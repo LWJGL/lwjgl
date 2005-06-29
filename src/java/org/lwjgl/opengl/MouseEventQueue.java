@@ -157,7 +157,10 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 
 	private void handleButton(MouseEvent e) {
 		byte button;
-		switch ( e.getButton() ) {
+		switch (e.getButton()) {
+			case MouseEvent.NOBUTTON:
+				// Nothing to do, so return
+				return;
 			case MouseEvent.BUTTON1:
 				// Emulate right click if ctrl is down
 				if (!e.isControlDown())
@@ -175,7 +178,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 				throw new IllegalArgumentException("Not a valid button: " + e.getButton());
 		}
 		byte state;
-		switch ( e.getID() ) {
+		switch (e.getID()) {
 			case MouseEvent.MOUSE_PRESSED:
 				state = 1;
 				break;

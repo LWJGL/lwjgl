@@ -7,8 +7,8 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class EXTBlendSubtract {
-	public static final int GL_FUNC_REVERSE_SUBTRACT_EXT = 0x800b;
 	public static final int GL_FUNC_SUBTRACT_EXT = 0x800a;
+	public static final int GL_FUNC_REVERSE_SUBTRACT_EXT = 0x800b;
 
 	private EXTBlendSubtract() {
 	}

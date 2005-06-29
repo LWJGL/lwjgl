@@ -7,8 +7,8 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class EXTBlendEquationSeparate {
-	public static final int GL_BLEND_EQUATION_ALPHA_EXT = 0x883d;
 	public static final int GL_BLEND_EQUATION_RGB_EXT = 0x8009;
+	public static final int GL_BLEND_EQUATION_ALPHA_EXT = 0x883d;
 
 	private EXTBlendEquationSeparate() {
 	}

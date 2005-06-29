@@ -7,8 +7,8 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class NVCopyDepthToColor {
-	public static final int GL_DEPTH_STENCIL_TO_BGRA_NV = 0x886f;
 	public static final int GL_DEPTH_STENCIL_TO_RGBA_NV = 0x886e;
+	public static final int GL_DEPTH_STENCIL_TO_BGRA_NV = 0x886f;
 
 	private NVCopyDepthToColor() {
 	}

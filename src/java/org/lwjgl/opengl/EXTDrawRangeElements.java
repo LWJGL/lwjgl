@@ -7,8 +7,8 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class EXTDrawRangeElements {
-	public static final int GL_MAX_ELEMENTS_INDICES_EXT = 0x80e9;
 	public static final int GL_MAX_ELEMENTS_VERTICES_EXT = 0x80e8;
+	public static final int GL_MAX_ELEMENTS_INDICES_EXT = 0x80e9;
 
 	private EXTDrawRangeElements() {
 	}

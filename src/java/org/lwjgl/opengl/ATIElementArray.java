@@ -7,27 +7,13 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class ATIElementArray {
-	public static final int GL_ELEMENT_ARRAY_POINTER_ATI = 0x876a;
-	public static final int GL_ELEMENT_ARRAY_TYPE_ATI = 0x8769;
 	public static final int GL_ELEMENT_ARRAY_ATI = 0x8768;
+	public static final int GL_ELEMENT_ARRAY_TYPE_ATI = 0x8769;
+	public static final int GL_ELEMENT_ARRAY_POINTER_ATI = 0x876a;
 
 	private ATIElementArray() {
 	}
 
-
-	public static void glDrawRangeElementArrayATI(int mode, int start, int end, int count) {
-		long function_pointer = GLContext.getCapabilities().ATI_element_array_glDrawRangeElementArrayATI_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
-		nglDrawRangeElementArrayATI(mode, start, end, count, function_pointer);
-	}
-	private static native void nglDrawRangeElementArrayATI(int mode, int start, int end, int count, long function_pointer);
-
-	public static void glDrawElementArrayATI(int mode, int count) {
-		long function_pointer = GLContext.getCapabilities().ATI_element_array_glDrawElementArrayATI_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
-		nglDrawElementArrayATI(mode, count, function_pointer);
-	}
-	private static native void nglDrawElementArrayATI(int mode, int count, long function_pointer);
 
 	public static void glElementPointerATI(ByteBuffer pPointer) {
 		long function_pointer = GLContext.getCapabilities().ATI_element_array_glElementPointerATI_pointer;
@@ -61,4 +47,18 @@ public final class ATIElementArray {
 		nglElementPointerATIBO(type, pPointer_buffer_offset, function_pointer);
 	}
 	private static native void nglElementPointerATIBO(int type, int pPointer_buffer_offset, long function_pointer);
+
+	public static void glDrawElementArrayATI(int mode, int count) {
+		long function_pointer = GLContext.getCapabilities().ATI_element_array_glDrawElementArrayATI_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglDrawElementArrayATI(mode, count, function_pointer);
+	}
+	private static native void nglDrawElementArrayATI(int mode, int count, long function_pointer);
+
+	public static void glDrawRangeElementArrayATI(int mode, int start, int end, int count) {
+		long function_pointer = GLContext.getCapabilities().ATI_element_array_glDrawRangeElementArrayATI_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglDrawRangeElementArrayATI(mode, start, end, count, function_pointer);
+	}
+	private static native void nglDrawRangeElementArrayATI(int mode, int start, int end, int count, long function_pointer);
 }

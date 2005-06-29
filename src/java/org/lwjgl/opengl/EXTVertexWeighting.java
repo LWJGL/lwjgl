@@ -7,23 +7,30 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class EXTVertexWeighting {
-	public static final int GL_VERTEX_WEIGHT_ARRAY_POINTER_EXT = 0x8510;
-	public static final int GL_VERTEX_WEIGHT_ARRAY_STRIDE_EXT = 0x850f;
-	public static final int GL_VERTEX_WEIGHT_ARRAY_TYPE_EXT = 0x850e;
-	public static final int GL_VERTEX_WEIGHT_ARRAY_SIZE_EXT = 0x850d;
-	public static final int GL_VERTEX_WEIGHT_ARRAY_EXT = 0x850c;
-	public static final int GL_CURRENT_VERTEX_WEIGHT_EXT = 0x850b;
-	public static final int GL_MODELVIEW1_EXT = 0x850a;
-	public static final int GL_MODELVIEW0_EXT = 0x1700;
-	public static final int GL_VERTEX_WEIGHTING_EXT = 0x8509;
-	public static final int GL_MODELVIEW1_MATRIX_EXT = 0x8506;
-	public static final int GL_MODELVIEW0_MATRIX_EXT = 0xba6;
-	public static final int GL_MODELVIEW1_STACK_DEPTH_EXT = 0x8502;
 	public static final int GL_MODELVIEW0_STACK_DEPTH_EXT = 0xba3;
+	public static final int GL_MODELVIEW1_STACK_DEPTH_EXT = 0x8502;
+	public static final int GL_MODELVIEW0_MATRIX_EXT = 0xba6;
+	public static final int GL_MODELVIEW1_MATRIX_EXT = 0x8506;
+	public static final int GL_VERTEX_WEIGHTING_EXT = 0x8509;
+	public static final int GL_MODELVIEW0_EXT = 0x1700;
+	public static final int GL_MODELVIEW1_EXT = 0x850a;
+	public static final int GL_CURRENT_VERTEX_WEIGHT_EXT = 0x850b;
+	public static final int GL_VERTEX_WEIGHT_ARRAY_EXT = 0x850c;
+	public static final int GL_VERTEX_WEIGHT_ARRAY_SIZE_EXT = 0x850d;
+	public static final int GL_VERTEX_WEIGHT_ARRAY_TYPE_EXT = 0x850e;
+	public static final int GL_VERTEX_WEIGHT_ARRAY_STRIDE_EXT = 0x850f;
+	public static final int GL_VERTEX_WEIGHT_ARRAY_POINTER_EXT = 0x8510;
 
 	private EXTVertexWeighting() {
 	}
 
+
+	public static void glVertexWeightfEXT(float weight) {
+		long function_pointer = GLContext.getCapabilities().EXT_vertex_weighting_glVertexWeightfEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglVertexWeightfEXT(weight, function_pointer);
+	}
+	private static native void nglVertexWeightfEXT(float weight, long function_pointer);
 
 	public static void glVertexWeightPointerEXT(int size, int stride, FloatBuffer pPointer) {
 		long function_pointer = GLContext.getCapabilities().EXT_vertex_weighting_glVertexWeightPointerEXT_pointer;
@@ -41,11 +48,4 @@ public final class EXTVertexWeighting {
 		nglVertexWeightPointerEXTBO(size, type, stride, pPointer_buffer_offset, function_pointer);
 	}
 	private static native void nglVertexWeightPointerEXTBO(int size, int type, int stride, int pPointer_buffer_offset, long function_pointer);
-
-	public static void glVertexWeightfEXT(float weight) {
-		long function_pointer = GLContext.getCapabilities().EXT_vertex_weighting_glVertexWeightfEXT_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
-		nglVertexWeightfEXT(weight, function_pointer);
-	}
-	private static native void nglVertexWeightfEXT(float weight, long function_pointer);
 }

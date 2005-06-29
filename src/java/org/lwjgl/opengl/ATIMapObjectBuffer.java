@@ -12,13 +12,6 @@ public final class ATIMapObjectBuffer {
 	}
 
 
-	public static void glUnmapObjectBufferATI(int buffer) {
-		long function_pointer = GLContext.getCapabilities().ATI_map_object_buffer_glUnmapObjectBufferATI_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
-		nglUnmapObjectBufferATI(buffer, function_pointer);
-	}
-	private static native void nglUnmapObjectBufferATI(int buffer, long function_pointer);
-
 	/**
 	 * glMapObjectBufferATI maps a gl object buffer to a ByteBuffer. The oldBuffer argument can be
 	 * null, in which case a new ByteBuffer will be created, pointing to the returned memory. If
@@ -39,4 +32,11 @@ public final class ATIMapObjectBuffer {
 		return __result;
 	}
 	private static native java.nio.ByteBuffer nglMapObjectBufferATI(int buffer, int result_size, java.nio.ByteBuffer old_buffer, long function_pointer);
+
+	public static void glUnmapObjectBufferATI(int buffer) {
+		long function_pointer = GLContext.getCapabilities().ATI_map_object_buffer_glUnmapObjectBufferATI_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglUnmapObjectBufferATI(buffer, function_pointer);
+	}
+	private static native void nglUnmapObjectBufferATI(int buffer, long function_pointer);
 }
