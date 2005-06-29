@@ -5,7 +5,7 @@ package org.lwjgl.input;
  * 
  * @author Kevin Glass
  */
-public class ControllerEvent {
+class ControllerEvent {
 	/** Indicates the event was caused by a button */
 	public static final int BUTTON = 1;
 	/** Indicates the event was caused by a axis */

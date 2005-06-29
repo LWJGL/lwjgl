@@ -10,7 +10,7 @@ import net.java.games.input.Component;
  * 
  * @author Kevin Glass
  */
-public class JInputController implements Controller {
+class JInputController implements Controller {
 	/** The JInput controller this class is wrapping */
 	private net.java.games.input.Controller target;
 	/** The index that has been assigned to this controller */
