@@ -54,6 +54,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
+import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -569,8 +570,13 @@ public final class Display {
 			Mouse.poll();
 			Mouse.updateCursor();
 		}
+		
 		if (Keyboard.isCreated()) {
 			Keyboard.poll();
+		}
+		
+		if(Controllers.isCreated()) {
+			Controllers.poll();
 		}
 	}
 
