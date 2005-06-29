@@ -29,12 +29,18 @@ public class Controllers {
 	/** The current event */
 	private static ControllerEvent event;
 	
+	/** Whether controllers were created */
+	private static boolean created;
+	
 	/**
 	 * Initialise the controllers collection
 	 * 
 	 * @throws LWJGLException Indicates a failure to initialise the controller library.
 	 */
 	public static void create() throws LWJGLException {
+		if (created)
+			return;
+		
 		try {
 			String plugins = System.getProperty("jinput.plugins");
 			
@@ -70,6 +76,8 @@ public class Controllers {
 	
 				createController(c);
 			}
+			
+			created = true;
 		} catch (Throwable e) {
 			throw new LWJGLException("Failed to initialise controllers",e);
 		}
@@ -143,6 +151,35 @@ public class Controllers {
 		event = (ControllerEvent) events.remove(0);
 		
 		return event != null;
+	}
+	
+	/**
+	 * @return True if Controllers has been created
+	 */
+	public static boolean isCreated() {
+		return created;
+	}	
+	
+	/**
+	 * Destroys any resources used by the controllers
+	 */
+	public static void destroy() {
+// 		FIXME! not currently possible to destroy a controller
+
+//		if (!created)
+//			return;
+//		created = false;
+//
+//		// nuke each controller
+//		for (int i=0;i<controllers.size();i++) {
+//			//
+//		}
+//		
+//		// cleanup
+//		event = null;
+//		events.clear();
+//		controllers.clear();
+//		controllerCount = 0;
 	}
 	
 	/**
