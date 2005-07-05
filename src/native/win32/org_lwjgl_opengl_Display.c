@@ -400,3 +400,148 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_reshape(JNIEnv *env, j
 
 	SetWindowPos(display_hwnd, HWND_TOP, x, y, clientSize.right - clientSize.left, clientSize.bottom - clientSize.top, SWP_NOZORDER);
 }
+
+static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height) {
+	unsigned char col;
+	unsigned char mask;
+	BITMAPINFO bitmapInfo;
+	HBITMAP cursorMask;
+	HBITMAP	colorBitmap;
+	ICONINFO iconInfo;
+	HICON icon;
+	char *ptrCursorImage;
+	int x, y;
+	char *dstPtr;
+	int pixelCount;
+	int scanlinePad;
+	int wordAlignedWidth;
+	int imageSize;
+	unsigned char *maskPixels;
+	int widthInBytes;
+	int leftShift;
+	int maskPixelsOff;
+	int scanlineWidth;
+	HBITMAP colorDIB;
+	
+    jsize pixelsLen = width * height;
+	
+	memset(&bitmapInfo, 0, sizeof(BITMAPINFO));
+	bitmapInfo.bmiHeader.biSize              = sizeof(BITMAPINFOHEADER);
+	bitmapInfo.bmiHeader.biWidth             = width;
+	bitmapInfo.bmiHeader.biHeight            = -height;
+	bitmapInfo.bmiHeader.biPlanes            = 1;
+	bitmapInfo.bmiHeader.biBitCount          = 24;
+	bitmapInfo.bmiHeader.biCompression       = BI_RGB;
+
+	colorDIB = CreateDIBSection(GetDC(NULL), (BITMAPINFO*)&(bitmapInfo),
+			DIB_RGB_COLORS, (void**)&(ptrCursorImage), NULL, 0);
+	if (!ptrCursorImage) {
+		throwException(env, "Could not allocate DIB section.");
+	}
+	
+	wordAlignedWidth = width * 3;
+	if (wordAlignedWidth % sizeof(long) != 0) {
+		wordAlignedWidth = (wordAlignedWidth / sizeof(long)) * sizeof(long) + sizeof(long);
+	}
+	for (y = 0; y < height; y++ ) {
+		dstPtr = ptrCursorImage + wordAlignedWidth*y;;
+		for (x = 0; x < width; x++ ) {
+			dstPtr[2] = (pixels[y*width+x] >> 0x10) & 0xFF;
+			dstPtr[1] = (pixels[y*width+x] >> 0x08) & 0xFF;
+			dstPtr[0] = pixels[y*width+x] & 0xFF;
+			dstPtr += 3;
+		}
+	}
+	
+
+	colorBitmap = CreateDIBitmap(GetDC(NULL),
+			(BITMAPINFOHEADER*)&bitmapInfo.bmiHeader,
+			CBM_INIT,
+			(void *)ptrCursorImage,
+			(BITMAPINFO*)&bitmapInfo,
+			DIB_RGB_COLORS);
+
+	DeleteObject(colorDIB);
+
+	// Convert alpha map to pixel packed mask
+	
+	// number of bytes it takes to fit a bit packed scan line.
+	widthInBytes = (width & 0x7) != 0 ? (width >> 3) + 1 : (width >> 3);
+
+	// number of bytes it takes to fit WORD padded scan line.
+	scanlineWidth = widthInBytes;
+	if (scanlineWidth % sizeof(WORD) != 0) {
+		scanlineWidth = (scanlineWidth / sizeof(WORD)) * sizeof(WORD) + sizeof(WORD);
+	}
+	imageSize = scanlineWidth*height;
+	maskPixels = (unsigned char*)malloc(sizeof(unsigned char)*imageSize);
+	memset(maskPixels, 0, imageSize);
+	for (y = 0; y < height; y++) {
+		leftShift = 17;
+		mask = 0;
+		maskPixelsOff = scanlineWidth*y;
+		for (x = 0; x < width; x++) {
+			col = (pixels[width*y+x] & 0x01000000) >> leftShift;
+			mask = mask | col;
+			leftShift++;
+			if (leftShift == 25) {
+				maskPixels[maskPixelsOff++] = ~mask;
+				leftShift = 17;
+				mask = 0;
+			}
+		}
+		
+		// write what is left over
+		if (leftShift != 17) {
+			maskPixels[maskPixelsOff++] = ~mask;
+		}
+	}
+	cursorMask = CreateBitmap(width, height, 1, 1, maskPixels);
+	
+	memset(&iconInfo, 0, sizeof(ICONINFO));
+	iconInfo.hbmMask = cursorMask;
+	iconInfo.hbmColor = colorBitmap;
+	iconInfo.fIcon = TRUE;
+	iconInfo.xHotspot = 0;
+	iconInfo.yHotspot = 0;
+	icon = CreateIconIndirect(&iconInfo);
+	DeleteObject(colorBitmap);
+	DeleteObject(cursorMask);
+	free(maskPixels);
+
+	return icon;
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nSetWindowIcon16
+  (JNIEnv *env, jclass clazz, jobject iconBuffer)
+{
+	int *imgData = NULL;
+	
+	HICON newIcon = createWindowIcon(env, imgData, 16, 16);
+	if (newIcon != NULL) {
+		if (display_hwnd != NULL) {
+			SendMessage(display_hwnd, WM_SETICON, ICON_SMALL,  (LPARAM) (newIcon));
+			
+			return 0;
+		}
+	}
+	
+	return -1;
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nSetWindowIcon32
+  (JNIEnv *env, jclass clazz, jobject iconBuffer)
+{
+	int *imgData = NULL;
+	
+	HICON newIcon = createWindowIcon(env, imgData, 32, 32);
+	if (newIcon != NULL) {
+		if (display_hwnd != NULL) {
+			SendMessage(display_hwnd, WM_SETICON, ICON_BIG,  (LPARAM) (newIcon));
+			
+			return 0;
+		}
+	}
+	
+	return -1;
+}
