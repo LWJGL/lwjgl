@@ -568,3 +568,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_unlockAWT(JNIEnv *env,
 	}
 	jawt.Unlock(env);
 }
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetWindowIcon
+  (JNIEnv *env, jclass clazz, jobject iconBuffer)
+{
+
+	return 0;
+}
+
