@@ -179,12 +179,12 @@ final class Win32Display implements DisplayImplementation {
 			int size = icons[i].limit();
 			
 			if ((((int) Math.sqrt(size)) == 16) && (!done16)) {
-				nSetWindowIcon16(icons[i]);
+				nSetWindowIcon16(icons[i].asIntBuffer());
 				used++;
 				done16 = true;
 			}
 			if ((((int) Math.sqrt(size)) == 32) && (!done32)) {
-				nSetWindowIcon32(icons[i]);
+				nSetWindowIcon32(icons[i].asIntBuffer());
 				used++;
 				done32 = true;
 			}
@@ -193,7 +193,7 @@ final class Win32Display implements DisplayImplementation {
 		return used;
 	}
 
-	private static native int nSetWindowIcon16(ByteBuffer icon);
+	private static native int nSetWindowIcon16(IntBuffer icon);
 	
-	private static native int nSetWindowIcon32(ByteBuffer icon);
+	private static native int nSetWindowIcon32(IntBuffer icon);
 }
