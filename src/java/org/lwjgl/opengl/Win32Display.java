@@ -156,4 +156,44 @@ final class Win32Display implements DisplayImplementation {
 	public void releaseTexImageFromPbuffer(PeerInfo handle, int buffer) {
 		((Win32PbufferPeerInfo)handle).releaseTexImageFromPbuffer(buffer);
 	}
+	
+
+	/**
+	 * Sets one or more icons for the Display.
+	 * <ul>
+	 * <li>On Windows you should supply at least one 16x16 icon and one 32x32.</li>
+	 * <li>Linux (and similar platforms) expect one 32x32 icon.</li>
+	 * <li>Mac OS X should be supplied one 128x128 icon</li>
+	 * </ul>
+	 * The implementation will use the supplied ByteBuffers with image data in RGBA and perform any conversions nescesarry for the specific platform.
+	 *
+	 * @param icons Array of icons in RGBA mode
+	 * @return number of icons used.
+	 */
+	public int setIcon(ByteBuffer[] icons) {
+		boolean done16 = false;
+		boolean done32 = false;
+		int used = 0;
+		
+		for (int i=0;i<icons.length;i++) {
+			int size = icons[i].limit();
+			
+			if ((((int) Math.sqrt(size)) == 16) && (!done16)) {
+				nSetWindowIcon16(icons[i]);
+				used++;
+				done16 = true;
+			}
+			if ((((int) Math.sqrt(size)) == 32) && (!done32)) {
+				nSetWindowIcon32(icons[i]);
+				used++;
+				done32 = true;
+			}
+		}
+		
+		return used;
+	}
+
+	private static native int nSetWindowIcon16(ByteBuffer icon);
+	
+	private static native int nSetWindowIcon32(ByteBuffer icon);
 }

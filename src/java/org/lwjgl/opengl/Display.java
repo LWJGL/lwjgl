@@ -43,6 +43,7 @@ package org.lwjgl.opengl;
  * @author foo
  */
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -812,5 +813,22 @@ public final class Display {
 	 */
 	public static String getVersion() {
 		return display_impl.getVersion();
+	}
+	
+
+	/**
+	 * Sets one or more icons for the Display.
+	 * <ul>
+	 * <li>On Windows you should supply at least one 16x16 icon and one 32x32.</li>
+	 * <li>Linux (and similar platforms) expect one 32x32 icon.</li>
+	 * <li>Mac OS X should be supplied one 128x128 icon</li>
+	 * </ul>
+	 * The implementation will use the supplied ByteBuffers with image data in RGBA and perform any conversions nescesarry for the specific platform.
+	 *
+	 * @param icons Array of icons in RGBA mode
+	 * @return number of icons used.
+	 */
+	public static int setIcon(ByteBuffer[] icons) {
+		return display_impl.setIcon(icons);
 	}
 }

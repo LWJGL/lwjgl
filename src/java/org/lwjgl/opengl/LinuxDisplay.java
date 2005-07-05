@@ -436,4 +436,32 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void releaseTexImageFromPbuffer(PeerInfo handle, int buffer) {
 		throw new UnsupportedOperationException();
 	}
+	
+
+	/**
+	 * Sets one or more icons for the Display.
+	 * <ul>
+	 * <li>On Windows you should supply at least one 16x16 icon and one 32x32.</li>
+	 * <li>Linux (and similar platforms) expect one 32x32 icon.</li>
+	 * <li>Mac OS X should be supplied one 128x128 icon</li>
+	 * </ul>
+	 * The implementation will use the supplied ByteBuffers with image data in RGBA and perform any conversions nescesarry for the specific platform.
+	 *
+	 * @param icons Array of icons in RGBA mode
+	 * @return number of icons used.
+	 */
+	public int setIcon(ByteBuffer[] icons) {
+		for (int i=0;i<icons.length;i++) {
+			int size = icons[i].limit();
+			
+			if (((int) Math.sqrt(size)) == 32) {
+				nSetWindowIcon(icons[i]);
+				return 1;
+			}
+		}
+		
+		return 0;
+	}
+	
+	private static native int nSetWindowIcon(ByteBuffer icon);
 }

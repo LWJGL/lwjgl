@@ -230,4 +230,18 @@ public interface DisplayImplementation {
 	public void bindTexImageToPbuffer(PeerInfo handle, int buffer);
 
 	public void releaseTexImageFromPbuffer(PeerInfo handle, int buffer);
+	
+	/**
+	 * Sets one or more icons for the Display.
+	 * <ul>
+	 * <li>On Windows you should supply at least one 16x16 icon and one 32x32.</li>
+	 * <li>Linux (and similar platforms) expect one 32x32 icon.</li>
+	 * <li>Mac OS X should be supplied one 128x128 icon</li>
+	 * </ul>
+	 * The implementation will use the supplied ByteBuffers with image data in RGBA and perform any conversions nescesarry for the specific platform.
+	 *
+	 * @param icons Array of icons in RGBA mode
+	 * @return number of icons used.
+	 */
+	public int setIcon(ByteBuffer[] icons); 
 }
