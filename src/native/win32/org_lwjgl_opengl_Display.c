@@ -515,7 +515,7 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nSetWindowIcon16
   (JNIEnv *env, jclass clazz, jobject iconBuffer)
 {
-	int *imgData = NULL;
+	int *imgData = (int *)(*env)->GetDirectBufferAddress(env, iconBuffer);
 	
 	HICON newIcon = createWindowIcon(env, imgData, 16, 16);
 	if (newIcon != NULL) {
@@ -532,7 +532,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nSetWindowIcon16
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nSetWindowIcon32
   (JNIEnv *env, jclass clazz, jobject iconBuffer)
 {
-	int *imgData = NULL;
+	int *imgData = (int *)(*env)->GetDirectBufferAddress(env, iconBuffer);
 	
 	HICON newIcon = createWindowIcon(env, imgData, 32, 32);
 	if (newIcon != NULL) {
