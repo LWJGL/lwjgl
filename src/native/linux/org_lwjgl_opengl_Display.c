@@ -78,6 +78,9 @@ static Window current_win;
 static window_mode current_window_mode;
 static int current_height;
 static int current_width;
+static int current_depth;
+
+static Visual *current_visual;
 
 static bool input_released;
 
@@ -404,6 +407,10 @@ static bool createWindow(JNIEnv* env, X11PeerInfo *peer_info, int x, int y, int 
 		attribs.override_redirect = True;
 	}
 	win = XCreateWindow(getDisplay(), root_win, x, y, width, height, 0, vis_info->depth, InputOutput, vis_info->visual, attribmask, &attribs);
+	
+	current_depth = vis_info->depth;
+	current_visual = vis_info->visual;
+	
 	XFree(vis_info);
 	if (!checkXError(env, getDisplay())) {
 		XFreeColormap(getDisplay(), cmap);
@@ -569,10 +576,61 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_unlockAWT(JNIEnv *env,
 	jawt.Unlock(env);
 }
 
+int setIcon(char *data,int width,int height) {
+	XWMHints* win_hints;
+	int x = 0;
+	int y = 5;
+	char r,g,b,a;
+	
+	int depth = 4;
+	
+	for (y=0;y<height;y++) {
+		for (x=0;x<width;x++) {
+			r = data[(x*4)+(y*width*4)];
+			g = data[(x*4)+(y*width*4)+1];
+			b = data[(x*4)+(y*width*4)+2];
+			a = data[(x*4)+(y*width*4)+3];
+			
+			data[(x*depth)+(y*width*depth)] = b; // blue
+			data[(x*depth)+(y*width*depth)+1] = g; // green
+			data[(x*depth)+(y*width*depth)+2] = r;
+			data[(x*depth)+(y*width*depth)+3] = a;
+		}
+	}
+	
+	Pixmap icon_pixmap = XCreatePixmap(getDisplay(), getCurrentWindow(), width, height, current_depth);	
+	
+	XImage *image = XCreateImage(getDisplay(), current_visual, current_depth, ZPixmap, 0, data, width, height, 32, 0);
+	
+	GC gc = XCreateGC(getDisplay(), icon_pixmap, 0, NULL);
+	
+	XPutImage(getDisplay(), icon_pixmap, gc, image, 0, 0, 0, 0, width, height);
+	
+	win_hints = XAllocWMHints();
+	if (!win_hints) {
+    		return -1;
+	}
+	
+    	win_hints->flags = IconPixmapHint;               
+	win_hints->icon_pixmap = icon_pixmap;
+	
+	XSetWMHints(getDisplay(), getCurrentWindow(), win_hints);
+	XFree(win_hints);
+	XFlush(getDisplay());
+	
+	return 0;
+}
+
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetWindowIcon
   (JNIEnv *env, jclass clazz, jobject iconBuffer)
 {
+	char *imgData = (char *)(*env)->GetDirectBufferAddress(env, iconBuffer);
 
+	if (setIcon(imgData,32,32) == 0) 
+	{
+		return 1;
+	}
+	
 	return 0;
 }
 
