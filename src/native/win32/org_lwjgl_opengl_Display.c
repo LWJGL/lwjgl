@@ -446,9 +446,9 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 	for (y = 0; y < height; y++ ) {
 		dstPtr = ptrCursorImage + wordAlignedWidth*y;;
 		for (x = 0; x < width; x++ ) {
-			dstPtr[2] = (pixels[y*width+x] >> 0x10) & 0xFF;
+			dstPtr[0] = (pixels[y*width+x] >> 0x10) & 0xFF;
 			dstPtr[1] = (pixels[y*width+x] >> 0x08) & 0xFF;
-			dstPtr[0] = pixels[y*width+x] & 0xFF;
+			dstPtr[2] = pixels[y*width+x] & 0xFF;
 			dstPtr += 3;
 		}
 	}
@@ -477,22 +477,22 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 	maskPixels = (unsigned char*)malloc(sizeof(unsigned char)*imageSize);
 	memset(maskPixels, 0, imageSize);
 	for (y = 0; y < height; y++) {
-		leftShift = 17;
+		leftShift = 7;
 		mask = 0;
 		maskPixelsOff = scanlineWidth*y;
 		for (x = 0; x < width; x++) {
-			col = (pixels[width*y+x] & 0x01000000) >> leftShift;
+			col = (pixels[width*y+x] & 0x00000001) << leftShift;
 			mask = mask | col;
-			leftShift++;
-			if (leftShift == 25) {
+			leftShift--;
+			if (leftShift == -1) {
 				maskPixels[maskPixelsOff++] = ~mask;
-				leftShift = 17;
+				leftShift = 7;
 				mask = 0;
 			}
 		}
 		
 		// write what is left over
-		if (leftShift != 17) {
+		if (leftShift != 7) {
 			maskPixels[maskPixelsOff++] = ~mask;
 		}
 	}
