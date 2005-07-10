@@ -176,7 +176,7 @@ final class Win32Display implements DisplayImplementation {
 		int used = 0;
 		
 		for (int i=0;i<icons.length;i++) {
-			int size = icons[i].limit();
+			int size = icons[i].limit() / 4;
 			
 			if ((((int) Math.sqrt(size)) == 16) && (!done16)) {
 				nSetWindowIcon16(icons[i].asIntBuffer());

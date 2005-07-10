@@ -452,7 +452,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	 */
 	public int setIcon(ByteBuffer[] icons) {
 		for (int i=0;i<icons.length;i++) {
-			int size = icons[i].limit();
+			int size = icons[i].limit() / 4;
 			
 			if (((int) Math.sqrt(size)) == 32) {
 				nSetWindowIcon(icons[i]);
