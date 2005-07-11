@@ -31,6 +31,9 @@
  */
 package org.lwjgl.test;
 
+import java.nio.ByteBuffer;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -91,7 +94,25 @@ public class WindowCreationTest {
 			window_x = window_y = 100;
 			Display.setLocation(window_x, window_y);
 			
+			// Icon test
+			ByteBuffer size16 = BufferUtils.createByteBuffer(16 * 16 * 4);
+			for(int i=0; i<16; i++) {
+				for(int j=0; j<16; j++) {
+					size16.putInt(0xffffffff);
+				}
+			}
+			size16.flip();
+			
+			ByteBuffer size32 = BufferUtils.createByteBuffer(32 * 32 * 4);
+			for(int i=0; i<32; i++) {
+				for(int j=0; j<32; j++) {
+					size32.putInt(0xff0000ff);
+				}
+			}		
+			size32.flip();
+			
 			Display.create();
+			Display.setIcon(new ByteBuffer[] { size16, size32 });
 			return true;
 		} catch (LWJGLException le) {
 			le.printStackTrace();
