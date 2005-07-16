@@ -446,9 +446,19 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 	for (y = 0; y < height; y++ ) {
 		dstPtr = ptrCursorImage + wordAlignedWidth*y;;
 		for (x = 0; x < width; x++ ) {
-			dstPtr[0] = (pixels[y*width+x] >> 0x10) & 0xFF;
-			dstPtr[1] = (pixels[y*width+x] >> 0x08) & 0xFF;
-			dstPtr[2] = pixels[y*width+x] & 0xFF;
+			if ((pixels[y*width+x] & 0xFF000000) != 0) 
+			{
+				dstPtr[0] = (pixels[y*width+x] >> 0x10) & 0xFF;
+				dstPtr[1] = (pixels[y*width+x] >> 0x08) & 0xFF;
+				dstPtr[2] = pixels[y*width+x] & 0xFF;
+			} 
+			else 
+			{
+				dstPtr[0] = 0;
+				dstPtr[1] = 0;
+				dstPtr[2] = 0;
+			}
+			
 			dstPtr += 3;
 		}
 	}
@@ -482,7 +492,7 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 		mask = 0;
 		maskPixelsOff = scanlineWidth*y;
 		for (x = 0; x < width; x++) {
-			col = (((pixels[width*y+x] & 0xFF000000) != 0) ? 1 : 0) << leftShift;
+			col = (((pixels[(width*y)+x] & 0xFF000000) != 0) ? 1 : 0) << leftShift;
 			mask = mask | col;
 			leftShift--;
 			if (leftShift == -1) {
