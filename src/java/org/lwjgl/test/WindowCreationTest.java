@@ -31,7 +31,9 @@
  */
 package org.lwjgl.test;
 
+import java.io.File;
 import java.nio.ByteBuffer;
+import java.io.IOException;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -39,6 +41,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.XPMFile;
 
 /**
  * Small class for testing that the Window is creatable
@@ -94,28 +97,41 @@ public class WindowCreationTest {
 			window_x = window_y = 100;
 			Display.setLocation(window_x, window_y);
 			
-			// Icon test
+			File file = new File(new File("res"), "lwjgl_16x16.xpm");
 			ByteBuffer size16 = BufferUtils.createByteBuffer(16 * 16 * 4);
-			for(int i=0; i<16; i++) {
-				for(int j=0; j<16; j++) {
-					size16.putInt(0xffffffff);
-				}
-			}
+			XPMFile xpm = XPMFile.load(file.getAbsolutePath());
+			size16.put(xpm.getBytes());
 			size16.flip();
 			
+			// Icon test
+//			for(int i=0; i<16; i++) {
+//				for(int j=0; j<16; j++) {
+//					size16.putInt(0xffffffff);
+//				}
+//			}
+//			size16.flip();
+
+			file = new File(new File("res"), "lwjgl_32x32.xpm");
 			ByteBuffer size32 = BufferUtils.createByteBuffer(32 * 32 * 4);
-			for(int i=0; i<32; i++) {
-				for(int j=0; j<32; j++) {
-					size32.putInt(0xff0000ff);
-				}
-			}		
+			xpm = XPMFile.load(file.getAbsolutePath());
+			size32.put(xpm.getBytes());
 			size32.flip();
+			
+//			ByteBuffer size32 = BufferUtils.createByteBuffer(32 * 32 * 4);
+//			for(int i=0; i<32; i++) {
+//				for(int j=0; j<32; j++) {
+//					size32.putInt(0xff0000ff);
+//				}
+//			}		
+//			size32.flip();
 			
 			Display.create();
 			Display.setIcon(new ByteBuffer[] { size16, size32 });
 			return true;
 		} catch (LWJGLException le) {
 			le.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		}
 		return false;
 	}
