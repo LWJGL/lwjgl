@@ -75,6 +75,9 @@ public final class Display {
 
 	/** X coordinate of the window */
 	private static int x = -1;
+	
+	/** Cached window icons, for when Display is recreated */
+	private static ByteBuffer[] cached_icons;
 
 	/**
 	 * Y coordinate of the window. Y in window coordinates is from the top of the display down,
@@ -266,6 +269,11 @@ public final class Display {
 		initControls();
 		setVSyncEnabled(vsync);
 		window_created = true;
+		
+		// set cached window icon if exists
+		if(cached_icons != null) {
+			setIcon(cached_icons);
+		}		
 	}
 
 	private static void destroyWindow() {
@@ -725,6 +733,7 @@ public final class Display {
 		destroyWindow();
 		destroyContext();
 		x = y = -1;
+		cached_icons = null;
 		reset();
 	}
 
@@ -824,11 +833,28 @@ public final class Display {
 	 * <li>Mac OS X should be supplied one 128x128 icon</li>
 	 * </ul>
 	 * The implementation will use the supplied ByteBuffers with image data in RGBA and perform any conversions nescesarry for the specific platform.
+	 * <p>
+	 * <b>NOTE:</b> The display will make a deep copy of the supplied byte buffer array, for the purpose
+	 * of recreating the icons when you go back and forth fullscreen mode. You therefore only need to 
+	 * set the icon once per instance.
 	 *
 	 * @param icons Array of icons in RGBA mode
-	 * @return number of icons used.
+	 * @return number of icons used, or 0 if display hasn't been created
 	 */
 	public static int setIcon(ByteBuffer[] icons) {
-		return display_impl.setIcon(icons);
+		
+		// make deep copy so we dont rely on the supplied buffers later on
+		cached_icons = new ByteBuffer[icons.length];
+		for(int i=0;i<icons.length; i++) {
+			cached_icons[i] = BufferUtils.createByteBuffer(icons[i].capacity());
+			cached_icons[i].put(icons[i]);
+			cached_icons[i].flip();
+		}
+		
+		if(Display.isCreated()) {
+			return display_impl.setIcon(cached_icons);
+		} else {
+			return 0;
+		}
 	}
 }
