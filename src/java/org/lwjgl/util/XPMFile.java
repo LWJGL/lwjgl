@@ -144,7 +144,7 @@ public class XPMFile {
 		String color = line.substring(6);
 
 		// we always assume type is color, and supplied as #<r><g><b>
-		return new Object[] { key, Integer.parseInt(color, 16)};
+		return new Object[] { key, new Integer(Integer.parseInt(color, 16))};
 	}
 
 	/**
