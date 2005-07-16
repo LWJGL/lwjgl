@@ -476,12 +476,13 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 	imageSize = scanlineWidth*height;
 	maskPixels = (unsigned char*)malloc(sizeof(unsigned char)*imageSize);
 	memset(maskPixels, 0, imageSize);
+	
 	for (y = 0; y < height; y++) {
 		leftShift = 7;
 		mask = 0;
 		maskPixelsOff = scanlineWidth*y;
 		for (x = 0; x < width; x++) {
-			col = (pixels[width*y+x] & 0x00000001) << leftShift;
+			col = (((pixels[width*y+x] & 0xFF000000) != 0) ? 1 : 0) << leftShift;
 			mask = mask | col;
 			leftShift--;
 			if (leftShift == -1) {
@@ -490,12 +491,12 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 				mask = 0;
 			}
 		}
-		
 		// write what is left over
 		if (leftShift != 7) {
 			maskPixels[maskPixelsOff++] = ~mask;
 		}
 	}
+	
 	cursorMask = CreateBitmap(width, height, 1, 1, maskPixels);
 	
 	memset(&iconInfo, 0, sizeof(ICONINFO));
