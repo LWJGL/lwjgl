@@ -318,8 +318,8 @@
 	
 	<!-- Compiles the Java source code -->
 	<target name="compile" description="Compiles the java source code">
-		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/*.java" source="1.4" target="1.4" taskname="lwjgl" />
-		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/input/**" source="1.4" target="1.4" classpath="${lwjgl.lib}/jinput.jar" taskname="input" />
+		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/*.java" source="1.4" target="1.4" classpath="${lwjgl.lib}/jinput.jar" taskname="lwjgl" />
+		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/input/**" source="1.4" target="1.4" taskname="input" />
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/openal/**" source="1.4" target="1.4" taskname="openal" />
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/opengl/**" source="1.4" target="1.4" taskname="opengl" />
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/test/**" source="1.4" target="1.4" taskname="test" />
