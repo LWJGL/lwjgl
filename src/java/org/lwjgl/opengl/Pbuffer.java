@@ -31,6 +31,9 @@
  */
 package org.lwjgl.opengl;
 
+import java.nio.IntBuffer;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
@@ -190,9 +193,13 @@ public final class Pbuffer implements Drawable {
 	}
 
 	private static PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture) throws LWJGLException {
-		if ( renderTexture == null )
-			return Display.getImplementation().createPbuffer(width, height, pixel_format, null, null);
-		else
+		if ( renderTexture == null ) {
+			// Though null is a perfectly valid argument, Matrox Parhelia drivers expect
+			// a 0 terminated list, or else they crash. Supplying NULL or 0, should
+			// cause the drivers to use default settings
+			IntBuffer defaultAttribs = BufferUtils.createIntBuffer(1);
+			return Display.getImplementation().createPbuffer(width, height, pixel_format, null, defaultAttribs);
+		} else
 			return Display.getImplementation().createPbuffer(width, height, pixel_format,
 					renderTexture.pixelFormatCaps,
 					renderTexture.pBufferAttribs);
