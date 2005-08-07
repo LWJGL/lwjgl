@@ -166,7 +166,7 @@ final class Context {
 
 	private void checkAccess() {
 		if (!canAccess())
-			throw new IllegalStateException("From thread " + Thread.currentThread() + ": " +thread + " already has the context current");
+			throw new IllegalStateException("From thread " + Thread.currentThread() + ": " + thread + " already has the context current");
 	}
 
 	/**

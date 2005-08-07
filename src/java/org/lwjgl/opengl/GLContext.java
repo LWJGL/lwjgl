@@ -62,10 +62,50 @@ import org.lwjgl.Sys;
  * @version $Revision$
  */
 public final class GLContext {
+	/**
+	 * Maps threads to their current context's ContextCapabilities, if any
+	 */
 	private final static ThreadLocal current_capabilities = new ThreadLocal();
+	
+	/**
+	 * The getCapabilities() method is a potential hot spot in any LWJGL application, since
+	 * it is needed for context capability discovery (e.g. is OpenGL 2.0 supported?), and
+	 * for the function pointers of gl functions. However, the 'current_capabilities' ThreadLocal
+	 * is (relatively) expensive to look up, and since most OpenGL applications use are single threaded
+	 * rendering, the following two is an optimization for this case.
+	 *
+	 * ThreadLocals can be thought of as a mapping between threads and values, so the idea
+	 * is to use a lock-less cache of mappings between threads and the current ContextCapabilities. The cache
+	 * could be any size, but in our case, we want a single sized cache for optimal performance
+	 * in the single threaded case.
+	 *
+	 * 'fast_path_cache' is the most recent ContextCapabilities (potentially null) and its owner. By
+	 * recent I mean the last thread setting the value in setCapabilities(). When getCapabilities()
+	 * is called, a check to see if the current is the owner of the ContextCapabilities instance inf
+	 * fast_path_cache. If so, the instance is returned, if not, some thread has since taken ownership
+	 * of the cache entry and the slower current_capabilities ThreadLocal is queried instead.
+	 *
+	 * No locks are needed in get/setCapabilities, because even though fast_path_cache can be accessed
+	 * from multiple threads at once, we are guaranteed by the JVM spec that its value is always valid.
+	 * Furthermore, if the ownership test in getCapabilities() succeeds, the cache entry can only contain
+	 * the correct ContextCapabilites (that is, the one from getThreadLocalCapabilites()),
+	 * since no other thread can sets the owner to anyone else than itself.
+	 */
+	private static CapabilitiesCacheEntry fast_path_cache = new CapabilitiesCacheEntry();
+	
+	/**
+	 * Simple lock-free cache of CapabilitesEntryCache to avoid allocating more than one
+	 * cache entry per thread
+	 */
+	private final static ThreadLocal thread_cache_entries = new ThreadLocal();
+	
+	/** 
+	 * The weak mapping from context Object instances to ContextCapabilities. Used
+	 * to avoid recreating a ContextCapabilities every time a context is made current.
+	 */
 	private final static Map capability_cache = new WeakHashMap();
 
-	/** Map of classes that have native stubs loaded */
+	/** Reference count of the native opengl implementation library */
 	private static int gl_ref_count;
 	private static boolean did_auto_load;
 
@@ -80,9 +120,21 @@ public final class GLContext {
 	 * @return The current capabilities instance.
 	 */
 	public static ContextCapabilities getCapabilities() {
-		return ((ContextCapabilities)current_capabilities.get());
+		CapabilitiesCacheEntry recent_cache_entry = fast_path_cache;
+		// Check owner of cache entry
+		if (recent_cache_entry.owner == Thread.currentThread()) {
+			/* The owner ship test succeeded, so the cache must contain the current ContextCapabilities instance 
+			 * assert recent_cache_entry.capabilities == getThreadLocalCapabilities();
+			 */
+			return recent_cache_entry.capabilities;
+		} else // Some other thread has written to the cache since, and we fall back to the slower path
+			return getThreadLocalCapabilities();
 	}
 	
+	private static ContextCapabilities getThreadLocalCapabilities() {
+		return ((ContextCapabilities)current_capabilities.get());
+	}
+
 	/**
 	 * Set the current capabilities instance. It contains the flags used
 	 * to test for support of a particular extension.
@@ -91,6 +143,16 @@ public final class GLContext {
 	 */
 	static void setCapabilities(ContextCapabilities capabilities) {
 		current_capabilities.set(capabilities);
+
+		CapabilitiesCacheEntry thread_cache_entry = (CapabilitiesCacheEntry)thread_cache_entries.get();
+		if (thread_cache_entry == null) {
+			thread_cache_entry = new CapabilitiesCacheEntry();
+			thread_cache_entries.set(thread_cache_entry);
+		}
+		thread_cache_entry.owner = Thread.currentThread();
+		thread_cache_entry.capabilities = capabilities;
+
+		fast_path_cache = thread_cache_entry;
 	}
 	
 	/**
@@ -260,4 +322,9 @@ public final class GLContext {
 
 	/** Native method to clear native stub bindings */
 	static native void resetNativeStubs(Class clazz);
+
+	private final static class CapabilitiesCacheEntry {
+		Thread owner;
+		ContextCapabilities capabilities;
+	}
 }
