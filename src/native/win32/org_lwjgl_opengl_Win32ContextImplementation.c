@@ -58,7 +58,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nCrea
 	HGLRC saved_context;
 	WGLExtensions extensions;
 	jobject context_handle = newJavaManagedByteBuffer(env, sizeof(Win32Context));
-	
 	if (context_handle == NULL) {
 		throwException(env, "Could not create handle buffer");
 		return NULL;
