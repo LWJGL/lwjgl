@@ -48,7 +48,7 @@
 #include "org_lwjgl_DefaultSysImplementation.h"
 
 static bool debug = false;
-static const char* VERSION = "0.97";
+static const char* VERSION = "0.98";
 static JavaVM *jvm;
 
 void initAttribList(attrib_list_t *list) {
