@@ -34,6 +34,8 @@ package org.lwjgl.util;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
@@ -83,24 +85,51 @@ public class WaveData {
 	}
 
 	/**
-	 * Creates a WaveData container from the specified filename
+	 * Creates a WaveData container from the specified url
 	 * 
-	 * @param filepath path to file (relative, and in classpath) 
+	 * @param path URL to file 
 	 * @return WaveData containing data, or null if a failure occured
 	 */
-	public static WaveData create(String filepath) {
+	public static WaveData create(URL path) {
 		try {
 			return create(
 				AudioSystem.getAudioInputStream(
-					new BufferedInputStream(WaveData.class.getClassLoader().getResourceAsStream(filepath))));
+					new BufferedInputStream(path.openStream())));
 		} catch (Exception e) {
-      org.lwjgl.LWJGLUtil.log("Unable to load file: " + filepath);
+			org.lwjgl.LWJGLUtil.log("Unable to create from: " + path);
 			e.printStackTrace();
 			return null;
 		}		
 	}
 	
 	/**
+	 * Creates a WaveData container from the specified in the classpath
+	 * 
+	 * @param path path to file (relative, and in classpath) 
+	 * @return WaveData containing data, or null if a failure occured
+	 */
+	public static WaveData create(String path) {
+		return create(WaveData.class.getClassLoader().getResource(path));
+	}
+	
+	/**
+	 * Creates a WaveData container from the specified inputstream
+	 * 
+	 * @param is InputStream to read from 
+	 * @return WaveData containing data, or null if a failure occured
+	 */
+	public static WaveData create(InputStream is) {
+		try {
+			return create(
+				AudioSystem.getAudioInputStream(is));
+		} catch (Exception e) {
+			org.lwjgl.LWJGLUtil.log("Unable to create from inputstream");
+			e.printStackTrace();
+			return null;
+		}		
+	}	
+	
+	/**	
 	 * Creates a WaveData container from the specified bytes
 	 *
 	 * @param buffer array of bytes containing the complete wave file
@@ -111,6 +140,31 @@ public class WaveData {
 			return create(
 				AudioSystem.getAudioInputStream(
 					new BufferedInputStream(new ByteArrayInputStream(buffer))));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**	
+	 * Creates a WaveData container from the specified ByetBuffer.
+	 * If the buffer is backed by an array, it will be used directly, 
+	 * else the contents of the buffer will be copied using get(byte[]).
+	 *
+	 * @param buffer ByteBuffer containing sound file
+	 * @return WaveData containing data, or null if a failure occured
+	 */
+	public static WaveData create(ByteBuffer buffer) {
+		try {
+			byte[] bytes = null;
+			
+			if(buffer.hasArray()) {
+				bytes = buffer.array();
+			} else {
+				bytes = new byte[buffer.capacity()];
+				buffer.get(bytes);
+			}
+			return create(bytes);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
