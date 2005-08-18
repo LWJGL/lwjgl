@@ -31,9 +31,8 @@
  */
 package org.lwjgl.test;
 
-import java.io.File;
-import java.nio.ByteBuffer;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -97,9 +96,8 @@ public class WindowCreationTest {
 			window_x = window_y = 100;
 			Display.setLocation(window_x, window_y);
 			
-			File file = new File(new File("res"), "lwjgl_16x16.xpm");
 			ByteBuffer size16 = BufferUtils.createByteBuffer(16 * 16 * 4);
-			XPMFile xpm = XPMFile.load(file.getAbsolutePath());
+			XPMFile xpm = XPMFile.load(WindowCreationTest.class.getClassLoader().getResourceAsStream("lwjgl_16x16.xpm"));
 			size16.put(xpm.getBytes());
 			size16.flip();
 			
@@ -111,9 +109,8 @@ public class WindowCreationTest {
 //			}
 //			size16.flip();
 
-			file = new File(new File("res"), "lwjgl_32x32.xpm");
 			ByteBuffer size32 = BufferUtils.createByteBuffer(32 * 32 * 4);
-			xpm = XPMFile.load(file.getAbsolutePath());
+			xpm = XPMFile.load(WindowCreationTest.class.getClassLoader().getResourceAsStream("lwjgl_32x32.xpm"));
 			size32.put(xpm.getBytes());
 			size32.flip();
 			

@@ -3,9 +3,9 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -40,14 +40,24 @@ public class XPMFile {
 	 * 
 	 * @param file path to file
 	 * @return XPMFile loaded, or exception 
-	 * @throws FileNotFoundException If file isn't found
 	 * @throws IOException If any IO exceptions occurs while reading file
 	 */
-	public static XPMFile load(String file) throws FileNotFoundException, IOException {
-		XPMFile xFile = new XPMFile();
-		xFile.readImage(file);
-		return xFile;
+	public static XPMFile load(String file) throws IOException {
+		return load(new FileInputStream(new File(file)));
 	}
+	
+	/**
+	 * Loads the XPM file 
+	 * 
+	 * @param is InputStream to read file from
+	 * @return XPMFile loaded, or exception 
+	 * @throws IOException If any IO exceptions occurs while reading file
+	 */
+	public static XPMFile load(InputStream is) throws IOException {
+		XPMFile xFile = new XPMFile();
+		xFile.readImage(is);
+		return xFile;
+	}	
 
 	/** 
 	 * @return the height of the image. 
@@ -73,12 +83,11 @@ public class XPMFile {
 	/** 
 	 * Read the image from the specified file. 
 	 * 
-	 * @throws FileNotFoundException If file isn't found
 	 * @throws IOException If any IO exceptions occurs while reading file
 	 */
-	private void readImage(String filename) throws FileNotFoundException, IOException {
+	private void readImage(InputStream is) throws IOException {
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(filename))));
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			HashMap colors = new HashMap();
 	
 			String comment = br.readLine();
