@@ -94,6 +94,8 @@
 		<include name="DevIL.dll" />
 		<include name="ILU.dll" />
 		<include name="ILUT.dll" />
+    
+    <include name="jinput-dxplugin.dll" />
 	</patternset>
 
 	<!-- Files to include in linux, glibc2.3 package -->
@@ -106,6 +108,8 @@
 		<include name="libIL.so" />
 		<include name="libILU.so" />
 		<include name="libILUT.so" />
+    
+    <include name="libjinput-linux.so" />
 	</patternset>
 
 	<!-- Files to include in mac os x package -->
@@ -118,6 +122,8 @@
 		<include name="libIL.dylib" />
 		<include name="libILU.dylib" />
 		<include name="libILUT.dylib" />
+    
+    <include name="libjinput.jnilib" />
 	</patternset>
 
 	<!-- Files to include in source distribution -->
@@ -264,6 +270,7 @@
 		<delete>
 			<fileset dir="${lwjgl.temp}/native/" includes="**/*"/>
 		</delete>	
+    <copy file="${lwjgl.lib}/jinput.jar" todir="${lwjgl.temp}/jar"/>
 		<copy todir="${lwjgl.temp}/native">
 			<fileset dir="${lwjgl.lib}/win32">
 				<patternset refid="lwjgl-win32.fileset" />
@@ -278,7 +285,8 @@
 	<target name="-distribute_linux">
 		<delete>
 			<fileset dir="${lwjgl.temp}/native/" includes="**/*"/>
-		</delete>	
+		</delete>
+    <copy file="${lwjgl.lib}/jinput.jar" todir="${lwjgl.temp}/jar"/>
 		<copy todir="${lwjgl.temp}/native">
 			<fileset dir="${lwjgl.lib}/linux">
 				<patternset refid="lwjgl-linux.fileset" />
@@ -293,7 +301,8 @@
 	<target name="-distribute_macosx">
 		<delete>
 			<fileset dir="${lwjgl.temp}/native/" includes="**/*"/>
-		</delete>	
+		</delete>
+    <copy file="${lwjgl.lib}/jinput.jar" todir="${lwjgl.temp}/jar"/>
 		<copy todir="${lwjgl.temp}/native">
 			<fileset dir="${lwjgl.lib}/macosx">
 				<patternset refid="lwjgl-macosx.fileset" />
@@ -720,15 +729,16 @@
 	
 		<!-- sign 'em -->
 		<input message="Please enter store password:" addproperty="store.pwd" />
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 				alias="matzon" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 		alias="matzon" storepass="${store.pwd}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_devil.jar" 	alias="matzon" storepass="${store.pwd}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_fmod3.jar" 	alias="matzon" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_test.jar" 		alias="matzon" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_util.jar" 		alias="matzon" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/media.jar" 				alias="matzon" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_test.jar" 	alias="matzon" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_util.jar" 	alias="matzon" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/media.jar" 		alias="matzon" storepass="${store.pwd}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_linux.jar" 	alias="matzon" storepass="${store.pwd}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" alias="matzon" storepass="${store.pwd}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_win32.jar" 	alias="matzon" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/jinput.jar" 		alias="matzon" storepass="${store.pwd}"/>
 	</target>
 	
 	<target name="changelog">
