@@ -33,6 +33,9 @@ package org.lwjgl.opengl;
 
 import java.awt.Canvas;
 import java.nio.ByteBuffer;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
@@ -44,17 +47,21 @@ import org.lwjgl.LWJGLUtil;
  * @version $Revision$
  */
 final class AWTSurfaceLock {
-	private final static int WAIT_DELAY_MILLIS = 100;
-	
-	private final ByteBuffer lock_buffer;
+
+	private final static int	WAIT_DELAY_MILLIS	= 100;
+
+	private final ByteBuffer	lock_buffer;
+
+	private boolean				firstLockSucceeded	= false;
 
 	public AWTSurfaceLock() {
 		lock_buffer = createHandle();
 	}
+
 	private static native ByteBuffer createHandle();
 
 	public ByteBuffer lockAndGetHandle(Canvas canvas) throws LWJGLException {
-		while (!lockAndInitHandle(lock_buffer, canvas)) {
+		while (!privilegedLockAndInitHandle(canvas)) {
 			LWJGLUtil.log("Could not get drawing surface info, retrying...");
 			try {
 				Thread.sleep(WAIT_DELAY_MILLIS);
@@ -62,12 +69,38 @@ final class AWTSurfaceLock {
 				LWJGLUtil.log("Interrupted while retrying: " + e);
 			}
 		}
+
 		return lock_buffer;
 	}
+
+	private boolean privilegedLockAndInitHandle(final Canvas canvas) throws LWJGLException {
+		// Workaround for Sun JDK bug 4796548 which still exists in java for OS X
+		// We need to elevate priveleges because of an AWT bug. Please see
+		// http://192.18.37.44/forums/index.php?topic=10572 for a discussion.
+		// It is only needed on first call, so we avoid it on all subsequent calls
+		// due to performance.		
+		if (firstLockSucceeded)
+			return lockAndInitHandle(lock_buffer, canvas);
+		else
+			try {
+				final Object result = AccessController.doPrivileged(new PrivilegedExceptionAction() {
+
+					public Object run() throws LWJGLException {
+						return Boolean.valueOf(lockAndInitHandle(lock_buffer, canvas));
+					}
+				});
+				firstLockSucceeded = ((Boolean) result).booleanValue();
+				return firstLockSucceeded;
+			} catch (PrivilegedActionException e) {
+				throw (LWJGLException) e.getException();
+			}
+	}
+
 	private static native boolean lockAndInitHandle(ByteBuffer lock_buffer, Canvas canvas) throws LWJGLException;
 
 	protected void unlock() throws LWJGLException {
 		nUnlock(lock_buffer);
 	}
+
 	private static native void nUnlock(ByteBuffer lock_buffer) throws LWJGLException;
 }
