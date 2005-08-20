@@ -31,7 +31,6 @@
  */
 package org.lwjgl.util;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -132,34 +131,49 @@ public final class Display {
 	 */
 	public static DisplayMode setDisplayMode(DisplayMode[] dm, final String[] param) throws Exception {
 		
+		class FieldAccessor {
+			final String fieldName;
+			final int order;
+			final int preferred;
+			final boolean usePreferred;
+			FieldAccessor(String fieldName, int order, int preferred, boolean usePreferred) {
+				this.fieldName = fieldName;
+				this.order = order;
+				this.preferred = preferred;
+				this.usePreferred = usePreferred;
+			}
+			int getInt(DisplayMode mode) {
+				if ("width".equals(fieldName)) {
+					return mode.getWidth();
+				}
+				if ("height".equals(fieldName)) {
+					return mode.getHeight();
+				}
+				if ("freq".equals(fieldName)) {
+					return mode.getFrequency();
+				}
+				if ("bpp".equals(fieldName)) {
+					return mode.getBitsPerPixel();
+				}
+				throw new IllegalArgumentException("Unknown field "+fieldName);
+			}
+		}
 		
 		class Sorter implements Comparator {
 			
-			final Field[] field;
-			final int[] order;
-			final boolean[] usePreferred;
-			final int[] preferred;
+			final FieldAccessor[] field;
 			
 			Sorter() throws NoSuchFieldException {
-				field = new Field[param.length];
-				order = new int[param.length];
-				preferred = new int[param.length];
-				usePreferred = new boolean[param.length];
+				field = new FieldAccessor[param.length];
 				for (int i = 0; i < field.length; i ++) {
 					int idx = param[i].indexOf('=');
 					if (idx > 0) {
-						preferred[i] = Integer.parseInt(param[i].substring(idx + 1, param[i].length()));
-						usePreferred[i] = true;
-						param[i] = param[i].substring(0, idx);
-						field[i] = DisplayMode.class.getDeclaredField(param[i]);
+						field[i] = new FieldAccessor(param[i].substring(0, idx), 0, Integer.parseInt(param[i].substring(idx + 1, param[i].length())), true);
 					} else if (param[i].charAt(0) == '-') {
-						field[i] = DisplayMode.class.getDeclaredField(param[i].substring(1));
-						order[i] = -1;
+						field[i] = new FieldAccessor(param[i].substring(1), -1, 0, false);
 					} else {
-						field[i] = DisplayMode.class.getDeclaredField(param[i]);
-						order[i] = 1;
+						field[i] = new FieldAccessor(param[i], 1, 0, false);
 					}
-					field[i].setAccessible(true);
 				}
 			}
 			
@@ -171,35 +185,31 @@ public final class Display {
 				DisplayMode dm2 = (DisplayMode) o2;
 				
 				for (int i = 0; i < field.length; i ++) {
-					try {
-						int f1 = field[i].getInt(dm1);
-						int f2 = field[i].getInt(dm2);
-						
-						if (usePreferred[i] && f1 != f2) {
-							if (f1 == preferred[i])
+					int f1 = field[i].getInt(dm1);
+					int f2 = field[i].getInt(dm2);
+					
+					if (field[i].usePreferred && f1 != f2) {
+						if (f1 == field[i].preferred)
+							return -1;
+						else if (f2 == field[i].preferred)
+							return 1;
+						else {
+							// Score according to the difference between the values
+							int absf1 = Math.abs(f1 - field[i].preferred);
+							int absf2 = Math.abs(f2 - field[i].preferred);
+							if (absf1 < absf2)
 								return -1;
-							else if (f2 == preferred[i])
+							else if (absf1 > absf2)
 								return 1;
-							else {
-								// Score according to the difference between the values
-								int absf1 = Math.abs(f1 - preferred[i]);
-								int absf2 = Math.abs(f2 - preferred[i]);
-								if (absf1 < absf2)
-									return -1;
-								else if (absf1 > absf2)
-									return 1;
-								else
-									continue;
-							}
-						} else if (f1 < f2)
-							return order[i];
-						else if (f1 == f2)
-							continue;
-						else
-							return -order[i];
-					} catch (IllegalAccessException e) {
-						throw new RuntimeException(e);
-					}
+							else
+								continue;
+						}
+					} else if (f1 < f2)
+						return field[i].order;
+					else if (f1 == f2)
+						continue;
+					else
+						return -field[i].order;
 				}
 				
 				return 0;
