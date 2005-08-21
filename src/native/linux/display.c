@@ -213,19 +213,36 @@ static bool setXF86VidModeMode(Display *disp, int screen, mode_info *mode) {
 	return True == XF86VidModeSwitchToMode(disp, screen, &mode->mode_data.xf86vm_modeinfo);
 }
 
+/* Try to set the mode specified through XRandR.
+ * Return value is the Status code of the mode switch
+ * The timestamp parameter is filled with the latest timestamp returned from XRRConfigTimes
+ */
+static Status trySetXrandrMode(Display *disp, int screen, mode_info *mode, Time *timestamp) {
+	Status status;
+	Drawable root_window = RootWindow(disp, screen);
+	XRRScreenConfiguration *screen_configuration = XRRGetScreenInfo (disp, root_window);
+	XRRConfigTimes(screen_configuration, timestamp);
+	Rotation current_rotation;
+	XRRConfigRotations(screen_configuration, &current_rotation);
+	status = XRRSetScreenConfigAndRate(disp, screen_configuration, root_window, mode->mode_data.size_index, current_rotation, mode->freq, *timestamp);
+	XRRFreeScreenConfigInfo(screen_configuration);
+	return status;
+}
+
 static bool setXrandrMode(Display *disp, int screen, mode_info *mode) {
-	Status success;
-	do {
-		Time config_time;
-		Drawable root_window = RootWindow(disp, screen);
-		XRRScreenConfiguration *screen_configuration = XRRGetScreenInfo (disp, root_window);
-		XRRConfigTimes(screen_configuration, &config_time);
-		Rotation current_rotation;
-		XRRConfigRotations(screen_configuration, &current_rotation);
-		success = XRRSetScreenConfigAndRate(disp, screen_configuration, root_window, mode->mode_data.size_index, current_rotation, mode->freq, config_time);
-		XRRFreeScreenConfigInfo(screen_configuration);
-	} while (success != 0);
-	return true;
+	Time timestamp;
+	Status status = trySetXrandrMode(disp, screen, mode, &timestamp);
+	if (status == 0)
+		return true; // Success
+	Time new_timestamp;
+	while (true) {
+		status = trySetXrandrMode(disp, screen, mode, &new_timestamp);
+		if (status == 0)
+			return true; // Success
+		if (new_timestamp == timestamp)
+			return false; // Failure, and the stamps are equal meaning that the failure is not merely transient
+		timestamp = new_timestamp;
+	}
 }
 
 static bool setMode(JNIEnv *env, Display *disp, int screen, int width, int height, int freq, bool temporary) {
