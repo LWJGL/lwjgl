@@ -51,14 +51,11 @@ void *extgl_GetProcAddress(const char *name)
 	char mach_name[BUFFER_SIZE] = "_";
 	strncat(mach_name, name, BUFFER_SIZE - 1);
 
-	if (NSIsSymbolNameDefinedInImage(opengl_lib_handle, mach_name)) {           
-		NSSymbol sym = NSLookupSymbolInImage(opengl_lib_handle, mach_name, NSLOOKUPSYMBOLINIMAGE_OPTION_BIND | NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
-		void *address = NSAddressOfSymbol(sym);
-		return address;
-	} else {
+	NSSymbol sym = NSLookupSymbolInImage(opengl_lib_handle, mach_name, NSLOOKUPSYMBOLINIMAGE_OPTION_BIND | NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
+	void *address = NSAddressOfSymbol(sym);
+	if (address == NULL)
 		printfDebug("Could not locate symbol %s\n", name);
-		return NULL;
-	}
+	return address;
 }
 
 static const struct mach_header *loadImage(const char *lib_name) {   
