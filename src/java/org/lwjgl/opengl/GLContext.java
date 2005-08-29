@@ -201,8 +201,14 @@ public final class GLContext {
 		String major_string = version_tokenizer.nextToken();
 		String minor_string = version_tokenizer.nextToken();
 
-		int majorVersion = Integer.parseInt(major_string);
-		int minorVersion = Integer.parseInt(minor_string);
+		int majorVersion = 0;
+		int minorVersion = 0;
+		try {
+			majorVersion = Integer.parseInt(major_string);
+			minorVersion = Integer.parseInt(minor_string);
+		} catch (NumberFormatException e) {
+			LWJGLUtil.log("The major and/or minor OpenGL version is malformed: " + e.getMessage());
+		}
 
 		if (majorVersion == 2) {
 			// ----------------------[ 2.X ]----------------------
