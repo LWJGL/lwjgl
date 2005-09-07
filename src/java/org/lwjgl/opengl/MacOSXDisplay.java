@@ -545,7 +545,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 		int height;
 		
 		width = height = (int) Math.sqrt(size);
-		int[] imageData = icons[biggest].asIntBuffer().array();
+		int[] imageData = new int[icons[biggest].remaining()];
+		icons[biggest].asIntBuffer().get(imageData);
 		
 		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		img.setRGB(0, 0, width, height, imageData, 0, width);
