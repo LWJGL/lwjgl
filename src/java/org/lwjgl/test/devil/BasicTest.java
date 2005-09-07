@@ -70,7 +70,12 @@ public class BasicTest {
 		System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
 		URL imageURL = BasicTest.class.getResource("/res/ILtest.tga");
 		System.out.println("ilLoadFromURL " + imageURL);
-		System.out.println("load lump = " + IL.ilLoadFromURL(imageURL));
+		try {
+			System.out.println("load lump = " + IL.ilLoadFromURL(imageURL));
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
 		System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
 		int newIm = IL.ilCloneCurImage();
 		IL.ilCopyImage(im.get(0));

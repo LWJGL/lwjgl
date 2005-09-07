@@ -447,53 +447,79 @@ public class IL {
 	 * @param filename File to determine type for
 	 * @return IL type, or IL_TYPE_UNKNOWN if undeterminable
 	 */
-	public static int getILType(String filename) {
-		int index = filename.lastIndexOf('.');
-		if (index != -1) {
-			String extension = filename.substring(index + 1);
-			if (extension.equalsIgnoreCase("bmp")) {
-				return IL_BMP;
-			} else if (extension.equalsIgnoreCase("cut")) {
-				return IL_CUT;
-			} else if (extension.equalsIgnoreCase("gif")) {
-				return IL_GIF;
-			} else if (extension.equalsIgnoreCase("ico")) {
-				return IL_ICO;
-			} else if (extension.equalsIgnoreCase("jpg")
-					|| extension.equalsIgnoreCase("jpeg")
-					|| extension.equalsIgnoreCase("jpe")) {
-				return IL.IL_JPG;
-			} else if (extension.equalsIgnoreCase("lif")) {
-				return IL_LIF;
-			} else if (extension.equalsIgnoreCase("mng")) {
-				return IL_MNG;
-			} else if (extension.equalsIgnoreCase("pcd")) {
-				return IL_PCD;
-			} else if (extension.equalsIgnoreCase("pcx")) {
-				return IL_PCX;
-			} else if (extension.equalsIgnoreCase("pic")) {
-				return IL_PIC;
-			} else if (extension.equalsIgnoreCase("png")) {
-				return IL_PNG;
-			} else if (extension.equalsIgnoreCase("pbm") || extension.equalsIgnoreCase("pgm")
-					|| extension.equalsIgnoreCase("ppm")) {
-				return IL_PNM;
-			} else if (extension.equalsIgnoreCase("psd")) {
-				return IL_PSD;
-			} else if (extension.equalsIgnoreCase("psp")) {
-				return IL_PSP;
-			} else if (extension.equalsIgnoreCase("bw") || extension.equalsIgnoreCase("rgb")
-					|| extension.equalsIgnoreCase("rgba") || extension.equalsIgnoreCase("sgi")) {
-				return IL_SGI;
-			} else if (extension.equalsIgnoreCase("tga")) {
-				return IL_TGA;
-			} else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff")) {
-				return IL_TIF;
-			}
+	public static int ilGetType(String extension) {
+		// Save having to use equalsIgnoreCase all the time
+		extension = extension.toLowerCase();
+		int type = IL_TYPE_UNKNOWN;
+		
+		if (extension.equals("bmp")) {
+			type = IL_BMP;
+		} else if (extension.equals("cut")) {
+			type = IL_CUT;
+		} else if (extension.equals("gif")) {
+			type = IL_GIF;
+		} else if (extension.equals("ico")) {
+			type = IL_ICO;
+		} else if (extension.equals("jpg")) {
+			type = IL_JPG;
+		} else if (extension.equals("lif")) {
+			type = IL_LIF;
+		} else if (extension.equals("mng")) {
+			type = IL_MNG;
+		} else if (extension.equals("pcd")) {
+			type = IL_PCD;
+		} else if (extension.equals("pcx")) {
+			type = IL_PCX;
+		} else if (extension.equals("pic")) {
+			type = IL_PIC;
+		} else if (extension.equals("png")) {
+			type = IL_PNG;
+		} else if (extension.equals("pbm") || extension.equals("pgm")
+				|| extension.equals("ppm")) {
+			type = IL_PNM;
+		} else if (extension.equals("psd")) {
+			type = IL_PSD;
+		} else if (extension.equals("psp")) {
+			type = IL_PSP;
+		} else if (extension.equals("bw") || extension.equals("rgb")
+				|| extension.equals("rgba") || extension.equals("sgi")) {
+			type = IL_SGI;
+		} else if (extension.equals("tga")) {
+			type = IL_TGA;
+		} else if (extension.equals("tif") || extension.equals("tiff")) {
+			type = IL_TIF;
+		} else if (extension.equals("dds")) {
+			type = IL_DDS;
+		} else if (extension.equals("raw")) {
+			type = IL_RAW;
+		} else if (extension.equals("lbm")) {
+			type = IL_LBM;
+		} else if (extension.equals("jng")) {
+			type = IL_JNG;
+		} else if (extension.equals("wal")) {
+			type = IL_WAL;
+		} else if (extension.equals("pix")) {
+			type = IL_PIX;
+		} else if (extension.equals("mdl")) {
+			type = IL_MDL;
+		} else if (extension.equals("exif")) {
+			type = IL_EXIF;
+		} else if (extension.equals("oil")) {
+			type = IL_OIL;
+		} else if (extension.equals("dcx")) {
+			type = IL_DCX;
+		} else if (extension.equals("pxr")) {
+			type = IL_PXR;
+		} else if (extension.equals("xpm")) {
+			type = IL_XPM;
+		} else if (extension.equals("pal")) {
+			type = IL_JASC_PAL;
+		} else if (extension.equals("h")) {
+			type = IL_CHEAD;
 		}
-		return IL_TYPE_UNKNOWN;
+		
+		return type;
 	}
-
 
 	/**
 	 * Loads an image from the specified url
@@ -501,20 +527,16 @@ public class IL {
 	 * @param url URL to load from
 	 * @return true if image was loaded
 	 */
-	public static boolean ilLoadFromURL(URL url) {
-		boolean result = false;
-
+	public static boolean ilLoadFromURL(URL url) throws IOException {
+		int type = IL_TYPE_UNKNOWN;
+		
 		String file = url.toString();
-
-		// read stream
-		try {
-			result = ilLoadFromStream(url.openStream(), getILType(file));
-		} catch (IOException e) {
-			e.printStackTrace();
-			result = false;
+		int index = file.lastIndexOf('.');
+		if (index != -1) {
+			String extension = file.substring(index + 1);
+			type = ilGetType(extension);
 		}
-
-		return result;
+		return ilLoadFromStream(url.openStream(), type); 
 	}
 
 	/**
@@ -524,7 +546,7 @@ public class IL {
 	 * @param type Type of image to expect
 	 * @return true if image was loaded
 	 */
-	public static boolean ilLoadFromStream(InputStream stream, int type) {
+	public static boolean ilLoadFromStream(InputStream stream, int type) throws IOException {
 		boolean result = false;
 		int lastRead = 0;
 		byte[] buffer = new byte[4096];
@@ -542,8 +564,10 @@ public class IL {
 			lump.flip();
 			result = ilLoadL(type, lump);
 		} catch (IOException e) {
-			e.printStackTrace();
-			result = false;
+			try {
+				buf.close();
+			} catch (IOException f ) {}
+			throw e; 
 		}
 
 		return result;
