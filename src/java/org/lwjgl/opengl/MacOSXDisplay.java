@@ -62,6 +62,7 @@ import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
 import java.security.PrivilegedActionException;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.input.Keyboard;
@@ -217,6 +218,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		return new MacOSXDisplayPeerInfo(pixel_format);
 	}
 
+	private final static IntBuffer current_viewport = BufferUtils.createIntBuffer(16);
 	public void update() {
 		boolean should_update = frame.getCanvas().syncShouldUpdateContext();
 		/*
@@ -250,7 +252,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 		if (should_update) {
 			Display.getContext().update();
 			/* This is necessary to make sure the context won't "forget" about the view size */
-			GL11.glViewport(0, 0, frame.getCanvas().syncGetWidth(), frame.getCanvas().syncGetHeight());
+			GL11.glGetInteger(GL11.GL_VIEWPORT, current_viewport);
+			GL11.glViewport(current_viewport.get(0), current_viewport.get(1), current_viewport.get(2), current_viewport.get(3));
 		}
 		if (frame.syncShouldWarpCursor()) {
 			warpCursor();
