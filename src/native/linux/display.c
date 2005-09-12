@@ -51,6 +51,8 @@
 #include "common_tools.h"
 #include "Window.h"
 
+#define NUM_XRANDR_RETRIES 5
+
 typedef struct {
 	int width;
 	int height;
@@ -230,12 +232,13 @@ static Status trySetXrandrMode(Display *disp, int screen, mode_info *mode, Time 
 }
 
 static bool setXrandrMode(Display *disp, int screen, mode_info *mode) {
+	int iteration;
 	Time timestamp;
 	Status status = trySetXrandrMode(disp, screen, mode, &timestamp);
 	if (status == 0)
 		return true; // Success
 	Time new_timestamp;
-	while (true) {
+	for (iteration = 0; iteration < NUM_XRANDR_RETRIES; iteration++) {
 		status = trySetXrandrMode(disp, screen, mode, &new_timestamp);
 		if (status == 0)
 			return true; // Success
@@ -243,6 +246,7 @@ static bool setXrandrMode(Display *disp, int screen, mode_info *mode) {
 			return false; // Failure, and the stamps are equal meaning that the failure is not merely transient
 		timestamp = new_timestamp;
 	}
+	return false;
 }
 
 static bool setMode(JNIEnv *env, Display *disp, int screen, int width, int height, int freq, bool temporary) {
