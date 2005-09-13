@@ -89,6 +89,11 @@ extension getCurrentDisplayModeExtension(void) {
 	return current_extension;
 }
 
+static bool isXrandrForceDisabled() {
+	char *supported_env = getenv("LWJGL_DISABLE_XRANDR");
+	return supported_env != NULL;
+}
+
 static bool getXF86VidModeVersion(JNIEnv *env, Display *disp, int *major, int *minor) {
 	int event_base, error_base;
 
@@ -121,6 +126,8 @@ static bool getXrandrVersion(JNIEnv *env, Display *disp, int *major, int *minor)
 
 static bool isXrandrSupported(JNIEnv *env, Display *disp) {
 	int major, minor;
+	if (isXrandrForceDisabled())
+		return false;
 	if (!getXrandrVersion(env, disp, &major, &minor))
 		return false;
 	return major >= 1;
