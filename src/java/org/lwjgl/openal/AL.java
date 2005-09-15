@@ -115,24 +115,6 @@ public final class AL {
 		if (created) {
 			return;
 		}
-			
-			
-		AL.deviceArguments = deviceArguments;
-		AL.contextFrequency = contextFrequency;
-		AL.contextRefresh = contextRefresh;
-		AL.contextSynchronized = contextSynchronized ? ALC.ALC_TRUE : ALC.ALC_FALSE;
-
-		create();
-	}
-
-	/**
-	 * Creates an OpenAL instance. The empty create will cause OpenAL to
-	 * open the default device, and create a context using default values. 
-	 */
-	public static void create() throws LWJGLException {
-		if (created) {
-			return;
-		}
 		String[] oalPaths = LWJGLUtil.getLibraryPaths(new String[]{
                                                   "lwjglaudio", "lwjglaudio.dll",
                                                   "openal", "libopenal.so",
@@ -148,12 +130,17 @@ public final class AL {
 			device = ALC.alcOpenDevice(deviceArguments);
 			if (device == null)
 				throw new LWJGLException("Could not open ALC device");
-			//check if doing default values or not
+
+			AL.deviceArguments = deviceArguments;
+			AL.contextFrequency = contextFrequency;
+			AL.contextRefresh = contextRefresh;
+			AL.contextSynchronized = contextSynchronized ? ALC.ALC_TRUE : ALC.ALC_FALSE;
+
 			if (contextFrequency == -1) {
 				context = ALC.alcCreateContext(device.device, null);
 			} else {
 				context = ALC.alcCreateContext(device.device,
-						ALCcontext.createAttributeList(contextFrequency, contextRefresh, contextSynchronized));
+						ALCcontext.createAttributeList(AL.contextFrequency, AL.contextRefresh, AL.contextSynchronized));
 			}
 			ALC.alcMakeContextCurrent(context.context);
 			created = true;
@@ -161,6 +148,19 @@ public final class AL {
 			destroy();
 			throw e;
 		}
+
+		create();
+	}
+
+	/**
+	 * Creates an OpenAL instance. The empty create will cause OpenAL to
+	 * open the default device, and create a context using default values.
+	 * This method used to use default values that the OpenAL implementation
+	 * chose but this produces unexpected results on some systems; so now
+	 * it defaults to 44100Hz mixing @ 60Hz refresh. 
+	 */
+	public static void create() throws LWJGLException {
+		create(null, 44100, 60, false);
 	}
 
 	/**
