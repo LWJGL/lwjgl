@@ -44,34 +44,14 @@ import org.lwjgl.Sys;
  * @version $Revision$
  */
 public final class AL {
-
-	/** ALC instance. */
-	protected static ALC alc;
-
 	/** ALCdevice instance. */
 	protected static ALCdevice device;
 
 	/** Current ALCcontext. */
 	protected static ALCcontext context;
 
-	/** 
-	 * String that requests a certain device or device configuration. 
-	 * If null is specified, the implementation will provide an 
-	 * implementation specific default. 
-	 */
-	protected static String deviceArguments;
-
-	/** Frequency for mixing output buffer, in units of Hz. */
-	protected static int contextFrequency = -1;
-
-	/** Refresh intervalls, in units of Hz. */
-	protected static int contextRefresh = -1;
-
-	/** Flag, indicating a synchronous context. */
-	protected static int contextSynchronized = ALC.ALC_FALSE;
-
 	/** Have we been created? */
-	protected static boolean created;
+	private static boolean created;
 
 	static {
 		Sys.initialize();
@@ -85,12 +65,12 @@ public final class AL {
 	 * 
 	 * @param oalPaths Array of strings containing paths to search for OpenAL library
 	 */
-	protected static native void nCreate(String[] oalPaths) throws LWJGLException;
+	private static native void nCreate(String[] oalPaths) throws LWJGLException;
 
 	/**
 	 * Native method the destroy the AL
 	 */
-	protected static native void nDestroy();
+	private static native void nDestroy();
 	
 	/**
 	 * @return true if AL has been created
@@ -127,20 +107,16 @@ public final class AL {
 			AL10.initNativeStubs();
 			ALC.initNativeStubs();
 
-			AL.deviceArguments = deviceArguments;
-			AL.contextFrequency = contextFrequency;
-			AL.contextRefresh = contextRefresh;
-			AL.contextSynchronized = contextSynchronized ? ALC.ALC_TRUE : ALC.ALC_FALSE;
-
 			device = ALC.alcOpenDevice(deviceArguments);
 			if (device == null)
 				throw new LWJGLException("Could not open ALC device");
 
-			if (AL.contextFrequency == -1) {
+			if (contextFrequency == -1) {
 				context = ALC.alcCreateContext(device.device, null);
 			} else {
 				context = ALC.alcCreateContext(device.device,
-						ALCcontext.createAttributeList(AL.contextFrequency, AL.contextRefresh, AL.contextSynchronized));
+						ALCcontext.createAttributeList(contextFrequency, contextRefresh, 
+							contextSynchronized ? ALC.ALC_TRUE : ALC.ALC_FALSE));
 			}
 			ALC.alcMakeContextCurrent(context.context);
 		} catch (LWJGLException e) {
@@ -175,12 +151,6 @@ public final class AL {
 		resetNativeStubs(AL10.class);
 		resetNativeStubs(ALC.class);
 
-		deviceArguments = null;
-
-		contextFrequency = -1;
-		contextRefresh = -1;
-		contextSynchronized = ALC.ALC_FALSE;
-		
 		if (created)
 			nDestroy();
 		created = false;
