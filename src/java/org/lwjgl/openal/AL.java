@@ -92,9 +92,8 @@ public final class AL {
 	public static void create(String deviceArguments, int contextFrequency, int contextRefresh, boolean contextSynchronized)
 		throws LWJGLException {
 			
-		if (created) {
-			return;
-		}
+		if (created)
+			throw new IllegalStateException("Only one OpenAL context may be instantiated at any one time.");
 		String[] oalPaths = LWJGLUtil.getLibraryPaths(new String[]{
                                                   "lwjglaudio", "lwjglaudio.dll",
                                                   "openal", "libopenal.so",
