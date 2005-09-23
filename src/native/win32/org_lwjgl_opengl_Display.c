@@ -362,10 +362,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setGammaRamp(JNIEnv *e
 	setGammaRamp(env, gamma_buffer);
 }
 
-JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Win32Display_getAdapter(JNIEnv *env, jobject self) {
-	return getAdapter(env);
-}
-
 JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Win32Display_getVersion(JNIEnv *env, jobject self) {
 	return getVersion(env);
 }

@@ -333,19 +333,6 @@ static char * getDriver() {
 	return szDriverValue;
 }
 
-jstring getAdapter(JNIEnv * env)
-{
-
-	jstring ret = NULL;
-	char *driver = getDriver();
-	if (driver == NULL) {
-		return NULL;
-	}
-	ret = NewStringNative(env, driver);
-	return ret;
-}
-
-
 
 jstring getVersion(JNIEnv * env)
 {

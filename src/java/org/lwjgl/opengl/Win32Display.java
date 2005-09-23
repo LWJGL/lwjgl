@@ -59,7 +59,26 @@ final class Win32Display implements DisplayImplementation {
 	public native void resetDisplayMode();
 	public native int getGammaRampLength();
 	public native void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLException;
-	public native String getAdapter();
+	public String getAdapter() {
+		try {
+			String adapter_string = Win32Registry.queryRegistrationKey(
+					Win32Registry.HKEY_LOCAL_MACHINE,
+					"HARDWARE\\DeviceMap\\Video",
+					"\\Device\\Video0");
+			String root_key = "\\registry\\machine\\";
+			if (adapter_string.toLowerCase().startsWith(root_key)) {
+				String driver_value = Win32Registry.queryRegistrationKey(
+						Win32Registry.HKEY_LOCAL_MACHINE,
+						adapter_string.substring(root_key.length()),
+						"InstalledDisplayDrivers");
+				return driver_value;
+			}
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Exception occurred while querying registry: " + e);
+		}
+		return null;
+	}
+	
 	public native String getVersion();
 	public native DisplayMode init() throws LWJGLException;
 	public native void setTitle(String title);

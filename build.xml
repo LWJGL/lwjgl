@@ -353,6 +353,7 @@
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/win32" force="yes">
 			<class name="org.lwjgl.opengl.Win32PbufferPeerInfo" />
 			<class name="org.lwjgl.opengl.Win32Display" />
+			<class name="org.lwjgl.opengl.Win32Registry" />
 			<class name="org.lwjgl.NativeSysImplementation" />
 			<class name="org.lwjgl.opengl.Win32AWTGLCanvasPeerInfo" />
 			<class name="org.lwjgl.opengl.Win32PeerInfo" />
