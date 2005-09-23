@@ -362,8 +362,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setGammaRamp(JNIEnv *e
 	setGammaRamp(env, gamma_buffer);
 }
 
-JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Win32Display_getVersion(JNIEnv *env, jobject self) {
-	return getVersion(env);
+JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Win32Display_nGetVersion(JNIEnv *env, jobject self, jstring driver) {
+	char *driver_str;
+	jstring result;
+	driver_str = GetStringNativeChars(env, driver);
+	if (driver_str == NULL)
+		return NULL;
+	result = getVersion(env, driver_str);
+	free(driver_str);
+	return result;
 }
 
 JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32Display_init(JNIEnv *env, jobject self) {

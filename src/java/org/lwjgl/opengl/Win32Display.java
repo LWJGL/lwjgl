@@ -79,7 +79,10 @@ final class Win32Display implements DisplayImplementation {
 		return null;
 	}
 	
-	public native String getVersion();
+	public String getVersion() {
+		return nGetVersion(getAdapter());
+	}
+	private native String nGetVersion(String driver);
 	public native DisplayMode init() throws LWJGLException;
 	public native void setTitle(String title);
 	public native boolean isCloseRequested();

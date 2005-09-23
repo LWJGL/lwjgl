@@ -52,6 +52,6 @@ extern int getGammaRampLength(void);
 extern void setGammaRamp(JNIEnv * env, jobject gammaRampBuffer);
 extern jobject initDisplay(JNIEnv * env);
 extern jstring getAdapter(JNIEnv * env);
-extern jstring getVersion(JNIEnv * env);
+extern jstring getVersion(JNIEnv * env, char *driver);
 
 #endif

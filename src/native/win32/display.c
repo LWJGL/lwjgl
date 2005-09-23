@@ -276,65 +276,7 @@ void restoreDisplayMode(void) {
 	}
 }
 
-static char * getDriver() {
-	#define MY_BUFSIZE 256
-
-	HKEY hKey;
-	static TCHAR szAdapterKey[MY_BUFSIZE], szDriverValue[MY_BUFSIZE];
-	DWORD dwBufLen = MY_BUFSIZE;
-	LONG lRet;
-
-	if(RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-		TEXT("HARDWARE\\DeviceMap\\Video"),
-					0,
-					KEY_QUERY_VALUE,
-					&hKey) != ERROR_SUCCESS) return NULL;
-
-	lRet = RegQueryValueEx(hKey,
-					TEXT("\\Device\\Video0"),
-					NULL,
-					NULL,
-					(LPBYTE)szAdapterKey,
-					&dwBufLen);
-
-	RegCloseKey(hKey);
-
-	if(lRet != ERROR_SUCCESS) return NULL;
-
-	printfDebug("Adapter key: %s\n", szAdapterKey);
-
-	// szAdapterKey now contains something like \Registry\Machine\System\CurrentControlSet\Control\Video\{B70DBD2A-90C4-41CF-A58E-F3BA69F1A6BC}\0000
-	// We'll check for the first chunk:
-	if (strnicmp("\\Registry\\Machine", szAdapterKey, 17) == 0) {
-		// Yes, it's right, so let's look for that key now
-
-		TCHAR szDriverKey[MY_BUFSIZE];
-		strcpy(szDriverKey, &szAdapterKey[18]);
-
-		if(RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-			TEXT(szDriverKey),
-						0,
-						KEY_QUERY_VALUE,
-						&hKey) != ERROR_SUCCESS) return NULL;
-
-		lRet = RegQueryValueEx(hKey,
-						TEXT("InstalledDisplayDrivers"),
-						NULL,
-						NULL,
-						(LPBYTE)szDriverValue,
-						&dwBufLen);
-
-		RegCloseKey(hKey);
-
-	}
-
-	if(lRet != ERROR_SUCCESS) return NULL;
-
-	return szDriverValue;
-}
-
-
-jstring getVersion(JNIEnv * env)
+jstring getVersion(JNIEnv * env, char *driver)
 {
 	jstring ret = NULL;
 
@@ -343,7 +285,6 @@ jstring getVersion(JNIEnv * env)
         DWORD dwInfoSize;
         LPVOID lpInfoBuff;
         BOOL bRetval;
-        char *driver = getDriver();
 
 	if (driver == NULL) {
 		return NULL;
