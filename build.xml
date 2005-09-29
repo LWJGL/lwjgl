@@ -433,9 +433,8 @@
 		</apply>
 	</target>
 
-	<target name="generate-opengl" depends="generators" description="Generates java and native source for GL">
+	<target name="-generate-opengl-from-template" depends="generators" description="Generates java and native source for a GL function set">
 		<!-- there's no apt task in ant yet, so we'll just invoke it manually for now -->
-		<!-- Generate core GL -->
 		<apply executable="apt" parallel="true">
 			<arg value="-nocompile"/>
 			<arg value="-factory"/>
@@ -448,113 +447,35 @@
 			<arg path="${lwjgl.src.headers}"/>
 			<arg value="-Acontextspecific"/>
 			<arg value="-Atypemap=org.lwjgl.util.generator.GLTypeMap"/>
-			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/GL*.java"/>
+			<fileset dir="${lwjgl.src.templates}" includes="${template-pattern}"/>
 		</apply>
-		<!-- Generate ARB -->
-		<apply executable="apt" parallel="true">
-			<arg value="-nocompile"/>
-			<arg value="-factory"/>
-			<arg value="org.lwjgl.util.generator.GeneratorProcessorFactory"/>
-			<arg value="-cp"/>
-			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<arg value="-s"/>
-			<arg path="${lwjgl.src}/java"/>
-			<arg value="-d"/>
-			<arg path="${lwjgl.src.headers}/arb"/>
-			<arg value="-Acontextspecific"/>
-			<arg value="-Atypemap=org.lwjgl.util.generator.GLTypeMap"/>
-			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/ARB*.java"/>
-		</apply>
-		<!-- Generate ATI -->
-		<apply executable="apt" parallel="true">
-			<arg value="-nocompile"/>
-			<arg value="-factory"/>
-			<arg value="org.lwjgl.util.generator.GeneratorProcessorFactory"/>
-			<arg value="-cp"/>
-			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<arg value="-s"/>
-			<arg path="${lwjgl.src}/java"/>
-			<arg value="-d"/>
-			<arg path="${lwjgl.src.headers}/ati"/>
-			<arg value="-Acontextspecific"/>
-			<arg value="-Atypemap=org.lwjgl.util.generator.GLTypeMap"/>
-			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/ATI*.java"/>
-		</apply>
-		<!-- Generate EXT -->
-		<apply executable="apt" parallel="true">
-			<arg value="-nocompile"/>
-			<arg value="-factory"/>
-			<arg value="org.lwjgl.util.generator.GeneratorProcessorFactory"/>
-			<arg value="-cp"/>
-			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<arg value="-s"/>
-			<arg path="${lwjgl.src}/java"/>
-			<arg value="-d"/>
-			<arg path="${lwjgl.src.headers}/ext"/>
-			<arg value="-Acontextspecific"/>
-			<arg value="-Atypemap=org.lwjgl.util.generator.GLTypeMap"/>
-			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/EXT*.java"/>
-		</apply>
-		<!-- Generate NV -->
-		<apply executable="apt" parallel="true">
-			<arg value="-nocompile"/>
-			<arg value="-factory"/>
-			<arg value="org.lwjgl.util.generator.GeneratorProcessorFactory"/>
-			<arg value="-cp"/>
-			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<arg value="-s"/>
-			<arg path="${lwjgl.src}/java"/>
-			<arg value="-d"/>
-			<arg path="${lwjgl.src.headers}/nv"/>
-			<arg value="-Acontextspecific"/>
-			<arg value="-Atypemap=org.lwjgl.util.generator.GLTypeMap"/>
-			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/NV*.java"/>
-		</apply>
-		<!-- Generate HP -->
-		<apply executable="apt" parallel="true">
-			<arg value="-nocompile"/>
-			<arg value="-factory"/>
-			<arg value="org.lwjgl.util.generator.GeneratorProcessorFactory"/>
-			<arg value="-cp"/>
-			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<arg value="-s"/>
-			<arg path="${lwjgl.src}/java"/>
-			<arg value="-d"/>
-			<arg path="${lwjgl.src.headers}/hp"/>
-			<arg value="-Acontextspecific"/>
-			<arg value="-Atypemap=org.lwjgl.util.generator.GLTypeMap"/>
-			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/HP*.java"/>
-		</apply>
-		<!-- Generate IBM -->
-		<apply executable="apt" parallel="true">
-			<arg value="-nocompile"/>
-			<arg value="-factory"/>
-			<arg value="org.lwjgl.util.generator.GeneratorProcessorFactory"/>
-			<arg value="-cp"/>
-			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<arg value="-s"/>
-			<arg path="${lwjgl.src}/java"/>
-			<arg value="-d"/>
-			<arg path="${lwjgl.src.headers}/ibm"/>
-			<arg value="-Acontextspecific"/>
-			<arg value="-Atypemap=org.lwjgl.util.generator.GLTypeMap"/>
-			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/IBM*.java"/>
-		</apply>
-		<!-- Generate SUN -->
-		<apply executable="apt" parallel="true">
-			<arg value="-nocompile"/>
-			<arg value="-factory"/>
-			<arg value="org.lwjgl.util.generator.GeneratorProcessorFactory"/>
-			<arg value="-cp"/>
-			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<arg value="-s"/>
-			<arg path="${lwjgl.src}/java"/>
-			<arg value="-d"/>
-			<arg path="${lwjgl.src.headers}/sun"/>
-			<arg value="-Acontextspecific"/>
-			<arg value="-Atypemap=org.lwjgl.util.generator.GLTypeMap"/>
-			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/SUN*.java"/>
-		</apply>
+	</target>
+
+	<target name="generate-opengl" depends="generators" description="Generates java and native source for GL">
+		<antcall target="-generate-opengl-from-template">
+			<param name="template-pattern" value="org/lwjgl/opengl/GL*.java"/>
+		</antcall>
+		<antcall target="-generate-opengl-from-template">
+			<param name="template-pattern" value="org/lwjgl/opengl/ARB*.java"/>
+		</antcall>
+		<antcall target="-generate-opengl-from-template">
+			<param name="template-pattern" value="org/lwjgl/opengl/ATI*.java"/>
+		</antcall>
+		<antcall target="-generate-opengl-from-template">
+			<param name="template-pattern" value="org/lwjgl/opengl/EXT*.java"/>
+		</antcall>
+		<antcall target="-generate-opengl-from-template">
+			<param name="template-pattern" value="org/lwjgl/opengl/NV*.java"/>
+		</antcall>
+		<antcall target="-generate-opengl-from-template">
+			<param name="template-pattern" value="org/lwjgl/opengl/HP*.java"/>
+		</antcall>
+		<antcall target="-generate-opengl-from-template">
+			<param name="template-pattern" value="org/lwjgl/opengl/IBM*.java"/>
+		</antcall>
+		<antcall target="-generate-opengl-from-template">
+			<param name="template-pattern" value="org/lwjgl/opengl/SUN*.java"/>
+		</antcall>
 	</target>
 
 	<target name="generate-opengl-references" depends="generators" description="Generates java and native source for GL">
