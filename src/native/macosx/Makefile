@@ -4,7 +4,7 @@ STRIP=strip
 CFLAGS_LINK=-dynamiclib -Wall
 FRAMEWORKS=-framework Foundation -framework AppKit -framework JavaVM -framework Carbon
 CFLAGS_O=-fPIC -O2 -D_MACOSX -Wall -c -I${AL}/include -I../common -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers
-SRC=$(wildcard *.m) $(wildcard *.c) $(wildcard ../common/*.c) $(wildcard ../common/arb/*.c) $(wildcard ../common/ati/*.c) $(wildcard ../common/ext/*.c) $(wildcard ../common/nv/*.c)
+SRC=$(wildcard *.m) $(wildcard *.c) $(wildcard ../common/*.c) $(wildcard ../generated/*.c)
 OBJECTS=$(subst .m,.o, $(subst .c,.o,$(SRC)))
 LIBRARY=liblwjgl.jnilib
 

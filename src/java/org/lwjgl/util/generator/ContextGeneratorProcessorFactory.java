@@ -105,7 +105,7 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 		}
 
 		private void generateContextCapabilitiesSource(boolean context_specific) throws IOException {
-			PrintWriter writer = env.getFiler().createSourceFile("org.lwjgl.opengl." + Utils.CONTEXT_CAPS_CLASS_NAME);
+			PrintWriter writer = env.getFiler().createTextFile(Filer.Location.SOURCE_TREE, "org.lwjgl.opengl", new File(Utils.CONTEXT_CAPS_CLASS_NAME + ".java"), null);
 			writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
 			writer.println();
 			writer.println("package org.lwjgl.opengl;");

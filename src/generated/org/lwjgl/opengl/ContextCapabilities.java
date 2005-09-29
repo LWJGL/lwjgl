@@ -69,6 +69,7 @@ public class ContextCapabilities {
 	public final boolean GL_EXT_fog_coord;
 	public final boolean GL_EXT_framebuffer_object;
 	public final boolean GL_EXT_multi_draw_arrays;
+	public final boolean GL_EXT_packed_depth_stencil;
 	public final boolean GL_EXT_packed_pixels;
 	public final boolean GL_EXT_paletted_texture;
 	public final boolean GL_EXT_pixel_buffer_object;
@@ -78,6 +79,7 @@ public class ContextCapabilities {
 	public final boolean GL_EXT_separate_specular_color;
 	public final boolean GL_EXT_shadow_funcs;
 	public final boolean GL_EXT_shared_texture_palette;
+	public final boolean GL_EXT_stencil_clear_tag;
 	public final boolean GL_EXT_stencil_two_side;
 	public final boolean GL_EXT_stencil_wrap;
 	public final boolean GL_EXT_texture_3d;
@@ -88,6 +90,7 @@ public class ContextCapabilities {
 	public final boolean GL_EXT_texture_lod_bias;
 	public final boolean GL_EXT_texture_mirror_clamp;
 	public final boolean GL_EXT_texture_rectangle;
+	public final boolean GL_EXT_texture_sRGB;
 	public final boolean GL_EXT_vertex_shader;
 	public final boolean GL_EXT_vertex_weighting;
 	public final boolean OpenGL11;
@@ -402,6 +405,7 @@ public class ContextCapabilities {
 	long EXT_secondary_color_glSecondaryColor3fEXT_pointer;
 	long EXT_secondary_color_glSecondaryColor3ubEXT_pointer;
 	long EXT_secondary_color_glSecondaryColorPointerEXT_pointer;
+	long EXT_stencil_clear_tag_glStencilClearTagEXT_pointer;
 	long EXT_stencil_two_side_glActiveStencilFaceEXT_pointer;
 	long EXT_vertex_shader_glBeginVertexShaderEXT_pointer;
 	long EXT_vertex_shader_glEndVertexShaderEXT_pointer;
@@ -1297,6 +1301,11 @@ public class ContextCapabilities {
 			(EXT_secondary_color_glSecondaryColorPointerEXT_pointer = GLContext.getFunctionAddress("glSecondaryColorPointerEXT")) != 0;
 	}
 
+	private boolean EXT_stencil_clear_tag_initNativeFunctionAddresses() {
+		return 
+			(EXT_stencil_clear_tag_glStencilClearTagEXT_pointer = GLContext.getFunctionAddress("glStencilClearTagEXT")) != 0;
+	}
+
 	private boolean EXT_stencil_two_side_initNativeFunctionAddresses() {
 		return 
 			(EXT_stencil_two_side_glActiveStencilFaceEXT_pointer = GLContext.getFunctionAddress("glActiveStencilFaceEXT")) != 0;
@@ -1945,6 +1954,8 @@ public class ContextCapabilities {
 			supported_extensions.remove("GL_EXT_point_parameters");
 		if (supported_extensions.contains("GL_EXT_secondary_color") && !EXT_secondary_color_initNativeFunctionAddresses())
 			supported_extensions.remove("GL_EXT_secondary_color");
+		if (supported_extensions.contains("GL_EXT_stencil_clear_tag") && !EXT_stencil_clear_tag_initNativeFunctionAddresses())
+			supported_extensions.remove("GL_EXT_stencil_clear_tag");
 		if (supported_extensions.contains("GL_EXT_stencil_two_side") && !EXT_stencil_two_side_initNativeFunctionAddresses())
 			supported_extensions.remove("GL_EXT_stencil_two_side");
 		if (supported_extensions.contains("GL_EXT_vertex_shader") && !EXT_vertex_shader_initNativeFunctionAddresses())
@@ -2061,6 +2072,7 @@ public class ContextCapabilities {
 		this.GL_EXT_fog_coord = supported_extensions.contains("GL_EXT_fog_coord");
 		this.GL_EXT_framebuffer_object = supported_extensions.contains("GL_EXT_framebuffer_object");
 		this.GL_EXT_multi_draw_arrays = supported_extensions.contains("GL_EXT_multi_draw_arrays");
+		this.GL_EXT_packed_depth_stencil = supported_extensions.contains("GL_EXT_packed_depth_stencil");
 		this.GL_EXT_packed_pixels = supported_extensions.contains("GL_EXT_packed_pixels");
 		this.GL_EXT_paletted_texture = supported_extensions.contains("GL_EXT_paletted_texture");
 		this.GL_EXT_pixel_buffer_object = supported_extensions.contains("GL_EXT_pixel_buffer_object")
@@ -2071,6 +2083,7 @@ public class ContextCapabilities {
 		this.GL_EXT_separate_specular_color = supported_extensions.contains("GL_EXT_separate_specular_color");
 		this.GL_EXT_shadow_funcs = supported_extensions.contains("GL_EXT_shadow_funcs");
 		this.GL_EXT_shared_texture_palette = supported_extensions.contains("GL_EXT_shared_texture_palette");
+		this.GL_EXT_stencil_clear_tag = supported_extensions.contains("GL_EXT_stencil_clear_tag");
 		this.GL_EXT_stencil_two_side = supported_extensions.contains("GL_EXT_stencil_two_side");
 		this.GL_EXT_stencil_wrap = supported_extensions.contains("GL_EXT_stencil_wrap");
 		this.GL_EXT_texture_3d = supported_extensions.contains("GL_EXT_texture_3d");
@@ -2081,6 +2094,7 @@ public class ContextCapabilities {
 		this.GL_EXT_texture_lod_bias = supported_extensions.contains("GL_EXT_texture_lod_bias");
 		this.GL_EXT_texture_mirror_clamp = supported_extensions.contains("GL_EXT_texture_mirror_clamp");
 		this.GL_EXT_texture_rectangle = supported_extensions.contains("GL_EXT_texture_rectangle");
+		this.GL_EXT_texture_sRGB = supported_extensions.contains("GL_EXT_texture_sRGB");
 		this.GL_EXT_vertex_shader = supported_extensions.contains("GL_EXT_vertex_shader");
 		this.GL_EXT_vertex_weighting = supported_extensions.contains("GL_EXT_vertex_weighting");
 		this.OpenGL11 = supported_extensions.contains("OpenGL11");

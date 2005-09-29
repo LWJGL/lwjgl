@@ -26,10 +26,7 @@ rem set LIBS=Kernel32.lib dinput.lib dxguid.lib OpenGL32.Lib Version.lib user32.
 
 for %%x in (..\..\src\native\win32\*.c) do cl %COPTIONS% %%x
 for %%x in (..\..\src\native\common\*.c) do cl %COPTIONS% %%x
-for %%x in (..\..\src\native\common\arb\*.c) do cl %COPTIONS% %%x
-for %%x in (..\..\src\native\common\nv\*.c) do cl %COPTIONS% %%x
-for %%x in (..\..\src\native\common\ext\*.c) do cl %COPTIONS% %%x
-for %%x in (..\..\src\native\common\ati\*.c) do cl %COPTIONS% %%x
+for %%x in (..\..\src\native\generated\*.c) do cl %COPTIONS% %%x
 
 cl /LD /Felwjgl.dll *.obj %LINKEROPTS% %LIBS%
 

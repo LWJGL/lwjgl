@@ -173,6 +173,11 @@
 		<mkdir dir="${lwjgl.temp}/native" taskname="initialiazing temp folder" />
 	</target>
 
+	<target name="clean-generated" description="Deletes the generated java and native source">
+		<delete dir="${lwjgl.src}/generated" quiet="true" failonerror="false" taskname="cleaning java source"/>
+		<delete dir="${lwjgl.src.native}/generated" quiet="true" failonerror="false" taskname="cleaning native source"/>
+	</target>
+	
 	<!-- Cleans up any files created during the execution of this script -->
 	<target name="clean" description="Cleans the diectories controlled by this ant script">
 		<delete dir="${lwjgl.temp}" quiet="true" failonerror="false" taskname="cleaning temp folder" />
@@ -327,10 +332,14 @@
 	
 	<!-- Compiles the Java source code -->
 	<target name="compile" description="Compiles the java source code">
-		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/*.java" source="1.4" target="1.4" classpath="${lwjgl.lib}/jinput.jar" taskname="lwjgl" />
-		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/input/**" source="1.4" target="1.4" taskname="input" />
-		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/openal/**" source="1.4" target="1.4" taskname="openal" />
-		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/opengl/**" source="1.4" target="1.4" taskname="opengl" />
+		<javac debug="yes" destdir="${lwjgl.bin}" includes="org/lwjgl/opengl/**" source="1.4" target="1.4" classpath="${lwjgl.lib}/jinput.jar" taskname="core">
+			<src path="${lwjgl.src}/java/"/>
+			<src path="${lwjgl.src}/generated/"/>
+			<include name="org/lwjgl/*.java"/>
+			<include name="org/lwjgl/input/**"/>
+			<include name="org/lwjgl/opengl/**"/>
+			<include name="org/lwjgl/openal/**"/>
+		</javac>
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/test/**" source="1.4" target="1.4" taskname="test" />
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/examples/**" source="1.4" target="1.4" taskname="examples" />
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/util/**" excludes="org/lwjgl/util/generator/**" source="1.4" target="1.4" taskname="util" />
@@ -424,9 +433,9 @@
 			<arg value="-cp"/>
 			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
 			<arg value="-s"/>
-			<arg path="${lwjgl.src}/java"/>
+			<arg path="${lwjgl.src}/generated"/>
 			<arg value="-d"/>
-			<arg path="${lwjgl.src.headers}"/>
+			<arg path="${lwjgl.src.native}/generated"/>
 			<arg value="-Atypemap=org.lwjgl.util.generator.ALTypeMap"/>
 			<arg value="-Ageneratechecks"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/openal/AL10.java"/>
@@ -442,9 +451,9 @@
 			<arg value="-cp"/>
 			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
 			<arg value="-s"/>
-			<arg path="${lwjgl.src}/java"/>
+			<arg path="${lwjgl.src}/generated"/>
 			<arg value="-d"/>
-			<arg path="${lwjgl.src.headers}"/>
+			<arg path="${lwjgl.src.native}/generated"/>
 			<arg value="-Acontextspecific"/>
 			<arg value="-Atypemap=org.lwjgl.util.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="${template-pattern}"/>
@@ -487,7 +496,7 @@
 			<arg value="-cp"/>
 			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
 			<arg value="-s"/>
-			<arg path="${lwjgl.src}/java"/>
+			<arg path="${lwjgl.src}/generated"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/*.java"/>
 		</apply>
 	</target>
@@ -501,7 +510,7 @@
 			<arg value="-cp"/>
 			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
 			<arg value="-s"/>
-			<arg path="${lwjgl.src}/java"/>
+			<arg path="${lwjgl.src}/generated"/>
 			<arg value="-Acontextspecific"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/*.java"/>
 		</apply>
