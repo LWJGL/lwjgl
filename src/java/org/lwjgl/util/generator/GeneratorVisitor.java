@@ -164,7 +164,6 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 
 	private void generateJavaSource(InterfaceDeclaration d) throws IOException {
 		validateMethods(d);
-//		PrintWriter java_writer = env.getFiler().createSourceFile(Utils.getQualifiedClassName(d));
 		PrintWriter java_writer = env.getFiler().createTextFile(Filer.Location.SOURCE_TREE, d.getPackage().getQualifiedName(), new File(Utils.getSimpleClassName(d) + ".java"), null);
 		java_writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
 		java_writer.println();

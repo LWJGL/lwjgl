@@ -33,8 +33,15 @@ files are still in CVS and the generator is not invoked in a default build.
 
 How to use it
 -------------
-The generator is invoked from ant with 'ant generate-openal', 'ant
-generate-opengl' or simply 'ant generate-all'.
+The generator is invoked from ant with 'ant generate-all'.
+
+If you want to do a stripped version of LWJGL including only a select subset
+of extensions and core function sets, use the "opengl-template-pattern"
+ant property. For example, this will only create source files for the core
+OpenGL functions:
+
+ant -Dopengl-template-pattern="org/lwjgl/opengl/GL*.java" clean-generated
+generate-all
 
 How it works
 ------------

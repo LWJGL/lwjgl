@@ -15,6 +15,7 @@
 	<property name="lwjgl.res" 						value="./res" />
 	<property name="lwjgl.version" 				value="0.98" />
 
+	<property name="opengl-template-pattern" value="org/lwjgl/opengl/GL*.java,org/lwjgl/opengl/ARB*.java,org/lwjgl/opengl/ATI*.java,org/lwjgl/opengl/EXT*.java,org/lwjgl/opengl/NV*.java,org/lwjgl/opengl/HP*.java,org/lwjgl/opengl/IBM*.java,org/lwjgl/opengl/SUN*.java"/>
 	<!-- ================================================================== -->
 	<!-- Filesets used for targets 																					-->
 	<!-- ================================================================== -->
@@ -442,7 +443,7 @@
 		</apply>
 	</target>
 
-	<target name="-generate-opengl-from-template" depends="generators" description="Generates java and native source for a GL function set">
+	<target name="generate-opengl" depends="generators" description="Generates java and native source for GL">
 		<!-- there's no apt task in ant yet, so we'll just invoke it manually for now -->
 		<apply executable="apt" parallel="true">
 			<arg value="-nocompile"/>
@@ -456,35 +457,8 @@
 			<arg path="${lwjgl.src.native}/generated"/>
 			<arg value="-Acontextspecific"/>
 			<arg value="-Atypemap=org.lwjgl.util.generator.GLTypeMap"/>
-			<fileset dir="${lwjgl.src.templates}" includes="${template-pattern}"/>
+			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>
 		</apply>
-	</target>
-
-	<target name="generate-opengl" depends="generators" description="Generates java and native source for GL">
-		<antcall target="-generate-opengl-from-template">
-			<param name="template-pattern" value="org/lwjgl/opengl/GL*.java"/>
-		</antcall>
-		<antcall target="-generate-opengl-from-template">
-			<param name="template-pattern" value="org/lwjgl/opengl/ARB*.java"/>
-		</antcall>
-		<antcall target="-generate-opengl-from-template">
-			<param name="template-pattern" value="org/lwjgl/opengl/ATI*.java"/>
-		</antcall>
-		<antcall target="-generate-opengl-from-template">
-			<param name="template-pattern" value="org/lwjgl/opengl/EXT*.java"/>
-		</antcall>
-		<antcall target="-generate-opengl-from-template">
-			<param name="template-pattern" value="org/lwjgl/opengl/NV*.java"/>
-		</antcall>
-		<antcall target="-generate-opengl-from-template">
-			<param name="template-pattern" value="org/lwjgl/opengl/HP*.java"/>
-		</antcall>
-		<antcall target="-generate-opengl-from-template">
-			<param name="template-pattern" value="org/lwjgl/opengl/IBM*.java"/>
-		</antcall>
-		<antcall target="-generate-opengl-from-template">
-			<param name="template-pattern" value="org/lwjgl/opengl/SUN*.java"/>
-		</antcall>
 	</target>
 
 	<target name="generate-opengl-references" depends="generators" description="Generates java and native source for GL">
@@ -497,7 +471,7 @@
 			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
 			<arg value="-s"/>
 			<arg path="${lwjgl.src}/generated"/>
-			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/*.java"/>
+			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>
 		</apply>
 	</target>
 	
@@ -512,7 +486,7 @@
 			<arg value="-s"/>
 			<arg path="${lwjgl.src}/generated"/>
 			<arg value="-Acontextspecific"/>
-			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/*.java"/>
+			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>
 		</apply>
 	</target>
 
