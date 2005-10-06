@@ -909,6 +909,7 @@ public interface GL11 {
 			@GLbyte
 			@GLshort
 			@GLint
+			@GLfloat
 			Buffer pixels);
 
 	@StripPostfix("params")
