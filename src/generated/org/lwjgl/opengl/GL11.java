@@ -1900,6 +1900,13 @@ public final class GL11 {
 		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		nglReadPixels(x, y, width, height, format, type, pixels, pixels.position(), function_pointer);
 	}
+	public static void glReadPixels(int x, int y, int width, int height, int format, int type, FloatBuffer pixels) {
+		long function_pointer = GLContext.getCapabilities().GL11_glReadPixels_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, height, 1));
+		nglReadPixels(x, y, width, height, format, type, pixels, pixels.position() << 2, function_pointer);
+	}
 	public static void glReadPixels(int x, int y, int width, int height, int format, int type, IntBuffer pixels) {
 		long function_pointer = GLContext.getCapabilities().GL11_glReadPixels_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);

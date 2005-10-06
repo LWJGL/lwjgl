@@ -1031,6 +1031,7 @@ public interface GL11 {
 			@GLbyte
 			@GLshort
 			@GLint
+			@GLfloat
 			Buffer pixels);
 
 	void glReadBuffer(@GLenum int mode);
