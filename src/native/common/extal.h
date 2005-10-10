@@ -37,27 +37,14 @@
 #include <windows.h>
 #endif
 
-#ifdef _X11
-#include <AL/altypes.h>
-#include <AL/alctypes.h>
-#endif
-#ifdef _WIN32
-#include <altypes.h>
-#include <alctypes.h>
-#endif
-#ifdef _MACOSX
-#include <AL/alctypes.h>
-#include <AL/altypes.h>
-#endif
-
 #include <jni.h>
 #include "common_tools.h"
-
-void extal_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions);
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+void extal_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions);
 
 #if defined(_WIN32)
  #ifdef _OPENAL32LIB
@@ -65,9 +52,6 @@ extern "C" {
  #else
   #define ALCAPI __declspec(dllimport)
  #endif
-
- typedef struct ALCdevice_struct ALCdevice;
- typedef struct ALCcontext_struct ALCcontext;
 
  #define ALCAPIENTRY __cdecl
 #else
@@ -92,6 +76,89 @@ extern "C" {
 
 #define INITGUID
 #define OPENAL
+
+// ALC typedefs
+typedef struct ALCdevice_struct ALCdevice;
+typedef struct ALCcontext_struct ALCcontext;
+/** 8-bit boolean */
+typedef char ALCboolean;
+
+/** character */
+typedef char ALCchar;
+
+/** signed 8-bit 2's complement integer */
+typedef char ALCbyte;
+
+/** unsigned 8-bit integer */
+typedef unsigned char ALCubyte;
+
+/** signed 16-bit 2's complement integer */
+typedef short ALCshort;
+
+/** unsigned 16-bit integer */
+typedef unsigned short ALCushort;
+
+/** signed 32-bit 2's complement integer */
+typedef int ALCint;
+
+/** unsigned 32-bit integer */
+typedef unsigned int ALCuint;
+
+/** non-negative 32-bit binary integer size */
+typedef int ALCsizei;
+
+/** enumerated 32-bit value */
+typedef int ALCenum;
+
+/** 32-bit IEEE754 floating-point */
+typedef float ALCfloat;
+
+/** 64-bit IEEE754 floating-point */
+typedef double ALCdouble;
+
+/** void type (for opaque pointers only) */
+typedef void ALCvoid;
+
+// AL typedefs
+/** 8-bit boolean */
+typedef char ALboolean;
+
+/** character */
+typedef char ALchar;
+
+/** signed 8-bit 2's complement integer */
+typedef char ALbyte;
+
+/** unsigned 8-bit integer */
+typedef unsigned char ALubyte;
+
+/** signed 16-bit 2's complement integer */
+typedef short ALshort;
+
+/** unsigned 16-bit integer */
+typedef unsigned short ALushort;
+
+/** signed 32-bit 2's complement integer */
+typedef int ALint;
+
+/** unsigned 32-bit integer */
+typedef unsigned int ALuint;
+
+/** non-negative 32-bit binary integer size */
+typedef int ALsizei;
+
+/** enumerated 32-bit value */
+typedef int ALenum;
+
+/** 32-bit IEEE754 floating-point */
+typedef float ALfloat;
+
+/** 64-bit IEEE754 floating-point */
+typedef double ALdouble;
+
+/** void type (for opaque pointers only) */
+typedef void ALvoid;
+
 
 void InitializeOpenAL(JNIEnv *env, jobjectArray oalPaths);
 void DeInitializeOpenAL();
