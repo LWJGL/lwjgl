@@ -136,10 +136,7 @@
 	
 	<uptodate property="lwjgl.main.built" targetfile="${lwjgl.lib}/win32/lwjgl.dll" >
 	    <srcfiles dir= "${lwjgl.src.native}/common" includes="*.c*"/>
-	    <srcfiles dir= "${lwjgl.src.native}/common/arb" includes="*.c"/>
-	    <srcfiles dir= "${lwjgl.src.native}/common/nv" includes="*.c"/>
-	    <srcfiles dir= "${lwjgl.src.native}/common/ext" includes="*.c"/>
-	    <srcfiles dir= "${lwjgl.src.native}/common/ati" includes="*.c"/>
+	    <srcfiles dir= "${lwjgl.src.native}/generated" includes="*.c"/>
 	    <srcfiles dir= "${lwjgl.src.native}/win32" includes="*.cpp"/>
 	</uptodate>	
 	
