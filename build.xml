@@ -91,7 +91,7 @@
 		<include name="lwjgl-fmod3.dll" />
 		<include name="lwjgl-devil.dll" />
 
-		<include name="lwjglaudio.dll" />
+		<include name="OpenAL32.dll" />
 		<include name="DevIL.dll" />
 		<include name="ILU.dll" />
 		<include name="ILUT.dll" />
