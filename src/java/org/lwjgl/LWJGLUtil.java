@@ -120,20 +120,30 @@ public class LWJGLUtil {
 					+ File.separator + platform_lib_name);
 		}
 
-		//add cwd path
-		possible_paths.add(platform_lib_name);
-
 		// Add all possible paths from java.library.path
 		String java_library_path = (String)AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
 				return System.getProperty("java.library.path");
 			}
 		});
+		
 		StringTokenizer st = new StringTokenizer(java_library_path, File.pathSeparator);
 		while (st.hasMoreTokens()) {
 			String path = st.nextToken();
 			possible_paths.add(path + File.separator + platform_lib_name);
 		}
+
+		//add current path
+		String current_dir = (String)AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				return System.getProperty("user.dir");
+			}
+		});
+		possible_paths.add(current_dir + File.separator + platform_lib_name);
+
+		
+		//add pure library (no path, let OS search)
+		possible_paths.add(platform_lib_name);
 
 		//create needed string array
 		String[] paths = new String[possible_paths.size()];
