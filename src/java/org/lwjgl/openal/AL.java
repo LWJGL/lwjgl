@@ -95,7 +95,7 @@ public final class AL {
 		if (created)
 			throw new IllegalStateException("Only one OpenAL context may be instantiated at any one time.");
 		String[] oalPaths = LWJGLUtil.getLibraryPaths(new String[]{
-                                                  "lwjglaudio", "lwjglaudio.dll",
+                                                  "OpenAL32", "OpenAL32.dll",
                                                   "openal", "libopenal.so",
                                                   "openal", "openal.dylib"}, AL.class.getClassLoader());
 		LWJGLUtil.log("Found " + oalPaths.length + " OpenAL paths");
