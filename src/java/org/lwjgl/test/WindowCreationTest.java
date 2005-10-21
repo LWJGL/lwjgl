@@ -33,6 +33,7 @@ package org.lwjgl.test;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -75,8 +76,6 @@ public class WindowCreationTest {
 	/** Whether we're in fullscreen mode */
 	private boolean				fullscreen	= false;
 	
-	
-
 	/**
 	 * Initializes the test 
 	 * @return true if initialization was successfull
@@ -96,39 +95,10 @@ public class WindowCreationTest {
 			window_x = window_y = 100;
 			Display.setLocation(window_x, window_y);
 			
-			ByteBuffer size16 = BufferUtils.createByteBuffer(16 * 16 * 4);
-			XPMFile xpm = XPMFile.load(WindowCreationTest.class.getClassLoader().getResourceAsStream("lwjgl_16x16.xpm"));
-			size16.put(xpm.getBytes());
-			size16.flip();
-			
-			// Icon test
-//			for(int i=0; i<16; i++) {
-//				for(int j=0; j<16; j++) {
-//					size16.putInt(0xffffffff);
-//				}
-//			}
-//			size16.flip();
-
-			ByteBuffer size32 = BufferUtils.createByteBuffer(32 * 32 * 4);
-			xpm = XPMFile.load(WindowCreationTest.class.getClassLoader().getResourceAsStream("lwjgl_32x32.xpm"));
-			size32.put(xpm.getBytes());
-			size32.flip();
-			
-//			ByteBuffer size32 = BufferUtils.createByteBuffer(32 * 32 * 4);
-//			for(int i=0; i<32; i++) {
-//				for(int j=0; j<32; j++) {
-//					size32.putInt(0xff0000ff);
-//				}
-//			}		
-//			size32.flip();
-			
 			Display.create();
-			Display.setIcon(new ByteBuffer[] { size16, size32 });
 			return true;
 		} catch (LWJGLException le) {
 			le.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
 		}
 		return false;
 	}
