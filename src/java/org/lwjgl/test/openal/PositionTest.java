@@ -177,8 +177,6 @@ public class PositionTest extends BasicTest {
     // =====================================================
     LWJGLUtil.log("Setting up OpenAL");
 
-    AL.create();
-
     AL10.alListener(AL10.AL_POSITION, listenerPosition);
     AL10.alListener(AL10.AL_VELOCITY, listenerVelocity);
     AL10.alListener(AL10.AL_ORIENTATION, listenerOrientation);
