@@ -273,7 +273,9 @@ public final class Display {
 		// set cached window icon if exists
 		if(cached_icons != null) {
 			setIcon(cached_icons);
-		}		
+		} else {
+			setIcon(new ByteBuffer[] { LWJGLUtil.LWJGLIcon16x16, LWJGLUtil.LWJGLIcon32x32 });
+		}
 	}
 
 	private static void destroyWindow() {
@@ -844,11 +846,14 @@ public final class Display {
 	public static int setIcon(ByteBuffer[] icons) {
 		
 		// make deep copy so we dont rely on the supplied buffers later on
-		cached_icons = new ByteBuffer[icons.length];
-		for(int i=0;i<icons.length; i++) {
-			cached_icons[i] = BufferUtils.createByteBuffer(icons[i].capacity());
-			cached_icons[i].put(icons[i]);
-			cached_icons[i].flip();
+		// don't recache!
+		if(cached_icons != icons) {
+			cached_icons = new ByteBuffer[icons.length];
+			for(int i=0;i<icons.length; i++) {
+				cached_icons[i] = BufferUtils.createByteBuffer(icons[i].capacity());
+				cached_icons[i].put(icons[i]);
+				cached_icons[i].flip();
+			}
 		}
 		
 		if(Display.isCreated()) {
