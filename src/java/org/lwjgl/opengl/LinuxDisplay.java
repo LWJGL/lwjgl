@@ -49,16 +49,61 @@ import org.lwjgl.input.Keyboard;
 final class LinuxDisplay implements DisplayImplementation {
 	private static final int NUM_BUTTONS = 3;
 
+	/** Keep track on the current awt lock owner to avoid
+	 * depending on JAWT locking to be re-entrant (This is a
+	 * problem with GCJ). JAWT locking is not that well specified
+	 * anyway so it is probably best to avoid assuming too much
+	 * about it.
+	 */
+	private static Thread current_awt_lock_owner;
+	private static int awt_lock_count;
+	
 	private static int display_connection_usage_count = 0;
 
 	private static PeerInfo peer_info;
 
 	/* Since Xlib is not guaranteed to be thread safe, we need a way to synchronize LWJGL
-	 * Xlib calls with AWT Xlib calls. Fortunately, JAWT implements LockAWT and UnlockAWT() to
+	 * Xlib calls with AWT Xlib calls. Fortunately, JAWT implements Lock()/Unlock() to
 	 * do just that.
 	 */
-	static native void lockAWT();
-	static native void unlockAWT();
+	static synchronized void lockAWT() {
+		Thread this_thread = Thread.currentThread();
+		while (current_awt_lock_owner != null && current_awt_lock_owner != this_thread) {
+			try {
+				LinuxDisplay.class.wait();
+			} catch (InterruptedException e) {
+				LWJGLUtil.log("Interrupted while waiting for awt lock: " + e);
+			}
+		}
+		if (awt_lock_count == 0) {
+			current_awt_lock_owner = this_thread;
+			try {
+				nLockAWT();
+			} catch (LWJGLException e) {
+				LWJGLUtil.log("Caught exception while locking AWT: " + e);
+			}
+		}
+		awt_lock_count++;
+	}
+	private static native void nLockAWT() throws LWJGLException;
+	
+	static synchronized void unlockAWT() {
+		if (awt_lock_count <= 0)
+			throw new IllegalStateException("AWT not locked!");
+		if (Thread.currentThread() != current_awt_lock_owner)
+			throw new IllegalStateException("AWT already locked by " + current_awt_lock_owner);
+		awt_lock_count--;
+		if (awt_lock_count == 0) {
+			try {
+				nUnlockAWT();
+			} catch (LWJGLException e) {
+				LWJGLUtil.log("Caught exception while unlocking AWT: " + e);
+			}
+			current_awt_lock_owner = null;
+			LinuxDisplay.class.notify();
+		}
+	}
+	private static native void nUnlockAWT() throws LWJGLException;
 
 	/**
 	 * increment and decrement display usage.

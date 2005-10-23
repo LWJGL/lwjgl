@@ -124,7 +124,6 @@ static int errorHandler(Display *disp, XErrorEvent *error) {
 	return 0;
 }
 
-
 Display *getDisplay(void) {
 	return display_connection;
 }
@@ -556,21 +555,21 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsActive
 	return focused || isLegacyFullscreen() ? JNI_TRUE : JNI_FALSE;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_lockAWT(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nLockAWT(JNIEnv *env, jclass clazz) {
 	JAWT jawt;
 	jawt.version = JAWT_VERSION_1_4;
 	if (JAWT_GetAWT(env, &jawt) != JNI_TRUE) {
-		throwGeneralException(env, "java/lang/RuntimeException", "GetAWT failed");
+		throwException(env, "GetAWT failed");
 		return;
 	}
 	jawt.Lock(env);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_unlockAWT(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUnlockAWT(JNIEnv *env, jclass clazz) {
 	JAWT jawt;
 	jawt.version = JAWT_VERSION_1_4;
 	if (JAWT_GetAWT(env, &jawt) != JNI_TRUE) {
-		throwGeneralException(env, "java/lang/RuntimeException", "GetAWT failed");
+		throwException(env, "GetAWT failed");
 		return;
 	}
 	jawt.Unlock(env);
