@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 
 /**
  * $Id$
@@ -63,6 +64,7 @@ abstract class PeerInfo {
 		if (lock_count == 0) {
 			doUnlock();
 			locking_thread = null;
+			notify();
 		}
 	}
 
@@ -71,8 +73,13 @@ abstract class PeerInfo {
 
 	public synchronized final ByteBuffer lockAndGetHandle() throws LWJGLException {
 		Thread this_thread = Thread.currentThread();
-		if (locking_thread != null && locking_thread != this_thread)
-			throw new IllegalStateException("PeerInfo already locked by " + locking_thread);
+		while (locking_thread != null && locking_thread != this_thread) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				LWJGLUtil.log("Interrupted while waiting for PeerInfo lock: " + e);
+			}
+		}
 		if (lock_count == 0) {
 			locking_thread = this_thread;
 			doLockAndInitHandle();
