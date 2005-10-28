@@ -10,8 +10,8 @@ typedef void (APIENTRY *glFogCoordPointerPROC) (GLenum type, GLsizei stride, con
 typedef void (APIENTRY *glMultiDrawArraysPROC) (GLenum mode, GLint * piFirst, GLsizei * piCount, GLsizei primcount);
 typedef void (APIENTRY *glPointParameteriPROC) (GLenum pname, GLint param);
 typedef void (APIENTRY *glPointParameterfPROC) (GLenum pname, GLfloat param);
-typedef void (APIENTRY *glPointParameterivPROC) (GLenum pname, GLint * params);
-typedef void (APIENTRY *glPointParameterfvPROC) (GLenum pname, GLfloat * params);
+typedef void (APIENTRY *glPointParameterivPROC) (GLenum pname, const GLint * params);
+typedef void (APIENTRY *glPointParameterfvPROC) (GLenum pname, const GLfloat * params);
 typedef void (APIENTRY *glSecondaryColor3bPROC) (GLbyte red, GLbyte green, GLbyte blue);
 typedef void (APIENTRY *glSecondaryColor3fPROC) (GLfloat red, GLfloat green, GLfloat blue);
 typedef void (APIENTRY *glSecondaryColor3ubPROC) (GLubyte red, GLubyte green, GLubyte blue);
@@ -67,13 +67,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglPointParameterf(JNIEnv *env
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglPointParameteriv(JNIEnv *env, jclass clazz, jint pname, jobject params, jint params_position, jlong function_pointer) {
-	GLint *params_address = ((GLint *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	const GLint *params_address = ((const GLint *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
 	glPointParameterivPROC glPointParameteriv = (glPointParameterivPROC)((intptr_t)function_pointer);
 	glPointParameteriv(pname, params_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglPointParameterfv(JNIEnv *env, jclass clazz, jint pname, jobject params, jint params_position, jlong function_pointer) {
-	GLfloat *params_address = ((GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	const GLfloat *params_address = ((const GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
 	glPointParameterfvPROC glPointParameterfv = (glPointParameterfvPROC)((intptr_t)function_pointer);
 	glPointParameterfv(pname, params_address);
 }

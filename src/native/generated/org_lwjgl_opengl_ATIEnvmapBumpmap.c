@@ -3,19 +3,19 @@
 #include <jni.h>
 #include "extgl.h"
 
-typedef void (APIENTRY *glTexBumpParameterfvATIPROC) (GLenum pname, GLfloat * param);
-typedef void (APIENTRY *glTexBumpParameterivATIPROC) (GLenum pname, GLint * param);
+typedef void (APIENTRY *glTexBumpParameterfvATIPROC) (GLenum pname, const GLfloat * param);
+typedef void (APIENTRY *glTexBumpParameterivATIPROC) (GLenum pname, const GLint * param);
 typedef void (APIENTRY *glGetTexBumpParameterfvATIPROC) (GLenum pname, GLfloat * param);
 typedef void (APIENTRY *glGetTexBumpParameterivATIPROC) (GLenum pname, GLint * param);
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParameterfvATI(JNIEnv *env, jclass clazz, jint pname, jobject param, jint param_position, jlong function_pointer) {
-	GLfloat *param_address = ((GLfloat *)(*env)->GetDirectBufferAddress(env, param)) + param_position;
+	const GLfloat *param_address = ((const GLfloat *)(*env)->GetDirectBufferAddress(env, param)) + param_position;
 	glTexBumpParameterfvATIPROC glTexBumpParameterfvATI = (glTexBumpParameterfvATIPROC)((intptr_t)function_pointer);
 	glTexBumpParameterfvATI(pname, param_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParameterivATI(JNIEnv *env, jclass clazz, jint pname, jobject param, jint param_position, jlong function_pointer) {
-	GLint *param_address = ((GLint *)(*env)->GetDirectBufferAddress(env, param)) + param_position;
+	const GLint *param_address = ((const GLint *)(*env)->GetDirectBufferAddress(env, param)) + param_position;
 	glTexBumpParameterivATIPROC glTexBumpParameterivATI = (glTexBumpParameterivATIPROC)((intptr_t)function_pointer);
 	glTexBumpParameterivATI(pname, param_address);
 }

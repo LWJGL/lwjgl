@@ -54,6 +54,7 @@ public interface EXT_secondary_color {
 			@CachedReference
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
+			@Const
 			@GLbyte
 			@GLubyte
 			@GLfloat

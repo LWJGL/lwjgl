@@ -42,7 +42,7 @@ public interface ARB_transpose_matrix {
 	int GL_TRANSPOSE_COLOR_MATRIX_ARB = 0x84E6;
 
 	@StripPostfix("pfMtx")
-	void glLoadTransposeMatrixfARB(@Check("16") FloatBuffer pfMtx);
+	void glLoadTransposeMatrixfARB(@Check("16") @Const FloatBuffer pfMtx);
 	@StripPostfix("pfMtx")
-	void glMultTransposeMatrixfARB(@Check("16") FloatBuffer pfMtx);
+	void glMultTransposeMatrixfARB(@Check("16") @Const FloatBuffer pfMtx);
 }

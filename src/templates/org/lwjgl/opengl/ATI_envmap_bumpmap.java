@@ -47,9 +47,9 @@ public interface ATI_envmap_bumpmap {
 	int GL_BUMP_TARGET_ATI = 0x877C;
 
 	@StripPostfix("param")
-	void glTexBumpParameterfvATI(@GLenum int pname, @Check("4") FloatBuffer param);
+	void glTexBumpParameterfvATI(@GLenum int pname, @Check("4") @Const FloatBuffer param);
 	@StripPostfix("param")
-	void glTexBumpParameterivATI(@GLenum int pname, @Check("4") IntBuffer param);
+	void glTexBumpParameterivATI(@GLenum int pname, @Check("4") @Const IntBuffer param);
 
 	@StripPostfix("param")
 	void glGetTexBumpParameterfvATI(@GLenum int pname, @Check("4") FloatBuffer param);

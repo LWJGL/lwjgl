@@ -4,7 +4,7 @@
 #include "extgl.h"
 
 typedef void (APIENTRY *glCurrentPaletteMatrixARBPROC) (GLint index);
-typedef void (APIENTRY *glMatrixIndexPointerARBPROC) (GLint size, GLenum type, GLsizei stride, GLvoid * pPointer);
+typedef void (APIENTRY *glMatrixIndexPointerARBPROC) (GLint size, GLenum type, GLsizei stride, const GLvoid * pPointer);
 typedef void (APIENTRY *glMatrixIndexubvARBPROC) (GLint size, GLubyte * pIndices);
 typedef void (APIENTRY *glMatrixIndexusvARBPROC) (GLint size, GLushort * pIndices);
 typedef void (APIENTRY *glMatrixIndexuivARBPROC) (GLint size, GLuint * pIndices);
@@ -15,13 +15,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglCurrentPaletteM
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARB(JNIEnv *env, jclass clazz, jint size, jint type, jint stride, jobject pPointer, jint pPointer_position, jlong function_pointer) {
-	GLvoid *pPointer_address = ((GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, pPointer)) + pPointer_position));
+	const GLvoid *pPointer_address = ((const GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, pPointer)) + pPointer_position));
 	glMatrixIndexPointerARBPROC glMatrixIndexPointerARB = (glMatrixIndexPointerARBPROC)((intptr_t)function_pointer);
 	glMatrixIndexPointerARB(size, type, stride, pPointer_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARBBO(JNIEnv *env, jclass clazz, jint size, jint type, jint stride, jint pPointer_buffer_offset, jlong function_pointer) {
-	GLvoid *pPointer_address = ((GLvoid *)offsetToPointer(pPointer_buffer_offset));
+	const GLvoid *pPointer_address = ((const GLvoid *)offsetToPointer(pPointer_buffer_offset));
 	glMatrixIndexPointerARBPROC glMatrixIndexPointerARB = (glMatrixIndexPointerARBPROC)((intptr_t)function_pointer);
 	glMatrixIndexPointerARB(size, type, stride, pPointer_address);
 }

@@ -141,10 +141,10 @@ public interface ARB_imaging {
 			Buffer data);
 
 	@StripPostfix("params")
-	void glColorTableParameteriv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
+	void glColorTableParameteriv(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
 	@StripPostfix("params")
-	void glColorTableParameterfv(@GLenum int target, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glColorTableParameterfv(@GLenum int target, @GLenum int pname, @Check("4") @Const FloatBuffer params);
 
 	void glCopyColorSubTable(@GLenum int target, @GLsizei int start, int x, int y, @GLsizei int width);
 
@@ -204,6 +204,7 @@ public interface ARB_imaging {
 	void glConvolutionFilter1D(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.UnpackPBO)
 			@Check("GLChecks.calculateImageStorage(image, format, type, width, 1, 1)")
+			@Const
 			@GLbyte
 			@GLshort
 			@GLint
@@ -213,6 +214,7 @@ public interface ARB_imaging {
 	void glConvolutionFilter2D(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.UnpackPBO)
 			@Check("GLChecks.calculateImageStorage(image, format, type, width, height, 1)")
+			@Const
 			@GLbyte
 			@GLshort
 			@GLint

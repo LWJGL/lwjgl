@@ -16,16 +16,16 @@ typedef void (APIENTRY *glWriteMaskEXTPROC) (GLuint res, GLuint in, GLenum outX,
 typedef void (APIENTRY *glInsertComponentEXTPROC) (GLuint res, GLuint src, GLuint num);
 typedef void (APIENTRY *glExtractComponentEXTPROC) (GLuint res, GLuint src, GLuint num);
 typedef GLuint (APIENTRY *glGenSymbolsEXTPROC) (GLenum dataType, GLenum storageType, GLenum range, GLuint components);
-typedef void (APIENTRY *glSetInvariantEXTPROC) (GLuint id, GLenum type, GLvoid * pAddr);
-typedef void (APIENTRY *glSetLocalConstantEXTPROC) (GLuint id, GLenum type, GLvoid * pAddr);
-typedef void (APIENTRY *glVariantbvEXTPROC) (GLuint id, GLbyte * pAddr);
-typedef void (APIENTRY *glVariantsvEXTPROC) (GLuint id, GLshort * pAddr);
-typedef void (APIENTRY *glVariantivEXTPROC) (GLuint id, GLint * pAddr);
-typedef void (APIENTRY *glVariantfvEXTPROC) (GLuint id, GLfloat * pAddr);
-typedef void (APIENTRY *glVariantubvEXTPROC) (GLuint id, GLubyte * pAddr);
-typedef void (APIENTRY *glVariantusvEXTPROC) (GLuint id, GLushort * pAddr);
-typedef void (APIENTRY *glVariantuivEXTPROC) (GLuint id, GLuint * pAddr);
-typedef void (APIENTRY *glVariantPointerEXTPROC) (GLuint id, GLenum type, GLuint stride, GLvoid * pAddr);
+typedef void (APIENTRY *glSetInvariantEXTPROC) (GLuint id, GLenum type, const GLvoid * pAddr);
+typedef void (APIENTRY *glSetLocalConstantEXTPROC) (GLuint id, GLenum type, const GLvoid * pAddr);
+typedef void (APIENTRY *glVariantbvEXTPROC) (GLuint id, const GLbyte * pAddr);
+typedef void (APIENTRY *glVariantsvEXTPROC) (GLuint id, const GLshort * pAddr);
+typedef void (APIENTRY *glVariantivEXTPROC) (GLuint id, const GLint * pAddr);
+typedef void (APIENTRY *glVariantfvEXTPROC) (GLuint id, const GLfloat * pAddr);
+typedef void (APIENTRY *glVariantubvEXTPROC) (GLuint id, const GLubyte * pAddr);
+typedef void (APIENTRY *glVariantusvEXTPROC) (GLuint id, const GLushort * pAddr);
+typedef void (APIENTRY *glVariantuivEXTPROC) (GLuint id, const GLuint * pAddr);
+typedef void (APIENTRY *glVariantPointerEXTPROC) (GLuint id, GLenum type, GLuint stride, const GLvoid * pAddr);
 typedef void (APIENTRY *glEnableVariantClientStateEXTPROC) (GLuint id);
 typedef void (APIENTRY *glDisableVariantClientStateEXTPROC) (GLuint id);
 typedef GLuint (APIENTRY *glBindLightParameterEXTPROC) (GLenum light, GLenum value);
@@ -113,67 +113,67 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGenSymbolsEXT(JN
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglSetInvariantEXT(JNIEnv *env, jclass clazz, jint id, jint type, jobject pAddr, jint pAddr_position, jlong function_pointer) {
-	GLvoid *pAddr_address = ((GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position));
+	const GLvoid *pAddr_address = ((const GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position));
 	glSetInvariantEXTPROC glSetInvariantEXT = (glSetInvariantEXTPROC)((intptr_t)function_pointer);
 	glSetInvariantEXT(id, type, pAddr_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglSetLocalConstantEXT(JNIEnv *env, jclass clazz, jint id, jint type, jobject pAddr, jint pAddr_position, jlong function_pointer) {
-	GLvoid *pAddr_address = ((GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position));
+	const GLvoid *pAddr_address = ((const GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position));
 	glSetLocalConstantEXTPROC glSetLocalConstantEXT = (glSetLocalConstantEXTPROC)((intptr_t)function_pointer);
 	glSetLocalConstantEXT(id, type, pAddr_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantbvEXT(JNIEnv *env, jclass clazz, jint id, jobject pAddr, jint pAddr_position, jlong function_pointer) {
-	GLbyte *pAddr_address = ((GLbyte *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position;
+	const GLbyte *pAddr_address = ((const GLbyte *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position;
 	glVariantbvEXTPROC glVariantbvEXT = (glVariantbvEXTPROC)((intptr_t)function_pointer);
 	glVariantbvEXT(id, pAddr_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantsvEXT(JNIEnv *env, jclass clazz, jint id, jobject pAddr, jint pAddr_position, jlong function_pointer) {
-	GLshort *pAddr_address = ((GLshort *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position;
+	const GLshort *pAddr_address = ((const GLshort *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position;
 	glVariantsvEXTPROC glVariantsvEXT = (glVariantsvEXTPROC)((intptr_t)function_pointer);
 	glVariantsvEXT(id, pAddr_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantivEXT(JNIEnv *env, jclass clazz, jint id, jobject pAddr, jint pAddr_position, jlong function_pointer) {
-	GLint *pAddr_address = ((GLint *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position;
+	const GLint *pAddr_address = ((const GLint *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position;
 	glVariantivEXTPROC glVariantivEXT = (glVariantivEXTPROC)((intptr_t)function_pointer);
 	glVariantivEXT(id, pAddr_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantfvEXT(JNIEnv *env, jclass clazz, jint id, jobject pAddr, jint pAddr_position, jlong function_pointer) {
-	GLfloat *pAddr_address = ((GLfloat *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position;
+	const GLfloat *pAddr_address = ((const GLfloat *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position;
 	glVariantfvEXTPROC glVariantfvEXT = (glVariantfvEXTPROC)((intptr_t)function_pointer);
 	glVariantfvEXT(id, pAddr_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantubvEXT(JNIEnv *env, jclass clazz, jint id, jobject pAddr, jint pAddr_position, jlong function_pointer) {
-	GLubyte *pAddr_address = ((GLubyte *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position;
+	const GLubyte *pAddr_address = ((const GLubyte *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position;
 	glVariantubvEXTPROC glVariantubvEXT = (glVariantubvEXTPROC)((intptr_t)function_pointer);
 	glVariantubvEXT(id, pAddr_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantusvEXT(JNIEnv *env, jclass clazz, jint id, jobject pAddr, jint pAddr_position, jlong function_pointer) {
-	GLushort *pAddr_address = ((GLushort *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position;
+	const GLushort *pAddr_address = ((const GLushort *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position;
 	glVariantusvEXTPROC glVariantusvEXT = (glVariantusvEXTPROC)((intptr_t)function_pointer);
 	glVariantusvEXT(id, pAddr_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantuivEXT(JNIEnv *env, jclass clazz, jint id, jobject pAddr, jint pAddr_position, jlong function_pointer) {
-	GLuint *pAddr_address = ((GLuint *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position;
+	const GLuint *pAddr_address = ((const GLuint *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position;
 	glVariantuivEXTPROC glVariantuivEXT = (glVariantuivEXTPROC)((intptr_t)function_pointer);
 	glVariantuivEXT(id, pAddr_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantPointerEXT(JNIEnv *env, jclass clazz, jint id, jint type, jint stride, jobject pAddr, jint pAddr_position, jlong function_pointer) {
-	GLvoid *pAddr_address = ((GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position));
+	const GLvoid *pAddr_address = ((const GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position));
 	glVariantPointerEXTPROC glVariantPointerEXT = (glVariantPointerEXTPROC)((intptr_t)function_pointer);
 	glVariantPointerEXT(id, type, stride, pAddr_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantPointerEXTBO(JNIEnv *env, jclass clazz, jint id, jint type, jint stride, jint pAddr_buffer_offset, jlong function_pointer) {
-	GLvoid *pAddr_address = ((GLvoid *)offsetToPointer(pAddr_buffer_offset));
+	const GLvoid *pAddr_address = ((const GLvoid *)offsetToPointer(pAddr_buffer_offset));
 	glVariantPointerEXTPROC glVariantPointerEXT = (glVariantPointerEXTPROC)((intptr_t)function_pointer);
 	glVariantPointerEXT(id, type, stride, pAddr_address);
 }

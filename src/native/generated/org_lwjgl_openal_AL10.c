@@ -17,7 +17,7 @@ typedef ALboolean (ALAPIENTRY *alIsExtensionPresentPROC) (ALubyte * fname);
 typedef ALenum (ALAPIENTRY *alGetEnumValuePROC) (ALubyte * ename);
 typedef ALvoid (ALAPIENTRY *alListeneriPROC) (ALenum pname, ALint value);
 typedef ALvoid (ALAPIENTRY *alListenerfPROC) (ALenum pname, ALfloat value);
-typedef ALvoid (ALAPIENTRY *alListenerfvPROC) (ALenum pname, ALfloat * value);
+typedef ALvoid (ALAPIENTRY *alListenerfvPROC) (ALenum pname, const ALfloat * value);
 typedef ALvoid (ALAPIENTRY *alListener3fPROC) (ALenum pname, ALfloat v1, ALfloat v2, ALfloat v3);
 typedef ALint (ALAPIENTRY *alGetListeneriPROC) (ALenum pname);
 typedef ALfloat (ALAPIENTRY *alGetListenerfPROC) (ALenum pname);
@@ -27,7 +27,7 @@ typedef ALvoid (ALAPIENTRY *alDeleteSourcesPROC) (ALsizei n, ALuint * sources);
 typedef ALboolean (ALAPIENTRY *alIsSourcePROC) (ALuint id);
 typedef ALvoid (ALAPIENTRY *alSourceiPROC) (ALuint source, ALenum pname, ALint value);
 typedef ALvoid (ALAPIENTRY *alSourcefPROC) (ALuint source, ALenum pname, ALfloat value);
-typedef ALvoid (ALAPIENTRY *alSourcefvPROC) (ALuint source, ALenum pname, ALfloat * value);
+typedef ALvoid (ALAPIENTRY *alSourcefvPROC) (ALuint source, ALenum pname, const ALfloat * value);
 typedef ALvoid (ALAPIENTRY *alSource3fPROC) (ALuint source, ALenum pname, ALfloat v1, ALfloat v2, ALfloat v3);
 typedef ALvoid (ALAPIENTRY *alGetSourceiPROC) (ALuint source, ALenum pname, ALint* value);
 typedef ALvoid (ALAPIENTRY *alGetSourcefPROC) (ALuint source, ALenum pname, ALfloat* value);
@@ -172,7 +172,7 @@ static void JNICALL Java_org_lwjgl_openal_AL10_nalListenerf(JNIEnv *env, jclass 
 }
 
 static void JNICALL Java_org_lwjgl_openal_AL10_nalListenerfv(JNIEnv *env, jclass clazz, jint pname, jobject value, jint value_position) {
-	ALfloat *value_address = ((ALfloat *)(*env)->GetDirectBufferAddress(env, value)) + value_position;
+	const ALfloat *value_address = ((const ALfloat *)(*env)->GetDirectBufferAddress(env, value)) + value_position;
 	alListenerfv(pname, value_address);
 }
 
@@ -219,7 +219,7 @@ static void JNICALL Java_org_lwjgl_openal_AL10_nalSourcef(JNIEnv *env, jclass cl
 }
 
 static void JNICALL Java_org_lwjgl_openal_AL10_nalSourcefv(JNIEnv *env, jclass clazz, jint source, jint pname, jobject value, jint value_position) {
-	ALfloat *value_address = ((ALfloat *)(*env)->GetDirectBufferAddress(env, value)) + value_position;
+	const ALfloat *value_address = ((const ALfloat *)(*env)->GetDirectBufferAddress(env, value)) + value_position;
 	alSourcefv(source, pname, value_address);
 }
 

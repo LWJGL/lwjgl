@@ -44,5 +44,5 @@ public interface ARB_point_parameters {
 	void glPointParameterfARB(@GLenum int pname, float param);
 
 	@StripPostfix("pfParams")
-	void glPointParameterfvARB(@GLenum int pname, @Check("4") FloatBuffer pfParams);
+	void glPointParameterfvARB(@GLenum int pname, @Check("4") @Const FloatBuffer pfParams);
 }

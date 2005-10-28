@@ -5,8 +5,8 @@
 
 typedef void (APIENTRY *glColorTablePROC) (GLenum target, GLenum internalFormat, GLsizei width, GLenum format, GLenum type, const GLvoid * data);
 typedef void (APIENTRY *glColorSubTablePROC) (GLenum target, GLsizei start, GLsizei count, GLenum format, GLenum type, const GLvoid * data);
-typedef void (APIENTRY *glColorTableParameterivPROC) (GLenum target, GLenum pname, GLint * params);
-typedef void (APIENTRY *glColorTableParameterfvPROC) (GLenum target, GLenum pname, GLfloat * params);
+typedef void (APIENTRY *glColorTableParameterivPROC) (GLenum target, GLenum pname, const GLint * params);
+typedef void (APIENTRY *glColorTableParameterfvPROC) (GLenum target, GLenum pname, const GLfloat * params);
 typedef void (APIENTRY *glCopyColorSubTablePROC) (GLenum target, GLsizei start, GLint x, GLint y, GLsizei width);
 typedef void (APIENTRY *glCopyColorTablePROC) (GLenum target, GLenum internalformat, GLint x, GLint y, GLsizei width);
 typedef void (APIENTRY *glGetColorTablePROC) (GLenum target, GLenum format, GLenum type, GLvoid * data);
@@ -24,8 +24,8 @@ typedef void (APIENTRY *glResetMinmaxPROC) (GLenum target);
 typedef void (APIENTRY *glGetMinmaxPROC) (GLenum target, GLboolean reset, GLenum format, GLenum types, GLvoid * values);
 typedef void (APIENTRY *glGetMinmaxParameterfvPROC) (GLenum target, GLenum pname, GLfloat * params);
 typedef void (APIENTRY *glGetMinmaxParameterivPROC) (GLenum target, GLenum pname, GLint * params);
-typedef void (APIENTRY *glConvolutionFilter1DPROC) (GLenum target, GLenum internalformat, GLsizei width, GLenum format, GLenum type, GLvoid * image);
-typedef void (APIENTRY *glConvolutionFilter2DPROC) (GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid * image);
+typedef void (APIENTRY *glConvolutionFilter1DPROC) (GLenum target, GLenum internalformat, GLsizei width, GLenum format, GLenum type, const GLvoid * image);
+typedef void (APIENTRY *glConvolutionFilter2DPROC) (GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid * image);
 typedef void (APIENTRY *glConvolutionParameterfPROC) (GLenum target, GLenum pname, GLfloat params);
 typedef void (APIENTRY *glConvolutionParameterfvPROC) (GLenum target, GLenum pname, const GLfloat * params);
 typedef void (APIENTRY *glConvolutionParameteriPROC) (GLenum target, GLenum pname, GLint params);
@@ -63,13 +63,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorSubTableBO(JNIEn
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorTableParameteriv(JNIEnv *env, jclass clazz, jint target, jint pname, jobject params, jint params_position, jlong function_pointer) {
-	GLint *params_address = ((GLint *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	const GLint *params_address = ((const GLint *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
 	glColorTableParameterivPROC glColorTableParameteriv = (glColorTableParameterivPROC)((intptr_t)function_pointer);
 	glColorTableParameteriv(target, pname, params_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorTableParameterfv(JNIEnv *env, jclass clazz, jint target, jint pname, jobject params, jint params_position, jlong function_pointer) {
-	GLfloat *params_address = ((GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	const GLfloat *params_address = ((const GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
 	glColorTableParameterfvPROC glColorTableParameterfv = (glColorTableParameterfvPROC)((intptr_t)function_pointer);
 	glColorTableParameterfv(target, pname, params_address);
 }
@@ -181,25 +181,25 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetMinmaxParameteriv(
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter1D(JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint format, jint type, jobject image, jint image_position, jlong function_pointer) {
-	GLvoid *image_address = ((GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, image)) + image_position));
+	const GLvoid *image_address = ((const GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, image)) + image_position));
 	glConvolutionFilter1DPROC glConvolutionFilter1D = (glConvolutionFilter1DPROC)((intptr_t)function_pointer);
 	glConvolutionFilter1D(target, internalformat, width, format, type, image_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter1DBO(JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint format, jint type, jint image_buffer_offset, jlong function_pointer) {
-	GLvoid *image_address = ((GLvoid *)offsetToPointer(image_buffer_offset));
+	const GLvoid *image_address = ((const GLvoid *)offsetToPointer(image_buffer_offset));
 	glConvolutionFilter1DPROC glConvolutionFilter1D = (glConvolutionFilter1DPROC)((intptr_t)function_pointer);
 	glConvolutionFilter1D(target, internalformat, width, format, type, image_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter2D(JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint height, jint format, jint type, jobject image, jint image_position, jlong function_pointer) {
-	GLvoid *image_address = ((GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, image)) + image_position));
+	const GLvoid *image_address = ((const GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, image)) + image_position));
 	glConvolutionFilter2DPROC glConvolutionFilter2D = (glConvolutionFilter2DPROC)((intptr_t)function_pointer);
 	glConvolutionFilter2D(target, internalformat, width, height, format, type, image_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter2DBO(JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint height, jint format, jint type, jint image_buffer_offset, jlong function_pointer) {
-	GLvoid *image_address = ((GLvoid *)offsetToPointer(image_buffer_offset));
+	const GLvoid *image_address = ((const GLvoid *)offsetToPointer(image_buffer_offset));
 	glConvolutionFilter2DPROC glConvolutionFilter2D = (glConvolutionFilter2DPROC)((intptr_t)function_pointer);
 	glConvolutionFilter2D(target, internalformat, width, height, format, type, image_address);
 }

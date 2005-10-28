@@ -6,7 +6,7 @@
 typedef void (APIENTRY *glSecondaryColor3bEXTPROC) (GLbyte red, GLbyte green, GLbyte blue);
 typedef void (APIENTRY *glSecondaryColor3fEXTPROC) (GLfloat red, GLfloat green, GLfloat blue);
 typedef void (APIENTRY *glSecondaryColor3ubEXTPROC) (GLubyte red, GLubyte green, GLubyte blue);
-typedef void (APIENTRY *glSecondaryColorPointerEXTPROC) (GLint size, GLenum type, GLsizei stride, GLvoid * pPointer);
+typedef void (APIENTRY *glSecondaryColorPointerEXTPROC) (GLint size, GLenum type, GLsizei stride, const GLvoid * pPointer);
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_nglSecondaryColor3bEXT(JNIEnv *env, jclass clazz, jbyte red, jbyte green, jbyte blue, jlong function_pointer) {
 	glSecondaryColor3bEXTPROC glSecondaryColor3bEXT = (glSecondaryColor3bEXTPROC)((intptr_t)function_pointer);
@@ -24,13 +24,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_nglSecondaryColor
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_nglSecondaryColorPointerEXT(JNIEnv *env, jclass clazz, jint size, jint type, jint stride, jobject pPointer, jint pPointer_position, jlong function_pointer) {
-	GLvoid *pPointer_address = ((GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, pPointer)) + pPointer_position));
+	const GLvoid *pPointer_address = ((const GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, pPointer)) + pPointer_position));
 	glSecondaryColorPointerEXTPROC glSecondaryColorPointerEXT = (glSecondaryColorPointerEXTPROC)((intptr_t)function_pointer);
 	glSecondaryColorPointerEXT(size, type, stride, pPointer_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_nglSecondaryColorPointerEXTBO(JNIEnv *env, jclass clazz, jint size, jint type, jint stride, jint pPointer_buffer_offset, jlong function_pointer) {
-	GLvoid *pPointer_address = ((GLvoid *)offsetToPointer(pPointer_buffer_offset));
+	const GLvoid *pPointer_address = ((const GLvoid *)offsetToPointer(pPointer_buffer_offset));
 	glSecondaryColorPointerEXTPROC glSecondaryColorPointerEXT = (glSecondaryColorPointerEXTPROC)((intptr_t)function_pointer);
 	glSecondaryColorPointerEXT(size, type, stride, pPointer_address);
 }

@@ -179,6 +179,7 @@ public interface EXT_vertex_shader {
 
 	void glSetInvariantEXT(@GLuint int id, @AutoType("pAddr") @GLenum int type,
 			@Check("4")
+			@Const
 			@GLbyte
 			@GLubyte
 			@GLshort
@@ -190,6 +191,7 @@ public interface EXT_vertex_shader {
 
 	void glSetLocalConstantEXT(@GLuint int id, @AutoType("pAddr") @GLenum int type,
 			@Check("4")
+			@Const
 			@GLbyte
 			@GLubyte
 			@GLshort
@@ -200,25 +202,26 @@ public interface EXT_vertex_shader {
 			Buffer pAddr);
 
 	@StripPostfix("pAddr")
-	void glVariantbvEXT(@GLuint int id, @Check("4") ByteBuffer pAddr);
+	void glVariantbvEXT(@GLuint int id, @Check("4") @Const ByteBuffer pAddr);
 	@StripPostfix("pAddr")
-	void glVariantsvEXT(@GLuint int id, @Check("4") ShortBuffer pAddr);
+	void glVariantsvEXT(@GLuint int id, @Check("4") @Const ShortBuffer pAddr);
 	@StripPostfix("pAddr")
-	void glVariantivEXT(@GLuint int id, @Check("4") IntBuffer pAddr);
+	void glVariantivEXT(@GLuint int id, @Check("4") @Const IntBuffer pAddr);
 	@StripPostfix("pAddr")
-	void glVariantfvEXT(@GLuint int id, @Check("4") FloatBuffer pAddr);
+	void glVariantfvEXT(@GLuint int id, @Check("4") @Const FloatBuffer pAddr);
 
 	@StripPostfix("pAddr")
-	void glVariantubvEXT(@GLuint int id, @Check("4") @GLubyte ByteBuffer pAddr);
+	void glVariantubvEXT(@GLuint int id, @Check("4") @Const @GLubyte ByteBuffer pAddr);
 	@StripPostfix("pAddr")
-	void glVariantusvEXT(@GLuint int id, @Check("4") @GLushort ShortBuffer pAddr);
+	void glVariantusvEXT(@GLuint int id, @Check("4") @Const @GLushort ShortBuffer pAddr);
 	@StripPostfix("pAddr")
-	void glVariantuivEXT(@GLuint int id, @Check("4") @GLuint IntBuffer pAddr);
+	void glVariantuivEXT(@GLuint int id, @Check("4") @Const @GLuint IntBuffer pAddr);
 
 	void glVariantPointerEXT(@GLuint int id, @AutoType("pAddr") @GLenum int type, @GLuint int stride,
 			@CachedReference
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
+			@Const
 			@GLbyte
 			@GLshort
 			@GLint

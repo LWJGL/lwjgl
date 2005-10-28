@@ -56,6 +56,7 @@ public interface ARB_matrix_palette {
 			@CachedReference
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
+			@Const
 			@GLubyte
 			@GLushort
 			@GLuint

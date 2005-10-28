@@ -110,9 +110,9 @@ public interface GL14 {
 	void glPointParameteri(@GLenum int pname, int param);
 	void glPointParameterf(@GLenum int pname, float param);
 	@StripPostfix("params")
-	void glPointParameteriv(@GLenum int pname, @Check("4") IntBuffer params);
+	void glPointParameteriv(@GLenum int pname, @Check("4") @Const IntBuffer params);
 	@StripPostfix("params")
-	void glPointParameterfv(@GLenum int pname, @Check("4") FloatBuffer params);
+	void glPointParameterfv(@GLenum int pname, @Check("4") @Const FloatBuffer params);
 
 	void glSecondaryColor3b(byte red, byte green, byte blue);
 	void glSecondaryColor3f(float red, float green, float blue);

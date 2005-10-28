@@ -636,7 +636,7 @@ public interface AL10 {
 	 */
 	@StripPostfix("value")
 	@ALvoid
-	void alListenerfv(@ALenum int pname, @Check("1") FloatBuffer value);
+	void alListenerfv(@ALenum int pname, @Check("1") @Const FloatBuffer value);
 
 	/**
 	 * Listener attributes are changed using the Listener group of commands.
@@ -736,7 +736,7 @@ public interface AL10 {
 	// TODO: What's the correct minimum value?
 	@StripPostfix("value")
 	@ALvoid
-	void alSourcefv(@ALuint int source, @ALenum int pname, @Check("1") FloatBuffer value);
+	void alSourcefv(@ALuint int source, @ALenum int pname, @Check("1") @Const FloatBuffer value);
 
 	/**
 	 * Specifies the position and other properties as taken into account during
