@@ -534,9 +534,9 @@ final class MacOSXDisplay implements DisplayImplementation {
 		int biggest = -1;
 		
 		for (int i=0;i<icons.length;i++) {
-			if (icons[i].limit() > size) {
+			if (icons[i].remaining() > size) {
 				biggest = i;
-				size = icons[i].limit();
+				size = icons[i].remaining();
 			}
 		}
 		
@@ -547,9 +547,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 		int width;
 		int height;
 		
-		width = height = (int) Math.sqrt(size);
-		int[] imageData = new int[icons[biggest].remaining()];
-		icons[biggest].asIntBuffer().get(imageData);
+		IntBuffer biggest_icon = icons[biggest].asIntBuffer();
+		int[] imageData = new int[biggest_icon.remaining()];
+		width = height = (int) Math.sqrt(imageData.length);
+		biggest_icon.get(imageData);
 		
 		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		img.setRGB(0, 0, width, height, imageData, 0, width);
