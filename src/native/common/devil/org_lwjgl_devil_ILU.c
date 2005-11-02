@@ -1,4 +1,5 @@
 #include "extilu.h"
+#include "org_lwjgl_devil_ILU.h"
 
 typedef ILboolean		(ILAPIENTRY *iluAlienifyPROC) (ILvoid);
 typedef ILboolean		(ILAPIENTRY *iluBlurAvgPROC) (ILuint Iter);
@@ -99,7 +100,7 @@ static iluWavePROC iluWave;
  * Method:    iluAlienify
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluAlienify(JNIEnv *env, jclass clazz) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluAlienify(JNIEnv *env, jclass clazz) {
     return iluAlienify();
 }
 
@@ -108,7 +109,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluAlienify(JNIEnv *env, jcl
  * Method:    iluBlurAvg
  * Signature: (I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluBlurAvg(JNIEnv *env, jclass clazz, jint iter) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluBlurAvg(JNIEnv *env, jclass clazz, jint iter) {
     return iluBlurAvg((ILuint)iter);
 }
 
@@ -117,7 +118,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluBlurAvg(JNIEnv *env, jcla
  * Method:    iluBlurGaussian
  * Signature: (I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluBlurGaussian(JNIEnv *env, jclass clazz, jint iter) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluBlurGaussian(JNIEnv *env, jclass clazz, jint iter) {
     return iluBlurGaussian((ILuint)iter);
 }
 
@@ -126,7 +127,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluBlurGaussian(JNIEnv *env,
  * Method:    iluBuildMipmaps
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluBuildMipmaps(JNIEnv *env, jclass clazz) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluBuildMipmaps(JNIEnv *env, jclass clazz) {
     return iluBuildMipmaps();
 }
 
@@ -135,7 +136,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluBuildMipmaps(JNIEnv *env,
  * Method:    iluColoursUsed
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_devil_ILU_iluColoursUsed(JNIEnv *env, jclass clazz) {
+static jint JNICALL Java_org_lwjgl_devil_ILU_iluColoursUsed(JNIEnv *env, jclass clazz) {
     return iluColoursUsed();
 }
 
@@ -144,7 +145,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_devil_ILU_iluColoursUsed(JNIEnv *env, jcla
  * Method:    iluCompareImage
  * Signature: (I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluCompareImage(JNIEnv *env, jclass clazz, jint comp) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluCompareImage(JNIEnv *env, jclass clazz, jint comp) {
     return iluCompareImage((ILuint)comp);
 }
 
@@ -153,7 +154,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluCompareImage(JNIEnv *env,
  * Method:    iluContrast
  * Signature: (F)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluContrast(JNIEnv *env, jclass clazz, jfloat contrast) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluContrast(JNIEnv *env, jclass clazz, jfloat contrast) {
     return iluContrast((ILfloat)contrast);
 }
 
@@ -162,7 +163,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluContrast(JNIEnv *env, jcl
  * Method:    iluCrop
  * Signature: (IIIIII)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluCrop(JNIEnv *env, jclass clazz, jint xOff, jint yOff, jint zOff, jint width, jint height, jint depth) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluCrop(JNIEnv *env, jclass clazz, jint xOff, jint yOff, jint zOff, jint width, jint height, jint depth) {
     return iluCrop((ILuint)xOff, (ILuint)yOff, (ILuint)zOff, (ILuint)width, (ILuint)height, (ILuint)depth);
 }
 
@@ -171,7 +172,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluCrop(JNIEnv *env, jclass 
  * Method:    iluDeleteImage
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluDeleteImage(JNIEnv *env, jclass clazz, jint id) {
+static void JNICALL Java_org_lwjgl_devil_ILU_iluDeleteImage(JNIEnv *env, jclass clazz, jint id) {
     iluDeleteImage((ILuint)id);
 }
 
@@ -180,7 +181,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluDeleteImage(JNIEnv *env, jcla
  * Method:    iluEdgeDetectE
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEdgeDetectE(JNIEnv *env, jclass clazz) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEdgeDetectE(JNIEnv *env, jclass clazz) {
     return iluEdgeDetectE();
 }
 
@@ -189,7 +190,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEdgeDetectE(JNIEnv *env, 
  * Method:    iluEdgeDetectP
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEdgeDetectP(JNIEnv *env, jclass clazz) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEdgeDetectP(JNIEnv *env, jclass clazz) {
     return iluEdgeDetectP();
 }
 
@@ -198,7 +199,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEdgeDetectP(JNIEnv *env, 
  * Method:    iluEdgeDetectS
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEdgeDetectS(JNIEnv *env, jclass clazz) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEdgeDetectS(JNIEnv *env, jclass clazz) {
     return iluEdgeDetectS();
 }
 
@@ -207,7 +208,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEdgeDetectS(JNIEnv *env, 
  * Method:    iluEmboss
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEmboss(JNIEnv *env, jclass clazz) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEmboss(JNIEnv *env, jclass clazz) {
     return iluEmboss();
 }
 
@@ -216,7 +217,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEmboss(JNIEnv *env, jclas
  * Method:    iluEnlargeCanvas
  * Signature: (III)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEnlargeCanvas(JNIEnv *env, jclass clazz, jint width, jint height, jint depth) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEnlargeCanvas(JNIEnv *env, jclass clazz, jint width, jint height, jint depth) {
     return iluEnlargeCanvas((ILuint)width, (ILuint)height, (ILuint)depth);
 }
 
@@ -225,7 +226,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEnlargeCanvas(JNIEnv *env
  * Method:    iluEnlargeImage
  * Signature: (FFF)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEnlargeImage(JNIEnv *env, jclass clazz, jfloat xDim, jfloat yDim, jfloat zDim) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEnlargeImage(JNIEnv *env, jclass clazz, jfloat xDim, jfloat yDim, jfloat zDim) {
     return iluEnlargeImage((ILfloat)xDim, (ILfloat)yDim, (ILfloat)zDim);
 }
 
@@ -234,7 +235,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEnlargeImage(JNIEnv *env,
  * Method:    iluEqualize
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEqualize(JNIEnv *env, jclass clazz) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEqualize(JNIEnv *env, jclass clazz) {
     return iluEqualize();
 }
 
@@ -243,7 +244,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEqualize(JNIEnv *env, jcl
  * Method:    iluErrorString
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_org_lwjgl_devil_ILU_iluErrorString(JNIEnv *env, jclass clazz, jint error) {
+static jstring JNICALL Java_org_lwjgl_devil_ILU_iluErrorString(JNIEnv *env, jclass clazz, jint error) {
     return NewStringNative(env, iluErrorString((ILenum)error));
 }
 
@@ -252,7 +253,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_devil_ILU_iluErrorString(JNIEnv *env, j
  * Method:    iluFlipImage
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluFlipImage(JNIEnv *env, jclass clazz) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluFlipImage(JNIEnv *env, jclass clazz) {
     return iluFlipImage();
 }
 
@@ -261,7 +262,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluFlipImage(JNIEnv *env, jc
  * Method:    iluGammaCorrect
  * Signature: (F)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluGammaCorrect(JNIEnv *env, jclass clazz, jfloat gamma) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluGammaCorrect(JNIEnv *env, jclass clazz, jfloat gamma) {
     return iluGammaCorrect((ILfloat)gamma);
 }
 
@@ -270,7 +271,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluGammaCorrect(JNIEnv *env,
  * Method:    iluGenImage
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_devil_ILU_iluGenImage(JNIEnv *env, jclass clazz) {
+static jint JNICALL Java_org_lwjgl_devil_ILU_iluGenImage(JNIEnv *env, jclass clazz) {
     return iluGenImage();
 }
 
@@ -279,7 +280,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_devil_ILU_iluGenImage(JNIEnv *env, jclass 
  * Method:    iluGetImageInfo
  * Signature: (Lorg/lwjgl/devil/ILinfo;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluGetImageInfo(JNIEnv *env, jclass clazz, jobject info) {
+static void JNICALL Java_org_lwjgl_devil_ILU_iluGetImageInfo(JNIEnv *env, jclass clazz, jobject info) {
     jfieldID fieldId;
     ILinfo *imageInfo;
 
@@ -345,7 +346,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluGetImageInfo(JNIEnv *env, jcl
  * Method:    iluGetInteger
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_devil_ILU_iluGetInteger(JNIEnv *env, jclass clazz, jint mode) {
+static jint JNICALL Java_org_lwjgl_devil_ILU_iluGetInteger(JNIEnv *env, jclass clazz, jint mode) {
     return iluGetInteger((ILenum)mode);
 }
 
@@ -354,7 +355,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_devil_ILU_iluGetInteger(JNIEnv *env, jclas
  * Method:    iluGetIntegerv
  * Signature: (ILjava/nio/IntBuffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_niluGetIntegerv(JNIEnv *env, jclass clazz, jint mode, jobject param_buffer, jint param_offset) {
+static void JNICALL Java_org_lwjgl_devil_ILU_niluGetIntegerv(JNIEnv *env, jclass clazz, jint mode, jobject param_buffer, jint param_offset) {
     ILbyte *lists = (ILbyte *) safeGetBufferAddress(env, param_buffer) + param_offset;
     iluGetIntegerv((ILsizei)mode, (ILuint *)lists);
 }
@@ -364,7 +365,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_niluGetIntegerv(JNIEnv *env, jcl
  * Method:    iluGetString
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_org_lwjgl_devil_ILU_iluGetString(JNIEnv *env, jclass clazz, jint stringName) {
+static jstring JNICALL Java_org_lwjgl_devil_ILU_iluGetString(JNIEnv *env, jclass clazz, jint stringName) {
     return NewStringNative(env, iluGetString((ILenum)stringName));
 }
 
@@ -373,7 +374,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_devil_ILU_iluGetString(JNIEnv *env, jcl
  * Method:    iluImageParameter
  * Signature: (II)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluImageParameter(JNIEnv *env, jclass clazz, jint pName, jint param) {
+static void JNICALL Java_org_lwjgl_devil_ILU_iluImageParameter(JNIEnv *env, jclass clazz, jint pName, jint param) {
     iluImageParameter((ILenum)pName, (ILenum)param);
 }
 
@@ -382,7 +383,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluImageParameter(JNIEnv *env, j
  * Method:    iluInit
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluInit(JNIEnv *env, jclass clazz) {
+static void JNICALL Java_org_lwjgl_devil_ILU_iluInit(JNIEnv *env, jclass clazz) {
     iluInit();
 }
 
@@ -391,7 +392,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluInit(JNIEnv *env, jclass claz
  * Method:    iluInvertAlpha
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluInvertAlpha(JNIEnv *env, jclass clazz) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluInvertAlpha(JNIEnv *env, jclass clazz) {
     return iluInvertAlpha();
 }
 
@@ -400,7 +401,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluInvertAlpha(JNIEnv *env, 
  * Method:    iluLoadImage
  * Signature: (Ljava/lang/String;)I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_devil_ILU_iluLoadImage(JNIEnv *env, jclass clazz, jstring fileName) {
+static jint JNICALL Java_org_lwjgl_devil_ILU_iluLoadImage(JNIEnv *env, jclass clazz, jstring fileName) {
     char *strFileName = GetStringNativeChars(env, fileName);
     jint result = iluLoadImage((const ILstring)strFileName);
     free(strFileName);
@@ -413,7 +414,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_devil_ILU_iluLoadImage(JNIEnv *env, jclass
  * Method:    iluMirror
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluMirror(JNIEnv *env, jclass clazz) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluMirror(JNIEnv *env, jclass clazz) {
     return iluMirror();
 }
 
@@ -422,7 +423,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluMirror(JNIEnv *env, jclas
  * Method:    iluNegative
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluNegative(JNIEnv *env, jclass clazz) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluNegative(JNIEnv *env, jclass clazz) {
     return iluNegative();
 }
 
@@ -431,7 +432,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluNegative(JNIEnv *env, jcl
  * Method:    iluNoisify
  * Signature: (F)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluNoisify(JNIEnv *env, jclass clazz, jfloat factor) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluNoisify(JNIEnv *env, jclass clazz, jfloat factor) {
     return iluNoisify((ILclampf)factor);
 }
 
@@ -440,7 +441,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluNoisify(JNIEnv *env, jcla
  * Method:    iluPixelize
  * Signature: (I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluPixelize(JNIEnv *env, jclass clazz, jint pixSize) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluPixelize(JNIEnv *env, jclass clazz, jint pixSize) {
     return iluPixelize((ILuint)pixSize);
 }
 
@@ -449,7 +450,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluPixelize(JNIEnv *env, jcl
  * Method:    iluReplaceColour
  * Signature: (BBBF)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluReplaceColour(JNIEnv *env, jclass clazz, jbyte red, jbyte green, jbyte blue, jfloat tolerence) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluReplaceColour(JNIEnv *env, jclass clazz, jbyte red, jbyte green, jbyte blue, jfloat tolerence) {
 	return false;
 }
 
@@ -458,7 +459,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluReplaceColour(JNIEnv *env
  * Method:    iluRotate
  * Signature: (F)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluRotate(JNIEnv *env, jclass clazz, jfloat angle) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluRotate(JNIEnv *env, jclass clazz, jfloat angle) {
     return iluRotate((ILfloat)angle);
 }
 
@@ -467,7 +468,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluRotate(JNIEnv *env, jclas
  * Method:    iluSaturate1f
  * Signature: (F)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluSaturate1f(JNIEnv *env, jclass clazz, jfloat saturation) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluSaturate1f(JNIEnv *env, jclass clazz, jfloat saturation) {
     return iluSaturate1f((ILfloat)saturation);
 }
 
@@ -476,7 +477,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluSaturate1f(JNIEnv *env, j
  * Method:    iluSaturate4f
  * Signature: (FFFF)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluSaturate4f(JNIEnv *env, jclass clazz, jfloat r, jfloat g, jfloat b, jfloat saturation) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluSaturate4f(JNIEnv *env, jclass clazz, jfloat r, jfloat g, jfloat b, jfloat saturation) {
     return iluSaturate4f((ILfloat)r, (ILfloat)g, (ILfloat)b, (ILfloat)saturation);
 }
 
@@ -485,7 +486,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluSaturate4f(JNIEnv *env, j
  * Method:    iluScale
  * Signature: (III)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluScale(JNIEnv *env, jclass clazz, jint width, jint height, jint depth) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluScale(JNIEnv *env, jclass clazz, jint width, jint height, jint depth) {
     return iluScale((ILuint)width, (ILuint)height, (ILuint)depth);
 }
 
@@ -494,7 +495,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluScale(JNIEnv *env, jclass
  * Method:    iluScaleColours
  * Signature: (FFF)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluScaleColours(JNIEnv *env, jclass clazz, jfloat r, jfloat g, jfloat b) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluScaleColours(JNIEnv *env, jclass clazz, jfloat r, jfloat g, jfloat b) {
     return iluScaleColours((ILfloat)r, (ILfloat)g, (ILfloat)b);
 }
 
@@ -503,7 +504,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluScaleColours(JNIEnv *env,
  * Method:    iluSharpen
  * Signature: (FI)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluSharpen(JNIEnv *env, jclass clazz, jfloat factor, jint iter) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluSharpen(JNIEnv *env, jclass clazz, jfloat factor, jint iter) {
     return iluSharpen((ILfloat)factor, (ILuint)iter);
 }
 
@@ -512,7 +513,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluSharpen(JNIEnv *env, jcla
  * Method:    iluSwapColours
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluSwapColours(JNIEnv *env, jclass clazz) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluSwapColours(JNIEnv *env, jclass clazz) {
     return iluSwapColours();
 }
 
@@ -521,7 +522,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluSwapColours(JNIEnv *env, 
  * Method:    iluWave
  * Signature: (F)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluWave(JNIEnv *env, jclass clazz, jfloat wave) {
+static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluWave(JNIEnv *env, jclass clazz, jfloat wave) {
     return iluWave((ILfloat)wave);
 }
 

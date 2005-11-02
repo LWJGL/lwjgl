@@ -4,9 +4,6 @@
 #include <jni.h>
 #include <stdio.h>
 #include <string.h>
-#include "org_lwjgl_devil_IL.h"
-#include "org_lwjgl_devil_ILU.h"
-#include "org_lwjgl_devil_ILUT.h"
 #include "common_tools.h"
 
 #ifdef _X11
