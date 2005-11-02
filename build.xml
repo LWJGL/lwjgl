@@ -395,13 +395,6 @@
 			<class name="org.lwjgl.fmod3.FMusic" />
 			<class name="org.lwjgl.fmod3.FSound" />
 		</javah>
-		
-		<!-- devil -->
-		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}/devil" force="yes">
-			<class name="org.lwjgl.devil.IL"/>
-			<class name="org.lwjgl.devil.ILU"/>
-			<class name="org.lwjgl.devil.ILUT"/>
-		</javah>
 	</target>	
 	
 	<!-- Creates the Javadoc -->
