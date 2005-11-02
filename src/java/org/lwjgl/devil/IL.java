@@ -621,7 +621,6 @@ public class IL {
 			"IL", "libIL.so",
 			"IL", "libIL.dylib"}, IL.class.getClassLoader());
 		nCreate(illPaths);
-		created = true;
 
 		try {
 			IL.initNativeStubs();

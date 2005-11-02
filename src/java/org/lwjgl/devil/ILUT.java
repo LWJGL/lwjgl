@@ -133,7 +133,6 @@ public class ILUT {
 			"ILUT", "libILUT.so",
 			"ILUT", "libILUT.dylib"}, ILUT.class.getClassLoader());
 		nCreate(ilutPaths);
-		created = true;
 
 		try {
 			ILUT.initNativeStubs();

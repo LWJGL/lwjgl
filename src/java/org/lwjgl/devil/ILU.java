@@ -168,7 +168,6 @@ public class ILU {
 			"ILU", "libILU.so",
 			"ILU", "libILU.dylib"}, ILU.class.getClassLoader());
 		nCreate(iluPaths);
-		created = true;
 
 		try {
 			ILU.initNativeStubs();
