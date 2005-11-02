@@ -34,12 +34,16 @@ package org.lwjgl.opengl;
 public interface ARB_window_pos {
 
 	void glWindowPos2fARB(float x, float y);
+	
+	void glWindowPos2dARB(double x, double y);
 
 	void glWindowPos2iARB(int x, int y);
 
 	void glWindowPos2sARB(short x, short y);
 
 	void glWindowPos3fARB(float x, float y, float z);
+
+	void glWindowPos3dARB(double x, double y, double z);
 
 	void glWindowPos3iARB(int x, int y, int z);
 

@@ -215,6 +215,12 @@ public final class EXTVertexShader {
 	}
 	private static native int nglGenSymbolsEXT(int dataType, int storageType, int range, int components, long function_pointer);
 
+	public static void glSetInvariantEXT(int id, DoubleBuffer pAddr) {
+		long function_pointer = GLContext.getCapabilities().EXT_vertex_shader_glSetInvariantEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(pAddr, 4);
+		nglSetInvariantEXT(id, GL11.GL_DOUBLE, pAddr, pAddr.position() << 3, function_pointer);
+	}
 	public static void glSetInvariantEXT(int id, FloatBuffer pAddr) {
 		long function_pointer = GLContext.getCapabilities().EXT_vertex_shader_glSetInvariantEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -241,6 +247,12 @@ public final class EXTVertexShader {
 	}
 	private static native void nglSetInvariantEXT(int id, int type, Buffer pAddr, int pAddr_position, long function_pointer);
 
+	public static void glSetLocalConstantEXT(int id, DoubleBuffer pAddr) {
+		long function_pointer = GLContext.getCapabilities().EXT_vertex_shader_glSetLocalConstantEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(pAddr, 4);
+		nglSetLocalConstantEXT(id, GL11.GL_DOUBLE, pAddr, pAddr.position() << 3, function_pointer);
+	}
 	public static void glSetLocalConstantEXT(int id, FloatBuffer pAddr) {
 		long function_pointer = GLContext.getCapabilities().EXT_vertex_shader_glSetLocalConstantEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -299,6 +311,14 @@ public final class EXTVertexShader {
 	}
 	private static native void nglVariantfvEXT(int id, FloatBuffer pAddr, int pAddr_position, long function_pointer);
 
+	public static void glVariantEXT(int id, DoubleBuffer pAddr) {
+		long function_pointer = GLContext.getCapabilities().EXT_vertex_shader_glVariantdvEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(pAddr, 4);
+		nglVariantdvEXT(id, pAddr, pAddr.position(), function_pointer);
+	}
+	private static native void nglVariantdvEXT(int id, DoubleBuffer pAddr, int pAddr_position, long function_pointer);
+
 	public static void glVariantuEXT(int id, ByteBuffer pAddr) {
 		long function_pointer = GLContext.getCapabilities().EXT_vertex_shader_glVariantubvEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -323,6 +343,14 @@ public final class EXTVertexShader {
 	}
 	private static native void nglVariantuivEXT(int id, IntBuffer pAddr, int pAddr_position, long function_pointer);
 
+	public static void glVariantPointerEXT(int id, int stride, DoubleBuffer pAddr) {
+		long function_pointer = GLContext.getCapabilities().EXT_vertex_shader_glVariantPointerEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pAddr);
+		GLChecks.getReferences().EXT_vertex_shader_glVariantPointerEXT_pAddr = pAddr;
+		nglVariantPointerEXT(id, GL11.GL_DOUBLE, stride, pAddr, pAddr.position() << 3, function_pointer);
+	}
 	public static void glVariantPointerEXT(int id, int stride, FloatBuffer pAddr) {
 		long function_pointer = GLContext.getCapabilities().EXT_vertex_shader_glVariantPointerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);

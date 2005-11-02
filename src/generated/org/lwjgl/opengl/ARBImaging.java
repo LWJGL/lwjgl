@@ -94,6 +94,13 @@ public final class ARBImaging {
 		BufferChecks.checkBuffer(data, 256);
 		nglColorTable(target, internalFormat, width, format, type, data, data.position(), function_pointer);
 	}
+	public static void glColorTable(int target, int internalFormat, int width, int format, int type, DoubleBuffer data) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glColorTable_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(data, 256);
+		nglColorTable(target, internalFormat, width, format, type, data, data.position() << 3, function_pointer);
+	}
 	public static void glColorTable(int target, int internalFormat, int width, int format, int type, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glColorTable_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -116,6 +123,13 @@ public final class ARBImaging {
 		GLChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(data, 256);
 		nglColorSubTable(target, start, count, format, type, data, data.position(), function_pointer);
+	}
+	public static void glColorSubTable(int target, int start, int count, int format, int type, DoubleBuffer data) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glColorSubTable_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(data, 256);
+		nglColorSubTable(target, start, count, format, type, data, data.position() << 3, function_pointer);
 	}
 	public static void glColorSubTable(int target, int start, int count, int format, int type, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glColorSubTable_pointer;
@@ -168,6 +182,12 @@ public final class ARBImaging {
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(data, 256);
 		nglGetColorTable(target, format, type, data, data.position(), function_pointer);
+	}
+	public static void glGetColorTable(int target, int format, int type, DoubleBuffer data) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetColorTable_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(data, 256);
+		nglGetColorTable(target, format, type, data, data.position() << 3, function_pointer);
 	}
 	public static void glGetColorTable(int target, int format, int type, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetColorTable_pointer;
@@ -227,6 +247,13 @@ public final class ARBImaging {
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkBuffer(values, 256);
 		nglGetHistogram(target, reset, format, type, values, values.position(), function_pointer);
+	}
+	public static void glGetHistogram(int target, boolean reset, int format, int type, DoubleBuffer values) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetHistogram_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkBuffer(values, 256);
+		nglGetHistogram(target, reset, format, type, values, values.position() << 3, function_pointer);
 	}
 	public static void glGetHistogram(int target, boolean reset, int format, int type, FloatBuffer values) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetHistogram_pointer;
@@ -295,6 +322,13 @@ public final class ARBImaging {
 		BufferChecks.checkBuffer(values, 4);
 		nglGetMinmax(target, reset, format, types, values, values.position(), function_pointer);
 	}
+	public static void glGetMinmax(int target, boolean reset, int format, int types, DoubleBuffer values) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetMinmax_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkBuffer(values, 4);
+		nglGetMinmax(target, reset, format, types, values, values.position() << 3, function_pointer);
+	}
 	public static void glGetMinmax(int target, boolean reset, int format, int types, FloatBuffer values) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetMinmax_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -347,6 +381,13 @@ public final class ARBImaging {
 		GLChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(image, GLChecks.calculateImageStorage(image, format, type, width, 1, 1));
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position(), function_pointer);
+	}
+	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, DoubleBuffer image) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glConvolutionFilter1D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(image, GLChecks.calculateImageStorage(image, format, type, width, 1, 1));
+		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position() << 3, function_pointer);
 	}
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, FloatBuffer image) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glConvolutionFilter1D_pointer;
@@ -459,6 +500,13 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(image);
 		nglGetConvolutionFilter(target, format, type, image, image.position(), function_pointer);
 	}
+	public static void glGetConvolutionFilter(int target, int format, int type, DoubleBuffer image) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetConvolutionFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(image);
+		nglGetConvolutionFilter(target, format, type, image, image.position() << 3, function_pointer);
+	}
 	public static void glGetConvolutionFilter(int target, int format, int type, FloatBuffer image) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetConvolutionFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -513,6 +561,14 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(column);
 		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, row.position(), column, column.position(), function_pointer);
 	}
+	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, ByteBuffer row, DoubleBuffer column) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glSeparableFilter2D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, row.position(), column, column.position() << 3, function_pointer);
+	}
 	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, ByteBuffer row, FloatBuffer column) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glSeparableFilter2D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -537,6 +593,46 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(column);
 		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, row.position(), column, column.position() << 1, function_pointer);
 	}
+	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, DoubleBuffer row, ByteBuffer column) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glSeparableFilter2D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, row.position() << 3, column, column.position(), function_pointer);
+	}
+	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, DoubleBuffer row, DoubleBuffer column) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glSeparableFilter2D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, row.position() << 3, column, column.position() << 3, function_pointer);
+	}
+	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, DoubleBuffer row, FloatBuffer column) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glSeparableFilter2D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, row.position() << 3, column, column.position() << 2, function_pointer);
+	}
+	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, DoubleBuffer row, IntBuffer column) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glSeparableFilter2D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, row.position() << 3, column, column.position() << 2, function_pointer);
+	}
+	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, DoubleBuffer row, ShortBuffer column) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glSeparableFilter2D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, row.position() << 3, column, column.position() << 1, function_pointer);
+	}
 	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, FloatBuffer row, ByteBuffer column) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glSeparableFilter2D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -544,6 +640,14 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, row.position() << 2, column, column.position(), function_pointer);
+	}
+	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, FloatBuffer row, DoubleBuffer column) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glSeparableFilter2D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, row.position() << 2, column, column.position() << 3, function_pointer);
 	}
 	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, FloatBuffer row, FloatBuffer column) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glSeparableFilter2D_pointer;
@@ -577,6 +681,14 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(column);
 		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, row.position() << 2, column, column.position(), function_pointer);
 	}
+	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, IntBuffer row, DoubleBuffer column) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glSeparableFilter2D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, row.position() << 2, column, column.position() << 3, function_pointer);
+	}
 	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, IntBuffer row, FloatBuffer column) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glSeparableFilter2D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -608,6 +720,14 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, row.position() << 1, column, column.position(), function_pointer);
+	}
+	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, ShortBuffer row, DoubleBuffer column) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glSeparableFilter2D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, row.position() << 1, column, column.position() << 3, function_pointer);
 	}
 	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, ShortBuffer row, FloatBuffer column) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glSeparableFilter2D_pointer;
@@ -651,14 +771,14 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position(), span, span.position(), function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, ByteBuffer column, FloatBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, ByteBuffer column, DoubleBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position(), span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position(), span, span.position() << 3, function_pointer);
 	}
 	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, ByteBuffer column, IntBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
@@ -678,41 +798,41 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position(), span, span.position() << 1, function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, FloatBuffer column, ByteBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, DoubleBuffer column, ByteBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position() << 2, span, span.position(), function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position() << 3, span, span.position(), function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, FloatBuffer column, FloatBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, DoubleBuffer column, DoubleBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position() << 2, span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position() << 3, span, span.position() << 3, function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, FloatBuffer column, IntBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, DoubleBuffer column, IntBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position() << 2, span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position() << 3, span, span.position() << 2, function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, FloatBuffer column, ShortBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, DoubleBuffer column, ShortBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position() << 2, span, span.position() << 1, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position() << 3, span, span.position() << 1, function_pointer);
 	}
 	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, IntBuffer column, ByteBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
@@ -723,14 +843,14 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position() << 2, span, span.position(), function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, IntBuffer column, FloatBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, IntBuffer column, DoubleBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position() << 2, span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position() << 2, span, span.position() << 3, function_pointer);
 	}
 	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, IntBuffer column, IntBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
@@ -759,14 +879,14 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position() << 1, span, span.position(), function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, ShortBuffer column, FloatBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, ShortBuffer column, DoubleBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position() << 1, span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position() << 1, span, span.position() << 3, function_pointer);
 	}
 	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, ShortBuffer column, IntBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
@@ -786,6 +906,150 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position(), column, column.position() << 1, span, span.position() << 1, function_pointer);
 	}
+	public static void glGetSeparableFilter(int target, int format, int type, DoubleBuffer row, ByteBuffer column, ByteBuffer span) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		BufferChecks.checkDirect(span);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 3, column, column.position(), span, span.position(), function_pointer);
+	}
+	public static void glGetSeparableFilter(int target, int format, int type, DoubleBuffer row, ByteBuffer column, DoubleBuffer span) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		BufferChecks.checkDirect(span);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 3, column, column.position(), span, span.position() << 3, function_pointer);
+	}
+	public static void glGetSeparableFilter(int target, int format, int type, DoubleBuffer row, ByteBuffer column, IntBuffer span) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		BufferChecks.checkDirect(span);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 3, column, column.position(), span, span.position() << 2, function_pointer);
+	}
+	public static void glGetSeparableFilter(int target, int format, int type, DoubleBuffer row, ByteBuffer column, ShortBuffer span) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		BufferChecks.checkDirect(span);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 3, column, column.position(), span, span.position() << 1, function_pointer);
+	}
+	public static void glGetSeparableFilter(int target, int format, int type, DoubleBuffer row, DoubleBuffer column, ByteBuffer span) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		BufferChecks.checkDirect(span);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 3, column, column.position() << 3, span, span.position(), function_pointer);
+	}
+	public static void glGetSeparableFilter(int target, int format, int type, DoubleBuffer row, DoubleBuffer column, DoubleBuffer span) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		BufferChecks.checkDirect(span);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 3, column, column.position() << 3, span, span.position() << 3, function_pointer);
+	}
+	public static void glGetSeparableFilter(int target, int format, int type, DoubleBuffer row, DoubleBuffer column, IntBuffer span) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		BufferChecks.checkDirect(span);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 3, column, column.position() << 3, span, span.position() << 2, function_pointer);
+	}
+	public static void glGetSeparableFilter(int target, int format, int type, DoubleBuffer row, DoubleBuffer column, ShortBuffer span) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		BufferChecks.checkDirect(span);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 3, column, column.position() << 3, span, span.position() << 1, function_pointer);
+	}
+	public static void glGetSeparableFilter(int target, int format, int type, DoubleBuffer row, IntBuffer column, ByteBuffer span) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		BufferChecks.checkDirect(span);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 3, column, column.position() << 2, span, span.position(), function_pointer);
+	}
+	public static void glGetSeparableFilter(int target, int format, int type, DoubleBuffer row, IntBuffer column, DoubleBuffer span) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		BufferChecks.checkDirect(span);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 3, column, column.position() << 2, span, span.position() << 3, function_pointer);
+	}
+	public static void glGetSeparableFilter(int target, int format, int type, DoubleBuffer row, IntBuffer column, IntBuffer span) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		BufferChecks.checkDirect(span);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 3, column, column.position() << 2, span, span.position() << 2, function_pointer);
+	}
+	public static void glGetSeparableFilter(int target, int format, int type, DoubleBuffer row, IntBuffer column, ShortBuffer span) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		BufferChecks.checkDirect(span);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 3, column, column.position() << 2, span, span.position() << 1, function_pointer);
+	}
+	public static void glGetSeparableFilter(int target, int format, int type, DoubleBuffer row, ShortBuffer column, ByteBuffer span) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		BufferChecks.checkDirect(span);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 3, column, column.position() << 1, span, span.position(), function_pointer);
+	}
+	public static void glGetSeparableFilter(int target, int format, int type, DoubleBuffer row, ShortBuffer column, DoubleBuffer span) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		BufferChecks.checkDirect(span);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 3, column, column.position() << 1, span, span.position() << 3, function_pointer);
+	}
+	public static void glGetSeparableFilter(int target, int format, int type, DoubleBuffer row, ShortBuffer column, IntBuffer span) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		BufferChecks.checkDirect(span);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 3, column, column.position() << 1, span, span.position() << 2, function_pointer);
+	}
+	public static void glGetSeparableFilter(int target, int format, int type, DoubleBuffer row, ShortBuffer column, ShortBuffer span) {
+		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(row);
+		BufferChecks.checkDirect(column);
+		BufferChecks.checkDirect(span);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 3, column, column.position() << 1, span, span.position() << 1, function_pointer);
+	}
 	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, ByteBuffer column, ByteBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -795,14 +1059,14 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position(), span, span.position(), function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, ByteBuffer column, FloatBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, ByteBuffer column, DoubleBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position(), span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position(), span, span.position() << 3, function_pointer);
 	}
 	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, ByteBuffer column, IntBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
@@ -822,41 +1086,41 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position(), span, span.position() << 1, function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, FloatBuffer column, ByteBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, DoubleBuffer column, ByteBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 2, span, span.position(), function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 3, span, span.position(), function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, FloatBuffer column, FloatBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, DoubleBuffer column, DoubleBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 2, span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 3, span, span.position() << 3, function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, FloatBuffer column, IntBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, DoubleBuffer column, IntBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 2, span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 3, span, span.position() << 2, function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, FloatBuffer column, ShortBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, DoubleBuffer column, ShortBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 2, span, span.position() << 1, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 3, span, span.position() << 1, function_pointer);
 	}
 	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, IntBuffer column, ByteBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
@@ -867,14 +1131,14 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 2, span, span.position(), function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, IntBuffer column, FloatBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, IntBuffer column, DoubleBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 2, span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 2, span, span.position() << 3, function_pointer);
 	}
 	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, IntBuffer column, IntBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
@@ -903,14 +1167,14 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 1, span, span.position(), function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, ShortBuffer column, FloatBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, ShortBuffer column, DoubleBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 1, span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 1, span, span.position() << 3, function_pointer);
 	}
 	public static void glGetSeparableFilter(int target, int format, int type, FloatBuffer row, ShortBuffer column, IntBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
@@ -939,14 +1203,14 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position(), span, span.position(), function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, ByteBuffer column, FloatBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, ByteBuffer column, DoubleBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position(), span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position(), span, span.position() << 3, function_pointer);
 	}
 	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, ByteBuffer column, IntBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
@@ -966,41 +1230,41 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position(), span, span.position() << 1, function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, FloatBuffer column, ByteBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, DoubleBuffer column, ByteBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 2, span, span.position(), function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 3, span, span.position(), function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, FloatBuffer column, FloatBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, DoubleBuffer column, DoubleBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 2, span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 3, span, span.position() << 3, function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, FloatBuffer column, IntBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, DoubleBuffer column, IntBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 2, span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 3, span, span.position() << 2, function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, FloatBuffer column, ShortBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, DoubleBuffer column, ShortBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 2, span, span.position() << 1, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 3, span, span.position() << 1, function_pointer);
 	}
 	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, IntBuffer column, ByteBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
@@ -1011,14 +1275,14 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 2, span, span.position(), function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, IntBuffer column, FloatBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, IntBuffer column, DoubleBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 2, span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 2, span, span.position() << 3, function_pointer);
 	}
 	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, IntBuffer column, IntBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
@@ -1047,14 +1311,14 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 1, span, span.position(), function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, ShortBuffer column, FloatBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, ShortBuffer column, DoubleBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 1, span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 2, column, column.position() << 1, span, span.position() << 3, function_pointer);
 	}
 	public static void glGetSeparableFilter(int target, int format, int type, IntBuffer row, ShortBuffer column, IntBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
@@ -1083,14 +1347,14 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position(), span, span.position(), function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, ByteBuffer column, FloatBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, ByteBuffer column, DoubleBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position(), span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position(), span, span.position() << 3, function_pointer);
 	}
 	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, ByteBuffer column, IntBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
@@ -1110,41 +1374,41 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position(), span, span.position() << 1, function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, FloatBuffer column, ByteBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, DoubleBuffer column, ByteBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position() << 2, span, span.position(), function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position() << 3, span, span.position(), function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, FloatBuffer column, FloatBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, DoubleBuffer column, DoubleBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position() << 2, span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position() << 3, span, span.position() << 3, function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, FloatBuffer column, IntBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, DoubleBuffer column, IntBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position() << 2, span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position() << 3, span, span.position() << 2, function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, FloatBuffer column, ShortBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, DoubleBuffer column, ShortBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position() << 2, span, span.position() << 1, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position() << 3, span, span.position() << 1, function_pointer);
 	}
 	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, IntBuffer column, ByteBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
@@ -1155,14 +1419,14 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position() << 2, span, span.position(), function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, IntBuffer column, FloatBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, IntBuffer column, DoubleBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position() << 2, span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position() << 2, span, span.position() << 3, function_pointer);
 	}
 	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, IntBuffer column, IntBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
@@ -1191,14 +1455,14 @@ public final class ARBImaging {
 		BufferChecks.checkDirect(span);
 		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position() << 1, span, span.position(), function_pointer);
 	}
-	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, ShortBuffer column, FloatBuffer span) {
+	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, ShortBuffer column, DoubleBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(row);
 		BufferChecks.checkDirect(column);
 		BufferChecks.checkDirect(span);
-		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position() << 1, span, span.position() << 2, function_pointer);
+		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position() << 1, span, span.position() << 3, function_pointer);
 	}
 	public static void glGetSeparableFilter(int target, int format, int type, ShortBuffer row, ShortBuffer column, IntBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;

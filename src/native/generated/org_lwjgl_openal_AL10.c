@@ -9,8 +9,10 @@ typedef ALboolean (ALAPIENTRY *alIsEnabledPROC) (ALenum capability);
 typedef ALboolean (ALAPIENTRY *alGetBooleanPROC) (ALenum pname);
 typedef ALint (ALAPIENTRY *alGetIntegerPROC) (ALenum pname);
 typedef ALfloat (ALAPIENTRY *alGetFloatPROC) (ALenum pname);
+typedef ALdouble (ALAPIENTRY *alGetDoublePROC) (ALenum pname);
 typedef ALvoid (ALAPIENTRY *alGetIntegervPROC) (ALenum pname, ALint * data);
 typedef ALvoid (ALAPIENTRY *alGetFloatvPROC) (ALenum pname, ALfloat * data);
+typedef ALvoid (ALAPIENTRY *alGetDoublevPROC) (ALenum pname, ALdouble * data);
 typedef ALubyte * (ALAPIENTRY *alGetStringPROC) (ALenum pname);
 typedef ALenum (ALAPIENTRY *alGetErrorPROC) ();
 typedef ALboolean (ALAPIENTRY *alIsExtensionPresentPROC) (ALubyte * fname);
@@ -58,8 +60,10 @@ static alIsEnabledPROC alIsEnabled;
 static alGetBooleanPROC alGetBoolean;
 static alGetIntegerPROC alGetInteger;
 static alGetFloatPROC alGetFloat;
+static alGetDoublePROC alGetDouble;
 static alGetIntegervPROC alGetIntegerv;
 static alGetFloatvPROC alGetFloatv;
+static alGetDoublevPROC alGetDoublev;
 static alGetStringPROC alGetString;
 static alGetErrorPROC alGetError;
 static alIsExtensionPresentPROC alIsExtensionPresent;
@@ -129,6 +133,11 @@ static jfloat JNICALL Java_org_lwjgl_openal_AL10_nalGetFloat(JNIEnv *env, jclass
 	return __result;
 }
 
+static jdouble JNICALL Java_org_lwjgl_openal_AL10_nalGetDouble(JNIEnv *env, jclass clazz, jint pname) {
+	ALdouble __result = alGetDouble(pname);
+	return __result;
+}
+
 static void JNICALL Java_org_lwjgl_openal_AL10_nalGetIntegerv(JNIEnv *env, jclass clazz, jint pname, jobject data, jint data_position) {
 	ALint *data_address = ((ALint *)(*env)->GetDirectBufferAddress(env, data)) + data_position;
 	alGetIntegerv(pname, data_address);
@@ -137,6 +146,11 @@ static void JNICALL Java_org_lwjgl_openal_AL10_nalGetIntegerv(JNIEnv *env, jclas
 static void JNICALL Java_org_lwjgl_openal_AL10_nalGetFloatv(JNIEnv *env, jclass clazz, jint pname, jobject data, jint data_position) {
 	ALfloat *data_address = ((ALfloat *)(*env)->GetDirectBufferAddress(env, data)) + data_position;
 	alGetFloatv(pname, data_address);
+}
+
+static void JNICALL Java_org_lwjgl_openal_AL10_nalGetDoublev(JNIEnv *env, jclass clazz, jint pname, jobject data, jint data_position) {
+	ALdouble *data_address = ((ALdouble *)(*env)->GetDirectBufferAddress(env, data)) + data_position;
+	alGetDoublev(pname, data_address);
 }
 
 static jobject JNICALL Java_org_lwjgl_openal_AL10_alGetString(JNIEnv *env, jclass clazz, jint pname) {
@@ -342,8 +356,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_initNativeStubs(JNIEnv *env, j
 		{"nalGetBoolean", "(I)Z", (void *)&Java_org_lwjgl_openal_AL10_nalGetBoolean, "alGetBoolean", (void *)&alGetBoolean},
 		{"nalGetInteger", "(I)I", (void *)&Java_org_lwjgl_openal_AL10_nalGetInteger, "alGetInteger", (void *)&alGetInteger},
 		{"nalGetFloat", "(I)F", (void *)&Java_org_lwjgl_openal_AL10_nalGetFloat, "alGetFloat", (void *)&alGetFloat},
+		{"nalGetDouble", "(I)D", (void *)&Java_org_lwjgl_openal_AL10_nalGetDouble, "alGetDouble", (void *)&alGetDouble},
 		{"nalGetIntegerv", "(ILjava/nio/IntBuffer;I)V", (void *)&Java_org_lwjgl_openal_AL10_nalGetIntegerv, "alGetIntegerv", (void *)&alGetIntegerv},
 		{"nalGetFloatv", "(ILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_openal_AL10_nalGetFloatv, "alGetFloatv", (void *)&alGetFloatv},
+		{"nalGetDoublev", "(ILjava/nio/DoubleBuffer;I)V", (void *)&Java_org_lwjgl_openal_AL10_nalGetDoublev, "alGetDoublev", (void *)&alGetDoublev},
 		{"alGetString", "(I)Ljava/lang/String;", (void *)&Java_org_lwjgl_openal_AL10_alGetString, "alGetString", (void *)&alGetString},
 		{"alGetError", "()I", (void *)&Java_org_lwjgl_openal_AL10_alGetError, "alGetError", (void *)&alGetError},
 		{"nalIsExtensionPresent", "(Ljava/lang/String;)Z", (void *)&Java_org_lwjgl_openal_AL10_nalIsExtensionPresent, "alIsExtensionPresent", (void *)&alIsExtensionPresent},

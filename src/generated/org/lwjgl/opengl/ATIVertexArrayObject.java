@@ -33,6 +33,13 @@ public final class ATIVertexArrayObject {
 		int __result = nglNewObjectBufferATI((pPointer.remaining()), pPointer, pPointer.position(), usage, function_pointer);
 		return __result;
 	}
+	public static int glNewObjectBufferATI(DoubleBuffer pPointer, int usage) {
+		long function_pointer = GLContext.getCapabilities().ATI_vertex_array_object_glNewObjectBufferATI_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(pPointer);
+		int __result = nglNewObjectBufferATI((pPointer.remaining() << 3), pPointer, pPointer.position() << 3, usage, function_pointer);
+		return __result;
+	}
 	public static int glNewObjectBufferATI(FloatBuffer pPointer, int usage) {
 		long function_pointer = GLContext.getCapabilities().ATI_vertex_array_object_glNewObjectBufferATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -69,6 +76,12 @@ public final class ATIVertexArrayObject {
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(pPointer);
 		nglUpdateObjectBufferATI(buffer, offset, (pPointer.remaining()), pPointer, pPointer.position(), preserve, function_pointer);
+	}
+	public static void glUpdateObjectBufferATI(int buffer, int offset, DoubleBuffer pPointer, int preserve) {
+		long function_pointer = GLContext.getCapabilities().ATI_vertex_array_object_glUpdateObjectBufferATI_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(pPointer);
+		nglUpdateObjectBufferATI(buffer, offset, (pPointer.remaining() << 3), pPointer, pPointer.position() << 3, preserve, function_pointer);
 	}
 	public static void glUpdateObjectBufferATI(int buffer, int offset, FloatBuffer pPointer, int preserve) {
 		long function_pointer = GLContext.getCapabilities().ATI_vertex_array_object_glUpdateObjectBufferATI_pointer;

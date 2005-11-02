@@ -541,10 +541,10 @@ public class GLImpl implements IGL {
 	/**
 	 * @param c
 	 */
-	public void glClearIndex(float c) {
+/*	public void glClearIndex(float c) {
 		GL.glClearIndex(c);
 	}
-
+*/
 	/**
 	 * @param s
 	 */

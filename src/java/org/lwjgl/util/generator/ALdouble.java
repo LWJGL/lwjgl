@@ -29,31 +29,19 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.opengl;
+package org.lwjgl.util.generator;
 
-import java.nio.Buffer;
+/**
+ * $Id$
+ *
+ * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @version $Revision$
+ */
 
-import org.lwjgl.util.generator.*;
+import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
-public interface EXT_fog_coord {
-	int GL_FOG_COORDINATE_SOURCE_EXT = 0x8450;
-	int GL_FOG_COORDINATE_EXT = 0x8451;
-	int GL_FRAGMENT_DEPTH_EXT = 0x8452;
-	int GL_CURRENT_FOG_COORDINATE_EXT = 0x8453;
-	int GL_FOG_COORDINATE_ARRAY_TYPE_EXT = 0x8454;
-	int GL_FOG_COORDINATE_ARRAY_STRIDE_EXT = 0x8455;
-	int GL_FOG_COORDINATE_ARRAY_POINTER_EXT = 0x8456;
-	int GL_FOG_COORDINATE_ARRAY_EXT = 0x8457;
-
-	void glFogCoordfEXT(float coord);
-	void glFogCoorddEXT(double coord);
-
-	void glFogCoordPointerEXT(@AutoType("data") @GLenum int type, @GLsizei int stride,
-			@CachedReference
-			@BufferObject(BufferKind.ArrayVBO)
-			@Check
-			@Const
-			@GLfloat
-			@GLdouble
-			Buffer data);
+@NativeType
+@Target({ElementType.PARAMETER, ElementType.METHOD})
+public @interface ALdouble {
 }

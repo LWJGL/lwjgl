@@ -92,6 +92,12 @@ public final class GL15 {
 		BufferChecks.checkDirect(data);
 		nglBufferData(target, (data.remaining()), data, data.position(), usage, function_pointer);
 	}
+	public static void glBufferData(int target, DoubleBuffer data, int usage) {
+		long function_pointer = GLContext.getCapabilities().GL15_glBufferData_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(data);
+		nglBufferData(target, (data.remaining() << 3), data, data.position() << 3, usage, function_pointer);
+	}
 	public static void glBufferData(int target, FloatBuffer data, int usage) {
 		long function_pointer = GLContext.getCapabilities().GL15_glBufferData_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -118,6 +124,12 @@ public final class GL15 {
 		BufferChecks.checkDirect(data);
 		nglBufferSubData(target, offset, (data.remaining()), data, data.position(), function_pointer);
 	}
+	public static void glBufferSubData(int target, int offset, DoubleBuffer data) {
+		long function_pointer = GLContext.getCapabilities().GL15_glBufferSubData_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(data);
+		nglBufferSubData(target, offset, (data.remaining() << 3), data, data.position() << 3, function_pointer);
+	}
 	public static void glBufferSubData(int target, int offset, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().GL15_glBufferSubData_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -143,6 +155,12 @@ public final class GL15 {
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(data);
 		nglGetBufferSubData(target, offset, (data.remaining()), data, data.position(), function_pointer);
+	}
+	public static void glGetBufferSubData(int target, int offset, DoubleBuffer data) {
+		long function_pointer = GLContext.getCapabilities().GL15_glGetBufferSubData_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(data);
+		nglGetBufferSubData(target, offset, (data.remaining() << 3), data, data.position() << 3, function_pointer);
 	}
 	public static void glGetBufferSubData(int target, int offset, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().GL15_glGetBufferSubData_pointer;

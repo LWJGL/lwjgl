@@ -72,6 +72,7 @@ public interface EXT_paletted_texture {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer data);
 
 	void glColorSubTableEXT(@GLenum int target, @GLsizei int start, @GLsizei int count, @GLenum int format, @GLenum int type,
@@ -81,6 +82,7 @@ public interface EXT_paletted_texture {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer data);
 
 	void glGetColorTableEXT(@GLenum int target, @GLenum int format, @GLenum int type,
@@ -89,6 +91,7 @@ public interface EXT_paletted_texture {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer data);
 
 	@StripPostfix("params")

@@ -106,6 +106,14 @@ public final class NVVertexProgram extends NVProgram {
 	}
 	private static native void nglGetProgramParameterfvNV(int target, int index, int parameterName, FloatBuffer params, int params_position, long function_pointer);
 
+	public static void glGetProgramParameterNV(int target, int index, int parameterName, DoubleBuffer params) {
+		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glGetProgramParameterdvNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
+		nglGetProgramParameterdvNV(target, index, parameterName, params, params.position(), function_pointer);
+	}
+	private static native void nglGetProgramParameterdvNV(int target, int index, int parameterName, DoubleBuffer params, int params_position, long function_pointer);
+
 	public static void glGetTrackMatrixNV(int target, int address, int parameterName, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glGetTrackMatrixivNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -121,6 +129,14 @@ public final class NVVertexProgram extends NVProgram {
 		nglGetVertexAttribfvNV(index, parameterName, params, params.position(), function_pointer);
 	}
 	private static native void nglGetVertexAttribfvNV(int index, int parameterName, FloatBuffer params, int params_position, long function_pointer);
+
+	public static void glGetVertexAttribNV(int index, int parameterName, DoubleBuffer params) {
+		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glGetVertexAttribdvNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
+		nglGetVertexAttribdvNV(index, parameterName, params, params.position(), function_pointer);
+	}
+	private static native void nglGetVertexAttribdvNV(int index, int parameterName, DoubleBuffer params, int params_position, long function_pointer);
 
 	public static void glGetVertexAttribNV(int index, int parameterName, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glGetVertexAttribivNV_pointer;
@@ -145,6 +161,13 @@ public final class NVVertexProgram extends NVProgram {
 	}
 	private static native void nglProgramParameter4fNV(int target, int index, float x, float y, float z, float w, long function_pointer);
 
+	public static void glProgramParameter4dNV(int target, int index, double x, double y, double z, double w) {
+		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glProgramParameter4dNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglProgramParameter4dNV(target, index, x, y, z, w, function_pointer);
+	}
+	private static native void nglProgramParameter4dNV(int target, int index, double x, double y, double z, double w, long function_pointer);
+
 	public static void glProgramParameters4NV(int target, int index, FloatBuffer params) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glProgramParameters4fvNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -153,6 +176,14 @@ public final class NVVertexProgram extends NVProgram {
 	}
 	private static native void nglProgramParameters4fvNV(int target, int index, int count, FloatBuffer params, int params_position, long function_pointer);
 
+	public static void glProgramParameters4NV(int target, int index, DoubleBuffer params) {
+		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glProgramParameters4dvNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(params);
+		nglProgramParameters4dvNV(target, index, (params.remaining()) >> 2, params, params.position(), function_pointer);
+	}
+	private static native void nglProgramParameters4dvNV(int target, int index, int count, DoubleBuffer params, int params_position, long function_pointer);
+
 	public static void glTrackMatrixNV(int target, int address, int matrix, int transform) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glTrackMatrixNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -160,6 +191,14 @@ public final class NVVertexProgram extends NVProgram {
 	}
 	private static native void nglTrackMatrixNV(int target, int address, int matrix, int transform, long function_pointer);
 
+	public static void glVertexAttribPointerNV(int index, int size, int type, int stride, DoubleBuffer buffer) {
+		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttribPointerNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(buffer);
+		GLChecks.getReferences().NV_vertex_program_glVertexAttribPointerNV_buffer = buffer;
+		nglVertexAttribPointerNV(index, size, type, stride, buffer, buffer.position() << 3, function_pointer);
+	}
 	public static void glVertexAttribPointerNV(int index, int size, int type, int stride, FloatBuffer buffer) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttribPointerNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -215,6 +254,13 @@ public final class NVVertexProgram extends NVProgram {
 	}
 	private static native void nglVertexAttrib1fNV(int index, float x, long function_pointer);
 
+	public static void glVertexAttrib1dNV(int index, double x) {
+		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttrib1dNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglVertexAttrib1dNV(index, x, function_pointer);
+	}
+	private static native void nglVertexAttrib1dNV(int index, double x, long function_pointer);
+
 	public static void glVertexAttrib2sNV(int index, short x, short y) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttrib2sNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -228,6 +274,13 @@ public final class NVVertexProgram extends NVProgram {
 		nglVertexAttrib2fNV(index, x, y, function_pointer);
 	}
 	private static native void nglVertexAttrib2fNV(int index, float x, float y, long function_pointer);
+
+	public static void glVertexAttrib2dNV(int index, double x, double y) {
+		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttrib2dNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglVertexAttrib2dNV(index, x, y, function_pointer);
+	}
+	private static native void nglVertexAttrib2dNV(int index, double x, double y, long function_pointer);
 
 	public static void glVertexAttrib3sNV(int index, short x, short y, short z) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttrib3sNV_pointer;
@@ -243,6 +296,13 @@ public final class NVVertexProgram extends NVProgram {
 	}
 	private static native void nglVertexAttrib3fNV(int index, float x, float y, float z, long function_pointer);
 
+	public static void glVertexAttrib3dNV(int index, double x, double y, double z) {
+		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttrib3dNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglVertexAttrib3dNV(index, x, y, z, function_pointer);
+	}
+	private static native void nglVertexAttrib3dNV(int index, double x, double y, double z, long function_pointer);
+
 	public static void glVertexAttrib4sNV(int index, short x, short y, short z, short w) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttrib4sNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -256,6 +316,13 @@ public final class NVVertexProgram extends NVProgram {
 		nglVertexAttrib4fNV(index, x, y, z, w, function_pointer);
 	}
 	private static native void nglVertexAttrib4fNV(int index, float x, float y, float z, float w, long function_pointer);
+
+	public static void glVertexAttrib4dNV(int index, double x, double y, double z, double w) {
+		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttrib4dNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglVertexAttrib4dNV(index, x, y, z, w, function_pointer);
+	}
+	private static native void nglVertexAttrib4dNV(int index, double x, double y, double z, double w, long function_pointer);
 
 	public static void glVertexAttrib4ubNV(int index, byte x, byte y, byte z, byte w) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttrib4ubNV_pointer;
@@ -280,6 +347,14 @@ public final class NVVertexProgram extends NVProgram {
 	}
 	private static native void nglVertexAttribs1fvNV(int index, int n, FloatBuffer v, int v_position, long function_pointer);
 
+	public static void glVertexAttribs1NV(int index, DoubleBuffer v) {
+		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttribs1dvNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(v);
+		nglVertexAttribs1dvNV(index, (v.remaining()), v, v.position(), function_pointer);
+	}
+	private static native void nglVertexAttribs1dvNV(int index, int n, DoubleBuffer v, int v_position, long function_pointer);
+
 	public static void glVertexAttribs2NV(int index, ShortBuffer v) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttribs2svNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -295,6 +370,14 @@ public final class NVVertexProgram extends NVProgram {
 		nglVertexAttribs2fvNV(index, (v.remaining()) >> 1, v, v.position(), function_pointer);
 	}
 	private static native void nglVertexAttribs2fvNV(int index, int n, FloatBuffer v, int v_position, long function_pointer);
+
+	public static void glVertexAttribs2NV(int index, DoubleBuffer v) {
+		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttribs2dvNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(v);
+		nglVertexAttribs2dvNV(index, (v.remaining()) >> 1, v, v.position(), function_pointer);
+	}
+	private static native void nglVertexAttribs2dvNV(int index, int n, DoubleBuffer v, int v_position, long function_pointer);
 
 	public static void glVertexAttribs3NV(int index, ShortBuffer v) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttribs3svNV_pointer;
@@ -312,6 +395,14 @@ public final class NVVertexProgram extends NVProgram {
 	}
 	private static native void nglVertexAttribs3fvNV(int index, int n, FloatBuffer v, int v_position, long function_pointer);
 
+	public static void glVertexAttribs3NV(int index, DoubleBuffer v) {
+		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttribs3dvNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(v);
+		nglVertexAttribs3dvNV(index, (v.remaining()) / 3, v, v.position(), function_pointer);
+	}
+	private static native void nglVertexAttribs3dvNV(int index, int n, DoubleBuffer v, int v_position, long function_pointer);
+
 	public static void glVertexAttribs4NV(int index, ShortBuffer v) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttribs4svNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -327,4 +418,12 @@ public final class NVVertexProgram extends NVProgram {
 		nglVertexAttribs4fvNV(index, (v.remaining()) >> 2, v, v.position(), function_pointer);
 	}
 	private static native void nglVertexAttribs4fvNV(int index, int n, FloatBuffer v, int v_position, long function_pointer);
+
+	public static void glVertexAttribs4NV(int index, DoubleBuffer v) {
+		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttribs4dvNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(v);
+		nglVertexAttribs4dvNV(index, (v.remaining()) >> 2, v, v.position(), function_pointer);
+	}
+	private static native void nglVertexAttribs4dvNV(int index, int n, DoubleBuffer v, int v_position, long function_pointer);
 }

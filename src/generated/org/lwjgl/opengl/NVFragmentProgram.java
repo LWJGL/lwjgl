@@ -25,6 +25,14 @@ public final class NVFragmentProgram extends NVProgram {
 	}
 	private static native void nglProgramNamedParameter4fNV(int id, int length, ByteBuffer name, int name_position, float x, float y, float z, float w, long function_pointer);
 
+	public static void glProgramNamedParameter4dNV(int id, ByteBuffer name, double x, double y, double z, double w) {
+		long function_pointer = GLContext.getCapabilities().NV_fragment_program_glProgramNamedParameter4dNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(name);
+		nglProgramNamedParameter4dNV(id, (name.remaining()), name, name.position(), x, y, z, w, function_pointer);
+	}
+	private static native void nglProgramNamedParameter4dNV(int id, int length, ByteBuffer name, int name_position, double x, double y, double z, double w, long function_pointer);
+
 	public static void glGetProgramNamedParameterNV(int id, ByteBuffer name, FloatBuffer params) {
 		long function_pointer = GLContext.getCapabilities().NV_fragment_program_glGetProgramNamedParameterfvNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -33,4 +41,13 @@ public final class NVFragmentProgram extends NVProgram {
 		nglGetProgramNamedParameterfvNV(id, (name.remaining()), name, name.position(), params, params.position(), function_pointer);
 	}
 	private static native void nglGetProgramNamedParameterfvNV(int id, int length, ByteBuffer name, int name_position, FloatBuffer params, int params_position, long function_pointer);
+
+	public static void glGetProgramNamedParameterNV(int id, ByteBuffer name, DoubleBuffer params) {
+		long function_pointer = GLContext.getCapabilities().NV_fragment_program_glGetProgramNamedParameterdvNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(name);
+		BufferChecks.checkBuffer(params, 4);
+		nglGetProgramNamedParameterdvNV(id, (name.remaining()), name, name.position(), params, params.position(), function_pointer);
+	}
+	private static native void nglGetProgramNamedParameterdvNV(int id, int length, ByteBuffer name, int name_position, DoubleBuffer params, int params_position, long function_pointer);
 }

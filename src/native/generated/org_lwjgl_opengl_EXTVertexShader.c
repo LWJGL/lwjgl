@@ -22,6 +22,7 @@ typedef void (APIENTRY *glVariantbvEXTPROC) (GLuint id, const GLbyte * pAddr);
 typedef void (APIENTRY *glVariantsvEXTPROC) (GLuint id, const GLshort * pAddr);
 typedef void (APIENTRY *glVariantivEXTPROC) (GLuint id, const GLint * pAddr);
 typedef void (APIENTRY *glVariantfvEXTPROC) (GLuint id, const GLfloat * pAddr);
+typedef void (APIENTRY *glVariantdvEXTPROC) (GLuint id, const GLdouble * pAddr);
 typedef void (APIENTRY *glVariantubvEXTPROC) (GLuint id, const GLubyte * pAddr);
 typedef void (APIENTRY *glVariantusvEXTPROC) (GLuint id, const GLushort * pAddr);
 typedef void (APIENTRY *glVariantuivEXTPROC) (GLuint id, const GLuint * pAddr);
@@ -146,6 +147,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantfvEXT(JNI
 	const GLfloat *pAddr_address = ((const GLfloat *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position;
 	glVariantfvEXTPROC glVariantfvEXT = (glVariantfvEXTPROC)((intptr_t)function_pointer);
 	glVariantfvEXT(id, pAddr_address);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantdvEXT(JNIEnv *env, jclass clazz, jint id, jobject pAddr, jint pAddr_position, jlong function_pointer) {
+	const GLdouble *pAddr_address = ((const GLdouble *)(*env)->GetDirectBufferAddress(env, pAddr)) + pAddr_position;
+	glVariantdvEXTPROC glVariantdvEXT = (glVariantdvEXTPROC)((intptr_t)function_pointer);
+	glVariantdvEXT(id, pAddr_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantubvEXT(JNIEnv *env, jclass clazz, jint id, jobject pAddr, jint pAddr_position, jlong function_pointer) {

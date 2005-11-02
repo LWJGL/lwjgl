@@ -105,6 +105,7 @@ public interface GL12 {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer pixels);
 
 	void glTexSubImage3D(@GLenum int target, int level, int xoffset, int yoffset, int zoffset, @GLsizei int width, @GLsizei int height, @GLsizei int depth, @GLenum int format, @GLenum int type,
@@ -115,6 +116,7 @@ public interface GL12 {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer pixels);
 	void glCopyTexSubImage3D(@GLenum int target, int level, int xoffset, int yoffset, int zoffset, int x, int y, @GLsizei int width, @GLsizei int height);
 }

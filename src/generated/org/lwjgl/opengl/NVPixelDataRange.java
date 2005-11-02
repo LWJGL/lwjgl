@@ -24,6 +24,12 @@ public final class NVPixelDataRange {
 		BufferChecks.checkDirect(data);
 		nglPixelDataRangeNV(target, (data.remaining()), data, data.position(), function_pointer);
 	}
+	public static void glPixelDataRangeNV(int target, DoubleBuffer data) {
+		long function_pointer = GLContext.getCapabilities().NV_pixel_data_range_glPixelDataRangeNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(data);
+		nglPixelDataRangeNV(target, (data.remaining() << 3), data, data.position() << 3, function_pointer);
+	}
 	public static void glPixelDataRangeNV(int target, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().NV_pixel_data_range_glPixelDataRangeNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);

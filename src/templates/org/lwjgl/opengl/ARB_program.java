@@ -33,6 +33,7 @@ package org.lwjgl.opengl;
 
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.util.generator.*;
@@ -136,19 +137,35 @@ public interface ARB_program {
 
 	void glProgramEnvParameter4fARB(int target, int index, float x, float y, float z, float w);
 
+	void glProgramEnvParameter4dARB(int target, int index, double x, double y, double z, double w);
+
 	@StripPostfix("params")
 	void glProgramEnvParameter4fvARB(@GLenum int target, @GLuint int index, @Check("4") @Const FloatBuffer params);
+	
+	@StripPostfix("params")
+	void glProgramEnvParameter4dvARB(@GLenum int target, @GLuint int index, @Check("4") @Const DoubleBuffer params);
 
 	void glProgramLocalParameter4fARB(@GLenum int target, @GLuint int index, float x, float y, float z, float w);
 
+	void glProgramLocalParameter4dARB(@GLenum int target, @GLuint int index, double x, double y, double z, double w);
+
 	@StripPostfix("params")
 	void glProgramLocalParameter4fvARB(@GLenum int target, @GLuint int index, @Check("4") @Const FloatBuffer params);
+	
+	@StripPostfix("params")
+	void glProgramLocalParameter4dvARB(@GLenum int target, @GLuint int index, @Check("4") @Const DoubleBuffer params);
 
 	@StripPostfix("params")
 	void glGetProgramEnvParameterfvARB(@GLenum int target, @GLuint int index, @Check("4") FloatBuffer params);
+	
+	@StripPostfix("params")
+	void glGetProgramEnvParameterdvARB(@GLenum int target, @GLuint int index, @Check("4") DoubleBuffer params);
 
 	@StripPostfix("params")
 	void glGetProgramLocalParameterfvARB(@GLenum int target, @GLuint int index, @Check("4") FloatBuffer params);
+	
+	@StripPostfix("params")
+	void glGetProgramLocalParameterdvARB(@GLenum int target, @GLuint int index, @Check("4") DoubleBuffer params);
 
 	@StripPostfix("params")
 	void glGetProgramivARB(@GLenum int target, @GLenum int parameterName, @Check("4") IntBuffer params);

@@ -27,6 +27,21 @@ public final class EXTFogCoord {
 	}
 	private static native void nglFogCoordfEXT(float coord, long function_pointer);
 
+	public static void glFogCoorddEXT(double coord) {
+		long function_pointer = GLContext.getCapabilities().EXT_fog_coord_glFogCoorddEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglFogCoorddEXT(coord, function_pointer);
+	}
+	private static native void nglFogCoorddEXT(double coord, long function_pointer);
+
+	public static void glFogCoordPointerEXT(int stride, DoubleBuffer data) {
+		long function_pointer = GLContext.getCapabilities().EXT_fog_coord_glFogCoordPointerEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(data);
+		GLChecks.getReferences().EXT_fog_coord_glFogCoordPointerEXT_data = data;
+		nglFogCoordPointerEXT(GL11.GL_DOUBLE, stride, data, data.position() << 3, function_pointer);
+	}
 	public static void glFogCoordPointerEXT(int stride, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().EXT_fog_coord_glFogCoordPointerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);

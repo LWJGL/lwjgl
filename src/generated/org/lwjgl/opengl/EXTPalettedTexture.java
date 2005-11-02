@@ -33,6 +33,12 @@ public final class EXTPalettedTexture {
 		BufferChecks.checkBuffer(data, GLChecks.calculateImageStorage(data, format, type, width, 1, 1));
 		nglColorTableEXT(target, internalFormat, width, format, type, data, data.position(), function_pointer);
 	}
+	public static void glColorTableEXT(int target, int internalFormat, int width, int format, int type, DoubleBuffer data) {
+		long function_pointer = GLContext.getCapabilities().EXT_paletted_texture_glColorTableEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(data, GLChecks.calculateImageStorage(data, format, type, width, 1, 1));
+		nglColorTableEXT(target, internalFormat, width, format, type, data, data.position() << 3, function_pointer);
+	}
 	public static void glColorTableEXT(int target, int internalFormat, int width, int format, int type, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().EXT_paletted_texture_glColorTableEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -59,6 +65,12 @@ public final class EXTPalettedTexture {
 		BufferChecks.checkBuffer(data, GLChecks.calculateImageStorage(data, format, type, count, 1, 1));
 		nglColorSubTableEXT(target, start, count, format, type, data, data.position(), function_pointer);
 	}
+	public static void glColorSubTableEXT(int target, int start, int count, int format, int type, DoubleBuffer data) {
+		long function_pointer = GLContext.getCapabilities().EXT_paletted_texture_glColorSubTableEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(data, GLChecks.calculateImageStorage(data, format, type, count, 1, 1));
+		nglColorSubTableEXT(target, start, count, format, type, data, data.position() << 3, function_pointer);
+	}
 	public static void glColorSubTableEXT(int target, int start, int count, int format, int type, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().EXT_paletted_texture_glColorSubTableEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -84,6 +96,12 @@ public final class EXTPalettedTexture {
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(data);
 		nglGetColorTableEXT(target, format, type, data, data.position(), function_pointer);
+	}
+	public static void glGetColorTableEXT(int target, int format, int type, DoubleBuffer data) {
+		long function_pointer = GLContext.getCapabilities().EXT_paletted_texture_glGetColorTableEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(data);
+		nglGetColorTableEXT(target, format, type, data, data.position() << 3, function_pointer);
 	}
 	public static void glGetColorTableEXT(int target, int format, int type, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().EXT_paletted_texture_glGetColorTableEXT_pointer;

@@ -31,12 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.nio.BufferOverflowException;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
+import java.nio.*;
 
 import org.lwjgl.util.generator.*;
 
@@ -200,10 +195,17 @@ public interface NV_vertex_program extends NV_program {
 	void glGetProgramParameterfvNV(@GLenum int target, @GLuint int index, @GLenum int parameterName, @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
+	void glGetProgramParameterdvNV(@GLenum int target, @GLuint int index, @GLenum int parameterName, @Check("4") DoubleBuffer params);
+
+	@StripPostfix("params")
 	void glGetTrackMatrixivNV(@GLenum int target, @GLuint int address, @GLenum int parameterName, @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
 	void glGetVertexAttribfvNV(@GLuint int index, @GLenum int parameterName, @Check("4") FloatBuffer params);
+	
+	@StripPostfix("params")
+	void glGetVertexAttribdvNV(@GLuint int index, @GLenum int parameterName, @Check("4") DoubleBuffer params);
+	
 	@StripPostfix("params")
 	void glGetVertexAttribivNV(@GLuint int index, @GLenum int parameterName, @Check("4") IntBuffer params);
 
@@ -211,11 +213,18 @@ public interface NV_vertex_program extends NV_program {
 	void glGetVertexAttribPointervNV(@GLuint int index, @GLenum int parameterName, @Result @GLvoid ByteBuffer pointer);
 
 	void glProgramParameter4fNV(@GLenum int target, @GLuint int index, float x, float y, float z, float w);
+	
+	void glProgramParameter4dNV(@GLenum int target, @GLuint int index, double x, double y, double z, double w);
 
 	@StripPostfix("params")
 	void glProgramParameters4fvNV(@GLenum int target, @GLuint int index, @AutoSize(value="params", expression=" >> 2") @GLuint int count,
 			@Const
 			FloatBuffer params);
+	
+	@StripPostfix("params")
+	void glProgramParameters4dvNV(@GLenum int target, @GLuint int index, @AutoSize(value="params", expression=" >> 2") @GLuint int count,
+			@Const
+			DoubleBuffer params);
 
 	void glTrackMatrixNV(@GLenum int target, @GLuint int address, @GLenum int matrix, @GLenum int transform);
 
@@ -231,23 +240,32 @@ public interface NV_vertex_program extends NV_program {
 			@GLint
 			@GLuint
 			@GLfloat
+			@GLdouble
 			Buffer buffer);
 
 	void glVertexAttrib1sNV(@GLuint int index, short x);
 
 	void glVertexAttrib1fNV(@GLuint int index, float x);
+	
+	void glVertexAttrib1dNV(@GLuint int index, double x);
 
 	void glVertexAttrib2sNV(@GLuint int index, short x, short y);
 
 	void glVertexAttrib2fNV(@GLuint int index, float x, float y);
+	
+	void glVertexAttrib2dNV(@GLuint int index, double x, double y);
 
 	void glVertexAttrib3sNV(@GLuint int index, short x, short y, short z);
 
 	void glVertexAttrib3fNV(@GLuint int index, float x, float y, float z);
+	
+	void glVertexAttrib3dNV(@GLuint int index, double x, double y, double z);
 
 	void glVertexAttrib4sNV(@GLuint int index, short x, short y, short z, short w);
 
 	void glVertexAttrib4fNV(@GLuint int index, float x, float y, float z, float w);
+	
+	void glVertexAttrib4dNV(@GLuint int index, double x, double y, double z, double w);
 
 	void glVertexAttrib4ubNV(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
 
@@ -255,19 +273,27 @@ public interface NV_vertex_program extends NV_program {
 	void glVertexAttribs1svNV(@GLuint int index, @AutoSize("v") @GLsizei int n, @Const ShortBuffer v);
 	@StripPostfix("v")
 	void glVertexAttribs1fvNV(@GLuint int index, @AutoSize("v") @GLsizei int n, @Const FloatBuffer v);
+	@StripPostfix("v")
+	void glVertexAttribs1dvNV(@GLuint int index, @AutoSize("v") @GLsizei int n, @Const DoubleBuffer v);
 
 	@StripPostfix("v")
 	void glVertexAttribs2svNV(@GLuint int index, @AutoSize(value="v", expression=" >> 1") @GLsizei int n, @Const ShortBuffer v);
 	@StripPostfix("v")
 	void glVertexAttribs2fvNV(@GLuint int index, @AutoSize(value="v", expression=" >> 1") @GLsizei int n, @Const FloatBuffer v);
+	@StripPostfix("v")
+	void glVertexAttribs2dvNV(@GLuint int index, @AutoSize(value="v", expression=" >> 1") @GLsizei int n, @Const DoubleBuffer v);
 
 	@StripPostfix("v")
 	void glVertexAttribs3svNV(@GLuint int index, @AutoSize(value="v", expression=" / 3") @GLsizei int n, @Const ShortBuffer v);
 	@StripPostfix("v")
 	void glVertexAttribs3fvNV(@GLuint int index, @AutoSize(value="v", expression=" / 3") @GLsizei int n, @Const FloatBuffer v);
+	@StripPostfix("v")
+	void glVertexAttribs3dvNV(@GLuint int index, @AutoSize(value="v", expression=" / 3") @GLsizei int n, @Const DoubleBuffer v);
 
 	@StripPostfix("v")
 	void glVertexAttribs4svNV(@GLuint int index, @AutoSize(value="v", expression=" >> 2") @GLsizei int n, @Const ShortBuffer v);
 	@StripPostfix("v")
 	void glVertexAttribs4fvNV(@GLuint int index, @AutoSize(value="v", expression=" >> 2") @GLsizei int n, @Const FloatBuffer v);
+	@StripPostfix("v")
+	void glVertexAttribs4dvNV(@GLuint int index, @AutoSize(value="v", expression=" >> 2") @GLsizei int n, @Const DoubleBuffer v);
 }

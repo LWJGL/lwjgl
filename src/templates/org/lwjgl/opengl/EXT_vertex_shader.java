@@ -31,11 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
+import java.nio.*;
 
 import org.lwjgl.util.generator.*;
 
@@ -187,6 +183,7 @@ public interface EXT_vertex_shader {
 			@GLint
 			@GLuint
 			@GLfloat
+			@GLdouble
 			Buffer pAddr);
 
 	void glSetLocalConstantEXT(@GLuint int id, @AutoType("pAddr") @GLenum int type,
@@ -199,6 +196,7 @@ public interface EXT_vertex_shader {
 			@GLint
 			@GLuint
 			@GLfloat
+			@GLdouble
 			Buffer pAddr);
 
 	@StripPostfix("pAddr")
@@ -209,6 +207,8 @@ public interface EXT_vertex_shader {
 	void glVariantivEXT(@GLuint int id, @Check("4") @Const IntBuffer pAddr);
 	@StripPostfix("pAddr")
 	void glVariantfvEXT(@GLuint int id, @Check("4") @Const FloatBuffer pAddr);
+	@StripPostfix("pAddr")
+	void glVariantdvEXT(@GLuint int id, @Check("4") @Const DoubleBuffer pAddr);
 
 	@StripPostfix("pAddr")
 	void glVariantubvEXT(@GLuint int id, @Check("4") @Const @GLubyte ByteBuffer pAddr);
@@ -229,6 +229,7 @@ public interface EXT_vertex_shader {
 			@GLushort
 			@GLuint
 			@GLfloat
+			@GLdouble
 			Buffer pAddr);
 
 	void glEnableVariantClientStateEXT(@GLuint int id);

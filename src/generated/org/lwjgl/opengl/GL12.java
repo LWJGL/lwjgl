@@ -87,6 +87,14 @@ public final class GL12 {
 			BufferChecks.checkBuffer(pixels, GLChecks.calculateTexImage3DStorage(pixels, format, type, width, height, depth, border));
 		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels != null ? pixels.position() : 0, function_pointer);
 	}
+	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, DoubleBuffer pixels) {
+		long function_pointer = GLContext.getCapabilities().GL12_glTexImage3D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		if (pixels != null)
+			BufferChecks.checkBuffer(pixels, GLChecks.calculateTexImage3DStorage(pixels, format, type, width, height, depth, border));
+		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels != null ? pixels.position() << 3 : 0, function_pointer);
+	}
 	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, FloatBuffer pixels) {
 		long function_pointer = GLContext.getCapabilities().GL12_glTexImage3D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -126,6 +134,13 @@ public final class GL12 {
 		GLChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, height, depth));
 		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position(), function_pointer);
+	}
+	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, DoubleBuffer pixels) {
+		long function_pointer = GLContext.getCapabilities().GL12_glTexSubImage3D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, height, depth));
+		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position() << 3, function_pointer);
 	}
 	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, FloatBuffer pixels) {
 		long function_pointer = GLContext.getCapabilities().GL12_glTexSubImage3D_pointer;

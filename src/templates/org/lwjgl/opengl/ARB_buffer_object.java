@@ -80,6 +80,7 @@ public interface ARB_buffer_object {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer data, @GLenum int usage);
 
 	void glBufferSubDataARB(@GLenum int target, @GLintptrARB int offset, @AutoSize("data") @GLsizeiptrARB int size,
@@ -89,6 +90,7 @@ public interface ARB_buffer_object {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer data);
 
 	void glGetBufferSubDataARB(@GLenum int target, @GLintptrARB int offset, @AutoSize("data") @GLsizeiptrARB int size,
@@ -97,6 +99,7 @@ public interface ARB_buffer_object {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer data);
 
 	/**

@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.util.generator.*;
@@ -91,17 +92,25 @@ public interface ARB_vertex_program extends ARB_program {
 
 	void glVertexAttrib1fARB(@GLuint int index, float x);
 
+	void glVertexAttrib1dARB(@GLuint int index, double x);
+
 	void glVertexAttrib2sARB(@GLuint int index, short x, short y);
 
 	void glVertexAttrib2fARB(@GLuint int index, float x, float y);
 
+	void glVertexAttrib2dARB(@GLuint int index, double x, double y);
+
 	void glVertexAttrib3sARB(@GLuint int index, short x, short y, short z);
 
 	void glVertexAttrib3fARB(@GLuint int index, float x, float y, float z);
+	
+	void glVertexAttrib3dARB(@GLuint int index, double x, double y, double z);
 
 	void glVertexAttrib4sARB(@GLuint int index, short x, short y, short z, short w);
 
 	void glVertexAttrib4fARB(@GLuint int index, float x, float y, float z, float w);
+
+	void glVertexAttrib4dARB(@GLuint int index, double x, double y, double z, double w);
 
 	void glVertexAttrib4NubARB(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
 
@@ -117,6 +126,7 @@ public interface ARB_vertex_program extends ARB_program {
 			@GLint
 			@GLuint
 			@GLfloat
+			@GLdouble
 			Buffer buffer);
 
 	void glEnableVertexAttribArrayARB(@GLuint int index);
@@ -125,6 +135,8 @@ public interface ARB_vertex_program extends ARB_program {
 
 	@StripPostfix("params")
 	void glGetVertexAttribfvARB(@GLuint int index, @GLenum int pname, @Check FloatBuffer params);
+	@StripPostfix("params")
+	void glGetVertexAttribdvARB(@GLuint int index, @GLenum int pname, @Check DoubleBuffer params);
 	@StripPostfix("params")
 	void glGetVertexAttribivARB(@GLuint int index, @GLenum int pname, @Check IntBuffer params);
 

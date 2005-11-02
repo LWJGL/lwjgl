@@ -56,6 +56,7 @@ public interface ARB_texture_compression {
 		@GLshort
 		@GLint
 		@GLfloat
+		@GLdouble
 		Buffer pData);
 
 	void glCompressedTexImage2DARB(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, int border, @GLsizei int imageSize,
@@ -66,6 +67,7 @@ public interface ARB_texture_compression {
 		@GLshort
 		@GLint
 		@GLfloat
+		@GLdouble
 		Buffer pData);
 
 	void glCompressedTexImage3DARB(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, @GLsizei int depth, int border, @GLsizei int imageSize,
@@ -76,6 +78,7 @@ public interface ARB_texture_compression {
 		@GLshort
 		@GLint
 		@GLfloat
+		@GLdouble
 		Buffer pData);
 
 	void glCompressedTexSubImage1DARB(@GLenum int target, int level, int xoffset, @GLsizei int width, @GLenum int format, @GLsizei int imageSize,
@@ -86,6 +89,7 @@ public interface ARB_texture_compression {
 		@GLshort
 		@GLint
 		@GLfloat
+		@GLdouble
 		Buffer pData);
 
 	void glCompressedTexSubImage2DARB(@GLenum int target, int level, int xoffset, int yoffset, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLsizei int imageSize,
@@ -96,6 +100,7 @@ public interface ARB_texture_compression {
 		@GLshort
 		@GLint
 		@GLfloat
+		@GLdouble
 		Buffer pData);
 
 	void glCompressedTexSubImage3DARB(@GLenum int target, int level, int xoffset, int yoffset, int zoffset, @GLsizei int width, @GLsizei int height, @GLsizei int depth, @GLenum int format, @GLsizei int imageSize,
@@ -106,6 +111,7 @@ public interface ARB_texture_compression {
 		@GLshort
 		@GLint
 		@GLfloat
+		@GLdouble
 		Buffer pData);
 
 	void glGetCompressedTexImageARB(@GLenum int target, int lod,
@@ -115,5 +121,6 @@ public interface ARB_texture_compression {
 		@GLshort
 		@GLint
 		@GLfloat
+		@GLdouble
 		Buffer pImg);
 }

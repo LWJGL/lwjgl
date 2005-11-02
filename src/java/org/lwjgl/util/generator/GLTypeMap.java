@@ -125,6 +125,8 @@ public class GLTypeMap implements TypeMap {
 			return "b";
 		else if (annotation_type.equals(GLfloat.class))
 			return "f";
+		else if (annotation_type.equals(GLdouble.class))
+			return "d";
 		else if (annotation_type.equals(GLhalf.class))
 			return "h";
 		else if (annotation_type.equals(GLboolean.class) || annotation_type.equals(GLvoid.class))
@@ -258,6 +260,8 @@ public class GLTypeMap implements TypeMap {
 			return "GL11.GL_UNSIGNED_SHORT";
 		else if (annotation_class.equals(GLfloat.class))
 			return "GL11.GL_FLOAT";
+		else if (annotation_class.equals(GLdouble.class))
+			return "GL11.GL_DOUBLE";
 		else
 			return null;
 	}

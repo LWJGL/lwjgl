@@ -130,6 +130,7 @@ public interface ARB_imaging {
 			@Const
 			@GLbyte
 			@GLfloat
+			@GLdouble
 			Buffer data);
 
 	void glColorSubTable(@GLenum int target, @GLsizei int start, @GLsizei int count, @GLenum int format, @GLenum int type,
@@ -138,6 +139,7 @@ public interface ARB_imaging {
 			@Const
 			@GLbyte
 			@GLfloat
+			@GLdouble
 			Buffer data);
 
 	@StripPostfix("params")
@@ -154,6 +156,7 @@ public interface ARB_imaging {
 			@Check("256")
 			@GLbyte
 			@GLfloat
+			@GLdouble
 			Buffer data);
 
 	@StripPostfix("params")
@@ -176,6 +179,7 @@ public interface ARB_imaging {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer values);
 
 	@StripPostfix("params")
@@ -194,6 +198,7 @@ public interface ARB_imaging {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer values);
 
 	@StripPostfix("params")
@@ -209,6 +214,7 @@ public interface ARB_imaging {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer image);
 
 	void glConvolutionFilter2D(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLenum int type,
@@ -242,6 +248,7 @@ public interface ARB_imaging {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer image);
 
 	@StripPostfix("params")
@@ -258,6 +265,7 @@ public interface ARB_imaging {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer row,
 			@BufferObject(BufferKind.UnpackPBO)
 			@Check
@@ -266,6 +274,7 @@ public interface ARB_imaging {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer column);
 
 	// TODO: check buffer size valid
@@ -276,20 +285,21 @@ public interface ARB_imaging {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer row,
 			@BufferObject(BufferKind.PackPBO)
 			@Check
 			@GLbyte
 			@GLshort
 			@GLint
-			@GLfloat
+			@GLdouble
 			Buffer column,
 			@BufferObject(BufferKind.PackPBO)
 			@Check
 			@GLbyte
 			@GLshort
 			@GLint
-			@GLfloat
+			@GLdouble
 			Buffer span);
 }
 

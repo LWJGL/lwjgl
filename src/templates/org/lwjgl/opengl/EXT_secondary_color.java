@@ -47,6 +47,8 @@ public interface EXT_secondary_color {
 	void glSecondaryColor3bEXT(byte red, byte green, byte blue);
 
 	void glSecondaryColor3fEXT(float red, float green, float blue);
+	
+	void glSecondaryColor3dEXT(double red, double green, double blue);
 
 	void glSecondaryColor3ubEXT(@GLubyte byte red, @GLubyte byte green, @GLubyte byte blue);
 
@@ -58,5 +60,6 @@ public interface EXT_secondary_color {
 			@GLbyte
 			@GLubyte
 			@GLfloat
+			@GLdouble
 			Buffer pPointer);
 }

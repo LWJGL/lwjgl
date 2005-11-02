@@ -34,6 +34,7 @@ package org.lwjgl.openal;
 import java.nio.Buffer;
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
 
 import org.lwjgl.util.generator.*;
 
@@ -458,6 +459,21 @@ public interface AL10 {
 	 * in specifying pName. The amount of memory required in the destination
 	 * depends on the actual state requested.
 	 * </p>
+	 *
+	 * @return double state described by pname will be returned.
+	 */
+	double alGetDouble(@ALenum int pname);
+
+	/**
+	 * Like OpenGL, AL uses a simplified interface for querying global state.
+	 *
+	 * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
+	 * AL_DISTANCE_MODEL.
+	 * <p>
+	 * <code>null</code> destinations are quietly ignored. AL_INVALID_ENUM is the response to errors
+	 * in specifying pName. The amount of memory required in the destination
+	 * depends on the actual state requested.
+	 * </p>
 		*
 		* @param pname state to be queried
 		* @param data Buffer to place the integers in
@@ -483,6 +499,24 @@ public interface AL10 {
 	@StripPostfix("data")
 	@ALvoid
 	void alGetFloatv(@ALenum int pname, @Check("1") FloatBuffer data);
+	
+	/**
+	 * Like OpenGL, AL uses a simplified interface for querying global state.
+	 *
+	 * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
+	 * AL_DISTANCE_MODEL.
+	 * <p>
+	 * <code>null</code> destinations are quietly ignored. AL_INVALID_ENUM is the response to errors
+	 * in specifying pName. The amount of memory required in the destination
+	 * depends on the actual state requested.
+	 * </p>
+		*
+		* @param pname state to be queried
+		* @param data Buffer to place the doubles in
+		*/
+	@StripPostfix("data")
+	@ALvoid
+	void alGetDoublev(@ALenum int pname, @Check("1") DoubleBuffer data);
 
 	/**
 	 * The application can retrieve state information global to the current AL Context.

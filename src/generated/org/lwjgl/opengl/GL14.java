@@ -72,6 +72,21 @@ public final class GL14 {
 	}
 	private static native void nglFogCoordf(float coord, long function_pointer);
 
+	public static void glFogCoordd(double coord) {
+		long function_pointer = GLContext.getCapabilities().GL14_glFogCoordd_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglFogCoordd(coord, function_pointer);
+	}
+	private static native void nglFogCoordd(double coord, long function_pointer);
+
+	public static void glFogCoordPointer(int stride, DoubleBuffer data) {
+		long function_pointer = GLContext.getCapabilities().GL14_glFogCoordPointer_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(data);
+		GLChecks.getReferences().GL14_glFogCoordPointer_data = data;
+		nglFogCoordPointer(GL11.GL_DOUBLE, stride, data, data.position() << 3, function_pointer);
+	}
 	public static void glFogCoordPointer(int stride, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().GL14_glFogCoordPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -145,6 +160,13 @@ public final class GL14 {
 	}
 	private static native void nglSecondaryColor3f(float red, float green, float blue, long function_pointer);
 
+	public static void glSecondaryColor3d(double red, double green, double blue) {
+		long function_pointer = GLContext.getCapabilities().GL14_glSecondaryColor3d_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglSecondaryColor3d(red, green, blue, function_pointer);
+	}
+	private static native void nglSecondaryColor3d(double red, double green, double blue, long function_pointer);
+
 	public static void glSecondaryColor3ub(byte red, byte green, byte blue) {
 		long function_pointer = GLContext.getCapabilities().GL14_glSecondaryColor3ub_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -152,6 +174,13 @@ public final class GL14 {
 	}
 	private static native void nglSecondaryColor3ub(byte red, byte green, byte blue, long function_pointer);
 
+	public static void glSecondaryColorPointer(int size, int stride, DoubleBuffer data) {
+		long function_pointer = GLContext.getCapabilities().GL14_glSecondaryColorPointer_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(data);
+		nglSecondaryColorPointer(size, GL11.GL_DOUBLE, stride, data, data.position() << 3, function_pointer);
+	}
 	public static void glSecondaryColorPointer(int size, int stride, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().GL14_glSecondaryColorPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -189,6 +218,13 @@ public final class GL14 {
 	}
 	private static native void nglWindowPos2f(float x, float y, long function_pointer);
 
+	public static void glWindowPos2d(double x, double y) {
+		long function_pointer = GLContext.getCapabilities().GL14_glWindowPos2d_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglWindowPos2d(x, y, function_pointer);
+	}
+	private static native void nglWindowPos2d(double x, double y, long function_pointer);
+
 	public static void glWindowPos2i(int x, int y) {
 		long function_pointer = GLContext.getCapabilities().GL14_glWindowPos2i_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -202,6 +238,13 @@ public final class GL14 {
 		nglWindowPos3f(x, y, z, function_pointer);
 	}
 	private static native void nglWindowPos3f(float x, float y, float z, long function_pointer);
+
+	public static void glWindowPos3d(double x, double y, double z) {
+		long function_pointer = GLContext.getCapabilities().GL14_glWindowPos3d_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglWindowPos3d(x, y, z, function_pointer);
+	}
+	private static native void nglWindowPos3d(double x, double y, double z, long function_pointer);
 
 	public static void glWindowPos3i(int x, int y, int z) {
 		long function_pointer = GLContext.getCapabilities().GL14_glWindowPos3i_pointer;

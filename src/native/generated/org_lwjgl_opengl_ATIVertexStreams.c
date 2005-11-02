@@ -4,16 +4,20 @@
 #include "extgl.h"
 
 typedef void (APIENTRY *glVertexStream2fATIPROC) (GLenum stream, GLfloat x, GLfloat y);
+typedef void (APIENTRY *glVertexStream2dATIPROC) (GLenum stream, GLdouble x, GLdouble y);
 typedef void (APIENTRY *glVertexStream2iATIPROC) (GLenum stream, GLint x, GLint y);
 typedef void (APIENTRY *glVertexStream2sATIPROC) (GLenum stream, GLshort x, GLshort y);
 typedef void (APIENTRY *glVertexStream3fATIPROC) (GLenum stream, GLfloat x, GLfloat y, GLfloat z);
+typedef void (APIENTRY *glVertexStream3dATIPROC) (GLenum stream, GLdouble x, GLdouble y, GLdouble z);
 typedef void (APIENTRY *glVertexStream3iATIPROC) (GLenum stream, GLint x, GLint y, GLint z);
 typedef void (APIENTRY *glVertexStream3sATIPROC) (GLenum stream, GLshort x, GLshort y, GLshort z);
 typedef void (APIENTRY *glVertexStream4fATIPROC) (GLenum stream, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+typedef void (APIENTRY *glVertexStream4dATIPROC) (GLenum stream, GLdouble x, GLdouble y, GLdouble z, GLdouble w);
 typedef void (APIENTRY *glVertexStream4iATIPROC) (GLenum stream, GLint x, GLint y, GLint z, GLint w);
 typedef void (APIENTRY *glVertexStream4sATIPROC) (GLenum stream, GLshort x, GLshort y, GLshort z, GLshort w);
 typedef void (APIENTRY *glNormalStream3bATIPROC) (GLenum stream, GLbyte x, GLbyte y, GLbyte z);
 typedef void (APIENTRY *glNormalStream3fATIPROC) (GLenum stream, GLfloat x, GLfloat y, GLfloat z);
+typedef void (APIENTRY *glNormalStream3dATIPROC) (GLenum stream, GLdouble x, GLdouble y, GLdouble z);
 typedef void (APIENTRY *glNormalStream3iATIPROC) (GLenum stream, GLint x, GLint y, GLint z);
 typedef void (APIENTRY *glNormalStream3sATIPROC) (GLenum stream, GLshort x, GLshort y, GLshort z);
 typedef void (APIENTRY *glClientActiveVertexStreamATIPROC) (GLenum stream);
@@ -23,6 +27,11 @@ typedef void (APIENTRY *glVertexBlendEnviATIPROC) (GLenum pname, GLint param);
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_nglVertexStream2fATI(JNIEnv *env, jclass clazz, jint stream, jfloat x, jfloat y, jlong function_pointer) {
 	glVertexStream2fATIPROC glVertexStream2fATI = (glVertexStream2fATIPROC)((intptr_t)function_pointer);
 	glVertexStream2fATI(stream, x, y);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_nglVertexStream2dATI(JNIEnv *env, jclass clazz, jint stream, jdouble x, jdouble y, jlong function_pointer) {
+	glVertexStream2dATIPROC glVertexStream2dATI = (glVertexStream2dATIPROC)((intptr_t)function_pointer);
+	glVertexStream2dATI(stream, x, y);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_nglVertexStream2iATI(JNIEnv *env, jclass clazz, jint stream, jint x, jint y, jlong function_pointer) {
@@ -40,6 +49,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_nglVertexStream3fA
 	glVertexStream3fATI(stream, x, y, z);
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_nglVertexStream3dATI(JNIEnv *env, jclass clazz, jint stream, jdouble x, jdouble y, jdouble z, jlong function_pointer) {
+	glVertexStream3dATIPROC glVertexStream3dATI = (glVertexStream3dATIPROC)((intptr_t)function_pointer);
+	glVertexStream3dATI(stream, x, y, z);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_nglVertexStream3iATI(JNIEnv *env, jclass clazz, jint stream, jint x, jint y, jint z, jlong function_pointer) {
 	glVertexStream3iATIPROC glVertexStream3iATI = (glVertexStream3iATIPROC)((intptr_t)function_pointer);
 	glVertexStream3iATI(stream, x, y, z);
@@ -53,6 +67,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_nglVertexStream3sA
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_nglVertexStream4fATI(JNIEnv *env, jclass clazz, jint stream, jfloat x, jfloat y, jfloat z, jfloat w, jlong function_pointer) {
 	glVertexStream4fATIPROC glVertexStream4fATI = (glVertexStream4fATIPROC)((intptr_t)function_pointer);
 	glVertexStream4fATI(stream, x, y, z, w);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_nglVertexStream4dATI(JNIEnv *env, jclass clazz, jint stream, jdouble x, jdouble y, jdouble z, jdouble w, jlong function_pointer) {
+	glVertexStream4dATIPROC glVertexStream4dATI = (glVertexStream4dATIPROC)((intptr_t)function_pointer);
+	glVertexStream4dATI(stream, x, y, z, w);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_nglVertexStream4iATI(JNIEnv *env, jclass clazz, jint stream, jint x, jint y, jint z, jint w, jlong function_pointer) {
@@ -73,6 +92,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_nglNormalStream3bA
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_nglNormalStream3fATI(JNIEnv *env, jclass clazz, jint stream, jfloat x, jfloat y, jfloat z, jlong function_pointer) {
 	glNormalStream3fATIPROC glNormalStream3fATI = (glNormalStream3fATIPROC)((intptr_t)function_pointer);
 	glNormalStream3fATI(stream, x, y, z);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_nglNormalStream3dATI(JNIEnv *env, jclass clazz, jint stream, jdouble x, jdouble y, jdouble z, jlong function_pointer) {
+	glNormalStream3dATIPROC glNormalStream3dATI = (glNormalStream3dATIPROC)((intptr_t)function_pointer);
+	glNormalStream3dATI(stream, x, y, z);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_nglNormalStream3iATI(JNIEnv *env, jclass clazz, jint stream, jint x, jint y, jint z, jlong function_pointer) {

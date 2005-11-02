@@ -33,6 +33,7 @@ package org.lwjgl.opengl;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
 
 import org.lwjgl.util.generator.*;
 
@@ -58,7 +59,12 @@ public interface NV_fragment_program extends NV_program {
 
 	void glProgramNamedParameter4fNV(@GLuint int id, @AutoSize("name") @GLsizei int length, @Const @GLubyte ByteBuffer name, float x, float y, float z, float w);
 
+	void glProgramNamedParameter4dNV(@GLuint int id, @AutoSize("name") @GLsizei int length, @Const @GLubyte ByteBuffer name, double x, double y, double z, double w);
+
 	@StripPostfix("params")
 	void glGetProgramNamedParameterfvNV(@GLuint int id, @AutoSize("name") @GLsizei int length, @Const @GLubyte ByteBuffer name, @Check("4") FloatBuffer params);
+	
+	@StripPostfix("params")
+	void glGetProgramNamedParameterdvNV(@GLuint int id, @AutoSize("name") @GLsizei int length, @Const @GLubyte ByteBuffer name, @Check("4") DoubleBuffer params);
 }
 

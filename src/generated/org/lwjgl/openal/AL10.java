@@ -425,6 +425,24 @@ public final class AL10 {
 	 * in specifying pName. The amount of memory required in the destination
 	 * depends on the actual state requested.
 	 * </p>
+	 * @return double state described by pname will be returned.
+	 */
+	public static double alGetDouble(int pname) {
+		double __result = nalGetDouble(pname);
+		Util.checkALError();
+		return __result;
+	}
+	private static native double nalGetDouble(int pname);
+
+	/**
+	 * Like OpenGL, AL uses a simplified interface for querying global state.
+	 * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
+	 * AL_DISTANCE_MODEL.
+	 * <p>
+	 * <code>null</code> destinations are quietly ignored. AL_INVALID_ENUM is the response to errors
+	 * in specifying pName. The amount of memory required in the destination
+	 * depends on the actual state requested.
+	 * </p>
 	 * @param pname state to be queried
 	 * @param data Buffer to place the integers in
 	 */
@@ -453,6 +471,25 @@ public final class AL10 {
 		Util.checkALError();
 	}
 	private static native void nalGetFloatv(int pname, FloatBuffer data, int data_position);
+
+	/**
+	 * Like OpenGL, AL uses a simplified interface for querying global state.
+	 * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
+	 * AL_DISTANCE_MODEL.
+	 * <p>
+	 * <code>null</code> destinations are quietly ignored. AL_INVALID_ENUM is the response to errors
+	 * in specifying pName. The amount of memory required in the destination
+	 * depends on the actual state requested.
+	 * </p>
+	 * @param pname state to be queried
+	 * @param data Buffer to place the doubles in
+	 */
+	public static void alGetDouble(int pname, DoubleBuffer data) {
+		BufferChecks.checkBuffer(data, 1);
+		nalGetDoublev(pname, data, data.position());
+		Util.checkALError();
+	}
+	private static native void nalGetDoublev(int pname, DoubleBuffer data, int data_position);
 
 	/**
 	 * The application can retrieve state information global to the current AL Context.

@@ -256,18 +256,26 @@ public interface GL20 {
 	void glVertexAttrib1s(@GLuint int index, short x);
 
 	void glVertexAttrib1f(@GLuint int index, float x);
+	
+	void glVertexAttrib1d(@GLuint int index, double x);
 
 	void glVertexAttrib2s(@GLuint int index, short x, short y);
 
 	void glVertexAttrib2f(@GLuint int index, float x, float y);
 
+	void glVertexAttrib2d(@GLuint int index, double x, double y);
+
 	void glVertexAttrib3s(@GLuint int index, short x, short y, short z);
 
 	void glVertexAttrib3f(@GLuint int index, float x, float y, float z);
 
+	void glVertexAttrib3d(@GLuint int index, double x, double y, double z);
+
 	void glVertexAttrib4s(@GLuint int index, short x, short y, short z, short w);
 
 	void glVertexAttrib4f(@GLuint int index, float x, float y, float z, float w);
+	
+	void glVertexAttrib4d(@GLuint int index, double x, double y, double z, double w);
 
 	void glVertexAttrib4Nub(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
 
@@ -283,6 +291,7 @@ public interface GL20 {
 			@GLint
 			@GLuint
 			@GLfloat
+			@GLdouble
 			Buffer buffer);
 
 	void glEnableVertexAttribArray(@GLuint int index);
@@ -290,6 +299,8 @@ public interface GL20 {
 
 	@StripPostfix("params")
 	void glGetVertexAttribfv(@GLuint int index, @GLenum int pname, @Check("4") FloatBuffer params);
+	@StripPostfix("params")
+	void glGetVertexAttribdv(@GLuint int index, @GLenum int pname, @Check("4") DoubleBuffer params);
 	@StripPostfix("params")
 	void glGetVertexAttribiv(@GLuint int index, @GLenum int pname, @Check("4") IntBuffer params);
 

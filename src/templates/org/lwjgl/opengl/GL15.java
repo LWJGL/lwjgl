@@ -87,6 +87,7 @@ public interface GL15 {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer data, @GLenum int usage);
 	void glBufferSubData(@GLenum int target, @GLintptr int offset, @AutoSize("data") @GLsizeiptr int size,
 			@Check
@@ -95,6 +96,7 @@ public interface GL15 {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer data);
 
 	void glGetBufferSubData(@GLenum int target, @GLintptr int offset, @AutoSize("data") @GLsizeiptr int size,
@@ -103,6 +105,7 @@ public interface GL15 {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer data);
 
 	/**

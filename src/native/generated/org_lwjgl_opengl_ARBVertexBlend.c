@@ -7,6 +7,7 @@ typedef void (APIENTRY *glWeightbvARBPROC) (GLint size, GLbyte * pWeights);
 typedef void (APIENTRY *glWeightsvARBPROC) (GLint size, GLshort * pWeights);
 typedef void (APIENTRY *glWeightivARBPROC) (GLint size, GLint * pWeights);
 typedef void (APIENTRY *glWeightfvARBPROC) (GLint size, GLfloat * pWeights);
+typedef void (APIENTRY *glWeightdvARBPROC) (GLint size, GLdouble * pWeights);
 typedef void (APIENTRY *glWeightubvARBPROC) (GLint size, GLubyte * pWeights);
 typedef void (APIENTRY *glWeightusvARBPROC) (GLint size, GLushort * pWeights);
 typedef void (APIENTRY *glWeightuivARBPROC) (GLint size, GLuint * pWeights);
@@ -35,6 +36,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightfvARB(JNIEn
 	GLfloat *pWeights_address = ((GLfloat *)(*env)->GetDirectBufferAddress(env, pWeights)) + pWeights_position;
 	glWeightfvARBPROC glWeightfvARB = (glWeightfvARBPROC)((intptr_t)function_pointer);
 	glWeightfvARB(size, pWeights_address);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightdvARB(JNIEnv *env, jclass clazz, jint size, jobject pWeights, jint pWeights_position, jlong function_pointer) {
+	GLdouble *pWeights_address = ((GLdouble *)(*env)->GetDirectBufferAddress(env, pWeights)) + pWeights_position;
+	glWeightdvARBPROC glWeightdvARB = (glWeightdvARBPROC)((intptr_t)function_pointer);
+	glWeightdvARB(size, pWeights_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightubvARB(JNIEnv *env, jclass clazz, jint size, jobject pWeights, jint pWeights_position, jlong function_pointer) {

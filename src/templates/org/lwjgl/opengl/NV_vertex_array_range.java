@@ -49,6 +49,7 @@ public interface NV_vertex_array_range {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer pPointer);
 
 	void glFlushVertexArrayRangeNV();

@@ -19,6 +19,13 @@ public final class ARBWindowPos {
 	}
 	private static native void nglWindowPos2fARB(float x, float y, long function_pointer);
 
+	public static void glWindowPos2dARB(double x, double y) {
+		long function_pointer = GLContext.getCapabilities().ARB_window_pos_glWindowPos2dARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglWindowPos2dARB(x, y, function_pointer);
+	}
+	private static native void nglWindowPos2dARB(double x, double y, long function_pointer);
+
 	public static void glWindowPos2iARB(int x, int y) {
 		long function_pointer = GLContext.getCapabilities().ARB_window_pos_glWindowPos2iARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -39,6 +46,13 @@ public final class ARBWindowPos {
 		nglWindowPos3fARB(x, y, z, function_pointer);
 	}
 	private static native void nglWindowPos3fARB(float x, float y, float z, long function_pointer);
+
+	public static void glWindowPos3dARB(double x, double y, double z) {
+		long function_pointer = GLContext.getCapabilities().ARB_window_pos_glWindowPos3dARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglWindowPos3dARB(x, y, z, function_pointer);
+	}
+	private static native void nglWindowPos3dARB(double x, double y, double z, long function_pointer);
 
 	public static void glWindowPos3iARB(int x, int y, int z) {
 		long function_pointer = GLContext.getCapabilities().ARB_window_pos_glWindowPos3iARB_pointer;

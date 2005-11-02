@@ -153,7 +153,7 @@ public interface IGL {
 	/**
 	 * @param c
 	 */
-	void glClearIndex(float c);
+//	void glClearIndex(float c);
 
 	/**
 	 * @param s

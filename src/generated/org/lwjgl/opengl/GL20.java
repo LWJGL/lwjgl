@@ -459,6 +459,13 @@ public final class GL20 {
 	}
 	private static native void nglVertexAttrib1f(int index, float x, long function_pointer);
 
+	public static void glVertexAttrib1d(int index, double x) {
+		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttrib1d_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglVertexAttrib1d(index, x, function_pointer);
+	}
+	private static native void nglVertexAttrib1d(int index, double x, long function_pointer);
+
 	public static void glVertexAttrib2s(int index, short x, short y) {
 		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttrib2s_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -472,6 +479,13 @@ public final class GL20 {
 		nglVertexAttrib2f(index, x, y, function_pointer);
 	}
 	private static native void nglVertexAttrib2f(int index, float x, float y, long function_pointer);
+
+	public static void glVertexAttrib2d(int index, double x, double y) {
+		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttrib2d_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglVertexAttrib2d(index, x, y, function_pointer);
+	}
+	private static native void nglVertexAttrib2d(int index, double x, double y, long function_pointer);
 
 	public static void glVertexAttrib3s(int index, short x, short y, short z) {
 		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttrib3s_pointer;
@@ -487,6 +501,13 @@ public final class GL20 {
 	}
 	private static native void nglVertexAttrib3f(int index, float x, float y, float z, long function_pointer);
 
+	public static void glVertexAttrib3d(int index, double x, double y, double z) {
+		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttrib3d_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglVertexAttrib3d(index, x, y, z, function_pointer);
+	}
+	private static native void nglVertexAttrib3d(int index, double x, double y, double z, long function_pointer);
+
 	public static void glVertexAttrib4s(int index, short x, short y, short z, short w) {
 		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttrib4s_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -501,6 +522,13 @@ public final class GL20 {
 	}
 	private static native void nglVertexAttrib4f(int index, float x, float y, float z, float w, long function_pointer);
 
+	public static void glVertexAttrib4d(int index, double x, double y, double z, double w) {
+		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttrib4d_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglVertexAttrib4d(index, x, y, z, w, function_pointer);
+	}
+	private static native void nglVertexAttrib4d(int index, double x, double y, double z, double w, long function_pointer);
+
 	public static void glVertexAttrib4Nub(int index, byte x, byte y, byte z, byte w) {
 		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttrib4Nub_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -508,6 +536,14 @@ public final class GL20 {
 	}
 	private static native void nglVertexAttrib4Nub(int index, byte x, byte y, byte z, byte w, long function_pointer);
 
+	public static void glVertexAttribPointer(int index, int size, boolean normalized, int stride, DoubleBuffer buffer) {
+		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttribPointer_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(buffer);
+		GLChecks.getReferences().GL20_glVertexAttribPointer_buffer = buffer;
+		nglVertexAttribPointer(index, size, GL11.GL_DOUBLE, normalized, stride, buffer, buffer.position() << 3, function_pointer);
+	}
 	public static void glVertexAttribPointer(int index, int size, boolean normalized, int stride, FloatBuffer buffer) {
 		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttribPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -570,6 +606,14 @@ public final class GL20 {
 		nglGetVertexAttribfv(index, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetVertexAttribfv(int index, int pname, FloatBuffer params, int params_position, long function_pointer);
+
+	public static void glGetVertexAttrib(int index, int pname, DoubleBuffer params) {
+		long function_pointer = GLContext.getCapabilities().GL20_glGetVertexAttribdv_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
+		nglGetVertexAttribdv(index, pname, params, params.position(), function_pointer);
+	}
+	private static native void nglGetVertexAttribdv(int index, int pname, DoubleBuffer params, int params_position, long function_pointer);
 
 	public static void glGetVertexAttrib(int index, int pname, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().GL20_glGetVertexAttribiv_pointer;

@@ -47,17 +47,22 @@ typedef void (APIENTRY *glGetUniformivPROC) (GLuint program, GLint location, GLi
 typedef void (APIENTRY *glGetShaderSourcePROC) (GLuint shader, GLsizei maxLength, GLsizei * length, GLchar * source);
 typedef void (APIENTRY *glVertexAttrib1sPROC) (GLuint index, GLshort x);
 typedef void (APIENTRY *glVertexAttrib1fPROC) (GLuint index, GLfloat x);
+typedef void (APIENTRY *glVertexAttrib1dPROC) (GLuint index, GLdouble x);
 typedef void (APIENTRY *glVertexAttrib2sPROC) (GLuint index, GLshort x, GLshort y);
 typedef void (APIENTRY *glVertexAttrib2fPROC) (GLuint index, GLfloat x, GLfloat y);
+typedef void (APIENTRY *glVertexAttrib2dPROC) (GLuint index, GLdouble x, GLdouble y);
 typedef void (APIENTRY *glVertexAttrib3sPROC) (GLuint index, GLshort x, GLshort y, GLshort z);
 typedef void (APIENTRY *glVertexAttrib3fPROC) (GLuint index, GLfloat x, GLfloat y, GLfloat z);
+typedef void (APIENTRY *glVertexAttrib3dPROC) (GLuint index, GLdouble x, GLdouble y, GLdouble z);
 typedef void (APIENTRY *glVertexAttrib4sPROC) (GLuint index, GLshort x, GLshort y, GLshort z, GLshort w);
 typedef void (APIENTRY *glVertexAttrib4fPROC) (GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+typedef void (APIENTRY *glVertexAttrib4dPROC) (GLuint index, GLdouble x, GLdouble y, GLdouble z, GLdouble w);
 typedef void (APIENTRY *glVertexAttrib4NubPROC) (GLuint index, GLubyte x, GLubyte y, GLubyte z, GLubyte w);
 typedef void (APIENTRY *glVertexAttribPointerPROC) (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * buffer);
 typedef void (APIENTRY *glEnableVertexAttribArrayPROC) (GLuint index);
 typedef void (APIENTRY *glDisableVertexAttribArrayPROC) (GLuint index);
 typedef void (APIENTRY *glGetVertexAttribfvPROC) (GLuint index, GLenum pname, GLfloat * params);
+typedef void (APIENTRY *glGetVertexAttribdvPROC) (GLuint index, GLenum pname, GLdouble * params);
 typedef void (APIENTRY *glGetVertexAttribivPROC) (GLuint index, GLenum pname, GLint * params);
 typedef void (APIENTRY *glGetVertexAttribPointervPROC) (GLuint index, GLenum pname, GLvoid ** pointer);
 typedef void (APIENTRY *glBindAttribLocationPROC) (GLuint program, GLuint index, const GLchar * name);
@@ -323,6 +328,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglVertexAttrib1f(JNIEnv *env,
 	glVertexAttrib1f(index, x);
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglVertexAttrib1d(JNIEnv *env, jclass clazz, jint index, jdouble x, jlong function_pointer) {
+	glVertexAttrib1dPROC glVertexAttrib1d = (glVertexAttrib1dPROC)((intptr_t)function_pointer);
+	glVertexAttrib1d(index, x);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglVertexAttrib2s(JNIEnv *env, jclass clazz, jint index, jshort x, jshort y, jlong function_pointer) {
 	glVertexAttrib2sPROC glVertexAttrib2s = (glVertexAttrib2sPROC)((intptr_t)function_pointer);
 	glVertexAttrib2s(index, x, y);
@@ -331,6 +341,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglVertexAttrib2s(JNIEnv *env,
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglVertexAttrib2f(JNIEnv *env, jclass clazz, jint index, jfloat x, jfloat y, jlong function_pointer) {
 	glVertexAttrib2fPROC glVertexAttrib2f = (glVertexAttrib2fPROC)((intptr_t)function_pointer);
 	glVertexAttrib2f(index, x, y);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglVertexAttrib2d(JNIEnv *env, jclass clazz, jint index, jdouble x, jdouble y, jlong function_pointer) {
+	glVertexAttrib2dPROC glVertexAttrib2d = (glVertexAttrib2dPROC)((intptr_t)function_pointer);
+	glVertexAttrib2d(index, x, y);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglVertexAttrib3s(JNIEnv *env, jclass clazz, jint index, jshort x, jshort y, jshort z, jlong function_pointer) {
@@ -343,6 +358,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglVertexAttrib3f(JNIEnv *env,
 	glVertexAttrib3f(index, x, y, z);
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglVertexAttrib3d(JNIEnv *env, jclass clazz, jint index, jdouble x, jdouble y, jdouble z, jlong function_pointer) {
+	glVertexAttrib3dPROC glVertexAttrib3d = (glVertexAttrib3dPROC)((intptr_t)function_pointer);
+	glVertexAttrib3d(index, x, y, z);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglVertexAttrib4s(JNIEnv *env, jclass clazz, jint index, jshort x, jshort y, jshort z, jshort w, jlong function_pointer) {
 	glVertexAttrib4sPROC glVertexAttrib4s = (glVertexAttrib4sPROC)((intptr_t)function_pointer);
 	glVertexAttrib4s(index, x, y, z, w);
@@ -351,6 +371,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglVertexAttrib4s(JNIEnv *env,
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglVertexAttrib4f(JNIEnv *env, jclass clazz, jint index, jfloat x, jfloat y, jfloat z, jfloat w, jlong function_pointer) {
 	glVertexAttrib4fPROC glVertexAttrib4f = (glVertexAttrib4fPROC)((intptr_t)function_pointer);
 	glVertexAttrib4f(index, x, y, z, w);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglVertexAttrib4d(JNIEnv *env, jclass clazz, jint index, jdouble x, jdouble y, jdouble z, jdouble w, jlong function_pointer) {
+	glVertexAttrib4dPROC glVertexAttrib4d = (glVertexAttrib4dPROC)((intptr_t)function_pointer);
+	glVertexAttrib4d(index, x, y, z, w);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglVertexAttrib4Nub(JNIEnv *env, jclass clazz, jint index, jbyte x, jbyte y, jbyte z, jbyte w, jlong function_pointer) {
@@ -384,6 +409,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglGetVertexAttribfv(JNIEnv *e
 	GLfloat *params_address = ((GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
 	glGetVertexAttribfvPROC glGetVertexAttribfv = (glGetVertexAttribfvPROC)((intptr_t)function_pointer);
 	glGetVertexAttribfv(index, pname, params_address);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglGetVertexAttribdv(JNIEnv *env, jclass clazz, jint index, jint pname, jobject params, jint params_position, jlong function_pointer) {
+	GLdouble *params_address = ((GLdouble *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetVertexAttribdvPROC glGetVertexAttribdv = (glGetVertexAttribdvPROC)((intptr_t)function_pointer);
+	glGetVertexAttribdv(index, pname, params_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglGetVertexAttribiv(JNIEnv *env, jclass clazz, jint index, jint pname, jobject params, jint params_position, jlong function_pointer) {

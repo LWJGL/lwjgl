@@ -57,6 +57,7 @@ public class ALTypeMap implements TypeMap {
 		native_types_to_primitive.put(ALbyte.class, PrimitiveType.Kind.BYTE);
 		native_types_to_primitive.put(ALenum.class, PrimitiveType.Kind.INT);
 		native_types_to_primitive.put(ALfloat.class, PrimitiveType.Kind.FLOAT);
+		native_types_to_primitive.put(ALdouble.class, PrimitiveType.Kind.DOUBLE);
 		native_types_to_primitive.put(ALint.class, PrimitiveType.Kind.INT);
 		native_types_to_primitive.put(ALshort.class, PrimitiveType.Kind.SHORT);
 		native_types_to_primitive.put(ALsizei.class, PrimitiveType.Kind.INT);
@@ -96,6 +97,8 @@ public class ALTypeMap implements TypeMap {
 			return "b";
 		else if (annotation_type.equals(ALfloat.class))
 			return "f";
+		else if (annotation_type.equals(ALdouble.class))
+			return "d";
 		else if (annotation_type.equals(ALboolean.class) || annotation_type.equals(ALvoid.class))
 			return "";
 		else
@@ -110,6 +113,9 @@ public class ALTypeMap implements TypeMap {
 				break;
 			case FLOAT:
 				type = ALfloat.class;
+				break;
+			case DOUBLE:
+				type = ALdouble.class;
 				break;
 			case SHORT:
 				type = ALshort.class;
@@ -136,7 +142,7 @@ public class ALTypeMap implements TypeMap {
 		else if (type.equals(ShortBuffer.class))
 			return new Class[]{ALshort.class};
 		else if (type.equals(DoubleBuffer.class))
-			return new Class[]{};
+			return new Class[]{ALdouble.class};
 		else
 			return new Class[]{};
 	}
@@ -145,7 +151,7 @@ public class ALTypeMap implements TypeMap {
 		if (type.equals(int.class))
 			return new Class[]{ALenum.class, ALint.class, ALsizei.class, ALuint.class};
 		else if (type.equals(double.class))
-			return new Class[]{};
+			return new Class[]{ALdouble.class};
 		else if (type.equals(float.class))
 			return new Class[]{ALfloat.class};
 		else if (type.equals(short.class))

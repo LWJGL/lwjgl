@@ -23,6 +23,12 @@ public final class NVVertexArrayRange {
 		BufferChecks.checkDirect(pPointer);
 		nglVertexArrayRangeNV((pPointer.remaining()), pPointer, pPointer.position(), function_pointer);
 	}
+	public static void glVertexArrayRangeNV(DoubleBuffer pPointer) {
+		long function_pointer = GLContext.getCapabilities().NV_vertex_array_range_glVertexArrayRangeNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(pPointer);
+		nglVertexArrayRangeNV((pPointer.remaining() << 3), pPointer, pPointer.position() << 3, function_pointer);
+	}
 	public static void glVertexArrayRangeNV(FloatBuffer pPointer) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_array_range_glVertexArrayRangeNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);

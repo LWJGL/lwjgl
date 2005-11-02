@@ -70,6 +70,12 @@ public class ARBBufferObject {
 		BufferChecks.checkDirect(data);
 		nglBufferDataARB(target, (data.remaining()), data, data.position(), usage, function_pointer);
 	}
+	public static void glBufferDataARB(int target, DoubleBuffer data, int usage) {
+		long function_pointer = GLContext.getCapabilities().ARB_buffer_object_glBufferDataARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(data);
+		nglBufferDataARB(target, (data.remaining() << 3), data, data.position() << 3, usage, function_pointer);
+	}
 	public static void glBufferDataARB(int target, FloatBuffer data, int usage) {
 		long function_pointer = GLContext.getCapabilities().ARB_buffer_object_glBufferDataARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -96,6 +102,12 @@ public class ARBBufferObject {
 		BufferChecks.checkDirect(data);
 		nglBufferSubDataARB(target, offset, (data.remaining()), data, data.position(), function_pointer);
 	}
+	public static void glBufferSubDataARB(int target, int offset, DoubleBuffer data) {
+		long function_pointer = GLContext.getCapabilities().ARB_buffer_object_glBufferSubDataARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(data);
+		nglBufferSubDataARB(target, offset, (data.remaining() << 3), data, data.position() << 3, function_pointer);
+	}
 	public static void glBufferSubDataARB(int target, int offset, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().ARB_buffer_object_glBufferSubDataARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -121,6 +133,12 @@ public class ARBBufferObject {
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(data);
 		nglGetBufferSubDataARB(target, offset, (data.remaining()), data, data.position(), function_pointer);
+	}
+	public static void glGetBufferSubDataARB(int target, int offset, DoubleBuffer data) {
+		long function_pointer = GLContext.getCapabilities().ARB_buffer_object_glGetBufferSubDataARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(data);
+		nglGetBufferSubDataARB(target, offset, (data.remaining() << 3), data, data.position() << 3, function_pointer);
 	}
 	public static void glGetBufferSubDataARB(int target, int offset, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().ARB_buffer_object_glGetBufferSubDataARB_pointer;

@@ -759,6 +759,7 @@ public interface GL11 {
 			@BufferObject(BufferKind.ArrayVBO)
 			@Const
 			@GLfloat
+			@GLdouble
 			@GLubyte
 			@GLbyte
 			Buffer pointer);
@@ -767,21 +768,26 @@ public interface GL11 {
 	void glColorMask(boolean red, boolean green, boolean blue, boolean alpha);
 	void glColor3b(byte red, byte green, byte blue);
 	void glColor3f(float red, float green, float blue);
+	void glColor3d(double red, double green, double blue);
 	void glColor3ub(@GLubyte byte red, @GLubyte byte green, @GLubyte byte blue);
 	void glColor4b(byte red, byte green, byte blue, byte alpha);
 	void glColor4f(float red, float green, float blue, float alpha);
+	void glColor4d(double red, double green, double blue, double alpha);
 	void glColor4ub(@GLubyte byte red, @GLubyte byte green, @GLubyte byte blue, @GLubyte byte alpha);
 
 	void glClipPlane(@GLenum int plane, @Check("4") @Const DoubleBuffer equation);
 
 	void glClearStencil(int s);
-	void glClearIndex(float c);
+	// This function is only used in indexed color mode
+//	void glClearIndex(float c);
 	void glEvalPoint1(int i);
 	void glEvalPoint2(int i, int j);
 	void glEvalMesh1(@GLenum int mode, int i1, int i2);
 	void glEvalMesh2(@GLenum int mode, int i1, int i2, int j1, int j2);
 	void glEvalCoord1f(float u);
+	void glEvalCoord1d(double u);
 	void glEvalCoord2f(float u, float v);
+	void glEvalCoord2d(double u, double v);
 	void glEnableClientState(@GLenum int cap);
 	void glDisableClientState(@GLenum int cap);
 	void glEnable(@GLenum int cap);
@@ -834,6 +840,8 @@ public interface GL11 {
 	@StripPostfix("v")
 	void glGetMapfv(@GLenum int target, @GLenum int query, @Check("256") FloatBuffer v);
 	@StripPostfix("v")
+	void glGetMapdv(@GLenum int target, @GLenum int query, @Check("256") DoubleBuffer v);
+	@StripPostfix("v")
 	void glGetMapiv(@GLenum int target, @GLenum int query, @Check("256") IntBuffer v);
 
 	@StripPostfix("params")
@@ -850,7 +858,7 @@ public interface GL11 {
 
 	@StripPostfix("params")
 	void glGetDoublev(@GLenum int pname, @Check("16") DoubleBuffer params);
-
+	
 	@StripPostfix("params")
 	void glGetFloatv(@GLenum int pname, @Check("16") FloatBuffer params);
 
@@ -867,7 +875,7 @@ public interface GL11 {
 
 	@StripPostfix("params")
 	void glFogfv(@GLenum int pname, @Check("4") @Const FloatBuffer params);
-
+	
 	@StripPostfix("params")
 	void glFogiv(@GLenum int pname, @Check("4") @Const IntBuffer params);
 
@@ -886,6 +894,7 @@ public interface GL11 {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer pointer);
 
 	void glInitNames();
@@ -910,6 +919,7 @@ public interface GL11 {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer pixels);
 
 	@StripPostfix("params")
@@ -917,6 +927,9 @@ public interface GL11 {
 
 	@StripPostfix("params")
 	void glGetTexGenfv(@GLenum int coord, @GLenum int pname, @Check("4") FloatBuffer params);
+	
+	@StripPostfix("params")
+	void glGetTexGendv(@GLenum int coord, @GLenum int pname, @Check("4") DoubleBuffer params);
 
 	@StripPostfix("params")
 	void glGetTexEnviv(@GLenum int coord, @GLenum int pname, @Check("4") IntBuffer params);
@@ -939,18 +952,25 @@ public interface GL11 {
 	void glMaterialiv(@GLenum int face, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
 	void glMapGrid1f(int un, float u1, float u2);
+	void glMapGrid1d(int un, double u1, double u2);
 	void glMapGrid2f(int un, float u1, float u2, int vn, float v1, float v2);
+	void glMapGrid2d(int un, double u1, double u2, int vn, double v1, double v2);
 
 	// TODO: check buffer size valid
 	void glMap2f(@GLenum int target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, @Check @Const FloatBuffer points);
+	void glMap2d(@GLenum int target, double u1, double u2, int ustride, int uorder, double v1, double v2, int vstride, int vorder, @Check @Const DoubleBuffer points);
 	// TODO: check buffer size valid
 	void glMap1f(@GLenum int target, float u1, float u2, int stride, int order, @Check @Const FloatBuffer points);
+	void glMap1d(@GLenum int target, double u1, double u2, int stride, int order, @Check @Const DoubleBuffer points);
 
 	void glLogicOp(@GLenum int opcode);
 	void glLoadName(@GLuint int name);
 
 	@StripPostfix("m")
 	void glLoadMatrixf(@Check("16") @Const FloatBuffer m);
+	
+	@StripPostfix("m")
+	void glLoadMatrixd(@Check("16") @Const DoubleBuffer m);
 
 	void glLoadIdentity();
 	void glListBase(@GLuint int base);
@@ -1003,16 +1023,21 @@ public interface GL11 {
 			@GLint
 			@GLbyte
 			@GLfloat
+			@GLdouble
 			Buffer pointer);
 
 	void glNormal3b(byte nx, byte ny, byte nz);
 	void glNormal3f(float nx, float ny, float nz);
+	void glNormal3d(double nx, double ny, double nz);
 	void glNormal3i(int nx, int ny, int nz);
 	void glNewList(@GLuint int list, @GLenum int mode);
 	void glEndList();
 
 	@StripPostfix("m")
 	void glMultMatrixf(@Check("16") @Const FloatBuffer m);
+	
+	@StripPostfix("m")
+	void glMultMatrixd(@Check("16") @Const DoubleBuffer m);
 
 	void glShadeModel(@GLenum int mode);
 
@@ -1020,9 +1045,11 @@ public interface GL11 {
 
 	void glScissor(int x, int y, @GLsizei int width, @GLsizei int height);
 	void glScalef(float x, float y, float z);
+	void glScaled(double x, double y, double z);
 	void glRotatef(float angle, float x, float y, float z);
 	int glRenderMode(@GLenum int mode);
 	void glRectf(float x1, float y1, float x2, float y2);
+	void glRectd(double x1, double y1, double x2, double y2);
 	void glRecti(int x1, int y1, int x2, int y2);
 
 	void glReadPixels(int x, int y, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLenum int type,
@@ -1032,14 +1059,18 @@ public interface GL11 {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer pixels);
 
 	void glReadBuffer(@GLenum int mode);
 	void glRasterPos2f(float x, float y);
+	void glRasterPos2d(double x, double y);
 	void glRasterPos2i(int x, int y);
 	void glRasterPos3f(float x, float y, float z);
+	void glRasterPos3d(double x, double y, double z);
 	void glRasterPos3i(int x, int y, int z);
 	void glRasterPos4f(float x, float y, float z, float w);
+	void glRasterPos4d(double x, double y, double z, double w);
 	void glRasterPos4i(int x, int y, int z, int w);
 	void glPushName(@GLuint int name);
 	void glPopName();
@@ -1063,15 +1094,20 @@ public interface GL11 {
 			@Const
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer pointer);
 
 	void glVertex2f(float x, float y);
+	void glVertex2d(double x, double y);
 	void glVertex2i(int x, int y);
 	void glVertex3f(float x, float y, float z);
+	void glVertex3d(double x, double y, double z);
 	void glVertex3i(int x, int y, int z);
 	void glVertex4f(float x, float y, float z, float w);
+	void glVertex4d(double x, double y, double z, double w);
 	void glVertex4i(int x, int y, int z, int w);
 	void glTranslatef(float x, float y, float z);
+	void glTranslated(double x, double y, double z);
 
 	void glTexImage1D(@GLenum int target, int level, int internalformat, @GLsizei int width, int border, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.UnpackPBO)
@@ -1081,6 +1117,7 @@ public interface GL11 {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer pixels);
 
 	void glTexImage2D(@GLenum int target, int level, int internalformat, int width, int height, int border, @GLenum int format, @GLenum int type,
@@ -1091,6 +1128,7 @@ public interface GL11 {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer pixels);
 	void glTexSubImage1D(@GLenum int target, int level, int xoffset, @GLsizei int width, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.UnpackPBO)
@@ -1100,6 +1138,7 @@ public interface GL11 {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer pixels);
 	void glTexSubImage2D(@GLenum int target, int level, int xoffset, int yoffset, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.UnpackPBO)
@@ -1109,6 +1148,7 @@ public interface GL11 {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer pixels);
 
 	void glTexParameterf(@GLenum int target, @GLenum int pname, float param);
@@ -1120,9 +1160,13 @@ public interface GL11 {
 	void glTexParameteriv(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer param);
 
 	void glTexGenf(@GLenum int coord, @GLenum int pname, float param);
+	void glTexGend(@GLenum int coord, @GLenum int pname, double param);
 
 	@StripPostfix("params")
 	void glTexGenfv(@GLenum int coord, @GLenum int pname, @Check("4") @Const FloatBuffer params);
+
+	@StripPostfix("params")
+	void glTexGendv(@GLenum int coord, @GLenum int pname, @Check("4") @Const DoubleBuffer params);
 
 	void glTexGeni(@GLenum int coord, @GLenum int pname, int param);
 
@@ -1144,12 +1188,17 @@ public interface GL11 {
 			@Check
 			@Const
 			@GLfloat
+			@GLdouble
 			Buffer pointer);
 
 	void glTexCoord1f(float s);
+	void glTexCoord1d(double s);
 	void glTexCoord2f(float s, float t);
+	void glTexCoord2d(double s, double t);
 	void glTexCoord3f(float s, float t, float r);
+	void glTexCoord3d(double s, double t, double r);
 	void glTexCoord4f(float s, float t, float r, float q);
+	void glTexCoord4d(double s, double t, double r, double q);
 	void glStencilOp(@GLenum int fail, @GLenum int zfail, @GLenum int zpass);
 	void glStencilMask(@GLuint int mask);
 	void glViewport(int x, int y, @GLsizei int width, @GLsizei int height);

@@ -204,10 +204,10 @@ public class GL {
 	}
 
 	/** @param c  */
-	public static void glClearIndex(float c) {
+/*	public static void glClearIndex(float c) {
 		GL11.glClearIndex(c);
 	}
-
+*/
 	/** @param s  */
 	public static void glClearStencil(int s) {
 		GL11.glClearStencil(s);

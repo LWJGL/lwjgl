@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
@@ -91,6 +92,8 @@ public interface ARB_vertex_blend {
 	void glWeightivARB(@AutoSize("pWeights") int size, IntBuffer pWeights);
 	@StripPostfix("pWeights")
 	void glWeightfvARB(@AutoSize("pWeights") int size, FloatBuffer pWeights);
+	@StripPostfix("pWeights")
+	void glWeightdvARB(@AutoSize("pWeights") int size, DoubleBuffer pWeights);
 
 	@StripPostfix("pWeights")
 	void glWeightubvARB(@AutoSize("pWeights") int size, @GLubyte ByteBuffer pWeights);
@@ -111,6 +114,7 @@ public interface ARB_vertex_blend {
 			@GLint
 			@GLuint
 			@GLfloat
+			@GLdouble
 			Buffer pPointer);
 
 	void glVertexBlendARB(int count);

@@ -33,6 +33,13 @@ public final class EXTSecondaryColor {
 	}
 	private static native void nglSecondaryColor3fEXT(float red, float green, float blue, long function_pointer);
 
+	public static void glSecondaryColor3dEXT(double red, double green, double blue) {
+		long function_pointer = GLContext.getCapabilities().EXT_secondary_color_glSecondaryColor3dEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglSecondaryColor3dEXT(red, green, blue, function_pointer);
+	}
+	private static native void nglSecondaryColor3dEXT(double red, double green, double blue, long function_pointer);
+
 	public static void glSecondaryColor3ubEXT(byte red, byte green, byte blue) {
 		long function_pointer = GLContext.getCapabilities().EXT_secondary_color_glSecondaryColor3ubEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -40,6 +47,14 @@ public final class EXTSecondaryColor {
 	}
 	private static native void nglSecondaryColor3ubEXT(byte red, byte green, byte blue, long function_pointer);
 
+	public static void glSecondaryColorPointerEXT(int size, int stride, DoubleBuffer pPointer) {
+		long function_pointer = GLContext.getCapabilities().EXT_secondary_color_glSecondaryColorPointerEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pPointer);
+		GLChecks.getReferences().EXT_secondary_color_glSecondaryColorPointerEXT_pPointer = pPointer;
+		nglSecondaryColorPointerEXT(size, GL11.GL_DOUBLE, stride, pPointer, pPointer.position() << 3, function_pointer);
+	}
 	public static void glSecondaryColorPointerEXT(int size, int stride, FloatBuffer pPointer) {
 		long function_pointer = GLContext.getCapabilities().EXT_secondary_color_glSecondaryColorPointerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);

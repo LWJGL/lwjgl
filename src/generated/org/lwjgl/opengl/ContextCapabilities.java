@@ -194,15 +194,19 @@ public class ContextCapabilities {
 	long ARB_multitexture_glClientActiveTextureARB_pointer;
 	long ARB_multitexture_glActiveTextureARB_pointer;
 	long ARB_multitexture_glMultiTexCoord1fARB_pointer;
+	long ARB_multitexture_glMultiTexCoord1dARB_pointer;
 	long ARB_multitexture_glMultiTexCoord1iARB_pointer;
 	long ARB_multitexture_glMultiTexCoord1sARB_pointer;
 	long ARB_multitexture_glMultiTexCoord2fARB_pointer;
+	long ARB_multitexture_glMultiTexCoord2dARB_pointer;
 	long ARB_multitexture_glMultiTexCoord2iARB_pointer;
 	long ARB_multitexture_glMultiTexCoord2sARB_pointer;
 	long ARB_multitexture_glMultiTexCoord3fARB_pointer;
+	long ARB_multitexture_glMultiTexCoord3dARB_pointer;
 	long ARB_multitexture_glMultiTexCoord3iARB_pointer;
 	long ARB_multitexture_glMultiTexCoord3sARB_pointer;
 	long ARB_multitexture_glMultiTexCoord4fARB_pointer;
+	long ARB_multitexture_glMultiTexCoord4dARB_pointer;
 	long ARB_multitexture_glMultiTexCoord4iARB_pointer;
 	long ARB_multitexture_glMultiTexCoord4sARB_pointer;
 	long ARB_occlusion_query_glGenQueriesARB_pointer;
@@ -220,11 +224,17 @@ public class ContextCapabilities {
 	long ARB_program_glDeleteProgramsARB_pointer;
 	long ARB_program_glGenProgramsARB_pointer;
 	long ARB_program_glProgramEnvParameter4fARB_pointer;
+	long ARB_program_glProgramEnvParameter4dARB_pointer;
 	long ARB_program_glProgramEnvParameter4fvARB_pointer;
+	long ARB_program_glProgramEnvParameter4dvARB_pointer;
 	long ARB_program_glProgramLocalParameter4fARB_pointer;
+	long ARB_program_glProgramLocalParameter4dARB_pointer;
 	long ARB_program_glProgramLocalParameter4fvARB_pointer;
+	long ARB_program_glProgramLocalParameter4dvARB_pointer;
 	long ARB_program_glGetProgramEnvParameterfvARB_pointer;
+	long ARB_program_glGetProgramEnvParameterdvARB_pointer;
 	long ARB_program_glGetProgramLocalParameterfvARB_pointer;
+	long ARB_program_glGetProgramLocalParameterdvARB_pointer;
 	long ARB_program_glGetProgramivARB_pointer;
 	long ARB_program_glGetProgramStringARB_pointer;
 	long ARB_program_glIsProgramARB_pointer;
@@ -280,6 +290,7 @@ public class ContextCapabilities {
 	long ARB_vertex_blend_glWeightsvARB_pointer;
 	long ARB_vertex_blend_glWeightivARB_pointer;
 	long ARB_vertex_blend_glWeightfvARB_pointer;
+	long ARB_vertex_blend_glWeightdvARB_pointer;
 	long ARB_vertex_blend_glWeightubvARB_pointer;
 	long ARB_vertex_blend_glWeightusvARB_pointer;
 	long ARB_vertex_blend_glWeightuivARB_pointer;
@@ -287,26 +298,33 @@ public class ContextCapabilities {
 	long ARB_vertex_blend_glVertexBlendARB_pointer;
 	long ARB_vertex_program_glVertexAttrib1sARB_pointer;
 	long ARB_vertex_program_glVertexAttrib1fARB_pointer;
+	long ARB_vertex_program_glVertexAttrib1dARB_pointer;
 	long ARB_vertex_program_glVertexAttrib2sARB_pointer;
 	long ARB_vertex_program_glVertexAttrib2fARB_pointer;
+	long ARB_vertex_program_glVertexAttrib2dARB_pointer;
 	long ARB_vertex_program_glVertexAttrib3sARB_pointer;
 	long ARB_vertex_program_glVertexAttrib3fARB_pointer;
+	long ARB_vertex_program_glVertexAttrib3dARB_pointer;
 	long ARB_vertex_program_glVertexAttrib4sARB_pointer;
 	long ARB_vertex_program_glVertexAttrib4fARB_pointer;
+	long ARB_vertex_program_glVertexAttrib4dARB_pointer;
 	long ARB_vertex_program_glVertexAttrib4NubARB_pointer;
 	long ARB_vertex_program_glVertexAttribPointerARB_pointer;
 	long ARB_vertex_program_glEnableVertexAttribArrayARB_pointer;
 	long ARB_vertex_program_glDisableVertexAttribArrayARB_pointer;
 	long ARB_vertex_program_glGetVertexAttribfvARB_pointer;
+	long ARB_vertex_program_glGetVertexAttribdvARB_pointer;
 	long ARB_vertex_program_glGetVertexAttribivARB_pointer;
 	long ARB_vertex_program_glGetVertexAttribPointervARB_pointer;
 	long ARB_vertex_shader_glBindAttribLocationARB_pointer;
 	long ARB_vertex_shader_glGetActiveAttribARB_pointer;
 	long ARB_vertex_shader_glGetAttribLocationARB_pointer;
 	long ARB_window_pos_glWindowPos2fARB_pointer;
+	long ARB_window_pos_glWindowPos2dARB_pointer;
 	long ARB_window_pos_glWindowPos2iARB_pointer;
 	long ARB_window_pos_glWindowPos2sARB_pointer;
 	long ARB_window_pos_glWindowPos3fARB_pointer;
+	long ARB_window_pos_glWindowPos3dARB_pointer;
 	long ARB_window_pos_glWindowPos3iARB_pointer;
 	long ARB_window_pos_glWindowPos3sARB_pointer;
 	long ATI_draw_buffers_glDrawBuffersATI_pointer;
@@ -353,16 +371,20 @@ public class ContextCapabilities {
 	long ATI_vertex_attrib_array_object_glGetVertexAttribArrayObjectfvATI_pointer;
 	long ATI_vertex_attrib_array_object_glGetVertexAttribArrayObjectivATI_pointer;
 	long ATI_vertex_streams_glVertexStream2fATI_pointer;
+	long ATI_vertex_streams_glVertexStream2dATI_pointer;
 	long ATI_vertex_streams_glVertexStream2iATI_pointer;
 	long ATI_vertex_streams_glVertexStream2sATI_pointer;
 	long ATI_vertex_streams_glVertexStream3fATI_pointer;
+	long ATI_vertex_streams_glVertexStream3dATI_pointer;
 	long ATI_vertex_streams_glVertexStream3iATI_pointer;
 	long ATI_vertex_streams_glVertexStream3sATI_pointer;
 	long ATI_vertex_streams_glVertexStream4fATI_pointer;
+	long ATI_vertex_streams_glVertexStream4dATI_pointer;
 	long ATI_vertex_streams_glVertexStream4iATI_pointer;
 	long ATI_vertex_streams_glVertexStream4sATI_pointer;
 	long ATI_vertex_streams_glNormalStream3bATI_pointer;
 	long ATI_vertex_streams_glNormalStream3fATI_pointer;
+	long ATI_vertex_streams_glNormalStream3dATI_pointer;
 	long ATI_vertex_streams_glNormalStream3iATI_pointer;
 	long ATI_vertex_streams_glNormalStream3sATI_pointer;
 	long ATI_vertex_streams_glClientActiveVertexStreamATI_pointer;
@@ -375,6 +397,7 @@ public class ContextCapabilities {
 	long EXT_depth_bounds_test_glDepthBoundsEXT_pointer;
 	long EXT_draw_range_elements_glDrawRangeElementsEXT_pointer;
 	long EXT_fog_coord_glFogCoordfEXT_pointer;
+	long EXT_fog_coord_glFogCoorddEXT_pointer;
 	long EXT_fog_coord_glFogCoordPointerEXT_pointer;
 	long EXT_framebuffer_object_glIsRenderbufferEXT_pointer;
 	long EXT_framebuffer_object_glBindRenderbufferEXT_pointer;
@@ -403,6 +426,7 @@ public class ContextCapabilities {
 	long EXT_point_parameters_glPointParameterfvEXT_pointer;
 	long EXT_secondary_color_glSecondaryColor3bEXT_pointer;
 	long EXT_secondary_color_glSecondaryColor3fEXT_pointer;
+	long EXT_secondary_color_glSecondaryColor3dEXT_pointer;
 	long EXT_secondary_color_glSecondaryColor3ubEXT_pointer;
 	long EXT_secondary_color_glSecondaryColorPointerEXT_pointer;
 	long EXT_stencil_clear_tag_glStencilClearTagEXT_pointer;
@@ -426,6 +450,7 @@ public class ContextCapabilities {
 	long EXT_vertex_shader_glVariantsvEXT_pointer;
 	long EXT_vertex_shader_glVariantivEXT_pointer;
 	long EXT_vertex_shader_glVariantfvEXT_pointer;
+	long EXT_vertex_shader_glVariantdvEXT_pointer;
 	long EXT_vertex_shader_glVariantubvEXT_pointer;
 	long EXT_vertex_shader_glVariantusvEXT_pointer;
 	long EXT_vertex_shader_glVariantuivEXT_pointer;
@@ -477,19 +502,22 @@ public class ContextCapabilities {
 	long GL11_glColorMask_pointer;
 	long GL11_glColor3b_pointer;
 	long GL11_glColor3f_pointer;
+	long GL11_glColor3d_pointer;
 	long GL11_glColor3ub_pointer;
 	long GL11_glColor4b_pointer;
 	long GL11_glColor4f_pointer;
+	long GL11_glColor4d_pointer;
 	long GL11_glColor4ub_pointer;
 	long GL11_glClipPlane_pointer;
 	long GL11_glClearStencil_pointer;
-	long GL11_glClearIndex_pointer;
 	long GL11_glEvalPoint1_pointer;
 	long GL11_glEvalPoint2_pointer;
 	long GL11_glEvalMesh1_pointer;
 	long GL11_glEvalMesh2_pointer;
 	long GL11_glEvalCoord1f_pointer;
+	long GL11_glEvalCoord1d_pointer;
 	long GL11_glEvalCoord2f_pointer;
+	long GL11_glEvalCoord2d_pointer;
 	long GL11_glEnableClientState_pointer;
 	long GL11_glDisableClientState_pointer;
 	long GL11_glEnable_pointer;
@@ -510,6 +538,7 @@ public class ContextCapabilities {
 	long GL11_glGetMaterialfv_pointer;
 	long GL11_glGetMaterialiv_pointer;
 	long GL11_glGetMapfv_pointer;
+	long GL11_glGetMapdv_pointer;
 	long GL11_glGetMapiv_pointer;
 	long GL11_glGetLightfv_pointer;
 	long GL11_glGetLightiv_pointer;
@@ -541,6 +570,7 @@ public class ContextCapabilities {
 	long GL11_glGetTexImage_pointer;
 	long GL11_glGetTexGeniv_pointer;
 	long GL11_glGetTexGenfv_pointer;
+	long GL11_glGetTexGendv_pointer;
 	long GL11_glGetTexEnviv_pointer;
 	long GL11_glGetTexEnvfv_pointer;
 	long GL11_glGetString_pointer;
@@ -551,12 +581,17 @@ public class ContextCapabilities {
 	long GL11_glMaterialfv_pointer;
 	long GL11_glMaterialiv_pointer;
 	long GL11_glMapGrid1f_pointer;
+	long GL11_glMapGrid1d_pointer;
 	long GL11_glMapGrid2f_pointer;
+	long GL11_glMapGrid2d_pointer;
 	long GL11_glMap2f_pointer;
+	long GL11_glMap2d_pointer;
 	long GL11_glMap1f_pointer;
+	long GL11_glMap1d_pointer;
 	long GL11_glLogicOp_pointer;
 	long GL11_glLoadName_pointer;
 	long GL11_glLoadMatrixf_pointer;
+	long GL11_glLoadMatrixd_pointer;
 	long GL11_glLoadIdentity_pointer;
 	long GL11_glListBase_pointer;
 	long GL11_glLineWidth_pointer;
@@ -588,25 +623,32 @@ public class ContextCapabilities {
 	long GL11_glNormalPointer_pointer;
 	long GL11_glNormal3b_pointer;
 	long GL11_glNormal3f_pointer;
+	long GL11_glNormal3d_pointer;
 	long GL11_glNormal3i_pointer;
 	long GL11_glNewList_pointer;
 	long GL11_glEndList_pointer;
 	long GL11_glMultMatrixf_pointer;
+	long GL11_glMultMatrixd_pointer;
 	long GL11_glShadeModel_pointer;
 	long GL11_glSelectBuffer_pointer;
 	long GL11_glScissor_pointer;
 	long GL11_glScalef_pointer;
+	long GL11_glScaled_pointer;
 	long GL11_glRotatef_pointer;
 	long GL11_glRenderMode_pointer;
 	long GL11_glRectf_pointer;
+	long GL11_glRectd_pointer;
 	long GL11_glRecti_pointer;
 	long GL11_glReadPixels_pointer;
 	long GL11_glReadBuffer_pointer;
 	long GL11_glRasterPos2f_pointer;
+	long GL11_glRasterPos2d_pointer;
 	long GL11_glRasterPos2i_pointer;
 	long GL11_glRasterPos3f_pointer;
+	long GL11_glRasterPos3d_pointer;
 	long GL11_glRasterPos3i_pointer;
 	long GL11_glRasterPos4f_pointer;
+	long GL11_glRasterPos4d_pointer;
 	long GL11_glRasterPos4i_pointer;
 	long GL11_glPushName_pointer;
 	long GL11_glPopName_pointer;
@@ -619,12 +661,16 @@ public class ContextCapabilities {
 	long GL11_glStencilFunc_pointer;
 	long GL11_glVertexPointer_pointer;
 	long GL11_glVertex2f_pointer;
+	long GL11_glVertex2d_pointer;
 	long GL11_glVertex2i_pointer;
 	long GL11_glVertex3f_pointer;
+	long GL11_glVertex3d_pointer;
 	long GL11_glVertex3i_pointer;
 	long GL11_glVertex4f_pointer;
+	long GL11_glVertex4d_pointer;
 	long GL11_glVertex4i_pointer;
 	long GL11_glTranslatef_pointer;
+	long GL11_glTranslated_pointer;
 	long GL11_glTexImage1D_pointer;
 	long GL11_glTexImage2D_pointer;
 	long GL11_glTexSubImage1D_pointer;
@@ -634,7 +680,9 @@ public class ContextCapabilities {
 	long GL11_glTexParameterfv_pointer;
 	long GL11_glTexParameteriv_pointer;
 	long GL11_glTexGenf_pointer;
+	long GL11_glTexGend_pointer;
 	long GL11_glTexGenfv_pointer;
+	long GL11_glTexGendv_pointer;
 	long GL11_glTexGeni_pointer;
 	long GL11_glTexGeniv_pointer;
 	long GL11_glTexEnvf_pointer;
@@ -643,9 +691,13 @@ public class ContextCapabilities {
 	long GL11_glTexEnviv_pointer;
 	long GL11_glTexCoordPointer_pointer;
 	long GL11_glTexCoord1f_pointer;
+	long GL11_glTexCoord1d_pointer;
 	long GL11_glTexCoord2f_pointer;
+	long GL11_glTexCoord2d_pointer;
 	long GL11_glTexCoord3f_pointer;
+	long GL11_glTexCoord3d_pointer;
 	long GL11_glTexCoord4f_pointer;
+	long GL11_glTexCoord4d_pointer;
 	long GL11_glStencilOp_pointer;
 	long GL11_glStencilMask_pointer;
 	long GL11_glViewport_pointer;
@@ -663,15 +715,22 @@ public class ContextCapabilities {
 	long GL13_glCompressedTexSubImage3D_pointer;
 	long GL13_glGetCompressedTexImage_pointer;
 	long GL13_glMultiTexCoord1f_pointer;
+	long GL13_glMultiTexCoord1d_pointer;
 	long GL13_glMultiTexCoord2f_pointer;
+	long GL13_glMultiTexCoord2d_pointer;
 	long GL13_glMultiTexCoord3f_pointer;
+	long GL13_glMultiTexCoord3d_pointer;
 	long GL13_glMultiTexCoord4f_pointer;
+	long GL13_glMultiTexCoord4d_pointer;
 	long GL13_glLoadTransposeMatrixf_pointer;
+	long GL13_glLoadTransposeMatrixd_pointer;
 	long GL13_glMultTransposeMatrixf_pointer;
+	long GL13_glMultTransposeMatrixd_pointer;
 	long GL13_glSampleCoverage_pointer;
 	long GL14_glBlendEquation_pointer;
 	long GL14_glBlendColor_pointer;
 	long GL14_glFogCoordf_pointer;
+	long GL14_glFogCoordd_pointer;
 	long GL14_glFogCoordPointer_pointer;
 	long GL14_glMultiDrawArrays_pointer;
 	long GL14_glPointParameteri_pointer;
@@ -680,12 +739,15 @@ public class ContextCapabilities {
 	long GL14_glPointParameterfv_pointer;
 	long GL14_glSecondaryColor3b_pointer;
 	long GL14_glSecondaryColor3f_pointer;
+	long GL14_glSecondaryColor3d_pointer;
 	long GL14_glSecondaryColor3ub_pointer;
 	long GL14_glSecondaryColorPointer_pointer;
 	long GL14_glBlendFuncSeparate_pointer;
 	long GL14_glWindowPos2f_pointer;
+	long GL14_glWindowPos2d_pointer;
 	long GL14_glWindowPos2i_pointer;
 	long GL14_glWindowPos3f_pointer;
+	long GL14_glWindowPos3d_pointer;
 	long GL14_glWindowPos3i_pointer;
 	long GL15_glBindBuffer_pointer;
 	long GL15_glDeleteBuffers_pointer;
@@ -750,17 +812,22 @@ public class ContextCapabilities {
 	long GL20_glGetShaderSource_pointer;
 	long GL20_glVertexAttrib1s_pointer;
 	long GL20_glVertexAttrib1f_pointer;
+	long GL20_glVertexAttrib1d_pointer;
 	long GL20_glVertexAttrib2s_pointer;
 	long GL20_glVertexAttrib2f_pointer;
+	long GL20_glVertexAttrib2d_pointer;
 	long GL20_glVertexAttrib3s_pointer;
 	long GL20_glVertexAttrib3f_pointer;
+	long GL20_glVertexAttrib3d_pointer;
 	long GL20_glVertexAttrib4s_pointer;
 	long GL20_glVertexAttrib4f_pointer;
+	long GL20_glVertexAttrib4d_pointer;
 	long GL20_glVertexAttrib4Nub_pointer;
 	long GL20_glVertexAttribPointer_pointer;
 	long GL20_glEnableVertexAttribArray_pointer;
 	long GL20_glDisableVertexAttribArray_pointer;
 	long GL20_glGetVertexAttribfv_pointer;
+	long GL20_glGetVertexAttribdv_pointer;
 	long GL20_glGetVertexAttribiv_pointer;
 	long GL20_glGetVertexAttribPointerv_pointer;
 	long GL20_glBindAttribLocation_pointer;
@@ -788,7 +855,9 @@ public class ContextCapabilities {
 	long NV_fence_glIsFenceNV_pointer;
 	long NV_fence_glGetFenceivNV_pointer;
 	long NV_fragment_program_glProgramNamedParameter4fNV_pointer;
+	long NV_fragment_program_glProgramNamedParameter4dNV_pointer;
 	long NV_fragment_program_glGetProgramNamedParameterfvNV_pointer;
+	long NV_fragment_program_glGetProgramNamedParameterdvNV_pointer;
 	long NV_half_float_glVertex2hNV_pointer;
 	long NV_half_float_glVertex3hNV_pointer;
 	long NV_half_float_glVertex4hNV_pointer;
@@ -856,31 +925,43 @@ public class ContextCapabilities {
 	long NV_vertex_array_range_glFreeMemoryNV_pointer;
 	long NV_vertex_program_glExecuteProgramNV_pointer;
 	long NV_vertex_program_glGetProgramParameterfvNV_pointer;
+	long NV_vertex_program_glGetProgramParameterdvNV_pointer;
 	long NV_vertex_program_glGetTrackMatrixivNV_pointer;
 	long NV_vertex_program_glGetVertexAttribfvNV_pointer;
+	long NV_vertex_program_glGetVertexAttribdvNV_pointer;
 	long NV_vertex_program_glGetVertexAttribivNV_pointer;
 	long NV_vertex_program_glGetVertexAttribPointervNV_pointer;
 	long NV_vertex_program_glProgramParameter4fNV_pointer;
+	long NV_vertex_program_glProgramParameter4dNV_pointer;
 	long NV_vertex_program_glProgramParameters4fvNV_pointer;
+	long NV_vertex_program_glProgramParameters4dvNV_pointer;
 	long NV_vertex_program_glTrackMatrixNV_pointer;
 	long NV_vertex_program_glVertexAttribPointerNV_pointer;
 	long NV_vertex_program_glVertexAttrib1sNV_pointer;
 	long NV_vertex_program_glVertexAttrib1fNV_pointer;
+	long NV_vertex_program_glVertexAttrib1dNV_pointer;
 	long NV_vertex_program_glVertexAttrib2sNV_pointer;
 	long NV_vertex_program_glVertexAttrib2fNV_pointer;
+	long NV_vertex_program_glVertexAttrib2dNV_pointer;
 	long NV_vertex_program_glVertexAttrib3sNV_pointer;
 	long NV_vertex_program_glVertexAttrib3fNV_pointer;
+	long NV_vertex_program_glVertexAttrib3dNV_pointer;
 	long NV_vertex_program_glVertexAttrib4sNV_pointer;
 	long NV_vertex_program_glVertexAttrib4fNV_pointer;
+	long NV_vertex_program_glVertexAttrib4dNV_pointer;
 	long NV_vertex_program_glVertexAttrib4ubNV_pointer;
 	long NV_vertex_program_glVertexAttribs1svNV_pointer;
 	long NV_vertex_program_glVertexAttribs1fvNV_pointer;
+	long NV_vertex_program_glVertexAttribs1dvNV_pointer;
 	long NV_vertex_program_glVertexAttribs2svNV_pointer;
 	long NV_vertex_program_glVertexAttribs2fvNV_pointer;
+	long NV_vertex_program_glVertexAttribs2dvNV_pointer;
 	long NV_vertex_program_glVertexAttribs3svNV_pointer;
 	long NV_vertex_program_glVertexAttribs3fvNV_pointer;
+	long NV_vertex_program_glVertexAttribs3dvNV_pointer;
 	long NV_vertex_program_glVertexAttribs4svNV_pointer;
 	long NV_vertex_program_glVertexAttribs4fvNV_pointer;
+	long NV_vertex_program_glVertexAttribs4dvNV_pointer;
 
 	private boolean ARB_buffer_object_initNativeFunctionAddresses() {
 		return 
@@ -964,15 +1045,19 @@ public class ContextCapabilities {
 			(ARB_multitexture_glClientActiveTextureARB_pointer = GLContext.getFunctionAddress("glClientActiveTextureARB")) != 0 &&
 			(ARB_multitexture_glActiveTextureARB_pointer = GLContext.getFunctionAddress("glActiveTextureARB")) != 0 &&
 			(ARB_multitexture_glMultiTexCoord1fARB_pointer = GLContext.getFunctionAddress("glMultiTexCoord1fARB")) != 0 &&
+			(ARB_multitexture_glMultiTexCoord1dARB_pointer = GLContext.getFunctionAddress("glMultiTexCoord1dARB")) != 0 &&
 			(ARB_multitexture_glMultiTexCoord1iARB_pointer = GLContext.getFunctionAddress("glMultiTexCoord1iARB")) != 0 &&
 			(ARB_multitexture_glMultiTexCoord1sARB_pointer = GLContext.getFunctionAddress("glMultiTexCoord1sARB")) != 0 &&
 			(ARB_multitexture_glMultiTexCoord2fARB_pointer = GLContext.getFunctionAddress("glMultiTexCoord2fARB")) != 0 &&
+			(ARB_multitexture_glMultiTexCoord2dARB_pointer = GLContext.getFunctionAddress("glMultiTexCoord2dARB")) != 0 &&
 			(ARB_multitexture_glMultiTexCoord2iARB_pointer = GLContext.getFunctionAddress("glMultiTexCoord2iARB")) != 0 &&
 			(ARB_multitexture_glMultiTexCoord2sARB_pointer = GLContext.getFunctionAddress("glMultiTexCoord2sARB")) != 0 &&
 			(ARB_multitexture_glMultiTexCoord3fARB_pointer = GLContext.getFunctionAddress("glMultiTexCoord3fARB")) != 0 &&
+			(ARB_multitexture_glMultiTexCoord3dARB_pointer = GLContext.getFunctionAddress("glMultiTexCoord3dARB")) != 0 &&
 			(ARB_multitexture_glMultiTexCoord3iARB_pointer = GLContext.getFunctionAddress("glMultiTexCoord3iARB")) != 0 &&
 			(ARB_multitexture_glMultiTexCoord3sARB_pointer = GLContext.getFunctionAddress("glMultiTexCoord3sARB")) != 0 &&
 			(ARB_multitexture_glMultiTexCoord4fARB_pointer = GLContext.getFunctionAddress("glMultiTexCoord4fARB")) != 0 &&
+			(ARB_multitexture_glMultiTexCoord4dARB_pointer = GLContext.getFunctionAddress("glMultiTexCoord4dARB")) != 0 &&
 			(ARB_multitexture_glMultiTexCoord4iARB_pointer = GLContext.getFunctionAddress("glMultiTexCoord4iARB")) != 0 &&
 			(ARB_multitexture_glMultiTexCoord4sARB_pointer = GLContext.getFunctionAddress("glMultiTexCoord4sARB")) != 0;
 	}
@@ -1002,11 +1087,17 @@ public class ContextCapabilities {
 			(ARB_program_glDeleteProgramsARB_pointer = GLContext.getFunctionAddress("glDeleteProgramsARB")) != 0 &&
 			(ARB_program_glGenProgramsARB_pointer = GLContext.getFunctionAddress("glGenProgramsARB")) != 0 &&
 			(ARB_program_glProgramEnvParameter4fARB_pointer = GLContext.getFunctionAddress("glProgramEnvParameter4fARB")) != 0 &&
+			(ARB_program_glProgramEnvParameter4dARB_pointer = GLContext.getFunctionAddress("glProgramEnvParameter4dARB")) != 0 &&
 			(ARB_program_glProgramEnvParameter4fvARB_pointer = GLContext.getFunctionAddress("glProgramEnvParameter4fvARB")) != 0 &&
+			(ARB_program_glProgramEnvParameter4dvARB_pointer = GLContext.getFunctionAddress("glProgramEnvParameter4dvARB")) != 0 &&
 			(ARB_program_glProgramLocalParameter4fARB_pointer = GLContext.getFunctionAddress("glProgramLocalParameter4fARB")) != 0 &&
+			(ARB_program_glProgramLocalParameter4dARB_pointer = GLContext.getFunctionAddress("glProgramLocalParameter4dARB")) != 0 &&
 			(ARB_program_glProgramLocalParameter4fvARB_pointer = GLContext.getFunctionAddress("glProgramLocalParameter4fvARB")) != 0 &&
+			(ARB_program_glProgramLocalParameter4dvARB_pointer = GLContext.getFunctionAddress("glProgramLocalParameter4dvARB")) != 0 &&
 			(ARB_program_glGetProgramEnvParameterfvARB_pointer = GLContext.getFunctionAddress("glGetProgramEnvParameterfvARB")) != 0 &&
+			(ARB_program_glGetProgramEnvParameterdvARB_pointer = GLContext.getFunctionAddress("glGetProgramEnvParameterdvARB")) != 0 &&
 			(ARB_program_glGetProgramLocalParameterfvARB_pointer = GLContext.getFunctionAddress("glGetProgramLocalParameterfvARB")) != 0 &&
+			(ARB_program_glGetProgramLocalParameterdvARB_pointer = GLContext.getFunctionAddress("glGetProgramLocalParameterdvARB")) != 0 &&
 			(ARB_program_glGetProgramivARB_pointer = GLContext.getFunctionAddress("glGetProgramivARB")) != 0 &&
 			(ARB_program_glGetProgramStringARB_pointer = GLContext.getFunctionAddress("glGetProgramStringARB")) != 0 &&
 			(ARB_program_glIsProgramARB_pointer = GLContext.getFunctionAddress("glIsProgramARB")) != 0;
@@ -1078,6 +1169,7 @@ public class ContextCapabilities {
 			(ARB_vertex_blend_glWeightsvARB_pointer = GLContext.getFunctionAddress("glWeightsvARB")) != 0 &&
 			(ARB_vertex_blend_glWeightivARB_pointer = GLContext.getFunctionAddress("glWeightivARB")) != 0 &&
 			(ARB_vertex_blend_glWeightfvARB_pointer = GLContext.getFunctionAddress("glWeightfvARB")) != 0 &&
+			(ARB_vertex_blend_glWeightdvARB_pointer = GLContext.getFunctionAddress("glWeightdvARB")) != 0 &&
 			(ARB_vertex_blend_glWeightubvARB_pointer = GLContext.getFunctionAddress("glWeightubvARB")) != 0 &&
 			(ARB_vertex_blend_glWeightusvARB_pointer = GLContext.getFunctionAddress("glWeightusvARB")) != 0 &&
 			(ARB_vertex_blend_glWeightuivARB_pointer = GLContext.getFunctionAddress("glWeightuivARB")) != 0 &&
@@ -1089,17 +1181,22 @@ public class ContextCapabilities {
 		return 
 			(ARB_vertex_program_glVertexAttrib1sARB_pointer = GLContext.getFunctionAddress("glVertexAttrib1sARB")) != 0 &&
 			(ARB_vertex_program_glVertexAttrib1fARB_pointer = GLContext.getFunctionAddress("glVertexAttrib1fARB")) != 0 &&
+			(ARB_vertex_program_glVertexAttrib1dARB_pointer = GLContext.getFunctionAddress("glVertexAttrib1dARB")) != 0 &&
 			(ARB_vertex_program_glVertexAttrib2sARB_pointer = GLContext.getFunctionAddress("glVertexAttrib2sARB")) != 0 &&
 			(ARB_vertex_program_glVertexAttrib2fARB_pointer = GLContext.getFunctionAddress("glVertexAttrib2fARB")) != 0 &&
+			(ARB_vertex_program_glVertexAttrib2dARB_pointer = GLContext.getFunctionAddress("glVertexAttrib2dARB")) != 0 &&
 			(ARB_vertex_program_glVertexAttrib3sARB_pointer = GLContext.getFunctionAddress("glVertexAttrib3sARB")) != 0 &&
 			(ARB_vertex_program_glVertexAttrib3fARB_pointer = GLContext.getFunctionAddress("glVertexAttrib3fARB")) != 0 &&
+			(ARB_vertex_program_glVertexAttrib3dARB_pointer = GLContext.getFunctionAddress("glVertexAttrib3dARB")) != 0 &&
 			(ARB_vertex_program_glVertexAttrib4sARB_pointer = GLContext.getFunctionAddress("glVertexAttrib4sARB")) != 0 &&
 			(ARB_vertex_program_glVertexAttrib4fARB_pointer = GLContext.getFunctionAddress("glVertexAttrib4fARB")) != 0 &&
+			(ARB_vertex_program_glVertexAttrib4dARB_pointer = GLContext.getFunctionAddress("glVertexAttrib4dARB")) != 0 &&
 			(ARB_vertex_program_glVertexAttrib4NubARB_pointer = GLContext.getFunctionAddress("glVertexAttrib4NubARB")) != 0 &&
 			(ARB_vertex_program_glVertexAttribPointerARB_pointer = GLContext.getFunctionAddress("glVertexAttribPointerARB")) != 0 &&
 			(ARB_vertex_program_glEnableVertexAttribArrayARB_pointer = GLContext.getFunctionAddress("glEnableVertexAttribArrayARB")) != 0 &&
 			(ARB_vertex_program_glDisableVertexAttribArrayARB_pointer = GLContext.getFunctionAddress("glDisableVertexAttribArrayARB")) != 0 &&
 			(ARB_vertex_program_glGetVertexAttribfvARB_pointer = GLContext.getFunctionAddress("glGetVertexAttribfvARB")) != 0 &&
+			(ARB_vertex_program_glGetVertexAttribdvARB_pointer = GLContext.getFunctionAddress("glGetVertexAttribdvARB")) != 0 &&
 			(ARB_vertex_program_glGetVertexAttribivARB_pointer = GLContext.getFunctionAddress("glGetVertexAttribivARB")) != 0 &&
 			(ARB_vertex_program_glGetVertexAttribPointervARB_pointer = GLContext.getFunctionAddress("glGetVertexAttribPointervARB")) != 0;
 	}
@@ -1114,9 +1211,11 @@ public class ContextCapabilities {
 	private boolean ARB_window_pos_initNativeFunctionAddresses() {
 		return 
 			(ARB_window_pos_glWindowPos2fARB_pointer = GLContext.getFunctionAddress("glWindowPos2fARB")) != 0 &&
+			(ARB_window_pos_glWindowPos2dARB_pointer = GLContext.getFunctionAddress("glWindowPos2dARB")) != 0 &&
 			(ARB_window_pos_glWindowPos2iARB_pointer = GLContext.getFunctionAddress("glWindowPos2iARB")) != 0 &&
 			(ARB_window_pos_glWindowPos2sARB_pointer = GLContext.getFunctionAddress("glWindowPos2sARB")) != 0 &&
 			(ARB_window_pos_glWindowPos3fARB_pointer = GLContext.getFunctionAddress("glWindowPos3fARB")) != 0 &&
+			(ARB_window_pos_glWindowPos3dARB_pointer = GLContext.getFunctionAddress("glWindowPos3dARB")) != 0 &&
 			(ARB_window_pos_glWindowPos3iARB_pointer = GLContext.getFunctionAddress("glWindowPos3iARB")) != 0 &&
 			(ARB_window_pos_glWindowPos3sARB_pointer = GLContext.getFunctionAddress("glWindowPos3sARB")) != 0;
 	}
@@ -1203,16 +1302,20 @@ public class ContextCapabilities {
 	private boolean ATI_vertex_streams_initNativeFunctionAddresses() {
 		return 
 			(ATI_vertex_streams_glVertexStream2fATI_pointer = GLContext.getFunctionAddress("glVertexStream2fATI")) != 0 &&
+			(ATI_vertex_streams_glVertexStream2dATI_pointer = GLContext.getFunctionAddress("glVertexStream2dATI")) != 0 &&
 			(ATI_vertex_streams_glVertexStream2iATI_pointer = GLContext.getFunctionAddress("glVertexStream2iATI")) != 0 &&
 			(ATI_vertex_streams_glVertexStream2sATI_pointer = GLContext.getFunctionAddress("glVertexStream2sATI")) != 0 &&
 			(ATI_vertex_streams_glVertexStream3fATI_pointer = GLContext.getFunctionAddress("glVertexStream3fATI")) != 0 &&
+			(ATI_vertex_streams_glVertexStream3dATI_pointer = GLContext.getFunctionAddress("glVertexStream3dATI")) != 0 &&
 			(ATI_vertex_streams_glVertexStream3iATI_pointer = GLContext.getFunctionAddress("glVertexStream3iATI")) != 0 &&
 			(ATI_vertex_streams_glVertexStream3sATI_pointer = GLContext.getFunctionAddress("glVertexStream3sATI")) != 0 &&
 			(ATI_vertex_streams_glVertexStream4fATI_pointer = GLContext.getFunctionAddress("glVertexStream4fATI")) != 0 &&
+			(ATI_vertex_streams_glVertexStream4dATI_pointer = GLContext.getFunctionAddress("glVertexStream4dATI")) != 0 &&
 			(ATI_vertex_streams_glVertexStream4iATI_pointer = GLContext.getFunctionAddress("glVertexStream4iATI")) != 0 &&
 			(ATI_vertex_streams_glVertexStream4sATI_pointer = GLContext.getFunctionAddress("glVertexStream4sATI")) != 0 &&
 			(ATI_vertex_streams_glNormalStream3bATI_pointer = GLContext.getFunctionAddress("glNormalStream3bATI")) != 0 &&
 			(ATI_vertex_streams_glNormalStream3fATI_pointer = GLContext.getFunctionAddress("glNormalStream3fATI")) != 0 &&
+			(ATI_vertex_streams_glNormalStream3dATI_pointer = GLContext.getFunctionAddress("glNormalStream3dATI")) != 0 &&
 			(ATI_vertex_streams_glNormalStream3iATI_pointer = GLContext.getFunctionAddress("glNormalStream3iATI")) != 0 &&
 			(ATI_vertex_streams_glNormalStream3sATI_pointer = GLContext.getFunctionAddress("glNormalStream3sATI")) != 0 &&
 			(ATI_vertex_streams_glClientActiveVertexStreamATI_pointer = GLContext.getFunctionAddress("glClientActiveVertexStreamATI")) != 0 &&
@@ -1249,6 +1352,7 @@ public class ContextCapabilities {
 	private boolean EXT_fog_coord_initNativeFunctionAddresses() {
 		return 
 			(EXT_fog_coord_glFogCoordfEXT_pointer = GLContext.getFunctionAddress("glFogCoordfEXT")) != 0 &&
+			(EXT_fog_coord_glFogCoorddEXT_pointer = GLContext.getFunctionAddress("glFogCoorddEXT")) != 0 &&
 			(EXT_fog_coord_glFogCoordPointerEXT_pointer = GLContext.getFunctionAddress("glFogCoordPointerEXT")) != 0;
 	}
 
@@ -1297,6 +1401,7 @@ public class ContextCapabilities {
 		return 
 			(EXT_secondary_color_glSecondaryColor3bEXT_pointer = GLContext.getFunctionAddress("glSecondaryColor3bEXT")) != 0 &&
 			(EXT_secondary_color_glSecondaryColor3fEXT_pointer = GLContext.getFunctionAddress("glSecondaryColor3fEXT")) != 0 &&
+			(EXT_secondary_color_glSecondaryColor3dEXT_pointer = GLContext.getFunctionAddress("glSecondaryColor3dEXT")) != 0 &&
 			(EXT_secondary_color_glSecondaryColor3ubEXT_pointer = GLContext.getFunctionAddress("glSecondaryColor3ubEXT")) != 0 &&
 			(EXT_secondary_color_glSecondaryColorPointerEXT_pointer = GLContext.getFunctionAddress("glSecondaryColorPointerEXT")) != 0;
 	}
@@ -1332,6 +1437,7 @@ public class ContextCapabilities {
 			(EXT_vertex_shader_glVariantsvEXT_pointer = GLContext.getFunctionAddress("glVariantsvEXT")) != 0 &&
 			(EXT_vertex_shader_glVariantivEXT_pointer = GLContext.getFunctionAddress("glVariantivEXT")) != 0 &&
 			(EXT_vertex_shader_glVariantfvEXT_pointer = GLContext.getFunctionAddress("glVariantfvEXT")) != 0 &&
+			(EXT_vertex_shader_glVariantdvEXT_pointer = GLContext.getFunctionAddress("glVariantdvEXT")) != 0 &&
 			(EXT_vertex_shader_glVariantubvEXT_pointer = GLContext.getFunctionAddress("glVariantubvEXT")) != 0 &&
 			(EXT_vertex_shader_glVariantusvEXT_pointer = GLContext.getFunctionAddress("glVariantusvEXT")) != 0 &&
 			(EXT_vertex_shader_glVariantuivEXT_pointer = GLContext.getFunctionAddress("glVariantuivEXT")) != 0 &&
@@ -1391,19 +1497,22 @@ public class ContextCapabilities {
 			(GL11_glColorMask_pointer = GLContext.getFunctionAddress("glColorMask")) != 0 &&
 			(GL11_glColor3b_pointer = GLContext.getFunctionAddress("glColor3b")) != 0 &&
 			(GL11_glColor3f_pointer = GLContext.getFunctionAddress("glColor3f")) != 0 &&
+			(GL11_glColor3d_pointer = GLContext.getFunctionAddress("glColor3d")) != 0 &&
 			(GL11_glColor3ub_pointer = GLContext.getFunctionAddress("glColor3ub")) != 0 &&
 			(GL11_glColor4b_pointer = GLContext.getFunctionAddress("glColor4b")) != 0 &&
 			(GL11_glColor4f_pointer = GLContext.getFunctionAddress("glColor4f")) != 0 &&
+			(GL11_glColor4d_pointer = GLContext.getFunctionAddress("glColor4d")) != 0 &&
 			(GL11_glColor4ub_pointer = GLContext.getFunctionAddress("glColor4ub")) != 0 &&
 			(GL11_glClipPlane_pointer = GLContext.getFunctionAddress("glClipPlane")) != 0 &&
 			(GL11_glClearStencil_pointer = GLContext.getFunctionAddress("glClearStencil")) != 0 &&
-			(GL11_glClearIndex_pointer = GLContext.getFunctionAddress("glClearIndex")) != 0 &&
 			(GL11_glEvalPoint1_pointer = GLContext.getFunctionAddress("glEvalPoint1")) != 0 &&
 			(GL11_glEvalPoint2_pointer = GLContext.getFunctionAddress("glEvalPoint2")) != 0 &&
 			(GL11_glEvalMesh1_pointer = GLContext.getFunctionAddress("glEvalMesh1")) != 0 &&
 			(GL11_glEvalMesh2_pointer = GLContext.getFunctionAddress("glEvalMesh2")) != 0 &&
 			(GL11_glEvalCoord1f_pointer = GLContext.getFunctionAddress("glEvalCoord1f")) != 0 &&
+			(GL11_glEvalCoord1d_pointer = GLContext.getFunctionAddress("glEvalCoord1d")) != 0 &&
 			(GL11_glEvalCoord2f_pointer = GLContext.getFunctionAddress("glEvalCoord2f")) != 0 &&
+			(GL11_glEvalCoord2d_pointer = GLContext.getFunctionAddress("glEvalCoord2d")) != 0 &&
 			(GL11_glEnableClientState_pointer = GLContext.getFunctionAddress("glEnableClientState")) != 0 &&
 			(GL11_glDisableClientState_pointer = GLContext.getFunctionAddress("glDisableClientState")) != 0 &&
 			(GL11_glEnable_pointer = GLContext.getFunctionAddress("glEnable")) != 0 &&
@@ -1424,6 +1533,7 @@ public class ContextCapabilities {
 			(GL11_glGetMaterialfv_pointer = GLContext.getFunctionAddress("glGetMaterialfv")) != 0 &&
 			(GL11_glGetMaterialiv_pointer = GLContext.getFunctionAddress("glGetMaterialiv")) != 0 &&
 			(GL11_glGetMapfv_pointer = GLContext.getFunctionAddress("glGetMapfv")) != 0 &&
+			(GL11_glGetMapdv_pointer = GLContext.getFunctionAddress("glGetMapdv")) != 0 &&
 			(GL11_glGetMapiv_pointer = GLContext.getFunctionAddress("glGetMapiv")) != 0 &&
 			(GL11_glGetLightfv_pointer = GLContext.getFunctionAddress("glGetLightfv")) != 0 &&
 			(GL11_glGetLightiv_pointer = GLContext.getFunctionAddress("glGetLightiv")) != 0 &&
@@ -1455,6 +1565,7 @@ public class ContextCapabilities {
 			(GL11_glGetTexImage_pointer = GLContext.getFunctionAddress("glGetTexImage")) != 0 &&
 			(GL11_glGetTexGeniv_pointer = GLContext.getFunctionAddress("glGetTexGeniv")) != 0 &&
 			(GL11_glGetTexGenfv_pointer = GLContext.getFunctionAddress("glGetTexGenfv")) != 0 &&
+			(GL11_glGetTexGendv_pointer = GLContext.getFunctionAddress("glGetTexGendv")) != 0 &&
 			(GL11_glGetTexEnviv_pointer = GLContext.getFunctionAddress("glGetTexEnviv")) != 0 &&
 			(GL11_glGetTexEnvfv_pointer = GLContext.getFunctionAddress("glGetTexEnvfv")) != 0 &&
 			(GL11_glGetString_pointer = GLContext.getFunctionAddress("glGetString")) != 0 &&
@@ -1465,12 +1576,17 @@ public class ContextCapabilities {
 			(GL11_glMaterialfv_pointer = GLContext.getFunctionAddress("glMaterialfv")) != 0 &&
 			(GL11_glMaterialiv_pointer = GLContext.getFunctionAddress("glMaterialiv")) != 0 &&
 			(GL11_glMapGrid1f_pointer = GLContext.getFunctionAddress("glMapGrid1f")) != 0 &&
+			(GL11_glMapGrid1d_pointer = GLContext.getFunctionAddress("glMapGrid1d")) != 0 &&
 			(GL11_glMapGrid2f_pointer = GLContext.getFunctionAddress("glMapGrid2f")) != 0 &&
+			(GL11_glMapGrid2d_pointer = GLContext.getFunctionAddress("glMapGrid2d")) != 0 &&
 			(GL11_glMap2f_pointer = GLContext.getFunctionAddress("glMap2f")) != 0 &&
+			(GL11_glMap2d_pointer = GLContext.getFunctionAddress("glMap2d")) != 0 &&
 			(GL11_glMap1f_pointer = GLContext.getFunctionAddress("glMap1f")) != 0 &&
+			(GL11_glMap1d_pointer = GLContext.getFunctionAddress("glMap1d")) != 0 &&
 			(GL11_glLogicOp_pointer = GLContext.getFunctionAddress("glLogicOp")) != 0 &&
 			(GL11_glLoadName_pointer = GLContext.getFunctionAddress("glLoadName")) != 0 &&
 			(GL11_glLoadMatrixf_pointer = GLContext.getFunctionAddress("glLoadMatrixf")) != 0 &&
+			(GL11_glLoadMatrixd_pointer = GLContext.getFunctionAddress("glLoadMatrixd")) != 0 &&
 			(GL11_glLoadIdentity_pointer = GLContext.getFunctionAddress("glLoadIdentity")) != 0 &&
 			(GL11_glListBase_pointer = GLContext.getFunctionAddress("glListBase")) != 0 &&
 			(GL11_glLineWidth_pointer = GLContext.getFunctionAddress("glLineWidth")) != 0 &&
@@ -1502,25 +1618,32 @@ public class ContextCapabilities {
 			(GL11_glNormalPointer_pointer = GLContext.getFunctionAddress("glNormalPointer")) != 0 &&
 			(GL11_glNormal3b_pointer = GLContext.getFunctionAddress("glNormal3b")) != 0 &&
 			(GL11_glNormal3f_pointer = GLContext.getFunctionAddress("glNormal3f")) != 0 &&
+			(GL11_glNormal3d_pointer = GLContext.getFunctionAddress("glNormal3d")) != 0 &&
 			(GL11_glNormal3i_pointer = GLContext.getFunctionAddress("glNormal3i")) != 0 &&
 			(GL11_glNewList_pointer = GLContext.getFunctionAddress("glNewList")) != 0 &&
 			(GL11_glEndList_pointer = GLContext.getFunctionAddress("glEndList")) != 0 &&
 			(GL11_glMultMatrixf_pointer = GLContext.getFunctionAddress("glMultMatrixf")) != 0 &&
+			(GL11_glMultMatrixd_pointer = GLContext.getFunctionAddress("glMultMatrixd")) != 0 &&
 			(GL11_glShadeModel_pointer = GLContext.getFunctionAddress("glShadeModel")) != 0 &&
 			(GL11_glSelectBuffer_pointer = GLContext.getFunctionAddress("glSelectBuffer")) != 0 &&
 			(GL11_glScissor_pointer = GLContext.getFunctionAddress("glScissor")) != 0 &&
 			(GL11_glScalef_pointer = GLContext.getFunctionAddress("glScalef")) != 0 &&
+			(GL11_glScaled_pointer = GLContext.getFunctionAddress("glScaled")) != 0 &&
 			(GL11_glRotatef_pointer = GLContext.getFunctionAddress("glRotatef")) != 0 &&
 			(GL11_glRenderMode_pointer = GLContext.getFunctionAddress("glRenderMode")) != 0 &&
 			(GL11_glRectf_pointer = GLContext.getFunctionAddress("glRectf")) != 0 &&
+			(GL11_glRectd_pointer = GLContext.getFunctionAddress("glRectd")) != 0 &&
 			(GL11_glRecti_pointer = GLContext.getFunctionAddress("glRecti")) != 0 &&
 			(GL11_glReadPixels_pointer = GLContext.getFunctionAddress("glReadPixels")) != 0 &&
 			(GL11_glReadBuffer_pointer = GLContext.getFunctionAddress("glReadBuffer")) != 0 &&
 			(GL11_glRasterPos2f_pointer = GLContext.getFunctionAddress("glRasterPos2f")) != 0 &&
+			(GL11_glRasterPos2d_pointer = GLContext.getFunctionAddress("glRasterPos2d")) != 0 &&
 			(GL11_glRasterPos2i_pointer = GLContext.getFunctionAddress("glRasterPos2i")) != 0 &&
 			(GL11_glRasterPos3f_pointer = GLContext.getFunctionAddress("glRasterPos3f")) != 0 &&
+			(GL11_glRasterPos3d_pointer = GLContext.getFunctionAddress("glRasterPos3d")) != 0 &&
 			(GL11_glRasterPos3i_pointer = GLContext.getFunctionAddress("glRasterPos3i")) != 0 &&
 			(GL11_glRasterPos4f_pointer = GLContext.getFunctionAddress("glRasterPos4f")) != 0 &&
+			(GL11_glRasterPos4d_pointer = GLContext.getFunctionAddress("glRasterPos4d")) != 0 &&
 			(GL11_glRasterPos4i_pointer = GLContext.getFunctionAddress("glRasterPos4i")) != 0 &&
 			(GL11_glPushName_pointer = GLContext.getFunctionAddress("glPushName")) != 0 &&
 			(GL11_glPopName_pointer = GLContext.getFunctionAddress("glPopName")) != 0 &&
@@ -1533,12 +1656,16 @@ public class ContextCapabilities {
 			(GL11_glStencilFunc_pointer = GLContext.getFunctionAddress("glStencilFunc")) != 0 &&
 			(GL11_glVertexPointer_pointer = GLContext.getFunctionAddress("glVertexPointer")) != 0 &&
 			(GL11_glVertex2f_pointer = GLContext.getFunctionAddress("glVertex2f")) != 0 &&
+			(GL11_glVertex2d_pointer = GLContext.getFunctionAddress("glVertex2d")) != 0 &&
 			(GL11_glVertex2i_pointer = GLContext.getFunctionAddress("glVertex2i")) != 0 &&
 			(GL11_glVertex3f_pointer = GLContext.getFunctionAddress("glVertex3f")) != 0 &&
+			(GL11_glVertex3d_pointer = GLContext.getFunctionAddress("glVertex3d")) != 0 &&
 			(GL11_glVertex3i_pointer = GLContext.getFunctionAddress("glVertex3i")) != 0 &&
 			(GL11_glVertex4f_pointer = GLContext.getFunctionAddress("glVertex4f")) != 0 &&
+			(GL11_glVertex4d_pointer = GLContext.getFunctionAddress("glVertex4d")) != 0 &&
 			(GL11_glVertex4i_pointer = GLContext.getFunctionAddress("glVertex4i")) != 0 &&
 			(GL11_glTranslatef_pointer = GLContext.getFunctionAddress("glTranslatef")) != 0 &&
+			(GL11_glTranslated_pointer = GLContext.getFunctionAddress("glTranslated")) != 0 &&
 			(GL11_glTexImage1D_pointer = GLContext.getFunctionAddress("glTexImage1D")) != 0 &&
 			(GL11_glTexImage2D_pointer = GLContext.getFunctionAddress("glTexImage2D")) != 0 &&
 			(GL11_glTexSubImage1D_pointer = GLContext.getFunctionAddress("glTexSubImage1D")) != 0 &&
@@ -1548,7 +1675,9 @@ public class ContextCapabilities {
 			(GL11_glTexParameterfv_pointer = GLContext.getFunctionAddress("glTexParameterfv")) != 0 &&
 			(GL11_glTexParameteriv_pointer = GLContext.getFunctionAddress("glTexParameteriv")) != 0 &&
 			(GL11_glTexGenf_pointer = GLContext.getFunctionAddress("glTexGenf")) != 0 &&
+			(GL11_glTexGend_pointer = GLContext.getFunctionAddress("glTexGend")) != 0 &&
 			(GL11_glTexGenfv_pointer = GLContext.getFunctionAddress("glTexGenfv")) != 0 &&
+			(GL11_glTexGendv_pointer = GLContext.getFunctionAddress("glTexGendv")) != 0 &&
 			(GL11_glTexGeni_pointer = GLContext.getFunctionAddress("glTexGeni")) != 0 &&
 			(GL11_glTexGeniv_pointer = GLContext.getFunctionAddress("glTexGeniv")) != 0 &&
 			(GL11_glTexEnvf_pointer = GLContext.getFunctionAddress("glTexEnvf")) != 0 &&
@@ -1557,9 +1686,13 @@ public class ContextCapabilities {
 			(GL11_glTexEnviv_pointer = GLContext.getFunctionAddress("glTexEnviv")) != 0 &&
 			(GL11_glTexCoordPointer_pointer = GLContext.getFunctionAddress("glTexCoordPointer")) != 0 &&
 			(GL11_glTexCoord1f_pointer = GLContext.getFunctionAddress("glTexCoord1f")) != 0 &&
+			(GL11_glTexCoord1d_pointer = GLContext.getFunctionAddress("glTexCoord1d")) != 0 &&
 			(GL11_glTexCoord2f_pointer = GLContext.getFunctionAddress("glTexCoord2f")) != 0 &&
+			(GL11_glTexCoord2d_pointer = GLContext.getFunctionAddress("glTexCoord2d")) != 0 &&
 			(GL11_glTexCoord3f_pointer = GLContext.getFunctionAddress("glTexCoord3f")) != 0 &&
+			(GL11_glTexCoord3d_pointer = GLContext.getFunctionAddress("glTexCoord3d")) != 0 &&
 			(GL11_glTexCoord4f_pointer = GLContext.getFunctionAddress("glTexCoord4f")) != 0 &&
+			(GL11_glTexCoord4d_pointer = GLContext.getFunctionAddress("glTexCoord4d")) != 0 &&
 			(GL11_glStencilOp_pointer = GLContext.getFunctionAddress("glStencilOp")) != 0 &&
 			(GL11_glStencilMask_pointer = GLContext.getFunctionAddress("glStencilMask")) != 0 &&
 			(GL11_glViewport_pointer = GLContext.getFunctionAddress("glViewport")) != 0;
@@ -1585,11 +1718,17 @@ public class ContextCapabilities {
 			(GL13_glCompressedTexSubImage3D_pointer = GLContext.getFunctionAddress("glCompressedTexSubImage3D")) != 0 &&
 			(GL13_glGetCompressedTexImage_pointer = GLContext.getFunctionAddress("glGetCompressedTexImage")) != 0 &&
 			(GL13_glMultiTexCoord1f_pointer = GLContext.getFunctionAddress("glMultiTexCoord1f")) != 0 &&
+			(GL13_glMultiTexCoord1d_pointer = GLContext.getFunctionAddress("glMultiTexCoord1d")) != 0 &&
 			(GL13_glMultiTexCoord2f_pointer = GLContext.getFunctionAddress("glMultiTexCoord2f")) != 0 &&
+			(GL13_glMultiTexCoord2d_pointer = GLContext.getFunctionAddress("glMultiTexCoord2d")) != 0 &&
 			(GL13_glMultiTexCoord3f_pointer = GLContext.getFunctionAddress("glMultiTexCoord3f")) != 0 &&
+			(GL13_glMultiTexCoord3d_pointer = GLContext.getFunctionAddress("glMultiTexCoord3d")) != 0 &&
 			(GL13_glMultiTexCoord4f_pointer = GLContext.getFunctionAddress("glMultiTexCoord4f")) != 0 &&
+			(GL13_glMultiTexCoord4d_pointer = GLContext.getFunctionAddress("glMultiTexCoord4d")) != 0 &&
 			(GL13_glLoadTransposeMatrixf_pointer = GLContext.getFunctionAddress("glLoadTransposeMatrixf")) != 0 &&
+			(GL13_glLoadTransposeMatrixd_pointer = GLContext.getFunctionAddress("glLoadTransposeMatrixd")) != 0 &&
 			(GL13_glMultTransposeMatrixf_pointer = GLContext.getFunctionAddress("glMultTransposeMatrixf")) != 0 &&
+			(GL13_glMultTransposeMatrixd_pointer = GLContext.getFunctionAddress("glMultTransposeMatrixd")) != 0 &&
 			(GL13_glSampleCoverage_pointer = GLContext.getFunctionAddress("glSampleCoverage")) != 0;
 	}
 
@@ -1598,6 +1737,7 @@ public class ContextCapabilities {
 			(GL14_glBlendEquation_pointer = GLContext.getFunctionAddress("glBlendEquation")) != 0 &&
 			(GL14_glBlendColor_pointer = GLContext.getFunctionAddress("glBlendColor")) != 0 &&
 			(GL14_glFogCoordf_pointer = GLContext.getFunctionAddress("glFogCoordf")) != 0 &&
+			(GL14_glFogCoordd_pointer = GLContext.getFunctionAddress("glFogCoordd")) != 0 &&
 			(GL14_glFogCoordPointer_pointer = GLContext.getFunctionAddress("glFogCoordPointer")) != 0 &&
 			(GL14_glMultiDrawArrays_pointer = GLContext.getFunctionAddress("glMultiDrawArrays")) != 0 &&
 			(GL14_glPointParameteri_pointer = GLContext.getFunctionAddress("glPointParameteri")) != 0 &&
@@ -1606,12 +1746,15 @@ public class ContextCapabilities {
 			(GL14_glPointParameterfv_pointer = GLContext.getFunctionAddress("glPointParameterfv")) != 0 &&
 			(GL14_glSecondaryColor3b_pointer = GLContext.getFunctionAddress("glSecondaryColor3b")) != 0 &&
 			(GL14_glSecondaryColor3f_pointer = GLContext.getFunctionAddress("glSecondaryColor3f")) != 0 &&
+			(GL14_glSecondaryColor3d_pointer = GLContext.getFunctionAddress("glSecondaryColor3d")) != 0 &&
 			(GL14_glSecondaryColor3ub_pointer = GLContext.getFunctionAddress("glSecondaryColor3ub")) != 0 &&
 			(GL14_glSecondaryColorPointer_pointer = GLContext.getFunctionAddress("glSecondaryColorPointer")) != 0 &&
 			(GL14_glBlendFuncSeparate_pointer = GLContext.getFunctionAddress("glBlendFuncSeparate")) != 0 &&
 			(GL14_glWindowPos2f_pointer = GLContext.getFunctionAddress("glWindowPos2f")) != 0 &&
+			(GL14_glWindowPos2d_pointer = GLContext.getFunctionAddress("glWindowPos2d")) != 0 &&
 			(GL14_glWindowPos2i_pointer = GLContext.getFunctionAddress("glWindowPos2i")) != 0 &&
 			(GL14_glWindowPos3f_pointer = GLContext.getFunctionAddress("glWindowPos3f")) != 0 &&
+			(GL14_glWindowPos3d_pointer = GLContext.getFunctionAddress("glWindowPos3d")) != 0 &&
 			(GL14_glWindowPos3i_pointer = GLContext.getFunctionAddress("glWindowPos3i")) != 0;
 	}
 
@@ -1684,17 +1827,22 @@ public class ContextCapabilities {
 			(GL20_glGetShaderSource_pointer = GLContext.getFunctionAddress("glGetShaderSource")) != 0 &&
 			(GL20_glVertexAttrib1s_pointer = GLContext.getFunctionAddress("glVertexAttrib1s")) != 0 &&
 			(GL20_glVertexAttrib1f_pointer = GLContext.getFunctionAddress("glVertexAttrib1f")) != 0 &&
+			(GL20_glVertexAttrib1d_pointer = GLContext.getFunctionAddress("glVertexAttrib1d")) != 0 &&
 			(GL20_glVertexAttrib2s_pointer = GLContext.getFunctionAddress("glVertexAttrib2s")) != 0 &&
 			(GL20_glVertexAttrib2f_pointer = GLContext.getFunctionAddress("glVertexAttrib2f")) != 0 &&
+			(GL20_glVertexAttrib2d_pointer = GLContext.getFunctionAddress("glVertexAttrib2d")) != 0 &&
 			(GL20_glVertexAttrib3s_pointer = GLContext.getFunctionAddress("glVertexAttrib3s")) != 0 &&
 			(GL20_glVertexAttrib3f_pointer = GLContext.getFunctionAddress("glVertexAttrib3f")) != 0 &&
+			(GL20_glVertexAttrib3d_pointer = GLContext.getFunctionAddress("glVertexAttrib3d")) != 0 &&
 			(GL20_glVertexAttrib4s_pointer = GLContext.getFunctionAddress("glVertexAttrib4s")) != 0 &&
 			(GL20_glVertexAttrib4f_pointer = GLContext.getFunctionAddress("glVertexAttrib4f")) != 0 &&
+			(GL20_glVertexAttrib4d_pointer = GLContext.getFunctionAddress("glVertexAttrib4d")) != 0 &&
 			(GL20_glVertexAttrib4Nub_pointer = GLContext.getFunctionAddress("glVertexAttrib4Nub")) != 0 &&
 			(GL20_glVertexAttribPointer_pointer = GLContext.getFunctionAddress("glVertexAttribPointer")) != 0 &&
 			(GL20_glEnableVertexAttribArray_pointer = GLContext.getFunctionAddress("glEnableVertexAttribArray")) != 0 &&
 			(GL20_glDisableVertexAttribArray_pointer = GLContext.getFunctionAddress("glDisableVertexAttribArray")) != 0 &&
 			(GL20_glGetVertexAttribfv_pointer = GLContext.getFunctionAddress("glGetVertexAttribfv")) != 0 &&
+			(GL20_glGetVertexAttribdv_pointer = GLContext.getFunctionAddress("glGetVertexAttribdv")) != 0 &&
 			(GL20_glGetVertexAttribiv_pointer = GLContext.getFunctionAddress("glGetVertexAttribiv")) != 0 &&
 			(GL20_glGetVertexAttribPointerv_pointer = GLContext.getFunctionAddress("glGetVertexAttribPointerv")) != 0 &&
 			(GL20_glBindAttribLocation_pointer = GLContext.getFunctionAddress("glBindAttribLocation")) != 0 &&
@@ -1734,7 +1882,9 @@ public class ContextCapabilities {
 	private boolean NV_fragment_program_initNativeFunctionAddresses() {
 		return 
 			(NV_fragment_program_glProgramNamedParameter4fNV_pointer = GLContext.getFunctionAddress("glProgramNamedParameter4fNV")) != 0 &&
-			(NV_fragment_program_glGetProgramNamedParameterfvNV_pointer = GLContext.getFunctionAddress("glGetProgramNamedParameterfvNV")) != 0;
+			(NV_fragment_program_glProgramNamedParameter4dNV_pointer = GLContext.getFunctionAddress("glProgramNamedParameter4dNV")) != 0 &&
+			(NV_fragment_program_glGetProgramNamedParameterfvNV_pointer = GLContext.getFunctionAddress("glGetProgramNamedParameterfvNV")) != 0 &&
+			(NV_fragment_program_glGetProgramNamedParameterdvNV_pointer = GLContext.getFunctionAddress("glGetProgramNamedParameterdvNV")) != 0;
 	}
 
 	private boolean NV_half_float_initNativeFunctionAddresses() {
@@ -1842,31 +1992,43 @@ public class ContextCapabilities {
 		return 
 			(NV_vertex_program_glExecuteProgramNV_pointer = GLContext.getFunctionAddress("glExecuteProgramNV")) != 0 &&
 			(NV_vertex_program_glGetProgramParameterfvNV_pointer = GLContext.getFunctionAddress("glGetProgramParameterfvNV")) != 0 &&
+			(NV_vertex_program_glGetProgramParameterdvNV_pointer = GLContext.getFunctionAddress("glGetProgramParameterdvNV")) != 0 &&
 			(NV_vertex_program_glGetTrackMatrixivNV_pointer = GLContext.getFunctionAddress("glGetTrackMatrixivNV")) != 0 &&
 			(NV_vertex_program_glGetVertexAttribfvNV_pointer = GLContext.getFunctionAddress("glGetVertexAttribfvNV")) != 0 &&
+			(NV_vertex_program_glGetVertexAttribdvNV_pointer = GLContext.getFunctionAddress("glGetVertexAttribdvNV")) != 0 &&
 			(NV_vertex_program_glGetVertexAttribivNV_pointer = GLContext.getFunctionAddress("glGetVertexAttribivNV")) != 0 &&
 			(NV_vertex_program_glGetVertexAttribPointervNV_pointer = GLContext.getFunctionAddress("glGetVertexAttribPointervNV")) != 0 &&
 			(NV_vertex_program_glProgramParameter4fNV_pointer = GLContext.getFunctionAddress("glProgramParameter4fNV")) != 0 &&
+			(NV_vertex_program_glProgramParameter4dNV_pointer = GLContext.getFunctionAddress("glProgramParameter4dNV")) != 0 &&
 			(NV_vertex_program_glProgramParameters4fvNV_pointer = GLContext.getFunctionAddress("glProgramParameters4fvNV")) != 0 &&
+			(NV_vertex_program_glProgramParameters4dvNV_pointer = GLContext.getFunctionAddress("glProgramParameters4dvNV")) != 0 &&
 			(NV_vertex_program_glTrackMatrixNV_pointer = GLContext.getFunctionAddress("glTrackMatrixNV")) != 0 &&
 			(NV_vertex_program_glVertexAttribPointerNV_pointer = GLContext.getFunctionAddress("glVertexAttribPointerNV")) != 0 &&
 			(NV_vertex_program_glVertexAttrib1sNV_pointer = GLContext.getFunctionAddress("glVertexAttrib1sNV")) != 0 &&
 			(NV_vertex_program_glVertexAttrib1fNV_pointer = GLContext.getFunctionAddress("glVertexAttrib1fNV")) != 0 &&
+			(NV_vertex_program_glVertexAttrib1dNV_pointer = GLContext.getFunctionAddress("glVertexAttrib1dNV")) != 0 &&
 			(NV_vertex_program_glVertexAttrib2sNV_pointer = GLContext.getFunctionAddress("glVertexAttrib2sNV")) != 0 &&
 			(NV_vertex_program_glVertexAttrib2fNV_pointer = GLContext.getFunctionAddress("glVertexAttrib2fNV")) != 0 &&
+			(NV_vertex_program_glVertexAttrib2dNV_pointer = GLContext.getFunctionAddress("glVertexAttrib2dNV")) != 0 &&
 			(NV_vertex_program_glVertexAttrib3sNV_pointer = GLContext.getFunctionAddress("glVertexAttrib3sNV")) != 0 &&
 			(NV_vertex_program_glVertexAttrib3fNV_pointer = GLContext.getFunctionAddress("glVertexAttrib3fNV")) != 0 &&
+			(NV_vertex_program_glVertexAttrib3dNV_pointer = GLContext.getFunctionAddress("glVertexAttrib3dNV")) != 0 &&
 			(NV_vertex_program_glVertexAttrib4sNV_pointer = GLContext.getFunctionAddress("glVertexAttrib4sNV")) != 0 &&
 			(NV_vertex_program_glVertexAttrib4fNV_pointer = GLContext.getFunctionAddress("glVertexAttrib4fNV")) != 0 &&
+			(NV_vertex_program_glVertexAttrib4dNV_pointer = GLContext.getFunctionAddress("glVertexAttrib4dNV")) != 0 &&
 			(NV_vertex_program_glVertexAttrib4ubNV_pointer = GLContext.getFunctionAddress("glVertexAttrib4ubNV")) != 0 &&
 			(NV_vertex_program_glVertexAttribs1svNV_pointer = GLContext.getFunctionAddress("glVertexAttribs1svNV")) != 0 &&
 			(NV_vertex_program_glVertexAttribs1fvNV_pointer = GLContext.getFunctionAddress("glVertexAttribs1fvNV")) != 0 &&
+			(NV_vertex_program_glVertexAttribs1dvNV_pointer = GLContext.getFunctionAddress("glVertexAttribs1dvNV")) != 0 &&
 			(NV_vertex_program_glVertexAttribs2svNV_pointer = GLContext.getFunctionAddress("glVertexAttribs2svNV")) != 0 &&
 			(NV_vertex_program_glVertexAttribs2fvNV_pointer = GLContext.getFunctionAddress("glVertexAttribs2fvNV")) != 0 &&
+			(NV_vertex_program_glVertexAttribs2dvNV_pointer = GLContext.getFunctionAddress("glVertexAttribs2dvNV")) != 0 &&
 			(NV_vertex_program_glVertexAttribs3svNV_pointer = GLContext.getFunctionAddress("glVertexAttribs3svNV")) != 0 &&
 			(NV_vertex_program_glVertexAttribs3fvNV_pointer = GLContext.getFunctionAddress("glVertexAttribs3fvNV")) != 0 &&
+			(NV_vertex_program_glVertexAttribs3dvNV_pointer = GLContext.getFunctionAddress("glVertexAttribs3dvNV")) != 0 &&
 			(NV_vertex_program_glVertexAttribs4svNV_pointer = GLContext.getFunctionAddress("glVertexAttribs4svNV")) != 0 &&
-			(NV_vertex_program_glVertexAttribs4fvNV_pointer = GLContext.getFunctionAddress("glVertexAttribs4fvNV")) != 0;
+			(NV_vertex_program_glVertexAttribs4fvNV_pointer = GLContext.getFunctionAddress("glVertexAttribs4fvNV")) != 0 &&
+			(NV_vertex_program_glVertexAttribs4dvNV_pointer = GLContext.getFunctionAddress("glVertexAttribs4dvNV")) != 0;
 	}
 
 

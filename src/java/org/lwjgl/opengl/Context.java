@@ -238,7 +238,8 @@ final class Context {
 		boolean was_current = isCurrent();
 		int error = GL11.GL_NO_ERROR;
 		if (was_current) {
-			error = GL11.glGetError();
+			if (GLContext.getCapabilities() != null && GLContext.getCapabilities().OpenGL11)
+				error = GL11.glGetError();
 			releaseCurrentContext();
 		}
 		checkDestroy();

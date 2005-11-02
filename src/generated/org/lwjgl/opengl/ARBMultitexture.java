@@ -68,6 +68,13 @@ public final class ARBMultitexture {
 	}
 	private static native void nglMultiTexCoord1fARB(int target, float s, long function_pointer);
 
+	public static void glMultiTexCoord1dARB(int target, double s) {
+		long function_pointer = GLContext.getCapabilities().ARB_multitexture_glMultiTexCoord1dARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglMultiTexCoord1dARB(target, s, function_pointer);
+	}
+	private static native void nglMultiTexCoord1dARB(int target, double s, long function_pointer);
+
 	public static void glMultiTexCoord1iARB(int target, int s) {
 		long function_pointer = GLContext.getCapabilities().ARB_multitexture_glMultiTexCoord1iARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -88,6 +95,13 @@ public final class ARBMultitexture {
 		nglMultiTexCoord2fARB(target, s, t, function_pointer);
 	}
 	private static native void nglMultiTexCoord2fARB(int target, float s, float t, long function_pointer);
+
+	public static void glMultiTexCoord2dARB(int target, double s, double t) {
+		long function_pointer = GLContext.getCapabilities().ARB_multitexture_glMultiTexCoord2dARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglMultiTexCoord2dARB(target, s, t, function_pointer);
+	}
+	private static native void nglMultiTexCoord2dARB(int target, double s, double t, long function_pointer);
 
 	public static void glMultiTexCoord2iARB(int target, int s, int t) {
 		long function_pointer = GLContext.getCapabilities().ARB_multitexture_glMultiTexCoord2iARB_pointer;
@@ -110,6 +124,13 @@ public final class ARBMultitexture {
 	}
 	private static native void nglMultiTexCoord3fARB(int target, float s, float t, float r, long function_pointer);
 
+	public static void glMultiTexCoord3dARB(int target, double s, double t, double r) {
+		long function_pointer = GLContext.getCapabilities().ARB_multitexture_glMultiTexCoord3dARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglMultiTexCoord3dARB(target, s, t, r, function_pointer);
+	}
+	private static native void nglMultiTexCoord3dARB(int target, double s, double t, double r, long function_pointer);
+
 	public static void glMultiTexCoord3iARB(int target, int s, int t, int r) {
 		long function_pointer = GLContext.getCapabilities().ARB_multitexture_glMultiTexCoord3iARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -130,6 +151,13 @@ public final class ARBMultitexture {
 		nglMultiTexCoord4fARB(target, s, t, r, q, function_pointer);
 	}
 	private static native void nglMultiTexCoord4fARB(int target, float s, float t, float r, float q, long function_pointer);
+
+	public static void glMultiTexCoord4dARB(int target, double s, double t, double r, double q) {
+		long function_pointer = GLContext.getCapabilities().ARB_multitexture_glMultiTexCoord4dARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglMultiTexCoord4dARB(target, s, t, r, q, function_pointer);
+	}
+	private static native void nglMultiTexCoord4dARB(int target, double s, double t, double r, double q, long function_pointer);
 
 	public static void glMultiTexCoord4iARB(int target, int s, int t, int r, int q) {
 		long function_pointer = GLContext.getCapabilities().ARB_multitexture_glMultiTexCoord4iARB_pointer;

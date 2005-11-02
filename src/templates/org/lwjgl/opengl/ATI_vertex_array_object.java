@@ -54,6 +54,7 @@ public interface ATI_vertex_array_object {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer pPointer, @GLenum int usage);
 
 	boolean glIsObjectBufferATI(@GLuint int buffer);
@@ -64,6 +65,7 @@ public interface ATI_vertex_array_object {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer pPointer, @GLenum int preserve);
 
 	@StripPostfix("params")

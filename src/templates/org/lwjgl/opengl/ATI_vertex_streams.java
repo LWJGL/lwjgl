@@ -46,6 +46,8 @@ public interface ATI_vertex_streams {
 	int GL_VERTEX_STREAM7_ATI = 0x8774;
 
 	void glVertexStream2fATI(@GLenum int stream, float x, float y);
+	
+	void glVertexStream2dATI(@GLenum int stream, double x, double y);
 
 	void glVertexStream2iATI(@GLenum int stream, int x, int y);
 
@@ -53,11 +55,15 @@ public interface ATI_vertex_streams {
 
 	void glVertexStream3fATI(@GLenum int stream, float x, float y, float z);
 
+	void glVertexStream3dATI(@GLenum int stream, double x, double y, double z);
+
 	void glVertexStream3iATI(@GLenum int stream, int x, int y, int z);
 
 	void glVertexStream3sATI(@GLenum int stream, short x, short y, short z);
 
 	void glVertexStream4fATI(@GLenum int stream, float x, float y, float z, float w);
+
+	void glVertexStream4dATI(@GLenum int stream, double x, double y, double z, double w);
 
 	void glVertexStream4iATI(@GLenum int stream, int x, int y, int z, int w);
 
@@ -66,6 +72,8 @@ public interface ATI_vertex_streams {
 	void glNormalStream3bATI(@GLenum int stream, byte x, byte y, byte z);
 
 	void glNormalStream3fATI(@GLenum int stream, float x, float y, float z);
+	
+	void glNormalStream3dATI(@GLenum int stream, double x, double y, double z);
 
 	void glNormalStream3iATI(@GLenum int stream, int x, int y, int z);
 

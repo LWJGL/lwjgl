@@ -6,6 +6,7 @@
 typedef void (APIENTRY *glBlendEquationPROC) (GLenum mode);
 typedef void (APIENTRY *glBlendColorPROC) (GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
 typedef void (APIENTRY *glFogCoordfPROC) (GLfloat coord);
+typedef void (APIENTRY *glFogCoorddPROC) (GLdouble coord);
 typedef void (APIENTRY *glFogCoordPointerPROC) (GLenum type, GLsizei stride, const GLvoid * data);
 typedef void (APIENTRY *glMultiDrawArraysPROC) (GLenum mode, GLint * piFirst, GLsizei * piCount, GLsizei primcount);
 typedef void (APIENTRY *glPointParameteriPROC) (GLenum pname, GLint param);
@@ -14,12 +15,15 @@ typedef void (APIENTRY *glPointParameterivPROC) (GLenum pname, const GLint * par
 typedef void (APIENTRY *glPointParameterfvPROC) (GLenum pname, const GLfloat * params);
 typedef void (APIENTRY *glSecondaryColor3bPROC) (GLbyte red, GLbyte green, GLbyte blue);
 typedef void (APIENTRY *glSecondaryColor3fPROC) (GLfloat red, GLfloat green, GLfloat blue);
+typedef void (APIENTRY *glSecondaryColor3dPROC) (GLdouble red, GLdouble green, GLdouble blue);
 typedef void (APIENTRY *glSecondaryColor3ubPROC) (GLubyte red, GLubyte green, GLubyte blue);
 typedef void (APIENTRY *glSecondaryColorPointerPROC) (GLint size, GLenum type, GLsizei stride, const GLvoid * data);
 typedef void (APIENTRY *glBlendFuncSeparatePROC) (GLenum sfactorRGB, GLenum dfactorRGB, GLenum sfactorAlpha, GLenum dfactorAlpha);
 typedef void (APIENTRY *glWindowPos2fPROC) (GLfloat x, GLfloat y);
+typedef void (APIENTRY *glWindowPos2dPROC) (GLdouble x, GLdouble y);
 typedef void (APIENTRY *glWindowPos2iPROC) (GLint x, GLint y);
 typedef void (APIENTRY *glWindowPos3fPROC) (GLfloat x, GLfloat y, GLfloat z);
+typedef void (APIENTRY *glWindowPos3dPROC) (GLdouble x, GLdouble y, GLdouble z);
 typedef void (APIENTRY *glWindowPos3iPROC) (GLint x, GLint y, GLint z);
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglBlendEquation(JNIEnv *env, jclass clazz, jint mode, jlong function_pointer) {
@@ -35,6 +39,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglBlendColor(JNIEnv *env, jcl
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglFogCoordf(JNIEnv *env, jclass clazz, jfloat coord, jlong function_pointer) {
 	glFogCoordfPROC glFogCoordf = (glFogCoordfPROC)((intptr_t)function_pointer);
 	glFogCoordf(coord);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglFogCoordd(JNIEnv *env, jclass clazz, jdouble coord, jlong function_pointer) {
+	glFogCoorddPROC glFogCoordd = (glFogCoorddPROC)((intptr_t)function_pointer);
+	glFogCoordd(coord);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglFogCoordPointer(JNIEnv *env, jclass clazz, jint type, jint stride, jobject data, jint data_position, jlong function_pointer) {
@@ -88,6 +97,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglSecondaryColor3f(JNIEnv *en
 	glSecondaryColor3f(red, green, blue);
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglSecondaryColor3d(JNIEnv *env, jclass clazz, jdouble red, jdouble green, jdouble blue, jlong function_pointer) {
+	glSecondaryColor3dPROC glSecondaryColor3d = (glSecondaryColor3dPROC)((intptr_t)function_pointer);
+	glSecondaryColor3d(red, green, blue);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglSecondaryColor3ub(JNIEnv *env, jclass clazz, jbyte red, jbyte green, jbyte blue, jlong function_pointer) {
 	glSecondaryColor3ubPROC glSecondaryColor3ub = (glSecondaryColor3ubPROC)((intptr_t)function_pointer);
 	glSecondaryColor3ub(red, green, blue);
@@ -115,6 +129,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglWindowPos2f(JNIEnv *env, jc
 	glWindowPos2f(x, y);
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglWindowPos2d(JNIEnv *env, jclass clazz, jdouble x, jdouble y, jlong function_pointer) {
+	glWindowPos2dPROC glWindowPos2d = (glWindowPos2dPROC)((intptr_t)function_pointer);
+	glWindowPos2d(x, y);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglWindowPos2i(JNIEnv *env, jclass clazz, jint x, jint y, jlong function_pointer) {
 	glWindowPos2iPROC glWindowPos2i = (glWindowPos2iPROC)((intptr_t)function_pointer);
 	glWindowPos2i(x, y);
@@ -123,6 +142,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglWindowPos2i(JNIEnv *env, jc
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglWindowPos3f(JNIEnv *env, jclass clazz, jfloat x, jfloat y, jfloat z, jlong function_pointer) {
 	glWindowPos3fPROC glWindowPos3f = (glWindowPos3fPROC)((intptr_t)function_pointer);
 	glWindowPos3f(x, y, z);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglWindowPos3d(JNIEnv *env, jclass clazz, jdouble x, jdouble y, jdouble z, jlong function_pointer) {
+	glWindowPos3dPROC glWindowPos3d = (glWindowPos3dPROC)((intptr_t)function_pointer);
+	glWindowPos3d(x, y, z);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglWindowPos3i(JNIEnv *env, jclass clazz, jint x, jint y, jint z, jlong function_pointer) {

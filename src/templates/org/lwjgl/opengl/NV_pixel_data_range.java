@@ -62,6 +62,7 @@ public interface NV_pixel_data_range {
 			@GLshort
 			@GLint
 			@GLfloat
+			@GLdouble
 			Buffer data);
 
 	void glFlushPixelDataRangeNV(@GLenum int target);

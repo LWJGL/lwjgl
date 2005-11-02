@@ -13,11 +13,17 @@ typedef void (APIENTRY *glCompressedTexSubImage2DPROC) (GLenum target, GLint lev
 typedef void (APIENTRY *glCompressedTexSubImage3DPROC) (GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const GLvoid * data);
 typedef void (APIENTRY *glGetCompressedTexImagePROC) (GLenum target, GLint lod, GLvoid * img);
 typedef void (APIENTRY *glMultiTexCoord1fPROC) (GLenum target, GLfloat s);
+typedef void (APIENTRY *glMultiTexCoord1dPROC) (GLenum target, GLdouble s);
 typedef void (APIENTRY *glMultiTexCoord2fPROC) (GLenum target, GLfloat s, GLfloat t);
+typedef void (APIENTRY *glMultiTexCoord2dPROC) (GLenum target, GLdouble s, GLdouble t);
 typedef void (APIENTRY *glMultiTexCoord3fPROC) (GLenum target, GLfloat s, GLfloat t, GLfloat r);
+typedef void (APIENTRY *glMultiTexCoord3dPROC) (GLenum target, GLdouble s, GLdouble t, GLdouble r);
 typedef void (APIENTRY *glMultiTexCoord4fPROC) (GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q);
+typedef void (APIENTRY *glMultiTexCoord4dPROC) (GLenum target, GLdouble s, GLdouble t, GLdouble r, GLdouble q);
 typedef void (APIENTRY *glLoadTransposeMatrixfPROC) (const GLfloat * m);
+typedef void (APIENTRY *glLoadTransposeMatrixdPROC) (const GLdouble * m);
 typedef void (APIENTRY *glMultTransposeMatrixfPROC) (const GLfloat * m);
+typedef void (APIENTRY *glMultTransposeMatrixdPROC) (const GLdouble * m);
 typedef void (APIENTRY *glSampleCoveragePROC) (GLclampf value, GLboolean invert);
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglActiveTexture(JNIEnv *env, jclass clazz, jint texture, jlong function_pointer) {
@@ -119,9 +125,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglMultiTexCoord1f(JNIEnv *env
 	glMultiTexCoord1f(target, s);
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglMultiTexCoord1d(JNIEnv *env, jclass clazz, jint target, jdouble s, jlong function_pointer) {
+	glMultiTexCoord1dPROC glMultiTexCoord1d = (glMultiTexCoord1dPROC)((intptr_t)function_pointer);
+	glMultiTexCoord1d(target, s);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglMultiTexCoord2f(JNIEnv *env, jclass clazz, jint target, jfloat s, jfloat t, jlong function_pointer) {
 	glMultiTexCoord2fPROC glMultiTexCoord2f = (glMultiTexCoord2fPROC)((intptr_t)function_pointer);
 	glMultiTexCoord2f(target, s, t);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglMultiTexCoord2d(JNIEnv *env, jclass clazz, jint target, jdouble s, jdouble t, jlong function_pointer) {
+	glMultiTexCoord2dPROC glMultiTexCoord2d = (glMultiTexCoord2dPROC)((intptr_t)function_pointer);
+	glMultiTexCoord2d(target, s, t);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglMultiTexCoord3f(JNIEnv *env, jclass clazz, jint target, jfloat s, jfloat t, jfloat r, jlong function_pointer) {
@@ -129,9 +145,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglMultiTexCoord3f(JNIEnv *env
 	glMultiTexCoord3f(target, s, t, r);
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglMultiTexCoord3d(JNIEnv *env, jclass clazz, jint target, jdouble s, jdouble t, jdouble r, jlong function_pointer) {
+	glMultiTexCoord3dPROC glMultiTexCoord3d = (glMultiTexCoord3dPROC)((intptr_t)function_pointer);
+	glMultiTexCoord3d(target, s, t, r);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglMultiTexCoord4f(JNIEnv *env, jclass clazz, jint target, jfloat s, jfloat t, jfloat r, jfloat q, jlong function_pointer) {
 	glMultiTexCoord4fPROC glMultiTexCoord4f = (glMultiTexCoord4fPROC)((intptr_t)function_pointer);
 	glMultiTexCoord4f(target, s, t, r, q);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglMultiTexCoord4d(JNIEnv *env, jclass clazz, jint target, jdouble s, jdouble t, jdouble r, jdouble q, jlong function_pointer) {
+	glMultiTexCoord4dPROC glMultiTexCoord4d = (glMultiTexCoord4dPROC)((intptr_t)function_pointer);
+	glMultiTexCoord4d(target, s, t, r, q);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglLoadTransposeMatrixf(JNIEnv *env, jclass clazz, jobject m, jint m_position, jlong function_pointer) {
@@ -140,10 +166,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglLoadTransposeMatrixf(JNIEnv
 	glLoadTransposeMatrixf(m_address);
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglLoadTransposeMatrixd(JNIEnv *env, jclass clazz, jobject m, jint m_position, jlong function_pointer) {
+	const GLdouble *m_address = ((const GLdouble *)(*env)->GetDirectBufferAddress(env, m)) + m_position;
+	glLoadTransposeMatrixdPROC glLoadTransposeMatrixd = (glLoadTransposeMatrixdPROC)((intptr_t)function_pointer);
+	glLoadTransposeMatrixd(m_address);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglMultTransposeMatrixf(JNIEnv *env, jclass clazz, jobject m, jint m_position, jlong function_pointer) {
 	const GLfloat *m_address = ((const GLfloat *)(*env)->GetDirectBufferAddress(env, m)) + m_position;
 	glMultTransposeMatrixfPROC glMultTransposeMatrixf = (glMultTransposeMatrixfPROC)((intptr_t)function_pointer);
 	glMultTransposeMatrixf(m_address);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglMultTransposeMatrixd(JNIEnv *env, jclass clazz, jobject m, jint m_position, jlong function_pointer) {
+	const GLdouble *m_address = ((const GLdouble *)(*env)->GetDirectBufferAddress(env, m)) + m_position;
+	glMultTransposeMatrixdPROC glMultTransposeMatrixd = (glMultTransposeMatrixdPROC)((intptr_t)function_pointer);
+	glMultTransposeMatrixd(m_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglSampleCoverage(JNIEnv *env, jclass clazz, jfloat value, jboolean invert, jlong function_pointer) {
