@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002-2004 LWJGL Project
+ * Copyright (c) 2002-2005 LWJGL Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,6 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferChecks;
 import org.lwjgl.LWJGLException;
-import org.lwjgl.LWJGLUtil;
 
 /**
  * $Id$
@@ -295,9 +294,6 @@ public class IL {
 	public static final int		IL_SEEK_END									= 2;
 	public static final int		IL_EOF											= -1;
 
-	/** Have we been created? */
-	protected static boolean	created;
-
 	public static native boolean ilActiveImage(int Number);
 	public static native boolean ilActiveLayer(int Number);
 	public static native boolean ilActiveMipmap(int Number);
@@ -362,7 +358,7 @@ public class IL {
 	public static native ByteBuffer ilGetPalette();
 	public static native String ilGetString(int StringName);
 	public static native void ilHint(int Target, int Mode);
-	private static native void ilInit();
+	static native void ilInit();
 	public static native boolean ilIsDisabled(int Mode);
 	public static native boolean ilIsEnabled(int Mode);
 	public static native boolean ilIsImage(int Image);
@@ -573,41 +569,9 @@ public class IL {
 		return result;
 	}
 
-	//    public static native int ilGetDXTCData(ILvoid *Buffer, int BufferSize, int DXTCFormat);
-	//    public static native boolean ilIsValidF(int Type, ILHANDLE File);
-	//    public static native boolean ilLoadF(int Type, ILHANDLE File);
-	//    public static native boolean ilLoadDataF(ILHANDLE File, int Width, int Height, int Depth, ILubyte Bpp);
-	//    public static native int ilSaveF(int Type, ILHANDLE File);
-	//    public static native void ilRegisterFormat(int Format);
-	//    public static native boolean ilRegisterLoad(String Ext, IL_LOADPROC Load);
-	//    public static native boolean ilRegisterMipNum(int Num);
-	//    public static native boolean ilRegisterNumImages(int Num);
-	//    public static native void ilRegisterOrigin(int Origin);
-	//    public static void ilRegisterPal(ByteBuffer Pal, int Size, int Type);
-	//    public static native void nilRegisterPal(ByteBuffer Pal, int pal_position, int Size, int Type);
-	//    public static native boolean ilRegisterSave(String Ext, IL_SAVEPROC Save);
-	//    public static native void ilRegisterType(int Type);
-	//    public static native void ilSetMemory(mAlloc, mFree);
-	//    public static native void ilSetRead(fOpenRProc, fCloseRProc, fEofProc, fGetcProc, fReadProc, fSeekRProc, fTellRProc);
-	//    public static native void ilSetWrite(fOpenWProc, fCloseWProc, fPutcProc, fSeekWProc, fTellWProc, fWriteProc);
-
-
-	static {
-		System.loadLibrary("lwjgl-devil");
-	}
-
-
-	/**
-	 * @return true if DevIL has been created
-	 */
-	public static boolean isCreated() {
-		return created;
-	}
-
-	private static native void initNativeStubs() throws LWJGLException;
-
-	private static native void resetNativeStubs(Class clazz);
-
+	/** Have we been created? */
+	protected static boolean	created;
+	
 	/**
 	 * Creates a new instance of IL.
 	 */
@@ -616,43 +580,24 @@ public class IL {
 			return;
 		}
 
-		String[] illPaths = LWJGLUtil.getLibraryPaths(new String[]{
-			"DevIL", "DevIL.dll",
-			"IL", "libIL.so",
-			"IL", "libIL.dylib"}, IL.class.getClassLoader());
-		nCreate(illPaths);
-
-		try {
-			IL.initNativeStubs();
-			IL.ilInit();
-			created = true;
-		} catch (LWJGLException e) {
-			destroy();
-			throw e;
-		}
+		ILNative.createIL();
+		created = true;
 	}
 
 	/**
 	 * Exit cleanly by calling destroy.
 	 */
 	public static void destroy() {
-		resetNativeStubs(IL.class);
-
 		if (created) {
-			nDestroy();
+			ILNative.destroyIL();
+			created = false;
 		}
-		created = false;
 	}
-
+	
 	/**
-	 * Native method to create IL instance
-	 * 
-	 * @param ilPaths Array of strings containing paths to search for Devil library
+	 * @return true if DevIL has been created
 	 */
-	protected static native void nCreate(String[] ilPaths) throws LWJGLException;
-
-	/**
-	 * Native method the destroy the IL
-	 */
-	protected static native void nDestroy();
+	public static boolean isCreated() {
+		return created;
+	}	
 }

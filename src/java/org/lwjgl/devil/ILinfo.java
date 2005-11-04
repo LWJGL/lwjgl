@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002-2004 LWJGL Project
+ * Copyright (c) 2002-2005 LWJGL Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -41,16 +41,16 @@ package org.lwjgl.devil;
  */
 public class ILinfo {
     public int id;                 // the image's id
-    public byte data[];              // the image's data
+    public byte data[];            // the image's data
     public int width;              // the image's width
     public int height;             // the image's height
     public int depth;              // the image's depth
-    public byte bpp;                // bytes per pixel (not bits) of the image
+    public byte bpp;               // bytes per pixel (not bits) of the image
     public int sizeOfData;         // the total size of the data (in bytes)
     public int format;             // image format (in IL enum style)
     public int type;               // image type (in IL enum style)
     public int origin;             // origin of the image
-    public byte palette[];           // the image's palette
+    public byte palette[];         // the image's palette
     public int palType;            // palette type
     public int palSize;            // palette size
     public int cubeFlags;          // flags for what cube map sides are present

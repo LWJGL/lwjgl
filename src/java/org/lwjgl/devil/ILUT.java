@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002-2004 LWJGL Project
+ * Copyright (c) 2002-2005 LWJGL Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,6 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.LWJGLUtil;
 
 /**
  * $Id$
@@ -83,9 +82,6 @@ public class ILUT {
 	public static final int ILUT_VENDOR = IL.IL_VENDOR;
 	public static final int ILUT_VERSION_NUM = IL.IL_VERSION_NUM;
 
-	/** Have we been created? */
-	protected static boolean created;
-
 	public static native boolean ilutRenderer(int renderer);
 	public static native boolean ilutDisable(int mode);
 	public static native boolean ilutEnable(int mode);
@@ -94,7 +90,7 @@ public class ILUT {
 	public static native void ilutGetBooleanv(int mode, ByteBuffer param);
 	public static native void ilutGetIntegerv(int mode, IntBuffer Param);
 	public static native String ilutGetString(int stringName);
-	private static native void ilutInit();
+	static native void ilutInit();
 	public static native boolean ilutIsDisabled(int mode);
 	public static native boolean ilutIsEnabled(int mode);
 	public static native void ilutPopAttrib();
@@ -112,13 +108,9 @@ public class ILUT {
 	public static native boolean ilutGLSaveImage(String fileName, int texID);
 	public static native boolean ilutGLSetTex(int texID);
 	public static native boolean ilutGLTexImage(int level);
-
-	/**
-	 * @return true if ILUT has been created
-	 */
-	public static boolean isCreated() {
-		return created;
-	}     
+	
+	/** Have we been created? */
+	protected static boolean created;	
 
 	/**
 	 * Creates a new instance of ILUT. Cannot be created unless IL has been created.
@@ -127,56 +119,25 @@ public class ILUT {
 		if(!IL.isCreated()) {
 			throw new LWJGLException("Cannot create ILUT without having created IL instance");
 		}
-
-		String[] ilutPaths = LWJGLUtil.getLibraryPaths(new String[]{
-			"ILUT", "ILUT.dll",
-			"ILUT", "libILUT.so",
-			"ILUT", "libILUT.dylib"}, ILUT.class.getClassLoader());
-		nCreate(ilutPaths);
-
-		try {
-			ILUT.initNativeStubs();
-			ILUT.ilutInit();
-			created = true;
-		} catch (LWJGLException e) {
-			destroy();
-			throw e;
-		}				
+		
+		ILNative.createILUT();
+		created = true;
 	}
-
-	static native void initNativeStubs() throws LWJGLException;
-
-	static native void resetNativeStubs(Class clazz);
 
 	/**
 	 * Exit cleanly by calling destroy.
 	 */
 	public static void destroy() {
-		resetNativeStubs(ILUT.class);
 		if (created) {
-			nDestroy();
+			ILNative.destroyILUT();
+			created = false;
 		}
-		created = false;
 	}
-
+	
 	/**
-	 * Native method to create ILUT instance
-	 * 
-	 * @param ilutPaths Array of strings containing paths to search for ILUT library
+	 * @return true if ILUT has been created
 	 */
-	protected static native void nCreate(String[] ilutPaths) throws LWJGLException;
-
-	/**
-	 * Native method the destroy the ILUT
-	 */
-	protected static native void nDestroy();
-
-	/**
-	 * Forcefully set created. Used internally by mac platform since
-	 * it loads ilu/ilut in IL and needs to mark them as created
-	 * @param created value to set created to
-	 */
-	static void setCreated(boolean created) {
-		ILUT.created = created;
-	}  
+	public static boolean isCreated() {
+		return created;
+	}	
 }

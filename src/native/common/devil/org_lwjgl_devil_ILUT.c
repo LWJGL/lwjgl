@@ -1,5 +1,5 @@
 #include "extilut.h"
-#include "org_lwjgl_devil_ILUT.h"
+#include "org_lwjgl_devil_ILNative.h"
 
 typedef ILboolean		(ILAPIENTRY *ilutRendererPROC) (ILenum Renderer);
 typedef ILboolean		(ILAPIENTRY *ilutDisablePROC) (ILenum Mode);
@@ -269,22 +269,22 @@ static jboolean JNICALL Java_org_lwjgl_devil_ILUT_ilutGLTexImage(JNIEnv *env, jc
  * Method:    nCreate
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILUT_nCreate(JNIEnv *env, jclass clazz, jobjectArray ilutPaths){
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILNative_nCreateILUT(JNIEnv *env, jclass clazz, jobjectArray ilutPaths){
     if (!extilut_Open(env, ilutPaths)) {
         throwException(env, "Failed to load ILUT library");
         return;
     }
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILUT_nDestroy(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILNative_nDestroyILUT(JNIEnv *env, jclass clazz) {
 	extilut_Close();
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILUT_resetNativeStubs(JNIEnv *env, jclass clazz, jclass ilut_class) {
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILNative_resetNativeStubsILUT(JNIEnv *env, jclass clazz, jclass ilut_class) {
 	(*env)->UnregisterNatives(env, ilut_class);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILUT_initNativeStubs(JNIEnv *env, jclass clazz){
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILNative_initNativeStubsILUT(JNIEnv *env, jclass clazz, jclass ilut_class){
 JavaMethodAndExtFunction functions[] = {
         {"ilutRenderer", "(I)Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutRenderer, "ilutRenderer", (void*)&ilutRenderer},
 		{"ilutDisable", "(I)Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutDisable, "ilutDisable", (void*)&ilutDisable},
@@ -312,5 +312,5 @@ JavaMethodAndExtFunction functions[] = {
 		{"ilutGLTexImage", "(I)Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutGLTexImage, "ilutGLTexImage", (void*)&ilutGLTexImage},
     };
     int num_functions = NUMFUNCTIONS(functions);
-    extilut_InitializeClass(env, clazz, num_functions, functions);
+    extilut_InitializeClass(env, ilut_class, num_functions, functions);
 }

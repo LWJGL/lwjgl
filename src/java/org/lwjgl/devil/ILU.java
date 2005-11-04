@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002-2004 LWJGL Project
+ * Copyright (c) 2002-2005 LWJGL Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,6 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferChecks;
 import org.lwjgl.LWJGLException;
-import org.lwjgl.LWJGLUtil;
 
 /**
  * $Id$
@@ -79,16 +78,6 @@ public class ILU {
 	public static final int ILU_VERSION_NUM =                    IL.IL_VERSION_NUM;
 	public static final int ILU_VENDOR =                         IL.IL_VENDOR;
 
-	/** Have we been created? */
-	protected static boolean created;
-
-	/**
-	 * @return true if ILU has been created
-	 */
-	public static boolean isCreated() {
-		return created;
-	}     
-
 	public static native boolean iluAlienify();
 	public static native boolean iluBlurAvg(int iter);
 	public static native boolean iluBlurGaussian(int iter);
@@ -118,7 +107,7 @@ public class ILU {
 	private static native void niluGetIntegerv(int mode, IntBuffer param, int param_offset);
 	public static native String iluGetString(int stringName);
 	public static native void iluImageParameter(int pName, int param);
-	private static native void iluInit();
+	static native void iluInit();
 	public static native boolean iluInvertAlpha();
 	public static native int iluLoadImage(String fileName);
 	public static native boolean iluMirror();
@@ -154,6 +143,9 @@ public class ILU {
 		iluScaleColours(r, g, b);
 	}
 	// ------------------------------------------------------------------------
+	
+	/** Have we been created? */
+	protected static boolean created;	
 
 	/**
 	 * Creates a new instance of ILU. Cannot be created unless IL has been created.
@@ -163,55 +155,24 @@ public class ILU {
 			throw new LWJGLException("Cannot create ILU without having created IL instance");
 		}
 
-		String[] iluPaths = LWJGLUtil.getLibraryPaths(new String[]{
-			"ILU", "ILU.dll",
-			"ILU", "libILU.so",
-			"ILU", "libILU.dylib"}, ILU.class.getClassLoader());
-		nCreate(iluPaths);
-
-		try {
-			ILU.initNativeStubs();
-			ILU.iluInit();
-			created = true;
-		} catch (LWJGLException e) {
-			destroy();
-			throw e;
-		}				
+		ILNative.createILU();
+		created = true;
 	}
-
-	static native void initNativeStubs() throws LWJGLException;
-
-	static native void resetNativeStubs(Class clazz);
 
 	/**
 	 * Exit cleanly by calling destroy.
 	 */
 	public static void destroy() {
-		resetNativeStubs(ILU.class);
 		if (created) {
-			nDestroy();
+			ILNative.destroyILU();
+			created = false;
 		}
-		created = false;
 	}
-
+	
 	/**
-	 * Native method to create ILU instance
-	 * 
-	 * @param iluPaths Array of strings containing paths to search for ILU library
+	 * @return true if ILU has been created
 	 */
-	protected static native void nCreate(String[] iluPaths) throws LWJGLException;
-
-	/**
-	 * Native method the destroy the ILU
-	 */
-	static native void nDestroy();
-
-	/**
-	 * Forcefully set created. Used internally by mac platform since
-	 * it loads ilu/ilut in IL and needs to mark them as created
-	 * @param created value to set created to
-	 */
-	static void setCreated(boolean created) {
-		ILU.created = created;
-	}
+	public static boolean isCreated() {
+		return created;
+	}     	
 }

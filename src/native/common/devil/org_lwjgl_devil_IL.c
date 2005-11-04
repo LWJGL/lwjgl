@@ -1,5 +1,5 @@
 #include "extil.h"
-#include "org_lwjgl_devil_IL.h"
+#include "org_lwjgl_devil_ILNative.h"
 
 typedef ILboolean			(ILAPIENTRY *ilActiveImagePROC) (ILuint Number);
 typedef ILboolean			(ILAPIENTRY *ilActiveLayerPROC) (ILuint Number);
@@ -911,22 +911,22 @@ static jboolean JNICALL Java_org_lwjgl_devil_IL_ilSaveData(JNIEnv *env, jclass c
  * Method:    nCreate
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nCreate(JNIEnv *env, jclass clazz, jobjectArray ilPaths) {
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILNative_nCreateIL(JNIEnv *env, jclass clazz, jobjectArray ilPaths) {
 	if (!extil_Open(env, ilPaths)) {
         throwException(env, "Failed to load DevIL library");
         return;
     }
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nDestroy(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILNative_nDestroyIL(JNIEnv *env, jclass clazz) {
 	extil_Close();
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_resetNativeStubs(JNIEnv *env, jclass clazz, jclass il_class) {
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILNative_resetNativeStubsIL(JNIEnv *env, jclass clazz, jclass il_class) {
 	(*env)->UnregisterNatives(env, il_class);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_initNativeStubs(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILNative_initNativeStubsIL(JNIEnv *env, jclass clazz, jclass il_class) {
     JavaMethodAndExtFunction functions[] = {
         {"ilActiveImage", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilActiveImage, "ilActiveImage", (void*)&ilActiveImage},
         {"ilActiveLayer", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilActiveLayer, "ilActiveLayer", (void*)&ilActiveLayer},
@@ -998,5 +998,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_initNativeStubs(JNIEnv *env, jcla
         {"ilSaveData", "(Ljava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilSaveData, "ilSaveData", (void*)&ilSaveData}
     };
     int num_functions = NUMFUNCTIONS(functions);
-    extil_InitializeClass(env, clazz, num_functions, functions);
+   	printf("hrmph\n");
+
+    extil_InitializeClass(env, il_class, num_functions, functions);
 }

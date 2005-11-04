@@ -1,5 +1,5 @@
 #include "extilu.h"
-#include "org_lwjgl_devil_ILU.h"
+#include "org_lwjgl_devil_ILNative.h"
 
 typedef ILboolean		(ILAPIENTRY *iluAlienifyPROC) (ILvoid);
 typedef ILboolean		(ILAPIENTRY *iluBlurAvgPROC) (ILuint Iter);
@@ -531,22 +531,22 @@ static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluWave(JNIEnv *env, jclass cla
  * Method:    nCreate
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_nCreate(JNIEnv *env, jclass clazz, jobjectArray iluPaths) {
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILNative_nCreateILU(JNIEnv *env, jclass clazz, jobjectArray iluPaths) {
 	if (!extilu_Open(env, iluPaths)) {
         throwException(env, "Failed to load ILU library");
         return;
     }
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_nDestroy(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILNative_nDestroyILU(JNIEnv *env, jclass clazz) {
 	extilu_Close();
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_resetNativeStubs(JNIEnv *env, jclass clazz, jclass ilu_class) {
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILNative_resetNativeStubsILU(JNIEnv *env, jclass clazz, jclass ilu_class) {
 	(*env)->UnregisterNatives(env, ilu_class);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_initNativeStubs(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILNative_initNativeStubsILU(JNIEnv *env, jclass clazz, jclass ilu_class) {
     JavaMethodAndExtFunction functions[] = {
         {"iluAlienify", "()Z", (void*)&Java_org_lwjgl_devil_ILU_iluAlienify, "iluAlienify", (void*)&iluAlienify},
 		{"iluBlurAvg", "(I)Z", (void*)&Java_org_lwjgl_devil_ILU_iluBlurAvg, "iluBlurAvg", (void*)&iluBlurAvg},
@@ -591,5 +591,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_initNativeStubs(JNIEnv *env, jcl
 		{"iluWave", "(F)Z", (void*)&Java_org_lwjgl_devil_ILU_iluWave, "iluWave", (void*)&iluWave},
     };
     int num_functions = NUMFUNCTIONS(functions);
-    extilu_InitializeClass(env, clazz, num_functions, functions);
+    extilu_InitializeClass(env, ilu_class, num_functions, functions);
 }
