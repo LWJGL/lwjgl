@@ -998,7 +998,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILNative_initNativeStubsIL(JNIEnv *e
         {"ilSaveData", "(Ljava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilSaveData, "ilSaveData", (void*)&ilSaveData}
     };
     int num_functions = NUMFUNCTIONS(functions);
-   	printf("hrmph\n");
-
     extil_InitializeClass(env, il_class, num_functions, functions);
 }
