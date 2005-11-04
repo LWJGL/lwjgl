@@ -215,7 +215,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
-		return new MacOSXDisplayPeerInfo(pixel_format);
+		try {
+			return new MacOSXDisplayPeerInfo(pixel_format, true);
+		} catch (LWJGLException e) {
+			return new MacOSXDisplayPeerInfo(pixel_format, false);
+		}
 	}
 
 	private final static IntBuffer current_viewport = BufferUtils.createIntBuffer(16);

@@ -42,8 +42,8 @@ import org.lwjgl.LWJGLException;
 final class MacOSXAWTGLCanvasPeerInfo extends MacOSXCanvasPeerInfo {
 	private final AWTGLCanvas canvas;
 
-	public MacOSXAWTGLCanvasPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) throws LWJGLException {
-		super(pixel_format);
+	public MacOSXAWTGLCanvasPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format, boolean support_pbuffer) throws LWJGLException {
+		super(pixel_format, support_pbuffer);
 		this.canvas = canvas;
 	}
 

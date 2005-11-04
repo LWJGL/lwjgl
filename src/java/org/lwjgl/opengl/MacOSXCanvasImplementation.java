@@ -44,7 +44,11 @@ import org.lwjgl.LWJGLException;
  */
 final class MacOSXCanvasImplementation implements AWTCanvasImplementation {
 	public PeerInfo createPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) throws LWJGLException {
-		return new MacOSXAWTGLCanvasPeerInfo(canvas, pixel_format);
+		try {
+			return new MacOSXAWTGLCanvasPeerInfo(canvas, pixel_format, true);
+		} catch (LWJGLException e) {
+			return new MacOSXAWTGLCanvasPeerInfo(canvas, pixel_format, false);
+		}
 	}
 
 	/**
