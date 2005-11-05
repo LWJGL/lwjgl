@@ -31,12 +31,12 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-
 import org.lwjgl.util.generator.*;
 
+import java.nio.*;
+
 public interface ARB_vertex_shader {
+
 	/*
 	 * Accepted by the <shaderType> argument of CreateShaderObjectARB and
 	 * returned by the <params> parameter of GetObjectParameter{if}vARB:
@@ -95,23 +95,74 @@ public interface ARB_vertex_shader {
 	int GL_FLOAT_MAT3_ARB = 0x8B5B;
 	int GL_FLOAT_MAT4_ARB = 0x8B5C;
 
+	void glVertexAttrib1sARB(@GLuint int index, short v0);
+
+	void glVertexAttrib1fARB(@GLuint int index, float v0);
+
+	void glVertexAttrib1dARB(@GLuint int index, double v0);
+
+	void glVertexAttrib2sARB(@GLuint int index, short v0, short v1);
+
+	void glVertexAttrib2fARB(@GLuint int index, float v0, float v1);
+
+	void glVertexAttrib2dARB(@GLuint int index, double v0, double v1);
+
+	void glVertexAttrib3sARB(@GLuint int index, short v0, short v1, short v2);
+
+	void glVertexAttrib3fARB(@GLuint int index, float v0, float v1, float v2);
+
+	void glVertexAttrib3dARB(@GLuint int index, double v0, double v1, double v2);
+
+	void glVertexAttrib4sARB(@GLuint int index, short v0, short v1, short v2, short v3);
+
+	void glVertexAttrib4fARB(@GLuint int index, float v0, float v1, float v2, float v3);
+
+	void glVertexAttrib4dARB(@GLuint int index, double v0, double v1, double v2, double v3);
+
+	void glVertexAttrib4NubARB(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
+
+	void glVertexAttribPointerARB(@GLuint int index, int size, @AutoType("buffer") @GLenum int type, boolean normalized, @GLsizei int stride,
+	                              @CachedReference
+	                              @BufferObject(BufferKind.ArrayVBO)
+	                              @Check
+	                              @Const
+	                              @GLbyte
+	                              @GLubyte
+	                              @GLshort
+	                              @GLushort
+	                              @GLint
+	                              @GLuint
+	                              @GLfloat
+	                              @GLdouble Buffer buffer);
+
+	void glEnableVertexAttribArrayARB(@GLuint int index);
+
+	void glDisableVertexAttribArrayARB(@GLuint int index);
+
 	void glBindAttribLocationARB(@GLhandleARB int programObj, @GLuint int index, @NullTerminated @Const @GLcharARB ByteBuffer name);
 
-	// ---------------------------
 	void glGetActiveAttribARB(@GLhandleARB int programObj, @GLuint int index,
-			@AutoSize("name")
-			@GLsizei
-			int maxLength,
-			@Check(value="1", canBeNull=true)
-			@GLsizei
-			IntBuffer length,
-			@Check("1")
-			IntBuffer size,
-			@Check("1")
-			@GLenum
-			IntBuffer type,
-			@GLcharARB
-			ByteBuffer name);
+	                          @AutoSize("name")
+	                          @GLsizei int maxLength,
+	                          @Check(value = "1", canBeNull = true)
+	                          @GLsizei IntBuffer length,
+	                          @Check("1") IntBuffer size,
+	                          @Check("1")
+	                          @GLenum IntBuffer type,
+	                          @GLcharARB ByteBuffer name);
 
 	int glGetAttribLocationARB(@GLhandleARB int programObj, @NullTerminated @Const @GLcharARB ByteBuffer name);
+
+	@StripPostfix("params")
+	void glGetVertexAttribfvARB(@GLuint int index, @GLenum int pname, @Check FloatBuffer params);
+
+	@StripPostfix("params")
+	void glGetVertexAttribdvARB(@GLuint int index, @GLenum int pname, @Check DoubleBuffer params);
+
+	@StripPostfix("params")
+	void glGetVertexAttribivARB(@GLuint int index, @GLenum int pname, @Check IntBuffer params);
+
+	@StripPostfix("result")
+	void glGetVertexAttribPointervARB(@GLuint int index, @GLenum int pname, @Result @GLvoid ByteBuffer result);
+
 }
