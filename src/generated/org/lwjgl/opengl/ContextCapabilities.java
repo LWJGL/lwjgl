@@ -316,9 +316,29 @@ public class ContextCapabilities {
 	long ARB_vertex_program_glGetVertexAttribdvARB_pointer;
 	long ARB_vertex_program_glGetVertexAttribivARB_pointer;
 	long ARB_vertex_program_glGetVertexAttribPointervARB_pointer;
+	long ARB_vertex_shader_glVertexAttrib1sARB_pointer;
+	long ARB_vertex_shader_glVertexAttrib1fARB_pointer;
+	long ARB_vertex_shader_glVertexAttrib1dARB_pointer;
+	long ARB_vertex_shader_glVertexAttrib2sARB_pointer;
+	long ARB_vertex_shader_glVertexAttrib2fARB_pointer;
+	long ARB_vertex_shader_glVertexAttrib2dARB_pointer;
+	long ARB_vertex_shader_glVertexAttrib3sARB_pointer;
+	long ARB_vertex_shader_glVertexAttrib3fARB_pointer;
+	long ARB_vertex_shader_glVertexAttrib3dARB_pointer;
+	long ARB_vertex_shader_glVertexAttrib4sARB_pointer;
+	long ARB_vertex_shader_glVertexAttrib4fARB_pointer;
+	long ARB_vertex_shader_glVertexAttrib4dARB_pointer;
+	long ARB_vertex_shader_glVertexAttrib4NubARB_pointer;
+	long ARB_vertex_shader_glVertexAttribPointerARB_pointer;
+	long ARB_vertex_shader_glEnableVertexAttribArrayARB_pointer;
+	long ARB_vertex_shader_glDisableVertexAttribArrayARB_pointer;
 	long ARB_vertex_shader_glBindAttribLocationARB_pointer;
 	long ARB_vertex_shader_glGetActiveAttribARB_pointer;
 	long ARB_vertex_shader_glGetAttribLocationARB_pointer;
+	long ARB_vertex_shader_glGetVertexAttribfvARB_pointer;
+	long ARB_vertex_shader_glGetVertexAttribdvARB_pointer;
+	long ARB_vertex_shader_glGetVertexAttribivARB_pointer;
+	long ARB_vertex_shader_glGetVertexAttribPointervARB_pointer;
 	long ARB_window_pos_glWindowPos2fARB_pointer;
 	long ARB_window_pos_glWindowPos2dARB_pointer;
 	long ARB_window_pos_glWindowPos2iARB_pointer;
@@ -1203,9 +1223,29 @@ public class ContextCapabilities {
 
 	private boolean ARB_vertex_shader_initNativeFunctionAddresses() {
 		return 
+			(ARB_vertex_shader_glVertexAttrib1sARB_pointer = GLContext.getFunctionAddress("glVertexAttrib1sARB")) != 0 &&
+			(ARB_vertex_shader_glVertexAttrib1fARB_pointer = GLContext.getFunctionAddress("glVertexAttrib1fARB")) != 0 &&
+			(ARB_vertex_shader_glVertexAttrib1dARB_pointer = GLContext.getFunctionAddress("glVertexAttrib1dARB")) != 0 &&
+			(ARB_vertex_shader_glVertexAttrib2sARB_pointer = GLContext.getFunctionAddress("glVertexAttrib2sARB")) != 0 &&
+			(ARB_vertex_shader_glVertexAttrib2fARB_pointer = GLContext.getFunctionAddress("glVertexAttrib2fARB")) != 0 &&
+			(ARB_vertex_shader_glVertexAttrib2dARB_pointer = GLContext.getFunctionAddress("glVertexAttrib2dARB")) != 0 &&
+			(ARB_vertex_shader_glVertexAttrib3sARB_pointer = GLContext.getFunctionAddress("glVertexAttrib3sARB")) != 0 &&
+			(ARB_vertex_shader_glVertexAttrib3fARB_pointer = GLContext.getFunctionAddress("glVertexAttrib3fARB")) != 0 &&
+			(ARB_vertex_shader_glVertexAttrib3dARB_pointer = GLContext.getFunctionAddress("glVertexAttrib3dARB")) != 0 &&
+			(ARB_vertex_shader_glVertexAttrib4sARB_pointer = GLContext.getFunctionAddress("glVertexAttrib4sARB")) != 0 &&
+			(ARB_vertex_shader_glVertexAttrib4fARB_pointer = GLContext.getFunctionAddress("glVertexAttrib4fARB")) != 0 &&
+			(ARB_vertex_shader_glVertexAttrib4dARB_pointer = GLContext.getFunctionAddress("glVertexAttrib4dARB")) != 0 &&
+			(ARB_vertex_shader_glVertexAttrib4NubARB_pointer = GLContext.getFunctionAddress("glVertexAttrib4NubARB")) != 0 &&
+			(ARB_vertex_shader_glVertexAttribPointerARB_pointer = GLContext.getFunctionAddress("glVertexAttribPointerARB")) != 0 &&
+			(ARB_vertex_shader_glEnableVertexAttribArrayARB_pointer = GLContext.getFunctionAddress("glEnableVertexAttribArrayARB")) != 0 &&
+			(ARB_vertex_shader_glDisableVertexAttribArrayARB_pointer = GLContext.getFunctionAddress("glDisableVertexAttribArrayARB")) != 0 &&
 			(ARB_vertex_shader_glBindAttribLocationARB_pointer = GLContext.getFunctionAddress("glBindAttribLocationARB")) != 0 &&
 			(ARB_vertex_shader_glGetActiveAttribARB_pointer = GLContext.getFunctionAddress("glGetActiveAttribARB")) != 0 &&
-			(ARB_vertex_shader_glGetAttribLocationARB_pointer = GLContext.getFunctionAddress("glGetAttribLocationARB")) != 0;
+			(ARB_vertex_shader_glGetAttribLocationARB_pointer = GLContext.getFunctionAddress("glGetAttribLocationARB")) != 0 &&
+			(ARB_vertex_shader_glGetVertexAttribfvARB_pointer = GLContext.getFunctionAddress("glGetVertexAttribfvARB")) != 0 &&
+			(ARB_vertex_shader_glGetVertexAttribdvARB_pointer = GLContext.getFunctionAddress("glGetVertexAttribdvARB")) != 0 &&
+			(ARB_vertex_shader_glGetVertexAttribivARB_pointer = GLContext.getFunctionAddress("glGetVertexAttribivARB")) != 0 &&
+			(ARB_vertex_shader_glGetVertexAttribPointervARB_pointer = GLContext.getFunctionAddress("glGetVertexAttribPointervARB")) != 0;
 	}
 
 	private boolean ARB_window_pos_initNativeFunctionAddresses() {

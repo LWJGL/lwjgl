@@ -6,6 +6,7 @@ class References {
 	java.nio.Buffer ARB_matrix_palette_glMatrixIndexPointerARB_pPointer;
 	java.nio.Buffer ARB_vertex_blend_glWeightPointerARB_pPointer;
 	java.nio.Buffer ARB_vertex_program_glVertexAttribPointerARB_buffer;
+	java.nio.Buffer ARB_vertex_shader_glVertexAttribPointerARB_buffer;
 	java.nio.Buffer ATI_element_array_glElementPointerATI_pPointer;
 	java.nio.Buffer EXT_fog_coord_glFogCoordPointerEXT_data;
 	java.nio.Buffer EXT_secondary_color_glSecondaryColorPointerEXT_pPointer;
@@ -25,6 +26,7 @@ class References {
 		this.ARB_matrix_palette_glMatrixIndexPointerARB_pPointer = references.ARB_matrix_palette_glMatrixIndexPointerARB_pPointer;
 		this.ARB_vertex_blend_glWeightPointerARB_pPointer = references.ARB_vertex_blend_glWeightPointerARB_pPointer;
 		this.ARB_vertex_program_glVertexAttribPointerARB_buffer = references.ARB_vertex_program_glVertexAttribPointerARB_buffer;
+		this.ARB_vertex_shader_glVertexAttribPointerARB_buffer = references.ARB_vertex_shader_glVertexAttribPointerARB_buffer;
 		this.ATI_element_array_glElementPointerATI_pPointer = references.ATI_element_array_glElementPointerATI_pPointer;
 		this.EXT_fog_coord_glFogCoordPointerEXT_data = references.EXT_fog_coord_glFogCoordPointerEXT_data;
 		this.EXT_secondary_color_glSecondaryColorPointerEXT_pPointer = references.EXT_secondary_color_glSecondaryColorPointerEXT_pPointer;
