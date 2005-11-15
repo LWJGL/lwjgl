@@ -12,13 +12,6 @@ import org.lwjgl.LWJGLException;
  * @author Kevin Glass
  */
 public class Controllers {
-	/** The name of the plugin used on windows */
-	private static final String WINDOWS_PLUGIN = "net.java.games.input.DirectInputEnvironmentPlugin";
-	/** The name of the plugin used on linux */
-	private static final String LINUX_PLUGIN = "net.java.games.input.LinuxEnvironmentPlugin";
-	/** The name of the plugin used on macos */
-	private static final String MACOS_PLUGIN = "net.java.games.input.OSXEnvironmentPlugin";
-	
 	/** The controllers available */
 	private static ArrayList controllers = new ArrayList();
 	/** The number of controllers */
@@ -42,20 +35,6 @@ public class Controllers {
 			return;
 		
 		try {
-			String plugins = System.getProperty("jinput.plugins");
-			
-			if (plugins == null) {
-				if (System.getProperty("os.name").startsWith("Win")) {
-					System.setProperty("jinput.plugins",WINDOWS_PLUGIN);
-				}
-				if (System.getProperty("os.name").startsWith("Lin")) {
-					System.setProperty("jinput.plugins",LINUX_PLUGIN);
-				}
-				if (System.getProperty("os.name").startsWith("Mac")) {
-					System.setProperty("jinput.plugins",MACOS_PLUGIN);
-				}
-			}
-			
 			ControllerEnvironment env = ControllerEnvironment.getDefaultEnvironment();
 			
 			net.java.games.input.Controller[] found = env.getControllers();
