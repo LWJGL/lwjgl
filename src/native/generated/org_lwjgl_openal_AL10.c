@@ -21,8 +21,8 @@ typedef ALvoid (ALAPIENTRY *alListeneriPROC) (ALenum pname, ALint value);
 typedef ALvoid (ALAPIENTRY *alListenerfPROC) (ALenum pname, ALfloat value);
 typedef ALvoid (ALAPIENTRY *alListenerfvPROC) (ALenum pname, const ALfloat * value);
 typedef ALvoid (ALAPIENTRY *alListener3fPROC) (ALenum pname, ALfloat v1, ALfloat v2, ALfloat v3);
-typedef ALint (ALAPIENTRY *alGetListeneriPROC) (ALenum pname);
-typedef ALfloat (ALAPIENTRY *alGetListenerfPROC) (ALenum pname);
+typedef void (ALAPIENTRY *alGetListeneriPROC) (ALenum pname, ALint* value);
+typedef void (ALAPIENTRY *alGetListenerfPROC) (ALenum pname, ALfloat* value);
 typedef ALvoid (ALAPIENTRY *alGetListenerfvPROC) (ALenum pname, ALfloat * floatdata);
 typedef ALvoid (ALAPIENTRY *alGenSourcesPROC) (ALsizei n, ALuint * sources);
 typedef ALvoid (ALAPIENTRY *alDeleteSourcesPROC) (ALsizei n, ALuint * sources);
@@ -195,12 +195,14 @@ static void JNICALL Java_org_lwjgl_openal_AL10_nalListener3f(JNIEnv *env, jclass
 }
 
 static jint JNICALL Java_org_lwjgl_openal_AL10_nalGetListeneri(JNIEnv *env, jclass clazz, jint pname) {
-	ALint __result = alGetListeneri(pname);
+	ALint __result;
+	alGetListeneri(pname, &__result);
 	return __result;
 }
 
 static jfloat JNICALL Java_org_lwjgl_openal_AL10_nalGetListenerf(JNIEnv *env, jclass clazz, jint pname) {
-	ALfloat __result = alGetListenerf(pname);
+	ALfloat __result;
+	alGetListenerf(pname, &__result);
 	return __result;
 }
 

@@ -690,7 +690,7 @@ public interface AL10 {
 	 * @param pname name of the attribute to be retrieved
 	 * @return int
 	 */
-	int alGetListeneri(@ALenum int pname);
+	void alGetListeneri(@ALenum int pname, @Result @ALint int value);
 
 	/**
 	 * Listener state is maintained inside the AL implementation and can be queried in
@@ -699,7 +699,7 @@ public interface AL10 {
 	 * @param pname name of the attribute to be retrieved
 	 * @return float
 	 */
-	float alGetListenerf(@ALenum int pname);
+	void alGetListenerf(@ALenum int pname, @Result float value);
 
 	/**
 	 * Listener state is maintained inside the AL implementation and can be queried in
