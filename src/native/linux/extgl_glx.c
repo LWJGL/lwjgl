@@ -69,7 +69,7 @@ glXWaitGLPROC lwjgl_glXWaitGL = NULL;
 glXWaitXPROC lwjgl_glXWaitX = NULL;
 glXGetClientStringPROC lwjgl_glXGetClientString = NULL;
 glXQueryServerStringPROC lwjgl_glXQueryServerString = NULL;
-export glXQueryExtensionsStringPROC lwjgl_glXQueryExtensionsString = NULL;
+glXQueryExtensionsStringPROC lwjgl_glXQueryExtensionsString = NULL;
 
 /* GLX_SGI_swap_control */
 glXSwapIntervalSGIPROC lwjgl_glXSwapIntervalSGI = NULL;
