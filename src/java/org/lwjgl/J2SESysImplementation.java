@@ -51,6 +51,7 @@ abstract class J2SESysImplementation extends DefaultSysImplementation {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch(Exception e) {
+			LWJGLUtil.log("Caught exception while setting LAF: " + e);
 		}
 		JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
 	}
