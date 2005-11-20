@@ -331,7 +331,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetTitle(JNIEnv * env
 
 static void destroyWindow(JNIEnv *env) {
 	if (glx_window != None) {
-		_glXDestroyWindow(getDisplay(), glx_window);
+		lwjgl_glXDestroyWindow(getDisplay(), glx_window);
 		glx_window = None;
 	}
 	XDestroyWindow(getDisplay(), current_win);
@@ -518,11 +518,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *
 		return;
 	}
 	if (peer_info->glx13) {
-		glx_window = _glXCreateWindow(getDisplay(), *fb_config, getCurrentWindow(), NULL);
+		glx_window = lwjgl_glXCreateWindow(getDisplay(), *fb_config, getCurrentWindow(), NULL);
 		XFree(fb_config);
 	}
 	if (!checkXError(env, getDisplay())) {
-		_glXDestroyWindow(getDisplay(), glx_window);
+		lwjgl_glXDestroyWindow(getDisplay(), glx_window);
 		destroyWindow(env);
 	}
 }

@@ -70,7 +70,7 @@ XVisualInfo *getVisualInfoFromPeerInfo(JNIEnv *env, X11PeerInfo *peer_info) {
 		GLXFBConfig *configs = getFBConfigFromPeerInfo(env, peer_info);
 		if (configs == NULL)
 			return NULL;
-		vis_info = _glXGetVisualFromFBConfig(peer_info->display, configs[0]);
+		vis_info = lwjgl_glXGetVisualFromFBConfig(peer_info->display, configs[0]);
 		if (vis_info == NULL)
 			throwException(env, "Could not get VisualInfo from GLX 1.3 config");
 		XFree(configs);
@@ -81,7 +81,7 @@ XVisualInfo *getVisualInfoFromPeerInfo(JNIEnv *env, X11PeerInfo *peer_info) {
 GLXFBConfig *getFBConfigFromPeerInfo(JNIEnv *env, X11PeerInfo *peer_info) {
 	int attribs[] = {GLX_FBCONFIG_ID, peer_info->config.glx13_config.config_id, None, None};
 	int num_elements;
-	GLXFBConfig *configs = _glXChooseFBConfig(peer_info->display, peer_info->screen, attribs, &num_elements);
+	GLXFBConfig *configs = lwjgl_glXChooseFBConfig(peer_info->display, peer_info->screen, attribs, &num_elements);
 	if (configs == NULL) {
 		throwException(env, "Could not find GLX 1.3 config from peer info");
 		return NULL;
@@ -147,7 +147,7 @@ static GLXFBConfig *chooseVisualGLX13FromBPP(JNIEnv *env, Display *disp, int scr
 	}
 	putAttrib(&attrib_list, None); putAttrib(&attrib_list, None);
 	int num_formats = 0;
-	GLXFBConfig* configs = _glXChooseFBConfig(disp, screen, attrib_list.attribs, &num_formats);
+	GLXFBConfig* configs = lwjgl_glXChooseFBConfig(disp, screen, attrib_list.attribs, &num_formats);
 	if (num_formats > 0) {
 		return configs;
 	} else {
@@ -208,7 +208,7 @@ static XVisualInfo *chooseVisualGLXFromBPP(JNIEnv *env, Display *disp, int scree
 		putAttrib(&attrib_list, GLX_SAMPLES_ARB); putAttrib(&attrib_list, samples);
 	}
 	putAttrib(&attrib_list, None);
-	return _glXChooseVisual(disp, screen, attrib_list.attribs);
+	return lwjgl_glXChooseVisual(disp, screen, attrib_list.attribs);
 }
 
 XVisualInfo *chooseVisualGLX(JNIEnv *env, Display *disp, int screen, jobject pixel_format, bool use_display_bpp, bool double_buffer) {
@@ -230,15 +230,15 @@ static void dumpVisualInfo(JNIEnv *env, Display *display, GLXExtensions *extensi
 	int alpha, depth, stencil, r, g, b;
 	int sample_buffers = 0;
 	int samples = 0;
-	_glXGetConfig(display, vis_info, GLX_RED_SIZE, &r);
-	_glXGetConfig(display, vis_info, GLX_GREEN_SIZE, &g);
-	_glXGetConfig(display, vis_info, GLX_BLUE_SIZE, &b);
-	_glXGetConfig(display, vis_info, GLX_ALPHA_SIZE, &alpha);
-	_glXGetConfig(display, vis_info, GLX_DEPTH_SIZE, &depth);
-	_glXGetConfig(display, vis_info, GLX_STENCIL_SIZE, &stencil);
+	lwjgl_glXGetConfig(display, vis_info, GLX_RED_SIZE, &r);
+	lwjgl_glXGetConfig(display, vis_info, GLX_GREEN_SIZE, &g);
+	lwjgl_glXGetConfig(display, vis_info, GLX_BLUE_SIZE, &b);
+	lwjgl_glXGetConfig(display, vis_info, GLX_ALPHA_SIZE, &alpha);
+	lwjgl_glXGetConfig(display, vis_info, GLX_DEPTH_SIZE, &depth);
+	lwjgl_glXGetConfig(display, vis_info, GLX_STENCIL_SIZE, &stencil);
 	if (extension_flags->GLX_ARB_multisample) {
-		_glXGetConfig(display, vis_info, GLX_SAMPLE_BUFFERS_ARB, &sample_buffers);
-		_glXGetConfig(display, vis_info, GLX_SAMPLES_ARB, &samples);
+		lwjgl_glXGetConfig(display, vis_info, GLX_SAMPLE_BUFFERS_ARB, &sample_buffers);
+		lwjgl_glXGetConfig(display, vis_info, GLX_SAMPLES_ARB, &samples);
 	}
 	printfDebugJava(env, "Pixel format info: r = %d, g = %d, b = %d, a = %d, depth = %d, stencil = %d, sample buffers = %d, samples = %d", r, g, b, alpha, depth, stencil, sample_buffers, samples);
 }
@@ -272,14 +272,14 @@ bool initPeerInfo(JNIEnv *env, jobject peer_info_handle, Display *display, int s
 			return false;
 		}
 		if (isDebugEnabled()) {
-			XVisualInfo *vis_info = _glXGetVisualFromFBConfig(display, configs[0]);
+			XVisualInfo *vis_info = lwjgl_glXGetVisualFromFBConfig(display, configs[0]);
 			if (vis_info != NULL) {
 				dumpVisualInfo(env, display, &extension_flags, vis_info);
 				XFree(vis_info);
 			}
 		}
 		int config_id;
-		int result = _glXGetFBConfigAttrib(display, configs[0], GLX_FBCONFIG_ID, &config_id);
+		int result = lwjgl_glXGetFBConfigAttrib(display, configs[0], GLX_FBCONFIG_ID, &config_id);
 		XFree(configs);
 		if (result != Success) {
 			throwException(env, "Could not get GLX_FBCONFIG_ID from GLXFBConfig");

@@ -58,8 +58,8 @@ static bool checkContext(JNIEnv *env, Display *display, GLXContext context) {
 		return false;
 	}
 	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Display.allowSoftwareOpenGL");
-	if (!allow_software_acceleration && _glXIsDirect(display, context) == False) {
-		_glXDestroyContext(display, context);
+	if (!allow_software_acceleration && lwjgl_glXIsDirect(display, context) == False) {
+		lwjgl_glXDestroyContext(display, context);
 		throwException(env, "Could not create a direct GLX context");
 		return false;
 	}
@@ -70,7 +70,7 @@ static void createContextGLX13(JNIEnv *env, X11PeerInfo *peer_info, X11Context *
 	GLXFBConfig *config = getFBConfigFromPeerInfo(env, peer_info);
 	if (config == NULL)
 		return;
-	GLXContext context = _glXCreateNewContext(peer_info->display, *config, GLX_RGBA_TYPE, shared_context, True);
+	GLXContext context = lwjgl_glXCreateNewContext(peer_info->display, *config, GLX_RGBA_TYPE, shared_context, True);
 	XFree(config);
 	if (!checkContext(env, peer_info->display, context))
 		return;
@@ -81,7 +81,7 @@ static void createContextGLX(JNIEnv *env, X11PeerInfo *peer_info, X11Context *co
 	XVisualInfo *vis_info = getVisualInfoFromPeerInfo(env, peer_info);
 	if (vis_info == NULL)
 		return;
-	GLXContext context = _glXCreateContext(peer_info->display, vis_info, shared_context, True);
+	GLXContext context = lwjgl_glXCreateContext(peer_info->display, vis_info, shared_context, True);
 	XFree(vis_info);
 	if (!checkContext(env, peer_info->display, context))
 		return;
@@ -94,7 +94,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nSetVSyn
 	X11Context *context_info = (*env)->GetDirectBufferAddress(env, context_handle);
 	if (context_info->extension_flags.GLX_SGI_swap_control) {
 		int interval = sync == JNI_TRUE ? 1 : 0;
-		_glXSwapIntervalSGI(interval);
+		lwjgl_glXSwapIntervalSGI(interval);
 	}
 }
 
@@ -130,7 +130,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nDestroy
   (JNIEnv *env, jclass clazz, jobject peer_handle, jobject context_handle) {
 	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, peer_handle);
 	X11Context *context_info = (*env)->GetDirectBufferAddress(env, context_handle);
-	_glXDestroyContext(peer_info->display, context_info->context);
+	lwjgl_glXDestroyContext(peer_info->display, context_info->context);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nReleaseCurrentContext
@@ -138,9 +138,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nRelease
 	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, peer_info_handle);
 	Bool result;
 	if (peer_info->glx13) {
-		result = _glXMakeContextCurrent(peer_info->display, None, None, NULL);
+		result = lwjgl_glXMakeContextCurrent(peer_info->display, None, None, NULL);
 	} else {
-		result = _glXMakeCurrent(peer_info->display, None, NULL);
+		result = lwjgl_glXMakeCurrent(peer_info->display, None, NULL);
 	}
 	if (!result)
 		throwException(env, "Could not release current context");
@@ -152,9 +152,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nMakeCur
 	X11Context *context_info = (*env)->GetDirectBufferAddress(env, context_handle);
 	Bool result;
 	if (peer_info->glx13) {
-		result = _glXMakeContextCurrent(peer_info->display, peer_info->drawable, peer_info->drawable, context_info->context);
+		result = lwjgl_glXMakeContextCurrent(peer_info->display, peer_info->drawable, peer_info->drawable, context_info->context);
 	} else {
-		result = _glXMakeCurrent(peer_info->display, peer_info->drawable, context_info->context);
+		result = lwjgl_glXMakeCurrent(peer_info->display, peer_info->drawable, context_info->context);
 	}
 	if (!result)
 		throwException(env, "Could not make context current");
@@ -163,11 +163,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nMakeCur
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nIsCurrent
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	X11Context *context_info = (*env)->GetDirectBufferAddress(env, context_handle);
-	return context_info->context == _glXGetCurrentContext();
+	return context_info->context == lwjgl_glXGetCurrentContext();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nSwapBuffers
   (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
 	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, peer_info_handle);
-	_glXSwapBuffers(peer_info->display, peer_info->drawable);
+	lwjgl_glXSwapBuffers(peer_info->display, peer_info->drawable);
 }

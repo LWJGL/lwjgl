@@ -32,113 +32,113 @@
 #include <dlfcn.h>
 #include "extgl_glx.h"
 
-glXGetFBConfigsPROC _glXGetFBConfigs = NULL;
-glXChooseFBConfigPROC _glXChooseFBConfig = NULL;
-glXGetFBConfigAttribPROC _glXGetFBConfigAttrib = NULL;
-glXGetVisualFromFBConfigPROC _glXGetVisualFromFBConfig = NULL;
-glXCreateWindowPROC _glXCreateWindow = NULL;
-glXDestroyWindowPROC _glXDestroyWindow = NULL;
-glXCreatePixmapPROC _glXCreatePixmap = NULL;
-glXDestroyPixmapPROC _glXDestroyPixmap = NULL;
-glXCreatePbufferPROC _glXCreatePbuffer = NULL;
-glXDestroyPbufferPROC _glXDestroyPbuffer = NULL;
-glXQueryDrawablePROC _glXQueryDrawable = NULL;
-glXCreateNewContextPROC _glXCreateNewContext = NULL;
-glXMakeContextCurrentPROC _glXMakeContextCurrent = NULL;
-glXGetCurrentReadDrawablePROC _glXGetCurrentReadDrawable = NULL;
-glXGetCurrentDisplayPROC _glXGetCurrentDisplay = NULL;
-glXQueryContextPROC _glXQueryContext = NULL;
-glXSelectEventPROC _glXSelectEvent = NULL;
-glXGetSelectedEventPROC _glXGetSelectedEvent = NULL;
-glXChooseVisualPROC _glXChooseVisual = NULL;
-glXCopyContextPROC _glXCopyContext = NULL;
-glXCreateContextPROC _glXCreateContext = NULL;
-glXCreateGLXPixmapPROC _glXCreateGLXPixmap = NULL;
-glXDestroyContextPROC _glXDestroyContext = NULL;
-glXDestroyGLXPixmapPROC _glXDestroyGLXPixmap = NULL;
-glXGetConfigPROC _glXGetConfig = NULL;
-glXGetCurrentContextPROC _glXGetCurrentContext = NULL;
-glXGetCurrentDrawablePROC _glXGetCurrentDrawable = NULL;
-glXIsDirectPROC _glXIsDirect = NULL;
-glXMakeCurrentPROC _glXMakeCurrent = NULL;
-glXQueryExtensionPROC _glXQueryExtension = NULL;
-glXQueryVersionPROC _glXQueryVersion = NULL;
-glXSwapBuffersPROC _glXSwapBuffers = NULL;
-glXUseXFontPROC _glXUseXFont = NULL;
-glXWaitGLPROC _glXWaitGL = NULL;
-glXWaitXPROC _glXWaitX = NULL;
-glXGetClientStringPROC _glXGetClientString = NULL;
-glXQueryServerStringPROC _glXQueryServerString = NULL;
-glXQueryExtensionsStringPROC _glXQueryExtensionsString = NULL;
+glXGetFBConfigsPROC lwjgl_glXGetFBConfigs = NULL;
+glXChooseFBConfigPROC lwjgl_glXChooseFBConfig = NULL;
+glXGetFBConfigAttribPROC lwjgl_glXGetFBConfigAttrib = NULL;
+glXGetVisualFromFBConfigPROC lwjgl_glXGetVisualFromFBConfig = NULL;
+glXCreateWindowPROC lwjgl_glXCreateWindow = NULL;
+glXDestroyWindowPROC lwjgl_glXDestroyWindow = NULL;
+glXCreatePixmapPROC lwjgl_glXCreatePixmap = NULL;
+glXDestroyPixmapPROC lwjgl_glXDestroyPixmap = NULL;
+glXCreatePbufferPROC lwjgl_glXCreatePbuffer = NULL;
+glXDestroyPbufferPROC lwjgl_glXDestroyPbuffer = NULL;
+glXQueryDrawablePROC lwjgl_glXQueryDrawable = NULL;
+glXCreateNewContextPROC lwjgl_glXCreateNewContext = NULL;
+glXMakeContextCurrentPROC lwjgl_glXMakeContextCurrent = NULL;
+glXGetCurrentReadDrawablePROC lwjgl_glXGetCurrentReadDrawable = NULL;
+glXGetCurrentDisplayPROC lwjgl_glXGetCurrentDisplay = NULL;
+glXQueryContextPROC lwjgl_glXQueryContext = NULL;
+glXSelectEventPROC lwjgl_glXSelectEvent = NULL;
+glXGetSelectedEventPROC lwjgl_glXGetSelectedEvent = NULL;
+glXChooseVisualPROC lwjgl_glXChooseVisual = NULL;
+glXCopyContextPROC lwjgl_glXCopyContext = NULL;
+glXCreateContextPROC lwjgl_glXCreateContext = NULL;
+glXCreateGLXPixmapPROC lwjgl_glXCreateGLXPixmap = NULL;
+glXDestroyContextPROC lwjgl_glXDestroyContext = NULL;
+glXDestroyGLXPixmapPROC lwjgl_glXDestroyGLXPixmap = NULL;
+glXGetConfigPROC lwjgl_glXGetConfig = NULL;
+glXGetCurrentContextPROC lwjgl_glXGetCurrentContext = NULL;
+glXGetCurrentDrawablePROC lwjgl_glXGetCurrentDrawable = NULL;
+glXIsDirectPROC lwjgl_glXIsDirect = NULL;
+glXMakeCurrentPROC lwjgl_glXMakeCurrent = NULL;
+glXQueryExtensionPROC lwjgl_glXQueryExtension = NULL;
+glXQueryVersionPROC lwjgl_glXQueryVersion = NULL;
+glXSwapBuffersPROC lwjgl_glXSwapBuffers = NULL;
+glXUseXFontPROC lwjgl_glXUseXFont = NULL;
+glXWaitGLPROC lwjgl_glXWaitGL = NULL;
+glXWaitXPROC lwjgl_glXWaitX = NULL;
+glXGetClientStringPROC lwjgl_glXGetClientString = NULL;
+glXQueryServerStringPROC lwjgl_glXQueryServerString = NULL;
+export glXQueryExtensionsStringPROC lwjgl_glXQueryExtensionsString = NULL;
 
 /* GLX_SGI_swap_control */
-glXSwapIntervalSGIPROC _glXSwapIntervalSGI = NULL;
+glXSwapIntervalSGIPROC lwjgl_glXSwapIntervalSGI = NULL;
 
 static void * lib_gl_handle = NULL;
 
 typedef void * (APIENTRY * glXGetProcAddressARBPROC) (const GLubyte *procName);
 
-static glXGetProcAddressARBPROC _glXGetProcAddressARB;
+static glXGetProcAddressARBPROC lwjgl_glXGetProcAddressARB;
 
 static GLXExtensions symbols_flags;
 
 /** returns true if the extention is available */
 static bool GLXQueryExtension(Display *disp, int screen, const char *name) {
-	const GLubyte *exts = (const GLubyte *)_glXQueryExtensionsString(disp, screen);
+	const GLubyte *exts = (const GLubyte *)lwjgl_glXQueryExtensionsString(disp, screen);
 	return extgl_QueryExtension(exts, name);
 }
 
 static void extgl_InitGLX13() {
 	ExtFunction functions[] = {
-		{"glXGetFBConfigs", (void*)&_glXGetFBConfigs},
-		{"glXChooseFBConfig", (void*)&_glXChooseFBConfig},
-		{"glXGetFBConfigAttrib", (void*)&_glXGetFBConfigAttrib},
-		{"glXGetVisualFromFBConfig", (void*)&_glXGetVisualFromFBConfig},
-		{"glXCreateWindow", (void*)&_glXCreateWindow},
-		{"glXDestroyWindow", (void*)&_glXDestroyWindow},
-		{"glXCreatePixmap", (void*)&_glXCreatePixmap},
-		{"glXDestroyPixmap", (void*)&_glXDestroyPixmap},
-		{"glXCreatePbuffer", (void*)&_glXCreatePbuffer},
-		{"glXDestroyPbuffer", (void*)&_glXDestroyPbuffer},
-		{"glXQueryDrawable", (void*)&_glXQueryDrawable},
-		{"glXCreateNewContext", (void*)&_glXCreateNewContext},
-		{"glXMakeContextCurrent", (void*)&_glXMakeContextCurrent},
-		{"glXGetCurrentReadDrawable", (void*)&_glXGetCurrentReadDrawable},
-		{"glXGetCurrentDisplay", (void*)&_glXGetCurrentDisplay},
-		{"glXQueryContext", (void*)&_glXQueryContext},
-		{"glXSelectEvent", (void*)&_glXSelectEvent},
-		{"glXGetSelectedEvent", (void*)&_glXGetSelectedEvent}};
+		{"glXGetFBConfigs", (void*)&lwjgl_glXGetFBConfigs},
+		{"glXChooseFBConfig", (void*)&lwjgl_glXChooseFBConfig},
+		{"glXGetFBConfigAttrib", (void*)&lwjgl_glXGetFBConfigAttrib},
+		{"glXGetVisualFromFBConfig", (void*)&lwjgl_glXGetVisualFromFBConfig},
+		{"glXCreateWindow", (void*)&lwjgl_glXCreateWindow},
+		{"glXDestroyWindow", (void*)&lwjgl_glXDestroyWindow},
+		{"glXCreatePixmap", (void*)&lwjgl_glXCreatePixmap},
+		{"glXDestroyPixmap", (void*)&lwjgl_glXDestroyPixmap},
+		{"glXCreatePbuffer", (void*)&lwjgl_glXCreatePbuffer},
+		{"glXDestroyPbuffer", (void*)&lwjgl_glXDestroyPbuffer},
+		{"glXQueryDrawable", (void*)&lwjgl_glXQueryDrawable},
+		{"glXCreateNewContext", (void*)&lwjgl_glXCreateNewContext},
+		{"glXMakeContextCurrent", (void*)&lwjgl_glXMakeContextCurrent},
+		{"glXGetCurrentReadDrawable", (void*)&lwjgl_glXGetCurrentReadDrawable},
+		{"glXGetCurrentDisplay", (void*)&lwjgl_glXGetCurrentDisplay},
+		{"glXQueryContext", (void*)&lwjgl_glXQueryContext},
+		{"glXSelectEvent", (void*)&lwjgl_glXSelectEvent},
+		{"glXGetSelectedEvent", (void*)&lwjgl_glXGetSelectedEvent}};
 	symbols_flags.GLX13 = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
 static void extgl_InitGLX12(void) {
 	ExtFunction functions[] = {
-		{"glXChooseVisual", (void*)&_glXChooseVisual},
-		{"glXCopyContext", (void*)&_glXCopyContext},
-		{"glXCreateContext", (void*)&_glXCreateContext},
-		{"glXCreateGLXPixmap", (void*)&_glXCreateGLXPixmap},
-		{"glXDestroyContext", (void*)&_glXDestroyContext},
-		{"glXDestroyGLXPixmap", (void*)&_glXDestroyGLXPixmap},
-		{"glXGetConfig", (void*)&_glXGetConfig},
-		{"glXGetCurrentContext", (void*)&_glXGetCurrentContext},
-		{"glXGetCurrentDrawable", (void*)&_glXGetCurrentDrawable},
-		{"glXIsDirect", (void*)&_glXIsDirect},
-		{"glXMakeCurrent", (void*)&_glXMakeCurrent},
-		{"glXQueryExtension", (void*)&_glXQueryExtension},
-		{"glXQueryVersion", (void*)&_glXQueryVersion},
-		{"glXSwapBuffers", (void*)&_glXSwapBuffers},
-		{"glXUseXFont", (void*)&_glXUseXFont},
-		{"glXWaitGL", (void*)&_glXWaitGL},
-		{"glXWaitX", (void*)&_glXWaitX},
-		{"glXGetClientString", (void*)&_glXGetClientString},
-		{"glXQueryServerString", (void*)&_glXQueryServerString},
-		{"glXQueryExtensionsString", (void*)&_glXQueryExtensionsString}};
+		{"glXChooseVisual", (void*)&lwjgl_glXChooseVisual},
+		{"glXCopyContext", (void*)&lwjgl_glXCopyContext},
+		{"glXCreateContext", (void*)&lwjgl_glXCreateContext},
+		{"glXCreateGLXPixmap", (void*)&lwjgl_glXCreateGLXPixmap},
+		{"glXDestroyContext", (void*)&lwjgl_glXDestroyContext},
+		{"glXDestroyGLXPixmap", (void*)&lwjgl_glXDestroyGLXPixmap},
+		{"glXGetConfig", (void*)&lwjgl_glXGetConfig},
+		{"glXGetCurrentContext", (void*)&lwjgl_glXGetCurrentContext},
+		{"glXGetCurrentDrawable", (void*)&lwjgl_glXGetCurrentDrawable},
+		{"glXIsDirect", (void*)&lwjgl_glXIsDirect},
+		{"glXMakeCurrent", (void*)&lwjgl_glXMakeCurrent},
+		{"glXQueryExtension", (void*)&lwjgl_glXQueryExtension},
+		{"glXQueryVersion", (void*)&lwjgl_glXQueryVersion},
+		{"glXSwapBuffers", (void*)&lwjgl_glXSwapBuffers},
+		{"glXUseXFont", (void*)&lwjgl_glXUseXFont},
+		{"glXWaitGL", (void*)&lwjgl_glXWaitGL},
+		{"glXWaitX", (void*)&lwjgl_glXWaitX},
+		{"glXGetClientString", (void*)&lwjgl_glXGetClientString},
+		{"glXQueryServerString", (void*)&lwjgl_glXQueryServerString},
+		{"glXQueryExtensionsString", (void*)&lwjgl_glXQueryExtensionsString}};
 	symbols_flags.GLX12 = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
 static void extgl_InitGLXSGISwapControl() {
 	ExtFunction functions[] = {
-		{"glXSwapIntervalSGI", (void*)&_glXSwapIntervalSGI}};
+		{"glXSwapIntervalSGI", (void*)&lwjgl_glXSwapIntervalSGI}};
 	symbols_flags.GLX_SGI_swap_control = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
@@ -161,8 +161,8 @@ bool extgl_Open(JNIEnv *env) {
 		throwException(env, buffer);
 		return false;
 	}
-	_glXGetProcAddressARB = (glXGetProcAddressARBPROC)dlsym(lib_gl_handle, "glXGetProcAddressARB");
-	if (_glXGetProcAddressARB == NULL) {
+	lwjgl_glXGetProcAddressARB = (glXGetProcAddressARBPROC)dlsym(lib_gl_handle, "glXGetProcAddressARB");
+	if (lwjgl_glXGetProcAddressARB == NULL) {
 		extgl_Close();
 		throwException(env, "Could not get address of glXGetProcAddressARB");
 		return false;
@@ -177,7 +177,7 @@ bool extgl_Open(JNIEnv *env) {
 }
 
 void *extgl_GetProcAddress(const char *name) {
-	void *t = (void*)_glXGetProcAddressARB((const GLubyte*)name);
+	void *t = (void*)lwjgl_glXGetProcAddressARB((const GLubyte*)name);
 	if (t == NULL) {
 		t = dlsym(lib_gl_handle, name);
 		if (t == NULL) {
@@ -198,7 +198,7 @@ bool extgl_InitGLX(Display *disp, int screen, GLXExtensions *extension_flags) {
 	// Check GLX 1.2 symbols available
 	if (!symbols_flags.GLX12)
 		return false;
-	if (_glXQueryVersion(disp, &major, &minor) != True)
+	if (lwjgl_glXQueryVersion(disp, &major, &minor) != True)
 		return false;
 	bool glx12 = major > 1 || (major == 1 && minor >= 2);
 	// Check GLX 1.2 version
