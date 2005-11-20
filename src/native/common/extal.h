@@ -165,9 +165,6 @@ void DeInitializeOpenAL();
 
 //extern alGetProcAddressPROC alGetProcAddress;
 
-typedef ALCcontext* (ALCAPIENTRY *alcGetCurrentContextPROC)(ALCvoid);
-extern alcGetCurrentContextPROC alcGetCurrentContext;
-
 #ifdef __cplusplus
 }
 #endif
