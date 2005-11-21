@@ -49,12 +49,7 @@
 	#include "extgl.h"
 	#include "extgl_glx.h"
 
-	/*
-	 * release input (keyboard, mouse)
-	 */
-	extern void handleMessages(JNIEnv *env);
-
-	extern bool checkXError(JNIEnv *env, Display *display);
+	extern bool checkXError(JNIEnv *, Display *);
 	extern Atom getWarpAtom(void);
 	/*
 	 * Various functions to release/acquire keyboard and mouse
@@ -64,9 +59,9 @@
 	extern void handleButtonPress(XButtonEvent *);
 	extern void handleButtonRelease(XButtonEvent *);
 	extern void handleKeyEvent(XKeyEvent *);
-	extern void updatePointerGrab(void);
-	extern void updateKeyboardGrab(void);
-	extern void setGrab(bool);
+	extern void updatePointerGrab(jint);
+	extern void updateKeyboardGrab(jint);
+	extern void setGrab(jint, bool);
 	extern bool isGrabbed(void);
 	extern bool shouldGrab(void);
 
@@ -98,11 +93,11 @@
 	/*
 	 * Return true if we are in fullscreen mode
 	 */
-	extern bool isFullscreen(void);
+	extern bool isFullscreen(jint window_mode);
 	
 	/*
 	 * Return true if we are in exclusive fullscreen mode
 	 */
-	extern bool isLegacyFullscreen(void);
+	extern bool isLegacyFullscreen(jint window_mode);
 
 #endif /* _LWJGL_WINDOW_H_INCLUDED_ */

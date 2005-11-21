@@ -47,6 +47,22 @@ import org.lwjgl.LWJGLUtil;
 import org.lwjgl.input.Keyboard;
 
 final class LinuxDisplay implements DisplayImplementation {
+	/** Window mode enum */
+	private static final int FULLSCREEN_LEGACY = 1;
+	private static final int FULLSCREEN_NETWM = 2;
+	private static final int WINDOWED = 3;
+
+	/** Current window mode */
+	private static int current_window_mode = WINDOWED;
+	
+	/** Display mode switching API */
+	private static final int XRANDR = 10;
+	private static final int XF86VIDMODE = 11;
+	private static final int NONE = 12;
+	
+	/** Current mode swithcing API */
+	private static int current_displaymode_extension = NONE;
+
 	private static final int NUM_BUTTONS = 3;
 
 	/** Keep track on the current awt lock owner to avoid
@@ -62,6 +78,37 @@ final class LinuxDisplay implements DisplayImplementation {
 
 	private static PeerInfo peer_info;
 
+	private static int getBestDisplayModeExtension() throws LWJGLException {
+		if (System.getenv("LWJGL_DISABLE_XRANDR") == null && isXrandrSupported()) {
+			LWJGLUtil.log("Using Xrandr for display mode switching");
+			return XRANDR;
+		} else if (isXF86VidModeSupported()) {
+			LWJGLUtil.log("Using XF86VidMode for display mode switching");
+			return XF86VIDMODE;
+		} else {
+			LWJGLUtil.log("No display mode extensions available");
+			return NONE;
+		}
+
+	}
+	private static native boolean isXrandrSupported() throws LWJGLException;
+	private static native boolean isXF86VidModeSupported() throws LWJGLException;
+
+	private static boolean isNetWMFullscreenSupported() throws LWJGLException {
+		if (System.getenv("LWJGL_DISABLE_NETWM") != null)
+			return false;
+		lockAWT();
+		try {
+			incDisplay();
+			boolean supported = nIsNetWMFullscreenSupported();
+			decDisplay();
+			return supported;
+		} finally {
+			unlockAWT();
+		}
+	}
+	private static native boolean nIsNetWMFullscreenSupported();
+	
 	/* Since Xlib is not guaranteed to be thread safe, we need a way to synchronize LWJGL
 	 * Xlib calls with AWT Xlib calls. Fortunately, JAWT implements Lock()/Unlock() to
 	 * do just that.
@@ -129,12 +176,26 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native void openDisplay() throws LWJGLException;
 	private static native void closeDisplay();
 
+	private static int getWindowMode(boolean fullscreen) throws LWJGLException {
+		if (fullscreen) {
+			if (current_displaymode_extension == XRANDR && isNetWMFullscreenSupported()) {
+				LWJGLUtil.log("Using NetWM for fullscreen window");
+				return FULLSCREEN_NETWM;
+			} else {
+				LWJGLUtil.log("Using legacy mode for fullscreen window");
+				return FULLSCREEN_LEGACY;
+			}
+		} else
+			return WINDOWED;
+	}
+	
 	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
 		lockAWT();
 		try {
 			ByteBuffer handle = peer_info.lockAndGetHandle();
 			try {
-				nCreateWindow(handle, mode, fullscreen, x, y);
+				current_window_mode = getWindowMode(fullscreen);
+				nCreateWindow(handle, mode, current_window_mode, x, y);
 			} finally {
 				peer_info.unlock();
 			}
@@ -142,7 +203,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	private static native void nCreateWindow(ByteBuffer peer_info_handle, DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException;
+	private static native void nCreateWindow(ByteBuffer peer_info_handle, DisplayMode mode, int window_mode, int x, int y) throws LWJGLException;
 
 	public void destroyWindow() {
 		lockAWT();
@@ -154,22 +215,22 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void switchDisplayMode(DisplayMode mode) throws LWJGLException {
 		lockAWT();
 		try {
-			nSwitchDisplayMode(mode);
+			nSwitchDisplayMode(current_displaymode_extension, mode);
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native void nSwitchDisplayMode(DisplayMode mode) throws LWJGLException;
+	private static native void nSwitchDisplayMode(int extension, DisplayMode mode) throws LWJGLException;
 
 	public void resetDisplayMode() {
 		lockAWT();
 		try {
-			nResetDisplayMode();
+			nResetDisplayMode(current_displaymode_extension);
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native void nResetDisplayMode();
+	private static native void nResetDisplayMode(int extension);
 
 	public int getGammaRampLength() {
 		lockAWT();
@@ -200,13 +261,17 @@ final class LinuxDisplay implements DisplayImplementation {
 	public DisplayMode init() throws LWJGLException {
 		lockAWT();
 		try {
-			DisplayMode mode = nInit();
+			current_displaymode_extension = getBestDisplayModeExtension();
+			if (current_displaymode_extension == NONE)
+				throw new LWJGLException("No display mode extension is available");
+			DisplayMode mode = nInit(current_displaymode_extension);
 			return mode;
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native DisplayMode nInit() throws LWJGLException;
+	/** Assumes extension != NONE */
+	private static native DisplayMode nInit(int extension) throws LWJGLException;
 
 	public void setTitle(String title) {
 		lockAWT();
@@ -233,11 +298,11 @@ final class LinuxDisplay implements DisplayImplementation {
 
 	public boolean isActive() {
 		lockAWT();
-		boolean result = nIsActive();
+		boolean result = nIsActive(current_window_mode);
 		unlockAWT();
 		return result;
 	}
-	private static native boolean nIsActive();
+	private static native boolean nIsActive(int window_mode);
 
 	public boolean isDirty() {
 		lockAWT();
@@ -254,10 +319,10 @@ final class LinuxDisplay implements DisplayImplementation {
 	
 	public void update() {
 		lockAWT();
-		nUpdate();
+		nUpdate(current_displaymode_extension, current_window_mode);
 		unlockAWT();
 	}
-	private static native void nUpdate();
+	private static native void nUpdate(int extension, int current_window_mode);
 
 	public void reshape(int x, int y, int width, int height) {
 		lockAWT();
@@ -269,13 +334,13 @@ final class LinuxDisplay implements DisplayImplementation {
 	public DisplayMode[] getAvailableDisplayModes() throws LWJGLException {
 		lockAWT();
 		try {
-			DisplayMode[] modes = nGetAvailableDisplayModes();
+			DisplayMode[] modes = nGetAvailableDisplayModes(current_displaymode_extension);
 			return modes;
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native DisplayMode[] nGetAvailableDisplayModes() throws LWJGLException;
+	private static native DisplayMode[] nGetAvailableDisplayModes(int extension) throws LWJGLException;
 
 	/* Mouse */
 	public boolean hasWheel() {
@@ -288,10 +353,11 @@ final class LinuxDisplay implements DisplayImplementation {
 
 	public void createMouse() {
 		lockAWT();
-		nCreateMouse();
+		nCreateMouse(current_window_mode);
 		unlockAWT();
 	}
-	private static native void nCreateMouse();
+	private static native void nCreateMouse(int window_mode);
+
 	public void destroyMouse() {
 		lockAWT();
 		nDestroyMouse();
@@ -300,6 +366,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native void nDestroyMouse();
 	
 	public void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons) {
+		update();
 		lockAWT();
 		nPollMouse(coord_buffer, buttons);
 		unlockAWT();
@@ -307,6 +374,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native void nPollMouse(IntBuffer coord_buffer, ByteBuffer buttons);
 	
 	public int readMouse(IntBuffer buffer, int buffer_position) {
+		update();
 		lockAWT();
 		int count = nReadMouse(buffer, buffer_position);
 		unlockAWT();
@@ -323,10 +391,10 @@ final class LinuxDisplay implements DisplayImplementation {
 	
 	public void grabMouse(boolean grab) {
 		lockAWT();
-		nGrabMouse(grab);
+		nGrabMouse(current_window_mode, grab);
 		unlockAWT();
 	}
-	private static native void nGrabMouse(boolean grab);
+	private static native void nGrabMouse(int window_mode, boolean grab);
 	
 	public int getNativeCursorCapabilities() {
 		lockAWT();
@@ -386,12 +454,12 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void createKeyboard() throws LWJGLException {
 		lockAWT();
 		try {
-			nCreateKeyboard();
+			nCreateKeyboard(current_window_mode);
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native void nCreateKeyboard() throws LWJGLException;
+	private static native void nCreateKeyboard(int window_mode) throws LWJGLException;
 	
 	public void destroyKeyboard() {
 		lockAWT();
@@ -401,6 +469,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native void nDestroyKeyboard();
 	
 	public void pollKeyboard(ByteBuffer keyDownBuffer) {
+		update();
 		lockAWT();
 		nPollKeyboard(keyDownBuffer);
 		unlockAWT();
@@ -408,6 +477,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native void nPollKeyboard(ByteBuffer keyDownBuffer);
 
 	public int readKeyboard(IntBuffer buffer, int buffer_position) {
+		update();
 		lockAWT();
 		int count = nReadKeyboard(buffer, buffer_position);
 		unlockAWT();

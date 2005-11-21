@@ -87,10 +87,10 @@ static void ungrabKeyboard(void) {
 	}
 }
 
-void updateKeyboardGrab(void) {
+void updateKeyboardGrab(jint window_mode) {
 	if (!created)
 		return;
-	if (isLegacyFullscreen()/* || shouldGrab()*/) {
+	if (isLegacyFullscreen(window_mode)) {
 		grabKeyboard();
 	} else {
 		ungrabKeyboard();
@@ -123,13 +123,13 @@ static void setupIMEventMask() {
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateKeyboard
-  (JNIEnv * env, jclass clazz)
+  (JNIEnv * env, jclass clazz, jint window_mode)
 {
 	memset(key_buf, 0, KEYBOARD_SIZE*sizeof(unsigned char));
 	created = true;
 	keyboard_grabbed = false;
 	initEventQueue(&event_queue, 3);
-	updateKeyboardGrab();
+	updateKeyboardGrab(window_mode);
 	XModifierKeymap *modifier_map = XGetModifierMapping(getDisplay());
 	numlock_mask = 0;
 	modeswitch_mask = 0;
@@ -684,12 +684,10 @@ void handleKeyEvent(XKeyEvent *event) {
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nPollKeyboard(JNIEnv * env, jclass clazz, jobject buffer) {
 	unsigned char *new_keyboard_buffer = (unsigned char *)(*env)->GetDirectBufferAddress(env, buffer);
-	handleMessages(env);
 	memcpy(new_keyboard_buffer, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
 }
 
 JNIEXPORT int JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReadKeyboard(JNIEnv * env, jclass clazz, jobject buffer, jint buffer_position) {
-	handleMessages(env);
 	jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer);
 	int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer))/sizeof(jint) - buffer_position;
 	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size);

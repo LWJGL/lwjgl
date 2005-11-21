@@ -135,7 +135,7 @@ static void updateCursor(void) {
 	XDefineCursor(getDisplay(), getCurrentWindow(), cursor);
 }
 
-static void grabPointer(void) {
+static void grabPointer(jint window_mode) {
 	if (!pointer_grabbed) {
 		int result;
 		int grab_mask = PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
@@ -144,7 +144,7 @@ static void grabPointer(void) {
 		if (result == GrabSuccess) {
 			pointer_grabbed = true;
 			// make sure we have a centered window
-			if (isLegacyFullscreen()) {
+			if (isLegacyFullscreen(window_mode)) {
 				XWindowAttributes win_attribs;
 				XGetWindowAttributes(getDisplay(), getCurrentWindow(), &win_attribs);
 				XF86VidModeSetViewPort(getDisplay(), getCurrentScreen(), win_attribs.x, win_attribs.y);
@@ -162,11 +162,11 @@ static void ungrabPointer(void) {
 	}
 }
 
-void updatePointerGrab(void) {
+void updatePointerGrab(jint window_mode) {
 	if (!created)
 		return;
-	if (isFullscreen() || shouldGrab()) {
-		grabPointer();
+	if (isFullscreen(window_mode) || shouldGrab()) {
+		grabPointer(window_mode);
 	} else {
 		ungrabPointer();
 	}
@@ -205,7 +205,7 @@ static void reset(void) {
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateMouse
-  (JNIEnv * env, jclass clazz)
+  (JNIEnv * env, jclass clazz, jint window_mode)
 {
 	int i;
 	last_y = last_x = accum_dx = accum_dy = accum_dz = 0;
@@ -218,7 +218,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateMouse
 	current_cursor = None;
 	created = true;
 	pointer_grabbed = false;
-	updatePointerGrab();
+	updatePointerGrab(window_mode);
 	initEventQueue(&event_queue, EVENT_SIZE);
 }
 
@@ -314,7 +314,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nPollMouse(JNIEnv * en
 	int coords_length = (*env)->GetDirectBufferCapacity(env, coord_buffer_obj);
 	unsigned char *buttons_buffer = (unsigned char *)(*env)->GetDirectBufferAddress(env, button_buffer_obj);
 	int buttons_length = (*env)->GetDirectBufferCapacity(env, button_buffer_obj);
-	handleMessages(env);
 	if (coords_length < 3) {
 		printfDebugJava(env, "ERROR: Not enough space in coords array: %d < 3", coords_length);
 		return;
@@ -339,7 +338,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nPollMouse(JNIEnv * en
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReadMouse(JNIEnv *env, jclass clazz, jobject buffer, jint buffer_position) {
 	jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer);
 	int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer))/sizeof(jint) - buffer_position;
-	handleMessages(env);
 	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size);
 }
 
@@ -347,12 +345,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetCursorPosition(JNI
 	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, x, transformY(y));
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGrabMouse(JNIEnv * env, jclass clazz, jboolean new_grab) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGrabMouse(JNIEnv * env, jclass clazz, jint window_mode, jboolean new_grab) {
 	Window root_return, child_return;
 	int root_x, root_y, win_x, win_y;
 	unsigned int mask_return;
 	
-	setGrab(new_grab == JNI_TRUE ? true : false);
+	setGrab(window_mode, new_grab == JNI_TRUE ? true : false);
 	reset();
 	XQueryPointer(getDisplay(), getCurrentWindow(), &root_return, &child_return, &root_x, &root_y, &win_x, &win_y, &mask_return);
 	doHandlePointerMotion(root_x, root_y, win_x, win_y);

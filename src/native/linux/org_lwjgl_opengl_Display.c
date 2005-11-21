@@ -68,14 +68,11 @@ typedef struct {
 
 #define MWM_HINTS_DECORATIONS   (1L << 1)
 
-typedef enum {FULLSCREEN_LEGACY, FULLSCREEN_NETWM, WINDOWED} window_mode;
-
 static GLXWindow glx_window = None;
 
 static Atom delete_atom;
 static Colormap cmap;
 static Window current_win;
-static window_mode current_window_mode;
 static int current_height;
 static int current_width;
 static int current_depth;
@@ -156,9 +153,9 @@ static void waitMapped(Window win) {
 	} while ((event.type != MapNotify) || (event.xmap.event != win));
 }
 
-static void updateInputGrab(void) {
-	updatePointerGrab();
-	updateKeyboardGrab();
+static void updateInputGrab(jint window_mode) {
+	updatePointerGrab(window_mode);
+	updateKeyboardGrab(window_mode);
 }
 
 static void setRepeatMode(JNIEnv *env, int mode) {
@@ -185,36 +182,36 @@ static void setDecorations(int dec) {
 	XChangeProperty (getDisplay(), getCurrentWindow(), motif_hints_atom, motif_hints_atom, 32, PropModeReplace, (unsigned char *)&motif_hints, sizeof(MotifWmHints)/sizeof(long));
 }
 
-static bool releaseInput(JNIEnv *env) {
-	if (isLegacyFullscreen() || input_released)
+static bool releaseInput(JNIEnv *env, jint extension, jint window_mode) {
+	if (isLegacyFullscreen(window_mode) || input_released)
 		return false;
 	input_released = true;
 	setRepeatMode(env, AutoRepeatModeDefault);
-	updateInputGrab();
-	if (current_window_mode == FULLSCREEN_NETWM) {
+	updateInputGrab(window_mode);
+	if (window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_NETWM) {
 		XIconifyWindow(getDisplay(), getCurrentWindow(), getCurrentScreen());
-		resetDisplayMode(env, getCurrentScreen(), true);
+		resetDisplayMode(env, getCurrentScreen(), extension, true);
 	}
 	return true;
 }
 
-static void acquireInput(JNIEnv *env) {
-	if (isLegacyFullscreen() || !input_released)
+static void acquireInput(JNIEnv *env, jint extension, jint window_mode) {
+	if (isLegacyFullscreen(window_mode) || !input_released)
 		return;
 	input_released = false;
 	setRepeatMode(env, AutoRepeatModeOff);
-	updateInputGrab();
-	if (current_window_mode == FULLSCREEN_NETWM) {
-		temporaryRestoreMode(env, getCurrentScreen());
+	updateInputGrab(window_mode);
+	if (window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_NETWM) {
+		temporaryRestoreMode(env, getCurrentScreen(), extension);
 	}
 }
 
-bool isFullscreen(void) {
-	return current_window_mode == FULLSCREEN_LEGACY || current_window_mode == FULLSCREEN_NETWM;
+bool isFullscreen(jint window_mode) {
+	return window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_LEGACY || window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_NETWM;
 }
 
-bool isLegacyFullscreen(void) {
-	return current_window_mode == FULLSCREEN_LEGACY;
+bool isLegacyFullscreen(jint window_mode) {
+	return window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_LEGACY;
 }
 
 bool shouldGrab(void) {
@@ -225,27 +222,27 @@ bool isGrabbed(void) {
 	return grab;
 }
 
-void setGrab(bool new_grab) {
+void setGrab(jint window_mode, bool new_grab) {
 	if (new_grab != grab) {
 		grab = new_grab;
-		updateInputGrab();
+		updateInputGrab(window_mode);
 	}
 }
 
-static void checkInput(JNIEnv *env) {
+static void checkInput(JNIEnv *env, jint extension, jint window_mode) {
 	Window win;
 	int revert_mode;
 	XGetInputFocus(getDisplay(), &win, &revert_mode);
 	if (win == current_win) {
-		acquireInput(env);
+		acquireInput(env, extension, window_mode);
 		focused = true;
 	} else {
-		releaseInput(env);
+		releaseInput(env, extension, window_mode);
 		focused = false;
 	}
 }
 
-void handleMessages(JNIEnv *env) {
+void handleMessages(JNIEnv *env, jint extension, jint window_mode) {
 	XEvent event;
 /*	Window win;
 	int revert_mode;*/
@@ -296,7 +293,7 @@ void handleMessages(JNIEnv *env) {
 				break;
 		}
 	}
-	checkInput(env);
+	checkInput(env, extension, window_mode);
 }
 
 static void setWindowTitle(const char *title) {
@@ -339,19 +336,12 @@ static void destroyWindow(JNIEnv *env) {
 	setRepeatMode(env, AutoRepeatModeDefault);
 }
 
-static bool isNetWMForceDisabled() {
-	char *supported_env = getenv("LWJGL_DISABLE_NETWM");
-	return supported_env != NULL;
-}
-
 static bool isNetWMFullscreenSupported(JNIEnv *env) {
 	unsigned long nitems;
 	Atom actual_type;
 	int actual_format;
 	unsigned long bytes_after;
 	Atom *supported_list;
-	if (isNetWMForceDisabled())
-		return false;
 	Atom netwm_supported_atom = XInternAtom(getDisplay(), "_NET_SUPPORTED", False);
 	int result = XGetWindowProperty(getDisplay(), RootWindow(getDisplay(), getCurrentScreen()), netwm_supported_atom, 0, 10000, False, AnyPropertyType, &actual_type, &actual_format, &nitems, &bytes_after, (void *)&supported_list);
 	if (result != Success) {
@@ -371,11 +361,15 @@ static bool isNetWMFullscreenSupported(JNIEnv *env) {
 	return supported;
 }
 
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsNetWMFullscreenSupported(JNIEnv *env, jclass unused) {
+	return isNetWMFullscreenSupported(env) ? JNI_TRUE : JNI_FALSE;
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReshape(JNIEnv *env, jclass clazz, jint x, jint y, jint width, jint height) {
 	XMoveWindow(getDisplay(), getCurrentWindow(), x, y);
 }
 
-static bool createWindow(JNIEnv* env, X11PeerInfo *peer_info, int x, int y, int width, int height) {
+static bool createWindow(JNIEnv* env, jint window_mode, X11PeerInfo *peer_info, int x, int y, int width, int height) {
 	bool undecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
 	dirty = true;
 	focused = true;
@@ -401,7 +395,7 @@ static bool createWindow(JNIEnv* env, X11PeerInfo *peer_info, int x, int y, int 
 	attribs.background_pixel = 0xFF000000;
 	attribs.win_gravity = NorthWestGravity;
 	attribmask = CWColormap | CWBackPixel | CWEventMask | CWWinGravity;
-	if (isLegacyFullscreen()) {
+	if (isLegacyFullscreen(window_mode)) {
 		attribmask |= CWOverrideRedirect;
 		attribs.override_redirect = True;
 	}
@@ -417,7 +411,7 @@ static bool createWindow(JNIEnv* env, X11PeerInfo *peer_info, int x, int y, int 
 	}
 	printfDebugJava(env, "Created window");
 	current_win = win;
-	if (current_window_mode != WINDOWED || undecorated) {
+	if (window_mode != org_lwjgl_opengl_LinuxDisplay_WINDOWED || undecorated) {
 		// Use Motif decoration hint property and hope the window manager respects them
 		setDecorations(0);
 	}
@@ -431,7 +425,7 @@ static bool createWindow(JNIEnv* env, X11PeerInfo *peer_info, int x, int y, int 
 	XFree(size_hints);
 	delete_atom = XInternAtom(getDisplay(), "WM_DELETE_WINDOW", False);
 	XSetWMProtocols(getDisplay(), win, &delete_atom, 1);
-	if (current_window_mode == FULLSCREEN_NETWM) {
+	if (window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_NETWM) {
 		Atom fullscreen_atom = XInternAtom(getDisplay(), "_NET_WM_STATE_FULLSCREEN", False);
 		XChangeProperty(getDisplay(), getCurrentWindow(), XInternAtom(getDisplay(), "_NET_WM_STATE", False),
 						XInternAtom(getDisplay(), "ATOM", False), 32, PropModeReplace, (const unsigned char*)&fullscreen_atom, 1);
@@ -460,21 +454,21 @@ int getWindowHeight(void) {
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUpdate
-  (JNIEnv *env, jclass clazz)
+  (JNIEnv *env, jclass clazz, jint extension, jint window_mode)
 {
-	handleMessages(env);
+	handleMessages(env, extension, window_mode);
 }
 
-JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetAvailableDisplayModes(JNIEnv *env, jclass clazz) {
-	return getAvailableDisplayModes(env, getCurrentScreen());
+JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetAvailableDisplayModes(JNIEnv *env, jclass clazz, jint extension) {
+	return getAvailableDisplayModes(env, getCurrentScreen(), extension);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwitchDisplayMode(JNIEnv *env, jclass clazz, jobject mode) {
-	switchDisplayMode(env, mode, getCurrentScreen());
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwitchDisplayMode(JNIEnv *env, jclass clazz, jint extension, jobject mode) {
+	switchDisplayMode(env, mode, getCurrentScreen(), extension);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nResetDisplayMode(JNIEnv *env, jclass clazz) {
-	resetDisplayMode(env, getCurrentScreen(), false);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nResetDisplayMode(JNIEnv *env, jclass clazz, jint extension) {
+	resetDisplayMode(env, getCurrentScreen(), extension, false);
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetGammaRampLength(JNIEnv *env, jclass clazz) {
@@ -485,22 +479,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetGammaRamp(JNIEnv *
 	setGammaRamp(env, gamma_buffer, getCurrentScreen());
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nInit(JNIEnv *env, jclass clazz) {
-	return initDisplay(env, getCurrentScreen());
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nInit(JNIEnv *env, jclass clazz, jint extension) {
+	return initDisplay(env, getCurrentScreen(), extension);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject mode, jboolean fullscreen, jint x, jint y) {
-	bool current_fullscreen = fullscreen == JNI_TRUE;
-	if (current_fullscreen) {
-		if (getCurrentDisplayModeExtension() == XRANDR && isNetWMFullscreenSupported(env)) {
-			printfDebugJava(env, "Using NetWM for fullscreen window");
-			current_window_mode = FULLSCREEN_NETWM;
-		} else {
-			printfDebugJava(env, "Using legacy mode for fullscreen window");
-			current_window_mode = FULLSCREEN_LEGACY;
-		}
-	} else
-		current_window_mode = WINDOWED;
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject mode, jint window_mode, jint x, jint y) {
 	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, peer_info_handle);
 	GLXFBConfig *fb_config = NULL;
 	if (peer_info->glx13) {
@@ -513,7 +496,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *
 	jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
 	int width = (*env)->GetIntField(env, mode, fid_width);
 	int height = (*env)->GetIntField(env, mode, fid_height);
-	bool window_created = createWindow(env, peer_info, x, y, width, height);
+	bool window_created = createWindow(env, window_mode, peer_info, x, y, width, height);
 	if (!window_created) {
 		return;
 	}
@@ -551,8 +534,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsCloseRequested
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsActive
-  (JNIEnv *env, jclass clazz) {
-	return focused || isLegacyFullscreen() ? JNI_TRUE : JNI_FALSE;
+  (JNIEnv *env, jclass clazz, jint window_mode) {
+	return focused || isLegacyFullscreen(window_mode) ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nLockAWT(JNIEnv *env, jclass clazz) {
