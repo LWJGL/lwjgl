@@ -392,8 +392,13 @@ final class LinuxDisplay implements DisplayImplementation {
 	public DisplayMode[] getAvailableDisplayModes() throws LWJGLException {
 		lockAWT();
 		try {
-			DisplayMode[] modes = nGetAvailableDisplayModes(current_displaymode_extension);
-			return modes;
+			incDisplay();
+			try {
+				DisplayMode[] modes = nGetAvailableDisplayModes(current_displaymode_extension);
+				return modes;
+			} finally {
+				decDisplay();
+			}
 		} finally {
 			unlockAWT();
 		}

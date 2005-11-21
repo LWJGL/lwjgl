@@ -460,7 +460,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUpdate
 }
 
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetAvailableDisplayModes(JNIEnv *env, jclass clazz, jint extension) {
-	return getAvailableDisplayModes(env, getCurrentScreen(), extension);
+	return getAvailableDisplayModes(env, getDisplay(), getCurrentScreen(), extension);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwitchDisplayMode(JNIEnv *env, jclass clazz, jint extension, jobject mode) {

@@ -413,15 +413,9 @@ void resetDisplayMode(JNIEnv *env, int screen, jint extension, jobject gamma_ram
 	XCloseDisplay(disp);
 }
 
-jobjectArray getAvailableDisplayModes(JNIEnv * env, int screen, jint extension) {
+jobjectArray getAvailableDisplayModes(JNIEnv * env, Display *disp, int screen, jint extension) {
 	int num_modes, i;
 	mode_info *avail_modes;
-	Display *disp = XOpenDisplay(NULL);
-	if (disp == NULL) {
-		throwException(env, "Could not open display");
-		return NULL;
-	}
-
 	int bpp = XDefaultDepth(disp, screen);
 	avail_modes = getDisplayModes(disp, screen, extension, &num_modes);
 	if (avail_modes == NULL) {
@@ -439,7 +433,6 @@ jobjectArray getAvailableDisplayModes(JNIEnv * env, int screen, jint extension) 
 		(*env)->SetObjectArrayElement(env, ret, i, displayMode);
 	}
 	free(avail_modes);
-	XCloseDisplay(disp);
 	return ret;
 }
 
