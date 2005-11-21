@@ -44,6 +44,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 
 final class LinuxDisplay implements DisplayImplementation {
@@ -78,6 +79,28 @@ final class LinuxDisplay implements DisplayImplementation {
 
 	private static PeerInfo peer_info;
 
+	/** Saved gamma used to restore display settings */
+	private static ByteBuffer saved_gamma;
+	private static ByteBuffer current_gamma;
+
+	private static ByteBuffer getCurrentGammaRamp() throws LWJGLException {
+		lockAWT();
+		try {
+			incDisplay();
+			try {
+				if (isXF86VidModeSupported())
+					return nGetCurrentGammaRamp();
+				else
+					return BufferUtils.createByteBuffer(0);
+			} finally {
+				decDisplay();
+			}
+		} finally {
+			unlockAWT();
+		}
+	}
+	private static native ByteBuffer nGetCurrentGammaRamp() throws LWJGLException;
+	
 	private static int getBestDisplayModeExtension() throws LWJGLException {
 		lockAWT();
 		try {
@@ -233,30 +256,55 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void resetDisplayMode() {
 		lockAWT();
 		try {
-			nResetDisplayMode(current_displaymode_extension);
+			nResetDisplayMode(current_displaymode_extension, saved_gamma);
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native void nResetDisplayMode(int extension);
+	private static native void nResetDisplayMode(int extension, ByteBuffer gamma_ramp);
 
 	public int getGammaRampLength() {
 		lockAWT();
-		int length = nGetGammaRampLength();
-		unlockAWT();
-		return length;
+		try {
+			try {
+				incDisplay();
+				int length;
+				if (isXF86VidModeSupported()) {
+					length = nGetGammaRampLength();
+				} else
+					length = 0;
+				decDisplay();
+				return length;
+			} catch (LWJGLException e) {
+				LWJGLUtil.log("Failed to get gamma ramp length: " + e);
+				return 0;
+			}
+		} finally {
+			unlockAWT();
+		}
 	}
 	private static native int nGetGammaRampLength();
 
 	public void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLException {
 		lockAWT();
 		try {
-			nSetGammaRamp(gammaRamp);
+			incDisplay();
+			boolean xf86_support = isXF86VidModeSupported();
+			decDisplay();
+			if (!xf86_support)
+				throw new LWJGLException("No gamma ramp support (Missing XF86VM extension)");
+			current_gamma = convertToNativeRamp(gammaRamp);
+			nSetGammaRamp(current_gamma);
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native void nSetGammaRamp(FloatBuffer gammaRamp) throws LWJGLException;
+	private static native void nSetGammaRamp(ByteBuffer gammaRamp) throws LWJGLException;
+
+	private static ByteBuffer convertToNativeRamp(FloatBuffer ramp) throws LWJGLException {
+		return nConvertToNativeRamp(ramp, ramp.position(), ramp.remaining());
+	}
+	private static native ByteBuffer nConvertToNativeRamp(FloatBuffer ramp, int offset, int length) throws LWJGLException;
 
 	public String getAdapter() {
 		return null;
@@ -273,6 +321,8 @@ final class LinuxDisplay implements DisplayImplementation {
 			if (current_displaymode_extension == NONE)
 				throw new LWJGLException("No display mode extension is available");
 			DisplayMode mode = nInit(current_displaymode_extension);
+			saved_gamma = getCurrentGammaRamp();
+			current_gamma = saved_gamma;
 			return mode;
 		} finally {
 			unlockAWT();
@@ -327,10 +377,10 @@ final class LinuxDisplay implements DisplayImplementation {
 	
 	public void update() {
 		lockAWT();
-		nUpdate(current_displaymode_extension, current_window_mode);
+		nUpdate(current_displaymode_extension, current_window_mode, saved_gamma, current_gamma);
 		unlockAWT();
 	}
-	private static native void nUpdate(int extension, int current_window_mode);
+	private static native void nUpdate(int extension, int current_window_mode, ByteBuffer saved_gamma, ByteBuffer current_gamma);
 
 	public void reshape(int x, int y, int width, int height) {
 		lockAWT();

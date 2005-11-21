@@ -70,10 +70,6 @@ static int saved_freq;
 static int current_width;
 static int current_height;
 static int current_freq;
-static int saved_gamma_ramp_length = 0;
-static unsigned short *saved_ramp = NULL;
-static unsigned short *current_ramp = NULL;
-static int current_gamma_ramp_length = 0;
 
 int getScreenModeWidth(void) {
 	return current_width;
@@ -281,18 +277,8 @@ static bool setMode(JNIEnv *env, Display *disp, int screen, jint extension, int 
 	return result;
 }
 
-static void freeSavedGammaRamps() {
-	free(saved_ramp);
-	saved_ramp = NULL;
-	saved_gamma_ramp_length = 0;
-}
-
-static int getGammaRampLengthOfDisplay(JNIEnv *env, Display *disp, int screen) {
+int getGammaRampLengthOfDisplay(JNIEnv *env, Display *disp, int screen) {
 	int ramp_size;
-	if (!isXF86VidModeSupported(env, disp)) {
-		printfDebugJava(env, "XF86VidMode extension version >= 2 not found");
-		return 0;
-	}
 	if (XF86VidModeGetGammaRampSize(disp, screen, &ramp_size) == False) {
 		printfDebugJava(env, "XF86VidModeGetGammaRampSize call failed");
 		return 0;
@@ -300,15 +286,23 @@ static int getGammaRampLengthOfDisplay(JNIEnv *env, Display *disp, int screen) {
 	return ramp_size;
 }
 
-int getGammaRampLength(JNIEnv *env, int screen) {
-	Display *disp = XOpenDisplay(NULL);
-	if (disp == NULL) {
-		printfDebugJava(env, "Could not open display");
-		return 0;
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nConvertToNativeRamp(JNIEnv *env, jclass unused, jobject ramp_buffer, jint buffer_offset, jint length) {
+	const jfloat *ramp_ptr = (const jfloat *)(*env)->GetDirectBufferAddress(env, ramp_buffer) + buffer_offset;
+	jobject native_ramp = newJavaManagedByteBuffer(env, length*3*sizeof(unsigned short));
+	if (native_ramp == NULL) {
+		throwException(env, "Failed to allocate gamma ramp buffer");
+		return NULL;
 	}
-	int length = getGammaRampLengthOfDisplay(env, disp, screen);
-	XCloseDisplay(disp);
-	return length;
+	unsigned short *native_ramp_ptr = (unsigned short *)(*env)->GetDirectBufferAddress(env, native_ramp);
+	int i;
+	for (i = 0; i < length; i++) {
+		float scaled_gamma = ramp_ptr[i]*0xffff;
+		short scaled_gamma_short = (unsigned short)round(scaled_gamma);
+		native_ramp_ptr[i] = scaled_gamma_short;
+		native_ramp_ptr[i + length] = scaled_gamma_short;
+		native_ramp_ptr[i + length*2] = scaled_gamma_short;
+	}
+	return native_ramp;
 }
 
 jobject initDisplay(JNIEnv *env, int screen, jint extension) {
@@ -337,38 +331,41 @@ jobject initDisplay(JNIEnv *env, int screen, jint extension) {
 
 	free(avail_modes);
 
-	/* Fetch the current gamma ramp */
-	saved_gamma_ramp_length = getGammaRampLengthOfDisplay(env, disp, screen);
-	if (saved_gamma_ramp_length > 0) {
-		saved_ramp = (unsigned short *)malloc(sizeof(unsigned short)*3*saved_gamma_ramp_length);
-		if (!XF86VidModeGetGammaRamp(disp, screen, saved_gamma_ramp_length, saved_ramp,
-					saved_ramp + saved_gamma_ramp_length, saved_ramp + saved_gamma_ramp_length*2))
-			freeSavedGammaRamps();
-	}
 	XCloseDisplay(disp);
 	return newMode;
 }
 
-static void freeCurrentGamma(void) {
-	if (current_ramp != NULL) {
-		free(current_ramp);
-		current_ramp = NULL;
-		current_gamma_ramp_length = 0;
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetCurrentGammaRamp(JNIEnv *env, jclass unused) {
+	int ramp_size = getGammaRampLengthOfDisplay(env, getDisplay(), getCurrentScreen());
+	jobject ramp_buffer = newJavaManagedByteBuffer(env, sizeof(unsigned short)*3*ramp_size);
+	if (ramp_buffer == NULL) {
+		throwException(env, "Could not allocate gamma ramp buffer");
+		return NULL;
 	}
+	unsigned short *ramp = (unsigned short *)(*env)->GetDirectBufferAddress(env, ramp_buffer);
+	if (!XF86VidModeGetGammaRamp(getDisplay(), getCurrentScreen(), ramp_size, ramp,
+				ramp + ramp_size, ramp + ramp_size*2)) {
+		throwException(env, "Could not get the current gamma ramp");
+		return NULL;
+	}
+	return ramp_buffer;
 }
 
-static void setCurrentGamma(Display *disp, int screen, JNIEnv *env) {
-	if (current_gamma_ramp_length == 0)
+static void setGamma(JNIEnv *env, Display *disp, int screen, jobject ramp_buffer, bool throw_on_error) {
+	unsigned short *ramp_ptr = (unsigned short *)(*env)->GetDirectBufferAddress(env, ramp_buffer);
+	jlong capacity = (*env)->GetDirectBufferCapacity(env, ramp_buffer);
+	int size = capacity/(sizeof(unsigned short)*3);
+	if (size == 0)
 		return;
-	if (XF86VidModeSetGammaRamp(disp, screen, current_gamma_ramp_length, current_ramp, current_ramp, current_ramp) == False) {
-		if (env != NULL)
+	if (XF86VidModeSetGammaRamp(disp, screen, size, ramp_ptr, ramp_ptr + size, ramp_ptr + size*2) == False) {
+		if (throw_on_error)
 			throwException(env, "Could not set gamma ramp.");
 		else
-			printfDebugJava(env, "Could not set gamma ramp");
+			printfDebugJava(env, "Could not set gamma ramp.");
 	}
 }
 
-void temporaryRestoreMode(JNIEnv *env, int screen, jint extension) {
+void temporaryRestoreMode(JNIEnv *env, int screen, jint extension, jobject saved_gamma_ramp) {
 	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
 		printfDebugJava(env, "Could not open display");
@@ -376,9 +373,9 @@ void temporaryRestoreMode(JNIEnv *env, int screen, jint extension) {
 	}
 	if (!setMode(env, disp, screen, extension, current_width, current_height, current_freq, false))
 		printfDebugJava(env, "Could not restore mode");
-	setCurrentGamma(disp, screen, NULL);
-	XCloseDisplay(disp);
 	// Don't propagate error to caller
+	setGamma(env, disp, screen, saved_gamma_ramp, false);
+	XCloseDisplay(disp);
 }
 
 void switchDisplayMode(JNIEnv * env, jobject mode, int screen, jint extension) {
@@ -403,7 +400,7 @@ void switchDisplayMode(JNIEnv * env, jobject mode, int screen, jint extension) {
 	XCloseDisplay(disp);
 }
 
-void resetDisplayMode(JNIEnv *env, int screen, jint extension, bool temporary) {
+void resetDisplayMode(JNIEnv *env, int screen, jint extension, jobject gamma_ramp, bool temporary) {
 	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
 		printfDebugJava(env, "Failed to contact X Server");
@@ -412,11 +409,7 @@ void resetDisplayMode(JNIEnv *env, int screen, jint extension, bool temporary) {
 	if (!setMode(env, disp, screen, extension, saved_width, saved_height, saved_freq, temporary)) {
 		printfDebugJava(env, "Failed to reset mode");
 	}
-	if (saved_gamma_ramp_length > 0) {
-		XF86VidModeSetGammaRamp(disp, screen, saved_gamma_ramp_length, saved_ramp, saved_ramp + 
-				saved_gamma_ramp_length, saved_ramp + saved_gamma_ramp_length*2);
-	}
-//	decDisplay();
+	setGamma(env, disp, screen, gamma_ramp, false);
 	XCloseDisplay(disp);
 }
 
@@ -456,19 +449,6 @@ void setGammaRamp(JNIEnv *env, jobject gamma_ramp_buffer, int screen) {
 		throwException(env, "Could not open display");
 		return;
 	}
-	freeCurrentGamma();
-	current_gamma_ramp_length = getGammaRampLengthOfDisplay(env, disp, screen);
-	if (current_gamma_ramp_length == 0) {
-		throwException(env, "Gamma ramp not supported");
-		return;
-	}
-	const float *gamma_ramp = (const float *)(*env)->GetDirectBufferAddress(env, gamma_ramp_buffer);
-	current_ramp = (unsigned short *)malloc(sizeof(unsigned short)*current_gamma_ramp_length);
-	int i;
-	for (i = 0; i < current_gamma_ramp_length; i++) {
-		float scaled_gamma = gamma_ramp[i]*0xffff;
-		current_ramp[i] = (unsigned short)round(scaled_gamma);
-	}
-	setCurrentGamma(disp, screen, env);
+	setGamma(env, disp, screen, gamma_ramp_buffer, true);
 	XCloseDisplay(disp);
 }

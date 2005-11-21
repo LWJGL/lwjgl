@@ -182,7 +182,7 @@ static void setDecorations(int dec) {
 	XChangeProperty (getDisplay(), getCurrentWindow(), motif_hints_atom, motif_hints_atom, 32, PropModeReplace, (unsigned char *)&motif_hints, sizeof(MotifWmHints)/sizeof(long));
 }
 
-static bool releaseInput(JNIEnv *env, jint extension, jint window_mode) {
+static bool releaseInput(JNIEnv *env, jint extension, jint window_mode, jobject gamma_ramp) {
 	if (isLegacyFullscreen(window_mode) || input_released)
 		return false;
 	input_released = true;
@@ -190,19 +190,19 @@ static bool releaseInput(JNIEnv *env, jint extension, jint window_mode) {
 	updateInputGrab(window_mode);
 	if (window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_NETWM) {
 		XIconifyWindow(getDisplay(), getCurrentWindow(), getCurrentScreen());
-		resetDisplayMode(env, getCurrentScreen(), extension, true);
+		resetDisplayMode(env, getCurrentScreen(), extension, gamma_ramp, true);
 	}
 	return true;
 }
 
-static void acquireInput(JNIEnv *env, jint extension, jint window_mode) {
+static void acquireInput(JNIEnv *env, jint extension, jint window_mode, jobject gamma_ramp) {
 	if (isLegacyFullscreen(window_mode) || !input_released)
 		return;
 	input_released = false;
 	setRepeatMode(env, AutoRepeatModeOff);
 	updateInputGrab(window_mode);
 	if (window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_NETWM) {
-		temporaryRestoreMode(env, getCurrentScreen(), extension);
+		temporaryRestoreMode(env, getCurrentScreen(), extension, gamma_ramp);
 	}
 }
 
@@ -229,20 +229,20 @@ void setGrab(jint window_mode, bool new_grab) {
 	}
 }
 
-static void checkInput(JNIEnv *env, jint extension, jint window_mode) {
+static void checkInput(JNIEnv *env, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma) {
 	Window win;
 	int revert_mode;
 	XGetInputFocus(getDisplay(), &win, &revert_mode);
 	if (win == current_win) {
-		acquireInput(env, extension, window_mode);
+		acquireInput(env, extension, window_mode, current_gamma);
 		focused = true;
 	} else {
-		releaseInput(env, extension, window_mode);
+		releaseInput(env, extension, window_mode, saved_gamma);
 		focused = false;
 	}
 }
 
-void handleMessages(JNIEnv *env, jint extension, jint window_mode) {
+void handleMessages(JNIEnv *env, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma) {
 	XEvent event;
 /*	Window win;
 	int revert_mode;*/
@@ -293,7 +293,7 @@ void handleMessages(JNIEnv *env, jint extension, jint window_mode) {
 				break;
 		}
 	}
-	checkInput(env, extension, window_mode);
+	checkInput(env, extension, window_mode, saved_gamma, current_gamma);
 }
 
 static void setWindowTitle(const char *title) {
@@ -454,9 +454,9 @@ int getWindowHeight(void) {
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUpdate
-  (JNIEnv *env, jclass clazz, jint extension, jint window_mode)
+  (JNIEnv *env, jclass clazz, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma)
 {
-	handleMessages(env, extension, window_mode);
+	handleMessages(env, extension, window_mode, saved_gamma, current_gamma);
 }
 
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetAvailableDisplayModes(JNIEnv *env, jclass clazz, jint extension) {
@@ -467,12 +467,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwitchDisplayMode(JNI
 	switchDisplayMode(env, mode, getCurrentScreen(), extension);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nResetDisplayMode(JNIEnv *env, jclass clazz, jint extension) {
-	resetDisplayMode(env, getCurrentScreen(), extension, false);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nResetDisplayMode(JNIEnv *env, jclass clazz, jint extension, jobject gamma_ramp) {
+	resetDisplayMode(env, getCurrentScreen(), extension, gamma_ramp, false);
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetGammaRampLength(JNIEnv *env, jclass clazz) {
-	return (jint)getGammaRampLength(env, getCurrentScreen());
+	return (jint)getGammaRampLengthOfDisplay(env, getDisplay(), getCurrentScreen());
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetGammaRamp(JNIEnv *env, jclass clazz, jobject gamma_buffer) {
