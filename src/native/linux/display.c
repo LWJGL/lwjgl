@@ -71,9 +71,7 @@ static int current_width;
 static int current_height;
 static int current_freq;
 static int saved_gamma_ramp_length = 0;
-static unsigned short *r_ramp = NULL;
-static unsigned short *g_ramp = NULL;
-static unsigned short *b_ramp = NULL;
+static unsigned short *saved_ramp = NULL;
 static unsigned short *current_ramp = NULL;
 static int current_gamma_ramp_length = 0;
 
@@ -284,12 +282,8 @@ static bool setMode(JNIEnv *env, Display *disp, int screen, jint extension, int 
 }
 
 static void freeSavedGammaRamps() {
-	free(r_ramp);
-	free(g_ramp);
-	free(b_ramp);
-	r_ramp = NULL;
-	g_ramp = NULL;
-	b_ramp = NULL;
+	free(saved_ramp);
+	saved_ramp = NULL;
 	saved_gamma_ramp_length = 0;
 }
 
@@ -346,10 +340,9 @@ jobject initDisplay(JNIEnv *env, int screen, jint extension) {
 	/* Fetch the current gamma ramp */
 	saved_gamma_ramp_length = getGammaRampLengthOfDisplay(env, disp, screen);
 	if (saved_gamma_ramp_length > 0) {
-		r_ramp = (unsigned short *)malloc(sizeof(unsigned short)*saved_gamma_ramp_length);
-		g_ramp = (unsigned short *)malloc(sizeof(unsigned short)*saved_gamma_ramp_length);
-		b_ramp = (unsigned short *)malloc(sizeof(unsigned short)*saved_gamma_ramp_length);
-		if (!XF86VidModeGetGammaRamp(disp, screen, saved_gamma_ramp_length, r_ramp, g_ramp, b_ramp))
+		saved_ramp = (unsigned short *)malloc(sizeof(unsigned short)*3*saved_gamma_ramp_length);
+		if (!XF86VidModeGetGammaRamp(disp, screen, saved_gamma_ramp_length, saved_ramp,
+					saved_ramp + saved_gamma_ramp_length, saved_ramp + saved_gamma_ramp_length*2))
 			freeSavedGammaRamps();
 	}
 	XCloseDisplay(disp);
@@ -420,7 +413,8 @@ void resetDisplayMode(JNIEnv *env, int screen, jint extension, bool temporary) {
 		printfDebugJava(env, "Failed to reset mode");
 	}
 	if (saved_gamma_ramp_length > 0) {
-		XF86VidModeSetGammaRamp(disp, screen, saved_gamma_ramp_length, r_ramp, g_ramp, b_ramp);
+		XF86VidModeSetGammaRamp(disp, screen, saved_gamma_ramp_length, saved_ramp, saved_ramp + 
+				saved_gamma_ramp_length, saved_ramp + saved_gamma_ramp_length*2);
 	}
 //	decDisplay();
 	XCloseDisplay(disp);
