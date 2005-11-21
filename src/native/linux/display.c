@@ -213,7 +213,6 @@ static mode_info *getDisplayModes(Display *disp, int screen, int *num_modes) {
 		case NONE:
 			// fall through
 		default:
-			// Should never happen
 			return NULL;
 	}
 }
@@ -257,8 +256,6 @@ static bool setXrandrMode(Display *disp, int screen, mode_info *mode) {
 }
 
 static bool setMode(JNIEnv *env, Display *disp, int screen, int width, int height, int freq, bool temporary) {
-	if (current_extension == NONE)
-		return false;
 	int num_modes, i;
 	mode_info *avail_modes = getDisplayModes(disp, screen, &num_modes);
 	if (avail_modes == NULL) {
@@ -282,7 +279,7 @@ static bool setMode(JNIEnv *env, Display *disp, int screen, int width, int heigh
 						continue;
 					}
 					break;
-				case NONE: // Should never happen
+				case NONE: // Should never happen, since NONE imply no available display modes
 				default:   // Should never happen
 					continue;
 			}
