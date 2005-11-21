@@ -319,30 +319,24 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetCurrentGammaRam
 	return ramp_buffer;
 }
 
-static void setGamma(JNIEnv *env, Display *disp, int screen, jobject ramp_buffer, bool throw_on_error) {
+static void setGamma(JNIEnv *env, Display *disp, int screen, jobject ramp_buffer) {
 	unsigned short *ramp_ptr = (unsigned short *)(*env)->GetDirectBufferAddress(env, ramp_buffer);
 	jlong capacity = (*env)->GetDirectBufferCapacity(env, ramp_buffer);
 	int size = capacity/(sizeof(unsigned short)*3);
 	if (size == 0)
 		return;
 	if (XF86VidModeSetGammaRamp(disp, screen, size, ramp_ptr, ramp_ptr + size, ramp_ptr + size*2) == False) {
-		if (throw_on_error)
-			throwException(env, "Could not set gamma ramp.");
-		else
-			printfDebugJava(env, "Could not set gamma ramp.");
+		throwException(env, "Could not set gamma ramp.");
 	}
 }
 
-static void setGammaRamp(JNIEnv *env, jobject gamma_ramp_buffer, int screen, bool throw_on_error) {
+static void setGammaRamp(JNIEnv *env, jobject gamma_ramp_buffer, int screen) {
 	Display * disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
-		if (throw_on_error)
-			throwException(env, "Could not open display");
-		else
-			printfDebugJava(env, "Could not open display");
+		throwException(env, "Could not open display");
 		return;
 	}
-	setGamma(env, disp, screen, gamma_ramp_buffer, throw_on_error);
+	setGamma(env, disp, screen, gamma_ramp_buffer);
 	XCloseDisplay(disp);
 }
 
@@ -356,15 +350,12 @@ void temporaryRestoreMode(JNIEnv *env, int screen, jint extension, jobject saved
 		printfDebugJava(env, "Could not restore mode");
 	XCloseDisplay(disp);
 	// Don't propagate error to caller
-	setGammaRamp(env, saved_gamma_ramp, screen, false);
+	setGammaRamp(env, saved_gamma_ramp, screen);
 }
 
-static bool switchDisplayMode(JNIEnv * env, int screen, jint extension, jobject mode, bool temporary, bool throw_on_error) {
+static bool switchDisplayMode(JNIEnv * env, int screen, jint extension, jobject mode, bool temporary) {
 	if (mode == NULL) {
-		if (throw_on_error)
-			throwException(env, "mode must be non-null");
-		else
-			printfDebugJava(env, "Ignored null mode");
+		throwException(env, "mode must be non-null");
 		return false;
 	}
 	jclass cls_displayMode = (*env)->GetObjectClass(env, mode);
@@ -376,18 +367,12 @@ static bool switchDisplayMode(JNIEnv * env, int screen, jint extension, jobject 
 	int freq = (*env)->GetIntField(env, mode, fid_freq);
 	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
-		if (throw_on_error)
-			throwException(env, "Could not open display");
-		else
-			printfDebugJava(env, "Could not open display");
+		throwException(env, "Could not open display");
 		return false;
 	}
 	if (!setMode(env, disp, screen, extension, width, height, freq, temporary)) {
 		XCloseDisplay(disp);
-		if (throw_on_error)
-			throwException(env, "Could not switch mode.");
-		else
-			printfDebugJava(env, "Could not switch mode");
+		throwException(env, "Could not switch mode.");
 		return false;
 	}
 	XCloseDisplay(disp);
@@ -395,9 +380,9 @@ static bool switchDisplayMode(JNIEnv * env, int screen, jint extension, jobject 
 }
 
 void resetDisplayMode(JNIEnv *env, int screen, jint extension, jobject gamma_ramp, jobject saved_mode, bool temporary) {
-	if (!switchDisplayMode(env, screen, extension, saved_mode, temporary, false))
+	if (!switchDisplayMode(env, screen, extension, saved_mode, temporary))
 		return;
-	setGammaRamp(env, gamma_ramp, screen, false);
+	setGammaRamp(env, gamma_ramp, screen);
 }
 
 static jobjectArray getAvailableDisplayModes(JNIEnv * env, Display *disp, int screen, jint extension) {
@@ -428,7 +413,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetAvailableD
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwitchDisplayMode(JNIEnv *env, jclass clazz, jint extension, jobject mode) {
-	switchDisplayMode(env, getCurrentScreen(), extension, mode, false, true);
+	switchDisplayMode(env, getCurrentScreen(), extension, mode, false);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nResetDisplayMode(JNIEnv *env, jclass clazz, jint extension, jobject gamma_ramp, jobject saved_mode) {
@@ -440,6 +425,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetGammaRampLength(JN
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetGammaRamp(JNIEnv *env, jclass clazz, jobject gamma_buffer) {
-	setGammaRamp(env, gamma_buffer, getCurrentScreen(), true);
+	setGammaRamp(env, gamma_buffer, getCurrentScreen());
 }
 

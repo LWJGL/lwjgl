@@ -260,11 +260,13 @@ final class LinuxDisplay implements DisplayImplementation {
 		lockAWT();
 		try {
 			nResetDisplayMode(current_displaymode_extension, saved_gamma, saved_mode);
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Caught exception while resetting mode: " + e);
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native void nResetDisplayMode(int extension, ByteBuffer gamma_ramp, DisplayMode saved_mode);
+	private static native void nResetDisplayMode(int extension, ByteBuffer gamma_ramp, DisplayMode saved_mode) throws LWJGLException;
 
 	public int getGammaRampLength() {
 		lockAWT();
@@ -383,10 +385,14 @@ final class LinuxDisplay implements DisplayImplementation {
 	
 	public void update() {
 		lockAWT();
-		nUpdate(current_displaymode_extension, current_window_mode, saved_gamma, current_gamma, saved_mode);
+		try {
+			nUpdate(current_displaymode_extension, current_window_mode, saved_gamma, current_gamma, saved_mode);
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Caught exception while processing messages: " + e);
+		}
 		unlockAWT();
 	}
-	private static native void nUpdate(int extension, int current_window_mode, ByteBuffer saved_gamma, ByteBuffer current_gamma, DisplayMode saved_mode);
+	private static native void nUpdate(int extension, int current_window_mode, ByteBuffer saved_gamma, ByteBuffer current_gamma, DisplayMode saved_mode) throws LWJGLException;
 
 	public void reshape(int x, int y, int width, int height) {
 		lockAWT();
