@@ -206,7 +206,8 @@ static Status trySetXrandrMode(Display *disp, int screen, mode_info *mode, Time 
 	Status status;
 	Drawable root_window = RootWindow(disp, screen);
 	XRRScreenConfiguration *screen_configuration = XRRGetScreenInfo(disp, root_window);
-	XRRConfigTimes(screen_configuration, timestamp);
+	Time config_time;
+	*timestamp = XRRConfigTimes(screen_configuration, &config_time);
 	Rotation current_rotation;
 	XRRConfigRotations(screen_configuration, &current_rotation);
 	status = XRRSetScreenConfigAndRate(disp, screen_configuration, root_window, mode->mode_data.size_index, current_rotation, mode->freq, *timestamp);
@@ -241,7 +242,7 @@ static bool setMode(JNIEnv *env, Display *disp, int screen, jint extension, int 
 		return false;
 	}
 	bool result = false;
-	for ( i = 0; i < num_modes; ++i ) {
+	for (i = 0; i < num_modes; ++i) {
 		printfDebugJava(env, "Mode %d: %dx%d @%d", i, avail_modes[i].width, avail_modes[i].height, avail_modes[i].freq);
 		if (avail_modes[i].width == width && avail_modes[i].height == height && avail_modes[i].freq == freq) {
 			switch (extension) {
