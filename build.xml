@@ -231,7 +231,7 @@
 	</target>
 
 	<!-- Create ONLY the jar archives -->
-	<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="clean, -initialize, compile, -createjars">
+	<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="-initialize, compile, -createjars">
 		<move todir="libs/">
 			<fileset dir="${lwjgl.temp}/jar">
 				<include name="*.jar"/>
