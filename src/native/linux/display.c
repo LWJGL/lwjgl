@@ -261,7 +261,7 @@ static bool setMode(JNIEnv *env, Display *disp, int screen, int width, int heigh
 		return false;
 	int num_modes, i;
 	mode_info *avail_modes = getDisplayModes(disp, screen, &num_modes);
-	if (avail_modes == NULL || num_modes == 0) {
+	if (avail_modes == NULL) {
 		printfDebugJava(env, "Could not get display modes");
 		return false;
 	}
@@ -350,7 +350,7 @@ jobject initDisplay(JNIEnv *env, int screen) {
 		return NULL;
 	}
 	avail_modes = getDisplayModes(disp, screen, &num_modes);
-	if (avail_modes == NULL) {
+	if (avail_modes == NULL || num_modes == 0) {
 		throwException(env, "Could not get display modes");
 		XCloseDisplay(disp);
 		return NULL;
