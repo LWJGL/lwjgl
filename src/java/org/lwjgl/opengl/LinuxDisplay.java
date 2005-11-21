@@ -83,6 +83,9 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static ByteBuffer saved_gamma;
 	private static ByteBuffer current_gamma;
 
+	/** Saved mode to restore with */
+	private static DisplayMode saved_mode;
+
 	private static ByteBuffer getCurrentGammaRamp() throws LWJGLException {
 		lockAWT();
 		try {
@@ -256,12 +259,12 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void resetDisplayMode() {
 		lockAWT();
 		try {
-			nResetDisplayMode(current_displaymode_extension, saved_gamma);
+			nResetDisplayMode(current_displaymode_extension, saved_gamma, saved_mode);
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native void nResetDisplayMode(int extension, ByteBuffer gamma_ramp);
+	private static native void nResetDisplayMode(int extension, ByteBuffer gamma_ramp, DisplayMode saved_mode);
 
 	public int getGammaRampLength() {
 		lockAWT();
@@ -320,10 +323,13 @@ final class LinuxDisplay implements DisplayImplementation {
 			current_displaymode_extension = getBestDisplayModeExtension();
 			if (current_displaymode_extension == NONE)
 				throw new LWJGLException("No display mode extension is available");
-			DisplayMode mode = nInit(current_displaymode_extension);
+			DisplayMode[] modes = getAvailableDisplayModes();
+			if (modes == null || modes.length == 0)
+				throw new LWJGLException("No modes available");
+			saved_mode = modes[0];
 			saved_gamma = getCurrentGammaRamp();
 			current_gamma = saved_gamma;
-			return mode;
+			return saved_mode;
 		} finally {
 			unlockAWT();
 		}
@@ -377,10 +383,10 @@ final class LinuxDisplay implements DisplayImplementation {
 	
 	public void update() {
 		lockAWT();
-		nUpdate(current_displaymode_extension, current_window_mode, saved_gamma, current_gamma);
+		nUpdate(current_displaymode_extension, current_window_mode, saved_gamma, current_gamma, saved_mode);
 		unlockAWT();
 	}
-	private static native void nUpdate(int extension, int current_window_mode, ByteBuffer saved_gamma, ByteBuffer current_gamma);
+	private static native void nUpdate(int extension, int current_window_mode, ByteBuffer saved_gamma, ByteBuffer current_gamma, DisplayMode saved_mode);
 
 	public void reshape(int x, int y, int width, int height) {
 		lockAWT();
