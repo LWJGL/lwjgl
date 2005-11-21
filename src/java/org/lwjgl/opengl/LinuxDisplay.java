@@ -79,20 +79,28 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static PeerInfo peer_info;
 
 	private static int getBestDisplayModeExtension() throws LWJGLException {
-		if (System.getenv("LWJGL_DISABLE_XRANDR") == null && isXrandrSupported()) {
-			LWJGLUtil.log("Using Xrandr for display mode switching");
-			return XRANDR;
-		} else if (isXF86VidModeSupported()) {
-			LWJGLUtil.log("Using XF86VidMode for display mode switching");
-			return XF86VIDMODE;
-		} else {
-			LWJGLUtil.log("No display mode extensions available");
-			return NONE;
+		lockAWT();
+		try {
+			incDisplay();
+			int result;
+			if (System.getenv("LWJGL_DISABLE_XRANDR") == null && isXrandrSupported()) {
+				LWJGLUtil.log("Using Xrandr for display mode switching");
+				result = XRANDR;
+			} else if (isXF86VidModeSupported()) {
+				LWJGLUtil.log("Using XF86VidMode for display mode switching");
+				result = XF86VIDMODE;
+			} else {
+				LWJGLUtil.log("No display mode extensions available");
+				result = NONE;
+			}
+			decDisplay();
+			return result;
+		} finally {
+			unlockAWT();
 		}
-
 	}
-	private static native boolean isXrandrSupported() throws LWJGLException;
-	private static native boolean isXF86VidModeSupported() throws LWJGLException;
+	private static native boolean isXrandrSupported();
+	private static native boolean isXF86VidModeSupported();
 
 	private static boolean isNetWMFullscreenSupported() throws LWJGLException {
 		if (System.getenv("LWJGL_DISABLE_NETWM") != null)

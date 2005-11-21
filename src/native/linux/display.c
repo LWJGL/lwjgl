@@ -130,26 +130,12 @@ static bool isXF86VidModeSupported(JNIEnv *env, Display *disp) {
 }
 	
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_isXrandrSupported(JNIEnv *env, jclass unused) {
-	Display *disp = XOpenDisplay(NULL);
-	if (disp == NULL) {
-		throwException(env, "Could not open display");
-		return JNI_FALSE;
-	}
-
-	jboolean result = isXrandrSupported(env, disp) ? JNI_TRUE : JNI_FALSE;
-	XCloseDisplay(disp);
+	jboolean result = isXrandrSupported(env, getDisplay()) ? JNI_TRUE : JNI_FALSE;
 	return result;
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_isXF86VidModeSupported(JNIEnv *env, jclass unused) {
-	Display *disp = XOpenDisplay(NULL);
-	if (disp == NULL) {
-		throwException(env, "Could not open display");
-		return JNI_FALSE;
-	}
-
-	jboolean result = isXF86VidModeSupported(env, disp) ? JNI_TRUE : JNI_FALSE;
-	XCloseDisplay(disp);
+	jboolean result = isXF86VidModeSupported(env, getDisplay()) ? JNI_TRUE : JNI_FALSE;
 	return result;
 }
 
