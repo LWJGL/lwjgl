@@ -68,14 +68,6 @@ static int current_width;
 static int current_height;
 static int current_freq;
 
-int getScreenModeWidth(void) {
-	return current_width;
-}
-
-int getScreenModeHeight(void) {
-	return current_height;
-}
-
 static bool getXF86VidModeVersion(JNIEnv *env, Display *disp, int *major, int *minor) {
 	int event_base, error_base;
 
