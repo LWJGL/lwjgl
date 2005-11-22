@@ -151,7 +151,7 @@ static void extgl_InitGLXSupportedExtensions(Display *disp, int screen, GLXExten
 
 bool extgl_Open(JNIEnv *env) {
 #define BUFFER_SIZE 2000
-	static char buffer[BUFFER_SIZE];
+	char buffer[BUFFER_SIZE];
 	if (lib_gl_handle != NULL)
 		return true;
 	lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);

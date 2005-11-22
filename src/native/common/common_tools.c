@@ -80,7 +80,7 @@ bool isDebugEnabled(void) {
 
 void printfDebugJava(JNIEnv *env, const char *format, ...) {
 	#define BUFFER_SIZE 4000
-	static char buffer[BUFFER_SIZE];
+	char buffer[BUFFER_SIZE];
 	jstring str;
 	jclass org_lwjgl_LWJGLUtil_class;
 	jmethodID log_method;
