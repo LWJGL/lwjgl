@@ -84,7 +84,9 @@ static bool putMouseEvent(jint button, jint state, jint dz) {
 }
 
 static int transformY(int y) {
-	return getWindowHeight() - 1 - y;
+	XWindowAttributes window_attributes;
+	XGetWindowAttributes(getDisplay(), getCurrentWindow(), &window_attributes);
+	return window_attributes.height - 1 - y;
 }
 
 static void setCursorPos(int x, int y) {
@@ -280,22 +282,28 @@ static int min(int v1, int v2) {
 	return v1 < v2 ? v1 : v2;
 }
 
-static void doHandlePointerMotion(Window root_window, int root_x, int root_y, int win_x, int win_y) {
+static void doHandlePointerMotion(Window root_window, Window window, int root_x, int root_y, int win_x, int win_y) {
 	setCursorPos(win_x, win_y);
 	if (!pointer_grabbed || !shouldGrab())
 		return;
 	// find the window position in root coordinates
+	XWindowAttributes window_attributes;
+	XGetWindowAttributes(getDisplay(), root_window, &window_attributes);
+	int root_window_width = window_attributes.width;
+	int root_window_height = window_attributes.height;
+	XGetWindowAttributes(getDisplay(), window, &window_attributes);
+	int window_width = window_attributes.width;
+	int window_height = window_attributes.height;
+	
 	int win_left = root_x - win_x;
 	int win_top = root_y - win_y;
-	int win_right = win_left + getWindowWidth();
-	int win_bottom = win_top + getWindowHeight();
+	int win_right = win_left + window_width;
+	int win_bottom = win_top + window_height;
 	// cap the window position to the screen dimensions
 	int border_left = max(0, win_left);
 	int border_top = max(0, win_top);
-	XWindowAttributes root_attributes;
-	XGetWindowAttributes(getDisplay(), root_window, &root_attributes);
-	int border_right = min(root_attributes.width, win_right);
-	int border_bottom = min(root_attributes.height, win_bottom);
+	int border_right = min(root_window_width, win_right);
+	int border_bottom = min(root_window_height, win_bottom);
 	// determine whether the cursor is outside the bounds
 	bool outside_limits = 	root_x < border_left + POINTER_WARP_BORDER || root_y < border_top + POINTER_WARP_BORDER ||
 							root_x > border_right - POINTER_WARP_BORDER || root_y > border_bottom - POINTER_WARP_BORDER;
@@ -308,7 +316,7 @@ static void doHandlePointerMotion(Window root_window, int root_x, int root_y, in
 }
 
 void handlePointerMotion(XMotionEvent *event) {
-	doHandlePointerMotion(event->root, event->x_root, event->y_root, event->x, event->y);
+	doHandlePointerMotion(event->root, event->window, event->x_root, event->y_root, event->x, event->y);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nPollMouse(JNIEnv * env, jclass clazz, jobject coord_buffer_obj, jobject button_buffer_obj) {
@@ -355,5 +363,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGrabMouse(JNIEnv * en
 	setGrab(window_mode, new_grab == JNI_TRUE ? true : false);
 	reset();
 	XQueryPointer(getDisplay(), getCurrentWindow(), &root_return, &child_return, &root_x, &root_y, &win_x, &win_y, &mask_return);
-	doHandlePointerMotion(root_return, root_x, root_y, win_x, win_y);
+	doHandlePointerMotion(root_return, getCurrentWindow(), root_x, root_y, win_x, win_y);
 }

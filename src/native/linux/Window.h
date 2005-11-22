@@ -66,16 +66,6 @@
 	extern bool shouldGrab(void);
 
 	/*
-	 * get the current window width
-	 */
-	extern int getWindowWidth(void);
-	
-	/*
-	 * get the current window height
-	 */
-	extern int getWindowHeight(void);
-	
-	/*
 	 * get the current display
 	 */
 	extern Display *getDisplay(void);

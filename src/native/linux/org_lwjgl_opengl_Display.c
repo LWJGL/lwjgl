@@ -445,14 +445,6 @@ Window getCurrentWindow(void) {
 	return current_win;
 }
 
-int getWindowWidth(void) {
-	return current_width;
-}
-
-int getWindowHeight(void) {
-	return current_height;
-}
-
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUpdate
   (JNIEnv *env, jclass clazz, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma, jobject saved_mode)
 {
