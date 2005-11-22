@@ -184,6 +184,7 @@ void handleWarpEvent(XClientMessageEvent *event) {
 static void doWarpPointer(int center_x, int center_y) {
 	XEvent warp_event;
 	warp_event.type = ClientMessage;
+	warp_event.xclient.window = getCurrentWindow();
 	warp_event.xclient.message_type = getWarpAtom();
 	warp_event.xclient.format = 32;
 	warp_event.xclient.data.l[0] = center_x;
@@ -316,7 +317,7 @@ static void doHandlePointerMotion(Window root_window, Window window, int root_x,
 }
 
 void handlePointerMotion(XMotionEvent *event) {
-	doHandlePointerMotion(event->root, event->window, event->x_root, event->y_root, event->x, event->y);
+	doHandlePointerMotion(event->root, getCurrentWindow(), event->x_root, event->y_root, event->x, event->y);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nPollMouse(JNIEnv * env, jclass clazz, jobject coord_buffer_obj, jobject button_buffer_obj) {

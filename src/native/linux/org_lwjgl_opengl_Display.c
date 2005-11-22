@@ -246,11 +246,12 @@ static void checkInput(JNIEnv *env, jint extension, jint window_mode, jobject sa
 
 void handleMessages(JNIEnv *env, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma, jobject saved_mode, jobject current_mode) {
 	XEvent event;
-/*	Window win;
-	int revert_mode;*/
 	while (XPending(getDisplay()) > 0) {
 		XNextEvent(getDisplay(), &event);
 		if (XFilterEvent(&event, None) == True)
+			continue;
+		// Ignore events from old windows
+		if (event.xany.window != getCurrentWindow())
 			continue;
 		switch (event.type) {
 			case ClientMessage:
@@ -259,16 +260,6 @@ void handleMessages(JNIEnv *env, jint extension, jint window_mode, jobject saved
 				} else if ((event.xclient.format == 32) && ((Atom)event.xclient.data.l[0] == delete_atom))
 					closerequested = true;
 				break;
-/*			case FocusOut:
-				XGetInputFocus(getDisplay(), &win, &revert_mode);
-				if (win != current_win) {
-					releaseInput();
-					focused = false;
-				}
-				break;
-			case FocusIn:
-				checkInput();
-				break;*/
 			case MapNotify:
 				dirty = true;
 				minimized = false;
