@@ -106,7 +106,7 @@ static void setCursorPos(int x, int y) {
 
 static void resetCursor(int x, int y) {
 	last_x = x;
-	last_y = y;
+	last_y = transformY(y);
 }
 
 static bool blankCursor(JNIEnv *env) {
@@ -286,7 +286,6 @@ static void doHandlePointerMotion(Window root_window, Window window, int root_x,
 	setCursorPos(win_x, win_y);
 	if (!pointer_grabbed || !shouldGrab())
 		return;
-	// find the window position in root coordinates
 	XWindowAttributes window_attributes;
 	XGetWindowAttributes(getDisplay(), root_window, &window_attributes);
 	int root_window_width = window_attributes.width;
@@ -295,6 +294,7 @@ static void doHandlePointerMotion(Window root_window, Window window, int root_x,
 	int window_width = window_attributes.width;
 	int window_height = window_attributes.height;
 	
+	// find the window position in root coordinates
 	int win_left = root_x - win_x;
 	int win_top = root_y - win_y;
 	int win_right = win_left + window_width;
