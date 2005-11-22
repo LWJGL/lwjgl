@@ -190,7 +190,8 @@ static bool releaseInput(JNIEnv *env, jint extension, jint window_mode, jobject 
 	updateInputGrab(window_mode);
 	if (window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_NETWM) {
 		XIconifyWindow(getDisplay(), getCurrentWindow(), getCurrentScreen());
-		resetDisplayMode(env, getCurrentScreen(), extension, gamma_ramp, saved_mode);
+		switchDisplayMode(env, getCurrentScreen(), extension, saved_mode);
+		setGammaRamp(env, getCurrentScreen(), gamma_ramp);
 	}
 	return true;
 }
@@ -202,7 +203,8 @@ static void acquireInput(JNIEnv *env, jint extension, jint window_mode, jobject 
 	setRepeatMode(env, AutoRepeatModeOff);
 	updateInputGrab(window_mode);
 	if (window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_NETWM) {
-		temporaryRestoreMode(env, getCurrentScreen(), extension, gamma_ramp, mode);
+		switchDisplayMode(env, getCurrentScreen(), extension, mode);
+		setGammaRamp(env, getCurrentScreen(), gamma_ramp);
 	}
 }
 
@@ -345,7 +347,7 @@ static bool isNetWMFullscreenSupported(JNIEnv *env) {
 	Atom netwm_supported_atom = XInternAtom(getDisplay(), "_NET_SUPPORTED", False);
 	int result = XGetWindowProperty(getDisplay(), RootWindow(getDisplay(), getCurrentScreen()), netwm_supported_atom, 0, 10000, False, AnyPropertyType, &actual_type, &actual_format, &nitems, &bytes_after, (void *)&supported_list);
 	if (result != Success) {
-		printfDebugJava(env, "Unable to query _NET_SUPPORTED window property");
+		throwException(env, "Unable to query _NET_SUPPORTED window property");
 		return false;
 	}
 	Atom fullscreen_atom = XInternAtom(getDisplay(), "_NET_WM_STATE_FULLSCREEN", False);

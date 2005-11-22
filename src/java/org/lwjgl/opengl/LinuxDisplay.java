@@ -95,7 +95,7 @@ final class LinuxDisplay implements DisplayImplementation {
 				if (isXF86VidModeSupported())
 					return nGetCurrentGammaRamp();
 				else
-					return BufferUtils.createByteBuffer(0);
+					return null;
 			} finally {
 				decDisplay();
 			}
@@ -105,29 +105,58 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native ByteBuffer nGetCurrentGammaRamp() throws LWJGLException;
 	
-	private static int getBestDisplayModeExtension() throws LWJGLException {
+	private static int getBestDisplayModeExtension() {
+		int result;
+		if (isXrandrSupported()) {
+			LWJGLUtil.log("Using Xrandr for display mode switching");
+			result = XRANDR;
+		} else if (isXF86VidModeSupported()) {
+			LWJGLUtil.log("Using XF86VidMode for display mode switching");
+			result = XF86VIDMODE;
+		} else {
+			LWJGLUtil.log("No display mode extensions available");
+			result = NONE;
+		}
+		return result;
+	}
+	
+	private static boolean isXrandrSupported() {
+		if (System.getenv("LWJGL_DISABLE_XRANDR") != null)
+			return false;
 		lockAWT();
 		try {
 			incDisplay();
-			int result;
-			if (System.getenv("LWJGL_DISABLE_XRANDR") == null && isXrandrSupported()) {
-				LWJGLUtil.log("Using Xrandr for display mode switching");
-				result = XRANDR;
-			} else if (isXF86VidModeSupported()) {
-				LWJGLUtil.log("Using XF86VidMode for display mode switching");
-				result = XF86VIDMODE;
-			} else {
-				LWJGLUtil.log("No display mode extensions available");
-				result = NONE;
+			try {
+				return nIsXrandrSupported();
+			} finally {
+				decDisplay();
 			}
-			decDisplay();
-			return result;
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Got exception while querying Xrandr support: " + e);
+			return false;
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native boolean isXrandrSupported();
-	private static native boolean isXF86VidModeSupported();
+	private static native boolean nIsXrandrSupported() throws LWJGLException;
+
+	private static boolean isXF86VidModeSupported() {
+		lockAWT();
+		try {
+			incDisplay();
+			try {
+				return nIsXF86VidModeSupported();
+			} finally {
+				decDisplay();
+			}
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Got exception while querying XF86VM support: " + e);
+			return false;
+		} finally {
+			unlockAWT();
+		}
+	}
+	private static native boolean nIsXF86VidModeSupported() throws LWJGLException;
 
 	private static boolean isNetWMFullscreenSupported() throws LWJGLException {
 		if (System.getenv("LWJGL_DISABLE_NETWM") != null)
@@ -135,14 +164,19 @@ final class LinuxDisplay implements DisplayImplementation {
 		lockAWT();
 		try {
 			incDisplay();
-			boolean supported = nIsNetWMFullscreenSupported();
-			decDisplay();
-			return supported;
+			try {
+				return nIsNetWMFullscreenSupported();
+			} finally {
+				decDisplay();
+			}
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Got exception while querying NetWM support: " + e);
+			return false;
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native boolean nIsNetWMFullscreenSupported();
+	private static native boolean nIsNetWMFullscreenSupported() throws LWJGLException;
 	
 	/* Since Xlib is not guaranteed to be thread safe, we need a way to synchronize LWJGL
 	 * Xlib calls with AWT Xlib calls. Fortunately, JAWT implements Lock()/Unlock() to
@@ -250,8 +284,8 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void switchDisplayMode(DisplayMode mode) throws LWJGLException {
 		lockAWT();
 		try {
+			nSwitchDisplayMode(current_displaymode_extension, mode);
 			current_mode = mode;
-			nSwitchDisplayMode(current_displaymode_extension, current_mode);
 		} finally {
 			unlockAWT();
 		}
@@ -261,27 +295,31 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void resetDisplayMode() {
 		lockAWT();
 		try {
-			nResetDisplayMode(current_displaymode_extension, saved_gamma, saved_mode);
+			switchDisplayMode(saved_mode);
+			if (isXF86VidModeSupported())
+				doSetGamma(saved_gamma);
 		} catch (LWJGLException e) {
 			LWJGLUtil.log("Caught exception while resetting mode: " + e);
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native void nResetDisplayMode(int extension, ByteBuffer gamma_ramp, DisplayMode saved_mode) throws LWJGLException;
 
 	public int getGammaRampLength() {
+		if (!isXF86VidModeSupported())
+			return 0;
 		lockAWT();
 		try {
 			try {
 				incDisplay();
-				int length;
-				if (isXF86VidModeSupported()) {
-					length = nGetGammaRampLength();
-				} else
-					length = 0;
-				decDisplay();
-				return length;
+				try {
+					return nGetGammaRampLength();
+				} catch (LWJGLException e) {
+					LWJGLUtil.log("Got exception while querying gamma length: " + e);
+					return 0;
+				} finally {
+					decDisplay();
+				}
 			} catch (LWJGLException e) {
 				LWJGLUtil.log("Failed to get gamma ramp length: " + e);
 				return 0;
@@ -290,18 +328,19 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	private static native int nGetGammaRampLength();
+	private static native int nGetGammaRampLength() throws LWJGLException;
 
 	public void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLException {
+		if (!isXF86VidModeSupported())
+			throw new LWJGLException("No gamma ramp support (Missing XF86VM extension)");
+		doSetGamma(convertToNativeRamp(gammaRamp));
+	}
+
+	private static void doSetGamma(ByteBuffer native_gamma) throws LWJGLException {
 		lockAWT();
 		try {
-			incDisplay();
-			boolean xf86_support = isXF86VidModeSupported();
-			decDisplay();
-			if (!xf86_support)
-				throw new LWJGLException("No gamma ramp support (Missing XF86VM extension)");
-			current_gamma = convertToNativeRamp(gammaRamp);
-			nSetGammaRamp(current_gamma);
+			nSetGammaRamp(native_gamma);
+			current_gamma = native_gamma;
 		} finally {
 			unlockAWT();
 		}
