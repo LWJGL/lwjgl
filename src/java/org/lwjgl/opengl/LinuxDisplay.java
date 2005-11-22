@@ -85,6 +85,7 @@ final class LinuxDisplay implements DisplayImplementation {
 
 	/** Saved mode to restore with */
 	private static DisplayMode saved_mode;
+	private static DisplayMode current_mode;
 
 	private static ByteBuffer getCurrentGammaRamp() throws LWJGLException {
 		lockAWT();
@@ -249,7 +250,8 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void switchDisplayMode(DisplayMode mode) throws LWJGLException {
 		lockAWT();
 		try {
-			nSwitchDisplayMode(current_displaymode_extension, mode);
+			current_mode = mode;
+			nSwitchDisplayMode(current_displaymode_extension, current_mode);
 		} finally {
 			unlockAWT();
 		}
@@ -329,6 +331,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			if (modes == null || modes.length == 0)
 				throw new LWJGLException("No modes available");
 			saved_mode = modes[0];
+			current_mode = saved_mode;
 			saved_gamma = getCurrentGammaRamp();
 			current_gamma = saved_gamma;
 			return saved_mode;
@@ -386,13 +389,13 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void update() {
 		lockAWT();
 		try {
-			nUpdate(current_displaymode_extension, current_window_mode, saved_gamma, current_gamma, saved_mode);
+			nUpdate(current_displaymode_extension, current_window_mode, saved_gamma, current_gamma, saved_mode, current_mode);
 		} catch (LWJGLException e) {
 			LWJGLUtil.log("Caught exception while processing messages: " + e);
 		}
 		unlockAWT();
 	}
-	private static native void nUpdate(int extension, int current_window_mode, ByteBuffer saved_gamma, ByteBuffer current_gamma, DisplayMode saved_mode) throws LWJGLException;
+	private static native void nUpdate(int extension, int current_window_mode, ByteBuffer saved_gamma, ByteBuffer current_gamma, DisplayMode saved_mode, DisplayMode current_mode) throws LWJGLException;
 
 	public void reshape(int x, int y, int width, int height) {
 		lockAWT();

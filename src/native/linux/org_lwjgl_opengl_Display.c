@@ -190,19 +190,19 @@ static bool releaseInput(JNIEnv *env, jint extension, jint window_mode, jobject 
 	updateInputGrab(window_mode);
 	if (window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_NETWM) {
 		XIconifyWindow(getDisplay(), getCurrentWindow(), getCurrentScreen());
-		resetDisplayMode(env, getCurrentScreen(), extension, gamma_ramp, saved_mode, true);
+		resetDisplayMode(env, getCurrentScreen(), extension, gamma_ramp, saved_mode);
 	}
 	return true;
 }
 
-static void acquireInput(JNIEnv *env, jint extension, jint window_mode, jobject gamma_ramp) {
+static void acquireInput(JNIEnv *env, jint extension, jint window_mode, jobject gamma_ramp, jobject mode) {
 	if (isLegacyFullscreen(window_mode) || !input_released)
 		return;
 	input_released = false;
 	setRepeatMode(env, AutoRepeatModeOff);
 	updateInputGrab(window_mode);
 	if (window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_NETWM) {
-		temporaryRestoreMode(env, getCurrentScreen(), extension, gamma_ramp);
+		temporaryRestoreMode(env, getCurrentScreen(), extension, gamma_ramp, mode);
 	}
 }
 
@@ -229,12 +229,12 @@ void setGrab(jint window_mode, bool new_grab) {
 	}
 }
 
-static void checkInput(JNIEnv *env, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma, jobject saved_mode) {
+static void checkInput(JNIEnv *env, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma, jobject saved_mode, jobject current_mode) {
 	Window win;
 	int revert_mode;
 	XGetInputFocus(getDisplay(), &win, &revert_mode);
 	if (win == current_win) {
-		acquireInput(env, extension, window_mode, current_gamma);
+		acquireInput(env, extension, window_mode, current_gamma, current_mode);
 		focused = true;
 	} else {
 		releaseInput(env, extension, window_mode, saved_gamma, saved_mode);
@@ -242,7 +242,7 @@ static void checkInput(JNIEnv *env, jint extension, jint window_mode, jobject sa
 	}
 }
 
-void handleMessages(JNIEnv *env, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma, jobject saved_mode) {
+void handleMessages(JNIEnv *env, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma, jobject saved_mode, jobject current_mode) {
 	XEvent event;
 /*	Window win;
 	int revert_mode;*/
@@ -293,7 +293,7 @@ void handleMessages(JNIEnv *env, jint extension, jint window_mode, jobject saved
 				break;
 		}
 	}
-	checkInput(env, extension, window_mode, saved_gamma, current_gamma, saved_mode);
+	checkInput(env, extension, window_mode, saved_gamma, current_gamma, saved_mode, current_mode);
 }
 
 static void setWindowTitle(const char *title) {
@@ -446,9 +446,9 @@ Window getCurrentWindow(void) {
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUpdate
-  (JNIEnv *env, jclass clazz, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma, jobject saved_mode)
+  (JNIEnv *env, jclass clazz, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma, jobject saved_mode, jobject current_mode)
 {
-	handleMessages(env, extension, window_mode, saved_gamma, current_gamma, saved_mode);
+	handleMessages(env, extension, window_mode, saved_gamma, current_gamma, saved_mode, current_mode);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject mode, jint window_mode, jint x, jint y) {

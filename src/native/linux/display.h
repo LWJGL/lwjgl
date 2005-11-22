@@ -45,7 +45,7 @@
 #include <jni.h>
 #include "common_tools.h"
 
-extern void resetDisplayMode(JNIEnv *env, int screen, jint extension, jobject gamma_ramp, jobject saved_mode, bool temporary);
-extern void temporaryRestoreMode(JNIEnv *env, int screen, jint extension, jobject gamma_ramp);
+extern void resetDisplayMode(JNIEnv *env, int screen, jint extension, jobject gamma_ramp, jobject saved_mode);
+extern void temporaryRestoreMode(JNIEnv *env, int screen, jint extension, jobject gamma_ramp, jobject saved_mode);
 
 #endif
