@@ -519,7 +519,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUnlockAWT(JNIEnv *env
 	jawt.Unlock(env);
 }
 
-int setIcon(char *data,int width,int height) {
+static int setIcon(char *data,int width,int height) {
 	XWMHints* win_hints;
 	int x = 0;
 	int y = 5;
