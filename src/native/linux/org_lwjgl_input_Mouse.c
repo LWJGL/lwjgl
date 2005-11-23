@@ -222,7 +222,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateMouse
 	created = true;
 	pointer_grabbed = false;
 	updatePointerGrab(window_mode);
-	initEventQueue(&event_queue, EVENT_SIZE);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyMouse
