@@ -53,10 +53,9 @@
 #include "org_lwjgl_opengl_LinuxDisplay.h"
 
 #define KEYBOARD_BUFFER_SIZE 50
-#define KEYBOARD_SIZE 256
 #define KEY_EVENT_BACKLOG 40
 
-static unsigned char key_buf[KEYBOARD_SIZE];
+static jbyte key_buf[org_lwjgl_input_Keyboard_KEYBOARD_SIZE];
 static int numlock_mask;
 static int modeswitch_mask;
 static int caps_lock_mask;
@@ -125,7 +124,7 @@ static void setupIMEventMask() {
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateKeyboard
   (JNIEnv * env, jclass clazz, jint window_mode)
 {
-	memset(key_buf, 0, KEYBOARD_SIZE*sizeof(unsigned char));
+	memset(key_buf, 0, org_lwjgl_input_Keyboard_KEYBOARD_SIZE*sizeof(jbyte));
 	created = true;
 	keyboard_grabbed = false;
 	initEventQueue(&event_queue, 3);
@@ -660,7 +659,7 @@ static void translateEvent(XKeyEvent *event, jint keycode, jint state) {
 	}
 }
 
-static unsigned char eventState(XKeyEvent *event) {
+static jbyte eventState(XKeyEvent *event) {
 	if (event->type == KeyPress) {
 		return 1;
 	} else if (event->type == KeyRelease) {
@@ -677,14 +676,14 @@ static void bufferEvent(XKeyEvent *key_event) {
 
 void handleKeyEvent(XKeyEvent *event) {
 	unsigned char keycode = getKeycode(event);
-	unsigned char state = eventState(event);
+	jbyte state = eventState(event);
 	key_buf[keycode] = state;
 	bufferEvent(event);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nPollKeyboard(JNIEnv * env, jclass clazz, jobject buffer) {
-	unsigned char *new_keyboard_buffer = (unsigned char *)(*env)->GetDirectBufferAddress(env, buffer);
-	memcpy(new_keyboard_buffer, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
+	jbyte *new_keyboard_buffer = (jbyte *)(*env)->GetDirectBufferAddress(env, buffer);
+	memcpy(new_keyboard_buffer, key_buf, org_lwjgl_input_Keyboard_KEYBOARD_SIZE*sizeof(jbyte));
 }
 
 JNIEXPORT int JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReadKeyboard(JNIEnv * env, jclass clazz, jobject buffer, jint buffer_position) {
