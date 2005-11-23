@@ -73,8 +73,6 @@ static GLXWindow glx_window = None;
 static Atom delete_atom;
 static Colormap cmap;
 static Window current_win;
-static int current_height;
-static int current_width;
 static int current_depth;
 
 static Visual *current_visual;
@@ -376,8 +374,6 @@ static bool createWindow(JNIEnv* env, jint window_mode, X11PeerInfo *peer_info, 
 	int attribmask;
 
 	input_released = false;
-	current_width = width;
-	current_height = height;
 	root_win = RootWindow(getDisplay(), getCurrentScreen());
 	XVisualInfo *vis_info = getVisualInfoFromPeerInfo(env, peer_info);
 	if (vis_info == NULL)
