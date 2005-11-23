@@ -45,9 +45,7 @@
 #include <X11/Xutil.h>
 #include "awt_tools.h"
 #include "org_lwjgl_opengl_LinuxAWTGLCanvasPeerInfo.h"
-#include "extgl_glx.h"
 #include "context.h"
-#include "Window.h"
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxAWTGLCanvasPeerInfo_nInitHandle
   (JNIEnv *env, jclass clazz, int screen, jobject lock_buffer_handle, jobject peer_info_handle) {

@@ -279,7 +279,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nConvertToNativeRam
 	int i;
 	for (i = 0; i < length; i++) {
 		float scaled_gamma = ramp_ptr[i]*0xffff;
-		short scaled_gamma_short = (unsigned short)round(scaled_gamma);
+		short scaled_gamma_short = (unsigned short)roundf(scaled_gamma);
 		native_ramp_ptr[i] = scaled_gamma_short;
 		native_ramp_ptr[i + length] = scaled_gamma_short;
 		native_ramp_ptr[i + length*2] = scaled_gamma_short;
