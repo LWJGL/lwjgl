@@ -80,7 +80,6 @@ static Visual *current_visual;
 static bool input_released;
 
 static bool dirty;
-static bool vsync_enabled;
 static bool minimized;
 static bool focused;
 static bool closerequested;
@@ -366,7 +365,6 @@ static bool createWindow(JNIEnv* env, jint window_mode, X11PeerInfo *peer_info, 
 	focused = true;
 	minimized = false;
 	closerequested = false;
-	vsync_enabled = false;
 	grab = false;
 	Window root_win;
 	Window win;
