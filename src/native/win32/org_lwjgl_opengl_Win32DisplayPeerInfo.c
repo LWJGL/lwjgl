@@ -73,6 +73,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32DisplayPeerInfo_nInitDC
 		throwException(env, "Could not get pixel format from dummy hdc");
 		return;
 	}
-	if (!applyPixelFormat(peer_info->drawable_hdc, pixel_format))
-		throwException(env, "Could not apply pixel format to drawable");
+	// If applyPixelFormat fails, just let it throw
+	applyPixelFormat(env, peer_info->drawable_hdc, pixel_format);
 }

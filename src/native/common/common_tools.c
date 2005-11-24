@@ -78,27 +78,33 @@ bool isDebugEnabled(void) {
 	return debug;
 }
 
-void printfDebugJava(JNIEnv *env, const char *format, ...) {
-	#define BUFFER_SIZE 4000
+static jstring sprintfJavaString(JNIEnv *env, const char *format, va_list ap) {
+#define BUFFER_SIZE 4000
 	char buffer[BUFFER_SIZE];
+	jstring str;
+#ifdef WIN32
+	_vsnprintf(buffer, BUFFER_SIZE, format, ap);
+#else
+	vsnprintf(buffer, BUFFER_SIZE, format, ap);
+#endif
+	buffer[BUFFER_SIZE - 1] = '\0';
+	str = (*env)->NewStringUTF(env, buffer);
+	return str;
+}
+
+void printfDebugJava(JNIEnv *env, const char *format, ...) {
 	jstring str;
 	jclass org_lwjgl_LWJGLUtil_class;
 	jmethodID log_method;
 	va_list ap;
-	va_start(ap, format);
 	if (isDebugEnabled()) {
-		#ifdef WIN32
-		_vsnprintf(buffer, BUFFER_SIZE, format, ap);
-		#else
-		vsnprintf(buffer, BUFFER_SIZE, format, ap);
-		#endif
-		buffer[BUFFER_SIZE - 1] = '\0';
-		str = (*env)->NewStringUTF(env, buffer);
+		va_start(ap, format);
+		str = sprintfJavaString(env, format, ap);
+		va_end(ap);
 		org_lwjgl_LWJGLUtil_class = (*env)->FindClass(env, "org/lwjgl/LWJGLUtil");
 		log_method = (*env)->GetStaticMethodID(env, org_lwjgl_LWJGLUtil_class, "log", "(Ljava/lang/String;)V");
 		(*env)->CallStaticVoidMethod(env, org_lwjgl_LWJGLUtil_class, log_method, str);
 	}
-	va_end(ap);
 }
 
 void printfDebug(const char *format, ...) {
@@ -169,6 +175,21 @@ int copyEvents(event_queue_t *queue, jint *output_event_buffer, int buffer_size)
 	return num_events;
 }
 
+static void throwFormattedGeneralException(JNIEnv * env, const char *exception_name, const char *format, va_list ap) {
+	jclass cls;
+	jstring str;
+	jmethodID exception_constructor;
+	jobject exception;
+
+	if ((*env)->ExceptionCheck(env) == JNI_TRUE)
+		return; // The JVM crashes if we try to throw two exceptions from one native call
+	str = sprintfJavaString(env, format, ap);
+	cls = (*env)->FindClass(env, exception_name);
+    exception_constructor = (*env)->GetMethodID(env, cls, "<init>", "(Ljava/lang/String;)V");
+	exception = (*env)->NewObject(env, cls, exception_constructor, str);
+	(*env)->Throw(env, exception);
+}
+
 void throwGeneralException(JNIEnv * env, const char *exception_name, const char * err) {
 	jclass cls;
 
@@ -176,11 +197,17 @@ void throwGeneralException(JNIEnv * env, const char *exception_name, const char 
 		return; // The JVM crashes if we try to throw two exceptions from one native call
 	cls = (*env)->FindClass(env, exception_name);
 	(*env)->ThrowNew(env, cls, err);
-	(*env)->DeleteLocalRef(env, cls);
 }
 
 void throwFMODException(JNIEnv * env, const char * err) {
 	throwGeneralException(env, "org/lwjgl/fmod3/FMODException", err);
+}
+
+void throwFormattedException(JNIEnv * env, const char *format, ...) {
+	va_list ap;
+	va_start(ap, format);
+	throwFormattedGeneralException(env, "org/lwjgl/LWJGLException", format, ap);
+	va_end(ap);
 }
 
 void throwException(JNIEnv * env, const char * err) {

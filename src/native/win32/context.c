@@ -40,6 +40,7 @@
  */
 
 #include <malloc.h>
+#include <jni.h>
 #include "common_tools.h"
 #include "extgl.h"
 #include "extgl_wgl.h"
@@ -78,14 +79,16 @@ static LRESULT CALLBACK dummyWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-bool applyPixelFormat(HDC hdc, int iPixelFormat) {
+bool applyPixelFormat(JNIEnv *env, HDC hdc, int iPixelFormat) {
 	PIXELFORMATDESCRIPTOR desc;
 	if (DescribePixelFormat(hdc, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &desc) == 0) {
+		throwFormattedException(env, "DescribePixelFormat failed (%d)", GetLastError());
 		return false;
 	}
 
 	// make that the pixel format of the device context 
 	if (SetPixelFormat(hdc, iPixelFormat, &desc) == FALSE) {
+		throwFormattedException(env, "SetPixelFormat failed (%d)", GetLastError());
 		return false;
 	}
 	return true;
@@ -358,8 +361,7 @@ int findPixelFormatOnDC(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixe
 	bool use_arb_selection = samples > 0 || pbuffer || pixelFormatCaps != NULL;
 	pixel_format_id = findPixelFormatDefault(env, hdc, pixel_format, use_hdc_bpp, double_buffer);
 	if (use_arb_selection) {
-		if (!applyPixelFormat(hdc, pixel_format_id)) {
-			throwException(env, "Could not apply pixel format to window");
+		if (!applyPixelFormat(env, hdc, pixel_format_id)) {
 			return -1;
 		}
 		dummy_hglrc = wglCreateContext(hdc);

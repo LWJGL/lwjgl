@@ -71,9 +71,8 @@ static bool getExtensions(JNIEnv *env, WGLExtensions *extensions, jobject pixel_
 		return false;
 	}
 	dummy_hdc = GetDC(dummy_hwnd);
-	if (!applyPixelFormat(dummy_hdc, pixel_format_id)) {
+	if (!applyPixelFormat(env, dummy_hdc, pixel_format_id)) {
 		closeWindow(&dummy_hwnd, &dummy_hdc);
-		throwException(env, "Could not apply pixel format");
 		return false;
 	}
 	dummy_context = wglCreateContext(dummy_hdc);

@@ -53,8 +53,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32PeerInfo_nChoosePixelFormat
 	int pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, pixel_format_caps, use_hdc_bpp, window, pbuffer, double_buffer);
 	if (pixel_format_id == -1)
 		return;
-	if (!applyPixelFormat(peer_info->format_hdc, pixel_format_id)) {
-		throwException(env, "Could not apply pixel format");
-		return;
-	}
+	// Let it throw
+	applyPixelFormat(env, peer_info->format_hdc, pixel_format_id);
 }

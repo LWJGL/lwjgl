@@ -43,6 +43,7 @@
 #define __LWJGL_CONTEXT_H
 
 #include <windows.h>
+#include <jni.h>
 #include "common_tools.h"
 #include "extgl.h"
 #include "extgl_wgl.h"
@@ -67,7 +68,7 @@ typedef struct {
  */
 extern bool registerWindow();
 
-extern bool applyPixelFormat(HDC hdc, int iPixelFormat);
+extern bool applyPixelFormat(JNIEnv *env, HDC hdc, int iPixelFormat);
 
 /*
  * Close the window
