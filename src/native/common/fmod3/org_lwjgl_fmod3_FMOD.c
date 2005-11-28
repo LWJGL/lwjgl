@@ -33,7 +33,7 @@
 #include "org_lwjgl_fmod3_FMOD.h"
 #include "extfmod3.h"
 
-static const char* VERSION = "0.97";
+static const char* VERSION = "0.98";
 
 /*
  * Class:     org_lwjgl_fmod3_FMOD
