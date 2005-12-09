@@ -1173,7 +1173,7 @@ public final class AL10 {
 	 * argument will have been updated accordingly.
 	 * </p>
 	 * @param source source to unqueue buffers from
-	 * @param buffers buffers to be unqueued
+	 * @param buffers IntBuffer containing list of names that were unqueued
 	 */
 	public static void alSourceUnqueueBuffers(int source, IntBuffer buffers) {
 		BufferChecks.checkDirect(buffers);
