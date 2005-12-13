@@ -32,34 +32,47 @@
 package org.lwjgl.opengl;
 
 public interface ARB_texture_rectangle {
-	/*
-	 * Accepted by the <cap> parameter of Enable, Disable and
-	 * IsEnabled; by the <pname> parameter of GetBooleanv, GetIntegerv,
-	 * GetFloatv and GetDoublev; and by the <target> parameter of
-	 * BindTexture, GetTexParameterfv, GetTexParameteriv,
-	 * TexParameterf, TexParameteri, TexParameterfv and TexParameteriv:
 
-	 * Accepted by the <target> parameter of GetTexImage,
-	 * GetTexLevelParameteriv, GetTexLevelParameterfv, TexImage2D,
-	 * CopyTexImage2D, TexSubImage2D and CopySubTexImage2D:
+	/*
+	Accepted by the <cap> parameter of Enable, Disable and IsEnabled;
+	by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv
+	and GetDoublev; and by the <target> parameter of BindTexture,
+	GetTexParameterfv, GetTexParameteriv, TexParameterf, TexParameteri,
+	TexParameterfv and TexParameteriv:
+	Accepted by the <target> parameter of GetTexImage,
+	GetTexLevelParameteriv, GetTexLevelParameterfv, TexImage2D,
+	CopyTexImage2D, TexSubImage2D and CopySubTexImage2D:
 	*/
 	int GL_TEXTURE_RECTANGLE_ARB = 0x84F5;
 
 	/*
-	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
-	 * GetFloatv and GetDoublev:
+	Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
+	GetFloatv and GetDoublev:
 	*/
 	int GL_TEXTURE_BINDING_RECTANGLE_ARB = 0x84F6;
 
 	/*
-	* Accepted by the <target> parameter of GetTexLevelParameteriv,
-	* GetTexLevelParameterfv, GetTexParameteriv and TexImage2D:
+	Accepted by the <target> parameter of GetTexLevelParameteriv,
+	GetTexLevelParameterfv, GetTexParameteriv and TexImage2D:
 	*/
 	int GL_PROXY_TEXTURE_RECTANGLE_ARB = 0x84F7;
 
 	/*
-	* Accepted by the <pname> parameter of GetBooleanv, GetDoublev,
-	* GetIntegerv and GetFloatv:
+	Accepted by the <pname> parameter of GetBooleanv, GetDoublev,
+	GetIntegerv and GetFloatv:
 	*/
 	int GL_MAX_RECTANGLE_TEXTURE_SIZE_ARB = 0x84F8;
+
+	/*
+	Returned by <type> parameter of GetActiveUniform when the location
+	<index> for program object <program> is of type sampler2DRect:
+	*/
+	int GL_SAMPLER_2D_RECT_ARB = 0x8B63;
+
+	/*
+	Returned by <type> parameter of GetActiveUniform when the location
+	<index> for program object <program> is of type sampler2DRectShadow:
+	*/
+	int GL_SAMPLER_2D_RECT_SHADOW_ARB = 0x8B64;
+
 }
