@@ -23,7 +23,6 @@ public final class EXTFramebufferObject {
 	 * Accepted by the &lt;internalformat&gt; parameter of
 	 * RenderbufferStorageEXT:
 	 */
-	public static final int GL_STENCIL_INDEX_EXT = 0x8d45;
 	public static final int GL_STENCIL_INDEX1_EXT = 0x8d46;
 	public static final int GL_STENCIL_INDEX4_EXT = 0x8d47;
 	public static final int GL_STENCIL_INDEX8_EXT = 0x8d48;
@@ -78,7 +77,6 @@ public final class EXTFramebufferObject {
 	public static final int GL_FRAMEBUFFER_COMPLETE_EXT = 0x8cd5;
 	public static final int GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT = 0x8cd6;
 	public static final int GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT = 0x8cd7;
-	public static final int GL_FRAMEBUFFER_INCOMPLETE_DUPLICATE_ATTACHMENT_EXT = 0x8cd8;
 	public static final int GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT = 0x8cd9;
 	public static final int GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT = 0x8cda;
 	public static final int GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT = 0x8cdb;
