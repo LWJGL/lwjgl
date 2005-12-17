@@ -52,7 +52,7 @@ import java.security.PrivilegedExceptionAction;
 public final class Sys {
 
   /** Current version of library */
-	public static final String VERSION = "0.98";
+	public static final String VERSION = "0.99";
 
 	/** The native library name */
 	private static final String LIBRARY_NAME = "lwjgl";
