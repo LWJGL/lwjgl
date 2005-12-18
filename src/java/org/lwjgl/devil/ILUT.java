@@ -120,6 +120,10 @@ public class ILUT {
 			throw new LWJGLException("Cannot create ILUT without having created IL instance");
 		}
 		
+		if(!ILU.isCreated()) {
+			throw new LWJGLException("Cannot create ILUT without having created ILU instance");
+		}		
+		
 		ILNative.createILUT();
 		created = true;
 	}
