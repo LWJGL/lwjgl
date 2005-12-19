@@ -52,7 +52,7 @@ import java.security.PrivilegedExceptionAction;
 public final class Sys {
 
   /** Current version of library */
-	public static final String VERSION = "0.99";
+	private static final String VERSION = "0.99";
 
 	/** The native library name */
 	private static final String LIBRARY_NAME = "lwjgl";
@@ -69,8 +69,8 @@ public final class Sys {
 			}
 		});
 		String native_version = implementation.getNativeLibraryVersion();
-		if (!native_version.equals(VERSION))
-			throw new LinkageError("Version mismatch: jar version is '" + VERSION +
+		if (!native_version.equals(getVersion()))
+			throw new LinkageError("Version mismatch: jar version is '" + getVersion() +
                              "', native libary version is '" + native_version + "'");
 		implementation.setDebug(LWJGLUtil.DEBUG);
 	}
@@ -108,6 +108,13 @@ public final class Sys {
 	private Sys() {
 	}
 
+	/**
+	 * Return the version of the core LWJGL libraries as a String.
+	 */
+	public static String getVersion() {
+		return VERSION;
+	}
+	
 	/**
 	 * Initialization. This is just a dummy method to trigger the static constructor.
 	 */
