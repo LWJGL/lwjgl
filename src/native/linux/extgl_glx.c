@@ -154,7 +154,7 @@ bool extgl_Open(JNIEnv *env) {
 	char buffer[BUFFER_SIZE];
 	if (lib_gl_handle != NULL)
 		return true;
-	lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
+	lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY);
 	if (lib_gl_handle == NULL) {
 		snprintf(buffer, BUFFER_SIZE, "Error loading libGL.so.1: %s", dlerror());
 		buffer[BUFFER_SIZE - 1] = '\0';
