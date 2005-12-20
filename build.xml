@@ -69,11 +69,13 @@
 	</fileset>
 	
 	<!-- Files to make Javadoc from -->
-	<fileset id="lwjgl.javadoc.fileset" dir="${lwjgl.src}/java">
+	<fileset id="lwjgl.javadoc.fileset" dir="${lwjgl.src}">
 		<include name="**/*.java" />
-		<exclude name="org/lwjgl/test/**" />
-		<exclude name="org/lwjgl/examples/**" />
-		<exclude name="org/lwjgl/util/generator/**" />
+		<exclude name="native/**" />
+		<exclude name="templates/**" />
+		<exclude name="java/org/lwjgl/test/**" />
+		<exclude name="java/org/lwjgl/examples/**" />
+		<exclude name="java/org/lwjgl/util/generator/**" />
 	</fileset>
 
 	<!-- Files to include in doc package -->
