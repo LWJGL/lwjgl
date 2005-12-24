@@ -32,8 +32,9 @@
 package org.lwjgl.opengl;
 
 public interface ARB_shading_language_100 {
+
 	/**
-     * Accepted by the <name> parameter of GetString:
-    */
+	 * Accepted by the &lt;name&gt; parameter of GetString:
+	 */
 	int GL_SHADING_LANGUAGE_VERSION_ARB = 0x8B8C;
 }

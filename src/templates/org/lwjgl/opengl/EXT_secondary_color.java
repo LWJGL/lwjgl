@@ -31,9 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 public interface EXT_secondary_color {
 	int GL_COLOR_SUM_EXT = 0x8458;
@@ -47,19 +47,18 @@ public interface EXT_secondary_color {
 	void glSecondaryColor3bEXT(byte red, byte green, byte blue);
 
 	void glSecondaryColor3fEXT(float red, float green, float blue);
-	
+
 	void glSecondaryColor3dEXT(double red, double green, double blue);
 
 	void glSecondaryColor3ubEXT(@GLubyte byte red, @GLubyte byte green, @GLubyte byte blue);
 
 	void glSecondaryColorPointerEXT(int size, @AutoType("pPointer") @GLenum int type, @GLsizei int stride,
-			@CachedReference
-			@BufferObject(BufferKind.ArrayVBO)
-			@Check
-			@Const
-			@GLbyte
-			@GLubyte
-			@GLfloat
-			@GLdouble
-			Buffer pPointer);
+	                                @CachedReference
+	                                @BufferObject(BufferKind.ArrayVBO)
+	                                @Check
+	                                @Const
+	                                @GLbyte
+	                                @GLubyte
+	                                @GLfloat
+	                                @GLdouble Buffer pPointer);
 }

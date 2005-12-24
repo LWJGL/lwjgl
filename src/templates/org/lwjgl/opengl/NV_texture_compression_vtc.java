@@ -33,13 +33,14 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
 
-@Extension(postfix="NV", className="NVTextureCompressionVTC")
+@Extension(postfix = "NV", className = "NVTextureCompressionVTC")
 public interface NV_texture_compression_vtc {
-	/*
-	 * Accepted by the <internalformat> parameter of TexImage3D and
-	 * CompressedTexImage3DARB and the <format> parameter of
+
+	/**
+	 * Accepted by the &lt;internalformat&gt; parameter of TexImage3D and
+	 * CompressedTexImage3DARB and the &lt;format&gt; parameter of
 	 * CompressedTexSubImage2DARB:
-	*/
+	 */
 	int GL_COMPRESSED_RGB_S3TC_DXT1_EXT = 0x83F0;
 	int GL_COMPRESSED_RGBA_S3TC_DXT1_EXT = 0x83F1;
 	int GL_COMPRESSED_RGBA_S3TC_DXT3_EXT = 0x83F2;

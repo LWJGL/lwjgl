@@ -32,4 +32,5 @@
 package org.lwjgl.opengl;
 
 public interface ARB_fragment_program_shadow {
+
 }

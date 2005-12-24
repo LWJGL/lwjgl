@@ -32,9 +32,10 @@
 package org.lwjgl.opengl;
 
 public interface NV_fragment_program2 {
-	/*
-	 * Accepted by the <pname> parameter of GetProgramivARB:
-	*/
+
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetProgramivARB:
+	 */
 	int GL_MAX_PROGRAM_EXEC_INSTRUCTIONS_NV = 0x88F4;
 	int GL_MAX_PROGRAM_CALL_DEPTH_NV = 0x88F5;
 	int GL_MAX_PROGRAM_IF_DEPTH_NV = 0x88F6;

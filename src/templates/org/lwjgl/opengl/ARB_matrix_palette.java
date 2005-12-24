@@ -31,14 +31,12 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
-
 import org.lwjgl.util.generator.*;
 
+import java.nio.*;
+
 public interface ARB_matrix_palette {
+
 	int GL_MATRIX_PALETTE_ARB = 0x8840;
 	int GL_MAX_MATRIX_PALETTE_STACK_DEPTH_ARB = 0x8841;
 	int GL_MAX_PALETTE_MATRICES_ARB = 0x8842;
@@ -53,19 +51,20 @@ public interface ARB_matrix_palette {
 	void glCurrentPaletteMatrixARB(int index);
 
 	void glMatrixIndexPointerARB(int size, @AutoType("pPointer") @GLenum int type, @GLsizei int stride,
-			@CachedReference
-			@BufferObject(BufferKind.ArrayVBO)
-			@Check
-			@Const
-			@GLubyte
-			@GLushort
-			@GLuint
-			Buffer pPointer);
+	                             @CachedReference
+	                             @BufferObject(BufferKind.ArrayVBO)
+	                             @Check
+	                             @Const
+	                             @GLubyte
+	                             @GLushort
+	                             @GLuint Buffer pPointer);
 
 	@StripPostfix("pIndices")
 	void glMatrixIndexubvARB(@AutoSize("pIndices") int size, @GLubyte ByteBuffer pIndices);
+
 	@StripPostfix("pIndices")
 	void glMatrixIndexusvARB(@AutoSize("pIndices") int size, @GLushort ShortBuffer pIndices);
+
 	@StripPostfix("pIndices")
 	void glMatrixIndexuivARB(@AutoSize("pIndices") int size, @GLuint IntBuffer pIndices);
 }

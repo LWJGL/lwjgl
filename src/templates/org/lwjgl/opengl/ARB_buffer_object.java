@@ -35,10 +35,11 @@ import org.lwjgl.util.generator.*;
 
 import java.nio.*;
 
-@Extension(postfix="ARB", isFinal=false)
+@Extension(postfix = "ARB", isFinal = false)
 public interface ARB_buffer_object {
-	/*
-	 * Accepted by the <usage> parameter of BufferDataARB:
+
+	/**
+	 * Accepted by the &lt;usage&gt; parameter of BufferDataARB:
 	 */
 	int GL_STREAM_DRAW_ARB = 0x88E0;
 	int GL_STREAM_READ_ARB = 0x88E1;
@@ -50,57 +51,57 @@ public interface ARB_buffer_object {
 	int GL_DYNAMIC_READ_ARB = 0x88E9;
 	int GL_DYNAMIC_COPY_ARB = 0x88EA;
 
-	/*
-	 * Accepted by the <access> parameter of MapBufferARB:
-	*/
+	/**
+	 * Accepted by the &lt;access&gt; parameter of MapBufferARB:
+	 */
 	int GL_READ_ONLY_ARB = 0x88B8;
 	int GL_WRITE_ONLY_ARB = 0x88B9;
 	int GL_READ_WRITE_ARB = 0x88BA;
 
-	/*
-	 * Accepted by the <pname> parameter of GetBufferParameterivARB:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBufferParameterivARB:
+	 */
 	int GL_BUFFER_SIZE_ARB = 0x8764;
 	int GL_BUFFER_USAGE_ARB = 0x8765;
 	int GL_BUFFER_ACCESS_ARB = 0x88BB;
 	int GL_BUFFER_MAPPED_ARB = 0x88BC;
 	int GL_BUFFER_MAP_POINTER_ARB = 0x88BD;
 
-	@Code(	"		StateTracker.bindBuffer(target, buffer);")
+	@Code("		StateTracker.bindBuffer(target, buffer);")
 	void glBindBufferARB(@GLenum int target, @GLuint int buffer);
-	@Code(	"		StateTracker.deleteBuffers(buffers);")
+
+	@Code("		StateTracker.deleteBuffers(buffers);")
 	void glDeleteBuffersARB(@AutoSize("buffers") @GLsizei int n, @Const @GLuint IntBuffer buffers);
+
 	void glGenBuffersARB(@AutoSize("buffers") int n, @GLuint IntBuffer buffers);
+
 	boolean glIsBufferARB(@GLuint int buffer);
 
 	@GenerateAutos
 	void glBufferDataARB(@GLenum int target, @AutoSize("data") @GLsizeiptrARB int size,
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer data, @GLenum int usage);
+	                     @Const
+	                     @GLbyte
+	                     @GLshort
+	                     @GLint
+	                     @GLfloat
+	                     @GLdouble Buffer data, @GLenum int usage);
 
 	void glBufferSubDataARB(@GLenum int target, @GLintptrARB int offset, @AutoSize("data") @GLsizeiptrARB int size,
-			@Check
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer data);
+	                        @Check
+	                        @Const
+	                        @GLbyte
+	                        @GLshort
+	                        @GLint
+	                        @GLfloat
+	                        @GLdouble Buffer data);
 
 	void glGetBufferSubDataARB(@GLenum int target, @GLintptrARB int offset, @AutoSize("data") @GLsizeiptrARB int size,
-			@Check
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer data);
+	                           @Check
+	                           @GLbyte
+	                           @GLshort
+	                           @GLint
+	                           @GLfloat
+	                           @GLdouble Buffer data);
 
 	/**
 	 * glMapBufferARB maps a gl vertex buffer buffer to a ByteBuffer. The oldBuffer argument can be null,
@@ -116,7 +117,8 @@ public interface ARB_buffer_object {
 	 * @return A ByteBuffer representing the mapped buffer memory.
 	 */
 	@CachedResult
-	@GLvoid ByteBuffer glMapBufferARB(@GLenum int target, @GLenum int access);
+	@GLvoid
+	ByteBuffer glMapBufferARB(@GLenum int target, @GLenum int access);
 
 	boolean glUnmapBufferARB(@GLenum int target);
 

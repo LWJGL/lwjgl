@@ -7,11 +7,24 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public class NVProgram {
+	/**
+	 *         Accepted by the &lt;pname&gt; parameter of GetProgramivNV:
+	 */
 	public static final int GL_PROGRAM_TARGET_NV = 0x8646;
 	public static final int GL_PROGRAM_LENGTH_NV = 0x8627;
 	public static final int GL_PROGRAM_RESIDENT_NV = 0x8647;
+	/**
+	 *         Accepted by the &lt;pname&gt; parameter of GetProgramStringNV:
+	 */
 	public static final int GL_PROGRAM_STRING_NV = 0x8628;
+	/**
+	 *         Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 *         GetFloatv, and GetDoublev:
+	 */
 	public static final int GL_PROGRAM_ERROR_POSITION_NV = 0x864b;
+	/**
+	 *         Accepted by the &lt;name&gt; parameter of GetString:
+	 */
 	public static final int GL_PROGRAM_ERROR_STRING_NV = 0x8874;
 
 

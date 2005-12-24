@@ -7,8 +7,17 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class GL20 {
+	/**
+	 * Accepted by the &lt;name&gt; parameter of GetString:
+	 */
 	public static final int GL_SHADING_LANGUAGE_VERSION = 0x8b8c;
+	/**
+	 * Accepted by the &lt;pname&gt; argument of GetInteger:
+	 */
 	public static final int GL_CURRENT_PROGRAM = 0x8b8d;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetObjectParameter{fi}vARB:
+	 */
 	public static final int GL_SHADER_TYPE = 0x8b4f;
 	public static final int GL_DELETE_STATUS = 0x8b80;
 	public static final int GL_COMPILE_STATUS = 0x8b81;
@@ -21,7 +30,13 @@ public final class GL20 {
 	public static final int GL_ACTIVE_ATTRIBUTES = 0x8b89;
 	public static final int GL_ACTIVE_ATTRIBUTE_MAX_LENGTH = 0x8b8a;
 	public static final int GL_SHADER_SOURCE_LENGTH = 0x8b88;
+	/**
+	 * Returned by the &lt;params&gt; parameter of GetObjectParameter{fi}vARB:
+	 */
 	public static final int GL_SHADER_OBJECT = 0x8b48;
+	/**
+	 * Returned by the &lt;type&gt; parameter of GetActiveUniformARB:
+	 */
 	public static final int GL_FLOAT_VEC2 = 0x8b50;
 	public static final int GL_FLOAT_VEC3 = 0x8b51;
 	public static final int GL_FLOAT_VEC4 = 0x8b52;
@@ -41,7 +56,15 @@ public final class GL20 {
 	public static final int GL_SAMPLER_CUBE = 0x8b60;
 	public static final int GL_SAMPLER_1D_SHADOW = 0x8b61;
 	public static final int GL_SAMPLER_2D_SHADOW = 0x8b62;
+	/**
+	 * Accepted by the &lt;shaderType&gt; argument of CreateShader and
+	 * returned by the &lt;params&gt; parameter of GetShader{if}v:
+	 */
 	public static final int GL_VERTEX_SHADER = 0x8b31;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 * GetFloatv, and GetDoublev:
+	 */
 	public static final int GL_MAX_VERTEX_UNIFORM_COMPONENTS = 0x8b4a;
 	public static final int GL_MAX_VARYING_FLOATS = 0x8b4b;
 	public static final int GL_MAX_VERTEX_ATTRIBS = 0x8869;
@@ -49,18 +72,45 @@ public final class GL20 {
 	public static final int GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS = 0x8b4c;
 	public static final int GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS = 0x8b4d;
 	public static final int GL_MAX_TEXTURE_COORDS = 0x8871;
+	/**
+	 * Accepted by the &lt;cap&gt; parameter of Disable, Enable, and IsEnabled, and
+	 * by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv, and
+	 * GetDoublev:
+	 */
 	public static final int GL_VERTEX_PROGRAM_POINT_SIZE = 0x8642;
 	public static final int GL_VERTEX_PROGRAM_TWO_SIDE = 0x8643;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetVertexAttrib{dfi}vARB:
+	 */
 	public static final int GL_VERTEX_ATTRIB_ARRAY_ENABLED = 0x8622;
 	public static final int GL_VERTEX_ATTRIB_ARRAY_SIZE = 0x8623;
 	public static final int GL_VERTEX_ATTRIB_ARRAY_STRIDE = 0x8624;
 	public static final int GL_VERTEX_ATTRIB_ARRAY_TYPE = 0x8625;
 	public static final int GL_VERTEX_ATTRIB_ARRAY_NORMALIZED = 0x886a;
 	public static final int GL_CURRENT_VERTEX_ATTRIB = 0x8626;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetVertexAttribPointervARB:
+	 */
 	public static final int GL_VERTEX_ATTRIB_ARRAY_POINTER = 0x8645;
+	/**
+	 * Accepted by the &lt;shaderType&gt; argument of CreateShader and
+	 * returned by the &lt;params&gt; parameter of GetShader{fi}vARB:
+	 */
 	public static final int GL_FRAGMENT_SHADER = 0x8b30;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 * GetFloatv, and GetDoublev:
+	 */
 	public static final int GL_MAX_FRAGMENT_UNIFORM_COMPONENTS = 0x8b49;
+	/**
+	 * Accepted by the &lt;target&gt; parameter of Hint and the &lt;pname&gt; parameter of
+	 * GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev:
+	 */
 	public static final int GL_FRAGMENT_SHADER_DERIVATIVE_HINT = 0x8b8b;
+	/**
+	 * Accepted by the &lt;pname&gt; parameters of GetIntegerv, GetFloatv,
+	 * and GetDoublev:
+	 */
 	public static final int GL_MAX_DRAW_BUFFERS = 0x8824;
 	public static final int GL_DRAW_BUFFER0 = 0x8825;
 	public static final int GL_DRAW_BUFFER1 = 0x8826;
@@ -78,9 +128,27 @@ public final class GL20 {
 	public static final int GL_DRAW_BUFFER13 = 0x8832;
 	public static final int GL_DRAW_BUFFER14 = 0x8833;
 	public static final int GL_DRAW_BUFFER15 = 0x8834;
+	/**
+	 * Accepted by the &lt;cap&gt; parameter of Enable, Disable, and IsEnabled, by
+	 * the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv, and
+	 * GetDoublev, and by the &lt;target&gt; parameter of TexEnvi, TexEnviv,
+	 * TexEnvf, TexEnvfv, GetTexEnviv, and GetTexEnvfv:
+	 */
 	public static final int GL_POINT_SPRITE = 0x8861;
+	/**
+	 * When the &lt;target&gt; parameter of TexEnvf, TexEnvfv, TexEnvi, TexEnviv,
+	 * GetTexEnvfv, or GetTexEnviv is POINT_SPRITE, then the value of
+	 * &lt;pname&gt; may be:
+	 */
 	public static final int GL_COORD_REPLACE = 0x8862;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of PointParameter{if}vARB, and the
+	 * &lt;pname&gt; of Get:
+	 */
 	public static final int GL_POINT_SPRITE_COORD_ORIGIN = 0x8ca0;
+	/**
+	 * Accepted by the &lt;param&gt; parameter of PointParameter{if}vARB:
+	 */
 	public static final int GL_LOWER_LEFT = 0x8ca1;
 	public static final int GL_UPPER_LEFT = 0x8ca2;
 	public static final int GL_STENCIL_BACK_FUNC = 0x8800;

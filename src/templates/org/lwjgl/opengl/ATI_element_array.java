@@ -31,9 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 public interface ATI_element_array {
 	int GL_ELEMENT_ARRAY_ATI = 0x8768;
@@ -41,14 +41,13 @@ public interface ATI_element_array {
 	int GL_ELEMENT_ARRAY_POINTER_ATI = 0x876A;
 
 	void glElementPointerATI(@AutoType("pPointer") @GLenum int type,
-			@CachedReference
-			@BufferObject(BufferKind.ArrayVBO)
-			@Check
-			@Const
-			@GLubyte
-			@GLushort
-			@GLuint
-			Buffer pPointer);
+	                         @CachedReference
+	                         @BufferObject(BufferKind.ArrayVBO)
+	                         @Check
+	                         @Const
+	                         @GLubyte
+	                         @GLushort
+	                         @GLuint Buffer pPointer);
 
 	void glDrawElementArrayATI(@GLenum int mode, @GLsizei int count);
 

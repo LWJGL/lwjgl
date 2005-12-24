@@ -31,27 +31,28 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.IntBuffer;
-
 import org.lwjgl.util.generator.*;
 
+import java.nio.*;
+
 public interface ARB_occlusion_query {
-	/*
-	 * Accepted by the <target> parameter of BeginQueryARB, EndQueryARB,
+
+	/**
+	 * Accepted by the &lt;target&gt; parameter of BeginQueryARB, EndQueryARB,
 	 * and GetQueryivARB:
-	*/
+	 */
 	int GL_SAMPLES_PASSED_ARB = 0x8914;
 
-	/*
-	 * Accepted by the <pname> parameter of GetQueryivARB:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetQueryivARB:
+	 */
 	int GL_QUERY_COUNTER_BITS_ARB = 0x8864;
 	int GL_CURRENT_QUERY_ARB = 0x8865;
 
-	/*
-	 * Accepted by the <pname> parameter of GetQueryObjectivARB and
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetQueryObjectivARB and
 	 * GetQueryObjectuivARB:
-	*/
+	 */
 	int GL_QUERY_RESULT_ARB = 0x8866;
 	int GL_QUERY_RESULT_AVAILABLE_ARB = 0x8867;
 

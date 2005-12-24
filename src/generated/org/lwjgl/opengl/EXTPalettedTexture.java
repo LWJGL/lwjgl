@@ -7,12 +7,20 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class EXTPalettedTexture {
+	/**
+	 * Accepted by the internalformat parameter of TexImage1D, TexImage2D and
+	 * TexImage3DEXT:
+	 */
 	public static final int GL_COLOR_INDEX1_EXT = 0x80e2;
 	public static final int GL_COLOR_INDEX2_EXT = 0x80e3;
 	public static final int GL_COLOR_INDEX4_EXT = 0x80e4;
 	public static final int GL_COLOR_INDEX8_EXT = 0x80e5;
 	public static final int GL_COLOR_INDEX12_EXT = 0x80e6;
 	public static final int GL_COLOR_INDEX16_EXT = 0x80e7;
+	/**
+	 * Accepted by the pname parameter of GetColorTableParameterivEXT and
+	 * GetColorTableParameterfvEXT:
+	 */
 	public static final int GL_COLOR_TABLE_FORMAT_EXT = 0x80d8;
 	public static final int GL_COLOR_TABLE_WIDTH_EXT = 0x80d9;
 	public static final int GL_COLOR_TABLE_RED_SIZE_EXT = 0x80da;
@@ -21,6 +29,9 @@ public final class EXTPalettedTexture {
 	public static final int GL_COLOR_TABLE_ALPHA_SIZE_EXT = 0x80dd;
 	public static final int GL_COLOR_TABLE_LUMINANCE_SIZE_EXT = 0x80de;
 	public static final int GL_COLOR_TABLE_INTENSITY_SIZE_EXT = 0x80df;
+	/**
+	 * Accepted by the value parameter of GetTexLevelParameter{if}v:
+	 */
 	public static final int GL_TEXTURE_INDEX_SIZE_EXT = 0x80ed;
 
 	private EXTPalettedTexture() {

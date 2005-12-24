@@ -31,16 +31,12 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.DoubleBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
-
 import org.lwjgl.util.generator.*;
 
+import java.nio.*;
+
 public interface ARB_vertex_blend {
+
 	int GL_MAX_VERTEX_UNITS_ARB = 0x86A4;
 	int GL_ACTIVE_VERTEX_UNITS_ARB = 0x86A5;
 	int GL_WEIGHT_SUM_UNITY_ARB = 0x86A6;
@@ -86,36 +82,41 @@ public interface ARB_vertex_blend {
 
 	@StripPostfix("pWeights")
 	void glWeightbvARB(@AutoSize("pWeights") int size, ByteBuffer pWeights);
+
 	@StripPostfix("pWeights")
 	void glWeightsvARB(@AutoSize("pWeights") int size, ShortBuffer pWeights);
+
 	@StripPostfix("pWeights")
 	void glWeightivARB(@AutoSize("pWeights") int size, IntBuffer pWeights);
+
 	@StripPostfix("pWeights")
 	void glWeightfvARB(@AutoSize("pWeights") int size, FloatBuffer pWeights);
+
 	@StripPostfix("pWeights")
 	void glWeightdvARB(@AutoSize("pWeights") int size, DoubleBuffer pWeights);
 
 	@StripPostfix("pWeights")
 	void glWeightubvARB(@AutoSize("pWeights") int size, @GLubyte ByteBuffer pWeights);
+
 	@StripPostfix("pWeights")
 	void glWeightusvARB(@AutoSize("pWeights") int size, @GLushort ShortBuffer pWeights);
+
 	@StripPostfix("pWeights")
 	void glWeightuivARB(@AutoSize("pWeights") int size, @GLuint IntBuffer pWeights);
 
 	void glWeightPointerARB(int size, @AutoType("pPointer") @GLenum int type, @GLsizei int stride,
-			@CachedReference
-			@BufferObject(BufferKind.ArrayVBO)
-			@Check
-			@Const
-			@GLbyte
-			@GLubyte
-			@GLshort
-			@GLushort
-			@GLint
-			@GLuint
-			@GLfloat
-			@GLdouble
-			Buffer pPointer);
+	                        @CachedReference
+	                        @BufferObject(BufferKind.ArrayVBO)
+	                        @Check
+	                        @Const
+	                        @GLbyte
+	                        @GLubyte
+	                        @GLshort
+	                        @GLushort
+	                        @GLint
+	                        @GLuint
+	                        @GLfloat
+	                        @GLdouble Buffer pPointer);
 
 	void glVertexBlendARB(int count);
 }

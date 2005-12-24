@@ -34,8 +34,19 @@ package org.lwjgl.opengl;
 import org.lwjgl.util.generator.*;
 
 public interface EXT_stencil_clear_tag {
-	int GL_STENCIL_TAG_BITS_EXT              = 0x88F2;
-    int GL_STENCIL_CLEAR_TAG_VALUE_EXT       = 0x88F3;
 
+	/**
+	 Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 GetFloatv, and GetDoublev.
+	 */
+	int GL_STENCIL_TAG_BITS_EXT = 0x88F2;
+	int GL_STENCIL_CLEAR_TAG_VALUE_EXT = 0x88F3;
+
+	/**
+	 Controls the stencil clear tag state. stencilTagBits is a count of
+	 the number of most-significant stencil buffer bits involved in the
+	 stencil clear tag update.
+	 */
 	void glStencilClearTagEXT(@GLsizei int stencilTagBits, @GLuint int stencilClearTag);
+
 }

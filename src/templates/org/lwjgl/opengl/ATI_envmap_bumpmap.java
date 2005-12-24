@@ -31,10 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 public interface ATI_envmap_bumpmap {
 	int GL_BUMP_ROT_MATRIX_ATI = 0x8775;
@@ -48,11 +47,13 @@ public interface ATI_envmap_bumpmap {
 
 	@StripPostfix("param")
 	void glTexBumpParameterfvATI(@GLenum int pname, @Check("4") @Const FloatBuffer param);
+
 	@StripPostfix("param")
 	void glTexBumpParameterivATI(@GLenum int pname, @Check("4") @Const IntBuffer param);
 
 	@StripPostfix("param")
 	void glGetTexBumpParameterfvATI(@GLenum int pname, @Check("4") FloatBuffer param);
+
 	@StripPostfix("param")
 	void glGetTexBumpParameterivATI(@GLenum int pname, @Check("4") IntBuffer param);
 }

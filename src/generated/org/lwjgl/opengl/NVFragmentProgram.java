@@ -7,7 +7,19 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class NVFragmentProgram extends NVProgram {
+	/**
+	 * Accepted by the &lt;cap&gt; parameter of Disable, Enable, and IsEnabled, by the
+	 * &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev,
+	 * and by the &lt;target&gt; parameter of BindProgramNV, LoadProgramNV,
+	 * ProgramLocalParameter4dARB, ProgramLocalParameter4dvARB,
+	 * ProgramLocalParameter4fARB, ProgramLocalParameter4fvARB,
+	 * GetProgramLocalParameterdvARB, and GetProgramLocalParameterfvARB:
+	 */
 	public static final int GL_FRAGMENT_PROGRAM_NV = 0x8870;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv,
+	 * and GetDoublev:
+	 */
 	public static final int GL_MAX_TEXTURE_COORDS_NV = 0x8871;
 	public static final int GL_MAX_TEXTURE_IMAGE_UNITS_NV = 0x8872;
 	public static final int GL_FRAGMENT_PROGRAM_BINDING_NV = 0x8873;

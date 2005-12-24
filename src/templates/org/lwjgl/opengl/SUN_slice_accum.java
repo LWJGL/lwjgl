@@ -33,9 +33,9 @@ package org.lwjgl.opengl;
 
 public interface SUN_slice_accum {
 
-    /*
-     * Accepted by the <op> parameter of Accum,
-     */
-    int GL_SLICE_ACCUM_SUN = 0x85CC;
+	/**
+	 * Accepted by the &lt;op&gt; parameter of Accum,
+	 */
+	int GL_SLICE_ACCUM_SUN = 0x85CC;
 
 }

@@ -31,19 +31,18 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 public interface EXT_draw_range_elements {
 	int GL_MAX_ELEMENTS_VERTICES_EXT = 0x80E8;
 	int GL_MAX_ELEMENTS_INDICES_EXT = 0x80E9;
 
 	void glDrawRangeElementsEXT(@GLenum int mode, @GLuint int start, @GLuint int end, @AutoSize("pIndices") @GLsizei int count, @AutoType("pIndices") @GLenum int type,
-			@BufferObject(BufferKind.ElementVBO)
-			@Const
-			@GLubyte
-			@GLushort
-			@GLuint
-			Buffer pIndices);
+	                            @BufferObject(BufferKind.ElementVBO)
+	                            @Const
+	                            @GLubyte
+	                            @GLushort
+	                            @GLuint Buffer pIndices);
 }

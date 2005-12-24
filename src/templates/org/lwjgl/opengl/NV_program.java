@@ -31,34 +31,33 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-
 import org.lwjgl.util.generator.*;
 
-@Extension(postfix="NV", isFinal=false)
+import java.nio.*;
+
+@Extension(postfix = "NV", isFinal = false)
 public interface NV_program {
-	/*
-	   Accepted by the <pname> parameter of GetProgramivNV:
+
+	/**
+	 Accepted by the &lt;pname&gt; parameter of GetProgramivNV:
 	 */
 	int GL_PROGRAM_TARGET_NV = 0x8646;
 	int GL_PROGRAM_LENGTH_NV = 0x8627;
 	int GL_PROGRAM_RESIDENT_NV = 0x8647;
 
-	/*
-	   Accepted by the <pname> parameter of GetProgramStringNV:
+	/**
+	 Accepted by the &lt;pname&gt; parameter of GetProgramStringNV:
 	 */
 	int GL_PROGRAM_STRING_NV = 0x8628;
 
-	/*
-	   Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
-	   GetFloatv, and GetDoublev:
+	/**
+	 Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 GetFloatv, and GetDoublev:
 	 */
 	int GL_PROGRAM_ERROR_POSITION_NV = 0x864B;
 
-	/*
-	   Accepted by the <name> parameter of GetString:
+	/**
+	 Accepted by the &lt;name&gt; parameter of GetString:
 	 */
 	int GL_PROGRAM_ERROR_STRING_NV = 0x8874;
 
@@ -67,6 +66,7 @@ public interface NV_program {
 	void glBindProgramNV(@GLenum int target, @GLuint int programID);
 
 	void glDeleteProgramsNV(@AutoSize("programs") @GLsizei int n, @Const @GLuint IntBuffer programs);
+
 	void glGenProgramsNV(@AutoSize("programs") @GLsizei int n, @GLuint IntBuffer programs);
 
 	@StripPostfix("params")
@@ -76,15 +76,13 @@ public interface NV_program {
 
 	boolean glIsProgramNV(@GLuint int programID);
 
-	@Code(	"		if (programIDs.remaining() != programResidences.remaining())\n" +
-			"			throw new IllegalArgumentException(\"programIDs.remaining() != programResidences.remaining()\");")
+	@Code("		if (programIDs.remaining() != programResidences.remaining())\n" +
+	      "			throw new IllegalArgumentException(\"programIDs.remaining() != programResidences.remaining()\");")
 	boolean glAreProgramsResidentNV(@AutoSize("programIDs") @GLsizei int n,
-			@Const
-			@GLuint
-			IntBuffer programIDs,
-			@Check
-			@GLboolean
-			ByteBuffer programResidences);
+	                                @Const
+	                                @GLuint IntBuffer programIDs,
+	                                @Check
+	                                @GLboolean ByteBuffer programResidences);
 
 	void glRequestResidentProgramsNV(@AutoSize("programIDs") @GLsizei int n, @GLuint IntBuffer programIDs);
 }

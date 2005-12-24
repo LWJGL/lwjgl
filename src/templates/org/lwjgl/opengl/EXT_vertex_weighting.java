@@ -31,9 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 public interface EXT_vertex_weighting {
 	int GL_MODELVIEW0_STACK_DEPTH_EXT = 0x0BA3;
@@ -53,10 +53,9 @@ public interface EXT_vertex_weighting {
 	void glVertexWeightfEXT(float weight);
 
 	void glVertexWeightPointerEXT(@GLsizei int size, @AutoType("pPointer") @GLenum int type, @GLsizei int stride,
-			@CachedReference
-			@BufferObject(BufferKind.ArrayVBO)
-			@Check
-			@Const
-			@GLfloat
-			Buffer pPointer);
+	                              @CachedReference
+	                              @BufferObject(BufferKind.ArrayVBO)
+	                              @Check
+	                              @Const
+	                              @GLfloat Buffer pPointer);
 }

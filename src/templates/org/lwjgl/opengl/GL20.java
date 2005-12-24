@@ -40,23 +40,23 @@ public interface GL20 {
 	// ----------------------[ ARB_shading_language_100 ]----------------------
 	// ------------------------------------------------------------------
 
-	/*
-	* Accepted by the <name> parameter of GetString:
-	*/
+	/**
+	 * Accepted by the &lt;name&gt; parameter of GetString:
+	 */
 	int GL_SHADING_LANGUAGE_VERSION = 0x8B8C;
 
 	// ------------------------------------------------------------------
 	// ----------------------[ ARB_shader_objects ]----------------------
 	// ------------------------------------------------------------------
 
-	/*
-	* Accepted by the <pname> argument of GetInteger:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; argument of GetInteger:
+	 */
 	int GL_CURRENT_PROGRAM = 0x8B8D;
 
-	/*
-	* Accepted by the <pname> parameter of GetObjectParameter{fi}vARB:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetObjectParameter{fi}vARB:
+	 */
 	int GL_SHADER_TYPE = 0x8B4F;
 	int GL_DELETE_STATUS = 0x8B80;
 	int GL_COMPILE_STATUS = 0x8B81;
@@ -70,14 +70,14 @@ public interface GL20 {
 	int GL_ACTIVE_ATTRIBUTE_MAX_LENGTH = 0x8B8A;
 	int GL_SHADER_SOURCE_LENGTH = 0x8B88;
 
-	/*
-	* Returned by the <params> parameter of GetObjectParameter{fi}vARB:
-	*/
+	/**
+	 * Returned by the &lt;params&gt; parameter of GetObjectParameter{fi}vARB:
+	 */
 	int GL_SHADER_OBJECT = 0x8B48;
 
-	/*
-	* Returned by the <type> parameter of GetActiveUniformARB:
-	*/
+	/**
+	 * Returned by the &lt;type&gt; parameter of GetActiveUniformARB:
+	 */
 	int GL_FLOAT_VEC2 = 0x8B50;
 	int GL_FLOAT_VEC3 = 0x8B51;
 	int GL_FLOAT_VEC4 = 0x8B52;
@@ -107,16 +107,14 @@ public interface GL20 {
 	 * @param string
 	 */
 	void glShaderSource(@GLuint int shader, @Constant("1") @GLsizei int count,
-			@Indirect
-			@Check
-			@Const
-			@GLchar
-			ByteBuffer string,
-			@AutoSize("string")
-			@Indirect
-			@Const
-			@GLint
-			int length);
+	                    @Indirect
+	                    @Check
+	                    @Const
+	                    @GLchar ByteBuffer string,
+	                    @AutoSize("string")
+	                    @Indirect
+	                    @Const
+	                    @GLint int length);
 
 	int glCreateShader(@GLuint int type);
 
@@ -160,31 +158,39 @@ public interface GL20 {
 
 	@StripPostfix("values")
 	void glUniform1fv(int location, @AutoSize("values") @GLsizei int count, FloatBuffer values);
+
 	@StripPostfix("values")
-	void glUniform2fv(int location, @AutoSize(value="values", expression=" >> 1") @GLsizei int count, FloatBuffer values);
+	void glUniform2fv(int location, @AutoSize(value = "values", expression = " >> 1") @GLsizei int count, FloatBuffer values);
+
 	@StripPostfix("values")
-	void glUniform3fv(int location, @AutoSize(value="values", expression=" / 3") @GLsizei int count, FloatBuffer values);
+	void glUniform3fv(int location, @AutoSize(value = "values", expression = " / 3") @GLsizei int count, FloatBuffer values);
+
 	@StripPostfix("values")
-	void glUniform4fv(int location, @AutoSize(value="values", expression=" >> 2") @GLsizei int count, FloatBuffer values);
+	void glUniform4fv(int location, @AutoSize(value = "values", expression = " >> 2") @GLsizei int count, FloatBuffer values);
 
 	@StripPostfix("values")
 	void glUniform1iv(int location, @AutoSize("values") @GLsizei int count, IntBuffer values);
+
 	@StripPostfix("values")
-	void glUniform2iv(int location, @AutoSize(value="values", expression=" >> 1") @GLsizei int count, IntBuffer values);
+	void glUniform2iv(int location, @AutoSize(value = "values", expression = " >> 1") @GLsizei int count, IntBuffer values);
+
 	@StripPostfix("values")
-	void glUniform3iv(int location, @AutoSize(value="values", expression=" / 3") @GLsizei int count, IntBuffer values);
+	void glUniform3iv(int location, @AutoSize(value = "values", expression = " / 3") @GLsizei int count, IntBuffer values);
+
 	@StripPostfix("values")
-	void glUniform4iv(int location, @AutoSize(value="values", expression=" >> 2") @GLsizei int count, IntBuffer values);
+	void glUniform4iv(int location, @AutoSize(value = "values", expression = " >> 2") @GLsizei int count, IntBuffer values);
 
 	@StripPostfix("matrices")
-	void glUniformMatrix2fv(int location, @AutoSize(value="matrices", expression=" >> 2") @GLsizei int count,
-			boolean transpose, FloatBuffer matrices);
+	void glUniformMatrix2fv(int location, @AutoSize(value = "matrices", expression = " >> 2") @GLsizei int count,
+	                        boolean transpose, FloatBuffer matrices);
+
 	@StripPostfix("matrices")
-	void glUniformMatrix3fv(int location, @AutoSize(value="matrices", expression=" / (3 * 3)") @GLsizei int count,
-			boolean transpose, FloatBuffer matrices);
+	void glUniformMatrix3fv(int location, @AutoSize(value = "matrices", expression = " / (3 * 3)") @GLsizei int count,
+	                        boolean transpose, FloatBuffer matrices);
+
 	@StripPostfix("matrices")
-	void glUniformMatrix4fv(int location, @AutoSize(value="matrices", expression=" >> 4") @GLsizei int count,
-			boolean transpose, FloatBuffer matrices);
+	void glUniformMatrix4fv(int location, @AutoSize(value = "matrices", expression = " >> 4") @GLsizei int count,
+	                        boolean transpose, FloatBuffer matrices);
 
 	@StripPostfix("params")
 	void glGetShaderiv(@GLuint int shader, @GLenum int pname, @Check IntBuffer params);
@@ -193,25 +199,19 @@ public interface GL20 {
 	void glGetProgramiv(@GLuint int program, @GLenum int pname, @Check IntBuffer params);
 
 	void glGetShaderInfoLog(@GLuint int shader, @AutoSize("infoLog") @GLsizei int maxLength,
-			@GLsizei
-			@Check(value="1", canBeNull=true)
-			IntBuffer length,
-			@GLchar
-			ByteBuffer infoLog);
+	                        @GLsizei
+	                        @Check(value = "1", canBeNull = true) IntBuffer length,
+	                        @GLchar ByteBuffer infoLog);
 
 	void glGetProgramInfoLog(@GLuint int program, @AutoSize("infoLog") @GLsizei int maxLength,
-			@GLsizei
-			@Check(value="1", canBeNull=true)
-			IntBuffer length,
-			@GLchar
-			ByteBuffer infoLog);
+	                         @GLsizei
+	                         @Check(value = "1", canBeNull = true) IntBuffer length,
+	                         @GLchar ByteBuffer infoLog);
 
 	void glGetAttachedShaders(@GLuint int program, @AutoSize("shaders") @GLsizei int maxCount,
-			@GLsizei
-			@Check(value="1", canBeNull=true)
-			IntBuffer count,
-			@GLuint
-			IntBuffer shaders);
+	                          @GLsizei
+	                          @Check(value = "1", canBeNull = true) IntBuffer count,
+	                          @GLuint IntBuffer shaders);
 
 	/**
 	 * Returns the location of the uniform with the specified name. The ByteBuffer should contain the uniform name as a
@@ -225,29 +225,24 @@ public interface GL20 {
 	int glGetUniformLocation(@GLuint int program, @NullTerminated @Check("1") @Const @GLchar ByteBuffer name);
 
 	void glGetActiveUniform(@GLuint int program, @GLuint int index, @AutoSize("name") @GLsizei int maxLength,
-			@Check(value="1", canBeNull=true)
-			@GLsizei
-			IntBuffer length,
-			@Check
-			@GLsizei
-			IntBuffer size,
-			@Check
-			@GLenum
-			IntBuffer type,
-			@GLchar
-			ByteBuffer name);
+	                        @Check(value = "1", canBeNull = true)
+	                        @GLsizei IntBuffer length,
+	                        @Check
+	                        @GLsizei IntBuffer size,
+	                        @Check
+	                        @GLenum IntBuffer type,
+	                        @GLchar ByteBuffer name);
 
 	@StripPostfix("params")
 	void glGetUniformfv(@GLuint int program, int location, @Check FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetUniformiv(@GLuint int program, int location, @Check IntBuffer params);
 
 	void glGetShaderSource(@GLuint int shader, @AutoSize("source") @GLsizei int maxLength,
-			@Check(value="1", canBeNull=true)
-			@GLsizei
-			IntBuffer length,
-			@GLchar
-			ByteBuffer source);
+	                       @Check(value = "1", canBeNull = true)
+	                       @GLsizei IntBuffer length,
+	                       @GLchar ByteBuffer source);
 
 	// ------------------------------------------------------------------
 	// ----------------------[ ARB_vertex_program ]----------------------
@@ -256,7 +251,7 @@ public interface GL20 {
 	void glVertexAttrib1s(@GLuint int index, short x);
 
 	void glVertexAttrib1f(@GLuint int index, float x);
-	
+
 	void glVertexAttrib1d(@GLuint int index, double x);
 
 	void glVertexAttrib2s(@GLuint int index, short x, short y);
@@ -274,33 +269,35 @@ public interface GL20 {
 	void glVertexAttrib4s(@GLuint int index, short x, short y, short z, short w);
 
 	void glVertexAttrib4f(@GLuint int index, float x, float y, float z, float w);
-	
+
 	void glVertexAttrib4d(@GLuint int index, double x, double y, double z, double w);
 
 	void glVertexAttrib4Nub(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
 
 	void glVertexAttribPointer(@GLuint int index, int size, @AutoType("buffer") @GLenum int type, boolean normalized, @GLsizei int stride,
-			@CachedReference
-			@BufferObject(BufferKind.ArrayVBO)
-			@Check
-			@Const
-			@GLubyte
-			@GLbyte
-			@GLshort
-			@GLushort
-			@GLint
-			@GLuint
-			@GLfloat
-			@GLdouble
-			Buffer buffer);
+	                           @CachedReference
+	                           @BufferObject(BufferKind.ArrayVBO)
+	                           @Check
+	                           @Const
+	                           @GLubyte
+	                           @GLbyte
+	                           @GLshort
+	                           @GLushort
+	                           @GLint
+	                           @GLuint
+	                           @GLfloat
+	                           @GLdouble Buffer buffer);
 
 	void glEnableVertexAttribArray(@GLuint int index);
+
 	void glDisableVertexAttribArray(@GLuint int index);
 
 	@StripPostfix("params")
 	void glGetVertexAttribfv(@GLuint int index, @GLenum int pname, @Check("4") FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetVertexAttribdv(@GLuint int index, @GLenum int pname, @Check("4") DoubleBuffer params);
+
 	@StripPostfix("params")
 	void glGetVertexAttribiv(@GLuint int index, @GLenum int pname, @Check("4") IntBuffer params);
 
@@ -311,16 +308,16 @@ public interface GL20 {
 	// ----------------------[ ARB_vertex_shader ]----------------------
 	// -----------------------------------------------------------------
 
-	/*
-	* Accepted by the <shaderType> argument of CreateShader and
-	* returned by the <params> parameter of GetShader{if}v:
-	*/
+	/**
+	 * Accepted by the &lt;shaderType&gt; argument of CreateShader and
+	 * returned by the &lt;params&gt; parameter of GetShader{if}v:
+	 */
 	int GL_VERTEX_SHADER = 0x8B31;
 
-	/*
-	* Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
-	* GetFloatv, and GetDoublev:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 * GetFloatv, and GetDoublev:
+	 */
 	int GL_MAX_VERTEX_UNIFORM_COMPONENTS = 0x8B4A;
 	int GL_MAX_VARYING_FLOATS = 0x8B4B;
 	int GL_MAX_VERTEX_ATTRIBS = 0x8869;
@@ -329,17 +326,17 @@ public interface GL20 {
 	int GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS = 0x8B4D;
 	int GL_MAX_TEXTURE_COORDS = 0x8871;
 
-	/*
-	* Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, and
-	* by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and
-	* GetDoublev:
-	*/
+	/**
+	 * Accepted by the &lt;cap&gt; parameter of Disable, Enable, and IsEnabled, and
+	 * by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv, and
+	 * GetDoublev:
+	 */
 	int GL_VERTEX_PROGRAM_POINT_SIZE = 0x8642;
 	int GL_VERTEX_PROGRAM_TWO_SIDE = 0x8643;
 
-	/*
-	* Accepted by the <pname> parameter of GetVertexAttrib{dfi}vARB:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetVertexAttrib{dfi}vARB:
+	 */
 	int GL_VERTEX_ATTRIB_ARRAY_ENABLED = 0x8622;
 	int GL_VERTEX_ATTRIB_ARRAY_SIZE = 0x8623;
 	int GL_VERTEX_ATTRIB_ARRAY_STRIDE = 0x8624;
@@ -347,25 +344,21 @@ public interface GL20 {
 	int GL_VERTEX_ATTRIB_ARRAY_NORMALIZED = 0x886A;
 	int GL_CURRENT_VERTEX_ATTRIB = 0x8626;
 
-	/*
-	* Accepted by the <pname> parameter of GetVertexAttribPointervARB:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetVertexAttribPointervARB:
+	 */
 	int GL_VERTEX_ATTRIB_ARRAY_POINTER = 0x8645;
 
 	void glBindAttribLocation(@GLuint int program, @GLuint int index, @NullTerminated @Const @GLchar ByteBuffer name);
 
 	void glGetActiveAttrib(@GLuint int program, @GLuint int index, @AutoSize("name") @GLsizei int maxLength,
-			@Check(value="1", canBeNull=true)
-			@GLsizei
-			IntBuffer length,
-			@Check("1")
-			IntBuffer size,
-			@Check("1")
-			@GLenum
-			IntBuffer type,
-			@Const
-			@GLchar
-			ByteBuffer name);
+	                       @Check(value = "1", canBeNull = true)
+	                       @GLsizei IntBuffer length,
+	                       @Check("1") IntBuffer size,
+	                       @Check("1")
+	                       @GLenum IntBuffer type,
+	                       @Const
+	                       @GLchar ByteBuffer name);
 
 	int glGetAttribLocation(@GLuint int program, @NullTerminated @Const @GLchar ByteBuffer name);
 
@@ -373,32 +366,32 @@ public interface GL20 {
 	// ----------------------[ ARB_fragment_shader ]----------------------
 	// -------------------------------------------------------------------
 
-	/*
-	* Accepted by the <shaderType> argument of CreateShader and
-	* returned by the <params> parameter of GetShader{fi}vARB:
-	*/
+	/**
+	 * Accepted by the &lt;shaderType&gt; argument of CreateShader and
+	 * returned by the &lt;params&gt; parameter of GetShader{fi}vARB:
+	 */
 	int GL_FRAGMENT_SHADER = 0x8B30;
 
-	/*
-	* Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
-	* GetFloatv, and GetDoublev:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 * GetFloatv, and GetDoublev:
+	 */
 	int GL_MAX_FRAGMENT_UNIFORM_COMPONENTS = 0x8B49;
 
-	/*
-	* Accepted by the <target> parameter of Hint and the <pname> parameter of
-	* GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev:
-	*/
+	/**
+	 * Accepted by the &lt;target&gt; parameter of Hint and the &lt;pname&gt; parameter of
+	 * GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev:
+	 */
 	int GL_FRAGMENT_SHADER_DERIVATIVE_HINT = 0x8B8B;
 
 	// ----------------------------------------------------------------
 	// ----------------------[ ARB_draw_buffers ]----------------------
 	// ----------------------------------------------------------------
 
-	/*
-	* Accepted by the <pname> parameters of GetIntegerv, GetFloatv,
-	* and GetDoublev:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameters of GetIntegerv, GetFloatv,
+	 * and GetDoublev:
+	 */
 	int GL_MAX_DRAW_BUFFERS = 0x8824;
 	int GL_DRAW_BUFFER0 = 0x8825;
 	int GL_DRAW_BUFFER1 = 0x8826;
@@ -423,30 +416,30 @@ public interface GL20 {
 	// ----------------------[ ARB_point_sprite ]----------------------
 	// ----------------------------------------------------------------
 
-	/*
-	* Accepted by the <cap> parameter of Enable, Disable, and IsEnabled, by
-	* the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and
-	* GetDoublev, and by the <target> parameter of TexEnvi, TexEnviv,
-	* TexEnvf, TexEnvfv, GetTexEnviv, and GetTexEnvfv:
-	*/
+	/**
+	 * Accepted by the &lt;cap&gt; parameter of Enable, Disable, and IsEnabled, by
+	 * the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv, and
+	 * GetDoublev, and by the &lt;target&gt; parameter of TexEnvi, TexEnviv,
+	 * TexEnvf, TexEnvfv, GetTexEnviv, and GetTexEnvfv:
+	 */
 	int GL_POINT_SPRITE = 0x8861;
 
-	/*
-	* When the <target> parameter of TexEnvf, TexEnvfv, TexEnvi, TexEnviv,
-	* GetTexEnvfv, or GetTexEnviv is POINT_SPRITE, then the value of
-	* <pname> may be:
-	*/
+	/**
+	 * When the &lt;target&gt; parameter of TexEnvf, TexEnvfv, TexEnvi, TexEnviv,
+	 * GetTexEnvfv, or GetTexEnviv is POINT_SPRITE, then the value of
+	 * &lt;pname&gt; may be:
+	 */
 	int GL_COORD_REPLACE = 0x8862;
 
-	/*
-	 * Accepted by the <pname> parameter of PointParameter{if}vARB, and the
-	 * <pname> of Get:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of PointParameter{if}vARB, and the
+	 * &lt;pname&gt; of Get:
+	 */
 	int GL_POINT_SPRITE_COORD_ORIGIN = 0x8CA0;
 
-	/*
-	* Accepted by the <param> parameter of PointParameter{if}vARB:
-	*/
+	/**
+	 * Accepted by the &lt;param&gt; parameter of PointParameter{if}vARB:
+	 */
 	int GL_LOWER_LEFT = 0x8CA1;
 	int GL_UPPER_LEFT = 0x8CA2;
 

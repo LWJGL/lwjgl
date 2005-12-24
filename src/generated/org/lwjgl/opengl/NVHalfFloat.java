@@ -7,6 +7,13 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class NVHalfFloat {
+	/**
+	 * Accepted by the &lt;type&gt; argument of VertexPointer, NormalPointer,
+	 * ColorPointer, TexCoordPointer, FogCoordPointerEXT,
+	 * SecondaryColorPointerEXT, VertexWeightPointerEXT, VertexAttribPointerNV,
+	 * DrawPixels, ReadPixels, TexImage1D, TexImage2D, TexImage3D, TexSubImage1D,
+	 * TexSubImage2D, TexSubImage3D, and GetTexImage:
+	 */
 	public static final int GL_HALF_FLOAT_NV = 0x140b;
 
 	private NVHalfFloat() {

@@ -37,16 +37,16 @@ import java.nio.*;
 
 public interface ARB_vertex_shader {
 
-	/*
-	 * Accepted by the <shaderType> argument of CreateShaderObjectARB and
-	 * returned by the <params> parameter of GetObjectParameter{if}vARB:
-	*/
+	/**
+	 * Accepted by the &lt;shaderType&gt; argument of CreateShaderObjectARB and
+	 * returned by the &lt;params&gt; parameter of GetObjectParameter{if}vARB:
+	 */
 	int GL_VERTEX_SHADER_ARB = 0x8B31;
 
-	/*
-	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
 	 * GetFloatv, and GetDoublev:
-	*/
+	 */
 	int GL_MAX_VERTEX_UNIFORM_COMPONENTS_ARB = 0x8B4A;
 	int GL_MAX_VARYING_FLOATS_ARB = 0x8B4B;
 	int GL_MAX_VERTEX_ATTRIBS_ARB = 0x8869;
@@ -55,23 +55,23 @@ public interface ARB_vertex_shader {
 	int GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS_ARB = 0x8B4D;
 	int GL_MAX_TEXTURE_COORDS_ARB = 0x8871;
 
-	/*
-	 * Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, and
-	 * by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and
+	/**
+	 * Accepted by the &lt;cap&gt; parameter of Disable, Enable, and IsEnabled, and
+	 * by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv, and
 	 * GetDoublev:
-	*/
+	 */
 	int GL_VERTEX_PROGRAM_POINT_SIZE_ARB = 0x8642;
 	int GL_VERTEX_PROGRAM_TWO_SIDE_ARB = 0x8643;
 
-	/*
-	* Accepted by the <pname> parameter GetObjectParameter{if}vARB:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter GetObjectParameter{if}vARB:
+	 */
 	int GL_OBJECT_ACTIVE_ATTRIBUTES_ARB = 0x8B89;
 	int GL_OBJECT_ACTIVE_ATTRIBUTE_MAX_LENGTH_ARB = 0x8B8A;
 
-	/*
-	 * Accepted by the <pname> parameter of GetVertexAttrib{dfi}vARB:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetVertexAttrib{dfi}vARB:
+	 */
 	int GL_VERTEX_ATTRIB_ARRAY_ENABLED_ARB = 0x8622;
 	int GL_VERTEX_ATTRIB_ARRAY_SIZE_ARB = 0x8623;
 	int GL_VERTEX_ATTRIB_ARRAY_STRIDE_ARB = 0x8624;
@@ -79,14 +79,14 @@ public interface ARB_vertex_shader {
 	int GL_VERTEX_ATTRIB_ARRAY_NORMALIZED_ARB = 0x886A;
 	int GL_CURRENT_VERTEX_ATTRIB_ARB = 0x8626;
 
-	/*
-	 * Accepted by the <pname> parameter of GetVertexAttribPointervARB:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetVertexAttribPointervARB:
+	 */
 	int GL_VERTEX_ATTRIB_ARRAY_POINTER_ARB = 0x8645;
 
-	/*
-	 * Returned by the <type> parameter of GetActiveAttribARB:
-	*/
+	/**
+	 * Returned by the &lt;type&gt; parameter of GetActiveAttribARB:
+	 */
 	int GL_FLOAT = 0x1406;
 	int GL_FLOAT_VEC2_ARB = 0x8B50;
 	int GL_FLOAT_VEC3_ARB = 0x8B51;

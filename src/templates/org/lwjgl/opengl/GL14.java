@@ -31,11 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 /**
  * $Id$
@@ -91,53 +89,63 @@ public interface GL14 {
 	void glBlendColor(@GLclampf float red, @GLclampf float green, @GLclampf float blue, @GLclampf float alpha);
 
 	void glFogCoordf(float coord);
-	
+
 	void glFogCoordd(double coord);
 
 	void glFogCoordPointer(@AutoType("data") @GLenum int type, @GLsizei int stride,
-			@CachedReference
-			@BufferObject(BufferKind.ArrayVBO)
-			@Check
-			@Const
-			@GLfloat
-			@GLdouble
-			Buffer data);
+	                       @CachedReference
+	                       @BufferObject(BufferKind.ArrayVBO)
+	                       @Check
+	                       @Const
+	                       @GLfloat
+	                       @GLdouble Buffer data);
 
-	@Code(	"		if (piFirst.remaining() != piCount.remaining()) {\n" +
-			"			throw new IllegalArgumentException(\"piFirst.remaining() != piCount.remaining()\");\n" +
-			"		}")
+	@Code("		if (piFirst.remaining() != piCount.remaining()) {\n" +
+	      "			throw new IllegalArgumentException(\"piFirst.remaining() != piCount.remaining()\");\n" +
+	      "		}")
 	void glMultiDrawArrays(@GLenum int mode, IntBuffer piFirst, @Check @GLsizei IntBuffer piCount, @AutoSize("piFirst") @GLsizei int primcount);
 
 	//void glMultiDrawElements(int mode, int piCount, int type, int pIndices, int primcount);
 
 	void glPointParameteri(@GLenum int pname, int param);
+
 	void glPointParameterf(@GLenum int pname, float param);
+
 	@StripPostfix("params")
 	void glPointParameteriv(@GLenum int pname, @Check("4") @Const IntBuffer params);
+
 	@StripPostfix("params")
 	void glPointParameterfv(@GLenum int pname, @Check("4") @Const FloatBuffer params);
 
 	void glSecondaryColor3b(byte red, byte green, byte blue);
+
 	void glSecondaryColor3f(float red, float green, float blue);
+
 	void glSecondaryColor3d(double red, double green, double blue);
+
 	void glSecondaryColor3ub(@GLubyte byte red, @GLubyte byte green, @GLubyte byte blue);
 
 	void glSecondaryColorPointer(int size, @AutoType("data") @GLenum int type, @GLsizei int stride,
-			@BufferObject(BufferKind.ArrayVBO)
-			@Check
-			@Const
-			@GLbyte
-			@GLubyte
-			@GLfloat
-			@GLdouble
-			Buffer data);
+	                             @BufferObject(BufferKind.ArrayVBO)
+	                             @Check
+	                             @Const
+	                             @GLbyte
+	                             @GLubyte
+	                             @GLfloat
+	                             @GLdouble Buffer data);
 
 	void glBlendFuncSeparate(@GLenum int sfactorRGB, @GLenum int dfactorRGB, @GLenum int sfactorAlpha, @GLenum int dfactorAlpha);
+
 	void glWindowPos2f(float x, float y);
+
 	void glWindowPos2d(double x, double y);
+
 	void glWindowPos2i(int x, int y);
+
 	void glWindowPos3f(float x, float y, float z);
+
 	void glWindowPos3d(double x, double y, double z);
+
 	void glWindowPos3i(int x, int y, int z);
 }
 

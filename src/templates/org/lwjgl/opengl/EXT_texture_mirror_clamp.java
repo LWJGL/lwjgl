@@ -32,12 +32,13 @@
 package org.lwjgl.opengl;
 
 public interface EXT_texture_mirror_clamp {
-	/*
-	 * Accepted by the <param> parameter of TexParameteri and TexParameterf,
-	 * and by the <params> parameter of TexParameteriv and TexParameterfv,
-	 * when their <pname> parameter is TEXTURE_WRAP_S, TEXTURE_WRAP_T,
+
+	/**
+	 * Accepted by the &lt;param&gt; parameter of TexParameteri and TexParameterf,
+	 * and by the &lt;params&gt; parameter of TexParameteriv and TexParameterfv,
+	 * when their &lt;pname&gt; parameter is TEXTURE_WRAP_S, TEXTURE_WRAP_T,
 	 * or TEXTURE_WRAP_R:
-	*/
+	 */
 	int GL_MIRROR_CLAMP_EXT = 0x8742;
 	int GL_MIRROR_CLAMP_TO_EDGE_EXT = 0x8743;
 	int GL_MIRROR_CLAMP_TO_BORDER_EXT = 0x8912;

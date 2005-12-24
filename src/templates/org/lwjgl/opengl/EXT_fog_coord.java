@@ -31,9 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 public interface EXT_fog_coord {
 	int GL_FOG_COORDINATE_SOURCE_EXT = 0x8450;
@@ -46,14 +46,14 @@ public interface EXT_fog_coord {
 	int GL_FOG_COORDINATE_ARRAY_EXT = 0x8457;
 
 	void glFogCoordfEXT(float coord);
+
 	void glFogCoorddEXT(double coord);
 
 	void glFogCoordPointerEXT(@AutoType("data") @GLenum int type, @GLsizei int stride,
-			@CachedReference
-			@BufferObject(BufferKind.ArrayVBO)
-			@Check
-			@Const
-			@GLfloat
-			@GLdouble
-			Buffer data);
+	                          @CachedReference
+	                          @BufferObject(BufferKind.ArrayVBO)
+	                          @Check
+	                          @Const
+	                          @GLfloat
+	                          @GLdouble Buffer data);
 }

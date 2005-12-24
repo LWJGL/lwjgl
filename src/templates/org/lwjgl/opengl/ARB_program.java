@@ -31,23 +31,21 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.nio.FloatBuffer;
-import java.nio.DoubleBuffer;
-import java.nio.IntBuffer;
-
 import org.lwjgl.util.generator.*;
 
-@Extension(postfix="ARB", isFinal=false)
+import java.nio.*;
+
+@Extension(postfix = "ARB", isFinal = false)
 public interface ARB_program {
-	/*
-	* Accepted by the <format> parameter of ProgramStringARB:
-	*/
+
+	/**
+	 * Accepted by the &lt;format&gt; parameter of ProgramStringARB:
+	 */
 	int GL_PROGRAM_FORMAT_ASCII_ARB = 0x8875;
 
-	/*
-	* Accepted by the <pname> parameter of GetProgramivARB:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetProgramivARB:
+	 */
 	int GL_PROGRAM_LENGTH_ARB = 0x8627;
 	int GL_PROGRAM_FORMAT_ARB = 0x8876;
 	int GL_PROGRAM_BINDING_ARB = 0x8677;
@@ -71,15 +69,15 @@ public interface ARB_program {
 	int GL_MAX_PROGRAM_ENV_PARAMETERS_ARB = 0x88B5;
 	int GL_PROGRAM_UNDER_NATIVE_LIMITS_ARB = 0x88B6;
 
-	/*
-	* Accepted by the <pname> parameter of GetProgramStringARB:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetProgramStringARB:
+	 */
 	int GL_PROGRAM_STRING_ARB = 0x8628;
 
-	/*
-	* Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
-	* GetFloatv, and GetDoublev:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 * GetFloatv, and GetDoublev:
+	 */
 	int GL_PROGRAM_ERROR_POSITION_ARB = 0x864B;
 	int GL_CURRENT_MATRIX_ARB = 0x8641;
 	int GL_TRANSPOSE_CURRENT_MATRIX_ARB = 0x88B7;
@@ -87,14 +85,14 @@ public interface ARB_program {
 	int GL_MAX_PROGRAM_MATRICES_ARB = 0x862F;
 	int GL_MAX_PROGRAM_MATRIX_STACK_DEPTH_ARB = 0x862E;
 
-	/*
-	* Accepted by the <name> parameter of GetString:
-	*/
+	/**
+	 * Accepted by the &lt;name&gt; parameter of GetString:
+	 */
 	int GL_PROGRAM_ERROR_STRING_ARB = 0x8874;
 
-	/*
-	* Accepted by the <mode> parameter of MatrixMode:
-	*/
+	/**
+	 * Accepted by the &lt;mode&gt; parameter of MatrixMode:
+	 */
 	int GL_MATRIX0_ARB = 0x88C0;
 	int GL_MATRIX1_ARB = 0x88C1;
 	int GL_MATRIX2_ARB = 0x88C2;
@@ -133,6 +131,7 @@ public interface ARB_program {
 	void glBindProgramARB(@GLenum int target, @GLuint int program);
 
 	void glDeleteProgramsARB(@AutoSize("programs") @GLsizei int n, @Const @GLuint IntBuffer programs);
+
 	void glGenProgramsARB(@AutoSize("programs") @GLsizei int n, @GLuint IntBuffer programs);
 
 	void glProgramEnvParameter4fARB(int target, int index, float x, float y, float z, float w);
@@ -141,7 +140,7 @@ public interface ARB_program {
 
 	@StripPostfix("params")
 	void glProgramEnvParameter4fvARB(@GLenum int target, @GLuint int index, @Check("4") @Const FloatBuffer params);
-	
+
 	@StripPostfix("params")
 	void glProgramEnvParameter4dvARB(@GLenum int target, @GLuint int index, @Check("4") @Const DoubleBuffer params);
 
@@ -151,19 +150,19 @@ public interface ARB_program {
 
 	@StripPostfix("params")
 	void glProgramLocalParameter4fvARB(@GLenum int target, @GLuint int index, @Check("4") @Const FloatBuffer params);
-	
+
 	@StripPostfix("params")
 	void glProgramLocalParameter4dvARB(@GLenum int target, @GLuint int index, @Check("4") @Const DoubleBuffer params);
 
 	@StripPostfix("params")
 	void glGetProgramEnvParameterfvARB(@GLenum int target, @GLuint int index, @Check("4") FloatBuffer params);
-	
+
 	@StripPostfix("params")
 	void glGetProgramEnvParameterdvARB(@GLenum int target, @GLuint int index, @Check("4") DoubleBuffer params);
 
 	@StripPostfix("params")
 	void glGetProgramLocalParameterfvARB(@GLenum int target, @GLuint int index, @Check("4") FloatBuffer params);
-	
+
 	@StripPostfix("params")
 	void glGetProgramLocalParameterdvARB(@GLenum int target, @GLuint int index, @Check("4") DoubleBuffer params);
 

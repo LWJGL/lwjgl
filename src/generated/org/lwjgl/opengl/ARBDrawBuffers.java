@@ -7,6 +7,10 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class ARBDrawBuffers {
+	/**
+	 * Accepted by the &lt;pname&gt; parameters of GetIntegerv, GetFloatv,
+	 * and GetDoublev:
+	 */
 	public static final int GL_MAX_DRAW_BUFFERS_ARB = 0x8824;
 	public static final int GL_DRAW_BUFFER0_ARB = 0x8825;
 	public static final int GL_DRAW_BUFFER1_ARB = 0x8826;

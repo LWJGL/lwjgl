@@ -31,11 +31,6 @@
  */
 package org.lwjgl.opengl;
 
-/**
- * EXT_blend_subtract constants
- *
- * @author cas
- */
 public interface EXT_blend_subtract {
 	int GL_FUNC_SUBTRACT_EXT = 0x800A;
 	int GL_FUNC_REVERSE_SUBTRACT_EXT = 0x800B;

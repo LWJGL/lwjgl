@@ -32,13 +32,14 @@
 package org.lwjgl.opengl;
 
 public interface ARB_half_float_pixel {
-	/*
-	 * Accepted by the <type> parameter of DrawPixels, ReadPixels,
-     * TexImage1D, TexImage2D, TexImage3D, GetTexImage, TexSubImage1D,
-     * TexSubImage2D, TexSubImage3D, GetHistogram, GetMinmax,
-     * ConvolutionFilter1D, ConvolutionFilter2D, GetConvolutionFilter,
-     * SeparableFilter2D, GetSeparableFilter, ColorTable, ColorSubTable,
-     * and GetColorTable:
-     */
+
+	/**
+	 * Accepted by the &lt;type&gt; parameter of DrawPixels, ReadPixels,
+	 * TexImage1D, TexImage2D, TexImage3D, GetTexImage, TexSubImage1D,
+	 * TexSubImage2D, TexSubImage3D, GetHistogram, GetMinmax,
+	 * ConvolutionFilter1D, ConvolutionFilter2D, GetConvolutionFilter,
+	 * SeparableFilter2D, GetSeparableFilter, ColorTable, ColorSubTable,
+	 * and GetColorTable:
+	 */
 	int GL_HALF_FLOAT_ARB = 0x140B;
 }

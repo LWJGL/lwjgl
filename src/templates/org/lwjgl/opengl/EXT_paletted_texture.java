@@ -36,7 +36,8 @@ import org.lwjgl.util.generator.*;
 import java.nio.*;
 
 public interface EXT_paletted_texture {
-	/*
+
+	/**
 	 * Accepted by the internalformat parameter of TexImage1D, TexImage2D and
 	 * TexImage3DEXT:
 	 */
@@ -47,7 +48,7 @@ public interface EXT_paletted_texture {
 	int GL_COLOR_INDEX12_EXT = 0x80E6;
 	int GL_COLOR_INDEX16_EXT = 0x80E7;
 
-	/*
+	/**
 	 * Accepted by the pname parameter of GetColorTableParameterivEXT and
 	 * GetColorTableParameterfvEXT:
 	 */
@@ -60,42 +61,40 @@ public interface EXT_paletted_texture {
 	int GL_COLOR_TABLE_LUMINANCE_SIZE_EXT = 0x80DE;
 	int GL_COLOR_TABLE_INTENSITY_SIZE_EXT = 0x80DF;
 
-	/*
+	/**
 	 * Accepted by the value parameter of GetTexLevelParameter{if}v:
 	 */
 	int GL_TEXTURE_INDEX_SIZE_EXT = 0x80ED;
 
 	void glColorTableEXT(@GLenum int target, @GLenum int internalFormat, @GLsizei int width, @GLenum int format, @GLenum int type,
-			@Check("GLChecks.calculateImageStorage(data, format, type, width, 1, 1)")
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer data);
+	                     @Check("GLChecks.calculateImageStorage(data, format, type, width, 1, 1)")
+	                     @Const
+	                     @GLbyte
+	                     @GLshort
+	                     @GLint
+	                     @GLfloat
+	                     @GLdouble Buffer data);
 
 	void glColorSubTableEXT(@GLenum int target, @GLsizei int start, @GLsizei int count, @GLenum int format, @GLenum int type,
-			@Check("GLChecks.calculateImageStorage(data, format, type, count, 1, 1)")
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer data);
+	                        @Check("GLChecks.calculateImageStorage(data, format, type, count, 1, 1)")
+	                        @Const
+	                        @GLbyte
+	                        @GLshort
+	                        @GLint
+	                        @GLfloat
+	                        @GLdouble Buffer data);
 
 	void glGetColorTableEXT(@GLenum int target, @GLenum int format, @GLenum int type,
-			@Check
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer data);
+	                        @Check
+	                        @GLbyte
+	                        @GLshort
+	                        @GLint
+	                        @GLfloat
+	                        @GLdouble Buffer data);
 
 	@StripPostfix("params")
 	void glGetColorTableParameterivEXT(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
+
 	@StripPostfix("params")
 	void glGetColorTableParameterfvEXT(@GLenum int target, @GLenum int pname, @Check("4") FloatBuffer params);
 }

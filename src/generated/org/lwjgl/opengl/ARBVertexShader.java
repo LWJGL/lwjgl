@@ -7,7 +7,15 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class ARBVertexShader {
+	/**
+	 * Accepted by the &lt;shaderType&gt; argument of CreateShaderObjectARB and
+	 * returned by the &lt;params&gt; parameter of GetObjectParameter{if}vARB:
+	 */
 	public static final int GL_VERTEX_SHADER_ARB = 0x8b31;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 * GetFloatv, and GetDoublev:
+	 */
 	public static final int GL_MAX_VERTEX_UNIFORM_COMPONENTS_ARB = 0x8b4a;
 	public static final int GL_MAX_VARYING_FLOATS_ARB = 0x8b4b;
 	public static final int GL_MAX_VERTEX_ATTRIBS_ARB = 0x8869;
@@ -15,17 +23,34 @@ public final class ARBVertexShader {
 	public static final int GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS_ARB = 0x8b4c;
 	public static final int GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS_ARB = 0x8b4d;
 	public static final int GL_MAX_TEXTURE_COORDS_ARB = 0x8871;
+	/**
+	 * Accepted by the &lt;cap&gt; parameter of Disable, Enable, and IsEnabled, and
+	 * by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv, and
+	 * GetDoublev:
+	 */
 	public static final int GL_VERTEX_PROGRAM_POINT_SIZE_ARB = 0x8642;
 	public static final int GL_VERTEX_PROGRAM_TWO_SIDE_ARB = 0x8643;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter GetObjectParameter{if}vARB:
+	 */
 	public static final int GL_OBJECT_ACTIVE_ATTRIBUTES_ARB = 0x8b89;
 	public static final int GL_OBJECT_ACTIVE_ATTRIBUTE_MAX_LENGTH_ARB = 0x8b8a;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetVertexAttrib{dfi}vARB:
+	 */
 	public static final int GL_VERTEX_ATTRIB_ARRAY_ENABLED_ARB = 0x8622;
 	public static final int GL_VERTEX_ATTRIB_ARRAY_SIZE_ARB = 0x8623;
 	public static final int GL_VERTEX_ATTRIB_ARRAY_STRIDE_ARB = 0x8624;
 	public static final int GL_VERTEX_ATTRIB_ARRAY_TYPE_ARB = 0x8625;
 	public static final int GL_VERTEX_ATTRIB_ARRAY_NORMALIZED_ARB = 0x886a;
 	public static final int GL_CURRENT_VERTEX_ATTRIB_ARB = 0x8626;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetVertexAttribPointervARB:
+	 */
 	public static final int GL_VERTEX_ATTRIB_ARRAY_POINTER_ARB = 0x8645;
+	/**
+	 * Returned by the &lt;type&gt; parameter of GetActiveAttribARB:
+	 */
 	public static final int GL_FLOAT = 0x1406;
 	public static final int GL_FLOAT_VEC2_ARB = 0x8b50;
 	public static final int GL_FLOAT_VEC3_ARB = 0x8b51;

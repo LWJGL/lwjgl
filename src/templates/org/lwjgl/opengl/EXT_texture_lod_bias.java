@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
 
-@Extension(postfix="EXT", className="EXTTextureLODBias")
+@Extension(postfix = "EXT", className = "EXTTextureLODBias")
 public interface EXT_texture_lod_bias {
 	int GL_TEXTURE_FILTER_CONTROL_EXT = 0x8500;
 	int GL_TEXTURE_LOD_BIAS_EXT = 0x8501;

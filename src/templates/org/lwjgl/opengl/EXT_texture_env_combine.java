@@ -31,7 +31,6 @@
  */
 package org.lwjgl.opengl;
 
-/** Insert the type's description here. Creation date: (22/02/00 01:26:05) */
 public interface EXT_texture_env_combine {
 	int GL_COMBINE_EXT = 0x8570;
 	int GL_COMBINE_RGB_EXT = 0x8571;

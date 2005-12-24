@@ -31,9 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 /**
  * $Id$
@@ -87,37 +87,34 @@ public interface GL12 {
 	int GL_ALIASED_LINE_WIDTH_RANGE = 0x846E;
 
 	void glDrawRangeElements(@GLenum int mode, @GLuint int start, @GLuint int end, @AutoSize("indices") @GLsizei int count,
-			@AutoType("indices")
-			@GLenum
-			int type,
-			@BufferObject(BufferKind.ElementVBO)
-			@Const
-			@GLubyte
-			@GLushort
-			@GLuint
-			Buffer indices);
+	                         @AutoType("indices")
+	                         @GLenum int type,
+	                         @BufferObject(BufferKind.ElementVBO)
+	                         @Const
+	                         @GLubyte
+	                         @GLushort
+	                         @GLuint Buffer indices);
 
 	void glTexImage3D(@GLenum int target, int level, int internalFormat, @GLsizei int width, @GLsizei int height, @GLsizei int depth, int border, @GLenum int format, @GLenum int type,
-			@BufferObject(BufferKind.UnpackPBO)
-			@Check(value="GLChecks.calculateTexImage3DStorage(pixels, format, type, width, height, depth, border)", canBeNull=true)
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer pixels);
+	                  @BufferObject(BufferKind.UnpackPBO)
+	                  @Check(value = "GLChecks.calculateTexImage3DStorage(pixels, format, type, width, height, depth, border)", canBeNull = true)
+	                  @Const
+	                  @GLbyte
+	                  @GLshort
+	                  @GLint
+	                  @GLfloat
+	                  @GLdouble Buffer pixels);
 
 	void glTexSubImage3D(@GLenum int target, int level, int xoffset, int yoffset, int zoffset, @GLsizei int width, @GLsizei int height, @GLsizei int depth, @GLenum int format, @GLenum int type,
-			@BufferObject(BufferKind.UnpackPBO)
-			@Check("GLChecks.calculateImageStorage(pixels, format, type, width, height, depth)")
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer pixels);
+	                     @BufferObject(BufferKind.UnpackPBO)
+	                     @Check("GLChecks.calculateImageStorage(pixels, format, type, width, height, depth)")
+	                     @Const
+	                     @GLbyte
+	                     @GLshort
+	                     @GLint
+	                     @GLfloat
+	                     @GLdouble Buffer pixels);
+
 	void glCopyTexSubImage3D(@GLenum int target, int level, int xoffset, int yoffset, int zoffset, int x, int y, @GLsizei int width, @GLsizei int height);
 }
 

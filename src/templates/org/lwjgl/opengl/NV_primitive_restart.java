@@ -34,18 +34,19 @@ package org.lwjgl.opengl;
 import org.lwjgl.util.generator.*;
 
 public interface NV_primitive_restart {
-	/*
-	* Accepted by the <array> parameter of EnableClientState and
-	* DisableClientState, by the <cap> parameter of IsEnabled, and by
-	* the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and
-	* GetDoublev:
-	*/
+
+	/**
+	 * Accepted by the &lt;array&gt; parameter of EnableClientState and
+	 * DisableClientState, by the &lt;cap&gt; parameter of IsEnabled, and by
+	 * the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv, and
+	 * GetDoublev:
+	 */
 	int GL_PRIMITIVE_RESTART_NV = 0x8558;
 
-	/*
-	* Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
-	* GetFloatv, and GetDoublev:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 * GetFloatv, and GetDoublev:
+	 */
 	int GL_PRIMITIVE_RESTART_INDEX_NV = 0x8559;
 
 	void glPrimitiveRestartNV();

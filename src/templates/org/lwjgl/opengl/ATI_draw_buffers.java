@@ -31,15 +31,16 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.IntBuffer;
-
 import org.lwjgl.util.generator.*;
 
+import java.nio.*;
+
 public interface ATI_draw_buffers {
-	/*
-	 * Accepted by the <pname> parameters of GetIntegerv, GetFloatv,
+
+	/**
+	 * Accepted by the &lt;pname&gt; parameters of GetIntegerv, GetFloatv,
 	 * and GetDoublev:
-	*/
+	 */
 	int GL_MAX_DRAW_BUFFERS_ATI = 0x8824;
 	int GL_DRAW_BUFFER0_ATI = 0x8825;
 	int GL_DRAW_BUFFER1_ATI = 0x8826;

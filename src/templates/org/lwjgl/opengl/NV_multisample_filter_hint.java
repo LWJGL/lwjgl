@@ -32,9 +32,10 @@
 package org.lwjgl.opengl;
 
 public interface NV_multisample_filter_hint {
-	/*
-	 * Accepted by the <target> parameter of Hint and by the <pname>
+
+	/**
+	 * Accepted by the &lt;target&gt; parameter of Hint and by the &lt;pname&gt;
 	 * parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev:
-	*/
+	 */
 	int GL_MULTISAMPLE_FILTER_HINT_NV = 0x8534;
 }

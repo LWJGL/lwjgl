@@ -31,39 +31,39 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-
 import org.lwjgl.util.generator.*;
 
+import java.nio.*;
+
 public interface NV_pixel_data_range {
-	/*
-	* Accepted by the <target> parameter of PixelDataRangeNV and
-	* FlushPixelDataRangeNV, and by the <cap> parameter of
-	* EnableClientState, DisableClientState, and IsEnabled:
-	*/
+
+	/**
+	 * Accepted by the &lt;target&gt; parameter of PixelDataRangeNV and
+	 * FlushPixelDataRangeNV, and by the &lt;cap&gt; parameter of
+	 * EnableClientState, DisableClientState, and IsEnabled:
+	 */
 	int GL_WRITE_PIXEL_DATA_RANGE_NV = 0x8878;
 	int GL_READ_PIXEL_DATA_RANGE_NV = 0x8879;
 
-	/*
-	* Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
-	* GetFloatv, and GetDoublev:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 * GetFloatv, and GetDoublev:
+	 */
 	int GL_WRITE_PIXEL_DATA_RANGE_LENGTH_NV = 0x887A;
 	int GL_READ_PIXEL_DATA_RANGE_LENGTH_NV = 0x887B;
 
-	/*
-	* Accepted by the <pname> parameter of GetPointerv:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetPointerv:
+	 */
 	int GL_WRITE_PIXEL_DATA_RANGE_POINTER_NV = 0x887C;
 	int GL_READ_PIXEL_DATA_RANGE_POINTER_NV = 0x887D;
 
 	void glPixelDataRangeNV(@GLenum int target, @AutoSize("data") @GLsizei int length,
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer data);
+	                        @GLbyte
+	                        @GLshort
+	                        @GLint
+	                        @GLfloat
+	                        @GLdouble Buffer data);
 
 	void glFlushPixelDataRangeNV(@GLenum int target);
 }

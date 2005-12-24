@@ -32,9 +32,10 @@
 package org.lwjgl.opengl;
 
 public interface NV_vertex_program2_option {
-	/*
-	 * Accepted by the <pname> parameter of GetProgramivARB:
-	*/
+
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetProgramivARB:
+	 */
 	int GL_MAX_PROGRAM_EXEC_INSTRUCTIONS_NV = 0x88F4;
 	int GL_MAX_PROGRAM_CALL_DEPTH_NV = 0x88F5;
 }

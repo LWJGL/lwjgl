@@ -32,10 +32,11 @@
 package org.lwjgl.opengl;
 
 public interface ATI_texture_float {
-	/*
-	 * Accepted by the <internalFormat> parameter of TexImage1D,
+
+	/**
+	 * Accepted by the &lt;internalFormat&gt; parameter of TexImage1D,
 	 * TexImage2D, and TexImage3D:
-	*/
+	 */
 	int GL_RGBA_FLOAT32_ATI = 0x8814;
 	int GL_RGB_FLOAT32_ATI = 0x8815;
 	int GL_ALPHA_FLOAT32_ATI = 0x8816;

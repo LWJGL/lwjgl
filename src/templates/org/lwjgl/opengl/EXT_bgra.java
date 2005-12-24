@@ -31,11 +31,6 @@
  */
 package org.lwjgl.opengl;
 
-/**
- * EXT_bgra_constants
- *
- * @author cas
- */
 public interface EXT_bgra {
 	int GL_BGR_EXT = 0x80E0;
 	int GL_BGRA_EXT = 0x80E1;

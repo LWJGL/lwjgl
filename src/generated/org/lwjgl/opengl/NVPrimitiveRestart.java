@@ -7,7 +7,17 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class NVPrimitiveRestart {
+	/**
+	 * Accepted by the &lt;array&gt; parameter of EnableClientState and
+	 * DisableClientState, by the &lt;cap&gt; parameter of IsEnabled, and by
+	 * the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv, and
+	 * GetDoublev:
+	 */
 	public static final int GL_PRIMITIVE_RESTART_NV = 0x8558;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 * GetFloatv, and GetDoublev:
+	 */
 	public static final int GL_PRIMITIVE_RESTART_INDEX_NV = 0x8559;
 
 	private NVPrimitiveRestart() {

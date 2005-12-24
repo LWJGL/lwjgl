@@ -32,23 +32,24 @@
 package org.lwjgl.opengl;
 
 public interface ARB_fragment_shader {
-	/*
-	 * Accepted by the <shaderType> argument of CreateShaderObjectARB and
-	 * returned by the <params> parameter of GetObjectParameter{fi}vARB:
-	*/
+
+	/**
+	 * Accepted by the &lt;shaderType&gt; argument of CreateShaderObjectARB and
+	 * returned by the &lt;params&gt; parameter of GetObjectParameter{fi}vARB:
+	 */
 	int GL_FRAGMENT_SHADER_ARB = 0x8B30;
 
-	/*
-	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
 	 * GetFloatv, and GetDoublev:
-	*/
+	 */
 	int GL_MAX_FRAGMENT_UNIFORM_COMPONENTS_ARB = 0x8B49;
 	int GL_MAX_TEXTURE_COORDS_ARB = 0x8871;
 	int GL_MAX_TEXTURE_IMAGE_UNITS_ARB = 0x8872;
 
-	/*
-	 * Accepted by the <target> parameter of Hint and the <pname> parameter of
+	/**
+	 * Accepted by the &lt;target&gt; parameter of Hint and the &lt;pname&gt; parameter of
 	 * GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev:
-	*/
+	 */
 	int GL_FRAGMENT_SHADER_DERIVATIVE_HINT_ARB = 0x8B8B;
 }

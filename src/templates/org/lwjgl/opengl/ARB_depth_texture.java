@@ -32,23 +32,24 @@
 package org.lwjgl.opengl;
 
 public interface ARB_depth_texture {
-	/*
-	 * Accepted by the <internalFormat> parameter of TexImage1D, TexImage2D,
+
+	/**
+	 * Accepted by the &lt;internalFormat&gt; parameter of TexImage1D, TexImage2D,
 	 * CopyTexImage1D and CopyTexImage2D:
-	*/
+	 */
 	int GL_DEPTH_COMPONENT16_ARB = 0x81A5;
 	int GL_DEPTH_COMPONENT24_ARB = 0x81A6;
 	int GL_DEPTH_COMPONENT32_ARB = 0x81A7;
 
-	/*
-	* Accepted by the <pname> parameter of GetTexLevelParameterfv and
-	* GetTexLevelParameteriv:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetTexLevelParameterfv and
+	 * GetTexLevelParameteriv:
+	 */
 	int GL_TEXTURE_DEPTH_SIZE_ARB = 0x884A;
 
-	/*
-	* Accepted by the <pname> parameter of TexParameterf, TexParameteri,
-	* TexParameterfv, TexParameteriv, GetTexParameterfv, and GetTexParameteriv:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of TexParameterf, TexParameteri,
+	 * TexParameterfv, TexParameteriv, GetTexParameterfv, and GetTexParameteriv:
+	 */
 	int GL_DEPTH_TEXTURE_MODE_ARB = 0x884B;
 }

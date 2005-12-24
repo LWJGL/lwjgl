@@ -7,6 +7,9 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public class ARBBufferObject {
+	/**
+	 * Accepted by the &lt;usage&gt; parameter of BufferDataARB:
+	 */
 	public static final int GL_STREAM_DRAW_ARB = 0x88e0;
 	public static final int GL_STREAM_READ_ARB = 0x88e1;
 	public static final int GL_STREAM_COPY_ARB = 0x88e2;
@@ -16,9 +19,15 @@ public class ARBBufferObject {
 	public static final int GL_DYNAMIC_DRAW_ARB = 0x88e8;
 	public static final int GL_DYNAMIC_READ_ARB = 0x88e9;
 	public static final int GL_DYNAMIC_COPY_ARB = 0x88ea;
+	/**
+	 * Accepted by the &lt;access&gt; parameter of MapBufferARB:
+	 */
 	public static final int GL_READ_ONLY_ARB = 0x88b8;
 	public static final int GL_WRITE_ONLY_ARB = 0x88b9;
 	public static final int GL_READ_WRITE_ARB = 0x88ba;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBufferParameterivARB:
+	 */
 	public static final int GL_BUFFER_SIZE_ARB = 0x8764;
 	public static final int GL_BUFFER_USAGE_ARB = 0x8765;
 	public static final int GL_BUFFER_ACCESS_ARB = 0x88bb;

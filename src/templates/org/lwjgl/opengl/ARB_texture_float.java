@@ -32,8 +32,9 @@
 package org.lwjgl.opengl;
 
 public interface ARB_texture_float {
-	/*
-	 * Accepted by the <value> parameter of GetTexLevelParameter:
+
+	/**
+	 * Accepted by the &lt;value&gt; parameter of GetTexLevelParameter:
 	 */
 	int GL_TEXTURE_RED_TYPE_ARB = 0x8C10;
 	int GL_TEXTURE_GREEN_TYPE_ARB = 0x8C11;
@@ -43,13 +44,13 @@ public interface ARB_texture_float {
 	int GL_TEXTURE_INTENSITY_TYPE_ARB = 0x8C15;
 	int GL_TEXTURE_DEPTH_TYPE_ARB = 0x8C16;
 
-	/*
-	 * Returned by the <params> parameter of GetTexLevelParameter:
+	/**
+	 * Returned by the &lt;params&gt; parameter of GetTexLevelParameter:
 	 */
 	int GL_UNSIGNED_NORMALIZED_ARB = 0x8C17;
 
-	/*
-	 * Accepted by the <internalFormat> parameter of TexImage1D,
+	/**
+	 * Accepted by the &lt;internalFormat&gt; parameter of TexImage1D,
 	 * TexImage2D, and TexImage3D:
 	 */
 	int GL_RGBA32F_ARB = 0x8814;

@@ -32,18 +32,19 @@
 package org.lwjgl.opengl;
 
 public interface ARB_pixel_buffer_object extends ARB_buffer_object {
-	/*
-	 * Accepted by the <target> parameters of BindBuffer, BufferData,
+
+	/**
+	 * Accepted by the &lt;target&gt; parameters of BindBuffer, BufferData,
 	 * BufferSubData, MapBuffer, UnmapBuffer, GetBufferSubData,
 	 * GetBufferParameteriv, and GetBufferPointerv:
-	*/
+	 */
 	int GL_PIXEL_PACK_BUFFER_ARB = 0x88EB;
 	int GL_PIXEL_UNPACK_BUFFER_ARB = 0x88EC;
 
-	/*
-	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
 	 * GetFloatv, and GetDoublev:
-	*/
+	 */
 	int GL_PIXEL_PACK_BUFFER_BINDING_ARB = 0x88ED;
 	int GL_PIXEL_UNPACK_BUFFER_BINDING_ARB = 0x88EF;
 }

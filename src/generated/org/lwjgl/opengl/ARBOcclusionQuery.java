@@ -7,9 +7,20 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class ARBOcclusionQuery {
+	/**
+	 * Accepted by the &lt;target&gt; parameter of BeginQueryARB, EndQueryARB,
+	 * and GetQueryivARB:
+	 */
 	public static final int GL_SAMPLES_PASSED_ARB = 0x8914;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetQueryivARB:
+	 */
 	public static final int GL_QUERY_COUNTER_BITS_ARB = 0x8864;
 	public static final int GL_CURRENT_QUERY_ARB = 0x8865;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetQueryObjectivARB and
+	 * GetQueryObjectuivARB:
+	 */
 	public static final int GL_QUERY_RESULT_ARB = 0x8866;
 	public static final int GL_QUERY_RESULT_AVAILABLE_ARB = 0x8867;
 

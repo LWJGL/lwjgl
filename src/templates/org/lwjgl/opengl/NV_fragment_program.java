@@ -31,25 +31,24 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.DoubleBuffer;
-
 import org.lwjgl.util.generator.*;
 
+import java.nio.*;
+
 public interface NV_fragment_program extends NV_program {
-	/*
-	 * Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, by the
-	 * <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev,
-	 * and by the <target> parameter of BindProgramNV, LoadProgramNV,
+
+	/**
+	 * Accepted by the &lt;cap&gt; parameter of Disable, Enable, and IsEnabled, by the
+	 * &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev,
+	 * and by the &lt;target&gt; parameter of BindProgramNV, LoadProgramNV,
 	 * ProgramLocalParameter4dARB, ProgramLocalParameter4dvARB,
 	 * ProgramLocalParameter4fARB, ProgramLocalParameter4fvARB,
 	 * GetProgramLocalParameterdvARB, and GetProgramLocalParameterfvARB:
 	 */
 	int GL_FRAGMENT_PROGRAM_NV = 0x8870;
 
-	/*
-	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv,
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv,
 	 * and GetDoublev:
 	 */
 	int GL_MAX_TEXTURE_COORDS_NV = 0x8871;
@@ -63,7 +62,7 @@ public interface NV_fragment_program extends NV_program {
 
 	@StripPostfix("params")
 	void glGetProgramNamedParameterfvNV(@GLuint int id, @AutoSize("name") @GLsizei int length, @Const @GLubyte ByteBuffer name, @Check("4") FloatBuffer params);
-	
+
 	@StripPostfix("params")
 	void glGetProgramNamedParameterdvNV(@GLuint int id, @AutoSize("name") @GLsizei int length, @Const @GLubyte ByteBuffer name, @Check("4") DoubleBuffer params);
 }

@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 import org.lwjgl.util.generator.*;
 
 public interface ARB_multitexture {
+
 	int GL_TEXTURE0_ARB = 0x84C0;
 	int GL_TEXTURE1_ARB = 0x84C1;
 	int GL_TEXTURE2_ARB = 0x84C2;
@@ -75,7 +76,7 @@ public interface ARB_multitexture {
 	void glActiveTextureARB(@GLenum int texture);
 
 	void glMultiTexCoord1fARB(@GLenum int target, float s);
-	
+
 	void glMultiTexCoord1dARB(@GLenum int target, double s);
 
 	void glMultiTexCoord1iARB(@GLenum int target, int s);
@@ -83,7 +84,7 @@ public interface ARB_multitexture {
 	void glMultiTexCoord1sARB(@GLenum int target, short s);
 
 	void glMultiTexCoord2fARB(@GLenum int target, float s, float t);
-	
+
 	void glMultiTexCoord2dARB(@GLenum int target, double s, double t);
 
 	void glMultiTexCoord2iARB(@GLenum int target, int s, int t);
@@ -91,7 +92,7 @@ public interface ARB_multitexture {
 	void glMultiTexCoord2sARB(@GLenum int target, short s, short t);
 
 	void glMultiTexCoord3fARB(@GLenum int target, float s, float t, float r);
-	
+
 	void glMultiTexCoord3dARB(@GLenum int target, double s, double t, double r);
 
 	void glMultiTexCoord3iARB(@GLenum int target, int s, int t, int r);

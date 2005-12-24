@@ -7,6 +7,10 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class ATITextureFloat {
+	/**
+	 * Accepted by the &lt;internalFormat&gt; parameter of TexImage1D,
+	 * TexImage2D, and TexImage3D:
+	 */
 	public static final int GL_RGBA_FLOAT32_ATI = 0x8814;
 	public static final int GL_RGB_FLOAT32_ATI = 0x8815;
 	public static final int GL_ALPHA_FLOAT32_ATI = 0x8816;

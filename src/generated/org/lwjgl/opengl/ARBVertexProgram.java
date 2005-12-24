@@ -7,21 +7,47 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class ARBVertexProgram extends ARBProgram {
+	/**
+	 * Accepted by the &lt;cap&gt; parameter of Disable, Enable, and IsEnabled, by the
+	 * &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev,
+	 * and by the &lt;target&gt; parameter of ProgramStringARB, BindProgramARB,
+	 * ProgramEnvParameter4[df][v]ARB, ProgramLocalParameter4[df][v]ARB,
+	 * GetProgramEnvParameter[df]vARB, GetProgramLocalParameter[df]vARB,
+	 * GetProgramivARB, and GetProgramStringARB.
+	 */
 	public static final int GL_VERTEX_PROGRAM_ARB = 0x8620;
+	/**
+	 * Accepted by the &lt;cap&gt; parameter of Disable, Enable, and IsEnabled, and by
+	 * the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv, and
+	 * GetDoublev:
+	 */
 	public static final int GL_VERTEX_PROGRAM_POINT_SIZE_ARB = 0x8642;
 	public static final int GL_VERTEX_PROGRAM_TWO_SIDE_ARB = 0x8643;
 	public static final int GL_COLOR_SUM_ARB = 0x8458;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetVertexAttrib[dfi]vARB:
+	 */
 	public static final int GL_VERTEX_ATTRIB_ARRAY_ENABLED_ARB = 0x8622;
 	public static final int GL_VERTEX_ATTRIB_ARRAY_SIZE_ARB = 0x8623;
 	public static final int GL_VERTEX_ATTRIB_ARRAY_STRIDE_ARB = 0x8624;
 	public static final int GL_VERTEX_ATTRIB_ARRAY_TYPE_ARB = 0x8625;
 	public static final int GL_VERTEX_ATTRIB_ARRAY_NORMALIZED_ARB = 0x886a;
 	public static final int GL_CURRENT_VERTEX_ATTRIB_ARB = 0x8626;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetVertexAttribPointervARB:
+	 */
 	public static final int GL_VERTEX_ATTRIB_ARRAY_POINTER_ARB = 0x8645;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetProgramivARB:
+	 */
 	public static final int GL_PROGRAM_ADDRESS_REGISTERS_ARB = 0x88b0;
 	public static final int GL_MAX_PROGRAM_ADDRESS_REGISTERS_ARB = 0x88b1;
 	public static final int GL_PROGRAM_NATIVE_ADDRESS_REGISTERS_ARB = 0x88b2;
 	public static final int GL_MAX_PROGRAM_NATIVE_ADDRESS_REGISTERS_ARB = 0x88b3;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 * GetFloatv, and GetDoublev:
+	 */
 	public static final int GL_MAX_VERTEX_ATTRIBS_ARB = 0x8869;
 
 	private ARBVertexProgram() {

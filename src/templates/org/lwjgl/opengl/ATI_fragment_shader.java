@@ -29,18 +29,14 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*
- * Note: 2X_BIT_ATI, 4X_BIT_ATI and 8X_BIT_ATI has been changed to X2_BIT_ATI, X4_BIT_ATI and X8_BIT_ATI
- * because variables cannot start with a number.
- *
- */
 package org.lwjgl.opengl;
-
-import java.nio.FloatBuffer;
 
 import org.lwjgl.util.generator.*;
 
+import java.nio.*;
+
 public interface ATI_fragment_shader {
+
 	int GL_FRAGMENT_SHADER_ATI = 0x8920;
 	int GL_REG_0_ATI = 0x8921;
 	int GL_REG_1_ATI = 0x8922;
@@ -135,9 +131,9 @@ public interface ATI_fragment_shader {
 	int GL_RED_BIT_ATI = 0x00000001;
 	int GL_GREEN_BIT_ATI = 0x00000002;
 	int GL_BLUE_BIT_ATI = 0x00000004;
-	int GL_X2_BIT_ATI = 0x00000001;
-	int GL_X4_BIT_ATI = 0x00000002;
-	int GL_X8_BIT_ATI = 0x00000004;
+	int GL_2X_BIT_ATI = 0x00000001;
+	int GL_4X_BIT_ATI = 0x00000002;
+	int GL_8X_BIT_ATI = 0x00000004;
 	int GL_HALF_BIT_ATI = 0x00000008;
 	int GL_QUARTER_BIT_ATI = 0x00000010;
 	int GL_EIGHTH_BIT_ATI = 0x00000020;
@@ -146,7 +142,8 @@ public interface ATI_fragment_shader {
 	int GL_NEGATE_BIT_ATI = 0x00000004;
 	int GL_BIAS_BIT_ATI = 0x00000008;
 
-	@GLuint int glGenFragmentShadersATI(@GLuint int range);
+	@GLuint
+	int glGenFragmentShadersATI(@GLuint int range);
 
 	void glBindFragmentShaderATI(@GLuint int id);
 

@@ -7,7 +7,16 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class EXTDepthBoundsTest {
+	/**
+	 *         Accepted by the &lt;cap&gt; parameter of Enable, Disable, and IsEnabled,
+	 *         and by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 *         GetFloatv, and GetDoublev:
+	 */
 	public static final int GL_DEPTH_BOUNDS_TEST_EXT = 0x8890;
+	/**
+	 *         Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 *         GetFloatv, and GetDoublev:
+	 */
 	public static final int GL_DEPTH_BOUNDS_EXT = 0x8891;
 
 	private EXTDepthBoundsTest() {

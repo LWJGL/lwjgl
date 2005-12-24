@@ -31,10 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 public interface NV_register_combiners {
 	int GL_REGISTER_COMBINERS_NV = 0x8522;
@@ -107,16 +106,19 @@ public interface NV_register_combiners {
 
 	@StripPostfix("params")
 	void glGetCombinerInputParameterfvNV(@GLenum int stage, @GLenum int portion, @GLenum int variable, @GLenum int pname, @Check("4") FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetCombinerInputParameterivNV(@GLenum int stage, @GLenum int portion, @GLenum int variable, @GLenum int pname, @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
 	void glGetCombinerOutputParameterfvNV(@GLenum int stage, @GLenum int portion, @GLenum int pname, @Check("4") FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetCombinerOutputParameterivNV(@GLenum int stage, @GLenum int portion, @GLenum int pname, @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
 	void glGetFinalCombinerInputParameterfvNV(@GLenum int variable, @GLenum int pname, @Check("4") FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetFinalCombinerInputParameterivNV(@GLenum int variable, @GLenum int pname, @Check("4") IntBuffer params);
 }

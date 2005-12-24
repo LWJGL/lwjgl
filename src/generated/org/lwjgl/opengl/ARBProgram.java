@@ -7,7 +7,13 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public class ARBProgram {
+	/**
+	 * Accepted by the &lt;format&gt; parameter of ProgramStringARB:
+	 */
 	public static final int GL_PROGRAM_FORMAT_ASCII_ARB = 0x8875;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetProgramivARB:
+	 */
 	public static final int GL_PROGRAM_LENGTH_ARB = 0x8627;
 	public static final int GL_PROGRAM_FORMAT_ARB = 0x8876;
 	public static final int GL_PROGRAM_BINDING_ARB = 0x8677;
@@ -30,14 +36,27 @@ public class ARBProgram {
 	public static final int GL_MAX_PROGRAM_LOCAL_PARAMETERS_ARB = 0x88b4;
 	public static final int GL_MAX_PROGRAM_ENV_PARAMETERS_ARB = 0x88b5;
 	public static final int GL_PROGRAM_UNDER_NATIVE_LIMITS_ARB = 0x88b6;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetProgramStringARB:
+	 */
 	public static final int GL_PROGRAM_STRING_ARB = 0x8628;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 * GetFloatv, and GetDoublev:
+	 */
 	public static final int GL_PROGRAM_ERROR_POSITION_ARB = 0x864b;
 	public static final int GL_CURRENT_MATRIX_ARB = 0x8641;
 	public static final int GL_TRANSPOSE_CURRENT_MATRIX_ARB = 0x88b7;
 	public static final int GL_CURRENT_MATRIX_STACK_DEPTH_ARB = 0x8640;
 	public static final int GL_MAX_PROGRAM_MATRICES_ARB = 0x862f;
 	public static final int GL_MAX_PROGRAM_MATRIX_STACK_DEPTH_ARB = 0x862e;
+	/**
+	 * Accepted by the &lt;name&gt; parameter of GetString:
+	 */
 	public static final int GL_PROGRAM_ERROR_STRING_ARB = 0x8874;
+	/**
+	 * Accepted by the &lt;mode&gt; parameter of MatrixMode:
+	 */
 	public static final int GL_MATRIX0_ARB = 0x88c0;
 	public static final int GL_MATRIX1_ARB = 0x88c1;
 	public static final int GL_MATRIX2_ARB = 0x88c2;

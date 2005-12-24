@@ -32,19 +32,20 @@
 package org.lwjgl.opengl;
 
 public interface ARB_vertex_buffer_object extends ARB_buffer_object {
-	/*
-	 * Accepted by the <target> parameters of BindBufferARB, BufferDataARB,
+
+	/**
+	 * Accepted by the &lt;target&gt; parameters of BindBufferARB, BufferDataARB,
 	 * BufferSubDataARB, MapBufferARB, UnmapBufferARB,
 	 * GetBufferSubDataARB, GetBufferParameterivARB, and
 	 * GetBufferPointervARB:
-	*/
+	 */
 	int GL_ARRAY_BUFFER_ARB = 0x8892;
 	int GL_ELEMENT_ARRAY_BUFFER_ARB = 0x8893;
 
-	/*
-	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
 	 * GetFloatv, and GetDoublev:
-	*/
+	 */
 	int GL_ARRAY_BUFFER_BINDING_ARB = 0x8894;
 	int GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB = 0x8895;
 	int GL_VERTEX_ARRAY_BUFFER_BINDING_ARB = 0x8896;
@@ -57,8 +58,8 @@ public interface ARB_vertex_buffer_object extends ARB_buffer_object {
 	int GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING_ARB = 0x889D;
 	int GL_WEIGHT_ARRAY_BUFFER_BINDING_ARB = 0x889E;
 
-	/*
-	 * Accepted by the <pname> parameter of GetVertexAttribivARB:
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetVertexAttribivARB:
 	 */
 	int GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING_ARB = 0x889F;
 }

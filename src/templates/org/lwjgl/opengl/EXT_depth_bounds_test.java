@@ -34,17 +34,18 @@ package org.lwjgl.opengl;
 import org.lwjgl.util.generator.*;
 
 public interface EXT_depth_bounds_test {
-	/*
-	Accepted by the <cap> parameter of Enable, Disable, and IsEnabled,
-	and by the <pname> parameter of GetBooleanv, GetIntegerv,
-	GetFloatv, and GetDoublev:
-	*/
+
+	/**
+	 Accepted by the &lt;cap&gt; parameter of Enable, Disable, and IsEnabled,
+	 and by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 GetFloatv, and GetDoublev:
+	 */
 	int GL_DEPTH_BOUNDS_TEST_EXT = 0x8890;
 
-	/*
-	Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
-	GetFloatv, and GetDoublev:
-	*/
+	/**
+	 Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 GetFloatv, and GetDoublev:
+	 */
 	int GL_DEPTH_BOUNDS_EXT = 0x8891;
 
 	void glDepthBoundsEXT(@GLclampd double zmin, @GLclampd double zmax);

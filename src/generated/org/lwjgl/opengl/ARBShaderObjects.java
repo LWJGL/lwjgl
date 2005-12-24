@@ -7,7 +7,13 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class ARBShaderObjects {
+	/**
+	 * Accepted by the &lt;pname&gt; argument of GetHandleARB:
+	 */
 	public static final int GL_PROGRAM_OBJECT_ARB = 0x8b40;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetObjectParameter{fi}vARB:
+	 */
 	public static final int GL_OBJECT_TYPE_ARB = 0x8b4e;
 	public static final int GL_OBJECT_SUBTYPE_ARB = 0x8b4f;
 	public static final int GL_OBJECT_DELETE_STATUS_ARB = 0x8b80;
@@ -19,7 +25,13 @@ public final class ARBShaderObjects {
 	public static final int GL_OBJECT_ACTIVE_UNIFORMS_ARB = 0x8b86;
 	public static final int GL_OBJECT_ACTIVE_UNIFORM_MAX_LENGTH_ARB = 0x8b87;
 	public static final int GL_OBJECT_SHADER_SOURCE_LENGTH_ARB = 0x8b88;
+	/**
+	 * Returned by the &lt;params&gt; parameter of GetObjectParameter{fi}vARB:
+	 */
 	public static final int GL_SHADER_OBJECT_ARB = 0x8b48;
+	/**
+	 * Returned by the &lt;type&gt; parameter of GetActiveUniformARB:
+	 */
 	public static final int GL_FLOAT = 0x1406;
 	public static final int GL_FLOAT_VEC2_ARB = 0x8b50;
 	public static final int GL_FLOAT_VEC3_ARB = 0x8b51;
@@ -82,8 +94,6 @@ public final class ARBShaderObjects {
 	 * The ARB_shader_objects extension allows multiple, optionally null-terminated, source strings to define a shader program.
 	 * <p/>
 	 * This method uses just a single string, that should NOT be null-terminated.
-	 * @param shaderObj
-	 * @param string
 	 */
 	public static void glShaderSourceARB(int shader, ByteBuffer string) {
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glShaderSourceARB_pointer;
@@ -320,7 +330,6 @@ public final class ARBShaderObjects {
 	 * Returns the location of the uniform with the specified name. The ByteBuffer should contain the uniform name as a <b>null-terminated</b> string.
 	 * @param programObj
 	 * @param name
-	 * @return
 	 */
 	public static int glGetUniformLocationARB(int programObj, ByteBuffer name) {
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glGetUniformLocationARB_pointer;

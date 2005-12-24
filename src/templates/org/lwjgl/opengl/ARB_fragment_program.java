@@ -32,18 +32,19 @@
 package org.lwjgl.opengl;
 
 public interface ARB_fragment_program extends ARB_program {
-	/*
-	 * Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, by the
-	 * <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev,
-	 * and by the <target> parameter of ProgramStringARB, BindProgramARB,
+
+	/**
+	 * Accepted by the &lt;cap&gt; parameter of Disable, Enable, and IsEnabled, by the
+	 * &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev,
+	 * and by the &lt;target&gt; parameter of ProgramStringARB, BindProgramARB,
 	 * ProgramEnvParameter4[df][v]ARB, ProgramLocalParameter4[df][v]ARB,
 	 * GetProgramEnvParameter[df]vARB, GetProgramLocalParameter[df]vARB,
 	 * GetProgramivARB and GetProgramStringARB.
 	 */
 	int GL_FRAGMENT_PROGRAM_ARB = 0x8804;
 
-	/*
-	 * Accepted by the <pname> parameter of GetProgramivARB:
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetProgramivARB:
 	 */
 	int GL_PROGRAM_ALU_INSTRUCTIONS_ARB = 0x8805;
 	int GL_PROGRAM_TEX_INSTRUCTIONS_ARB = 0x8806;
@@ -58,8 +59,8 @@ public interface ARB_fragment_program extends ARB_program {
 	int GL_MAX_PROGRAM_NATIVE_TEX_INSTRUCTIONS_ARB = 0x880F;
 	int GL_MAX_PROGRAM_NATIVE_TEX_INDIRECTIONS_ARB = 0x8810;
 
-	/*
-	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv,
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv,
 	 * and GetDoublev:
 	 */
 	int GL_MAX_TEXTURE_COORDS_ARB = 0x8871;

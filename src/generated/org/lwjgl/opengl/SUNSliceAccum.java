@@ -7,6 +7,9 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class SUNSliceAccum {
+	/**
+	 * Accepted by the &lt;op&gt; parameter of Accum,
+	 */
 	public static final int GL_SLICE_ACCUM_SUN = 0x85cc;
 
 	private SUNSliceAccum() {

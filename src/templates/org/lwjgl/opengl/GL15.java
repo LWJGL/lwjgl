@@ -72,41 +72,41 @@ public interface GL15 {
 	int GL_BUFFER_MAPPED = 0x88BC;
 	int GL_BUFFER_MAP_POINTER = 0x88BD;
 
-	@Code(	"		StateTracker.bindBuffer(target, buffer);")
+	@Code("		StateTracker.bindBuffer(target, buffer);")
 	void glBindBuffer(@GLenum int target, @GLuint int buffer);
-	@Code(	"		StateTracker.deleteBuffers(buffers);")
+
+	@Code("		StateTracker.deleteBuffers(buffers);")
 	void glDeleteBuffers(@AutoSize("buffers") @GLsizei int n, @Const @GLuint IntBuffer buffers);
 
 	void glGenBuffers(@AutoSize("buffers") @GLsizei int n, @GLuint IntBuffer buffers);
+
 	boolean glIsBuffer(@GLuint int buffer);
 
 	@GenerateAutos
 	void glBufferData(@GLenum int target, @AutoSize("data") @GLsizeiptr int size,
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer data, @GLenum int usage);
+	                  @Const
+	                  @GLbyte
+	                  @GLshort
+	                  @GLint
+	                  @GLfloat
+	                  @GLdouble Buffer data, @GLenum int usage);
+
 	void glBufferSubData(@GLenum int target, @GLintptr int offset, @AutoSize("data") @GLsizeiptr int size,
-			@Check
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer data);
+	                     @Check
+	                     @Const
+	                     @GLbyte
+	                     @GLshort
+	                     @GLint
+	                     @GLfloat
+	                     @GLdouble Buffer data);
 
 	void glGetBufferSubData(@GLenum int target, @GLintptr int offset, @AutoSize("data") @GLsizeiptr int size,
-			@Check
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer data);
+	                        @Check
+	                        @GLbyte
+	                        @GLshort
+	                        @GLint
+	                        @GLfloat
+	                        @GLdouble Buffer data);
 
 	/**
 	 * glMapBuffer maps a gl vertex buffer buffer to a ByteBuffer. The oldBuffer argument can be null, in which case a new
@@ -124,7 +124,8 @@ public interface GL15 {
 	 * @return A ByteBuffer representing the mapped buffer memory.
 	 */
 	@CachedResult
-	@GLvoid ByteBuffer glMapBuffer(@GLenum int target, @GLenum int access);
+	@GLvoid
+	ByteBuffer glMapBuffer(@GLenum int target, @GLenum int access);
 
 	boolean glUnmapBuffer(@GLenum int target);
 
@@ -138,30 +139,33 @@ public interface GL15 {
 	// ---------------------- ARB_occlusion_query ----------------------
 	// -----------------------------------------------------------------
 
-	/*
-	* Accepted by the <target> parameter of BeginQuery, EndQuery,
-	* and GetQueryiv:
-	*/
+	/**
+	 * Accepted by the &lt;target&gt; parameter of BeginQuery, EndQuery,
+	 * and GetQueryiv:
+	 */
 	int GL_SAMPLES_PASSED = 0x8914;
 
-	/*
-	Accepted by the <pname> parameter of GetQueryiv:
-	*/
+	/**
+	 Accepted by the &lt;pname&gt; parameter of GetQueryiv:
+	 */
 	int GL_QUERY_COUNTER_BITS = 0x8864;
 	int GL_CURRENT_QUERY = 0x8865;
 
-	/*
-	Accepted by the <pname> parameter of GetQueryObjectiv and
-	GetQueryObjectuiv:
-	*/
+	/**
+	 Accepted by the &lt;pname&gt; parameter of GetQueryObjectiv and
+	 GetQueryObjectuiv:
+	 */
 	int GL_QUERY_RESULT = 0x8866;
 	int GL_QUERY_RESULT_AVAILABLE = 0x8867;
 
 	void glGenQueries(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
+
 	void glDeleteQueries(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
+
 	boolean glIsQuery(@GLuint int id);
 
 	void glBeginQuery(@GLenum int target, @GLuint int id);
+
 	void glEndQuery(@GLenum int target);
 
 	@StripPostfix("params")

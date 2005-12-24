@@ -34,10 +34,11 @@ package org.lwjgl.opengl;
 import org.lwjgl.util.generator.*;
 
 public interface EXT_blend_equation_separate {
-	/*
-	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
+
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
 	 * GetFloatv, and GetDoublev:
-	*/
+	 */
 	int GL_BLEND_EQUATION_RGB_EXT = 0x8009;
 	int GL_BLEND_EQUATION_ALPHA_EXT = 0x883D;
 

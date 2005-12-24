@@ -32,10 +32,11 @@
 package org.lwjgl.opengl;
 
 public interface NV_texture_expand_normal {
-	/*
-	 * Accepted by the <pname> parameters of TexParameteri,
+
+	/**
+	 * Accepted by the &lt;pname&gt; parameters of TexParameteri,
 	 * TexParameteriv, TexParameterf, TexParameterfv, GetTexParameteri,
 	 * and GetTexParameteriv:
-	*/
+	 */
 	int GL_TEXTURE_UNSIGNED_REMAP_MODE_NV = 0x888F;
 }

@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
 
-@Extension(postfix="EXT", className="EXTTextureCompressionS3TC")
+@Extension(postfix = "EXT", className = "EXTTextureCompressionS3TC")
 public interface EXT_texture_compression_s3tc {
 	int GL_COMPRESSED_RGB_S3TC_DXT1_EXT = 0x83F0;
 	int GL_COMPRESSED_RGBA_S3TC_DXT1_EXT = 0x83F1;

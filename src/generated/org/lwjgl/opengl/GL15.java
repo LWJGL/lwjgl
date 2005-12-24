@@ -38,9 +38,20 @@ public final class GL15 {
 	public static final int GL_BUFFER_ACCESS = 0x88bb;
 	public static final int GL_BUFFER_MAPPED = 0x88bc;
 	public static final int GL_BUFFER_MAP_POINTER = 0x88bd;
+	/**
+	 * Accepted by the &lt;target&gt; parameter of BeginQuery, EndQuery,
+	 * and GetQueryiv:
+	 */
 	public static final int GL_SAMPLES_PASSED = 0x8914;
+	/**
+	 *         Accepted by the &lt;pname&gt; parameter of GetQueryiv:
+	 */
 	public static final int GL_QUERY_COUNTER_BITS = 0x8864;
 	public static final int GL_CURRENT_QUERY = 0x8865;
+	/**
+	 *         Accepted by the &lt;pname&gt; parameter of GetQueryObjectiv and
+	 *         GetQueryObjectuiv:
+	 */
 	public static final int GL_QUERY_RESULT = 0x8866;
 	public static final int GL_QUERY_RESULT_AVAILABLE = 0x8867;
 

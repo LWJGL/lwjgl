@@ -31,9 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.FloatBuffer;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 public interface EXT_point_parameters {
 	int GL_POINT_SIZE_MIN_EXT = 0x8126;

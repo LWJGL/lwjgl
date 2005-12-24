@@ -32,10 +32,11 @@
 package org.lwjgl.opengl;
 
 public interface NV_float_buffer {
-	/*
-	 * Accepted by the <internalformat> parameter of TexImage2D and
+
+	/**
+	 * Accepted by the &lt;internalformat&gt; parameter of TexImage2D and
 	 * CopyTexImage2D:
-	*/
+	 */
 	int GL_FLOAT_R_NV = 0x8880;
 	int GL_FLOAT_RG_NV = 0x8881;
 	int GL_FLOAT_RGB_NV = 0x8882;
@@ -49,42 +50,42 @@ public interface NV_float_buffer {
 	int GL_FLOAT_RGBA16_NV = 0x888A;
 	int GL_FLOAT_RGBA32_NV = 0x888B;
 
-	/*
-	* Accepted by the <pname> parameter of GetTexLevelParameterfv and
-	* GetTexLevelParameteriv:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetTexLevelParameterfv and
+	 * GetTexLevelParameteriv:
+	 */
 	int GL_TEXTURE_FLOAT_COMPONENTS_NV = 0x888C;
 
-	/*
-	* Accepted by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv,
-	* and GetDoublev:
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv,
+	 * and GetDoublev:
+	 */
 	int GL_FLOAT_CLEAR_COLOR_VALUE_NV = 0x888D;
 	int GL_FLOAT_RGBA_MODE_NV = 0x888E;
 
+	/**
+	 * Accepted in the &lt;piAttributes&gt; array of wglGetPixelFormatAttribivARB and
+	 * wglGetPixelFormatAttribfvARB and in the &lt;piAttribIList&gt; and
+	 * &lt;pfAttribFList&gt; arrays of wglChoosePixelFormatARB:
+	 */
 	/*
-	* Accepted in the <piAttributes> array of wglGetPixelFormatAttribivARB and
-	* wglGetPixelFormatAttribfvARB and in the <piAttribIList> and
-	* <pfAttribFList> arrays of wglChoosePixelFormatARB:
-	*/
-    /*
-	int WGL_FLOAT_COMPONENTS_NV = 0x20B0;
-	int WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_R_NV = 0x20B1;
-	int WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_RG_NV = 0x20B2;
-	int WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_RGB_NV = 0x20B3;
-	int WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_RGBA_NV = 0x20B4;
-	*/
+	 int WGL_FLOAT_COMPONENTS_NV = 0x20B0;
+	 int WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_R_NV = 0x20B1;
+	 int WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_RG_NV = 0x20B2;
+	 int WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_RGB_NV = 0x20B3;
+	 int WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_RGBA_NV = 0x20B4;
+	 */
 
+	/**
+	 * Accepted in the &lt;piAttribIList&gt; array of wglCreatePbufferARB and returned
+	 * in the &lt;value&gt; parameter of wglQueryPbufferARB when &lt;iAttribute&gt; is
+	 * WGL_TEXTURE_FORMAT_ARB:
+	 */
 	/*
-	* Accepted in the <piAttribIList> array of wglCreatePbufferARB and returned
-	* in the <value> parameter of wglQueryPbufferARB when <iAttribute> is
-	* WGL_TEXTURE_FORMAT_ARB:
-	*/
-    /*
-	int WGL_TEXTURE_FLOAT_R_NV = 0x20B5;
-	int WGL_TEXTURE_FLOAT_RG_NV = 0x20B6;
-	int WGL_TEXTURE_FLOAT_RGB_NV = 0x20B7;
-	int WGL_TEXTURE_FLOAT_RGBA_NV = 0x20B8;
-	*/
+	 int WGL_TEXTURE_FLOAT_R_NV = 0x20B5;
+	 int WGL_TEXTURE_FLOAT_RG_NV = 0x20B6;
+	 int WGL_TEXTURE_FLOAT_RGB_NV = 0x20B7;
+	 int WGL_TEXTURE_FLOAT_RGBA_NV = 0x20B8;
+	 */
 
 }

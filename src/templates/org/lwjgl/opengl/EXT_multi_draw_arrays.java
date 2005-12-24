@@ -31,13 +31,13 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.IntBuffer;
-
 import org.lwjgl.util.generator.*;
 
+import java.nio.*;
+
 public interface EXT_multi_draw_arrays {
-	@Code(	"		if (piFirst.remaining() != piCount.remaining()) {\n" +
-			"			throw new IllegalArgumentException(\"piFirst.remaining() != piCount.remaining()\");\n" +
-			"		}")
+	@Code("		if (piFirst.remaining() != piCount.remaining()) {\n" +
+	      "			throw new IllegalArgumentException(\"piFirst.remaining() != piCount.remaining()\");\n" +
+	      "		}")
 	void glMultiDrawArraysEXT(@GLenum int mode, IntBuffer piFirst, @Check @GLsizei IntBuffer piCount, @AutoSize("piFirst") int primcount);
 }

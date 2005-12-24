@@ -31,18 +31,19 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.ShortBuffer;
-
 import org.lwjgl.util.generator.*;
 
+import java.nio.*;
+
 public interface NV_half_float {
-	/*
-	 * Accepted by the <type> argument of VertexPointer, NormalPointer,
+
+	/**
+	 * Accepted by the &lt;type&gt; argument of VertexPointer, NormalPointer,
 	 * ColorPointer, TexCoordPointer, FogCoordPointerEXT,
 	 * SecondaryColorPointerEXT, VertexWeightPointerEXT, VertexAttribPointerNV,
 	 * DrawPixels, ReadPixels, TexImage1D, TexImage2D, TexImage3D, TexSubImage1D,
 	 * TexSubImage2D, TexSubImage3D, and GetTexImage:
-	*/
+	 */
 	int GL_HALF_FLOAT_NV = 0x140B;
 
 	void glVertex2hNV(@GLhalf short x, @GLhalf short y);
@@ -87,10 +88,13 @@ public interface NV_half_float {
 
 	@StripPostfix("attribs")
 	void glVertexAttribs1hvNV(@GLuint int index, @AutoSize("attribs") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
+
 	@StripPostfix("attribs")
-	void glVertexAttribs2hvNV(@GLuint int index, @AutoSize(value="attribs", expression=" >> 1") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
+	void glVertexAttribs2hvNV(@GLuint int index, @AutoSize(value = "attribs", expression = " >> 1") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
+
 	@StripPostfix("attribs")
-	void glVertexAttribs3hvNV(@GLuint int index, @AutoSize(value="attribs", expression=" / 3") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
+	void glVertexAttribs3hvNV(@GLuint int index, @AutoSize(value = "attribs", expression = " / 3") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
+
 	@StripPostfix("attribs")
-	void glVertexAttribs4hvNV(@GLuint int index, @AutoSize(value="attribs", expression=" >> 2") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
+	void glVertexAttribs4hvNV(@GLuint int index, @AutoSize(value = "attribs", expression = " >> 2") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
 }

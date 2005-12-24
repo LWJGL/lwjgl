@@ -31,11 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 public interface ATI_vertex_array_object {
 	int GL_STATIC_ATI = 0x8760;
@@ -48,28 +46,28 @@ public interface ATI_vertex_array_object {
 	int GL_ARRAY_OBJECT_OFFSET_ATI = 0x8767;
 
 	@GenerateAutos
-	@GLuint int glNewObjectBufferATI(@AutoSize("pPointer") @GLsizei int size,
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer pPointer, @GLenum int usage);
+	@GLuint
+	int glNewObjectBufferATI(@AutoSize("pPointer") @GLsizei int size,
+	                         @Const
+	                         @GLbyte
+	                         @GLshort
+	                         @GLint
+	                         @GLfloat
+	                         @GLdouble Buffer pPointer, @GLenum int usage);
 
 	boolean glIsObjectBufferATI(@GLuint int buffer);
 
 	void glUpdateObjectBufferATI(@GLuint int buffer, @GLuint int offset, @AutoSize("pPointer") @GLsizei int size,
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer pPointer, @GLenum int preserve);
+	                             @Const
+	                             @GLbyte
+	                             @GLshort
+	                             @GLint
+	                             @GLfloat
+	                             @GLdouble Buffer pPointer, @GLenum int preserve);
 
 	@StripPostfix("params")
 	void glGetObjectBufferfvATI(@GLuint int buffer, @GLenum int pname, @Check FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetObjectBufferivATI(@GLuint int buffer, @GLenum int pname, @Check IntBuffer params);
 
@@ -79,6 +77,7 @@ public interface ATI_vertex_array_object {
 
 	@StripPostfix("params")
 	void glGetArrayObjectfvATI(@GLenum int array, @GLenum int pname, @Check("4") FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetArrayObjectivATI(@GLenum int array, @GLenum int pname, @Check("4") IntBuffer params);
 
@@ -86,6 +85,7 @@ public interface ATI_vertex_array_object {
 
 	@StripPostfix("params")
 	void glGetVariantArrayObjectfvATI(@GLuint int id, @GLenum int pname, @Check("4") FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetVariantArrayObjectivATI(@GLuint int id, @GLenum int pname, @Check("4") IntBuffer params);
 }

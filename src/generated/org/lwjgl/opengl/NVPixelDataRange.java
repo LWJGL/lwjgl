@@ -7,10 +7,22 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class NVPixelDataRange {
+	/**
+	 * Accepted by the &lt;target&gt; parameter of PixelDataRangeNV and
+	 * FlushPixelDataRangeNV, and by the &lt;cap&gt; parameter of
+	 * EnableClientState, DisableClientState, and IsEnabled:
+	 */
 	public static final int GL_WRITE_PIXEL_DATA_RANGE_NV = 0x8878;
 	public static final int GL_READ_PIXEL_DATA_RANGE_NV = 0x8879;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 * GetFloatv, and GetDoublev:
+	 */
 	public static final int GL_WRITE_PIXEL_DATA_RANGE_LENGTH_NV = 0x887a;
 	public static final int GL_READ_PIXEL_DATA_RANGE_LENGTH_NV = 0x887b;
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetPointerv:
+	 */
 	public static final int GL_WRITE_PIXEL_DATA_RANGE_POINTER_NV = 0x887c;
 	public static final int GL_READ_PIXEL_DATA_RANGE_POINTER_NV = 0x887d;
 

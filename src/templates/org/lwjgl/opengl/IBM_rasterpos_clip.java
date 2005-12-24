@@ -33,10 +33,10 @@ package org.lwjgl.opengl;
 
 public interface IBM_rasterpos_clip {
 
-    /**
-    * Accepted by the <target> parameter of Enable and Disable and the <value>
-    * parameter of IsEnabled, GetBooleanv, GetIntegerv, GetFloatv, GetDoublev:
-    */
+	/**
+	 * Accepted by the &lt;target&gt; parameter of Enable and Disable and the &lt;value&gt;
+	 * parameter of IsEnabled, GetBooleanv, GetIntegerv, GetFloatv, GetDoublev:
+	 */
 	int GL_RASTER_POSITION_UNCLIPPED_IBM = 103010;
 
 }

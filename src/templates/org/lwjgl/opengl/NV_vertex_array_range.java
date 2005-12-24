@@ -31,10 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 public interface NV_vertex_array_range {
 	int GL_VERTEX_ARRAY_RANGE_NV = 0x851D;
@@ -44,18 +43,18 @@ public interface NV_vertex_array_range {
 	int GL_VERTEX_ARRAY_RANGE_POINTER_NV = 0x8521;
 
 	void glVertexArrayRangeNV(@AutoSize("pPointer") @GLsizei int size,
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer pPointer);
+	                          @Const
+	                          @GLbyte
+	                          @GLshort
+	                          @GLint
+	                          @GLfloat
+	                          @GLdouble Buffer pPointer);
 
 	void glFlushVertexArrayRangeNV();
 
 	@PlatformDependent({Platform.WGL, Platform.GLX})
-	@GLvoid ByteBuffer glAllocateMemoryNV(@AutoResultSize int size, float readFrequency, float writeFrequency, float priority);
+	@GLvoid
+	ByteBuffer glAllocateMemoryNV(@AutoResultSize int size, float readFrequency, float writeFrequency, float priority);
 
 	@PlatformDependent({Platform.WGL, Platform.GLX})
 	void glFreeMemoryNV(@Check @GLbyte Buffer pointer);

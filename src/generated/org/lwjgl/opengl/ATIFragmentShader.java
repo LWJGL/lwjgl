@@ -101,9 +101,9 @@ public final class ATIFragmentShader {
 	public static final int GL_RED_BIT_ATI = 0x1;
 	public static final int GL_GREEN_BIT_ATI = 0x2;
 	public static final int GL_BLUE_BIT_ATI = 0x4;
-	public static final int GL_X2_BIT_ATI = 0x1;
-	public static final int GL_X4_BIT_ATI = 0x2;
-	public static final int GL_X8_BIT_ATI = 0x4;
+	public static final int GL_2X_BIT_ATI = 0x1;
+	public static final int GL_4X_BIT_ATI = 0x2;
+	public static final int GL_8X_BIT_ATI = 0x4;
 	public static final int GL_HALF_BIT_ATI = 0x8;
 	public static final int GL_QUARTER_BIT_ATI = 0x10;
 	public static final int GL_EIGHTH_BIT_ATI = 0x20;

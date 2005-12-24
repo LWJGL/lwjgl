@@ -31,9 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.IntBuffer;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 public interface NV_point_sprite {
 	int GL_POINT_SPRITE_NV = 0x8861;

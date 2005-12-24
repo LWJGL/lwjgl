@@ -17,10 +17,10 @@ public final class ATIMapObjectBuffer {
 	 * null, in which case a new ByteBuffer will be created, pointing to the returned memory. If
 	 * oldBuffer is non-null, it will be returned if it points to the same mapped memory, otherwise a
 	 * new ByteBuffer is created.
-	 * @param result_size      The size of the buffer area.
-	 * @param old_buffer A ByteBuffer. If this argument points to the same address as the new mapping,
-	 *                  it will be returned and no new buffer will be created. In that case, size is
-	 *                  ignored.
+	 * @param result_size   The size of the buffer area.
+	 * @param old_buffer    A ByteBuffer. If this argument points to the same address as the new mapping,
+	 *                      it will be returned and no new buffer will be created. In that case, size is
+	 *                      ignored.
 	 * @return A ByteBuffer representing the mapped object buffer memory.
 	 */
 	public static java.nio.ByteBuffer glMapObjectBufferATI(int buffer, int result_size, java.nio.ByteBuffer old_buffer) {

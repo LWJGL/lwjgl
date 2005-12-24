@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
 
-import java.nio.IntBuffer;
+import java.nio.*;
 
 public interface EXT_framebuffer_object {
 
@@ -61,8 +61,8 @@ public interface EXT_framebuffer_object {
 	int GL_STENCIL_INDEX16_EXT = 0x8D49;
 
 	/**
-     * Accepted by the &lt;pname&gt; parameter of GetRenderbufferParameterivEXT:
-    */
+	 * Accepted by the &lt;pname&gt; parameter of GetRenderbufferParameterivEXT:
+	 */
 	int GL_RENDERBUFFER_WIDTH_EXT = 0x8D42;
 	int GL_RENDERBUFFER_HEIGHT_EXT = 0x8D43;
 	int GL_RENDERBUFFER_INTERNAL_FORMAT_EXT = 0x8D44;
@@ -137,6 +137,7 @@ public interface EXT_framebuffer_object {
 	void glBindRenderbufferEXT(@GLenum int target, @GLuint int renderbuffer);
 
 	void glDeleteRenderbuffersEXT(@AutoSize("renderbuffers") int n, @Const @GLuint IntBuffer renderbuffers);
+
 	void glGenRenderbuffersEXT(@AutoSize("renderbuffers") int n, @GLuint IntBuffer renderbuffers);
 
 	void glRenderbufferStorageEXT(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLsizei int height);
@@ -149,9 +150,11 @@ public interface EXT_framebuffer_object {
 	void glBindFramebufferEXT(@GLenum int target, @GLuint int framebuffer);
 
 	void glDeleteFramebuffersEXT(@AutoSize("framebuffers") int n, @Const @GLuint IntBuffer framebuffers);
+
 	void glGenFramebuffersEXT(@AutoSize("framebuffers") int n, @Const @GLuint IntBuffer framebuffers);
 
-	@GLenum int glCheckFramebufferStatusEXT(@GLenum int target);
+	@GLenum
+	int glCheckFramebufferStatusEXT(@GLenum int target);
 
 	void glFramebufferTexture1DEXT(@GLenum int target, @GLenum int attachment, @GLenum int textarget, @GLuint int texture, int level);
 

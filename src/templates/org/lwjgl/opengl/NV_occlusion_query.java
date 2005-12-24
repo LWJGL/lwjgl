@@ -31,9 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.IntBuffer;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 public interface NV_occlusion_query {
 	int GL_OCCLUSION_TEST_HP = 0x8165;
@@ -45,6 +45,7 @@ public interface NV_occlusion_query {
 	int GL_PIXEL_COUNT_AVAILABLE_NV = 0x8867;
 
 	void glGenOcclusionQueriesNV(@AutoSize("piIDs") @GLsizei int n, @GLuint IntBuffer piIDs);
+
 	void glDeleteOcclusionQueriesNV(@AutoSize("piIDs") @GLsizei int n, @Const @GLuint IntBuffer piIDs);
 
 	boolean glIsOcclusionQueryNV(@GLuint int id);
@@ -55,6 +56,7 @@ public interface NV_occlusion_query {
 
 	@StripPostfix("params")
 	void glGetOcclusionQueryuivNV(@GLuint int id, @GLenum int pname, @Check("4") @GLuint IntBuffer params);
+
 	@StripPostfix("params")
 	void glGetOcclusionQueryivNV(@GLuint int id, @GLenum int pname, @Check("4") IntBuffer params);
 }

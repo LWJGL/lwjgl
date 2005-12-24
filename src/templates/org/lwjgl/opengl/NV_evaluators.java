@@ -31,11 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 public interface NV_evaluators {
 	int GL_EVAL_2D_NV = 0x86C0;
@@ -64,25 +62,27 @@ public interface NV_evaluators {
 	int GL_MAX_RATIONAL_EVAL_ORDER_NV = 0x86D7;
 
 	void glGetMapControlPointsNV(@GLenum int target, @GLuint int index, @GLenum int type, @GLsizei int ustride, @GLsizei int vstride, boolean packed,
-			@Check
-			@Const
-			@GLfloat
-			Buffer pPoints);
+	                             @Check
+	                             @Const
+	                             @GLfloat Buffer pPoints);
 
 	void glMapControlPointsNV(@GLenum int target, @GLuint int index, @GLenum int type, @GLsizei int ustride, @GLsizei int vstride, int uorder, int vorder, boolean packed, @Check @Const @GLfloat Buffer pPoints);
 
 	@StripPostfix("params")
 	void glMapParameterfvNV(@GLenum int target, @GLenum int pname, @Check("4") @Const FloatBuffer params);
+
 	@StripPostfix("params")
 	void glMapParameterivNV(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
 	@StripPostfix("params")
 	void glGetMapParameterfvNV(@GLenum int target, @GLenum int pname, @Check("4") @Const FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetMapParameterivNV(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
 	@StripPostfix("params")
 	void glGetMapAttribParameterfvNV(@GLenum int target, @GLuint int index, @GLenum int pname, @Check("4") FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetMapAttribParameterivNV(@GLenum int target, @GLuint int index, @GLenum int pname, @Check("4") IntBuffer params);
 

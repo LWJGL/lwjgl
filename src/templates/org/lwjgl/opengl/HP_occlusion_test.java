@@ -33,16 +33,16 @@ package org.lwjgl.opengl;
 
 public interface HP_occlusion_test {
 
-    /**
-    * Accepted by the <cap> parameter of Enable, Disable, and IsEnabled, by
-    * the <pname> of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev :
-    */
+	/**
+	 * Accepted by the &lt;cap&gt; parameter of Enable, Disable, and IsEnabled, by
+	 * the &lt;pname&gt; of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev :
+	 */
 	int GL_OCCLUSION_TEST_HP = 0x8165;
 
-    /**
-	* Accepted by the <pname> of GetBooleanv, GetIntegerv, GetFloatv, and
-	* GetDoublev :
-	*/
+	/**
+	 * Accepted by the &lt;pname&gt; of GetBooleanv, GetIntegerv, GetFloatv, and
+	 * GetDoublev :
+	 */
 	int GL_OCCLUSION_TEST_RESULT_HP = 0x8166;
 
 }

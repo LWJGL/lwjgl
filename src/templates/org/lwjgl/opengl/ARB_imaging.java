@@ -31,11 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 /**
  * $Id$
@@ -46,8 +44,9 @@ import org.lwjgl.util.generator.*;
  * @version $Revision$
  */
 
-@Extension(postfix="")
+@Extension(postfix = "")
 public interface ARB_imaging {
+
 	int GL_CONSTANT_COLOR = 0x8001;
 	int GL_ONE_MINUS_CONSTANT_COLOR = 0x8002;
 	int GL_CONSTANT_ALPHA = 0x8003;
@@ -125,22 +124,20 @@ public interface ARB_imaging {
 	int GL_MINMAX_SINK = 0x8030;
 
 	void glColorTable(@GLenum int target, @GLenum int internalFormat, @GLsizei int width, @GLenum int format, @GLenum int type,
-			@BufferObject(BufferKind.UnpackPBO)
-			@Check("256")
-			@Const
-			@GLbyte
-			@GLfloat
-			@GLdouble
-			Buffer data);
+	                  @BufferObject(BufferKind.UnpackPBO)
+	                  @Check("256")
+	                  @Const
+	                  @GLbyte
+	                  @GLfloat
+	                  @GLdouble Buffer data);
 
 	void glColorSubTable(@GLenum int target, @GLsizei int start, @GLsizei int count, @GLenum int format, @GLenum int type,
-			@BufferObject(BufferKind.UnpackPBO)
-			@Check("256")
-			@Const
-			@GLbyte
-			@GLfloat
-			@GLdouble
-			Buffer data);
+	                     @BufferObject(BufferKind.UnpackPBO)
+	                     @Check("256")
+	                     @Const
+	                     @GLbyte
+	                     @GLfloat
+	                     @GLdouble Buffer data);
 
 	@StripPostfix("params")
 	void glColorTableParameteriv(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer params);
@@ -153,14 +150,14 @@ public interface ARB_imaging {
 	void glCopyColorTable(@GLenum int target, @GLenum int internalformat, int x, int y, @GLsizei int width);
 
 	void glGetColorTable(@GLenum int target, @GLenum int format, @GLenum int type,
-			@Check("256")
-			@GLbyte
-			@GLfloat
-			@GLdouble
-			Buffer data);
+	                     @Check("256")
+	                     @GLbyte
+	                     @GLfloat
+	                     @GLdouble Buffer data);
 
 	@StripPostfix("params")
 	void glGetColorTableParameteriv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
+
 	@StripPostfix("params")
 	void glGetColorTableParameterfv(@GLenum int target, @GLenum int pname, @Check("4") FloatBuffer params);
 
@@ -173,17 +170,17 @@ public interface ARB_imaging {
 	void glResetHistogram(@GLenum int target);
 
 	void glGetHistogram(@GLenum int target, boolean reset, @GLenum int format, @GLenum int type,
-			@BufferObject(BufferKind.PackPBO)
-			@Check("256")
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer values);
+	                    @BufferObject(BufferKind.PackPBO)
+	                    @Check("256")
+	                    @GLbyte
+	                    @GLshort
+	                    @GLint
+	                    @GLfloat
+	                    @GLdouble Buffer values);
 
 	@StripPostfix("params")
 	void glGetHistogramParameterfv(@GLenum int target, @GLenum int pname, @Check("256") FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetHistogramParameteriv(@GLenum int target, @GLenum int pname, @Check("256") IntBuffer params);
 
@@ -192,39 +189,37 @@ public interface ARB_imaging {
 	void glResetMinmax(@GLenum int target);
 
 	void glGetMinmax(@GLenum int target, boolean reset, @GLenum int format, @GLenum int types,
-			@BufferObject(BufferKind.PackPBO)
-			@Check("4")
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer values);
+	                 @BufferObject(BufferKind.PackPBO)
+	                 @Check("4")
+	                 @GLbyte
+	                 @GLshort
+	                 @GLint
+	                 @GLfloat
+	                 @GLdouble Buffer values);
 
 	@StripPostfix("params")
 	void glGetMinmaxParameterfv(@GLenum int target, @GLenum int pname, @Check("4") FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetMinmaxParameteriv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
 
 	void glConvolutionFilter1D(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLenum int format, @GLenum int type,
-			@BufferObject(BufferKind.UnpackPBO)
-			@Check("GLChecks.calculateImageStorage(image, format, type, width, 1, 1)")
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer image);
+	                           @BufferObject(BufferKind.UnpackPBO)
+	                           @Check("GLChecks.calculateImageStorage(image, format, type, width, 1, 1)")
+	                           @Const
+	                           @GLbyte
+	                           @GLshort
+	                           @GLint
+	                           @GLfloat
+	                           @GLdouble Buffer image);
 
 	void glConvolutionFilter2D(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLenum int type,
-			@BufferObject(BufferKind.UnpackPBO)
-			@Check("GLChecks.calculateImageStorage(image, format, type, width, height, 1)")
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			Buffer image);
+	                           @BufferObject(BufferKind.UnpackPBO)
+	                           @Check("GLChecks.calculateImageStorage(image, format, type, width, height, 1)")
+	                           @Const
+	                           @GLbyte
+	                           @GLshort
+	                           @GLint Buffer image);
 
 	void glConvolutionParameterf(@GLenum int target, @GLenum int pname, float params);
 
@@ -242,64 +237,58 @@ public interface ARB_imaging {
 
 	// TODO: check buffer size valid
 	void glGetConvolutionFilter(@GLenum int target, @GLenum int format, @GLenum int type,
-			@BufferObject(BufferKind.PackPBO)
-			@Check
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer image);
+	                            @BufferObject(BufferKind.PackPBO)
+	                            @Check
+	                            @GLbyte
+	                            @GLshort
+	                            @GLint
+	                            @GLfloat
+	                            @GLdouble Buffer image);
 
 	@StripPostfix("params")
 	void glGetConvolutionParameterfv(@GLenum int target, @GLenum int pname, @Check("4") FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetConvolutionParameteriv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
 
 	// TODO: check buffer size valid
 	void glSeparableFilter2D(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLenum int type,
-			@BufferObject(BufferKind.UnpackPBO)
-			@Check
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer row,
-			@BufferObject(BufferKind.UnpackPBO)
-			@Check
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer column);
+	                         @BufferObject(BufferKind.UnpackPBO)
+	                         @Check
+	                         @Const
+	                         @GLbyte
+	                         @GLshort
+	                         @GLint
+	                         @GLfloat
+	                         @GLdouble Buffer row,
+	                         @BufferObject(BufferKind.UnpackPBO)
+	                         @Check
+	                         @Const
+	                         @GLbyte
+	                         @GLshort
+	                         @GLint
+	                         @GLfloat
+	                         @GLdouble Buffer column);
 
 	// TODO: check buffer size valid
 	void glGetSeparableFilter(@GLenum int target, @GLenum int format, @GLenum int type,
-			@BufferObject(BufferKind.PackPBO)
-			@Check
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			@GLdouble
-			Buffer row,
-			@BufferObject(BufferKind.PackPBO)
-			@Check
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLdouble
-			Buffer column,
-			@BufferObject(BufferKind.PackPBO)
-			@Check
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLdouble
-			Buffer span);
+	                          @BufferObject(BufferKind.PackPBO)
+	                          @Check
+	                          @GLbyte
+	                          @GLshort
+	                          @GLint
+	                          @GLfloat
+	                          @GLdouble Buffer row,
+	                          @BufferObject(BufferKind.PackPBO)
+	                          @Check
+	                          @GLbyte
+	                          @GLshort
+	                          @GLint
+	                          @GLdouble Buffer column,
+	                          @BufferObject(BufferKind.PackPBO)
+	                          @Check
+	                          @GLbyte
+	                          @GLshort
+	                          @GLint
+	                          @GLdouble Buffer span);
 }
-

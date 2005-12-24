@@ -31,9 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.*;
-
 import org.lwjgl.util.generator.*;
+
+import java.nio.*;
 
 public interface EXT_vertex_shader {
 	int GL_VERTEX_SHADER_EXT = 0x8780;
@@ -153,7 +153,8 @@ public interface EXT_vertex_shader {
 
 	void glBindVertexShaderEXT(@GLuint int id);
 
-	@GLuint int glGenVertexShadersEXT(@GLuint int range);
+	@GLuint
+	int glGenVertexShadersEXT(@GLuint int range);
 
 	void glDeleteVertexShaderEXT(@GLuint int id);
 
@@ -171,103 +172,119 @@ public interface EXT_vertex_shader {
 
 	void glExtractComponentEXT(@GLuint int res, @GLuint int src, @GLuint int num);
 
-	@GLuint int glGenSymbolsEXT(@GLenum int dataType, @GLenum int storageType, @GLenum int range, @GLuint int components);
+	@GLuint
+	int glGenSymbolsEXT(@GLenum int dataType, @GLenum int storageType, @GLenum int range, @GLuint int components);
 
 	void glSetInvariantEXT(@GLuint int id, @AutoType("pAddr") @GLenum int type,
-			@Check("4")
-			@Const
-			@GLbyte
-			@GLubyte
-			@GLshort
-			@GLushort
-			@GLint
-			@GLuint
-			@GLfloat
-			@GLdouble
-			Buffer pAddr);
+	                       @Check("4")
+	                       @Const
+	                       @GLbyte
+	                       @GLubyte
+	                       @GLshort
+	                       @GLushort
+	                       @GLint
+	                       @GLuint
+	                       @GLfloat
+	                       @GLdouble Buffer pAddr);
 
 	void glSetLocalConstantEXT(@GLuint int id, @AutoType("pAddr") @GLenum int type,
-			@Check("4")
-			@Const
-			@GLbyte
-			@GLubyte
-			@GLshort
-			@GLushort
-			@GLint
-			@GLuint
-			@GLfloat
-			@GLdouble
-			Buffer pAddr);
+	                           @Check("4")
+	                           @Const
+	                           @GLbyte
+	                           @GLubyte
+	                           @GLshort
+	                           @GLushort
+	                           @GLint
+	                           @GLuint
+	                           @GLfloat
+	                           @GLdouble Buffer pAddr);
 
 	@StripPostfix("pAddr")
 	void glVariantbvEXT(@GLuint int id, @Check("4") @Const ByteBuffer pAddr);
+
 	@StripPostfix("pAddr")
 	void glVariantsvEXT(@GLuint int id, @Check("4") @Const ShortBuffer pAddr);
+
 	@StripPostfix("pAddr")
 	void glVariantivEXT(@GLuint int id, @Check("4") @Const IntBuffer pAddr);
+
 	@StripPostfix("pAddr")
 	void glVariantfvEXT(@GLuint int id, @Check("4") @Const FloatBuffer pAddr);
+
 	@StripPostfix("pAddr")
 	void glVariantdvEXT(@GLuint int id, @Check("4") @Const DoubleBuffer pAddr);
 
 	@StripPostfix("pAddr")
 	void glVariantubvEXT(@GLuint int id, @Check("4") @Const @GLubyte ByteBuffer pAddr);
+
 	@StripPostfix("pAddr")
 	void glVariantusvEXT(@GLuint int id, @Check("4") @Const @GLushort ShortBuffer pAddr);
+
 	@StripPostfix("pAddr")
 	void glVariantuivEXT(@GLuint int id, @Check("4") @Const @GLuint IntBuffer pAddr);
 
 	void glVariantPointerEXT(@GLuint int id, @AutoType("pAddr") @GLenum int type, @GLuint int stride,
-			@CachedReference
-			@BufferObject(BufferKind.ArrayVBO)
-			@Check
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLubyte
-			@GLushort
-			@GLuint
-			@GLfloat
-			@GLdouble
-			Buffer pAddr);
+	                         @CachedReference
+	                         @BufferObject(BufferKind.ArrayVBO)
+	                         @Check
+	                         @Const
+	                         @GLbyte
+	                         @GLshort
+	                         @GLint
+	                         @GLubyte
+	                         @GLushort
+	                         @GLuint
+	                         @GLfloat
+	                         @GLdouble Buffer pAddr);
 
 	void glEnableVariantClientStateEXT(@GLuint int id);
 
 	void glDisableVariantClientStateEXT(@GLuint int id);
 
-	@GLuint int glBindLightParameterEXT(@GLenum int light, @GLenum int value);
+	@GLuint
+	int glBindLightParameterEXT(@GLenum int light, @GLenum int value);
 
-	@GLuint int glBindMaterialParameterEXT(@GLenum int face, @GLenum int value);
+	@GLuint
+	int glBindMaterialParameterEXT(@GLenum int face, @GLenum int value);
 
-	@GLuint int glBindTexGenParameterEXT(@GLenum int unit, @GLenum int coord, @GLenum int value);
+	@GLuint
+	int glBindTexGenParameterEXT(@GLenum int unit, @GLenum int coord, @GLenum int value);
 
-	@GLuint int glBindTextureUnitParameterEXT(@GLenum int unit, @GLenum int value);
+	@GLuint
+	int glBindTextureUnitParameterEXT(@GLenum int unit, @GLenum int value);
 
-	@GLuint int glBindParameterEXT(@GLenum int value);
+	@GLuint
+	int glBindParameterEXT(@GLenum int value);
 
 	boolean glIsVariantEnabledEXT(@GLuint int id, @GLenum int cap);
 
 	@StripPostfix("pbData")
 	void glGetVariantBooleanvEXT(@GLuint int id, @GLenum int value, @Check("4") ByteBuffer pbData);
+
 	@StripPostfix("pbData")
 	void glGetVariantIntegervEXT(@GLuint int id, @GLenum int value, @Check("4") IntBuffer pbData);
+
 	@StripPostfix("pbData")
 	void glGetVariantFloatvEXT(@GLuint int id, @GLenum int value, @Check("4") FloatBuffer pbData);
+
 	@StripPostfix("pbData")
 	void glGetVariantPointervEXT(@GLuint int id, @GLenum int value, @Result @GLvoid ByteBuffer pbData);
 
 	@StripPostfix("pbData")
 	void glGetInvariantBooleanvEXT(@GLuint int id, @GLenum int value, @Check("4") ByteBuffer pbData);
+
 	@StripPostfix("pbData")
 	void glGetInvariantIntegervEXT(@GLuint int id, @GLenum int value, @Check("4") IntBuffer pbData);
+
 	@StripPostfix("pbData")
 	void glGetInvariantFloatvEXT(@GLuint int id, @GLenum int value, @Check("4") FloatBuffer pbData);
 
 	@StripPostfix("pbData")
 	void glGetLocalConstantBooleanvEXT(@GLuint int id, @GLenum int value, @Check("4") ByteBuffer pbData);
+
 	@StripPostfix("pbData")
 	void glGetLocalConstantIntegervEXT(@GLuint int id, @GLenum int value, @Check("4") IntBuffer pbData);
+
 	@StripPostfix("pbData")
 	void glGetLocalConstantFloatvEXT(@GLuint int id, @GLenum int value, @Check("4") FloatBuffer pbData);
 }
