@@ -29,7 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /**
  * $Id$
  *
@@ -58,9 +58,7 @@ static bool modeSet = false; // Whether we've done a display mode change
 static WORD originalGamma[GAMMA_SIZE]; // Original gamma settings
 static WORD currentGamma[GAMMA_SIZE]; // Current gamma settings
 static DEVMODE devmode; // Now we'll remember this value for the future
-extern HWND				display_hwnd;						              // Handle to the window
-
-
+extern HWND display_hwnd; // Handle to the window
 
 jobjectArray getAvailableDisplayModes(JNIEnv *env)
 {
@@ -73,33 +71,33 @@ jobjectArray getAvailableDisplayModes(JNIEnv *env)
  */
 static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 
-        int i = 0, j = 0, n = 0;
+	int i = 0, j = 0, n = 0;
 
 	DISPLAY_DEVICE DisplayDevice;
 	DEVMODE DevMode;
 	jobject *display_mode_objects = NULL;
 	int list_size = 0;
 
-        jclass displayModeClass;
+	jclass displayModeClass;
 
-        jobjectArray ret;
-        jmethodID displayModeConstructor;
-  
+	jobjectArray ret;
+	jmethodID displayModeConstructor;
+
 	ZeroMemory(&DevMode, sizeof(DEVMODE));
 	ZeroMemory(&DisplayDevice, sizeof(DISPLAY_DEVICE));
 
 	DevMode.dmSize = sizeof(DEVMODE);
 	DisplayDevice.cb = sizeof(DISPLAY_DEVICE);
-  
-      displayModeClass = (*env)->FindClass(env, "org/lwjgl/opengl/DisplayMode");
-      displayModeConstructor = (*env)->GetMethodID(env, displayModeClass, "<init>", "(IIII)V");
- 
+
+	displayModeClass = (*env)->FindClass(env, "org/lwjgl/opengl/DisplayMode");
+	displayModeConstructor = (*env)->GetMethodID(env, displayModeClass, "<init>", "(IIII)V");
+
 	while(EnumDisplayDevices(NULL, i++, &DisplayDevice, 0) != 0) {
-	  // continue if mirroring device
+		// continue if mirroring device
 		if((DisplayDevice.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER) != 0) {
 			continue;
 		}
-	
+
 		j = 0;
 		while(EnumDisplaySettings((const char *) DisplayDevice.DeviceName, j++, &DevMode) != 0) {
 			// Filter out indexed modes
@@ -111,16 +109,16 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 					if (display_mode_objects == NULL)
 						return NULL;
 				}
-                        displayMode = (*env)->NewObject(env, displayModeClass, displayModeConstructor, 
-											 DevMode.dmPelsWidth, DevMode.dmPelsHeight,
-											 DevMode.dmBitsPerPel, DevMode.dmDisplayFrequency);
+				displayMode = (*env)->NewObject(env, displayModeClass, displayModeConstructor, 
+						DevMode.dmPelsWidth, DevMode.dmPelsHeight,
+						DevMode.dmBitsPerPel, DevMode.dmDisplayFrequency);
 				display_mode_objects[n++] = displayMode;
 			}
 		}
 	}
 	printfDebugJava(env, "Found %d displaymodes", n);
-  
-      ret = (*env)->NewObjectArray(env, n, displayModeClass, NULL);
+
+	ret = (*env)->NewObjectArray(env, n, displayModeClass, NULL);
 	for (i = 0; i < n; i++) {
 		(*env)->SetObjectArrayElement(env, ret, i, display_mode_objects[i]);
 	}
@@ -130,38 +128,37 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 
 void switchDisplayMode(JNIEnv * env, jobject mode)
 {
-        jclass cls_displayMode = (*env)->GetObjectClass(env, mode);
-        jfieldID fid_width = (*env)->GetFieldID(env, cls_displayMode, "width", "I");
-        jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
-        jfieldID fid_bpp = (*env)->GetFieldID(env, cls_displayMode, "bpp", "I");
-        jfieldID fid_freq = (*env)->GetFieldID(env, cls_displayMode, "freq", "I");
+	jclass cls_displayMode = (*env)->GetObjectClass(env, mode);
+	jfieldID fid_width = (*env)->GetFieldID(env, cls_displayMode, "width", "I");
+	jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
+	jfieldID fid_bpp = (*env)->GetFieldID(env, cls_displayMode, "bpp", "I");
+	jfieldID fid_freq = (*env)->GetFieldID(env, cls_displayMode, "freq", "I");
 
-        int width = (*env)->GetIntField(env, mode, fid_width);
-        int height = (*env)->GetIntField(env, mode, fid_height);
-        int bpp = (*env)->GetIntField(env, mode, fid_bpp);
-        int freq = (*env)->GetIntField(env, mode, fid_freq);
-        LONG cdsret;
+	int width = (*env)->GetIntField(env, mode, fid_width);
+	int height = (*env)->GetIntField(env, mode, fid_height);
+	int bpp = (*env)->GetIntField(env, mode, fid_bpp);
+	int freq = (*env)->GetIntField(env, mode, fid_freq);
+	LONG cdsret;
 
 	devmode.dmSize = sizeof(DEVMODE);
 	devmode.dmBitsPerPel = bpp;
 	devmode.dmPelsWidth = width;
 	devmode.dmPelsHeight = height;
-	devmode.dmDisplayFlags = 0;
 	devmode.dmDisplayFrequency = freq;
-	devmode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFLAGS;
+	devmode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 	if (freq != 0)
 		devmode.dmFields |= DM_DISPLAYFREQUENCY;
-        cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
+	cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
 
 	if (cdsret != DISP_CHANGE_SUCCESSFUL) {
 		// Failed: so let's check to see if it's a wierd dual screen display
-		printfDebugJava(env, "Failed to set display mode... assuming dual monitors");
+		printfDebugJava(env, "Failed to set display mode (%ld) ... assuming dual monitors", cdsret);
 		devmode.dmPelsWidth = width * 2;
 		cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
 
 		if (cdsret != DISP_CHANGE_SUCCESSFUL) {
-			printfDebugJava(env, "Failed to set display mode using dual monitors");
-			throwException(env, "Failed to set display mode.");
+			printfDebugJava(env, "Failed to set display mode using dual monitors (%ld)", cdsret);
+			throwFormattedException(env, "Failed to set display mode (%ld).", cdsret);
 			return;
 		}
 	}
@@ -175,21 +172,21 @@ int getGammaRampLength(void)
 
 void setGammaRamp(JNIEnv * env, jobject gammaRampBuffer)
 {
-        int i;
-        float scaledRampEntry;
-        WORD rampEntry;
-        HDC screenDC;
-        const float *gammaRamp = (const float *)(*env)->GetDirectBufferAddress(env, gammaRampBuffer);
+	int i;
+	float scaledRampEntry;
+	WORD rampEntry;
+	HDC screenDC;
+	const float *gammaRamp = (const float *)(*env)->GetDirectBufferAddress(env, gammaRampBuffer);
 	// Turn array of floats into array of RGB WORDs
 
-        for (i = 0; i < 256; i ++) {
-                scaledRampEntry = gammaRamp[i]*0xffff;
-                rampEntry = (WORD)scaledRampEntry;
+	for (i = 0; i < 256; i ++) {
+		scaledRampEntry = gammaRamp[i]*0xffff;
+		rampEntry = (WORD)scaledRampEntry;
 		currentGamma[i] = rampEntry;
 		currentGamma[i + 256] = rampEntry;
 		currentGamma[i + 512] = rampEntry;
 	}
-        screenDC = GetDC(NULL);
+	screenDC = GetDC(NULL);
 	if (SetDeviceGammaRamp(screenDC, currentGamma) == FALSE) {
 		throwException(env, "Failed to set device gamma.");
 	}
@@ -199,13 +196,13 @@ void setGammaRamp(JNIEnv * env, jobject gammaRampBuffer)
 
 jobject initDisplay(JNIEnv * env)
 {
-        int width;
-        int height;
-        int bpp;
-        int freq;
-        jclass jclass_DisplayMode;
-        jmethodID ctor;
-        jobject newMode;
+	int width;
+	int height;
+	int bpp;
+	int freq;
+	jclass jclass_DisplayMode;
+	jmethodID ctor;
+	jobject newMode;
 	// Determine the current screen resolution
 	// Get the screen
 	HDC screenDC = GetDC(NULL);
@@ -214,16 +211,16 @@ jobject initDisplay(JNIEnv * env)
 		return NULL;
 	}
 	// Get the device caps
-        width = GetDeviceCaps(screenDC, HORZRES);
-        height = GetDeviceCaps(screenDC, VERTRES);
-        bpp = GetDeviceCaps(screenDC, BITSPIXEL);
-        freq = GetDeviceCaps(screenDC, VREFRESH);
+	width = GetDeviceCaps(screenDC, HORZRES);
+	height = GetDeviceCaps(screenDC, VERTRES);
+	bpp = GetDeviceCaps(screenDC, BITSPIXEL);
+	freq = GetDeviceCaps(screenDC, VREFRESH);
 	if (freq <= 1)
 		freq = 0; // Unknown
 
-        jclass_DisplayMode = (*env)->FindClass(env, "org/lwjgl/opengl/DisplayMode");
-        ctor = (*env)->GetMethodID(env, jclass_DisplayMode, "<init>", "(IIII)V");
-        newMode = (*env)->NewObject(env, jclass_DisplayMode, ctor, width, height, bpp, freq);
+	jclass_DisplayMode = (*env)->FindClass(env, "org/lwjgl/opengl/DisplayMode");
+	ctor = (*env)->GetMethodID(env, jclass_DisplayMode, "<init>", "(IIII)V");
+	newMode = (*env)->NewObject(env, jclass_DisplayMode, ctor, width, height, bpp, freq);
 
 	// Get the default gamma ramp
 	if (GetDeviceGammaRamp(screenDC, originalGamma) == FALSE) {
@@ -259,7 +256,7 @@ void resetDisplayMode(JNIEnv * env) {
 void restoreDisplayMode(void) {
 	// Restore gamma
 	HDC screenDC = GetDC(NULL);
-        LONG cdsret;
+	LONG cdsret;
 	if (!SetDeviceGammaRamp(screenDC, currentGamma)) {
 		printfDebug("Could not restore device gamma\n");
 	}
@@ -268,7 +265,7 @@ void restoreDisplayMode(void) {
 	if (!modeSet) {
 		printfDebug("Attempting to restore the display mode\n");
 		modeSet = true;
-                cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
+		cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
 
 		if (cdsret != DISP_CHANGE_SUCCESSFUL) {
 			printfDebug("Failed to restore display mode\n");
@@ -282,18 +279,18 @@ jstring getVersion(JNIEnv * env, char *driver)
 
 	TCHAR driverDLL[256] = "\0";
 	DWORD var = 0;
-        DWORD dwInfoSize;
-        LPVOID lpInfoBuff;
-        BOOL bRetval;
+	DWORD dwInfoSize;
+	LPVOID lpInfoBuff;
+	BOOL bRetval;
 
 	if (driver == NULL) {
 		return NULL;
 	}
 	strcat(driverDLL, driver);
 	strcat(driverDLL, ".dll");
-        dwInfoSize = GetFileVersionInfoSize(driverDLL, &var);
-        lpInfoBuff = malloc(dwInfoSize);
-        bRetval = GetFileVersionInfo(driverDLL, 0, dwInfoSize, lpInfoBuff);
+	dwInfoSize = GetFileVersionInfoSize(driverDLL, &var);
+	lpInfoBuff = malloc(dwInfoSize);
+	bRetval = GetFileVersionInfo(driverDLL, 0, dwInfoSize, lpInfoBuff);
 	if (bRetval == 0) {
 	} else {
 		VS_FIXEDFILEINFO * fxdFileInfo;
@@ -310,7 +307,7 @@ jstring getVersion(JNIEnv * env, char *driver)
 		}
 	}
 
-        free(lpInfoBuff);
+	free(lpInfoBuff);
 
 	return ret;
 }
