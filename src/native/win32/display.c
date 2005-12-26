@@ -92,14 +92,16 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 	displayModeClass = (*env)->FindClass(env, "org/lwjgl/opengl/DisplayMode");
 	displayModeConstructor = (*env)->GetMethodID(env, displayModeClass, "<init>", "(IIII)V");
 
-	while(EnumDisplayDevices(NULL, i++, &DisplayDevice, 0) != 0) {
+	/* Multi-monitor stuff commented out since we're only really interested in the primary monitor */
+/*	while(EnumDisplayDevices(NULL, i++, &DisplayDevice, 0) != 0) {
 		// continue if mirroring device
 		if((DisplayDevice.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER) != 0) {
 			continue;
 		}
 
 		j = 0;
-		while(EnumDisplaySettings((const char *) DisplayDevice.DeviceName, j++, &DevMode) != 0) {
+		while(EnumDisplaySettings((const char *) DisplayDevice.DeviceName, j++, &DevMode) != 0) {*/
+		while(EnumDisplaySettings(NULL, j++, &DevMode) != 0) {
 			// Filter out indexed modes
 			if (DevMode.dmBitsPerPel > 8 && ChangeDisplaySettings(&DevMode, CDS_FULLSCREEN | CDS_TEST) == DISP_CHANGE_SUCCESSFUL) {
 				jobject displayMode;
@@ -115,7 +117,7 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 				display_mode_objects[n++] = displayMode;
 			}
 		}
-	}
+//	}
 	printfDebugJava(env, "Found %d displaymodes", n);
 
 	ret = (*env)->NewObjectArray(env, n, displayModeClass, NULL);
@@ -151,16 +153,17 @@ void switchDisplayMode(JNIEnv * env, jobject mode)
 	cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
 
 	if (cdsret != DISP_CHANGE_SUCCESSFUL) {
-		// Failed: so let's check to see if it's a wierd dual screen display
+		/* What's the proper way to do this multiply with 2 thing, if at all necessary? */
+/*		// Failed: so let's check to see if it's a wierd dual screen display
 		printfDebugJava(env, "Failed to set display mode (%ld) ... assuming dual monitors", cdsret);
 		devmode.dmPelsWidth = width * 2;
 		cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
 
 		if (cdsret != DISP_CHANGE_SUCCESSFUL) {
-			printfDebugJava(env, "Failed to set display mode using dual monitors (%ld)", cdsret);
+			printfDebugJava(env, "Failed to set display mode using dual monitors (%ld)", cdsret);*/
 			throwFormattedException(env, "Failed to set display mode (%ld).", cdsret);
 			return;
-		}
+//		}
 	}
 	modeSet = true;
 }
