@@ -67,6 +67,8 @@ public class ContextCapabilities {
 	public final boolean GL_EXT_depth_bounds_test;
 	public final boolean GL_EXT_draw_range_elements;
 	public final boolean GL_EXT_fog_coord;
+	public final boolean GL_EXT_framebuffer_blit;
+	public final boolean GL_EXT_framebuffer_multisample;
 	public final boolean GL_EXT_framebuffer_object;
 	public final boolean GL_EXT_multi_draw_arrays;
 	public final boolean GL_EXT_packed_depth_stencil;
@@ -419,6 +421,8 @@ public class ContextCapabilities {
 	long EXT_fog_coord_glFogCoordfEXT_pointer;
 	long EXT_fog_coord_glFogCoorddEXT_pointer;
 	long EXT_fog_coord_glFogCoordPointerEXT_pointer;
+	long EXT_framebuffer_blit_glBlitFramebufferEXT_pointer;
+	long EXT_framebuffer_multisample_glRenderbufferStorageMultisampleEXT_pointer;
 	long EXT_framebuffer_object_glIsRenderbufferEXT_pointer;
 	long EXT_framebuffer_object_glBindRenderbufferEXT_pointer;
 	long EXT_framebuffer_object_glDeleteRenderbuffersEXT_pointer;
@@ -1396,6 +1400,16 @@ public class ContextCapabilities {
 			(EXT_fog_coord_glFogCoordPointerEXT_pointer = GLContext.getFunctionAddress("glFogCoordPointerEXT")) != 0;
 	}
 
+	private boolean EXT_framebuffer_blit_initNativeFunctionAddresses() {
+		return 
+			(EXT_framebuffer_blit_glBlitFramebufferEXT_pointer = GLContext.getFunctionAddress("glBlitFramebufferEXT")) != 0;
+	}
+
+	private boolean EXT_framebuffer_multisample_initNativeFunctionAddresses() {
+		return 
+			(EXT_framebuffer_multisample_glRenderbufferStorageMultisampleEXT_pointer = GLContext.getFunctionAddress("glRenderbufferStorageMultisampleEXT")) != 0;
+	}
+
 	private boolean EXT_framebuffer_object_initNativeFunctionAddresses() {
 		return 
 			(EXT_framebuffer_object_glIsRenderbufferEXT_pointer = GLContext.getFunctionAddress("glIsRenderbufferEXT")) != 0 &&
@@ -2146,6 +2160,10 @@ public class ContextCapabilities {
 			supported_extensions.remove("GL_EXT_draw_range_elements");
 		if (supported_extensions.contains("GL_EXT_fog_coord") && !EXT_fog_coord_initNativeFunctionAddresses())
 			supported_extensions.remove("GL_EXT_fog_coord");
+		if (supported_extensions.contains("GL_EXT_framebuffer_blit") && !EXT_framebuffer_blit_initNativeFunctionAddresses())
+			supported_extensions.remove("GL_EXT_framebuffer_blit");
+		if (supported_extensions.contains("GL_EXT_framebuffer_multisample") && !EXT_framebuffer_multisample_initNativeFunctionAddresses())
+			supported_extensions.remove("GL_EXT_framebuffer_multisample");
 		if (supported_extensions.contains("GL_EXT_framebuffer_object") && !EXT_framebuffer_object_initNativeFunctionAddresses())
 			supported_extensions.remove("GL_EXT_framebuffer_object");
 		if (supported_extensions.contains("GL_EXT_multi_draw_arrays") && !EXT_multi_draw_arrays_initNativeFunctionAddresses())
@@ -2272,6 +2290,8 @@ public class ContextCapabilities {
 		this.GL_EXT_depth_bounds_test = supported_extensions.contains("GL_EXT_depth_bounds_test");
 		this.GL_EXT_draw_range_elements = supported_extensions.contains("GL_EXT_draw_range_elements");
 		this.GL_EXT_fog_coord = supported_extensions.contains("GL_EXT_fog_coord");
+		this.GL_EXT_framebuffer_blit = supported_extensions.contains("GL_EXT_framebuffer_blit");
+		this.GL_EXT_framebuffer_multisample = supported_extensions.contains("GL_EXT_framebuffer_multisample");
 		this.GL_EXT_framebuffer_object = supported_extensions.contains("GL_EXT_framebuffer_object");
 		this.GL_EXT_multi_draw_arrays = supported_extensions.contains("GL_EXT_multi_draw_arrays");
 		this.GL_EXT_packed_depth_stencil = supported_extensions.contains("GL_EXT_packed_depth_stencil");
