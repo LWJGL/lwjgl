@@ -45,14 +45,13 @@
 #define COMPILE_MULTIMON_STUBS
 #include <Multimon.h>
 #include <jni.h>
+#include "org_lwjgl_opengl_Win32Display.h"
 #include "display.h"
 #include "common_tools.h"
 
-#define GAMMA_SIZE 256
-
 static bool modeSet = false; // Whether we've done a display mode change
-static WORD originalGamma[3*GAMMA_SIZE]; // Original gamma settings
-static WORD currentGamma[3*GAMMA_SIZE]; // Current gamma settings
+static WORD originalGamma[3*org_lwjgl_opengl_Win32Display_GAMMA_LENGTH]; // Original gamma settings
+static WORD currentGamma[3*org_lwjgl_opengl_Win32Display_GAMMA_LENGTH]; // Current gamma settings
 static DEVMODE devmode; // Now we'll remember this value for the future
 
 static jobject createDisplayMode(JNIEnv *env, DEVMODE *devmode) {
@@ -169,11 +168,6 @@ void switchDisplayMode(JNIEnv * env, jobject mode)
 	modeSet = true;
 }
 
-int getGammaRampLength(void)
-{
-	return GAMMA_SIZE;
-}
-
 void setGammaRamp(JNIEnv * env, jobject gammaRampBuffer)
 {
 	int i;
@@ -183,12 +177,12 @@ void setGammaRamp(JNIEnv * env, jobject gammaRampBuffer)
 	const float *gammaRamp = (const float *)(*env)->GetDirectBufferAddress(env, gammaRampBuffer);
 	// Turn array of floats into array of RGB WORDs
 
-	for (i = 0; i < GAMMA_SIZE; i ++) {
+	for (i = 0; i < org_lwjgl_opengl_Win32Display_GAMMA_LENGTH; i ++) {
 		scaledRampEntry = gammaRamp[i]*0xffff;
 		rampEntry = (WORD)scaledRampEntry;
 		currentGamma[i] = rampEntry;
-		currentGamma[i + GAMMA_SIZE] = rampEntry;
-		currentGamma[i + 2*GAMMA_SIZE] = rampEntry;
+		currentGamma[i + org_lwjgl_opengl_Win32Display_GAMMA_LENGTH] = rampEntry;
+		currentGamma[i + 2*org_lwjgl_opengl_Win32Display_GAMMA_LENGTH] = rampEntry;
 	}
 	screenDC = GetDC(NULL);
 	if (SetDeviceGammaRamp(screenDC, currentGamma) == FALSE) {
@@ -214,7 +208,7 @@ jobject initDisplay(JNIEnv * env)
 	if (GetDeviceGammaRamp(screenDC, originalGamma) == FALSE) {
 		printfDebugJava(env, "Failed to get initial device gamma");
 	}
-	memcpy(currentGamma, originalGamma, sizeof(WORD)*3*GAMMA_SIZE);
+	memcpy(currentGamma, originalGamma, sizeof(WORD)*3*org_lwjgl_opengl_Win32Display_GAMMA_LENGTH);
 	ReleaseDC(NULL, screenDC);
 
 	if (!EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &devmode)) {

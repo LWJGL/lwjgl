@@ -48,7 +48,7 @@
 
 	#include <windows.h>
 	#include <jni.h>
-	#include "extgl.h"
+	#include "common_tools.h"
 
 	#ifdef _PRIVATE_WINDOW_H_
 		#define WINDOW_H_API

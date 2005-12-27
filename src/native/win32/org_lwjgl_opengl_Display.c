@@ -354,10 +354,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_resetDisplayMode(JNIEn
 	resetDisplayModeAndClipping(env);
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getGammaRampLength(JNIEnv *env, jobject self) {
-	return getGammaRampLength();
-}
-
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setGammaRamp(JNIEnv *env, jobject self, jobject gamma_buffer) {
 	setGammaRamp(env, gamma_buffer);
 }

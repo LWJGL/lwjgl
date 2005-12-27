@@ -47,6 +47,8 @@ import org.lwjgl.LWJGLUtil;
 import org.lwjgl.input.Cursor;
 
 final class Win32Display implements DisplayImplementation {
+	private final static int GAMMA_LENGTH = 256;
+
 	private static Win32DisplayPeerInfo peer_info;
 
 	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
@@ -57,7 +59,11 @@ final class Win32Display implements DisplayImplementation {
 	public native void destroyWindow();
 	public native void switchDisplayMode(DisplayMode mode) throws LWJGLException;
 	public native void resetDisplayMode();
-	public native int getGammaRampLength();
+
+	public int getGammaRampLength() {
+		return GAMMA_LENGTH;
+	}
+
 	public native void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLException;
 	public String getAdapter() {
 		try {
