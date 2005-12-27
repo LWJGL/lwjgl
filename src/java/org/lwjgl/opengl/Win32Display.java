@@ -120,8 +120,18 @@ final class Win32Display implements DisplayImplementation {
 	public native int getButtonCount();
 	public native void createMouse() throws LWJGLException;
 	public native void destroyMouse();
-	public native void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons);
-	public native int readMouse(IntBuffer buffer, int buffer_position);
+	public void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons) {
+		update();
+		nPollMouse(coord_buffer, buttons);
+	}
+	private native void nPollMouse(IntBuffer coord_buffer, ByteBuffer buttons);
+	
+	public int readMouse(IntBuffer buffer, int buffer_position) {
+		update();
+		return nReadMouse(buffer, buffer_position);
+	}
+	private native int nReadMouse(IntBuffer buffer, int buffer_position);
+		
 	public native void grabMouse(boolean grab);
 	public int getNativeCursorCapabilities() {
 		return Cursor.CURSOR_ONE_BIT_TRANSPARENCY;
@@ -135,8 +145,19 @@ final class Win32Display implements DisplayImplementation {
 	/* Keyboard */
 	public native void createKeyboard() throws LWJGLException;
 	public native void destroyKeyboard();
-	public native void pollKeyboard(ByteBuffer keyDownBuffer);
-	public native int readKeyboard(IntBuffer buffer, int buffer_position);
+	
+	public void pollKeyboard(ByteBuffer keyDownBuffer) {
+		update();
+		nPollKeyboard(keyDownBuffer);
+	}
+	private native void nPollKeyboard(ByteBuffer keyDownBuffer);
+	
+	public int readKeyboard(IntBuffer buffer, int buffer_position) {
+		update();
+		return nReadKeyboard(buffer, buffer_position);
+	}
+	private native int nReadKeyboard(IntBuffer buffer, int buffer_position);
+
 	public native int isStateKeySet(int key);
 
 	public native ByteBuffer nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;

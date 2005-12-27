@@ -66,8 +66,6 @@
 
 	WINDOW_H_API void handleMouseButton(int button, int state);
 
-	WINDOW_H_API void handleMessages(void);
-
 	WINDOW_H_API bool getCurrentFullscreen();
 	/*
 	 * Handle native Win32 messages

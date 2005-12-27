@@ -315,15 +315,13 @@ static void readDXBuffer(JNIEnv *env) {
 	}
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_readMouse
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nReadMouse
 	(JNIEnv * env, jobject self, jobject buffer_obj, jint buffer_position)
 {
 	jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer_obj) + buffer_position;
 	int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer_obj))/sizeof(jint) - buffer_position;
 	if (mouse_grabbed) {
 		readDXBuffer(env);
-	} else {
-		handleMessages();
 	}
 	return copyEvents(&event_queue, buffer_ptr, buffer_size);
 }
@@ -348,7 +346,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyMouse(JNIEnv *e
 	ShutdownMouse(env);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_pollMouse(JNIEnv * env, jobject self, jobject coord_buffer_obj, jobject button_buffer_obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nPollMouse(JNIEnv * env, jobject self, jobject coord_buffer_obj, jobject button_buffer_obj) {
 	UpdateMouseFields(env, coord_buffer_obj, button_buffer_obj);
 }
 
@@ -468,8 +466,6 @@ static void UpdateMouseFields(JNIEnv *env, jobject coord_buffer_obj, jobject but
 		printfDebugJava(env, "ERROR: Not enough space in coords array: %d < 3", coords_length);
 		return;
 	}
-
-	handleMessages();
 
 	if (mouse_grabbed) {
 		hRes = IDirectInputDevice_GetDeviceState(mDIDevice, sizeof(DIMOUSESTATE), &diMouseState);

@@ -137,7 +137,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyKeyboard
  * Method:    nPoll
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_pollKeyboard
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nPollKeyboard
   (JNIEnv * env, jobject self, jobject buffer)
 {
 	HRESULT ret;
@@ -171,7 +171,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_pollKeyboard
         IDirectInputDevice_GetDeviceState(lpdiKeyboard, (DWORD)buffer_size, keyboardBuffer);
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_readKeyboard
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nReadKeyboard
   (JNIEnv * env, jobject self, jobject buffer_obj, jint buffer_position)
 {
         UINT scan_code;
