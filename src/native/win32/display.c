@@ -48,12 +48,29 @@
 #include "display.h"
 #include "common_tools.h"
 
-#define GAMMA_SIZE (3*256)
+#define GAMMA_SIZE 256
 
 static bool modeSet = false; // Whether we've done a display mode change
-static WORD originalGamma[GAMMA_SIZE]; // Original gamma settings
-static WORD currentGamma[GAMMA_SIZE]; // Current gamma settings
+static WORD originalGamma[3*GAMMA_SIZE]; // Original gamma settings
+static WORD currentGamma[3*GAMMA_SIZE]; // Current gamma settings
 static DEVMODE devmode; // Now we'll remember this value for the future
+
+static jobject createDisplayMode(JNIEnv *env, DEVMODE *devmode) {
+	jclass displayModeClass;
+
+	jmethodID displayModeConstructor;
+
+	displayModeClass = (*env)->FindClass(env, "org/lwjgl/opengl/DisplayMode");
+	if (displayModeClass == NULL)
+		return NULL;
+	displayModeConstructor = (*env)->GetMethodID(env, displayModeClass, "<init>", "(IIII)V");
+	if (displayModeConstructor == NULL)
+		return NULL;
+
+	return (*env)->NewObject(env, displayModeClass, displayModeConstructor, 
+			devmode->dmPelsWidth, devmode->dmPelsHeight,
+			devmode->dmBitsPerPel, devmode->dmDisplayFrequency);
+}
 
 /**
  * Choose displaymodes using extended codepath (multiple displaydevices)
@@ -62,24 +79,20 @@ jobjectArray getAvailableDisplayModes(JNIEnv * env) {
 
 	int i = 0, j = 0, n = 0;
 
-	DISPLAY_DEVICE DisplayDevice;
+//	DISPLAY_DEVICE DisplayDevice;
 	DEVMODE DevMode;
 	jobject *display_mode_objects = NULL;
 	int list_size = 0;
 
 	jclass displayModeClass;
-
 	jobjectArray ret;
-	jmethodID displayModeConstructor;
+	displayModeClass = (*env)->FindClass(env, "org/lwjgl/opengl/DisplayMode");
 
 	ZeroMemory(&DevMode, sizeof(DEVMODE));
-	ZeroMemory(&DisplayDevice, sizeof(DISPLAY_DEVICE));
+//	ZeroMemory(&DisplayDevice, sizeof(DISPLAY_DEVICE));
 
 	DevMode.dmSize = sizeof(DEVMODE);
-	DisplayDevice.cb = sizeof(DISPLAY_DEVICE);
-
-	displayModeClass = (*env)->FindClass(env, "org/lwjgl/opengl/DisplayMode");
-	displayModeConstructor = (*env)->GetMethodID(env, displayModeClass, "<init>", "(IIII)V");
+//	DisplayDevice.cb = sizeof(DISPLAY_DEVICE);
 
 	/* Multi-monitor stuff commented out since we're only really interested in the primary monitor */
 /*	while(EnumDisplayDevices(NULL, i++, &DisplayDevice, 0) != 0) {
@@ -100,9 +113,7 @@ jobjectArray getAvailableDisplayModes(JNIEnv * env) {
 					if (display_mode_objects == NULL)
 						return NULL;
 				}
-				displayMode = (*env)->NewObject(env, displayModeClass, displayModeConstructor, 
-						DevMode.dmPelsWidth, DevMode.dmPelsHeight,
-						DevMode.dmBitsPerPel, DevMode.dmDisplayFrequency);
+				displayMode = createDisplayMode(env, &DevMode);
 				display_mode_objects[n++] = displayMode;
 			}
 		}
@@ -160,7 +171,7 @@ void switchDisplayMode(JNIEnv * env, jobject mode)
 
 int getGammaRampLength(void)
 {
-	return 256;
+	return GAMMA_SIZE;
 }
 
 void setGammaRamp(JNIEnv * env, jobject gammaRampBuffer)
@@ -172,12 +183,12 @@ void setGammaRamp(JNIEnv * env, jobject gammaRampBuffer)
 	const float *gammaRamp = (const float *)(*env)->GetDirectBufferAddress(env, gammaRampBuffer);
 	// Turn array of floats into array of RGB WORDs
 
-	for (i = 0; i < 256; i ++) {
+	for (i = 0; i < GAMMA_SIZE; i ++) {
 		scaledRampEntry = gammaRamp[i]*0xffff;
 		rampEntry = (WORD)scaledRampEntry;
 		currentGamma[i] = rampEntry;
-		currentGamma[i + 256] = rampEntry;
-		currentGamma[i + 512] = rampEntry;
+		currentGamma[i + GAMMA_SIZE] = rampEntry;
+		currentGamma[i + 2*GAMMA_SIZE] = rampEntry;
 	}
 	screenDC = GetDC(NULL);
 	if (SetDeviceGammaRamp(screenDC, currentGamma) == FALSE) {
@@ -219,7 +230,7 @@ jobject initDisplay(JNIEnv * env)
 	if (GetDeviceGammaRamp(screenDC, originalGamma) == FALSE) {
 		printfDebugJava(env, "Failed to get initial device gamma");
 	}
-	memcpy(currentGamma, originalGamma, sizeof(WORD)*GAMMA_SIZE);
+	memcpy(currentGamma, originalGamma, sizeof(WORD)*3*GAMMA_SIZE);
 	ReleaseDC(NULL, screenDC);
 	return newMode;
 }
