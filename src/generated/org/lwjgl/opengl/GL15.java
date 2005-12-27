@@ -60,7 +60,6 @@ public final class GL15 {
 
 
 	public static void glBindBuffer(int target, int buffer) {
-		StateTracker.bindBuffer(target, buffer);
 		long function_pointer = GLContext.getCapabilities().GL15_glBindBuffer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglBindBuffer(target, buffer, function_pointer);
@@ -68,7 +67,6 @@ public final class GL15 {
 	private static native void nglBindBuffer(int target, int buffer, long function_pointer);
 
 	public static void glDeleteBuffers(IntBuffer buffers) {
-		StateTracker.deleteBuffers(buffers);
 		long function_pointer = GLContext.getCapabilities().GL15_glDeleteBuffers_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(buffers);

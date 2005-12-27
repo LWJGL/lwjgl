@@ -65,6 +65,7 @@ public class ContextCapabilitiesGenerator {
 	public static void generateClassPrologue(PrintWriter writer, boolean context_specific) {
 		writer.println("public class " + Utils.CONTEXT_CAPS_CLASS_NAME + " {");
 		writer.println("\tfinal StateTracker tracker;");
+		writer.println("\tfinal IntBuffer scratch_int_buffer = BufferUtils.createIntBuffer(16);");
 		writer.println();
 		if (!context_specific) {
 			writer.println("\tprivate static boolean " + STUBS_LOADED_NAME + " = false;");

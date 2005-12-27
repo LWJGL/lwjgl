@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import java.nio.Buffer;
+import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 
@@ -57,51 +58,66 @@ class GLChecks {
 		return StateTracker.getReferencesStack().getReferences();
 	}
 
+	private static boolean checkBufferObject(int buffer_enum, boolean state) {
+		IntBuffer scratch_buffer = GLContext.getCapabilities().scratch_int_buffer;
+		GL11.glGetInteger(buffer_enum, scratch_buffer);
+		boolean is_enabled = scratch_buffer.get(0) != 0;
+		return state == is_enabled;
+	}
+	
 	/** Helper method to ensure that array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOdisabled() {
-		if (StateTracker.getVBOArrayStack().getState() != 0)
+		if ((GLContext.getCapabilities().OpenGL15 && !checkBufferObject(GL15.GL_ARRAY_BUFFER_BINDING, false) ||
+					(GLContext.getCapabilities().GL_ARB_vertex_buffer_object && !checkBufferObject(ARBVertexBufferObject.GL_ARRAY_BUFFER_BINDING_ARB, false))))
 			throw new OpenGLException("Cannot use Buffers when Array Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOenabled() {
-		if (StateTracker.getVBOArrayStack().getState() == 0)
+		if ((GLContext.getCapabilities().OpenGL15 && !checkBufferObject(GL15.GL_ARRAY_BUFFER_BINDING, true) ||
+					(GLContext.getCapabilities().GL_ARB_vertex_buffer_object && !checkBufferObject(ARBVertexBufferObject.GL_ARRAY_BUFFER_BINDING_ARB, true))))
 			throw new OpenGLException("Cannot use offsets when Array Buffer Object is disabled");
 	}
 
 	/** Helper method to ensure that element array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureElementVBOdisabled() {
-		if (StateTracker.getVBOElementStack().getState() != 0)
+		if ((GLContext.getCapabilities().OpenGL15 && !checkBufferObject(GL15.GL_ELEMENT_ARRAY_BUFFER_BINDING, false) ||
+					(GLContext.getCapabilities().GL_ARB_vertex_buffer_object && !checkBufferObject(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB, false))))
 			throw new OpenGLException("Cannot use Buffers when Element Array Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that element array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureElementVBOenabled() {
-		if (StateTracker.getVBOElementStack().getState() == 0)
+		if ((GLContext.getCapabilities().OpenGL15 && !checkBufferObject(GL15.GL_ELEMENT_ARRAY_BUFFER_BINDING, true) ||
+					(GLContext.getCapabilities().GL_ARB_vertex_buffer_object && !checkBufferObject(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB, true))))
 			throw new OpenGLException("Cannot use offsets when Element Array Buffer Object is disabled");
 	}
 
 	/** Helper method to ensure that pixel pack buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensurePackPBOdisabled() {
-		if (StateTracker.getPBOPackStack().getState() != 0)
+		if ((GLContext.getCapabilities().GL_ARB_pixel_buffer_object && !checkBufferObject(ARBPixelBufferObject.GL_PIXEL_PACK_BUFFER_BINDING_ARB, false) ||
+					(GLContext.getCapabilities().GL_EXT_pixel_buffer_object && !checkBufferObject(EXTPixelBufferObject.GL_PIXEL_PACK_BUFFER_BINDING_EXT, false))))
 			throw new OpenGLException("Cannot use Buffers when Pixel Pack Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that pixel pack buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensurePackPBOenabled() {
-		if (StateTracker.getPBOPackStack().getState() == 0)
+		if ((GLContext.getCapabilities().GL_ARB_pixel_buffer_object && !checkBufferObject(ARBPixelBufferObject.GL_PIXEL_PACK_BUFFER_BINDING_ARB, true) ||
+					(GLContext.getCapabilities().GL_EXT_pixel_buffer_object && !checkBufferObject(EXTPixelBufferObject.GL_PIXEL_PACK_BUFFER_BINDING_EXT, true))))
 			throw new OpenGLException("Cannot use offsets when Pixel Pack Buffer Object is disabled");
 	}
 
 	/** Helper method to ensure that pixel unpack buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureUnpackPBOdisabled() {
-		if (StateTracker.getPBOUnpackStack().getState() != 0)
+		if ((GLContext.getCapabilities().GL_ARB_pixel_buffer_object && !checkBufferObject(ARBPixelBufferObject.GL_PIXEL_UNPACK_BUFFER_BINDING_ARB, false) ||
+					(GLContext.getCapabilities().GL_EXT_pixel_buffer_object && !checkBufferObject(EXTPixelBufferObject.GL_PIXEL_UNPACK_BUFFER_BINDING_EXT, false))))
 			throw new OpenGLException("Cannot use Buffers when Pixel Unpack Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that pixel unpack buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureUnpackPBOenabled() {
-		if (StateTracker.getPBOUnpackStack().getState() == 0)
+		if ((GLContext.getCapabilities().GL_ARB_pixel_buffer_object && !checkBufferObject(ARBPixelBufferObject.GL_PIXEL_UNPACK_BUFFER_BINDING_ARB, true) ||
+					(GLContext.getCapabilities().GL_EXT_pixel_buffer_object && !checkBufferObject(EXTPixelBufferObject.GL_PIXEL_UNPACK_BUFFER_BINDING_EXT, true))))
 			throw new OpenGLException("Cannot use offsets when Pixel Unpack Buffer Object is disabled");
 	}
 

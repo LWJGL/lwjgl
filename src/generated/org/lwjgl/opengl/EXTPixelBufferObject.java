@@ -18,8 +18,8 @@ public final class EXTPixelBufferObject extends ARBBufferObject {
 	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
 	 * GetFloatv, and GetDoublev:
 	 */
-	public static final int PIXEL_PACK_BUFFER_BINDING_EXT = 0x88ed;
-	public static final int PIXEL_UNPACK_BUFFER_BINDING_EXT = 0x88ef;
+	public static final int GL_PIXEL_PACK_BUFFER_BINDING_EXT = 0x88ed;
+	public static final int GL_PIXEL_UNPACK_BUFFER_BINDING_EXT = 0x88ef;
 
 	private EXTPixelBufferObject() {
 	}

@@ -35,24 +35,12 @@ import java.nio.IntBuffer;
 
 /** Track Vertex Buffer Objects by context. */
 final class StateTracker {
-	private final StateStack vbo_array_stack;
-	private final StateStack vbo_element_stack;
-
-	private final StateStack pbo_pack_stack;
-	private final StateStack pbo_unpack_stack;
-
 	private final ReferencesStack references_stack;
 	
 	private final StateStack attrib_stack;
 
 	StateTracker() {
 		int stack_size = Math.max(1, Util.glGetInteger(GL11.GL_MAX_CLIENT_ATTRIB_STACK_DEPTH));
-
-		vbo_array_stack = new StateStack(stack_size, 0);
-		vbo_element_stack = new StateStack(stack_size, 0);
-
-		pbo_pack_stack = new StateStack(stack_size, 0);
-		pbo_unpack_stack = new StateStack(stack_size, 0);
 
 		references_stack = new ReferencesStack(stack_size);
 
@@ -61,10 +49,6 @@ final class StateTracker {
 
 	static void popAttrib() {
 		if ((getClientAttribStack().popState() & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
-			getVBOArrayStack().popState();
-			getVBOElementStack().popState();
-			getPBOPackStack().popState();
-			getPBOUnpackStack().popState();
 			getReferencesStack().popState();
 		}
 	}
@@ -73,61 +57,8 @@ final class StateTracker {
 		getClientAttribStack().pushState();
 		getClientAttribStack().setState(mask);
 		if ((mask & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
-			getVBOArrayStack().pushState();
-			getVBOElementStack().pushState();
-			getPBOPackStack().pushState();
-			getPBOUnpackStack().pushState();
 			getReferencesStack().pushState();
 		}
-	}
-
-	static void deleteBuffers(IntBuffer buffers) {
-		for (int i = buffers.position(); i < buffers.limit(); i++) {
-			int buffer_handle = buffers.get(i);
-			if (getVBOArrayStack().getState() == buffer_handle)
-				getVBOArrayStack().setState(0);
-			if (getVBOElementStack().getState() == buffer_handle)
-				getVBOElementStack().setState(0);
-			if (getPBOPackStack().getState() == buffer_handle)
-				getPBOPackStack().setState(0);
-			if (getPBOUnpackStack().getState() == buffer_handle)
-				getPBOUnpackStack().setState(0);
-		}
-	}
-
-	static void bindBuffer(int target, int buffer) {
-		switch ( target ) {
-			case ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB:
-				getVBOArrayStack().setState(buffer);
-				break;
-			case ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB:
-				getVBOElementStack().setState(buffer);
-				break;
-			case ARBPixelBufferObject.GL_PIXEL_PACK_BUFFER_ARB:
-				getPBOPackStack().setState(buffer);
-				break;
-			case ARBPixelBufferObject.GL_PIXEL_UNPACK_BUFFER_ARB:
-				getPBOUnpackStack().setState(buffer);
-				break;
-			default:
-				throw new IllegalArgumentException("Unsupported VBO target " + target);
-		}
-	}
-
-	static StateStack getVBOArrayStack() {
-		return GLContext.getCapabilities().tracker.vbo_array_stack;
-	}
-
-	static StateStack getVBOElementStack() {
-		return GLContext.getCapabilities().tracker.vbo_element_stack;
-	}
-
-	static StateStack getPBOPackStack() {
-		return GLContext.getCapabilities().tracker.pbo_pack_stack;
-	}
-
-	static StateStack getPBOUnpackStack() {
-		return GLContext.getCapabilities().tracker.pbo_unpack_stack;
 	}
 
 	static ReferencesStack getReferencesStack() {

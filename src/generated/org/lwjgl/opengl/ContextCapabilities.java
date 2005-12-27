@@ -3,10 +3,13 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferUtils;
 import java.util.Set;
+import java.nio.IntBuffer;
 
 public class ContextCapabilities {
 	final StateTracker tracker;
+	final IntBuffer scratch_int_buffer = BufferUtils.createIntBuffer(16);
 
 	public final boolean GL_ARB_color_buffer_float;
 	public final boolean GL_ARB_depth_texture;

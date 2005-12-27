@@ -45,6 +45,6 @@ public interface EXT_pixel_buffer_object extends ARB_buffer_object {
 	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
 	 * GetFloatv, and GetDoublev:
 	 */
-	int PIXEL_PACK_BUFFER_BINDING_EXT = 0x88ED;
-	int PIXEL_UNPACK_BUFFER_BINDING_EXT = 0x88EF;
+	int GL_PIXEL_PACK_BUFFER_BINDING_EXT = 0x88ED;
+	int GL_PIXEL_UNPACK_BUFFER_BINDING_EXT = 0x88EF;
 }

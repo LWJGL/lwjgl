@@ -67,10 +67,8 @@ public interface ARB_buffer_object {
 	int GL_BUFFER_MAPPED_ARB = 0x88BC;
 	int GL_BUFFER_MAP_POINTER_ARB = 0x88BD;
 
-	@Code("		StateTracker.bindBuffer(target, buffer);")
 	void glBindBufferARB(@GLenum int target, @GLuint int buffer);
 
-	@Code("		StateTracker.deleteBuffers(buffers);")
 	void glDeleteBuffersARB(@AutoSize("buffers") @GLsizei int n, @Const @GLuint IntBuffer buffers);
 
 	void glGenBuffersARB(@AutoSize("buffers") int n, @GLuint IntBuffer buffers);

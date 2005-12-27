@@ -111,7 +111,9 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 			writer.println("package org.lwjgl.opengl;");
 			writer.println();
 			writer.println("import org.lwjgl.LWJGLException;");
+			writer.println("import org.lwjgl.BufferUtils;");
 			writer.println("import java.util.Set;");
+			writer.println("import java.nio.IntBuffer;");
 			writer.println();
 			ContextCapabilitiesGenerator.generateClassPrologue(writer, context_specific);
 			DeclarationFilter filter = DeclarationFilter.getFilter(InterfaceDeclaration.class);

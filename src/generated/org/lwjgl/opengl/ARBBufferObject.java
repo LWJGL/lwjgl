@@ -36,7 +36,6 @@ public class ARBBufferObject {
 
 
 	public static void glBindBufferARB(int target, int buffer) {
-		StateTracker.bindBuffer(target, buffer);
 		long function_pointer = GLContext.getCapabilities().ARB_buffer_object_glBindBufferARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglBindBufferARB(target, buffer, function_pointer);
@@ -44,7 +43,6 @@ public class ARBBufferObject {
 	private static native void nglBindBufferARB(int target, int buffer, long function_pointer);
 
 	public static void glDeleteBuffersARB(IntBuffer buffers) {
-		StateTracker.deleteBuffers(buffers);
 		long function_pointer = GLContext.getCapabilities().ARB_buffer_object_glDeleteBuffersARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(buffers);
