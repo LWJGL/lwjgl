@@ -48,28 +48,17 @@
 #include "display.h"
 #include "common_tools.h"
 
-#define WINDOWCLASSNAME "LWJGLWINDOW"
-
 #define GAMMA_SIZE (3*256)
 
-static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env);
-static char * getDriver();
 static bool modeSet = false; // Whether we've done a display mode change
 static WORD originalGamma[GAMMA_SIZE]; // Original gamma settings
 static WORD currentGamma[GAMMA_SIZE]; // Current gamma settings
 static DEVMODE devmode; // Now we'll remember this value for the future
-extern HWND display_hwnd; // Handle to the window
-
-jobjectArray getAvailableDisplayModes(JNIEnv *env)
-{
-	jobjectArray result = GetAvailableDisplayModesEx(env);
-	return result;
-}
 
 /**
  * Choose displaymodes using extended codepath (multiple displaydevices)
  */
-static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
+jobjectArray getAvailableDisplayModes(JNIEnv * env) {
 
 	int i = 0, j = 0, n = 0;
 
