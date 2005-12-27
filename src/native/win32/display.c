@@ -200,38 +200,28 @@ void setGammaRamp(JNIEnv * env, jobject gammaRampBuffer)
 
 jobject initDisplay(JNIEnv * env)
 {
-	int width;
-	int height;
-	int bpp;
-	int freq;
-	jclass jclass_DisplayMode;
-	jmethodID ctor;
+	DEVMODE devmode;
 	jobject newMode;
-	// Determine the current screen resolution
+	LONG cdsret;
+
 	// Get the screen
 	HDC screenDC = GetDC(NULL);
 	if (!screenDC) {
 		throwException(env, "Couldn't get screen DC!");
 		return NULL;
 	}
-	// Get the device caps
-	width = GetDeviceCaps(screenDC, HORZRES);
-	height = GetDeviceCaps(screenDC, VERTRES);
-	bpp = GetDeviceCaps(screenDC, BITSPIXEL);
-	freq = GetDeviceCaps(screenDC, VREFRESH);
-	if (freq <= 1)
-		freq = 0; // Unknown
-
-	jclass_DisplayMode = (*env)->FindClass(env, "org/lwjgl/opengl/DisplayMode");
-	ctor = (*env)->GetMethodID(env, jclass_DisplayMode, "<init>", "(IIII)V");
-	newMode = (*env)->NewObject(env, jclass_DisplayMode, ctor, width, height, bpp, freq);
-
 	// Get the default gamma ramp
 	if (GetDeviceGammaRamp(screenDC, originalGamma) == FALSE) {
 		printfDebugJava(env, "Failed to get initial device gamma");
 	}
 	memcpy(currentGamma, originalGamma, sizeof(WORD)*3*GAMMA_SIZE);
 	ReleaseDC(NULL, screenDC);
+
+	if (!EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &devmode)) {
+		throwFormattedException(env, "Couldn't get current display settings (%ld)", GetLastError());
+		return NULL;
+	}
+	newMode = createDisplayMode(env, &devmode);
 	return newMode;
 }
 
