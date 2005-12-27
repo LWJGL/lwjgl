@@ -142,6 +142,7 @@ void switchDisplayMode(JNIEnv * env, jobject mode)
 	int freq = (*env)->GetIntField(env, mode, fid_freq);
 	LONG cdsret;
 
+	ZeroMemory(&devmode, sizeof(DEVMODE));
 	devmode.dmSize = sizeof(DEVMODE);
 	devmode.dmBitsPerPel = bpp;
 	devmode.dmPelsWidth = width;
