@@ -229,6 +229,14 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	}
 
 	/**
+	 * Override this to do initialising of the context.
+	 * It will be called once from paint(), immediately after 
+	 * the context is created.
+	 */
+	protected void initGL() {
+	}
+
+	/**
 	 * Override this to do painting
 	 */
 	protected void paintGL() {
@@ -246,6 +254,8 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 			try {
 				if (context == null) {
 					this.context = new Context(peer_info, drawable != null ? drawable.getContext() : null);
+					context.makeCurrent();
+					initGL();
 				}
 				if (!context.isCurrent())
 					context.makeCurrent();
