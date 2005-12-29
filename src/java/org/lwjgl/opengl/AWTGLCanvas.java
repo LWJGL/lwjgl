@@ -147,6 +147,8 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	 */
 	public AWTGLCanvas(GraphicsDevice device, PixelFormat pixel_format, Drawable drawable) throws LWJGLException {
 		super(implementation.findConfiguration(device, pixel_format));
+		if (pixel_format == null)
+			throw new NullPointerException("Pixel format must be non-null");
 		addHierarchyListener(this);
 		this.drawable = drawable;
 		this.pixel_format = pixel_format;

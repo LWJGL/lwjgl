@@ -646,6 +646,8 @@ public final class Display {
 	 * @throws LWJGLException
 	 */
 	public static void create(PixelFormat pixel_format, Drawable shared_drawable) throws LWJGLException {
+		if (pixel_format == null)
+			throw new NullPointerException("Pixel format must be non-null");
 		if (isCreated())
 			throw new IllegalStateException("Only one LWJGL context may be instantiated at any one time.");
 		if (pixel_format == null)

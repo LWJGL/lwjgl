@@ -178,6 +178,8 @@ public final class Pbuffer implements Drawable {
 	 * 						 with the Display context (if created).
 	 */
 	public Pbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture, Drawable shared_drawable) throws LWJGLException {
+		if (pixel_format == null)
+			throw new NullPointerException("Pixel format must be non-null");
 		this.width = width;
 		this.height = height;
 		this.peer_info = createPbuffer(width, height, pixel_format, renderTexture);
