@@ -138,12 +138,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nIs
 	return result ? JNI_TRUE : JNI_FALSE;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSetVSync
-  (JNIEnv *env, jclass clazz, jobject context_handle, jboolean enable) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSetSwapInterval
+  (JNIEnv *env, jclass clazz, jobject context_handle, jint int_value) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	long vsync_value = enable == JNI_TRUE ? 1 : 0;
-	[context_info->context setValues:&vsync_value forParameter:NSOpenGLCPSwapInterval];
+	long value = int_value;
+	[context_info->context setValues:&value forParameter:NSOpenGLCPSwapInterval];
 	[pool release];
 }
 

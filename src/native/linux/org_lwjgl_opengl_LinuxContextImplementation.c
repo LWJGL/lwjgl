@@ -88,13 +88,12 @@ static void createContextGLX(JNIEnv *env, X11PeerInfo *peer_info, X11Context *co
 	context_info->context = context;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nSetVSync
-  (JNIEnv *env, jclass clazz, jobject context_handle, jboolean sync)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nSetSwapInterval
+  (JNIEnv *env, jclass clazz, jobject context_handle, jint value)
 {
 	X11Context *context_info = (*env)->GetDirectBufferAddress(env, context_handle);
 	if (context_info->extension_flags.GLX_SGI_swap_control) {
-		int interval = sync == JNI_TRUE ? 1 : 0;
-		lwjgl_glXSwapIntervalSGI(interval);
+		lwjgl_glXSwapIntervalSGI(value);
 	}
 }
 

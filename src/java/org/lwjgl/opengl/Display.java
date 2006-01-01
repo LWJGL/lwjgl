@@ -91,8 +91,8 @@ public final class Display {
 	/** Fullscreen */
 	private static boolean fullscreen;
 
-	/** VSync */
-	private static boolean vsync;
+	/** Swap interval */
+	private static int swap_interval;
 
 	/** A unique context object, so we can track different contexts between creates() and destroys() */
 	private static PeerInfo peer_info;
@@ -267,7 +267,7 @@ public final class Display {
 		
 		setTitle(title);
 		initControls();
-		setVSyncEnabled(vsync);
+		setSwapInterval(swap_interval);
 		window_created = true;
 		
 		// set cached window icon if exists
@@ -774,14 +774,28 @@ public final class Display {
 	}
 
 	/**
+	 * Set the buffer swap interval. This call is a best-attempt at changing
+	 * the monitor swap interval, which is the minimum periodicity of color buffer swaps,
+	 * measured in video frame periods, and is not guaranteed to be successful.
+	 *
+	 * A video frame period is the time required to display a full frame of video data.
+	 *
+	 * @param sync true to synchronize; false to ignore synchronization
+	 */
+	public static void setSwapInterval(int value) {
+		swap_interval = value;
+		if (isCreated())
+			Context.setSwapInterval(swap_interval);
+	}
+	
+	
+	/**
 	 * Enable or disable vertical monitor synchronization. This call is a best-attempt at changing
 	 * the vertical refresh synchronization of the monitor, and is not guaranteed to be successful.
 	 * @param sync true to synchronize; false to ignore synchronization
 	 */
 	public static void setVSyncEnabled(boolean sync) {
-		vsync = sync;
-		if (isCreated())
-			Context.setVSync(vsync);
+		setSwapInterval(sync ? 1 : 0);
 	}
 
 	/**

@@ -119,15 +119,11 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nIsC
 	return wglGetCurrentContext() == context_info->context;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nSetVSync
-  (JNIEnv *env, jclass clazz, jobject context_handle, jboolean enable) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nSetSwapInterval
+  (JNIEnv *env, jclass clazz, jobject context_handle, jint value) {
 	Win32Context *context_info = (Win32Context *)(*env)->GetDirectBufferAddress(env, context_handle);
 	if (context_info->extensions.WGL_EXT_swap_control) {
-		if (enable == JNI_TRUE) {
-			context_info->extensions.wglSwapIntervalEXT(1);
-		} else {
-			context_info->extensions.wglSwapIntervalEXT(0);
-		}
+		context_info->extensions.wglSwapIntervalEXT(value);
 	}
 }
 

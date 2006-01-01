@@ -75,7 +75,7 @@ interface ContextImplementation {
 	 */
 	public boolean isCurrent(ByteBuffer handle) throws LWJGLException;
 
-	public void setVSync(boolean enable);
+	public void setSwapInterval(int value);
 
 	/**
 	 * Destroys the Context.

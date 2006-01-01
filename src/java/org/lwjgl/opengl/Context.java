@@ -209,13 +209,18 @@ final class Context {
 	}
 
 	/**
-	 * Enable or disable vertical monitor synchronization. This call is a best-attempt at changing
-	 * the monitor vertical refresh synchronization of the context, and is not guaranteed to be successful.
+	 * Set the buffer swap interval. This call is a best-attempt at changing
+	 * the monitor swap interval, which is the minimum periodicity of color buffer swaps,
+	 * measured in video frame periods, and is not guaranteed to be successful.
+	 *
+	 * A video frame period is the time required to display a full frame of video data.
+	 *
 	 * @param sync true to synchronize; false to ignore synchronization
 	 */
-	public static void setVSync(boolean enable) {
-		implementation.setVSync(enable);
+	public static void setSwapInterval(int value) {
+		implementation.setSwapInterval(value);
 	}
+	
 	
 	/**
 	 * Destroy the context. This method behaves the same as destroy() with the extra

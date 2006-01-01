@@ -170,14 +170,21 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	} 
 	
 	/**
-	 * Enable vsync
+	 * Set swap interval.
 	 */
-	public void setVSyncEnabled(boolean enabled) throws LWJGLException {
+	public void setSwapInterval(int swap_interval) throws LWJGLException {
 		synchronized(SYNC_LOCK) {
 			if (context == null)
 				throw new IllegalStateException("Canvas not yet displayable");
-			Context.setVSync(enabled);
+			Context.setSwapInterval(swap_interval);
 		}
+	}
+	
+	/**
+	 * Enable vsync
+	 */
+	public void setVSyncEnabled(boolean enabled) throws LWJGLException {
+		setSwapInterval(enabled ? 1 : 0);
 	}
 	
 	/**
