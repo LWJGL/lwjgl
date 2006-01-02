@@ -154,7 +154,16 @@ bool extgl_Open(JNIEnv *env) {
 	char buffer[BUFFER_SIZE];
 	if (lib_gl_handle != NULL)
 		return true;
-	lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY);
+	/*
+	 * Actually we don't need the RTLD_GLOBAL flag, since the symbols
+	 * we load should be private to us. However, according to the
+	 * documentation at
+	 *
+	 * http://dri.sourceforge.net/doc/DRIuserguide.html
+	 *
+	 * DRI drivers need this flag to work properly
+	 */
+	lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
 	if (lib_gl_handle == NULL) {
 		snprintf(buffer, BUFFER_SIZE, "Error loading libGL.so.1: %s", dlerror());
 		buffer[BUFFER_SIZE - 1] = '\0';
