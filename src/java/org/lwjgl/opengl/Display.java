@@ -596,7 +596,7 @@ public final class Display {
 	 *
 	 * @throws LWJGLException If the context could not be released
 	 */
-	public void releaseContext() throws LWJGLException {
+	public static void releaseContext() throws LWJGLException {
 		if (!isCreated())
 			throw new IllegalStateException("Display is not created");
 		if (context.isCurrent())
