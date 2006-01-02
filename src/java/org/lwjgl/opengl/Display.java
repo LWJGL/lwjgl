@@ -598,7 +598,7 @@ public final class Display {
 	 */
 	public void releaseContext() throws LWJGLException {
 		if (!isCreated())
-			throw new IllegalStateException("No window created to make current");
+			throw new IllegalStateException("Display is not created");
 		if (context.isCurrent())
 			Context.releaseCurrentContext();
 	}
@@ -610,7 +610,7 @@ public final class Display {
 	 */
 	public static void makeCurrent() throws LWJGLException {
 		if (!isCreated())
-			throw new IllegalStateException("No window created to make current");
+			throw new IllegalStateException("Display is not created");
 		context.makeCurrent();
 	}
 
