@@ -592,7 +592,20 @@ public final class Display {
 	}
 
 	/**
-	 * Make the Display the current rendering context for GL calls. Also initialize native stubs.
+	 * Release the Display context.
+	 *
+	 * @throws LWJGLException If the context could not be released
+	 */
+	public void releaseContext() throws LWJGLException {
+		if (!isCreated())
+			throw new IllegalStateException("No window created to make current");
+		if (context.isCurrent())
+			Context.releaseCurrentContext();
+	}
+	
+	/**
+	 * Make the Display the current rendering context for GL calls.
+	 *
 	 * @throws LWJGLException If the context could not be made current
 	 */
 	public static void makeCurrent() throws LWJGLException {
