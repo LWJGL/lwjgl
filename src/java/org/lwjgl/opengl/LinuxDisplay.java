@@ -121,7 +121,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	
 	private static boolean isXrandrSupported() {
-		if (System.getenv("LWJGL_DISABLE_XRANDR") != null)
+		if (Boolean.getBoolean("LWJGL_DISABLE_XRANDR"))
 			return false;
 		lockAWT();
 		try {
@@ -159,7 +159,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native boolean nIsXF86VidModeSupported() throws LWJGLException;
 
 	private static boolean isNetWMFullscreenSupported() throws LWJGLException {
-		if (System.getenv("LWJGL_DISABLE_NETWM") != null)
+		if (Boolean.getBoolean("LWJGL_DISABLE_NETWM"))
 			return false;
 		lockAWT();
 		try {
