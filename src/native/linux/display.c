@@ -68,7 +68,7 @@ static bool getXF86VidModeVersion(JNIEnv *env, Display *disp, int *major, int *m
 	int event_base, error_base;
 
 	if (!XF86VidModeQueryExtension(disp, &event_base, &error_base)) {
-		throwException(env, "XF86VidMode extension not available");
+		printfDebugJava(env, "XF86VidMode extension not available");
 		return false;
 	}
 	if (!XF86VidModeQueryVersion(disp, major, minor)) {
@@ -83,7 +83,7 @@ static bool getXrandrVersion(JNIEnv *env, Display *disp, int *major, int *minor)
 	int event_base, error_base;
 
 	if (!XRRQueryExtension(disp, &event_base, &error_base)) {
-		throwException(env, "Xrandr extension not available");
+		printfDebugJava(env, "Xrandr extension not available");
 		return false;
 	}
 	if (!XRRQueryVersion(disp, major, minor)) {
