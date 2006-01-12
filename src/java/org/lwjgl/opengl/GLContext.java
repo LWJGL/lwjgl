@@ -320,7 +320,11 @@ public final class GLContext {
 	/** The OpenGL library reference count is decremented, and if it reaches 0, the library is unloaded. */
 	public static synchronized void unloadOpenGLLibrary() {
 		gl_ref_count--;
-		if ( gl_ref_count == 0 )
+		/*
+		 * Unload the native OpenGL library unless we're on linux, since
+		 * some drivers (NVIDIA proprietary) crash on exit when unloading the library.
+		 */
+		if (gl_ref_count == 0 && LWJGLUtil.getPlatform() != LWJGLUtil.PLATFORM_LINUX)
 			nUnloadOpenGLLibrary();
 	}
 
