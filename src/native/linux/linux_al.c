@@ -29,21 +29,36 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
-#include <jni.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "org_lwjgl_openal_AL.h"
 #include "extal.h"
+#include "common_tools.h"
 
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL_nCreate(JNIEnv *env, jclass clazz, jstring oalPath) {
-	if (!tryLoadLibrary(env, oalPath)) {
-		throwException(env, "Could not load OpenAL library");
+#include <dlfcn.h>
+
+static void* handleOAL;
+
+void *NativeGetFunctionPointer(const char *function) {
+	return dlsym(handleOAL, function);
+}
+
+bool tryLoadLibrary(JNIEnv *env, jstring path) {
+	char *path_str = GetStringNativeChars(env, path);
+	printfDebugJava(env, "Testing '%s'", path_str);
+	handleOAL = dlopen(path_str, RTLD_LAZY);
+	if (handleOAL != NULL) {
+		printfDebugJava(env, "Found OpenAL at '%s'", path_str);
 	}
+	free(path_str);
+	return handleOAL != NULL;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL_nDestroy(JNIEnv *env, jclass clazz) {
-	UnLoadOpenAL();
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL_resetNativeStubs(JNIEnv *env, jclass clazz, jclass al_class) {
-	(*env)->UnregisterNatives(env, al_class);
+void UnLoadOpenAL() {
+	if (handleOAL != NULL) {
+		dlclose(handleOAL);
+		handleOAL = NULL;
+	}
 }

@@ -44,8 +44,6 @@
 extern "C" {
 #endif
 
-void extal_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions);
-
 #if defined(_WIN32)
  #ifdef _OPENAL32LIB
   #define ALCAPI __declspec(dllexport)
@@ -159,11 +157,12 @@ typedef double ALdouble;
 /** void type (for opaque pointers only) */
 typedef void ALvoid;
 
+void* extal_GetProcAddress(const char* function);
 
-void InitializeOpenAL(JNIEnv *env, jobjectArray oalPaths);
-void DeInitializeOpenAL();
-
-//extern alGetProcAddressPROC alGetProcAddress;
+/* Platform dependent functions */
+void *NativeGetFunctionPointer(const char *function);
+bool tryLoadLibrary(JNIEnv *env, jstring path);
+void UnLoadOpenAL();
 
 #ifdef __cplusplus
 }

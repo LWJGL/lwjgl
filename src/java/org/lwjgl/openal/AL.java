@@ -65,7 +65,7 @@ public final class AL {
 	 * 
 	 * @param oalPaths Array of strings containing paths to search for OpenAL library
 	 */
-	private static native void nCreate(String[] oalPaths) throws LWJGLException;
+	private static native void nCreate(String oalPath) throws LWJGLException;
 
 	/**
 	 * Native method the destroy the AL
@@ -99,8 +99,17 @@ public final class AL {
                                                   "openal", "libopenal.so",
                                                   "openal", "openal.dylib"}, AL.class.getClassLoader());
 		LWJGLUtil.log("Found " + oalPaths.length + " OpenAL paths");
-		nCreate(oalPaths);
-		created = true;
+		for (int i = 0; i < oalPaths.length; i++) {
+			try {
+				nCreate(oalPaths[i]);
+				created = true;
+				break;
+			} catch (LWJGLException e) {
+				LWJGLUtil.log("Failed to load " + oalPaths[i] + ": " + e.getMessage());
+			}
+		}
+		if (!created)
+			throw new LWJGLException("Could not locate OpenAL library.");
 
 		try {
 			AL10.initNativeStubs();
