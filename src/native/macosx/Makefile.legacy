@@ -1,17 +1,16 @@
-# This makefile builds a 'fat' library that is _only_ compatible with 10.4 and later
+# Use this makefile to build for Mac OS X 10.3 and earlier
 
-CC=gcc-4.0
-LINKER=gcc-4.0
+CC=gcc-3.0
+LINKER=gcc-3.0
 STRIP=strip
-SDK_ROOT=/Developer/SDKs/MacOSX10.4u.sdk
-ARCHS=-arch i386 -arch ppc
-CFLAGS_LINK=-isysroot $(SDK_ROOT) -Wl,-syslibroot,$(SDK_ROOT) $(ARCHS) -exported_symbols_list lwjgl.symbols -dynamiclib -Wall
+ARCHS=
 SYMBOL_FILE=lwjgl.symbols
+CFLAGS_LINK=-exported_symbols_list lwjgl.symbols -dynamiclib -Wall
 FRAMEWORKS=-framework Foundation -framework AppKit -framework JavaVM -framework Carbon
-CFLAGS_O=-isysroot $(SDK_ROOT) $(ARCHS) -fPIC -O2 -D_MACOSX -Wall -c -I$(SDK_ROOT)/System/Library/Frameworks/OpenAL.framework/Versions/A/Headers -I../common -I$(SDK_ROOT)/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers
+CFLAGS_O=-fPIC -O2 -D_MACOSX -Wall -c -I${AL}/include -I../common -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers
 SRC=$(wildcard *.m) $(wildcard *.c) $(wildcard ../common/*.c) $(wildcard ../generated/*.c)
 OBJECTS=$(subst .m,.o, $(subst .c,.o,$(SRC)))
-LIBRARY=liblwjgl.jnilib
+LIBRARY=liblwjgl-legacy.jnilib
 
 $(LIBRARY): $(OBJECTS) $(SYMBOL_FILE)
 	$(LINKER) $(CFLAGS_LINK) -o $@ $(OBJECTS) $(FRAMEWORKS)

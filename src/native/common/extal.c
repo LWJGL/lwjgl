@@ -59,7 +59,10 @@ static void* handleOAL;
 #include <mach-o/dyld.h>
 #include <stdlib.h>
 #include <string.h>
-static const struct mach_header* handleOAL;
+#include <CoreFoundation/CoreFoundation.h>
+
+static const struct mach_header* handleOAL = NULL;
+static CFBundleRef openal_bundle = NULL;
 #endif
 
 typedef ALvoid* (ALAPIENTRY *alGetProcAddressPROC)( ALubyte* fname );
@@ -80,15 +83,23 @@ static void *NativeGetFunctionPointer(const char *function) {
 #endif
 #ifdef _MACOSX
 	char *mac_symbol_name = (char *)malloc((strlen(function) + 2)*sizeof(char));
+	void *address = NULL;
 	if (mac_symbol_name == NULL)
 		return NULL;
 	mac_symbol_name[0] = '_';
 	strcpy(&(mac_symbol_name[1]), function);
-	NSSymbol symbol = NSLookupSymbolInImage(handleOAL, mac_symbol_name, NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
+	if (handleOAL != NULL) {
+		NSSymbol symbol = NSLookupSymbolInImage(handleOAL, mac_symbol_name, NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
+		if (symbol != NULL) {
+			address = NSAddressOfSymbol(symbol);
+		}
+	} else if (openal_bundle != NULL) {
+		CFStringRef cf_function = CFStringCreateWithCString(NULL, function, kCFStringEncodingUTF8);
+		address = CFBundleGetFunctionPointerForName(openal_bundle, cf_function);
+		CFRelease(cf_function);
+	}
 	free(mac_symbol_name);
-	if (symbol == NULL)
-		return NULL;
-	return NSAddressOfSymbol(symbol);
+	return address;
 #endif
 }
 
@@ -106,7 +117,25 @@ static void* extal_GetProcAddress(const char* function) {
 	return p;
 }
 
-static void tryLoadLibrary(JNIEnv *env, jstring path) {
+#ifdef _MACOSX
+static CFBundleRef tryLoadFramework(JNIEnv *env) {
+	CFStringRef framework_path = CFSTR("/System/Library/Frameworks/OpenAL.framework");
+	if (framework_path == NULL) {
+		printfDebugJava(env, "Failed to allocate string");
+		return NULL;
+	}
+	CFURLRef url = CFURLCreateWithFileSystemPath(NULL, framework_path, kCFURLPOSIXPathStyle, TRUE);
+	if (url == NULL) {
+		printfDebugJava(env, "Failed to allocate URL");
+		return NULL;
+	}
+	CFBundleRef openal_bundle = CFBundleCreate(NULL, url);
+	CFRelease(url);
+	return openal_bundle;
+}
+#endif
+
+static bool tryLoadLibrary(JNIEnv *env, jstring path) {
 #ifdef _WIN32
 		char *path_str = GetStringNativeChars(env, path);
 		printfDebugJava(env, "Testing '%s'", path_str);
@@ -115,6 +144,7 @@ static void tryLoadLibrary(JNIEnv *env, jstring path) {
 			printfDebugJava(env, "Found OpenAL at '%s'", path_str);
 		}
 		free(path_str);
+		return handleOAL != NULL;
 #endif
 #ifdef _X11
 		char *path_str = GetStringNativeChars(env, path);
@@ -124,6 +154,7 @@ static void tryLoadLibrary(JNIEnv *env, jstring path) {
 			printfDebugJava(env, "Found OpenAL at '%s'", path_str);
 		}
 		free(path_str);
+		return handleOAL != NULL;
 #endif
 #ifdef _MACOSX
 		const char *path_str = (*env)->GetStringUTFChars(env, path, NULL);
@@ -133,6 +164,10 @@ static void tryLoadLibrary(JNIEnv *env, jstring path) {
 			printfDebugJava(env, "Found OpenAL at '%s'", path_str);
 		}
 		(*env)->ReleaseStringUTFChars(env, path, path_str);
+		openal_bundle = tryLoadFramework(env);
+		if (openal_bundle != NULL)
+			printfDebugJava(env, "Found OpenAL Bundle");
+		return handleOAL != NULL || openal_bundle != NULL;
 #endif
 }
 
@@ -146,8 +181,7 @@ static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 
 	for(i=0;i<pathcount;i++) {
 		path = (jstring) (*env)->GetObjectArrayElement(env, oalPaths, i);
-		tryLoadLibrary(env, path);
-		if (handleOAL != NULL) {
+		if (tryLoadLibrary(env, path)) {
 			return true;
 		}
 	}
@@ -169,7 +203,10 @@ static void UnLoadOpenAL() {
 	}
 #endif
 #ifdef _MACOSX
-	// Cannot remove the image
+	if (openal_bundle != NULL) {
+		CFRelease(openal_bundle);
+		openal_bundle = NULL;
+	}
 #endif
 }
 
