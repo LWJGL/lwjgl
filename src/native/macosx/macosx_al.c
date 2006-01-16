@@ -53,14 +53,15 @@ static const struct mach_header* handleOAL = NULL;
 static CFBundleRef openal_bundle = NULL;
 
 void *NativeGetFunctionPointer(const char *function) {
-	char *mac_symbol_name = (char *)malloc((strlen(function) + 2)*sizeof(char));
 	void *address = NULL;
-	if (mac_symbol_name == NULL)
-		return NULL;
-	mac_symbol_name[0] = '_';
-	strcpy(&(mac_symbol_name[1]), function);
 	if (handleOAL != NULL) {
+		char *mac_symbol_name = (char *)malloc((strlen(function) + 2)*sizeof(char));
+		if (mac_symbol_name == NULL)
+			return NULL;
+		mac_symbol_name[0] = '_';
+		strcpy(&(mac_symbol_name[1]), function);
 		NSSymbol symbol = NSLookupSymbolInImage(handleOAL, mac_symbol_name, NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
+		free(mac_symbol_name);
 		if (symbol != NULL) {
 			address = NSAddressOfSymbol(symbol);
 		}
@@ -69,7 +70,6 @@ void *NativeGetFunctionPointer(const char *function) {
 		address = CFBundleGetFunctionPointerForName(openal_bundle, cf_function);
 		CFRelease(cf_function);
 	}
-	free(mac_symbol_name);
 	return address;
 }
 
