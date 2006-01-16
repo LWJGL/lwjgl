@@ -34,12 +34,11 @@ package org.lwjgl;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import org.lwjgl.input.Mouse;
-
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
+
+import org.lwjgl.input.Mouse;
 
 /**
  * $Id$

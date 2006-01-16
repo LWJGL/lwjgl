@@ -34,7 +34,6 @@ package org.lwjgl.opengl;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.lang.reflect.Method;
-
 import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 

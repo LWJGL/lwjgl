@@ -45,11 +45,10 @@ package org.lwjgl.opengl;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.util.Arrays;
-import java.util.HashSet;
-
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
