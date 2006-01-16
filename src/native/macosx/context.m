@@ -37,36 +37,41 @@
  * @version $Revision$
  */
 
+#import <CoreFoundation/CoreFoundation.h>
 #import "context.h"
 
-#import <Cocoa/Cocoa.h>
-#import <Carbon/Carbon.h>
+static CFBundleRef opengl_bundle = NULL;
 
-#include <mach-o/dyld.h>
-static const struct mach_header *opengl_lib_handle = NULL;
-
-void *extgl_GetProcAddress(const char *name)
-{
-	#define BUFFER_SIZE 1024
-	char mach_name[BUFFER_SIZE] = "_";
-	strncat(mach_name, name, BUFFER_SIZE - 1);
-
-	NSSymbol sym = NSLookupSymbolInImage(opengl_lib_handle, mach_name, NSLOOKUPSYMBOLINIMAGE_OPTION_BIND | NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
-	void *address = NSAddressOfSymbol(sym);
+void *extgl_GetProcAddress(const char *name) {
+	CFStringRef cf_name = CFStringCreateWithCString(NULL, name, kCFStringEncodingUTF8);
+	void *address = CFBundleGetFunctionPointerForName(opengl_bundle, cf_name);
+	CFRelease(cf_name);
 	if (address == NULL)
 		printfDebug("Could not locate symbol %s\n", name);
 	return address;
 }
 
-static const struct mach_header *loadImage(const char *lib_name) {   
-	return NSAddImage(lib_name, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
+static CFBundleRef loadFramework(JNIEnv *env) {   
+	CFStringRef framework_path = CFSTR("/System/Library/Frameworks/OpenGL.framework");
+	if (framework_path == NULL) {
+		printfDebugJava(env, "Failed to allocate string");
+		return NULL;
+	}   
+	CFURLRef url = CFURLCreateWithFileSystemPath(NULL, framework_path, kCFURLPOSIXPathStyle, TRUE);
+	if (url == NULL) {
+		printfDebugJava(env, "Failed to allocate URL");
+		return NULL;
+	}
+	CFBundleRef opengl_bundle = CFBundleCreate(NULL, url);
+	CFRelease(url);
+	return opengl_bundle;
 }
 
 bool extgl_Open(JNIEnv *env) {
-	if (opengl_lib_handle != NULL)
+	if (opengl_bundle != NULL)
 		return true;
-	opengl_lib_handle = loadImage("/System/Library/Frameworks/OpenGL.framework/Libraries/libGL.dylib");
-	if (opengl_lib_handle != NULL) {
+	opengl_bundle = loadFramework(env);
+	if (opengl_bundle != NULL) {
 		return true;
 	} else {
 		throwException(env, "Could not load OpenGL library");
@@ -76,7 +81,10 @@ bool extgl_Open(JNIEnv *env) {
 
 void extgl_Close(void)
 {
-	opengl_lib_handle = NULL;
+	if (opengl_bundle != NULL) {
+		CFRelease(opengl_bundle);
+		opengl_bundle = NULL;
+	}
 }
 
 NSOpenGLPixelFormat *choosePixelFormat(JNIEnv *env, jobject pixel_format, bool use_display_bpp, bool support_window, bool support_pbuffer, bool double_buffered) {
