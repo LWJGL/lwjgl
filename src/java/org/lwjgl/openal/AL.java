@@ -66,6 +66,14 @@ public final class AL {
 	 * @param oalPaths Array of strings containing paths to search for OpenAL library
 	 */
 	private static native void nCreate(String oalPath) throws LWJGLException;
+	
+	/**
+	 * Native method to create AL instance from the Mac OS X 10.4 OpenAL framework.
+	 * It is only defined in the Mac OS X native library.
+	 * 
+	 * @param oalPaths Array of strings containing paths to search for OpenAL library
+	 */
+	private static native void nCreateDefault() throws LWJGLException;
 
 	/**
 	 * Native method the destroy the AL
@@ -107,6 +115,11 @@ public final class AL {
 			} catch (LWJGLException e) {
 				LWJGLUtil.log("Failed to load " + oalPaths[i] + ": " + e.getMessage());
 			}
+		}
+		if (!created && LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_MACOSX) {
+			// Try to load OpenAL from the framework instead
+			nCreateDefault();
+			created = true;
 		}
 		if (!created)
 			throw new LWJGLException("Could not locate OpenAL library.");

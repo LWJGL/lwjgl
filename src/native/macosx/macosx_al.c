@@ -97,10 +97,7 @@ bool tryLoadLibrary(JNIEnv *env, jstring path) {
 		printfDebugJava(env, "Found OpenAL at '%s'", path_str);
 	}
 	(*env)->ReleaseStringUTFChars(env, path, path_str);
-	openal_bundle = tryLoadFramework(env);
-	if (openal_bundle != NULL)
-		printfDebugJava(env, "Found OpenAL Bundle");
-	return handleOAL != NULL || openal_bundle != NULL;
+	return handleOAL != NULL;
 }
 
 /**
@@ -113,3 +110,10 @@ void UnLoadOpenAL() {
 	}
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL_nCreateDefault(JNIEnv *env, jclass clazz) {
+	openal_bundle = tryLoadFramework(env);
+	if (openal_bundle != NULL)
+		printfDebugJava(env, "Found OpenAL Bundle");
+	else
+		throwException(env, "Could not load OpenAL framework");
+}

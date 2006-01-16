@@ -1,7 +1,7 @@
 # Use this makefile to build for Mac OS X 10.3 and earlier
 
-CC=gcc-3.0
-LINKER=gcc-3.0
+CC=gcc-3.3
+LINKER=gcc-3.3
 STRIP=strip
 ARCHS=
 SYMBOL_FILE=lwjgl.symbols
