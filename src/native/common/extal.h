@@ -158,6 +158,7 @@ typedef double ALdouble;
 typedef void ALvoid;
 
 void* extal_GetProcAddress(const char* function);
+void extal_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions);
 
 /* Platform dependent functions */
 void *NativeGetFunctionPointer(const char *function);
