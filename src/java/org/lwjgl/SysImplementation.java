@@ -42,6 +42,12 @@ package org.lwjgl;
  */
 interface SysImplementation {
 	/**
+	 * Return an array of possible library names. later names
+	 * tried last.
+	 */
+	public String[] getNativeLibraryNames();
+	
+	/**
 	 * Return the version of the native library
 	 */
 	public String getNativeLibraryVersion();

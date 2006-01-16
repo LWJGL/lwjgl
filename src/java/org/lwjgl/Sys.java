@@ -54,20 +54,31 @@ public final class Sys {
   /** Current version of library */
 	private static final String VERSION = "0.99";
 
-	/** The native library name */
-	private static final String LIBRARY_NAME = "lwjgl";
-
 	/** The implementation instance to delegate platform specific behavior to */
 	private final static SysImplementation implementation;
   
-	static {
-		implementation = createImplementation();
+	private static void loadLibrary(final String name) {
 		AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
-				System.loadLibrary(LIBRARY_NAME);
+				System.loadLibrary(name);
 				return null;
 			}
 		});
+	}
+	
+	static {
+		implementation = createImplementation();
+		String[] library_names = implementation.getNativeLibraryNames();
+		UnsatisfiedLinkError last_load_error = null;
+		for (int i = 0; i < library_names.length; i++) {
+			try {
+				loadLibrary(library_names[i]);
+			} catch (UnsatisfiedLinkError e) {
+				last_load_error = e;
+			}
+		}
+		if (last_load_error != null)
+			throw last_load_error;
 		String native_version = implementation.getNativeLibraryVersion();
 		if (!native_version.equals(getVersion()))
 			throw new LinkageError("Version mismatch: jar version is '" + getVersion() +

@@ -283,28 +283,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 	 * when the OS version is 10.3 or lower.
 	 */
 	private void hideUI(boolean hide) {
-		if (!isMacOSXEqualsOrBetterThan(10, 4))
+		if (!LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 4))
 			nHideUI(hide);
 	}
 
-	private static boolean isMacOSXEqualsOrBetterThan(int major_required, int minor_required) {
-		String os_version = System.getProperty("os.version");
-		StringTokenizer version_tokenizer = new StringTokenizer(os_version, ".");
-		int major;
-		int minor;
-		try {
-			String major_str = version_tokenizer.nextToken();
-			String minor_str = version_tokenizer.nextToken();
-			major = Integer.parseInt(major_str);
-			minor = Integer.parseInt(minor_str);
-		} catch (Exception e) {
-			LWJGLUtil.log("Exception occurred while trying to determine OS version: " + e);
-			// Best guess, no
-			return false;
-		}
-		return major > major_required || (major == major_required && minor >= minor_required);
-	}
-	
 	private native void nHideUI(boolean hide);
 
 	native void getMouseDeltas(IntBuffer delta_buffer);
@@ -360,7 +342,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private native void nGrabMouse(boolean grab);
 
 	public int getNativeCursorCapabilities() {
-		if (isMacOSXEqualsOrBetterThan(10, 4)) {
+		if (LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 4)) {
 			int cursor_colors = Toolkit.getDefaultToolkit().getMaximumCursorColors();
 			boolean supported = cursor_colors >= Short.MAX_VALUE && getMaxCursorSize() > 0;
 			int caps = supported ? org.lwjgl.input.Cursor.CURSOR_8_BIT_ALPHA | org.lwjgl.input.Cursor.CURSOR_ONE_BIT_TRANSPARENCY: 0;
@@ -455,7 +437,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public int getPbufferCapabilities() {
-		if (isMacOSXEqualsOrBetterThan(10, 3))
+		if (LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 3))
 			return Pbuffer.PBUFFER_SUPPORTED;
 		else
 			return 0;

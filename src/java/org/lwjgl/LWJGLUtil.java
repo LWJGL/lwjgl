@@ -421,4 +421,28 @@ public class LWJGLUtil {
 			System.err.println(msg);
 		}
 	}
+	
+	/**
+	 * Method to determine if the current system is running a version of
+	 * Mac OS X better than the given version. This is only useful for Mac OS X
+	 * specific code and will not work for any other platform.
+	 */
+	public static boolean isMacOSXEqualsOrBetterThan(int major_required, int minor_required) {
+		String os_version = System.getProperty("os.version");
+		StringTokenizer version_tokenizer = new StringTokenizer(os_version, ".");
+		int major;
+		int minor;
+		try {
+			String major_str = version_tokenizer.nextToken();
+			String minor_str = version_tokenizer.nextToken();
+			major = Integer.parseInt(major_str);
+			minor = Integer.parseInt(minor_str);
+		} catch (Exception e) {
+			LWJGLUtil.log("Exception occurred while trying to determine OS version: " + e);
+			// Best guess, no
+			return false;
+		}
+		return major > major_required || (major == major_required && minor >= minor_required);
+	}
+	
 }
