@@ -392,12 +392,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_grabMouse
 	if(grab) {
 		if (!mouse_grabbed) {
 			mouse_grabbed = true;
+			IDirectInputDevice_Unacquire(mDIDevice);
+			if (IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK)
+				printfDebugJava(env, "Failed to reset cooperative mode");
 			IDirectInputDevice_Acquire(mDIDevice);
 		}
 	} else {
 		if (mouse_grabbed) {
 			mouse_grabbed = false;
 			IDirectInputDevice_Unacquire(mDIDevice);
+			if (IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) == DI_OK ||
+					IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), DISCL_NONEXCLUSIVE | DISCL_BACKGROUND) == DI_OK) {
+				IDirectInputDevice_Acquire(mDIDevice);
+			}
 		}	
 	}
 	initEventQueue(&event_queue, EVENT_SIZE);
@@ -467,8 +474,8 @@ static void UpdateMouseFields(JNIEnv *env, jobject coord_buffer_obj, jobject but
 		return;
 	}
 
-	if (mouse_grabbed) {
-		hRes = IDirectInputDevice_GetDeviceState(mDIDevice, sizeof(DIMOUSESTATE), &diMouseState);
+	hRes = IDirectInputDevice_GetDeviceState(mDIDevice, sizeof(DIMOUSESTATE), &diMouseState);
+	if (mouse_grabbed || hRes == DI_OK) {
 		if (hRes != DI_OK) { 
 			// Don't allow the mouse to drift when failed
 			diMouseState.lX = 0;
