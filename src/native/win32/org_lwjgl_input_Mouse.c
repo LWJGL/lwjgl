@@ -65,8 +65,6 @@ static jboolean win32_message_button_states[BUTTON_STATES_SIZE];
 static bool mouse_grabbed;
 
 /* These accumulated deltas track the cursor position from Windows messages */
-static int accum_dx;
-static int accum_dy;
 static int accum_dwheel;
 static int last_x;
 static int last_y;
@@ -95,10 +93,6 @@ static bool putMouseEvent(jint button, jint state, jint dz) {
 		return putMouseEventWithCoords(button, state, 0, 0, dz);
 	else
 		return putMouseEventWithCoords(button, state, last_x, last_y, dz);
-}
-
-static void resetCursorPos(void) {
-	accum_dx = accum_dy = 0;
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_hasWheel(JNIEnv *env, jobject self) {
@@ -141,6 +135,18 @@ static bool CreateMouse(JNIEnv *env) {
 		return true;
 }
 
+static bool acquireMouse(DWORD flags) {
+	if (IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), flags) == DI_OK) {
+		IDirectInputDevice_Acquire(mDIDevice);
+		return true;
+	} else
+		return false;
+}
+
+static bool acquireMouseNonExclusive() {
+	return acquireMouse(DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) || acquireMouse(DISCL_NONEXCLUSIVE | DISCL_BACKGROUND);
+}
+
 /**
  * Sets up the Mouse properties
  */ 
@@ -160,11 +166,10 @@ static bool SetupMouse(JNIEnv *env) {
 	IDirectInputDevice_SetProperty(mDIDevice, DIPROP_BUFFERSIZE, &dipropdw.diph);
 
 	// set the cooperative level
-	if (IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
-		throwException(env, "SetCooperativeLevel failed");
+	if (!acquireMouseNonExclusive()) {
+		printfDebugJava(env, "SetCooperativeLevel failed");
 		return false;
 	}
-	resetCursorPos();
 	return true;
 }
 
@@ -176,7 +181,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createMouse(JNIEnv *en
 
 	initEventQueue(&event_queue, EVENT_SIZE);
 
-	last_x = last_y = accum_dx = accum_dy = accum_dwheel = 0;
+	last_x = last_y = accum_dwheel = 0;
 	mouse_grabbed = false;
 
 	// Create input
@@ -221,8 +226,6 @@ void handleMouseMoved(int x, int y) {
 		y = transformY(y);
 		dx = x - last_x;
 		dy = y - last_y;
-		accum_dx += dx;
-		accum_dy += dy;
 		last_x = x;
 		last_y = y;
 		if (mouse_grabbed) {
@@ -393,18 +396,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_grabMouse
 		if (!mouse_grabbed) {
 			mouse_grabbed = true;
 			IDirectInputDevice_Unacquire(mDIDevice);
-			if (IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK)
+			if (!acquireMouse(DISCL_EXCLUSIVE | DISCL_FOREGROUND))
 				printfDebugJava(env, "Failed to reset cooperative mode");
-			IDirectInputDevice_Acquire(mDIDevice);
 		}
 	} else {
 		if (mouse_grabbed) {
 			mouse_grabbed = false;
 			IDirectInputDevice_Unacquire(mDIDevice);
-			if (IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) == DI_OK ||
-					IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), DISCL_NONEXCLUSIVE | DISCL_BACKGROUND) == DI_OK) {
-				IDirectInputDevice_Acquire(mDIDevice);
-			}
+			acquireMouseNonExclusive();
 		}	
 	}
 	initEventQueue(&event_queue, EVENT_SIZE);
@@ -493,8 +492,6 @@ static void UpdateMouseFields(JNIEnv *env, jobject coord_buffer_obj, jobject but
 			}
 		}
 
-		coords[0] = diMouseState.lX;
-		coords[1] = -diMouseState.lY;
 		coords[2] = diMouseState.lZ;
 		num_buttons = mButtoncount;
 		if (num_buttons > buttons_length)
@@ -502,14 +499,19 @@ static void UpdateMouseFields(JNIEnv *env, jobject coord_buffer_obj, jobject but
 		for (j = 0; j < num_buttons; j++)
 			buttons_buffer[j] = diMouseState.rgbButtons[j] != 0 ? JNI_TRUE : JNI_FALSE;
 	} else {
-		coords[0] = last_x;
-		coords[1] = last_y;
 		coords[2] = accum_dwheel;
-		accum_dx = accum_dy = accum_dwheel = 0;
+		accum_dwheel = 0;
 		num_buttons = mButtoncount;
 		if (num_buttons > BUTTON_STATES_SIZE)
 			num_buttons = BUTTON_STATES_SIZE;
 		for (j = 0; j < num_buttons; j++)
 			buttons_buffer[j] = win32_message_button_states[j];
+	}
+	if (mouse_grabbed) {
+		coords[0] = diMouseState.lX;
+		coords[1] = -diMouseState.lY;
+	} else {
+		coords[0] = last_x;
+		coords[1] = last_y;
 	}
 }
