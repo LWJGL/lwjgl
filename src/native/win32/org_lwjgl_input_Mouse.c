@@ -500,13 +500,13 @@ static void UpdateMouseFields(JNIEnv *env, jobject coord_buffer_obj, jobject but
 			buttons_buffer[j] = diMouseState.rgbButtons[j] != 0 ? JNI_TRUE : JNI_FALSE;
 	} else {
 		coords[2] = accum_dwheel;
-		accum_dwheel = 0;
 		num_buttons = mButtoncount;
 		if (num_buttons > BUTTON_STATES_SIZE)
 			num_buttons = BUTTON_STATES_SIZE;
 		for (j = 0; j < num_buttons; j++)
 			buttons_buffer[j] = win32_message_button_states[j];
 	}
+	accum_dwheel = 0;
 	if (mouse_grabbed) {
 		coords[0] = diMouseState.lX;
 		coords[1] = -diMouseState.lY;
