@@ -72,6 +72,8 @@ public final class Sys {
 		for (int i = 0; i < library_names.length; i++) {
 			try {
 				loadLibrary(library_names[i]);
+				last_load_error = null;
+				break;
 			} catch (UnsatisfiedLinkError e) {
 				last_load_error = e;
 			}
