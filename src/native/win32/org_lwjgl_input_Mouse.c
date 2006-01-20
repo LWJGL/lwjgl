@@ -484,27 +484,38 @@ static void UpdateMouseFields(JNIEnv *env, jobject coord_buffer_obj, jobject but
 			// if so, then attempt to reacquire. 
 			if(hRes == DIERR_INPUTLOST || hRes == DIERR_NOTACQUIRED) {
 				hRes = IDirectInputDevice_Acquire(mDIDevice);
-				if (hRes != DI_OK)
+				if (hRes != DI_OK) {
 					return;
+				} else {
+					hRes = IDirectInputDevice_GetDeviceState(mDIDevice, sizeof(DIMOUSESTATE), &diMouseState);
+					if (hRes != DI_OK) {
+						printfDebugJava(env, "Error getting mouse state #2: %d", hRes);
+						return;
+					}
+				}
 			} else {
-				printfDebugJava(env, "Error getting mouse state: %d", hRes);
+				printfDebugJava(env, "Error getting mouse state #2: %d", hRes);
 				return;
 			}
 		}
 
 		coords[2] = diMouseState.lZ;
 		num_buttons = mButtoncount;
-		if (num_buttons > buttons_length)
+		if (num_buttons > buttons_length) {
 			num_buttons = buttons_length;
-		for (j = 0; j < num_buttons; j++)
+		}
+		for (j = 0; j < num_buttons; j++) {
 			buttons_buffer[j] = diMouseState.rgbButtons[j] != 0 ? JNI_TRUE : JNI_FALSE;
+		}
 	} else {
 		coords[2] = accum_dwheel;
 		num_buttons = mButtoncount;
-		if (num_buttons > BUTTON_STATES_SIZE)
+		if (num_buttons > BUTTON_STATES_SIZE) {
 			num_buttons = BUTTON_STATES_SIZE;
-		for (j = 0; j < num_buttons; j++)
+		}
+		for (j = 0; j < num_buttons; j++) {
 			buttons_buffer[j] = win32_message_button_states[j];
+		}
 	}
 	accum_dwheel = 0;
 	if (mouse_grabbed) {
