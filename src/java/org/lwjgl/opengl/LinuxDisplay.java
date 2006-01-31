@@ -369,7 +369,16 @@ final class LinuxDisplay implements DisplayImplementation {
 			DisplayMode[] modes = getAvailableDisplayModes();
 			if (modes == null || modes.length == 0)
 				throw new LWJGLException("No modes available");
-			saved_mode = modes[0];
+			switch (current_displaymode_extension) {
+				case XRANDR:
+					saved_mode = getCurrentXRandrMode();
+					break;
+				case XF86VIDMODE:
+					saved_mode = modes[0];
+					break;
+				default:
+					throw new LWJGLException("Unknown display mode extension: " + current_displaymode_extension);
+			}
 			current_mode = saved_mode;
 			saved_gamma = getCurrentGammaRamp();
 			current_gamma = saved_gamma;
@@ -378,8 +387,18 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	/** Assumes extension != NONE */
-	private static native DisplayMode nInit(int extension) throws LWJGLException;
+
+	private static DisplayMode getCurrentXRandrMode() throws LWJGLException {
+		incDisplay();
+		try {
+			return nGetCurrentXRandrMode();
+		} finally {
+			decDisplay();
+		}
+	}
+	
+	/** Assumes extension == XRANDR */
+	private static native DisplayMode nGetCurrentXRandrMode() throws LWJGLException;
 
 	public void setTitle(String title) {
 		lockAWT();

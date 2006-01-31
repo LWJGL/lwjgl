@@ -141,6 +141,7 @@ extern int copyEvents(event_queue_t *event_queue, jint *output_event_buffer, int
 extern bool putEvent(event_queue_t *queue, jint *event);
 extern void throwGeneralException(JNIEnv * env, const char *exception_name, const char * err);
 extern void throwException(JNIEnv *env, const char *msg);
+extern void throwFormattedException(JNIEnv * env, const char *format, ...);
 extern void throwFMODException(JNIEnv * env, const char * err);
 extern void setDebugEnabled(bool enable);
 extern void printfDebugJava(JNIEnv *env, const char *format, ...);

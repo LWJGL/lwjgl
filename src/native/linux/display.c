@@ -197,7 +197,7 @@ static Status trySetXrandrMode(Display *disp, int screen, mode_info *mode, Time 
 	Time config_time;
 	*timestamp = XRRConfigTimes(screen_configuration, &config_time);
 	Rotation current_rotation;
-	XRRConfigRotations(screen_configuration, &current_rotation);
+	XRRConfigCurrentConfiguration(screen_configuration, &current_rotation);
 	status = XRRSetScreenConfigAndRate(disp, screen_configuration, root_window, mode->mode_data.size_index, current_rotation, mode->freq, *timestamp);
 	XRRFreeScreenConfigInfo(screen_configuration);
 	return status;
@@ -359,7 +359,6 @@ static jobjectArray getAvailableDisplayModes(JNIEnv * env, Display *disp, int sc
 	avail_modes = getDisplayModes(disp, screen, extension, &num_modes);
 	if (avail_modes == NULL) {
 		printfDebugJava(env, "Could not get display modes");
-		XCloseDisplay(disp);
 		return NULL;
 	}
 	// Allocate an array of DisplayModes big enough
@@ -373,6 +372,36 @@ static jobjectArray getAvailableDisplayModes(JNIEnv * env, Display *disp, int sc
 	}
 	free(avail_modes);
 	return ret;
+}
+
+static jobject getCurrentXRandrMode(JNIEnv * env, Display *disp, int screen) {
+	Drawable root_window = RootWindow(disp, screen);
+	XRRScreenConfiguration *config = XRRGetScreenInfo(disp, root_window);
+	if (config == NULL) {
+		throwException(env, "Could not get current screen configuration.");
+		return NULL;
+	}
+	short rate = XRRConfigCurrentRate(config);
+	Rotation current_rotation;
+	SizeID size_index = XRRConfigCurrentConfiguration(config, &current_rotation);
+	int n_sizes;
+	XRRScreenSize *sizes = XRRConfigSizes(config, &n_sizes);
+	if (size_index >= n_sizes) {
+		throwFormattedException(env, "Xrandr current index (%d) is larger than or equals to the number of sizes (%d).", size_index, n_sizes);
+		XRRFreeScreenConfigInfo(config);
+		return NULL;
+	}
+	XRRScreenSize current_size = sizes[size_index];
+	XRRFreeScreenConfigInfo(config);
+	int bpp = XDefaultDepth(disp, screen);
+	jclass displayModeClass = (*env)->FindClass(env, "org/lwjgl/opengl/DisplayMode");
+	jmethodID displayModeConstructor = (*env)->GetMethodID(env, displayModeClass, "<init>", "(IIII)V");
+	jobject displayMode = (*env)->NewObject(env, displayModeClass, displayModeConstructor, current_size.width, current_size.height, bpp, rate);
+	return displayMode;
+}
+
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetCurrentXRandrMode(JNIEnv *env, jclass unused) {
+	return getCurrentXRandrMode(env, getDisplay(), getCurrentScreen());
 }
 
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetAvailableDisplayModes(JNIEnv *env, jclass clazz, jint extension) {
