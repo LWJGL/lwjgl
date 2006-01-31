@@ -389,11 +389,16 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 
 	private static DisplayMode getCurrentXRandrMode() throws LWJGLException {
-		incDisplay();
+		lockAWT();
 		try {
-			return nGetCurrentXRandrMode();
+			incDisplay();
+			try {
+				return nGetCurrentXRandrMode();
+			} finally {
+				decDisplay();
+			}
 		} finally {
-			decDisplay();
+			unlockAWT();
 		}
 	}
 	
