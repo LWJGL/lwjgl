@@ -31,6 +31,8 @@
  */
 package org.lwjgl.openal;
 
+import java.util.Vector;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
@@ -52,7 +54,7 @@ public final class AL {
 
 	/** Have we been created? */
 	private static boolean created;
-
+	
 	static {
 		Sys.initialize();
 	}
@@ -96,8 +98,17 @@ public final class AL {
 	 * @param contextFrequency Frequency for mixing output buffer, in units of Hz (Common values include 11025, 22050, and 44100).
 	 * @param contextRefresh Refresh intervalls, in units of Hz.
 	 * @param contextSynchronized Flag, indicating a synchronous context.* 
+	 */	
+	public static void create(String deviceArguments, int contextFrequency, int contextRefresh, boolean contextSynchronized) 
+		throws LWJGLException {
+		create(deviceArguments, contextFrequency, contextRefresh, contextSynchronized, true);
+	}
+	
+	/**
+	 * @param openDevice Whether to automatically open the device
+	 * @see #create(String, int, int, boolean)
 	 */
-	public static void create(String deviceArguments, int contextFrequency, int contextRefresh, boolean contextSynchronized)
+	static void create(String deviceArguments, int contextFrequency, int contextRefresh, boolean contextSynchronized, boolean openDevice)
 		throws LWJGLException {
 			
 		if (created)
@@ -128,18 +139,20 @@ public final class AL {
 			AL10.initNativeStubs();
 			ALC.initNativeStubs();
 
-			device = ALC.alcOpenDevice(deviceArguments);
-			if (device == null)
-				throw new LWJGLException("Could not open ALC device");
-
-			if (contextFrequency == -1) {
-				context = ALC.alcCreateContext(device.device, null);
-			} else {
-				context = ALC.alcCreateContext(device.device,
-						ALCcontext.createAttributeList(contextFrequency, contextRefresh, 
-							contextSynchronized ? ALC.ALC_TRUE : ALC.ALC_FALSE));
+			if(openDevice) {
+				device = ALC.alcOpenDevice(deviceArguments);
+				if (device == null)
+					throw new LWJGLException("Could not open ALC device");
+	
+				if (contextFrequency == -1) {
+					context = ALC.alcCreateContext(device.device, null);
+				} else {
+					context = ALC.alcCreateContext(device.device,
+							ALCcontext.createAttributeList(contextFrequency, contextRefresh, 
+								contextSynchronized ? ALC.ALC_TRUE : ALC.ALC_FALSE));
+				}
+				ALC.alcMakeContextCurrent(context.context);
 			}
-			ALC.alcMakeContextCurrent(context.context);
 		} catch (LWJGLException e) {
 			destroy();
 			throw e;
@@ -188,5 +201,42 @@ public final class AL {
 	 */
 	public static Object getContext() {
 		return context;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static String[] getImplementations() throws LWJGLException, OpenALException {
+		if(AL.isCreated()) {
+			throw new OpenALException("Cannot enumerate devices if AL has already been created");
+		}
+
+		Vector availableDevices 	= new Vector();
+
+		try {
+			// init
+			create(null, 44100, 60, false, false);
+			
+			// check for extension
+			if(!ALC.alcIsExtensionPresent("ALC_ENUMERATION_EXT")) {
+				throw new OpenALException("ALC_ENUMERATION_EXT extension not available");
+			}
+			
+			// get list of published devices
+			String[] publishedDevices = ALC.ngetImplementations();
+
+			// run through them and verify
+			for (int i = 0; i < publishedDevices.length; i++) {
+				availableDevices.add(publishedDevices[i]);
+			}
+		} finally {
+			destroy();
+		}
+		
+		String[] available = new String[availableDevices.size()];
+		availableDevices.copyInto(available);
+		
+		return available;
 	}
 }

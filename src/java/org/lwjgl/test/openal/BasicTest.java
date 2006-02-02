@@ -53,6 +53,18 @@ public abstract class BasicTest {
    */
   public BasicTest() {
     try {
+      String[] imps = AL.getImplementations();
+      if(imps.length > 0) {
+    	  System.out.println("Available devices: ");
+    	  for(int i=0; i<imps.length; i++) {
+	        System.out.println("  " + i + ": " + imps[i]);
+	      }
+      }
+    } catch (Exception e) {
+    	System.out.println("Unable to query available devices: " + e.getMessage());
+    }
+	  
+    try {
       AL.create();
     } catch (Exception e) {
       System.out.println("Unable to create OpenAL.\nPlease make sure that OpenAL is available on this system. Exception: " + e);

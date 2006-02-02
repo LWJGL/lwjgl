@@ -343,6 +343,53 @@ static jint JNICALL Java_org_lwjgl_openal_ALC_nalcGetEnumValue (JNIEnv *env, jcl
 	return result;
 }
 
+JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_openal_ALC_ngetImplementations(JNIEnv *env, jclass clazz) {
+    jclass strcls;
+    jarray strarr;
+	jstring str;
+
+	char *deviceList;
+	char *devices[12];
+	int numDevices, i;
+	
+	// get device list
+	deviceList = (char *)alcGetString(NULL, 4100L);
+
+	// build list
+	for (numDevices = 0; numDevices < 12; numDevices++) {devices[numDevices] = NULL;}
+	for (numDevices = 0; numDevices < 12; numDevices++) {
+		devices[numDevices] = deviceList;
+		deviceList += strlen(deviceList);
+		if (deviceList[0] == 0) {
+			if (deviceList[1] == 0) {
+				break;
+			} else {
+				deviceList += 1;
+			}
+		}
+	}
+	
+	// iterate found devices and add to java string array
+	if (devices[numDevices] != NULL) {
+		numDevices++;
+		strcls = (*env)->FindClass(env, "java/lang/String");
+		strarr = (*env)->NewObjectArray(env, numDevices+1, strcls, 0);
+
+		// add default
+		str = NewStringNative(env, "NULL Device (Default)");
+		(*env)->SetObjectArrayElement(env, strarr, 0, str);
+		(*env)->DeleteLocalRef(env, str);
+
+		for (i = 0; i < numDevices; i++) {
+			str = NewStringNative(env, devices[i]);
+			(*env)->SetObjectArrayElement(env, strarr, i+1, str);
+			(*env)->DeleteLocalRef(env, str);
+		}
+
+	}
+	return strarr;
+}
+
 /**
  * Loads the context OpenAL functions
  *

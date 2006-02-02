@@ -148,6 +148,13 @@ public final class ALC {
 	}
 
 	static native void initNativeStubs() throws LWJGLException;
+	
+	static long getDevice() {
+		if(AL.device != null) {
+			return AL.device.device;
+		}
+		return 0L;
+	}
 
 	/**
 	 * The application can obtain certain strings from ALC.
@@ -164,7 +171,8 @@ public final class ALC {
 	 * @return String property from device
 	 */
 	public static String alcGetString(int pname) {
-		String result = nalcGetString(AL.device.device, pname);
+		String result;
+		result = nalcGetString(getDevice(), pname);
 		Util.checkALCError();
 		return result;
 	}
@@ -192,7 +200,7 @@ public final class ALC {
 	 */
 	public static void alcGetInteger(int pname, IntBuffer integerdata) {
 		BufferChecks.checkDirect(integerdata);
-		nalcGetIntegerv(AL.device.device, pname, integerdata.remaining(), integerdata, integerdata.position());
+		nalcGetIntegerv(getDevice(), pname, integerdata.remaining(), integerdata, integerdata.position());
 		Util.checkALCError();
 	}
 	private native static void nalcGetIntegerv(long device, int pname, int size, Buffer integerdata, int offset);
@@ -333,7 +341,7 @@ public final class ALC {
 	 * @return Errorcode from ALC statemachine
 	 */
 	public static int alcGetError() {
-		return nalcGetError(AL.device.device);
+		return nalcGetError(getDevice());
 	}
 	private native static int nalcGetError(long device);
 
@@ -347,7 +355,7 @@ public final class ALC {
 	 * @return true if extension is available, false if not
 	 */
 	public static boolean alcIsExtensionPresent(String extName) {
-		boolean result = nalcIsExtensionPresent(AL.device.device, extName);
+		boolean result = nalcIsExtensionPresent(getDevice(), extName);
 		Util.checkALCError();
 		return result;
 	}
@@ -364,9 +372,11 @@ public final class ALC {
 	 * @return value of enumeration
 	 */
 	public static int alcGetEnumValue(String enumName) {
-		int result = nalcGetEnumValue(AL.device.device, enumName);
+		int result = nalcGetEnumValue(getDevice(), enumName);
 		Util.checkALCError();
 		return result;
 	}
 	private native static int nalcGetEnumValue(long device, String enumName);
+
+	static native String[] ngetImplementations();
 }
