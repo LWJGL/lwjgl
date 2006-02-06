@@ -85,6 +85,19 @@ public class ContextCapabilitiesGenerator {
 			return EXTENSION_PREFIX + interface_name;
 	}
 
+	public static void generateSuperClassAdds(PrintWriter writer, InterfaceDeclaration d) {
+		Collection<InterfaceType> super_interfaces = d.getSuperinterfaces();
+		if (super_interfaces.size() > 1)
+			throw new RuntimeException(d + " extends more than one other interface");
+		if (super_interfaces.size() == 1) {
+			InterfaceType super_interface = super_interfaces.iterator().next();
+			writer.print("\t\tif (" + CACHED_EXTS_VAR_NAME + ".contains(\"");
+			writer.println(translateFieldName(d.getSimpleName()) + "\"))");
+			writer.print("\t\t\t");
+			generateAddExtension(writer, super_interface.getDeclaration());
+		}
+	}
+
 	public static void generateInitializer(PrintWriter writer, InterfaceDeclaration d) {
 		String translated_field_name = translateFieldName(d.getSimpleName());
 		writer.print("\t\tthis." + translated_field_name + " = ");
@@ -145,13 +158,13 @@ public class ContextCapabilitiesGenerator {
 				writer.println(translateFieldName(d.getSimpleName()) + "\");");
 			} else {
 				writer.print("\t\tGLContext." + Utils.STUB_INITIALIZER_NAME + "(" + Utils.getSimpleClassName(d));
-				writer.println(".class, supported_extensions, \"" + translateFieldName(d.getSimpleName()) + "\");");
+				writer.println(".class, " + CACHED_EXTS_VAR_NAME + ", \"" + translateFieldName(d.getSimpleName()) + "\");");
 			}
 		}
 	}
 	
-	public static void generateAddExtension(PrintWriter writer, InterfaceDeclaration d) {
-		writer.print("\t\t" + CACHED_EXTS_VAR_NAME + ".add(\"");
+	private static void generateAddExtension(PrintWriter writer, InterfaceDeclaration d) {
+		writer.print(CACHED_EXTS_VAR_NAME + ".add(\"");
 		writer.println(translateFieldName(d.getSimpleName()) + "\");");
 	}
 

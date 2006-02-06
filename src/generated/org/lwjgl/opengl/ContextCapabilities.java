@@ -2094,9 +2094,20 @@ public class ContextCapabilities {
 			throw new LWJGLException("GL11 not supported");
 		GLContext.setCapabilities(this);
 		Set supported_extensions = GLContext.getSupportedExtensions();
-		supported_extensions.add("GL_ARB_buffer_object");
-		supported_extensions.add("GL_ARB_program");
-		supported_extensions.add("GL_NV_program");
+		if (supported_extensions.contains("GL_ARB_fragment_program"))
+			supported_extensions.add("GL_ARB_program");
+		if (supported_extensions.contains("GL_ARB_pixel_buffer_object"))
+			supported_extensions.add("GL_ARB_buffer_object");
+		if (supported_extensions.contains("GL_ARB_vertex_buffer_object"))
+			supported_extensions.add("GL_ARB_buffer_object");
+		if (supported_extensions.contains("GL_ARB_vertex_program"))
+			supported_extensions.add("GL_ARB_program");
+		if (supported_extensions.contains("GL_EXT_pixel_buffer_object"))
+			supported_extensions.add("GL_ARB_buffer_object");
+		if (supported_extensions.contains("GL_NV_fragment_program"))
+			supported_extensions.add("GL_NV_program");
+		if (supported_extensions.contains("GL_NV_vertex_program"))
+			supported_extensions.add("GL_NV_program");
 		if (supported_extensions.contains("GL_ARB_buffer_object") && !ARB_buffer_object_initNativeFunctionAddresses())
 			supported_extensions.remove("GL_ARB_buffer_object");
 		if (supported_extensions.contains("GL_ARB_color_buffer_float") && !ARB_color_buffer_float_initNativeFunctionAddresses())

@@ -139,8 +139,7 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 			ContextCapabilitiesGenerator.generateInitStubsPrologue(writer, context_specific);
 			for (TypeDeclaration typedecl : interface_decls) {
 				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
-				if (!Utils.isFinal(interface_decl))
-					ContextCapabilitiesGenerator.generateAddExtension(writer, interface_decl);
+				ContextCapabilitiesGenerator.generateSuperClassAdds(writer, interface_decl);
 			}
 			for (TypeDeclaration typedecl : interface_decls) {
 				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
