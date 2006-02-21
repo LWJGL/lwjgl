@@ -167,10 +167,13 @@
 		<mkdir dir="${lwjgl.docs}/javadoc" taskname="initialiazing docs folder" />
 		<mkdir dir="${lwjgl.res}" taskname="initialiazing res folder" />
 		<mkdir dir="${lwjgl.temp}" taskname="initialiazing temp folder" />
-		<mkdir dir="${lwjgl.temp}/jar" taskname="initialiazing temp folder" />
-		<mkdir dir="${lwjgl.temp}/doc" taskname="initialiazing temp folder" />
-		<mkdir dir="${lwjgl.temp}/res" taskname="initialiazing temp folder" />
-		<mkdir dir="${lwjgl.temp}/native" taskname="initialiazing temp folder" />
+		<mkdir dir="${lwjgl.temp}/jar" taskname="initialiazing temp/jar folder" />
+		<mkdir dir="${lwjgl.temp}/doc" taskname="initialiazing temp/doc folder" />
+		<mkdir dir="${lwjgl.temp}/res" taskname="initialiazing temp/res folder" />
+		<mkdir dir="${lwjgl.temp}/native" taskname="initialiazing temp/native folder" />
+		<mkdir dir="${lwjgl.temp}/native/win32" taskname="initialiazing temp/win32 folder" />
+		<mkdir dir="${lwjgl.temp}/native/linux" taskname="initialiazing temp/linux folder" />
+		<mkdir dir="${lwjgl.temp}/native/macosx" taskname="initialiazing temp/macosx folder" />
 	</target>
 
 	<target name="clean-generated" description="Deletes the generated java and native source">
@@ -227,9 +230,7 @@
 		<!-- create distribution from files in libs/ and temp/ -->
 		<antcall target="-distribution_javadoc" />
 		<antcall target="-distribution_source" />
-		<antcall target="-distribute_win32" />
-		<antcall target="-distribute_linux" />
-		<antcall target="-distribute_macosx" />
+		<antcall target="-distribute" />
 	</target>
 
 	<!-- Create ONLY the jar archives -->
@@ -270,51 +271,30 @@
 		</jar>
 	</target>
 
-	<!-- Distributes win32 files  -->
-	<target name="-distribute_win32">
+	<!-- Distributes files  -->
+	<target name="-distribute">
 		<delete>
 			<fileset dir="${lwjgl.temp}/native/" includes="**/*"/>
 		</delete>	
     <copy file="${lwjgl.lib}/jinput.jar" todir="${lwjgl.temp}/jar"/>
-		<copy todir="${lwjgl.temp}/native">
+		<copy todir="${lwjgl.temp}/native/win32">
 			<fileset dir="${lwjgl.lib}/win32">
 				<patternset refid="lwjgl-win32.fileset" />
 			</fileset>
 		</copy>
-		<zip destfile="${lwjgl.dist}/lwjgl-win32-${lwjgl.version}.zip">
-			<zipfileset dir="${lwjgl.temp}" prefix="lwjgl-win32-${lwjgl.version}/"/>
-		</zip>
-	</target>
-
-	<!-- Distributes linux files  -->
-	<target name="-distribute_linux">
-		<delete>
-			<fileset dir="${lwjgl.temp}/native/" includes="**/*"/>
-		</delete>
-    <copy file="${lwjgl.lib}/jinput.jar" todir="${lwjgl.temp}/jar"/>
-		<copy todir="${lwjgl.temp}/native">
+		<copy todir="${lwjgl.temp}/native/linux">
 			<fileset dir="${lwjgl.lib}/linux">
 				<patternset refid="lwjgl-linux.fileset" />
 			</fileset>
 		</copy>
-		<zip destfile="${lwjgl.dist}/lwjgl-linux-${lwjgl.version}.zip">
-			<zipfileset dir="${lwjgl.temp}" prefix="lwjgl-linux-${lwjgl.version}/"/>
-		</zip>
-	</target>
-
-	<!-- Distributes macosx files  -->
-	<target name="-distribute_macosx">
-		<delete>
-			<fileset dir="${lwjgl.temp}/native/" includes="**/*"/>
-		</delete>
-    <copy file="${lwjgl.lib}/jinput.jar" todir="${lwjgl.temp}/jar"/>
-		<copy todir="${lwjgl.temp}/native">
+		<copy todir="${lwjgl.temp}/native/macosx">
 			<fileset dir="${lwjgl.lib}/macosx">
 				<patternset refid="lwjgl-macosx.fileset" />
 			</fileset>
 		</copy>
-		<zip destfile="${lwjgl.dist}/lwjgl-macosx-${lwjgl.version}.zip">
-			<zipfileset dir="${lwjgl.temp}" prefix="lwjgl-macosx-${lwjgl.version}/"/>
+		
+		<zip destfile="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip">
+			<zipfileset dir="${lwjgl.temp}" prefix="lwjgl-${lwjgl.version}/"/>
 		</zip>
 	</target>
 

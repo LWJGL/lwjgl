@@ -12,7 +12,7 @@ To run some of the included tests:
  Extract the archive, and cd into directory
  (please substitute ; and \ according to platform)
 
-  java -cp .;res;jar\lwjgl.jar;jar\lwjgl_test.jar;jar\lwjgl_util.jar;jar\lwjgl_fmod3.jar;jar\lwjgl_devil.jar;jar\jinput.jar; -Djava.library.path=native TEST 
+  java -cp .;res;jar\lwjgl.jar;jar\lwjgl_test.jar;jar\lwjgl_util.jar;jar\lwjgl_fmod3.jar;jar\lwjgl_devil.jar;jar\jinput.jar; -Djava.library.path=native\<win32|linux|macosx> TEST 
   (this specifies that the jvm should locate the lwjgl native libs in 'native' directory)
   
  where TEST is one of the following: 
@@ -59,7 +59,7 @@ To run some of the included tests:
   org.lwjgl.test.devil.BasicTest
   
 You may also run the Space invaders demo by executing:
-  java -cp .;res;jar\lwjgl.jar;jar\lwjgl_test.jar;jar\lwjgl_util.jar; -Djava.library.path=native org.lwjgl.examples.spaceinvaders.Game
+  java -cp .;res;jar\lwjgl.jar;jar\lwjgl_test.jar;jar\lwjgl_util.jar; -Djava.library.path=native\<win32|linux|macosx> org.lwjgl.examples.spaceinvaders.Game
   
 Project Webpage: www.lwjgl.org
 Project Forum: forum.lwjgl.org
