@@ -120,10 +120,11 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_didMaximize
 	did_maximize = false;
 	return result;
 }
+
 /*
  *	WindowProc for the GL window.
  */
-LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
+static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 							     UINT msg,
 							     WPARAM wParam,
 							     LPARAM lParam)
