@@ -237,7 +237,7 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 /*
  * Handle native Win32 messages
  */
-void handleMessages(void)
+static void handleMessages(void)
 {
 	/*
 	 * Now's our chance to deal with Windows messages that are
