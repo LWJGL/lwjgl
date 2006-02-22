@@ -238,25 +238,25 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 /*
  * Handle native Win32 messages
  */
-static void handleMessages(void)
-{
+static void handleMessages(void) {
 	/*
 	 * Now's our chance to deal with Windows messages that are
 	 * otherwise just piling up and causing everything not to
 	 * work properly
 	 */
 	MSG msg;
-	while (PeekMessage(
-		&msg,         // message information
-		NULL,           // handle to window
-		0,  // first message
-		0,  // last message
-		PM_REMOVE      // removal options
-		))
-	{
-		if (display_hwnd != NULL && msg.hwnd == display_hwnd)
-	      	DispatchMessage(&msg);
-	};
+	if (display_hwnd != NULL) {
+		while (PeekMessage(
+					&msg,         // message information
+					display_hwnd,           // handle to window
+					0,  // first message
+					0,  // last message
+					PM_REMOVE      // removal options
+					))
+		{
+			DispatchMessage(&msg);
+		}
+	}
 }
 
 /*
