@@ -345,7 +345,7 @@ static jint JNICALL Java_org_lwjgl_openal_ALC_nalcGetEnumValue (JNIEnv *env, jcl
 
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_openal_ALC_ngetImplementations(JNIEnv *env, jclass clazz) {
     jclass strcls;
-    jarray strarr;
+    jarray strarr = NULL;
 	jstring str;
 
 	char *deviceList;
