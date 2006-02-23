@@ -57,12 +57,19 @@ static bool checkContext(JNIEnv *env, Display *display, GLXContext context) {
 		throwException(env, "Could not create GLX context");
 		return false;
 	}
-	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Display.allowSoftwareOpenGL");
+	/*
+	 * Ditched the requirement that contexts have to be direct. It was
+	 * never true that all accelerated contexts are direct, but it
+	 * was a reasonable test until the appearance of Xgl and friends.
+	 * Now the test is at best useless, and at worst wrong,
+	 * in case the current X server accelerates indirect rendering.
+	 */
+/*	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Display.allowSoftwareOpenGL");
 	if (!allow_software_acceleration && lwjgl_glXIsDirect(display, context) == False) {
 		lwjgl_glXDestroyContext(display, context);
 		throwException(env, "Could not create a direct GLX context");
 		return false;
-	}
+	}*/
 	return true;
 }
 
