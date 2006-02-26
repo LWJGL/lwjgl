@@ -59,21 +59,21 @@ public class GLTypeMap implements TypeMap {
 		native_types_to_primitive.put(GLfloat.class, PrimitiveType.Kind.FLOAT);
 		native_types_to_primitive.put(GLint.class, PrimitiveType.Kind.INT);
 		native_types_to_primitive.put(GLshort.class, PrimitiveType.Kind.SHORT);
-		native_types_to_primitive.put(GLsizeiptr.class, PrimitiveType.Kind.INT);
+		native_types_to_primitive.put(GLsizeiptr.class, PrimitiveType.Kind.LONG);
 		native_types_to_primitive.put(GLuint.class, PrimitiveType.Kind.INT);
 		native_types_to_primitive.put(GLboolean.class, PrimitiveType.Kind.BOOLEAN);
 		native_types_to_primitive.put(GLchar.class, PrimitiveType.Kind.BYTE);
 		native_types_to_primitive.put(GLdouble.class, PrimitiveType.Kind.DOUBLE);
 		native_types_to_primitive.put(GLhalf.class, PrimitiveType.Kind.SHORT);
-		native_types_to_primitive.put(GLintptrARB.class, PrimitiveType.Kind.INT);
+		native_types_to_primitive.put(GLintptrARB.class, PrimitiveType.Kind.LONG);
 		native_types_to_primitive.put(GLsizei.class, PrimitiveType.Kind.INT);
 		native_types_to_primitive.put(GLushort.class, PrimitiveType.Kind.SHORT);
 		native_types_to_primitive.put(GLbyte.class, PrimitiveType.Kind.BYTE);
 		native_types_to_primitive.put(GLclampd.class, PrimitiveType.Kind.DOUBLE);
 		native_types_to_primitive.put(GLenum.class, PrimitiveType.Kind.INT);
 		native_types_to_primitive.put(GLhandleARB.class, PrimitiveType.Kind.INT);
-		native_types_to_primitive.put(GLintptr.class, PrimitiveType.Kind.INT);
-		native_types_to_primitive.put(GLsizeiptrARB.class, PrimitiveType.Kind.INT);
+		native_types_to_primitive.put(GLintptr.class, PrimitiveType.Kind.LONG);
+		native_types_to_primitive.put(GLsizeiptrARB.class, PrimitiveType.Kind.LONG);
 		native_types_to_primitive.put(GLubyte.class, PrimitiveType.Kind.BYTE);
 		native_types_to_primitive.put(GLvoid.class, PrimitiveType.Kind.BYTE);
 	}
@@ -172,8 +172,8 @@ public class GLTypeMap implements TypeMap {
 
 	private static Class[] getValidBufferTypes(Class type) {
 		if (type.equals(IntBuffer.class))
-			return new Class[]{GLbitfield.class, GLenum.class, GLhandleARB.class, GLint.class, GLintptrARB.class, GLintptrARB.class,
-							GLsizei.class, GLsizeiptrARB.class, GLsizeiptr.class, GLuint.class};
+			return new Class[]{GLbitfield.class, GLenum.class, GLhandleARB.class, GLint.class,
+							GLsizei.class, GLuint.class};
 		else if (type.equals(FloatBuffer.class))
 			return new Class[]{GLclampf.class, GLfloat.class};
 		else if (type.equals(ByteBuffer.class))
@@ -187,9 +187,11 @@ public class GLTypeMap implements TypeMap {
 	}
 
 	private static Class[] getValidPrimitiveTypes(Class type) {
-		if (type.equals(int.class))
-			return new Class[]{GLbitfield.class, GLenum.class, GLhandleARB.class, GLint.class, GLintptrARB.class, GLuint.class,
-							GLintptr.class, GLintptr.class, GLsizei.class, GLsizeiptrARB.class, GLsizeiptr.class};
+		if (type.equals(long .class))
+			return new Class[]{GLintptrARB.class, GLuint.class, GLintptr.class, GLsizeiptrARB.class, GLsizeiptr.class};
+		else if (type.equals(int.class))
+			return new Class[]{GLbitfield.class, GLenum.class, GLhandleARB.class, GLint.class, GLuint.class,
+							GLsizei.class};
 		else if (type.equals(double.class))
 			return new Class[]{GLclampd.class, GLdouble.class};
 		else if (type.equals(float.class))

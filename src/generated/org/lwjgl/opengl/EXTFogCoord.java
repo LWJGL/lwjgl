@@ -51,11 +51,11 @@ public final class EXTFogCoord {
 		nglFogCoordPointerEXT(GL11.GL_FLOAT, stride, data, data.position() << 2, function_pointer);
 	}
 	private static native void nglFogCoordPointerEXT(int type, int stride, Buffer data, int data_position, long function_pointer);
-	public static void glFogCoordPointerEXT(int type, int stride, int data_buffer_offset) {
+	public static void glFogCoordPointerEXT(int type, int stride, long data_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().EXT_fog_coord_glFogCoordPointerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureArrayVBOenabled();
 		nglFogCoordPointerEXTBO(type, stride, data_buffer_offset, function_pointer);
 	}
-	private static native void nglFogCoordPointerEXTBO(int type, int stride, int data_buffer_offset, long function_pointer);
+	private static native void nglFogCoordPointerEXTBO(int type, int stride, long data_buffer_offset, long function_pointer);
 }

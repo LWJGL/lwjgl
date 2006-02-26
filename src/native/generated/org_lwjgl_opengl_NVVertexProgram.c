@@ -125,7 +125,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribPoin
 	glVertexAttribPointerNV(index, size, type, stride, buffer_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribPointerNVBO(JNIEnv *env, jclass clazz, jint index, jint size, jint type, jint stride, jint buffer_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribPointerNVBO(JNIEnv *env, jclass clazz, jint index, jint size, jint type, jint stride, jlong buffer_buffer_offset, jlong function_pointer) {
 	const GLvoid *buffer_address = ((const GLvoid *)offsetToPointer(buffer_buffer_offset));
 	glVertexAttribPointerNVPROC glVertexAttribPointerNV = (glVertexAttribPointerNVPROC)((intptr_t)function_pointer);
 	glVertexAttribPointerNV(index, size, type, stride, buffer_address);

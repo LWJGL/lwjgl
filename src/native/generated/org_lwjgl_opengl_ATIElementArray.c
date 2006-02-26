@@ -13,7 +13,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerAT
 	glElementPointerATI(type, pPointer_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerATIBO(JNIEnv *env, jclass clazz, jint type, jint pPointer_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerATIBO(JNIEnv *env, jclass clazz, jint type, jlong pPointer_buffer_offset, jlong function_pointer) {
 	const GLvoid *pPointer_address = ((const GLvoid *)offsetToPointer(pPointer_buffer_offset));
 	glElementPointerATIPROC glElementPointerATI = (glElementPointerATIPROC)((intptr_t)function_pointer);
 	glElementPointerATI(type, pPointer_address);

@@ -40,13 +40,13 @@ public final class ATIElementArray {
 		nglElementPointerATI(GL11.GL_UNSIGNED_SHORT, pPointer, pPointer.position() << 1, function_pointer);
 	}
 	private static native void nglElementPointerATI(int type, Buffer pPointer, int pPointer_position, long function_pointer);
-	public static void glElementPointerATI(int type, int pPointer_buffer_offset) {
+	public static void glElementPointerATI(int type, long pPointer_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().ATI_element_array_glElementPointerATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureArrayVBOenabled();
 		nglElementPointerATIBO(type, pPointer_buffer_offset, function_pointer);
 	}
-	private static native void nglElementPointerATIBO(int type, int pPointer_buffer_offset, long function_pointer);
+	private static native void nglElementPointerATIBO(int type, long pPointer_buffer_offset, long function_pointer);
 
 	public static void glDrawElementArrayATI(int mode, int count) {
 		long function_pointer = GLContext.getCapabilities().ATI_element_array_glDrawElementArrayATI_pointer;

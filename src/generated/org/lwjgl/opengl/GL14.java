@@ -96,13 +96,13 @@ public final class GL14 {
 		nglFogCoordPointer(GL11.GL_FLOAT, stride, data, data.position() << 2, function_pointer);
 	}
 	private static native void nglFogCoordPointer(int type, int stride, Buffer data, int data_position, long function_pointer);
-	public static void glFogCoordPointer(int type, int stride, int data_buffer_offset) {
+	public static void glFogCoordPointer(int type, int stride, long data_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().GL14_glFogCoordPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureArrayVBOenabled();
 		nglFogCoordPointerBO(type, stride, data_buffer_offset, function_pointer);
 	}
-	private static native void nglFogCoordPointerBO(int type, int stride, int data_buffer_offset, long function_pointer);
+	private static native void nglFogCoordPointerBO(int type, int stride, long data_buffer_offset, long function_pointer);
 
 	public static void glMultiDrawArrays(int mode, IntBuffer piFirst, IntBuffer piCount) {
 		if (piFirst.remaining() != piCount.remaining()) {
@@ -196,13 +196,13 @@ public final class GL14 {
 		nglSecondaryColorPointer(size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, data, data.position(), function_pointer);
 	}
 	private static native void nglSecondaryColorPointer(int size, int type, int stride, Buffer data, int data_position, long function_pointer);
-	public static void glSecondaryColorPointer(int size, int type, int stride, int data_buffer_offset) {
+	public static void glSecondaryColorPointer(int size, int type, int stride, long data_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().GL14_glSecondaryColorPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureArrayVBOenabled();
 		nglSecondaryColorPointerBO(size, type, stride, data_buffer_offset, function_pointer);
 	}
-	private static native void nglSecondaryColorPointerBO(int size, int type, int stride, int data_buffer_offset, long function_pointer);
+	private static native void nglSecondaryColorPointerBO(int size, int type, int stride, long data_buffer_offset, long function_pointer);
 
 	public static void glBlendFuncSeparate(int sfactorRGB, int dfactorRGB, int sfactorAlpha, int dfactorAlpha) {
 		long function_pointer = GLContext.getCapabilities().GL14_glBlendFuncSeparate_pointer;

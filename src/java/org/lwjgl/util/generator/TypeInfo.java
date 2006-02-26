@@ -77,6 +77,9 @@ public class TypeInfo {
 	private static Class getTypeFromPrimitiveKind(PrimitiveType.Kind kind) {
 		Class type;
 		switch (kind) {
+			case LONG:
+				type = long.class;
+				break;
 			case INT:
 				type = int.class;
 				break;

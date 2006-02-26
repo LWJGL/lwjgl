@@ -61,6 +61,9 @@ public class JavaTypeTranslator implements TypeVisitor {
 
 	public void visitPrimitiveType(PrimitiveType t) {
 		switch (t.getKind()) {
+			case LONG:
+				type = long.class;
+				break;
 			case INT:
 				type = int.class;
 				break;

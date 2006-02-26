@@ -277,7 +277,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglBitmap(JNIEnv *env, jclass 
 	glBitmap(width, height, xorig, yorig, xmove, ymove, bitmap_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglBitmapBO(JNIEnv *env, jclass clazz, jint width, jint height, jfloat xorig, jfloat yorig, jfloat xmove, jfloat ymove, jint bitmap_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglBitmapBO(JNIEnv *env, jclass clazz, jint width, jint height, jfloat xorig, jfloat yorig, jfloat xmove, jfloat ymove, jlong bitmap_buffer_offset, jlong function_pointer) {
 	const GLubyte *bitmap_address = ((const GLubyte *)offsetToPointer(bitmap_buffer_offset));
 	glBitmapPROC glBitmap = (glBitmapPROC)((intptr_t)function_pointer);
 	glBitmap(width, height, xorig, yorig, xmove, ymove, bitmap_address);
@@ -355,7 +355,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglColorPointer(JNIEnv *env, j
 	glColorPointer(size, type, stride, pointer_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglColorPointerBO(JNIEnv *env, jclass clazz, jint size, jint type, jint stride, jint pointer_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglColorPointerBO(JNIEnv *env, jclass clazz, jint size, jint type, jint stride, jlong pointer_buffer_offset, jlong function_pointer) {
 	const GLvoid *pointer_address = ((const GLvoid *)offsetToPointer(pointer_buffer_offset));
 	glColorPointerPROC glColorPointer = (glColorPointerPROC)((intptr_t)function_pointer);
 	glColorPointer(size, type, stride, pointer_address);
@@ -488,7 +488,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglEdgeFlagPointer(JNIEnv *env
 	glEdgeFlagPointer(stride, pointer_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglEdgeFlagPointerBO(JNIEnv *env, jclass clazz, jint stride, jint pointer_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglEdgeFlagPointerBO(JNIEnv *env, jclass clazz, jint stride, jlong pointer_buffer_offset, jlong function_pointer) {
 	const GLvoid *pointer_address = ((const GLvoid *)offsetToPointer(pointer_buffer_offset));
 	glEdgeFlagPointerPROC glEdgeFlagPointer = (glEdgeFlagPointerPROC)((intptr_t)function_pointer);
 	glEdgeFlagPointer(stride, pointer_address);
@@ -505,7 +505,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawPixels(JNIEnv *env, jcl
 	glDrawPixels(width, height, format, type, pixels_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawPixelsBO(JNIEnv *env, jclass clazz, jint width, jint height, jint format, jint type, jint pixels_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawPixelsBO(JNIEnv *env, jclass clazz, jint width, jint height, jint format, jint type, jlong pixels_buffer_offset, jlong function_pointer) {
 	const GLvoid *pixels_address = ((const GLvoid *)offsetToPointer(pixels_buffer_offset));
 	glDrawPixelsPROC glDrawPixels = (glDrawPixelsPROC)((intptr_t)function_pointer);
 	glDrawPixels(width, height, format, type, pixels_address);
@@ -517,7 +517,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawElements(JNIEnv *env, j
 	glDrawElements(mode, count, type, indices_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawElementsBO(JNIEnv *env, jclass clazz, jint mode, jint count, jint type, jint indices_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawElementsBO(JNIEnv *env, jclass clazz, jint mode, jint count, jint type, jlong indices_buffer_offset, jlong function_pointer) {
 	const GLvoid *indices_address = ((const GLvoid *)offsetToPointer(indices_buffer_offset));
 	glDrawElementsPROC glDrawElements = (glDrawElementsPROC)((intptr_t)function_pointer);
 	glDrawElements(mode, count, type, indices_address);
@@ -560,7 +560,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapfv(JNIEnv *env, 
 	glGetPixelMapfv(map, values_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapfvBO(JNIEnv *env, jclass clazz, jint map, jint values_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapfvBO(JNIEnv *env, jclass clazz, jint map, jlong values_buffer_offset, jlong function_pointer) {
 	GLfloat *values_address = ((GLfloat *)offsetToPointer(values_buffer_offset));
 	glGetPixelMapfvPROC glGetPixelMapfv = (glGetPixelMapfvPROC)((intptr_t)function_pointer);
 	glGetPixelMapfv(map, values_address);
@@ -572,7 +572,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapuiv(JNIEnv *env,
 	glGetPixelMapuiv(map, values_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapuivBO(JNIEnv *env, jclass clazz, jint map, jint values_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapuivBO(JNIEnv *env, jclass clazz, jint map, jlong values_buffer_offset, jlong function_pointer) {
 	GLuint *values_address = ((GLuint *)offsetToPointer(values_buffer_offset));
 	glGetPixelMapuivPROC glGetPixelMapuiv = (glGetPixelMapuivPROC)((intptr_t)function_pointer);
 	glGetPixelMapuiv(map, values_address);
@@ -584,7 +584,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapusv(JNIEnv *env,
 	glGetPixelMapusv(map, values_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapusvBO(JNIEnv *env, jclass clazz, jint map, jint values_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapusvBO(JNIEnv *env, jclass clazz, jint map, jlong values_buffer_offset, jlong function_pointer) {
 	GLushort *values_address = ((GLushort *)offsetToPointer(values_buffer_offset));
 	glGetPixelMapusvPROC glGetPixelMapusv = (glGetPixelMapusvPROC)((intptr_t)function_pointer);
 	glGetPixelMapusv(map, values_address);
@@ -741,7 +741,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglInterleavedArrays(JNIEnv *e
 	glInterleavedArrays(format, stride, pointer_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglInterleavedArraysBO(JNIEnv *env, jclass clazz, jint format, jint stride, jint pointer_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglInterleavedArraysBO(JNIEnv *env, jclass clazz, jint format, jint stride, jlong pointer_buffer_offset, jlong function_pointer) {
 	const GLvoid *pointer_address = ((const GLvoid *)offsetToPointer(pointer_buffer_offset));
 	glInterleavedArraysPROC glInterleavedArrays = (glInterleavedArraysPROC)((intptr_t)function_pointer);
 	glInterleavedArrays(format, stride, pointer_address);
@@ -787,7 +787,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexImage(JNIEnv *env, jc
 	glGetTexImage(target, level, format, type, pixels_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexImageBO(JNIEnv *env, jclass clazz, jint target, jint level, jint format, jint type, jint pixels_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexImageBO(JNIEnv *env, jclass clazz, jint target, jint level, jint format, jint type, jlong pixels_buffer_offset, jlong function_pointer) {
 	GLvoid *pixels_address = ((GLvoid *)offsetToPointer(pixels_buffer_offset));
 	glGetTexImagePROC glGetTexImage = (glGetTexImagePROC)((intptr_t)function_pointer);
 	glGetTexImage(target, level, format, type, pixels_address);
@@ -835,7 +835,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPolygonStipple(JNIEnv *e
 	glGetPolygonStipple(mask_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPolygonStippleBO(JNIEnv *env, jclass clazz, jint mask_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPolygonStippleBO(JNIEnv *env, jclass clazz, jlong mask_buffer_offset, jlong function_pointer) {
 	GLubyte *mask_address = ((GLubyte *)offsetToPointer(mask_buffer_offset));
 	glGetPolygonStipplePROC glGetPolygonStipple = (glGetPolygonStipplePROC)((intptr_t)function_pointer);
 	glGetPolygonStipple(mask_address);
@@ -1016,7 +1016,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPolygonStipple(JNIEnv *env,
 	glPolygonStipple(mask_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPolygonStippleBO(JNIEnv *env, jclass clazz, jint mask_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPolygonStippleBO(JNIEnv *env, jclass clazz, jlong mask_buffer_offset, jlong function_pointer) {
 	const GLubyte *mask_address = ((const GLubyte *)offsetToPointer(mask_buffer_offset));
 	glPolygonStipplePROC glPolygonStipple = (glPolygonStipplePROC)((intptr_t)function_pointer);
 	glPolygonStipple(mask_address);
@@ -1068,7 +1068,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapfv(JNIEnv *env, jcl
 	glPixelMapfv(map, mapsize, values_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapfvBO(JNIEnv *env, jclass clazz, jint map, jint mapsize, jint values_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapfvBO(JNIEnv *env, jclass clazz, jint map, jint mapsize, jlong values_buffer_offset, jlong function_pointer) {
 	const GLfloat *values_address = ((const GLfloat *)offsetToPointer(values_buffer_offset));
 	glPixelMapfvPROC glPixelMapfv = (glPixelMapfvPROC)((intptr_t)function_pointer);
 	glPixelMapfv(map, mapsize, values_address);
@@ -1080,7 +1080,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapuiv(JNIEnv *env, jc
 	glPixelMapuiv(map, mapsize, values_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapuivBO(JNIEnv *env, jclass clazz, jint map, jint mapsize, jint values_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapuivBO(JNIEnv *env, jclass clazz, jint map, jint mapsize, jlong values_buffer_offset, jlong function_pointer) {
 	const GLuint *values_address = ((const GLuint *)offsetToPointer(values_buffer_offset));
 	glPixelMapuivPROC glPixelMapuiv = (glPixelMapuivPROC)((intptr_t)function_pointer);
 	glPixelMapuiv(map, mapsize, values_address);
@@ -1092,7 +1092,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapusv(JNIEnv *env, jc
 	glPixelMapusv(map, mapsize, values_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapusvBO(JNIEnv *env, jclass clazz, jint map, jint mapsize, jint values_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapusvBO(JNIEnv *env, jclass clazz, jint map, jint mapsize, jlong values_buffer_offset, jlong function_pointer) {
 	const GLushort *values_address = ((const GLushort *)offsetToPointer(values_buffer_offset));
 	glPixelMapusvPROC glPixelMapusv = (glPixelMapusvPROC)((intptr_t)function_pointer);
 	glPixelMapusv(map, mapsize, values_address);
@@ -1114,7 +1114,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglNormalPointer(JNIEnv *env, 
 	glNormalPointer(type, stride, pointer_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglNormalPointerBO(JNIEnv *env, jclass clazz, jint type, jint stride, jint pointer_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglNormalPointerBO(JNIEnv *env, jclass clazz, jint type, jint stride, jlong pointer_buffer_offset, jlong function_pointer) {
 	const GLvoid *pointer_address = ((const GLvoid *)offsetToPointer(pointer_buffer_offset));
 	glNormalPointerPROC glNormalPointer = (glNormalPointerPROC)((intptr_t)function_pointer);
 	glNormalPointer(type, stride, pointer_address);
@@ -1220,7 +1220,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglReadPixels(JNIEnv *env, jcl
 	glReadPixels(x, y, width, height, format, type, pixels_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglReadPixelsBO(JNIEnv *env, jclass clazz, jint x, jint y, jint width, jint height, jint format, jint type, jint pixels_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglReadPixelsBO(JNIEnv *env, jclass clazz, jint x, jint y, jint width, jint height, jint format, jint type, jlong pixels_buffer_offset, jlong function_pointer) {
 	GLvoid *pixels_address = ((GLvoid *)offsetToPointer(pixels_buffer_offset));
 	glReadPixelsPROC glReadPixels = (glReadPixelsPROC)((intptr_t)function_pointer);
 	glReadPixels(x, y, width, height, format, type, pixels_address);
@@ -1327,7 +1327,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglVertexPointer(JNIEnv *env, 
 	glVertexPointer(size, type, stride, pointer_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglVertexPointerBO(JNIEnv *env, jclass clazz, jint size, jint type, jint stride, jint pointer_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglVertexPointerBO(JNIEnv *env, jclass clazz, jint size, jint type, jint stride, jlong pointer_buffer_offset, jlong function_pointer) {
 	const GLvoid *pointer_address = ((const GLvoid *)offsetToPointer(pointer_buffer_offset));
 	glVertexPointerPROC glVertexPointer = (glVertexPointerPROC)((intptr_t)function_pointer);
 	glVertexPointer(size, type, stride, pointer_address);
@@ -1394,7 +1394,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage1D(JNIEnv *env, jcl
 	glTexImage1D(target, level, internalformat, width, border, format, type, pixels_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage1DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint border, jint format, jint type, jint pixels_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage1DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint border, jint format, jint type, jlong pixels_buffer_offset, jlong function_pointer) {
 	const GLvoid *pixels_address = ((const GLvoid *)offsetToPointer(pixels_buffer_offset));
 	glTexImage1DPROC glTexImage1D = (glTexImage1DPROC)((intptr_t)function_pointer);
 	glTexImage1D(target, level, internalformat, width, border, format, type, pixels_address);
@@ -1406,7 +1406,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage2D(JNIEnv *env, jcl
 	glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage2DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint height, jint border, jint format, jint type, jint pixels_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage2DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint height, jint border, jint format, jint type, jlong pixels_buffer_offset, jlong function_pointer) {
 	const GLvoid *pixels_address = ((const GLvoid *)offsetToPointer(pixels_buffer_offset));
 	glTexImage2DPROC glTexImage2D = (glTexImage2DPROC)((intptr_t)function_pointer);
 	glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels_address);
@@ -1418,7 +1418,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage1D(JNIEnv *env, 
 	glTexSubImage1D(target, level, xoffset, width, format, type, pixels_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage1DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint width, jint format, jint type, jint pixels_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage1DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint width, jint format, jint type, jlong pixels_buffer_offset, jlong function_pointer) {
 	const GLvoid *pixels_address = ((const GLvoid *)offsetToPointer(pixels_buffer_offset));
 	glTexSubImage1DPROC glTexSubImage1D = (glTexSubImage1DPROC)((intptr_t)function_pointer);
 	glTexSubImage1D(target, level, xoffset, width, format, type, pixels_address);
@@ -1430,7 +1430,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage2D(JNIEnv *env, 
 	glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage2DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint width, jint height, jint format, jint type, jint pixels_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage2DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint width, jint height, jint format, jint type, jlong pixels_buffer_offset, jlong function_pointer) {
 	const GLvoid *pixels_address = ((const GLvoid *)offsetToPointer(pixels_buffer_offset));
 	glTexSubImage2DPROC glTexSubImage2D = (glTexSubImage2DPROC)((intptr_t)function_pointer);
 	glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels_address);
@@ -1519,7 +1519,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexCoordPointer(JNIEnv *env
 	glTexCoordPointer(size, type, stride, pointer_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexCoordPointerBO(JNIEnv *env, jclass clazz, jint size, jint type, jint stride, jint pointer_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexCoordPointerBO(JNIEnv *env, jclass clazz, jint size, jint type, jint stride, jlong pointer_buffer_offset, jlong function_pointer) {
 	const GLvoid *pointer_address = ((const GLvoid *)offsetToPointer(pointer_buffer_offset));
 	glTexCoordPointerPROC glTexCoordPointer = (glTexCoordPointerPROC)((intptr_t)function_pointer);
 	glTexCoordPointer(size, type, stride, pointer_address);

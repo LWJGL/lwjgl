@@ -44,7 +44,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorTable(JNIEnv *en
 	glColorTable(target, internalFormat, width, format, type, data_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorTableBO(JNIEnv *env, jclass clazz, jint target, jint internalFormat, jint width, jint format, jint type, jint data_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorTableBO(JNIEnv *env, jclass clazz, jint target, jint internalFormat, jint width, jint format, jint type, jlong data_buffer_offset, jlong function_pointer) {
 	const GLvoid *data_address = ((const GLvoid *)offsetToPointer(data_buffer_offset));
 	glColorTablePROC glColorTable = (glColorTablePROC)((intptr_t)function_pointer);
 	glColorTable(target, internalFormat, width, format, type, data_address);
@@ -56,7 +56,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorSubTable(JNIEnv 
 	glColorSubTable(target, start, count, format, type, data_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorSubTableBO(JNIEnv *env, jclass clazz, jint target, jint start, jint count, jint format, jint type, jint data_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorSubTableBO(JNIEnv *env, jclass clazz, jint target, jint start, jint count, jint format, jint type, jlong data_buffer_offset, jlong function_pointer) {
 	const GLvoid *data_address = ((const GLvoid *)offsetToPointer(data_buffer_offset));
 	glColorSubTablePROC glColorSubTable = (glColorSubTablePROC)((intptr_t)function_pointer);
 	glColorSubTable(target, start, count, format, type, data_address);
@@ -128,7 +128,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetHistogram(JNIEnv *
 	glGetHistogram(target, reset, format, type, values_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetHistogramBO(JNIEnv *env, jclass clazz, jint target, jboolean reset, jint format, jint type, jint values_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetHistogramBO(JNIEnv *env, jclass clazz, jint target, jboolean reset, jint format, jint type, jlong values_buffer_offset, jlong function_pointer) {
 	GLvoid *values_address = ((GLvoid *)offsetToPointer(values_buffer_offset));
 	glGetHistogramPROC glGetHistogram = (glGetHistogramPROC)((intptr_t)function_pointer);
 	glGetHistogram(target, reset, format, type, values_address);
@@ -162,7 +162,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetMinmax(JNIEnv *env
 	glGetMinmax(target, reset, format, types, values_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetMinmaxBO(JNIEnv *env, jclass clazz, jint target, jboolean reset, jint format, jint types, jint values_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetMinmaxBO(JNIEnv *env, jclass clazz, jint target, jboolean reset, jint format, jint types, jlong values_buffer_offset, jlong function_pointer) {
 	GLvoid *values_address = ((GLvoid *)offsetToPointer(values_buffer_offset));
 	glGetMinmaxPROC glGetMinmax = (glGetMinmaxPROC)((intptr_t)function_pointer);
 	glGetMinmax(target, reset, format, types, values_address);
@@ -186,7 +186,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter1D(J
 	glConvolutionFilter1D(target, internalformat, width, format, type, image_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter1DBO(JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint format, jint type, jint image_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter1DBO(JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint format, jint type, jlong image_buffer_offset, jlong function_pointer) {
 	const GLvoid *image_address = ((const GLvoid *)offsetToPointer(image_buffer_offset));
 	glConvolutionFilter1DPROC glConvolutionFilter1D = (glConvolutionFilter1DPROC)((intptr_t)function_pointer);
 	glConvolutionFilter1D(target, internalformat, width, format, type, image_address);
@@ -198,7 +198,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter2D(J
 	glConvolutionFilter2D(target, internalformat, width, height, format, type, image_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter2DBO(JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint height, jint format, jint type, jint image_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter2DBO(JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint height, jint format, jint type, jlong image_buffer_offset, jlong function_pointer) {
 	const GLvoid *image_address = ((const GLvoid *)offsetToPointer(image_buffer_offset));
 	glConvolutionFilter2DPROC glConvolutionFilter2D = (glConvolutionFilter2DPROC)((intptr_t)function_pointer);
 	glConvolutionFilter2D(target, internalformat, width, height, format, type, image_address);
@@ -242,7 +242,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetConvolutionFilter(
 	glGetConvolutionFilter(target, format, type, image_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetConvolutionFilterBO(JNIEnv *env, jclass clazz, jint target, jint format, jint type, jint image_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetConvolutionFilterBO(JNIEnv *env, jclass clazz, jint target, jint format, jint type, jlong image_buffer_offset, jlong function_pointer) {
 	GLvoid *image_address = ((GLvoid *)offsetToPointer(image_buffer_offset));
 	glGetConvolutionFilterPROC glGetConvolutionFilter = (glGetConvolutionFilterPROC)((intptr_t)function_pointer);
 	glGetConvolutionFilter(target, format, type, image_address);
@@ -267,7 +267,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglSeparableFilter2D(JNI
 	glSeparableFilter2D(target, internalformat, width, height, format, type, row_address, column_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglSeparableFilter2DBO(JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint height, jint format, jint type, jint row_buffer_offset, jint column_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglSeparableFilter2DBO(JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint height, jint format, jint type, jlong row_buffer_offset, jlong column_buffer_offset, jlong function_pointer) {
 	const GLvoid *row_address = ((const GLvoid *)offsetToPointer(row_buffer_offset));
 	const GLvoid *column_address = ((const GLvoid *)offsetToPointer(column_buffer_offset));
 	glSeparableFilter2DPROC glSeparableFilter2D = (glSeparableFilter2DPROC)((intptr_t)function_pointer);
@@ -282,7 +282,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetSeparableFilter(JN
 	glGetSeparableFilter(target, format, type, row_address, column_address, span_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetSeparableFilterBO(JNIEnv *env, jclass clazz, jint target, jint format, jint type, jint row_buffer_offset, jint column_buffer_offset, jint span_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetSeparableFilterBO(JNIEnv *env, jclass clazz, jint target, jint format, jint type, jlong row_buffer_offset, jlong column_buffer_offset, jlong span_buffer_offset, jlong function_pointer) {
 	GLvoid *row_address = ((GLvoid *)offsetToPointer(row_buffer_offset));
 	GLvoid *column_address = ((GLvoid *)offsetToPointer(column_buffer_offset));
 	GLvoid *span_address = ((GLvoid *)offsetToPointer(span_buffer_offset));

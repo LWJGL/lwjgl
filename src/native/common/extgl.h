@@ -86,6 +86,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #define __GL_H__
 
 #include <string.h>
+#include <stddef.h>
 
 #ifndef APIENTRY
 #define APIENTRY
@@ -140,15 +141,15 @@ typedef void GLvoid;
 #endif
 
 // OpenGL 2.0 types
-typedef int GLintptr;
-typedef unsigned int GLsizeiptr;
+typedef ptrdiff_t  GLintptr;
+typedef ptrdiff_t GLsizeiptr;
 typedef unsigned char GLchar;
 
 // ARB_shader_objects types
 typedef unsigned int GLhandleARB;
 // ARB_vertex_buffer_object types
-typedef int GLintptrARB;
-typedef unsigned int GLsizeiptrARB;
+typedef ptrdiff_t GLintptrARB;
+typedef ptrdiff_t GLsizeiptrARB;
 typedef unsigned char GLcharARB;
 
 // NV_half_float types

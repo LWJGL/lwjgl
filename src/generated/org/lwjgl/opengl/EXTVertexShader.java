@@ -384,13 +384,13 @@ public final class EXTVertexShader {
 		nglVariantPointerEXT(id, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, stride, pAddr, pAddr.position() << 1, function_pointer);
 	}
 	private static native void nglVariantPointerEXT(int id, int type, int stride, Buffer pAddr, int pAddr_position, long function_pointer);
-	public static void glVariantPointerEXT(int id, int type, int stride, int pAddr_buffer_offset) {
+	public static void glVariantPointerEXT(int id, int type, int stride, long pAddr_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().EXT_vertex_shader_glVariantPointerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureArrayVBOenabled();
 		nglVariantPointerEXTBO(id, type, stride, pAddr_buffer_offset, function_pointer);
 	}
-	private static native void nglVariantPointerEXTBO(int id, int type, int stride, int pAddr_buffer_offset, long function_pointer);
+	private static native void nglVariantPointerEXTBO(int id, int type, int stride, long pAddr_buffer_offset, long function_pointer);
 
 	public static void glEnableVariantClientStateEXT(int id) {
 		long function_pointer = GLContext.getCapabilities().EXT_vertex_shader_glEnableVariantClientStateEXT_pointer;

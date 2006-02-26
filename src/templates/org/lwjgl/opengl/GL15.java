@@ -81,7 +81,7 @@ public interface GL15 {
 	boolean glIsBuffer(@GLuint int buffer);
 
 	@GenerateAutos
-	void glBufferData(@GLenum int target, @AutoSize("data") @GLsizeiptr int size,
+	void glBufferData(@GLenum int target, @AutoSize("data") @GLsizeiptr long size,
 	                  @Const
 	                  @GLbyte
 	                  @GLshort
@@ -89,7 +89,7 @@ public interface GL15 {
 	                  @GLfloat
 	                  @GLdouble Buffer data, @GLenum int usage);
 
-	void glBufferSubData(@GLenum int target, @GLintptr int offset, @AutoSize("data") @GLsizeiptr int size,
+	void glBufferSubData(@GLenum int target, @GLintptr long offset, @AutoSize("data") @GLsizeiptr long size,
 	                     @Check
 	                     @Const
 	                     @GLbyte
@@ -98,7 +98,7 @@ public interface GL15 {
 	                     @GLfloat
 	                     @GLdouble Buffer data);
 
-	void glGetBufferSubData(@GLenum int target, @GLintptr int offset, @AutoSize("data") @GLsizeiptr int size,
+	void glGetBufferSubData(@GLenum int target, @GLintptr long offset, @AutoSize("data") @GLsizeiptr long size,
 	                        @Check
 	                        @GLbyte
 	                        @GLshort

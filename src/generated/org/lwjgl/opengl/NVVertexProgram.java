@@ -293,13 +293,13 @@ public final class NVVertexProgram extends NVProgram {
 		nglVertexAttribPointerNV(index, size, type, stride, buffer, buffer.position() << 1, function_pointer);
 	}
 	private static native void nglVertexAttribPointerNV(int index, int size, int type, int stride, Buffer buffer, int buffer_position, long function_pointer);
-	public static void glVertexAttribPointerNV(int index, int size, int type, int stride, int buffer_buffer_offset) {
+	public static void glVertexAttribPointerNV(int index, int size, int type, int stride, long buffer_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttribPointerNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureArrayVBOenabled();
 		nglVertexAttribPointerNVBO(index, size, type, stride, buffer_buffer_offset, function_pointer);
 	}
-	private static native void nglVertexAttribPointerNVBO(int index, int size, int type, int stride, int buffer_buffer_offset, long function_pointer);
+	private static native void nglVertexAttribPointerNVBO(int index, int size, int type, int stride, long buffer_buffer_offset, long function_pointer);
 
 	public static void glVertexAttrib1sNV(int index, short x) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttrib1sNV_pointer;

@@ -95,7 +95,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_nglVertexAttribPoi
 	glVertexAttribPointerARB(index, size, type, normalized, stride, buffer_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_nglVertexAttribPointerARBBO(JNIEnv *env, jclass clazz, jint index, jint size, jint type, jboolean normalized, jint stride, jint buffer_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_nglVertexAttribPointerARBBO(JNIEnv *env, jclass clazz, jint index, jint size, jint type, jboolean normalized, jint stride, jlong buffer_buffer_offset, jlong function_pointer) {
 	const GLvoid *buffer_address = ((const GLvoid *)offsetToPointer(buffer_buffer_offset));
 	glVertexAttribPointerARBPROC glVertexAttribPointerARB = (glVertexAttribPointerARBPROC)((intptr_t)function_pointer);
 	glVertexAttribPointerARB(index, size, type, normalized, stride, buffer_address);

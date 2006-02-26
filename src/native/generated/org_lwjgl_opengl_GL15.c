@@ -46,19 +46,19 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL15_nglIsBuffer(JNIEnv *env, j
 	return __result;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferData(JNIEnv *env, jclass clazz, jint target, jint size, jobject data, jint data_position, jint usage, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferData(JNIEnv *env, jclass clazz, jint target, jlong size, jobject data, jint data_position, jint usage, jlong function_pointer) {
 	const GLvoid *data_address = ((const GLvoid *)(((char *)safeGetBufferAddress(env, data)) + data_position));
 	glBufferDataPROC glBufferData = (glBufferDataPROC)((intptr_t)function_pointer);
 	glBufferData(target, size, data_address, usage);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferSubData(JNIEnv *env, jclass clazz, jint target, jint offset, jint size, jobject data, jint data_position, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferSubData(JNIEnv *env, jclass clazz, jint target, jlong offset, jlong size, jobject data, jint data_position, jlong function_pointer) {
 	const GLvoid *data_address = ((const GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, data)) + data_position));
 	glBufferSubDataPROC glBufferSubData = (glBufferSubDataPROC)((intptr_t)function_pointer);
 	glBufferSubData(target, offset, size, data_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferSubData(JNIEnv *env, jclass clazz, jint target, jint offset, jint size, jobject data, jint data_position, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferSubData(JNIEnv *env, jclass clazz, jint target, jlong offset, jlong size, jobject data, jint data_position, jlong function_pointer) {
 	GLvoid *data_address = ((GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, data)) + data_position));
 	glGetBufferSubDataPROC glGetBufferSubData = (glGetBufferSubDataPROC)((intptr_t)function_pointer);
 	glGetBufferSubData(target, offset, size, data_address);

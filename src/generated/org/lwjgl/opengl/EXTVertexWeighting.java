@@ -41,11 +41,11 @@ public final class EXTVertexWeighting {
 		nglVertexWeightPointerEXT(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position() << 2, function_pointer);
 	}
 	private static native void nglVertexWeightPointerEXT(int size, int type, int stride, Buffer pPointer, int pPointer_position, long function_pointer);
-	public static void glVertexWeightPointerEXT(int size, int type, int stride, int pPointer_buffer_offset) {
+	public static void glVertexWeightPointerEXT(int size, int type, int stride, long pPointer_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().EXT_vertex_weighting_glVertexWeightPointerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureArrayVBOenabled();
 		nglVertexWeightPointerEXTBO(size, type, stride, pPointer_buffer_offset, function_pointer);
 	}
-	private static native void nglVertexWeightPointerEXTBO(int size, int type, int stride, int pPointer_buffer_offset, long function_pointer);
+	private static native void nglVertexWeightPointerEXTBO(int size, int type, int stride, long pPointer_buffer_offset, long function_pointer);
 }

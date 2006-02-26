@@ -70,7 +70,7 @@ public class NativeMethodStubsGenerator {
 	private static void generateParameter(PrintWriter writer, ParameterDeclaration param, Mode mode) {
 		writer.print(", ");
 		if (mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null) {
-			writer.print("jint " + param.getSimpleName() + Utils.BUFFER_OBJECT_PARAMETER_POSTFIX);
+			writer.print("jlong " + param.getSimpleName() + Utils.BUFFER_OBJECT_PARAMETER_POSTFIX);
 		} else {
 			JNITypeTranslator translator = new JNITypeTranslator();
 			param.getType().accept(translator);

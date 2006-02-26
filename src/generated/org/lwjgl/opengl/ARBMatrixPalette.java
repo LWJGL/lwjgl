@@ -54,13 +54,13 @@ public final class ARBMatrixPalette {
 		nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_SHORT, stride, pPointer, pPointer.position() << 1, function_pointer);
 	}
 	private static native void nglMatrixIndexPointerARB(int size, int type, int stride, Buffer pPointer, int pPointer_position, long function_pointer);
-	public static void glMatrixIndexPointerARB(int size, int type, int stride, int pPointer_buffer_offset) {
+	public static void glMatrixIndexPointerARB(int size, int type, int stride, long pPointer_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().ARB_matrix_palette_glMatrixIndexPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureArrayVBOenabled();
 		nglMatrixIndexPointerARBBO(size, type, stride, pPointer_buffer_offset, function_pointer);
 	}
-	private static native void nglMatrixIndexPointerARBBO(int size, int type, int stride, int pPointer_buffer_offset, long function_pointer);
+	private static native void nglMatrixIndexPointerARBBO(int size, int type, int stride, long pPointer_buffer_offset, long function_pointer);
 
 	public static void glMatrixIndexuARB(ByteBuffer pIndices) {
 		long function_pointer = GLContext.getCapabilities().ARB_matrix_palette_glMatrixIndexubvARB_pointer;

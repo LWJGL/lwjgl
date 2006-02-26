@@ -42,7 +42,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage1D(JNIEnv
 	glCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage1DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint border, jint imageSize, jint data_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage1DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint border, jint imageSize, jlong data_buffer_offset, jlong function_pointer) {
 	const GLvoid *data_address = ((const GLvoid *)offsetToPointer(data_buffer_offset));
 	glCompressedTexImage1DPROC glCompressedTexImage1D = (glCompressedTexImage1DPROC)((intptr_t)function_pointer);
 	glCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data_address);
@@ -54,7 +54,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage2D(JNIEnv
 	glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage2DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint height, jint border, jint imageSize, jint data_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage2DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint height, jint border, jint imageSize, jlong data_buffer_offset, jlong function_pointer) {
 	const GLvoid *data_address = ((const GLvoid *)offsetToPointer(data_buffer_offset));
 	glCompressedTexImage2DPROC glCompressedTexImage2D = (glCompressedTexImage2DPROC)((intptr_t)function_pointer);
 	glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data_address);
@@ -66,7 +66,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage3D(JNIEnv
 	glCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage3DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint height, jint depth, jint border, jint imageSize, jint data_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage3DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint height, jint depth, jint border, jint imageSize, jlong data_buffer_offset, jlong function_pointer) {
 	const GLvoid *data_address = ((const GLvoid *)offsetToPointer(data_buffer_offset));
 	glCompressedTexImage3DPROC glCompressedTexImage3D = (glCompressedTexImage3DPROC)((intptr_t)function_pointer);
 	glCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data_address);
@@ -78,7 +78,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage1D(JNI
 	glCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage1DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint width, jint format, jint imageSize, jint data_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage1DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint width, jint format, jint imageSize, jlong data_buffer_offset, jlong function_pointer) {
 	const GLvoid *data_address = ((const GLvoid *)offsetToPointer(data_buffer_offset));
 	glCompressedTexSubImage1DPROC glCompressedTexSubImage1D = (glCompressedTexSubImage1DPROC)((intptr_t)function_pointer);
 	glCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data_address);
@@ -90,7 +90,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage2D(JNI
 	glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage2DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint width, jint height, jint format, jint imageSize, jint data_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage2DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint width, jint height, jint format, jint imageSize, jlong data_buffer_offset, jlong function_pointer) {
 	const GLvoid *data_address = ((const GLvoid *)offsetToPointer(data_buffer_offset));
 	glCompressedTexSubImage2DPROC glCompressedTexSubImage2D = (glCompressedTexSubImage2DPROC)((intptr_t)function_pointer);
 	glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data_address);
@@ -102,7 +102,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage3D(JNI
 	glCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage3DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint width, jint height, jint depth, jint format, jint imageSize, jint data_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage3DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint width, jint height, jint depth, jint format, jint imageSize, jlong data_buffer_offset, jlong function_pointer) {
 	const GLvoid *data_address = ((const GLvoid *)offsetToPointer(data_buffer_offset));
 	glCompressedTexSubImage3DPROC glCompressedTexSubImage3D = (glCompressedTexSubImage3DPROC)((intptr_t)function_pointer);
 	glCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data_address);
@@ -114,7 +114,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglGetCompressedTexImage(JNIEn
 	glGetCompressedTexImage(target, lod, img_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglGetCompressedTexImageBO(JNIEnv *env, jclass clazz, jint target, jint lod, jint img_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglGetCompressedTexImageBO(JNIEnv *env, jclass clazz, jint target, jint lod, jlong img_buffer_offset, jlong function_pointer) {
 	GLvoid *img_address = ((GLvoid *)offsetToPointer(img_buffer_offset));
 	glGetCompressedTexImagePROC glGetCompressedTexImage = (glGetCompressedTexImagePROC)((intptr_t)function_pointer);
 	glGetCompressedTexImage(target, lod, img_address);

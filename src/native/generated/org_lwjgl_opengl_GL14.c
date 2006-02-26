@@ -52,7 +52,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglFogCoordPointer(JNIEnv *env
 	glFogCoordPointer(type, stride, data_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglFogCoordPointerBO(JNIEnv *env, jclass clazz, jint type, jint stride, jint data_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglFogCoordPointerBO(JNIEnv *env, jclass clazz, jint type, jint stride, jlong data_buffer_offset, jlong function_pointer) {
 	const GLvoid *data_address = ((const GLvoid *)offsetToPointer(data_buffer_offset));
 	glFogCoordPointerPROC glFogCoordPointer = (glFogCoordPointerPROC)((intptr_t)function_pointer);
 	glFogCoordPointer(type, stride, data_address);
@@ -113,7 +113,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglSecondaryColorPointer(JNIEn
 	glSecondaryColorPointer(size, type, stride, data_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglSecondaryColorPointerBO(JNIEnv *env, jclass clazz, jint size, jint type, jint stride, jint data_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglSecondaryColorPointerBO(JNIEnv *env, jclass clazz, jint size, jint type, jint stride, jlong data_buffer_offset, jlong function_pointer) {
 	const GLvoid *data_address = ((const GLvoid *)offsetToPointer(data_buffer_offset));
 	glSecondaryColorPointerPROC glSecondaryColorPointer = (glSecondaryColorPointerPROC)((intptr_t)function_pointer);
 	glSecondaryColorPointer(size, type, stride, data_address);

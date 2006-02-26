@@ -105,7 +105,7 @@ static inline jobject safeNewBufferCached(JNIEnv *env, void *p, int size, jobjec
 
 }
 
-static inline void *offsetToPointer(jint offset) {
+static inline void *offsetToPointer(jlong offset) {
 	return (char *)NULL + offset;
 }
 

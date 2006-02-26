@@ -141,7 +141,7 @@ public class JavaMethodsGenerator {
 		if (bo_annotation != null && mode == Mode.BUFFEROBJECT) {
 			if (buffer_type == null)
 				throw new RuntimeException("type of " + param + " is not a nio Buffer parameter but is annotated as buffer object");
-			writer.print("int " + param.getSimpleName() + Utils.BUFFER_OBJECT_PARAMETER_POSTFIX);
+			writer.print("long " + param.getSimpleName() + Utils.BUFFER_OBJECT_PARAMETER_POSTFIX);
 		} else {
 			writer.print(type_info.getType().getSimpleName());
 			writer.print(" " + param.getSimpleName());

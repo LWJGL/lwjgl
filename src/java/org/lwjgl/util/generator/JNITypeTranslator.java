@@ -78,6 +78,9 @@ public class JNITypeTranslator implements TypeVisitor {
 	public void visitPrimitiveType(PrimitiveType t) {
 		String type;
 		switch (t.getKind()) {
+			case LONG:
+				type = "jlong";
+				break;
 			case INT:
 				type = "jint";
 				break;

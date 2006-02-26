@@ -179,7 +179,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantPointerEX
 	glVariantPointerEXT(id, type, stride, pAddr_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantPointerEXTBO(JNIEnv *env, jclass clazz, jint id, jint type, jint stride, jint pAddr_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantPointerEXTBO(JNIEnv *env, jclass clazz, jint id, jint type, jint stride, jlong pAddr_buffer_offset, jlong function_pointer) {
 	const GLvoid *pAddr_address = ((const GLvoid *)offsetToPointer(pAddr_buffer_offset));
 	glVariantPointerEXTPROC glVariantPointerEXT = (glVariantPointerEXTPROC)((intptr_t)function_pointer);
 	glVariantPointerEXT(id, type, stride, pAddr_address);

@@ -90,7 +90,7 @@ public final class GL15 {
 	}
 	private static native boolean nglIsBuffer(int buffer, long function_pointer);
 
-	public static void glBufferData(int target, int size, int usage) {
+	public static void glBufferData(int target, long size, int usage) {
 		long function_pointer = GLContext.getCapabilities().GL15_glBufferData_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglBufferData(target, size, null, 0, usage, function_pointer);
@@ -125,71 +125,71 @@ public final class GL15 {
 		BufferChecks.checkDirect(data);
 		nglBufferData(target, (data.remaining() << 1), data, data.position() << 1, usage, function_pointer);
 	}
-	private static native void nglBufferData(int target, int size, Buffer data, int data_position, int usage, long function_pointer);
+	private static native void nglBufferData(int target, long size, Buffer data, int data_position, int usage, long function_pointer);
 
-	public static void glBufferSubData(int target, int offset, ByteBuffer data) {
+	public static void glBufferSubData(int target, long offset, ByteBuffer data) {
 		long function_pointer = GLContext.getCapabilities().GL15_glBufferSubData_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(data);
 		nglBufferSubData(target, offset, (data.remaining()), data, data.position(), function_pointer);
 	}
-	public static void glBufferSubData(int target, int offset, DoubleBuffer data) {
+	public static void glBufferSubData(int target, long offset, DoubleBuffer data) {
 		long function_pointer = GLContext.getCapabilities().GL15_glBufferSubData_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(data);
 		nglBufferSubData(target, offset, (data.remaining() << 3), data, data.position() << 3, function_pointer);
 	}
-	public static void glBufferSubData(int target, int offset, FloatBuffer data) {
+	public static void glBufferSubData(int target, long offset, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().GL15_glBufferSubData_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(data);
 		nglBufferSubData(target, offset, (data.remaining() << 2), data, data.position() << 2, function_pointer);
 	}
-	public static void glBufferSubData(int target, int offset, IntBuffer data) {
+	public static void glBufferSubData(int target, long offset, IntBuffer data) {
 		long function_pointer = GLContext.getCapabilities().GL15_glBufferSubData_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(data);
 		nglBufferSubData(target, offset, (data.remaining() << 2), data, data.position() << 2, function_pointer);
 	}
-	public static void glBufferSubData(int target, int offset, ShortBuffer data) {
+	public static void glBufferSubData(int target, long offset, ShortBuffer data) {
 		long function_pointer = GLContext.getCapabilities().GL15_glBufferSubData_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(data);
 		nglBufferSubData(target, offset, (data.remaining() << 1), data, data.position() << 1, function_pointer);
 	}
-	private static native void nglBufferSubData(int target, int offset, int size, Buffer data, int data_position, long function_pointer);
+	private static native void nglBufferSubData(int target, long offset, long size, Buffer data, int data_position, long function_pointer);
 
-	public static void glGetBufferSubData(int target, int offset, ByteBuffer data) {
+	public static void glGetBufferSubData(int target, long offset, ByteBuffer data) {
 		long function_pointer = GLContext.getCapabilities().GL15_glGetBufferSubData_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(data);
 		nglGetBufferSubData(target, offset, (data.remaining()), data, data.position(), function_pointer);
 	}
-	public static void glGetBufferSubData(int target, int offset, DoubleBuffer data) {
+	public static void glGetBufferSubData(int target, long offset, DoubleBuffer data) {
 		long function_pointer = GLContext.getCapabilities().GL15_glGetBufferSubData_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(data);
 		nglGetBufferSubData(target, offset, (data.remaining() << 3), data, data.position() << 3, function_pointer);
 	}
-	public static void glGetBufferSubData(int target, int offset, FloatBuffer data) {
+	public static void glGetBufferSubData(int target, long offset, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().GL15_glGetBufferSubData_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(data);
 		nglGetBufferSubData(target, offset, (data.remaining() << 2), data, data.position() << 2, function_pointer);
 	}
-	public static void glGetBufferSubData(int target, int offset, IntBuffer data) {
+	public static void glGetBufferSubData(int target, long offset, IntBuffer data) {
 		long function_pointer = GLContext.getCapabilities().GL15_glGetBufferSubData_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(data);
 		nglGetBufferSubData(target, offset, (data.remaining() << 2), data, data.position() << 2, function_pointer);
 	}
-	public static void glGetBufferSubData(int target, int offset, ShortBuffer data) {
+	public static void glGetBufferSubData(int target, long offset, ShortBuffer data) {
 		long function_pointer = GLContext.getCapabilities().GL15_glGetBufferSubData_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(data);
 		nglGetBufferSubData(target, offset, (data.remaining() << 1), data, data.position() << 1, function_pointer);
 	}
-	private static native void nglGetBufferSubData(int target, int offset, int size, Buffer data, int data_position, long function_pointer);
+	private static native void nglGetBufferSubData(int target, long offset, long size, Buffer data, int data_position, long function_pointer);
 
 	/**
 	 * glMapBuffer maps a gl vertex buffer buffer to a ByteBuffer. The oldBuffer argument can be null, in which case a new

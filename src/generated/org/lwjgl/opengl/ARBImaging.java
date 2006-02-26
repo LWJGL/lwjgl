@@ -109,13 +109,13 @@ public final class ARBImaging {
 		nglColorTable(target, internalFormat, width, format, type, data, data.position() << 2, function_pointer);
 	}
 	private static native void nglColorTable(int target, int internalFormat, int width, int format, int type, Buffer data, int data_position, long function_pointer);
-	public static void glColorTable(int target, int internalFormat, int width, int format, int type, int data_buffer_offset) {
+	public static void glColorTable(int target, int internalFormat, int width, int format, int type, long data_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glColorTable_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureUnpackPBOenabled();
 		nglColorTableBO(target, internalFormat, width, format, type, data_buffer_offset, function_pointer);
 	}
-	private static native void nglColorTableBO(int target, int internalFormat, int width, int format, int type, int data_buffer_offset, long function_pointer);
+	private static native void nglColorTableBO(int target, int internalFormat, int width, int format, int type, long data_buffer_offset, long function_pointer);
 
 	public static void glColorSubTable(int target, int start, int count, int format, int type, ByteBuffer data) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glColorSubTable_pointer;
@@ -139,13 +139,13 @@ public final class ARBImaging {
 		nglColorSubTable(target, start, count, format, type, data, data.position() << 2, function_pointer);
 	}
 	private static native void nglColorSubTable(int target, int start, int count, int format, int type, Buffer data, int data_position, long function_pointer);
-	public static void glColorSubTable(int target, int start, int count, int format, int type, int data_buffer_offset) {
+	public static void glColorSubTable(int target, int start, int count, int format, int type, long data_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glColorSubTable_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureUnpackPBOenabled();
 		nglColorSubTableBO(target, start, count, format, type, data_buffer_offset, function_pointer);
 	}
-	private static native void nglColorSubTableBO(int target, int start, int count, int format, int type, int data_buffer_offset, long function_pointer);
+	private static native void nglColorSubTableBO(int target, int start, int count, int format, int type, long data_buffer_offset, long function_pointer);
 
 	public static void glColorTableParameter(int target, int pname, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glColorTableParameteriv_pointer;
@@ -277,13 +277,13 @@ public final class ARBImaging {
 		nglGetHistogram(target, reset, format, type, values, values.position() << 1, function_pointer);
 	}
 	private static native void nglGetHistogram(int target, boolean reset, int format, int type, Buffer values, int values_position, long function_pointer);
-	public static void glGetHistogram(int target, boolean reset, int format, int type, int values_buffer_offset) {
+	public static void glGetHistogram(int target, boolean reset, int format, int type, long values_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetHistogram_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOenabled();
 		nglGetHistogramBO(target, reset, format, type, values_buffer_offset, function_pointer);
 	}
-	private static native void nglGetHistogramBO(int target, boolean reset, int format, int type, int values_buffer_offset, long function_pointer);
+	private static native void nglGetHistogramBO(int target, boolean reset, int format, int type, long values_buffer_offset, long function_pointer);
 
 	public static void glGetHistogramParameter(int target, int pname, FloatBuffer params) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetHistogramParameterfv_pointer;
@@ -351,13 +351,13 @@ public final class ARBImaging {
 		nglGetMinmax(target, reset, format, types, values, values.position() << 1, function_pointer);
 	}
 	private static native void nglGetMinmax(int target, boolean reset, int format, int types, Buffer values, int values_position, long function_pointer);
-	public static void glGetMinmax(int target, boolean reset, int format, int types, int values_buffer_offset) {
+	public static void glGetMinmax(int target, boolean reset, int format, int types, long values_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetMinmax_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOenabled();
 		nglGetMinmaxBO(target, reset, format, types, values_buffer_offset, function_pointer);
 	}
-	private static native void nglGetMinmaxBO(int target, boolean reset, int format, int types, int values_buffer_offset, long function_pointer);
+	private static native void nglGetMinmaxBO(int target, boolean reset, int format, int types, long values_buffer_offset, long function_pointer);
 
 	public static void glGetMinmaxParameter(int target, int pname, FloatBuffer params) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetMinmaxParameterfv_pointer;
@@ -411,13 +411,13 @@ public final class ARBImaging {
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position() << 1, function_pointer);
 	}
 	private static native void nglConvolutionFilter1D(int target, int internalformat, int width, int format, int type, Buffer image, int image_position, long function_pointer);
-	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, int image_buffer_offset) {
+	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, long image_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glConvolutionFilter1D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureUnpackPBOenabled();
 		nglConvolutionFilter1DBO(target, internalformat, width, format, type, image_buffer_offset, function_pointer);
 	}
-	private static native void nglConvolutionFilter1DBO(int target, int internalformat, int width, int format, int type, int image_buffer_offset, long function_pointer);
+	private static native void nglConvolutionFilter1DBO(int target, int internalformat, int width, int format, int type, long image_buffer_offset, long function_pointer);
 
 	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, ByteBuffer image) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glConvolutionFilter2D_pointer;
@@ -441,13 +441,13 @@ public final class ARBImaging {
 		nglConvolutionFilter2D(target, internalformat, width, height, format, type, image, image.position() << 1, function_pointer);
 	}
 	private static native void nglConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer image, int image_position, long function_pointer);
-	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, int image_buffer_offset) {
+	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, long image_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glConvolutionFilter2D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureUnpackPBOenabled();
 		nglConvolutionFilter2DBO(target, internalformat, width, height, format, type, image_buffer_offset, function_pointer);
 	}
-	private static native void nglConvolutionFilter2DBO(int target, int internalformat, int width, int height, int format, int type, int image_buffer_offset, long function_pointer);
+	private static native void nglConvolutionFilter2DBO(int target, int internalformat, int width, int height, int format, int type, long image_buffer_offset, long function_pointer);
 
 	public static void glConvolutionParameterf(int target, int pname, float params) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glConvolutionParameterf_pointer;
@@ -529,13 +529,13 @@ public final class ARBImaging {
 		nglGetConvolutionFilter(target, format, type, image, image.position() << 1, function_pointer);
 	}
 	private static native void nglGetConvolutionFilter(int target, int format, int type, Buffer image, int image_position, long function_pointer);
-	public static void glGetConvolutionFilter(int target, int format, int type, int image_buffer_offset) {
+	public static void glGetConvolutionFilter(int target, int format, int type, long image_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetConvolutionFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOenabled();
 		nglGetConvolutionFilterBO(target, format, type, image_buffer_offset, function_pointer);
 	}
-	private static native void nglGetConvolutionFilterBO(int target, int format, int type, int image_buffer_offset, long function_pointer);
+	private static native void nglGetConvolutionFilterBO(int target, int format, int type, long image_buffer_offset, long function_pointer);
 
 	public static void glGetConvolutionParameter(int target, int pname, FloatBuffer params) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetConvolutionParameterfv_pointer;
@@ -754,13 +754,13 @@ public final class ARBImaging {
 		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, row.position() << 1, column, column.position() << 1, function_pointer);
 	}
 	private static native void nglSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, int row_position, Buffer column, int column_position, long function_pointer);
-	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, int row_buffer_offset, int column_buffer_offset) {
+	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, long row_buffer_offset, long column_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glSeparableFilter2D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureUnpackPBOenabled();
 		nglSeparableFilter2DBO(target, internalformat, width, height, format, type, row_buffer_offset, column_buffer_offset, function_pointer);
 	}
-	private static native void nglSeparableFilter2DBO(int target, int internalformat, int width, int height, int format, int type, int row_buffer_offset, int column_buffer_offset, long function_pointer);
+	private static native void nglSeparableFilter2DBO(int target, int internalformat, int width, int height, int format, int type, long row_buffer_offset, long column_buffer_offset, long function_pointer);
 
 	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, ByteBuffer column, ByteBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
@@ -1483,11 +1483,11 @@ public final class ARBImaging {
 		nglGetSeparableFilter(target, format, type, row, row.position() << 1, column, column.position() << 1, span, span.position() << 1, function_pointer);
 	}
 	private static native void nglGetSeparableFilter(int target, int format, int type, Buffer row, int row_position, Buffer column, int column_position, Buffer span, int span_position, long function_pointer);
-	public static void glGetSeparableFilter(int target, int format, int type, int row_buffer_offset, int column_buffer_offset, int span_buffer_offset) {
+	public static void glGetSeparableFilter(int target, int format, int type, long row_buffer_offset, long column_buffer_offset, long span_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensurePackPBOenabled();
 		nglGetSeparableFilterBO(target, format, type, row_buffer_offset, column_buffer_offset, span_buffer_offset, function_pointer);
 	}
-	private static native void nglGetSeparableFilterBO(int target, int format, int type, int row_buffer_offset, int column_buffer_offset, int span_buffer_offset, long function_pointer);
+	private static native void nglGetSeparableFilterBO(int target, int format, int type, long row_buffer_offset, long column_buffer_offset, long span_buffer_offset, long function_pointer);
 }

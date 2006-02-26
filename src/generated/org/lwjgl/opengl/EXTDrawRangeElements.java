@@ -36,11 +36,11 @@ public final class EXTDrawRangeElements {
 		nglDrawRangeElementsEXT(mode, start, end, (pIndices.remaining()), GL11.GL_UNSIGNED_SHORT, pIndices, pIndices.position() << 1, function_pointer);
 	}
 	private static native void nglDrawRangeElementsEXT(int mode, int start, int end, int count, int type, Buffer pIndices, int pIndices_position, long function_pointer);
-	public static void glDrawRangeElementsEXT(int mode, int start, int end, int count, int type, int pIndices_buffer_offset) {
+	public static void glDrawRangeElementsEXT(int mode, int start, int end, int count, int type, long pIndices_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().EXT_draw_range_elements_glDrawRangeElementsEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureElementVBOenabled();
 		nglDrawRangeElementsEXTBO(mode, start, end, count, type, pIndices_buffer_offset, function_pointer);
 	}
-	private static native void nglDrawRangeElementsEXTBO(int mode, int start, int end, int count, int type, int pIndices_buffer_offset, long function_pointer);
+	private static native void nglDrawRangeElementsEXTBO(int mode, int start, int end, int count, int type, long pIndices_buffer_offset, long function_pointer);
 }

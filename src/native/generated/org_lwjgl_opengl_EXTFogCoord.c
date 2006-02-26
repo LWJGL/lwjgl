@@ -23,7 +23,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXT(J
 	glFogCoordPointerEXT(type, stride, data_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXTBO(JNIEnv *env, jclass clazz, jint type, jint stride, jint data_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXTBO(JNIEnv *env, jclass clazz, jint type, jint stride, jlong data_buffer_offset, jlong function_pointer) {
 	const GLvoid *data_address = ((const GLvoid *)offsetToPointer(data_buffer_offset));
 	glFogCoordPointerEXTPROC glFogCoordPointerEXT = (glFogCoordPointerEXTPROC)((intptr_t)function_pointer);
 	glFogCoordPointerEXT(type, stride, data_address);

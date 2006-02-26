@@ -72,11 +72,11 @@ public final class EXTSecondaryColor {
 		nglSecondaryColorPointerEXT(size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, pPointer, pPointer.position(), function_pointer);
 	}
 	private static native void nglSecondaryColorPointerEXT(int size, int type, int stride, Buffer pPointer, int pPointer_position, long function_pointer);
-	public static void glSecondaryColorPointerEXT(int size, int type, int stride, int pPointer_buffer_offset) {
+	public static void glSecondaryColorPointerEXT(int size, int type, int stride, long pPointer_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().EXT_secondary_color_glSecondaryColorPointerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureArrayVBOenabled();
 		nglSecondaryColorPointerEXTBO(size, type, stride, pPointer_buffer_offset, function_pointer);
 	}
-	private static native void nglSecondaryColorPointerEXTBO(int size, int type, int stride, int pPointer_buffer_offset, long function_pointer);
+	private static native void nglSecondaryColorPointerEXTBO(int size, int type, int stride, long pPointer_buffer_offset, long function_pointer);
 }

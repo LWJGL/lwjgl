@@ -38,19 +38,19 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ARBBufferObject_nglIsBufferARB(
 	return __result;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBBufferObject_nglBufferDataARB(JNIEnv *env, jclass clazz, jint target, jint size, jobject data, jint data_position, jint usage, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBBufferObject_nglBufferDataARB(JNIEnv *env, jclass clazz, jint target, jlong size, jobject data, jint data_position, jint usage, jlong function_pointer) {
 	const GLvoid *data_address = ((const GLvoid *)(((char *)safeGetBufferAddress(env, data)) + data_position));
 	glBufferDataARBPROC glBufferDataARB = (glBufferDataARBPROC)((intptr_t)function_pointer);
 	glBufferDataARB(target, size, data_address, usage);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBBufferObject_nglBufferSubDataARB(JNIEnv *env, jclass clazz, jint target, jint offset, jint size, jobject data, jint data_position, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBBufferObject_nglBufferSubDataARB(JNIEnv *env, jclass clazz, jint target, jlong offset, jlong size, jobject data, jint data_position, jlong function_pointer) {
 	const GLvoid *data_address = ((const GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, data)) + data_position));
 	glBufferSubDataARBPROC glBufferSubDataARB = (glBufferSubDataARBPROC)((intptr_t)function_pointer);
 	glBufferSubDataARB(target, offset, size, data_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBBufferObject_nglGetBufferSubDataARB(JNIEnv *env, jclass clazz, jint target, jint offset, jint size, jobject data, jint data_position, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBBufferObject_nglGetBufferSubDataARB(JNIEnv *env, jclass clazz, jint target, jlong offset, jlong size, jobject data, jint data_position, jlong function_pointer) {
 	GLvoid *data_address = ((GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, data)) + data_position));
 	glGetBufferSubDataARBPROC glGetBufferSubDataARB = (glGetBufferSubDataARBPROC)((intptr_t)function_pointer);
 	glGetBufferSubDataARB(target, offset, size, data_address);

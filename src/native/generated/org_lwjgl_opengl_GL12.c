@@ -14,7 +14,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElements(JNIEnv *e
 	glDrawRangeElements(mode, start, end, count, type, indices_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElementsBO(JNIEnv *env, jclass clazz, jint mode, jint start, jint end, jint count, jint type, jint indices_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElementsBO(JNIEnv *env, jclass clazz, jint mode, jint start, jint end, jint count, jint type, jlong indices_buffer_offset, jlong function_pointer) {
 	const GLvoid *indices_address = ((const GLvoid *)offsetToPointer(indices_buffer_offset));
 	glDrawRangeElementsPROC glDrawRangeElements = (glDrawRangeElementsPROC)((intptr_t)function_pointer);
 	glDrawRangeElements(mode, start, end, count, type, indices_address);
@@ -26,7 +26,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglTexImage3D(JNIEnv *env, jcl
 	glTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglTexImage3DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint internalFormat, jint width, jint height, jint depth, jint border, jint format, jint type, jint pixels_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglTexImage3DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint internalFormat, jint width, jint height, jint depth, jint border, jint format, jint type, jlong pixels_buffer_offset, jlong function_pointer) {
 	const GLvoid *pixels_address = ((const GLvoid *)offsetToPointer(pixels_buffer_offset));
 	glTexImage3DPROC glTexImage3D = (glTexImage3DPROC)((intptr_t)function_pointer);
 	glTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels_address);
@@ -38,7 +38,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglTexSubImage3D(JNIEnv *env, 
 	glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglTexSubImage3DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint width, jint height, jint depth, jint format, jint type, jint pixels_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglTexSubImage3DBO(JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint width, jint height, jint depth, jint format, jint type, jlong pixels_buffer_offset, jlong function_pointer) {
 	const GLvoid *pixels_address = ((const GLvoid *)offsetToPointer(pixels_buffer_offset));
 	glTexSubImage3DPROC glTexSubImage3D = (glTexSubImage3DPROC)((intptr_t)function_pointer);
 	glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels_address);

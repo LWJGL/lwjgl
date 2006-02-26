@@ -68,7 +68,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightPointerARB(
 	glWeightPointerARB(size, type, stride, pPointer_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightPointerARBBO(JNIEnv *env, jclass clazz, jint size, jint type, jint stride, jint pPointer_buffer_offset, jlong function_pointer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightPointerARBBO(JNIEnv *env, jclass clazz, jint size, jint type, jint stride, jlong pPointer_buffer_offset, jlong function_pointer) {
 	const GLvoid *pPointer_address = ((const GLvoid *)offsetToPointer(pPointer_buffer_offset));
 	glWeightPointerARBPROC glWeightPointerARB = (glWeightPointerARBPROC)((intptr_t)function_pointer);
 	glWeightPointerARB(size, type, stride, pPointer_address);

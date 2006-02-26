@@ -159,13 +159,13 @@ public final class ARBVertexBlend {
 		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, stride, pPointer, pPointer.position() << 1, function_pointer);
 	}
 	private static native void nglWeightPointerARB(int size, int type, int stride, Buffer pPointer, int pPointer_position, long function_pointer);
-	public static void glWeightPointerARB(int size, int type, int stride, int pPointer_buffer_offset) {
+	public static void glWeightPointerARB(int size, int type, int stride, long pPointer_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glWeightPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureArrayVBOenabled();
 		nglWeightPointerARBBO(size, type, stride, pPointer_buffer_offset, function_pointer);
 	}
-	private static native void nglWeightPointerARBBO(int size, int type, int stride, int pPointer_buffer_offset, long function_pointer);
+	private static native void nglWeightPointerARBBO(int size, int type, int stride, long pPointer_buffer_offset, long function_pointer);
 
 	public static void glVertexBlendARB(int count) {
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glVertexBlendARB_pointer;

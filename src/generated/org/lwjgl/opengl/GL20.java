@@ -645,13 +645,13 @@ public final class GL20 {
 		nglVertexAttribPointer(index, size, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, normalized, stride, buffer, buffer.position() << 1, function_pointer);
 	}
 	private static native void nglVertexAttribPointer(int index, int size, int type, boolean normalized, int stride, Buffer buffer, int buffer_position, long function_pointer);
-	public static void glVertexAttribPointer(int index, int size, int type, boolean normalized, int stride, int buffer_buffer_offset) {
+	public static void glVertexAttribPointer(int index, int size, int type, boolean normalized, int stride, long buffer_buffer_offset) {
 		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttribPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		GLChecks.ensureArrayVBOenabled();
 		nglVertexAttribPointerBO(index, size, type, normalized, stride, buffer_buffer_offset, function_pointer);
 	}
-	private static native void nglVertexAttribPointerBO(int index, int size, int type, boolean normalized, int stride, int buffer_buffer_offset, long function_pointer);
+	private static native void nglVertexAttribPointerBO(int index, int size, int type, boolean normalized, int stride, long buffer_buffer_offset, long function_pointer);
 
 	public static void glEnableVertexAttribArray(int index) {
 		long function_pointer = GLContext.getCapabilities().GL20_glEnableVertexAttribArray_pointer;
