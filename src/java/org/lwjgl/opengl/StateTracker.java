@@ -31,7 +31,6 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.IntBuffer;
 
 /** Track Vertex Buffer Objects by context. */
 final class StateTracker {

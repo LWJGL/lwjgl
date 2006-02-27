@@ -44,7 +44,6 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 
 final class LinuxDisplay implements DisplayImplementation {
