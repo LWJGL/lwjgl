@@ -63,7 +63,7 @@ class MacOSXSysImplementation extends J2SESysImplementation {
 		 *    using webstart, one can supply two nativelib references, one for Mac OS X 10.4
 		 *    (the default library), and one for earlier Mac OS X (the legacy library). This is the
 		 *    preferred way to deploy the libraries. The legacy naming is for the users that don't want to
-		 *    mess around with libraries and classloaders. They can simply supply make sure that lwjgl.jar
+		 *    mess around with libraries and classloaders. They can simply make sure that lwjgl.jar
 		 *    is in the classpath and that both the default library and the legacy library is in the native
 		 *    library path (java.library.path).
 		 */
