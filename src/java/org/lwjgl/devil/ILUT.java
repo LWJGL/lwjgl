@@ -37,7 +37,6 @@ import java.nio.IntBuffer;
 import org.lwjgl.LWJGLException;
 
 /**
- * $Id$
  * <p>
  * The DevIL ILUT API.
  * </p>
@@ -45,6 +44,7 @@ import org.lwjgl.LWJGLException;
  * @author captainjester <captainjester@users.sourceforge.net>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class ILUT {
 

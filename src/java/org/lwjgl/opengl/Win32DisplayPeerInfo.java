@@ -36,10 +36,10 @@ import java.nio.ByteBuffer;
 import org.lwjgl.LWJGLException;
 
 /**
- * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 final class Win32DisplayPeerInfo extends Win32PeerInfo {
 	public Win32DisplayPeerInfo(PixelFormat pixel_format) throws LWJGLException {

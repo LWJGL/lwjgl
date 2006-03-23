@@ -36,12 +36,12 @@ import org.lwjgl.util.generator.*;
 import java.nio.*;
 
 /**
- * $Id$
  * <p/>
  * The core OpenGL1.3 API.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public interface GL13 {
 	int GL_TEXTURE0 = 0x84C0;

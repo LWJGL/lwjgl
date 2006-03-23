@@ -39,12 +39,12 @@ import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.DisplayMode;
 
 /**
- * $Id$
  *
  * This is a basic test, which contains the most used stuff
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public abstract class BasicTest {
 

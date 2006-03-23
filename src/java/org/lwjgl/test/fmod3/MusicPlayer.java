@@ -41,10 +41,10 @@ import org.lwjgl.fmod3.FMusicModule;
 import org.lwjgl.fmod3.FSound;
 
 /**
- * $Id$
  * <br>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class MusicPlayer {
 	

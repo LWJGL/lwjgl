@@ -32,13 +32,13 @@
 package org.lwjgl.util.generator;
 
 /**
- * $Id$
  *
  * Implies that a parameter is indirect, and forces the native
  * stub to use the indirection operator '&' on it.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 import java.lang.annotation.Target;

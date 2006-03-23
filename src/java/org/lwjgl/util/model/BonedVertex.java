@@ -34,12 +34,12 @@ package org.lwjgl.util.model;
 import org.lwjgl.util.vector.ReadableVector3f;
 
 /**
- * $Id$
  * 
  * A BonedVerex is a Vertex influenced by bone Weights
  * 
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public class BonedVertex extends Vertex {
 	

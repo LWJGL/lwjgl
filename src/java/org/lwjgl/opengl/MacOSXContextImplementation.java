@@ -36,10 +36,10 @@ import java.nio.ByteBuffer;
 import org.lwjgl.LWJGLException;
 
 /**
- * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 final class MacOSXContextImplementation implements ContextImplementation {
 	public ByteBuffer create(PeerInfo peer_info, ByteBuffer shared_context_handle) throws LWJGLException {

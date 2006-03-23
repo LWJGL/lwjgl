@@ -32,12 +32,12 @@
 package org.lwjgl.devil;
 
 /**
- * $Id$
  *
  * ILinfo information holding class.
  * 
  * @author captainjester <captainjester@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public class ILinfo {
     public int id;                 // the image's id

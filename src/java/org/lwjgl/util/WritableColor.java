@@ -34,11 +34,10 @@ package org.lwjgl.util;
 import java.nio.ByteBuffer;
 
 /**
- * $Id$
  * Write interface for Colors
  * @author $Author$
  * @version $Revision$
-
+ * $Id$
  */
 public interface WritableColor {
 	/**

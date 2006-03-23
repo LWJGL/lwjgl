@@ -35,10 +35,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
- * $Id$
  * A 3D sprite!
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public class Sprite3D extends ModelRenderer {
 	

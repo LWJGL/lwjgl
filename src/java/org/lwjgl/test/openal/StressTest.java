@@ -38,12 +38,12 @@ import org.lwjgl.openal.AL10;
 import org.lwjgl.util.WaveData;
 
 /**
- * $Id$
  *
  * Simple test for stresstesting OpenAL playing random samples ad nausea
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class StressTest extends BasicTest {
 

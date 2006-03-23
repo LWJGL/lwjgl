@@ -36,12 +36,12 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 
 /**
- * $Id$
  * <br>
  * Wrapper class, to make ALC contexts behave like the orginal api.
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 final class ALCcontext {
 

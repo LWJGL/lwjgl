@@ -44,10 +44,10 @@ import org.lwjgl.fmod3.FSound;
 import org.lwjgl.fmod3.callbacks.FMusicCallback;
 
 /**
- * $Id$ <br>
  * 
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$ <br>
  */
 public class SyncTest {
 	

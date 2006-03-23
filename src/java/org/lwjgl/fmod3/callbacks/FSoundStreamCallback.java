@@ -37,10 +37,10 @@ import org.lwjgl.fmod3.FSoundStream;
 
 /**
  * This interface describes a callback interface to Fmod music
- * $Id$
  * <br>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public interface FSoundStreamCallback {
   public void FSOUND_STREAMCALLBACK(FSoundStream stream, ByteBuffer buff, int len);

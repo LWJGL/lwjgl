@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 /**
- * $Id$
  *
  * This class encapsulates the properties for a given display mode.
  * This class is not instantiable, and is aquired from the <code>Display.
@@ -40,6 +39,7 @@ package org.lwjgl.opengl;
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 public final class DisplayMode {

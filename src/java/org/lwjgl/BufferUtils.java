@@ -42,12 +42,11 @@ import java.nio.LongBuffer;
 import java.nio.ShortBuffer;
 
 /**
- * $Id$
- *
  * Some often-used Buffer code for creating native buffers of the appropriate size.
-
+ *
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 
 public final class BufferUtils {

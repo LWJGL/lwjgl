@@ -47,12 +47,12 @@ import javax.sound.sampled.AudioSystem;
 import org.lwjgl.openal.AL10;
 
 /**
- * $Id$
  *
  * Utitlity class for loading wavefiles.
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class WaveData {
 	/** actual wave data */

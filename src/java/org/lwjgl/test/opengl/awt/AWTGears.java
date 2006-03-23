@@ -44,12 +44,12 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 
 /**
- * $Id$
  * <p>
  * AWT version of the gears demo
  * <p>
  * @version $Revision$
  * @author Brian Matzon <brian@matzon.dk>
+ * $Id$
  */
 public class AWTGears extends Frame {
 	

@@ -39,12 +39,12 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 
 /**
- * $Id$
  * <br>
  * Mouse test
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class MouseCreationTest {
 		/** position of quad to draw */

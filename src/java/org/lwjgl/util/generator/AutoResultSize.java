@@ -32,13 +32,13 @@
 package org.lwjgl.util.generator;
 
 /**
- * $Id$
  *
  * AutoResultSize specifies that a parameter should determine
  * the size of a Buffer result.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 import java.lang.annotation.Target;

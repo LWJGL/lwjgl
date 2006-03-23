@@ -36,12 +36,12 @@ import org.lwjgl.util.generator.*;
 import java.nio.*;
 
 /**
- * $Id$
  *
  * The core OpenGL1.1 API.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 public interface GL11 {

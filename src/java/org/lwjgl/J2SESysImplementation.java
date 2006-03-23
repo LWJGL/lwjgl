@@ -35,11 +35,11 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
- * $Id$
  * A SysImplementation which delegates as much as it can to J2SE.
  * <p>
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 abstract class J2SESysImplementation extends DefaultSysImplementation {
 

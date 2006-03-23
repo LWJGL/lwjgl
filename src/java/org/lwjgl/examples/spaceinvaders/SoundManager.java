@@ -41,7 +41,6 @@ import org.lwjgl.util.WaveData;
 
 
 /**
- * $Id$
  * <p>
  * Simple sound manager for OpenAL using n sources accessed in
  * a round robin schedule. Source n is reserved for a single buffer and checking for
@@ -49,6 +48,7 @@ import org.lwjgl.util.WaveData;
  * </p>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class SoundManager {
 

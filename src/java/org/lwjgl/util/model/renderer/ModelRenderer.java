@@ -42,7 +42,6 @@ import org.lwjgl.util.model.Frame;
 import org.lwjgl.util.model.Model;
 
 /**
- * $Id$
  * 
  * Pluggable model renderer
  * <p>
@@ -55,6 +54,7 @@ import org.lwjgl.util.model.Model;
  * 
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public class ModelRenderer implements Renderable {
 	

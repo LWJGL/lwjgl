@@ -36,10 +36,10 @@ import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 
 /**
- * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 class LinuxSysImplementation extends J2SESysImplementation {
 	static {

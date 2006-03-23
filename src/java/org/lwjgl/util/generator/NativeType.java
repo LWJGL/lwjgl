@@ -32,13 +32,13 @@
 package org.lwjgl.util.generator;
 
 /**
- * $Id$
  *
  * This annotation indicates that another annotation is
  * a native type.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 import java.lang.annotation.Target;

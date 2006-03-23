@@ -38,12 +38,12 @@ import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.OpenALException;
 
 /**
- * $Id$
  *
  * Simple test for testing the number of available sources
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class SourceLimitTest extends BasicTest {
 

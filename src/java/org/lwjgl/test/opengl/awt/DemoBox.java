@@ -57,11 +57,11 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 
 /**
- * $Id$
  * <p>
  * </p>
  * @version $Revision$
  * @author Brian Matzon <brian@matzon.dk>
+ * $Id$
  */
 public class DemoBox extends Frame {
 

@@ -46,12 +46,12 @@ import java.io.File;
 import java.nio.*;
 
 /**
- * $Id$
  *
  * Generator visitor for the generator tool
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public class GeneratorVisitor extends SimpleDeclarationVisitor {
 	private final AnnotationProcessorEnvironment env;

@@ -42,13 +42,13 @@ import org.lwjgl.openal.AL10;
 import org.lwjgl.util.WaveData;
 
 /**
- * $Id$
  *
  * This is a basic play test
  * Yes, over zealous use of getError ;)
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class PlayTestMemory extends BasicTest {
     

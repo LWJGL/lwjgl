@@ -36,12 +36,12 @@ import java.io.Serializable;
 import org.lwjgl.util.vector.ReadableVector3f;
 
 /**
- * $Id$
  * 
  * A single vertex in a mesh.
  * 
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public class Vertex implements Serializable {
 	

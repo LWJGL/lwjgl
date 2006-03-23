@@ -41,13 +41,13 @@ import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 
 /**
- * $Id$
  *
  * A class representing a native cursor. Instances of this
  * class can be used with Mouse.setCursor(), if available.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 public class Cursor {

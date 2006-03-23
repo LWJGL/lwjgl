@@ -37,12 +37,12 @@ import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 
 /**
- * $Id$
  * <br>
  * Test class for Sys
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class SysTest {
   

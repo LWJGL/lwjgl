@@ -34,10 +34,10 @@ package org.lwjgl.fmod3;
 import java.nio.ByteBuffer;
 
 /**
- * $Id$
  * <br>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class FSoundSampleLock {
 

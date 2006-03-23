@@ -33,10 +33,10 @@ package org.lwjgl;
 
 
 /**
- * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 abstract class DefaultSysImplementation implements SysImplementation {
 	/** The native library name */

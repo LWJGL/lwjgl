@@ -37,10 +37,10 @@ import java.awt.GraphicsDevice;
 import org.lwjgl.LWJGLException;
 
 /**
- * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 interface AWTCanvasImplementation {
 	/**

@@ -44,12 +44,12 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.glu.GLU;
 
 /**
- * $Id$
  *
  * Tests switching between windowed and fullscreen - including hardware cursor test
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class HWCursorTest {
 	

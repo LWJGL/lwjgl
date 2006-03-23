@@ -36,10 +36,10 @@ import java.nio.ByteBuffer;
 import org.lwjgl.LWJGLException;
 
 /**
- * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 final class LinuxDisplayPeerInfo extends LinuxPeerInfo {
 	public LinuxDisplayPeerInfo(PixelFormat pixel_format) throws LWJGLException {

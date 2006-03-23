@@ -35,12 +35,12 @@ import java.io.Serializable;
 import java.nio.FloatBuffer;
 
 /**
- * $Id$
  *
  * Base class for vectors.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public abstract class Vector implements Serializable, ReadableVector {
 

@@ -44,7 +44,6 @@ import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 
 /**
- * $Id$
  * <br>
  * A raw Keyboard interface. This can be used to poll the current state of the
  * keys, or read all the keyboard presses / releases since the last read.
@@ -53,6 +52,7 @@ import org.lwjgl.opengl.Display;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class Keyboard {
 	/**

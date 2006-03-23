@@ -35,13 +35,13 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 
 /**
- * $Id$
  * <p>
  * Native interface for DevIL
  * </p>
  * 
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 class ILNative {
 

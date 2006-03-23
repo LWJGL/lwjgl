@@ -38,12 +38,12 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 /**
- * $Id$ This is an interface describing an Object that can render using
  * OpenGL1.1, 1.2, 1.3, 1.4, 1.5, and all the EXT and ARB extensions in the LWJGL library. Its main purpose is to stop
  * object-oriented zealots annoying us any more.
  *
  * @author $Author$
  * @version $Revision$
+ * $Id$ This is an interface describing an Object that can render using
  */
 public interface IGL {
 

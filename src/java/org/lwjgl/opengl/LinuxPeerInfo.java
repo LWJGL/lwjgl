@@ -34,10 +34,10 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 
 /**
- * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 abstract class LinuxPeerInfo extends PeerInfo {
 	public LinuxPeerInfo() {

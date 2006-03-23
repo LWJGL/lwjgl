@@ -36,10 +36,10 @@ import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 
 /**
- * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 class MacOSXSysImplementation extends J2SESysImplementation {
 	public String[] getNativeLibraryNames() {

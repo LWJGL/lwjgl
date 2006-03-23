@@ -32,12 +32,12 @@
 package org.lwjgl.devil;
 
 /**
- * $Id$
  *
  * ILpointi information holding class.
  * 
  * @author captainjester <captainjester@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public class ILpointi {
     public int x;

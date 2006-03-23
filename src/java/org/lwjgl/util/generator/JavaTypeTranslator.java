@@ -36,13 +36,13 @@ import com.sun.mirror.type.*;
 import com.sun.mirror.util.*;
 
 /**
- * $Id$
  *
  * A TypeVisitor that translates (annotated) TypeMirrors to
  * java types (represented by a Class)
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public class JavaTypeTranslator implements TypeVisitor {
 	private Class type;

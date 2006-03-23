@@ -39,7 +39,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 
 /**
- * $Id$
  * 
  * <p>
  * This is the context class for OpenAL. This class implements functions
@@ -66,6 +65,7 @@ import org.lwjgl.Sys;
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public final class ALC {
 	/** Bad value */

@@ -34,10 +34,10 @@ import java.io.Serializable;
 import java.nio.ByteBuffer;
 
 /**
- * $Id$
  * A mutable Color class
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public final class Color implements ReadableColor, Serializable, WritableColor {
 

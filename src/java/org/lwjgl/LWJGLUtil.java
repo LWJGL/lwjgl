@@ -43,13 +43,13 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
- * $Id$
  * <p>
  * Internal library methods
  * </p>
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class LWJGLUtil {
 	public static final int PLATFORM_LINUX 			= 1;

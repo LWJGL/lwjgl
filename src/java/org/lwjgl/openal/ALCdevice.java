@@ -32,12 +32,12 @@
 package org.lwjgl.openal;
 
 /**
- * $Id$
  * <br>
  * Wrapper class, to make ALC devices behave like the orginal api.
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 final class ALCdevice {
     

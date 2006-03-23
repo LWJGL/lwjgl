@@ -34,10 +34,10 @@ package org.lwjgl.util;
 import java.io.Serializable;
 
 /**
- * $Id$
  * A 2D integer Dimension class, which looks remarkably like an AWT one.
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public final class Dimension implements Serializable, ReadableDimension, WritableDimension {
 	

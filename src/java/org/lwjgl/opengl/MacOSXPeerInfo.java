@@ -36,10 +36,10 @@ import java.nio.ByteBuffer;
 import org.lwjgl.LWJGLException;
 
 /**
- * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 abstract class MacOSXPeerInfo extends PeerInfo {
 	public MacOSXPeerInfo(PixelFormat pixel_format, boolean use_display_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException {

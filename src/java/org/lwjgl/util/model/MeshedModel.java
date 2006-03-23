@@ -38,7 +38,6 @@ import org.lwjgl.util.vector.Vector2f;
 
 
 /**
- * $Id$
  * 
  * A simple animated 3d mesh, consisting of multiple vertex positions.
  * with a single material. The model's internal format is optimised for RAM storage;
@@ -47,6 +46,7 @@ import org.lwjgl.util.vector.Vector2f;
  * 
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public class MeshedModel extends Model {
 	

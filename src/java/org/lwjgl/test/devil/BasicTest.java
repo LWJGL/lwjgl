@@ -42,11 +42,11 @@ import org.lwjgl.devil.ILUT;
 import org.lwjgl.devil.ILinfo;
 
 /**
- * $Id$
  * <p>The core DevIL and ILU API.</p>
  * 
  * @author Mark Bernard <captainjester@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public class BasicTest {
 

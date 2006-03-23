@@ -36,12 +36,12 @@ import org.lwjgl.util.generator.*;
 import java.nio.*;
 
 /**
- * $Id$
  * <p/>
  * The core OpenGL1.2.1 API, with the imaging subset.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 public interface GL12 {

@@ -33,12 +33,12 @@
 package org.lwjgl.util.generator;
 
 /**
- * $Id$
  *
  * This class generates the initNatives native function.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 import com.sun.mirror.declaration.*;

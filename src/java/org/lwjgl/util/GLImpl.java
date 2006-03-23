@@ -38,13 +38,13 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 /**
- * $Id$
  * <p/>
  * An extensible GL class that contains all the GL11 through GL15 methods, and all the ARB and EXT extension methods - but this
  * time as instance methods, like JOGL, Magician, and GL4Java.
  *
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public class GLImpl implements IGL {
 

@@ -38,12 +38,12 @@ import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 
 /**
- * $Id$
  * <br>
  * This is the OpenAL class. It extends the latest core.
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public final class AL {
 	/** ALCdevice instance. */

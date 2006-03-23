@@ -35,10 +35,10 @@ import org.lwjgl.fmod3.FMusicModule;
 
 /**
  * This interface describes a callback interface to Fmod music
- * $Id$
  * <br>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public interface FMusicCallback {
   public void FMUSIC_CALLBACK(FMusicModule module, int param);

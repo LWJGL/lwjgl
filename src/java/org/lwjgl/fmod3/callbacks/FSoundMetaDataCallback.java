@@ -35,10 +35,10 @@ import java.nio.ByteBuffer;
 
 /**
  * This interface describes a callback interface to Fmod music
- * $Id$
  * <br>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public interface FSoundMetaDataCallback {
   public void FSOUND_METADATACALLBACK(ByteBuffer name, ByteBuffer value);

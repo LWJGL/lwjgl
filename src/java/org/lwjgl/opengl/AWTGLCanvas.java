@@ -47,12 +47,12 @@ import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 
 /**
- * $Id$
  * <p>
  * An AWT rendering context.
  * <p>
  * @version $Revision$
  * @author $Author$
+ * $Id$
  */
 public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, HierarchyListener {
 	private final static AWTCanvasImplementation implementation;

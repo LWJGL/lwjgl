@@ -33,13 +33,13 @@
 package org.lwjgl.util.generator;
 
 /**
- * $Id$
  *
  * A TypeVisitor that translates types (and optional native type
  * annotations) to the native type string.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 import com.sun.mirror.declaration.*;

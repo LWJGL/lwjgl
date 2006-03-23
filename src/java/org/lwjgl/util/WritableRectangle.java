@@ -32,10 +32,10 @@
 package org.lwjgl.util;
 
 /**
- * $Id$
  * Write interface for Rectangles
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public interface WritableRectangle extends WritablePoint, WritableDimension {
 	

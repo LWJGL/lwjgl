@@ -54,13 +54,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * $Id$
  * 
  * Loads a Model from an XML document. Construct with an XML Document as the argument,
  * and then retrieve the Model by calling load().
  * 
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public class XMLLoader {
 	

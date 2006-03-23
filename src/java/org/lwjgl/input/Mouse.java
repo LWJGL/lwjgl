@@ -43,7 +43,6 @@ import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 
 /**
- * $Id$
  * <br>
  * A raw Mouse interface. This can be used to poll the current state of the
  * mouse buttons, and determine the mouse movement delta since the last poll.
@@ -57,6 +56,7 @@ import org.lwjgl.opengl.Display;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class Mouse {
 	/** Has the mouse been created? */

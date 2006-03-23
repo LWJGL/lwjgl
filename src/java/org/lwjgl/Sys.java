@@ -41,12 +41,12 @@ import java.security.PrivilegedExceptionAction;
 import org.lwjgl.input.Mouse;
 
 /**
- * $Id$
  * <p>
  * System class (named Sys so as not to conflict with java.lang.System)
  * </p>
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public final class Sys {
 

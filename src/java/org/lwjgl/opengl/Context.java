@@ -38,7 +38,6 @@ import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 
 /**
- * $Id$
  * <p/>
  * Context encapsulates an OpenGL context.
  * <p/>
@@ -47,6 +46,7 @@ import org.lwjgl.Sys;
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 final class Context {
 	/**

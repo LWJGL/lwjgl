@@ -32,7 +32,6 @@
 package org.lwjgl.util.generator;
 
 /**
- * $Id$
  *
  * This annotation implies that the corresponding native 
  * function symbol is named after the platform specific
@@ -40,6 +39,7 @@ package org.lwjgl.util.generator;
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 import java.lang.annotation.Target;

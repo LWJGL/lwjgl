@@ -41,12 +41,12 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.glu.GLU;
 
 /**
- * $Id$
  * <p>
  * Tests AWTGLCanvas functionality
  * <p>
  * @version $Revision$
  * @author $Author$
+ * $Id$
  */
 public class AWTTest extends Frame {
 

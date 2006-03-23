@@ -39,12 +39,12 @@ import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.util.vector.Vector2f;
 
 /**
- * $Id$
  * <br>
  * Keyboard test
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class KeyboardTest {
 

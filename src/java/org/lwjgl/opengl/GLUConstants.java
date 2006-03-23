@@ -32,12 +32,12 @@
 package org.lwjgl.opengl;
 
 /**
- * $Id$
  * <p/>
  * GLU constants.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public interface GLUConstants {
 

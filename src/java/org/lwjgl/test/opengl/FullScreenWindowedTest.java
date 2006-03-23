@@ -40,12 +40,12 @@ import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.util.vector.Vector2f;
 
 /**
- * $Id$
  * 
  * Tests switching between windowed and fullscreen
  * 
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class FullScreenWindowedTest {
 	/** Intended deiplay mode */

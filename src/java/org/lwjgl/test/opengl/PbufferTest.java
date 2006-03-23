@@ -46,12 +46,12 @@ import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.util.vector.Vector2f;
 
 /**
- * $Id$
  *
  * Tests Pbuffers
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public class PbufferTest {
 

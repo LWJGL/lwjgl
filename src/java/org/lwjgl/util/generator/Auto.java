@@ -32,12 +32,12 @@
 package org.lwjgl.util.generator;
 
 /**
- * $Id$
  *
  * AutoType and AutoSize is annotated with @Auto.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 import java.lang.annotation.Target;

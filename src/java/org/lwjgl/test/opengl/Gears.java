@@ -46,12 +46,12 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 
 /**
- * $Id$
  * <p>
  * This is the OpenGL "standard" Gears demo, originally by Brian Paul
  * </p>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class Gears {
 

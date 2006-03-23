@@ -32,10 +32,10 @@
 package org.lwjgl.util;
 
 /**
- * $Id$
  * Write interface for Points
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public interface WritablePoint {
 	public void setLocation(int x, int y);

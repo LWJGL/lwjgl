@@ -32,13 +32,13 @@
 package org.lwjgl.util.generator;
 
 /**
- * $Id$
  *
  * This annotation implies that a method should not include
  * error checking even if it is enabled.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 import java.lang.annotation.Target;

@@ -39,13 +39,13 @@ import java.nio.DoubleBuffer;
 import org.lwjgl.util.generator.*;
 
 /**
- * $Id$
  * <br>
  * This is the core OpenAL class. This class implements
  * AL.h version 1.0
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public interface AL10 {
 	/** Bad value */

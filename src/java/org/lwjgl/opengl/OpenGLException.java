@@ -34,12 +34,12 @@ package org.lwjgl.opengl;
 import org.lwjgl.opengl.glu.GLU;
 
 /**
- * $Id$
  * <p/>
  * Thrown by the debug build library of the LWJGL if any OpenGL operation causes an error.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public class OpenGLException extends RuntimeException {
 

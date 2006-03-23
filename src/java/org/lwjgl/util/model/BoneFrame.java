@@ -34,10 +34,10 @@ package org.lwjgl.util.model;
 import org.lwjgl.util.vector.Matrix4f;
 
 /**
- * $Id$
  * A BoneFrame describes a set of new positions for Bones in an animation.
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public class BoneFrame extends Frame {
 	

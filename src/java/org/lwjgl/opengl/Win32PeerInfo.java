@@ -37,10 +37,10 @@ import java.nio.IntBuffer;
 import org.lwjgl.LWJGLException;
 
 /**
- * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 abstract class Win32PeerInfo extends PeerInfo {
 	public Win32PeerInfo() {

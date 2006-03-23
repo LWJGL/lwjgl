@@ -35,10 +35,10 @@ import java.nio.ByteBuffer;
 
 /**
  * This class is a representation of a SyncPoint in FMod.
- * $Id$
  * <br>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class FSoundSyncPoint {
   /** Opaque handle to syncpoint */

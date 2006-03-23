@@ -35,12 +35,12 @@ import java.io.Serializable;
 import java.nio.FloatBuffer;
 
 /**
- * $Id$
  *
  * Holds a 3x3 matrix.
  * 
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 public class Matrix3f extends Matrix implements Serializable {

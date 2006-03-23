@@ -33,12 +33,12 @@
 package org.lwjgl.util.generator;
 
 /**
- * $Id$
  *
  * OpenGL sepcific generator behaviour
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 import com.sun.mirror.declaration.*;

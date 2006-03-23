@@ -39,13 +39,13 @@ import org.lwjgl.util.vector.Vector2f;
 
 
 /**
- * $Id$
  * 
  * Base class for the two kinds of model supported. A Model has a single "material"
  * and a single triangular mesh with a single skin, and any number of animations.
  * 
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public abstract class Model implements Serializable {
 	

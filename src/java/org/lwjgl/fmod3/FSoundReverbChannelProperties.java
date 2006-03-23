@@ -33,10 +33,10 @@ package org.lwjgl.fmod3;
 
 /**
  * This class is a representation of a Reverb channel property object in FMod.
- * $Id$
  * <br>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class FSoundReverbChannelProperties {
   /** Handle to stream */

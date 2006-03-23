@@ -40,13 +40,13 @@ import org.lwjgl.openal.AL10;
 import org.lwjgl.util.WaveData;
 
 /**
- * $Id$
  * <br>
  * Performs a creation test, by creating and destroying OpenAL twice.
  * We cannot inherit from BasicTest since it follows another structure.
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class OpenALCreationTest {
 

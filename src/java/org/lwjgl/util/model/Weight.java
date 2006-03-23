@@ -34,10 +34,10 @@ package org.lwjgl.util.model;
 import java.io.Serializable;
 
 /**
- * $Id$
  * Describes how a bone influences a vertex.
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public class Weight implements Serializable {
 	

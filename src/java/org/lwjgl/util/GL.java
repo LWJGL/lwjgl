@@ -72,12 +72,12 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 /**
- * $Id$
  * <p/>
  * An extensible GL class that contains all the GL11 through GL15 methods, and all the ARB and EXT extension methods.
  *
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public class GL {
 

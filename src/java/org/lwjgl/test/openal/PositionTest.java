@@ -46,13 +46,13 @@ import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.util.WaveData;
 
 /**
- * $Id$
  * <br>
  * This test demonstrates OpenAL positioning Based on the example by Chad Armstrong 
  * (http://www.edenwaith.com/products/pige/tutorials/openal.php)
  * 
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class PositionTest extends BasicTest {
 

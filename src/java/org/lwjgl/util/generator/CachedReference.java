@@ -32,13 +32,13 @@
 package org.lwjgl.util.generator;
 
 /**
- * $Id$
  *
  * This annotation indicates that a buffer parameter is cached by
  * OpenGL.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 import java.lang.annotation.Target;

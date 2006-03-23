@@ -39,7 +39,6 @@ import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 
 /**
- * $Id$
  * <p/>
  * Pbuffer encapsulates an OpenGL pbuffer.
  * <p/>
@@ -48,6 +47,7 @@ import org.lwjgl.Sys;
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public final class Pbuffer implements Drawable {
 	/**

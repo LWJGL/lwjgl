@@ -36,12 +36,12 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
 /**
- * $Id$
  * <br>
  * Test class for Display & DisplayMode
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class DisplayTest {
   

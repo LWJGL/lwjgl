@@ -48,10 +48,10 @@ import org.lwjgl.fmod3.callbacks.FSoundStreamCallback;
 import org.lwjgl.fmod3.callbacks.FSoundTellCallback;
 
 /**
- * $Id$
  * <br>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class FSound {
 

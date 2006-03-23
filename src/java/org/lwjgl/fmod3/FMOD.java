@@ -40,10 +40,10 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 
 /**
- * $Id$
  * <br>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class FMOD {
 

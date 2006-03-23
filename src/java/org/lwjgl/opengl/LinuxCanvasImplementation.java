@@ -41,10 +41,10 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 
 /**
- * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 final class LinuxCanvasImplementation implements AWTCanvasImplementation {
 	static int getScreenFromDevice(final GraphicsDevice device) throws LWJGLException {

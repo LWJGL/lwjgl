@@ -36,12 +36,12 @@ import org.lwjgl.util.generator.*;
 import java.nio.*;
 
 /**
- * $Id$
  * <p/>
  * The core OpenGL1.4 API.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public interface GL14 {
 	int GL_GENERATE_MIPMAP = 0x8191;

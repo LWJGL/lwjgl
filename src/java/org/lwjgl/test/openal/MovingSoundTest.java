@@ -41,13 +41,13 @@ import org.lwjgl.util.WaveData;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
- * $Id$
  *
  * This test simulates a listener positioned in the center, and 
  * a source moving around the listener using the keyboard
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class MovingSoundTest extends BasicTest {
   

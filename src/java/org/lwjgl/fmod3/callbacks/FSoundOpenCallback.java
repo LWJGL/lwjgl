@@ -33,10 +33,10 @@ package org.lwjgl.fmod3.callbacks;
 
 /**
  * This interface describes a callback interface to Fmod music
- * $Id$
  * <br>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public interface FSoundOpenCallback {
   public int FSOUND_OPENCALLBACK(String name);

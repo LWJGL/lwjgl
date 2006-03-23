@@ -33,12 +33,12 @@
 package org.lwjgl.util.generator;
 
 /**
- * $Id$
  *
  * This class generates the functions in the native source files.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 import com.sun.mirror.apt.*;

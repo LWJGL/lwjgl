@@ -32,7 +32,6 @@
 package org.lwjgl;
 
 /**
- * $Id$
  * <p>
  * This exception is supplied to make exception handling more generic for LWJGL
  * specific exceptions
@@ -40,6 +39,7 @@ package org.lwjgl;
  * 
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class LWJGLException extends Exception {
 

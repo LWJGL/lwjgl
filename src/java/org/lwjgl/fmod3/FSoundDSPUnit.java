@@ -35,10 +35,10 @@ import java.nio.ByteBuffer;
 
 /**
  * This class is a representation of a DSPUnit in FMod.
- * $Id$
  * <br>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class FSoundDSPUnit {
   /** Opaque handle to dsp unit */

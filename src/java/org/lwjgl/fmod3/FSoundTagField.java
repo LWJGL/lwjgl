@@ -35,10 +35,10 @@ import java.nio.ByteBuffer;
 
 /**
  * This class defines attributes in a tag field
- * $Id$
  * <br>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class FSoundTagField {
 

@@ -32,12 +32,12 @@
 package org.lwjgl.util;
 
 /**
- * $Id$
  * 
  * Simple interface to things that can be Rendered.
  * 
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public interface Renderable {
 	

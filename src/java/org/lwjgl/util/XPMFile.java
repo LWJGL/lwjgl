@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 /**
- * $Id$
  * <p>
  * NOTE: This simple XPM reader does not support extensions nor hotspots
  * </p>
@@ -20,6 +19,7 @@ import java.util.StringTokenizer;
  * @author Brian Matzon <brian@matzon.dk>
  * @author Jos Hirth
  * @version $Revision$
+ * $Id$
  */
 
 public class XPMFile {

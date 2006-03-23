@@ -36,12 +36,12 @@ import org.lwjgl.util.model.Frame;
 import org.lwjgl.util.model.Model;
 
 /**
- * $Id$
  * The interface for processing individual frames of rendered models.
  * Typically the processor will process the frame of animation, and store
  * the processed results in some data structure that make it easy to render.
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public interface FrameProcessor extends Renderable {
 	

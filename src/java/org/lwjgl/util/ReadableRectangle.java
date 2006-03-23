@@ -32,11 +32,10 @@
 package org.lwjgl.util;
 
 /**
- * $Id$
  * Readonly interface for Rectangles
  * @author $Author$
  * @version $Revision$
-
+ * $Id$
  */
 public interface ReadableRectangle extends ReadableDimension, ReadablePoint {
 	

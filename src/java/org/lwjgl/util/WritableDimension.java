@@ -32,10 +32,10 @@
 package org.lwjgl.util;
 
 /**
- * $Id$
  * Write interface for Dimensions
  * @author $Author$
  * @version $Revision$
+ * $Id$
 
  */
 public interface WritableDimension {

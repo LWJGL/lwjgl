@@ -35,12 +35,12 @@ import java.io.Serializable;
 import java.nio.FloatBuffer;
 
 /**
- * $Id$
  *
  * Holds a 4-tuple vector.
  * 
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 public class Vector4f extends Vector implements Serializable, ReadableVector4f, WritableVector4f {

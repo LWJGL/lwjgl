@@ -32,12 +32,12 @@
 package org.lwjgl;
 
 /**
- * $Id$
  * <p>
  * Win32 SysImplementation. This is just a straightforward NativsSysImplementation.
  * </p>
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 class Win32SysImplementation extends NativeSysImplementation {
 }

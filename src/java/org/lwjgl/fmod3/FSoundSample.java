@@ -33,10 +33,10 @@ package org.lwjgl.fmod3;
 
 /**
  * This class is a representation of a Sound Sample in FMod.
- * $Id$
  * <br>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class FSoundSample {
   /** Handle to sample */

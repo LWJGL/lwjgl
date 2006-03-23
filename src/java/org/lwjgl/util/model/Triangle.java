@@ -34,9 +34,9 @@ package org.lwjgl.util.model;
 import java.io.Serializable;
 
 /**
- * $Id$
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public class Triangle implements Serializable {
 	

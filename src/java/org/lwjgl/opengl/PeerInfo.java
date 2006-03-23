@@ -37,10 +37,10 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 
 /**
- * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 abstract class PeerInfo {
 	private final ByteBuffer handle;

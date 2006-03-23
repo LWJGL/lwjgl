@@ -33,10 +33,10 @@ package org.lwjgl.util.model;
 
 
 /**
- * $Id$
  * A MeshFrame describes a set of new positions for Vertices in an animation.
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public class MeshFrame extends Frame {
 	

@@ -38,7 +38,6 @@ import org.lwjgl.util.vector.Vector2f;
 
 
 /**
- * $Id$
  * 
  * A simple animated, skinned, boned 3D model, consisting of a single mesh
  * with a single material. The model's internal format is optimised for RAM storage;
@@ -47,6 +46,7 @@ import org.lwjgl.util.vector.Vector2f;
  * 
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public class BonedModel extends Model {
 	

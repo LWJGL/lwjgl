@@ -46,7 +46,6 @@ import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 
 /**
- * $Id$
  * <p/>
  * Manages GL contexts. Before any rendering is done by a LWJGL system, a call should be made to GLContext.useContext() with a
  * context. This will ensure that GLContext has an accurate reflection of the current context's capabilities and function
@@ -58,6 +57,7 @@ import org.lwjgl.Sys;
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public final class GLContext {
 	/**

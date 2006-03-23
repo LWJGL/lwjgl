@@ -34,11 +34,10 @@ package org.lwjgl.util;
 import java.io.Serializable;
 
 /**
- * $Id$
  * A 2D integer Rectangle class which looks remarkably like an AWT one.
  * @author $Author$
  * @version $Revision$
-
+ * $Id$
  */
 public final class Rectangle implements ReadableRectangle, WritableRectangle, Serializable {
 

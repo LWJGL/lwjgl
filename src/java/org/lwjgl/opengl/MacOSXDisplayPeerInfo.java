@@ -36,10 +36,10 @@ import java.awt.Canvas;
 import org.lwjgl.LWJGLException;
 
 /**
- * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 final class MacOSXDisplayPeerInfo extends MacOSXCanvasPeerInfo {
 	private boolean locked = false;

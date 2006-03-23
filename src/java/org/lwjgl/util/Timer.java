@@ -34,7 +34,6 @@ package org.lwjgl.util;
 import org.lwjgl.Sys;
 
 /**
- * $Id$
  *
  * A hires timer. This measures time in seconds as floating point values.
  * All Timers created are updated simultaneously by calling the static method
@@ -43,6 +42,7 @@ import org.lwjgl.Sys;
  * 
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public class Timer {
 

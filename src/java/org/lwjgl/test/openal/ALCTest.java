@@ -37,12 +37,12 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.ALC;
 
 /**
- * $Id$
  *
  * This is a test for the ALC part of OpenAL
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class ALCTest extends BasicTest {
 

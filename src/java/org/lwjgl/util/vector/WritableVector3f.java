@@ -32,10 +32,10 @@
 package org.lwjgl.util.vector;
 
 /**
- * $Id$
  * Writable interface to Vector3fs
  * @author $author$
  * @version $revision$
+ * $Id$
  */
 public interface WritableVector3f extends WritableVector2f {
 

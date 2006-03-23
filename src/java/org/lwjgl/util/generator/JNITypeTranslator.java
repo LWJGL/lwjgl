@@ -36,13 +36,13 @@ import com.sun.mirror.type.*;
 import com.sun.mirror.util.*;
 
 /**
- * $Id$
  *
  * A TypeVisitor that translates TypeMirrors to JNI
  * type strings.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public class JNITypeTranslator implements TypeVisitor {
 	private final StringBuilder signature = new StringBuilder();

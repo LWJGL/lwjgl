@@ -47,12 +47,12 @@ import java.nio.*;
 import java.lang.annotation.Annotation;
 
 /**
- * $Id$
  *
  * Generator visitor for the context capabilities generator tool
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public class ContextCapabilitiesGenerator {
 	private final static String STUBS_LOADED_NAME = "loaded_stubs";

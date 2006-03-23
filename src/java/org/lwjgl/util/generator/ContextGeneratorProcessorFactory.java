@@ -52,12 +52,12 @@ import static java.util.Collections.*;
 import static com.sun.mirror.util.DeclarationVisitors.*;
 
 /**
- * $Id$
  *
  * Generator tool for creating the ContexCapabilities class
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public class ContextGeneratorProcessorFactory implements AnnotationProcessorFactory, RoundCompleteListener {
 	private static boolean first_round = true;

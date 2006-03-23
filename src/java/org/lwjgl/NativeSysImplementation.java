@@ -32,11 +32,11 @@
 package org.lwjgl;
 
 /**
- * $Id$
  * A SysImplementation that uses native calls only.
  * <p>
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 class NativeSysImplementation extends DefaultSysImplementation {
 	

@@ -32,13 +32,13 @@
 package org.lwjgl.util.generator;
 
 /**
- * $Id$
  *
  * This class represent a parameter configuration. There are multiple
  * TypeInfos in case of multityped parameters.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 import com.sun.mirror.declaration.*;

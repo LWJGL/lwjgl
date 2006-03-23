@@ -40,10 +40,10 @@ import org.lwjgl.fmod3.FMODException;
 import org.lwjgl.fmod3.FSound;
 
 /**
- * $Id$
  * <br>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class CDPlayer {
 

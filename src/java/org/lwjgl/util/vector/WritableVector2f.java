@@ -32,10 +32,10 @@
 package org.lwjgl.util.vector;
 
 /**
- * $Id$
  * Writable interface to Vector2fs
  * @author $author$
  * @version $revision$
+ * $Id$
  */
 public interface WritableVector2f {
 

@@ -34,10 +34,10 @@ package org.lwjgl.util.model;
 import java.io.Serializable;
 
 /**
- * $Id$
  * The base class for animation frames.
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public abstract class Frame implements Serializable, Comparable {
 	

@@ -36,12 +36,12 @@ import org.lwjgl.util.generator.*;
 import java.nio.*;
 
 /**
- * $Id$
  * <p/>
  * The GL12 imaging subset extension.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 @Extension(postfix = "")

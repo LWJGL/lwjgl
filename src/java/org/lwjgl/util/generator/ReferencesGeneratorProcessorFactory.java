@@ -52,12 +52,12 @@ import static java.util.Collections.*;
 import static com.sun.mirror.util.DeclarationVisitors.*;
 
 /**
- * $Id$
  *
  * Generator tool for creating the References class
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 public class ReferencesGeneratorProcessorFactory implements AnnotationProcessorFactory, RoundCompleteListener {
 	private final static String REFERENCES_CLASS_NAME = "References";

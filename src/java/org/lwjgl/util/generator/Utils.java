@@ -32,12 +32,12 @@
 package org.lwjgl.util.generator;
 
 /**
- * $Id$
  *
  * Various utility methods to the generator.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 
 import com.sun.mirror.type.*;

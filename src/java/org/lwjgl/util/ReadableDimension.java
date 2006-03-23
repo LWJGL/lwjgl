@@ -32,11 +32,10 @@
 package org.lwjgl.util;
 
 /**
- * $Id$
  * Readonly interface for Dimensions
  * @author $Author$
  * @version $Revision$
-
+ * $Id$
  */
 public interface ReadableDimension {
 

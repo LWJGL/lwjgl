@@ -32,12 +32,12 @@
 package org.lwjgl.util.vector;
 
 /**
- * $Id$
  * 
  * Quaternions for LWJGL!
  * 
  * @author fbi
  * @version $Revision$
+ * $Id$
  */
 
 import java.nio.FloatBuffer;

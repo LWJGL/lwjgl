@@ -36,13 +36,13 @@ import java.nio.ByteBuffer;
 import org.lwjgl.LWJGLException;
 
 /**
- * $Id$
  * <p/>
  * Context implementation interface.
  * <p/>
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 interface ContextImplementation {
 	/**

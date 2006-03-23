@@ -34,10 +34,10 @@ package org.lwjgl.opengl;
 import org.lwjgl.LWJGLException;
 
 /**
- * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
+ * $Id$
  */
 final class MacOSXAWTGLCanvasPeerInfo extends MacOSXCanvasPeerInfo {
 	private final AWTGLCanvas canvas;

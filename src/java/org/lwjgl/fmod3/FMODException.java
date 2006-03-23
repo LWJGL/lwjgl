@@ -35,10 +35,10 @@ import org.lwjgl.LWJGLException;
 
 /**
  * FMOD Exception specific for FMOD exceptions (duh!)
- * $Id$
  * <br>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
+ * $Id$
  */
 public class FMODException extends LWJGLException {
 

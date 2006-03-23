@@ -32,10 +32,10 @@
 package org.lwjgl.util.model.renderer;
 
 /**
- * $Id$
  * Listens out for events that occur in animations and takes appropriate actions
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public interface AnimationEventListener {
 	/**

@@ -40,11 +40,11 @@ import org.lwjgl.LWJGLUtil;
 import org.lwjgl.opengl.DisplayMode;
 
 /**
- * $Id$
  * Display initialization utility, that can be used to find display modes and pick
  * one for you based on your criteria.
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public final class Display {
 	

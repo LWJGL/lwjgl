@@ -38,12 +38,12 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 /**
- * $Id$
  *
  * This is a <em>very basic</em> skeleton to init a game and run it.
  *
  * @author $Author$
  * @version $Revision$
+ * $Id$
  */
 public class Game {
 	
