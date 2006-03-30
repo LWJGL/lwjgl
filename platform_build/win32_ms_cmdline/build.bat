@@ -13,7 +13,7 @@ rem ** fixes this, but is not available in free		 **
 rem ** toolkit. Alternatively, remove AWT support  **
 rem ** all together (only works on win32)          **
 rem *************************************************
-set LINKEROPTS=/link /LIBPATH:"%JAVA_HOME%\lib" /LIBPATH:"%ALHOME%\libs" /LIBPATH:"%DXHOME%\Lib" /LIBPATH:"%PLTSDKHOME%\Lib" /LIBPATH:"%CHOME%\Lib" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /NOLOGO /DLL
+set LINKEROPTS=/link /LIBPATH:"%JAVA_HOME%\lib" /LIBPATH:"%ALHOME%\libs" /LIBPATH:"%DXHOME%\Lib\x86" /LIBPATH:"%PLTSDKHOME%\Lib" /LIBPATH:"%CHOME%\Lib" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /NOLOGO /DLL
 set LIBS=dinput.lib dxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib jawt.lib winmm.lib
 
 rem *************************************************
