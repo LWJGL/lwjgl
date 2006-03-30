@@ -274,7 +274,7 @@ public class LWJGLUtil {
 
 		if (osName.startsWith("Windows")) {
 			return PLATFORM_WINDOWS;
-		} else if (osName.startsWith("Linux") || osName.startsWith("FreeBSD")) {
+		} else if (osName.startsWith("Linux") || osName.startsWith("FreeBSD") || osName.startsWith("SunOS")) {
 			return PLATFORM_LINUX;
 		} else if (osName.startsWith("Mac OS X")) {
 			return PLATFORM_MACOSX;
