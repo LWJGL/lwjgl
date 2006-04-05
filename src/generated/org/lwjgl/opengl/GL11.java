@@ -636,6 +636,25 @@ public final class GL11 {
 	}
 	private static native void nglBindTexture(int target, int texture, long function_pointer);
 
+	public static void glPrioritizeTextures(IntBuffer textures, FloatBuffer priorities) {
+		long function_pointer = GLContext.getCapabilities().GL11_glPrioritizeTextures_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(textures);
+		BufferChecks.checkBuffer(priorities, textures.remaining());
+		nglPrioritizeTextures((textures.remaining()), textures, textures.position(), priorities, priorities.position(), function_pointer);
+	}
+	private static native void nglPrioritizeTextures(int n, IntBuffer textures, int textures_position, FloatBuffer priorities, int priorities_position, long function_pointer);
+
+	public static boolean glAreTexturesResident(IntBuffer textures, ByteBuffer residences) {
+		long function_pointer = GLContext.getCapabilities().GL11_glAreTexturesResident_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(textures);
+		BufferChecks.checkBuffer(residences, textures.remaining());
+		boolean __result = nglAreTexturesResident((textures.remaining()), textures, textures.position(), residences, residences.position(), function_pointer);
+		return __result;
+	}
+	private static native boolean nglAreTexturesResident(int n, IntBuffer textures, int textures_position, ByteBuffer residences, int residences_position, long function_pointer);
+
 	public static void glBegin(int mode) {
 		long function_pointer = GLContext.getCapabilities().GL11_glBegin_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);

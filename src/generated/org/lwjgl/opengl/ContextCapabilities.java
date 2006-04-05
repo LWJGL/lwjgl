@@ -512,6 +512,8 @@ public class ContextCapabilities {
 	long GL11_glBlendFunc_pointer;
 	long GL11_glBitmap_pointer;
 	long GL11_glBindTexture_pointer;
+	long GL11_glPrioritizeTextures_pointer;
+	long GL11_glAreTexturesResident_pointer;
 	long GL11_glBegin_pointer;
 	long GL11_glEnd_pointer;
 	long GL11_glArrayElement_pointer;
@@ -1537,6 +1539,8 @@ public class ContextCapabilities {
 			(GL11_glBlendFunc_pointer = GLContext.getFunctionAddress("glBlendFunc")) != 0 &&
 			(GL11_glBitmap_pointer = GLContext.getFunctionAddress("glBitmap")) != 0 &&
 			(GL11_glBindTexture_pointer = GLContext.getFunctionAddress("glBindTexture")) != 0 &&
+			(GL11_glPrioritizeTextures_pointer = GLContext.getFunctionAddress("glPrioritizeTextures")) != 0 &&
+			(GL11_glAreTexturesResident_pointer = GLContext.getFunctionAddress("glAreTexturesResident")) != 0 &&
 			(GL11_glBegin_pointer = GLContext.getFunctionAddress("glBegin")) != 0 &&
 			(GL11_glEnd_pointer = GLContext.getFunctionAddress("glEnd")) != 0 &&
 			(GL11_glArrayElement_pointer = GLContext.getFunctionAddress("glArrayElement")) != 0 &&

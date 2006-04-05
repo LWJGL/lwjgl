@@ -13,6 +13,8 @@ typedef void (APIENTRY *glCallListPROC) (GLuint list);
 typedef void (APIENTRY *glBlendFuncPROC) (GLenum sfactor, GLenum dfactor);
 typedef void (APIENTRY *glBitmapPROC) (GLsizei width, GLsizei height, GLfloat xorig, GLfloat yorig, GLfloat xmove, GLfloat ymove, const GLubyte * bitmap);
 typedef void (APIENTRY *glBindTexturePROC) (GLenum target, GLuint texture);
+typedef void (APIENTRY *glPrioritizeTexturesPROC) (GLsizei n, const GLuint * textures, const GLclampf * priorities);
+typedef GLboolean (APIENTRY *glAreTexturesResidentPROC) (GLsizei n, const GLuint * textures, GLboolean * residences);
 typedef void (APIENTRY *glBeginPROC) (GLenum mode);
 typedef void (APIENTRY *glEndPROC) ();
 typedef void (APIENTRY *glArrayElementPROC) (GLint i);
@@ -286,6 +288,21 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglBitmapBO(JNIEnv *env, jclas
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglBindTexture(JNIEnv *env, jclass clazz, jint target, jint texture, jlong function_pointer) {
 	glBindTexturePROC glBindTexture = (glBindTexturePROC)((intptr_t)function_pointer);
 	glBindTexture(target, texture);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPrioritizeTextures(JNIEnv *env, jclass clazz, jint n, jobject textures, jint textures_position, jobject priorities, jint priorities_position, jlong function_pointer) {
+	const GLuint *textures_address = ((const GLuint *)(*env)->GetDirectBufferAddress(env, textures)) + textures_position;
+	const GLclampf *priorities_address = ((const GLclampf *)(*env)->GetDirectBufferAddress(env, priorities)) + priorities_position;
+	glPrioritizeTexturesPROC glPrioritizeTextures = (glPrioritizeTexturesPROC)((intptr_t)function_pointer);
+	glPrioritizeTextures(n, textures_address, priorities_address);
+}
+
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL11_nglAreTexturesResident(JNIEnv *env, jclass clazz, jint n, jobject textures, jint textures_position, jobject residences, jint residences_position, jlong function_pointer) {
+	const GLuint *textures_address = ((const GLuint *)(*env)->GetDirectBufferAddress(env, textures)) + textures_position;
+	GLboolean *residences_address = ((GLboolean *)(*env)->GetDirectBufferAddress(env, residences)) + residences_position;
+	glAreTexturesResidentPROC glAreTexturesResident = (glAreTexturesResidentPROC)((intptr_t)function_pointer);
+	GLboolean __result = glAreTexturesResident(n, textures_address, residences_address);
+	return __result;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglBegin(JNIEnv *env, jclass clazz, jint mode, jlong function_pointer) {

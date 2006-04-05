@@ -742,6 +742,19 @@ public interface GL11 {
 
 	void glBindTexture(@GLenum int target, @GLuint int texture);
 
+	void glPrioritizeTextures(@AutoSize("textures") @GLsizei int n,
+			@Const
+			@GLuint IntBuffer textures,
+			@Const
+			@Check("textures.remaining()")
+			@GLclampf FloatBuffer priorities);
+
+	boolean glAreTexturesResident(@AutoSize("textures") @GLsizei int n,
+			@Const
+			@GLuint IntBuffer textures,
+			@Check("textures.remaining()")
+			@GLboolean ByteBuffer residences);
+
 	void glBegin(@GLenum int mode);
 
 	void glEnd();
