@@ -23,6 +23,7 @@
  */
 package org.lwjgl.util.jinput;
 
+import net.java.games.input.AbstractComponent;
 import net.java.games.input.Keyboard;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
@@ -90,12 +91,12 @@ final class LWJGLKeyboard extends Keyboard {
 		if (key == null)
 			return false;
 		float value = org.lwjgl.input.Keyboard.getEventKeyState() ? 1 : 0;
-		event.set(key, value);
+		event.set(key, value, System.currentTimeMillis()*1000000);
 		return true;
 	}
 
 
-	private final static class Key extends Keyboard.Key {
+	private final static class Key extends AbstractComponent {
 		private final int lwjgl_key;
 		private float value;
 		
@@ -110,6 +111,14 @@ final class LWJGLKeyboard extends Keyboard {
 		
 		protected final float poll() {
 			return value;
+		}
+
+		public final boolean isRelative() {
+			return false;
+		}
+
+		public final boolean isAnalog() {
+			return false;
 		}
 	}
 }

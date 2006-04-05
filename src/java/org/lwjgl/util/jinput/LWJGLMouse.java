@@ -25,6 +25,7 @@
 
 package org.lwjgl.util.jinput;
 
+import net.java.games.input.AbstractComponent;
 import net.java.games.input.Mouse;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
@@ -90,13 +91,14 @@ final class LWJGLMouse extends Mouse {
 	protected final synchronized boolean getNextDeviceEvent(Event event) throws IOException {
 		if (!org.lwjgl.input.Mouse.isCreated())
 			return false;
+		long nanos = System.currentTimeMillis()*1000000;
 		while (true) {
 			switch (event_state) {
 				case EVENT_X:
 					event_state = EVENT_Y;
 					int dx = org.lwjgl.input.Mouse.getEventDX();
 					if (dx != 0) {
-						event.set(getX(), dx);
+						event.set(getX(), dx, nanos);
 						return true;
 					}
 					break;
@@ -107,7 +109,7 @@ final class LWJGLMouse extends Mouse {
 					 */
 					int dy = -org.lwjgl.input.Mouse.getEventDY();
 					if (dy != 0) {
-						event.set(getY(), dy);
+						event.set(getY(), dy, nanos);
 						return true;
 					}
 					break;
@@ -115,7 +117,7 @@ final class LWJGLMouse extends Mouse {
 					event_state = EVENT_BUTTON;
 					int dwheel = org.lwjgl.input.Mouse.getEventDWheel();
 					if (dwheel != 0) {
-						event.set(getWheel(), dwheel);
+						event.set(getWheel(), dwheel, nanos);
 						return true;
 					}
 					break;
@@ -125,7 +127,7 @@ final class LWJGLMouse extends Mouse {
 					if (lwjgl_button != -1) {
 						Button button = map(lwjgl_button);
 						if (button != null) {
-							event.set(button, org.lwjgl.input.Mouse.getEventButtonState() ? 1f : 0f);
+							event.set(button, org.lwjgl.input.Mouse.getEventButtonState() ? 1f : 0f, nanos);
 							return true;
 						}
 					}
@@ -141,7 +143,7 @@ final class LWJGLMouse extends Mouse {
 		}
 	}
 
-	final static class Axis extends Mouse.Axis {
+	final static class Axis extends AbstractComponent {
 		public Axis(Component.Identifier.Axis axis_id) {
 			super(axis_id.getName(), axis_id);
 		}
@@ -153,9 +155,13 @@ final class LWJGLMouse extends Mouse {
 		protected final float poll() throws IOException {
 			return 0;
 		}
+
+		public final boolean isAnalog() {
+			return true;
+		}
 	}
 
-	final static class Button extends Mouse.Button {
+	final static class Button extends AbstractComponent {
 		private float value;
 		
 		public Button(Component.Identifier.Button button_id) {
@@ -168,6 +174,14 @@ final class LWJGLMouse extends Mouse {
 
 		protected final float poll() throws IOException {
 			return value;
+		}
+
+		public final boolean isRelative() {
+			return false;
+		}
+
+		public final boolean isAnalog() {
+			return false;
 		}
 	}
 }
