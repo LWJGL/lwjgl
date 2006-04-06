@@ -150,6 +150,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 		if (pixel_format == null)
 			throw new NullPointerException("Pixel format must be non-null");
 		addHierarchyListener(this);
+		addComponentListener(this);
 		this.drawable = drawable;
 		this.pixel_format = pixel_format;
 	}
