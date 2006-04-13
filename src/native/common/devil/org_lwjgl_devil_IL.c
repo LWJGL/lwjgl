@@ -475,7 +475,6 @@ static jobject JNICALL Java_org_lwjgl_devil_IL_ilGetData(JNIEnv * env, jclass cl
  * Signature: ()I
  */
 static jint JNICALL Java_org_lwjgl_devil_IL_ilGetError(JNIEnv *env, jclass clazz) {
-	printf("Java_org_lwjgl_devil_IL_ilGetError\n");
     return ilGetError();
 }
 
