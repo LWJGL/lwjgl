@@ -55,6 +55,9 @@ import org.lwjgl.Sys;
  * $Id$
  */
 public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, HierarchyListener {
+
+	private static final long serialVersionUID = 1L;
+	
 	private final static AWTCanvasImplementation implementation;
 	private boolean update_context;
 	private Object SYNC_LOCK = new Object();
@@ -173,7 +176,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	/**
 	 * Set swap interval.
 	 */
-	public void setSwapInterval(int swap_interval) throws LWJGLException {
+	public void setSwapInterval(int swap_interval) {
 		synchronized(SYNC_LOCK) {
 			if (context == null)
 				throw new IllegalStateException("Canvas not yet displayable");
@@ -184,7 +187,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	/**
 	 * Enable vsync
 	 */
-	public void setVSyncEnabled(boolean enabled) throws LWJGLException {
+	public void setVSyncEnabled(boolean enabled) {
 		setSwapInterval(enabled ? 1 : 0);
 	}
 	

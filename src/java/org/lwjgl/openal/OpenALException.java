@@ -42,6 +42,8 @@ package org.lwjgl.openal;
  */
 public class OpenALException extends RuntimeException {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor for OpenALException.
 	 */

@@ -163,7 +163,7 @@ public final class Display {
 			
 			final FieldAccessor[] field;
 			
-			Sorter() throws NoSuchFieldException {
+			Sorter() {
 				field = new FieldAccessor[param.length];
 				for (int i = 0; i < field.length; i ++) {
 					int idx = param[i].indexOf('=');

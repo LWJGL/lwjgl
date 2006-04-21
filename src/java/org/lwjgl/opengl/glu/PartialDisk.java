@@ -83,11 +83,10 @@ public class PartialDisk extends Quadric {
 		float startAngle,
 		float sweepAngle) {
 
-		int i, j, max;
+		int i, j;
 		float[] sinCache = new float[CACHE_SIZE];
 		float[] cosCache = new float[CACHE_SIZE];
 		float angle;
-		float x, y;
 		float sintemp, costemp;
 		float deltaRadius;
 		float radiusLow, radiusHigh;

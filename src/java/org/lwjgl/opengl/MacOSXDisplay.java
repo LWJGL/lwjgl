@@ -287,8 +287,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	native void getMouseDeltas(IntBuffer delta_buffer);
 
-	private native void updateContext();
-
 	public void reshape(int x, int y, int width, int height) {
 		frame.resize(x, y, width, height);
 	}

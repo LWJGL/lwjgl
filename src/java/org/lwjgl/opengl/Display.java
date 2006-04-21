@@ -355,7 +355,7 @@ public final class Display {
 	 * @param fps The desired frame rate, in frames per second
 	 */
 	public static void sync3(int fps) {
-		float frameTime = 1.0f / (float) (fps > 1 ? fps - 1 : 1);
+		float frameTime = 1.0f / (fps > 1 ? fps - 1 : 1);
 		timeNow = Sys.getTime();
 		while (timeNow > timeThen && (float) (timeNow - timeThen) / (float) Sys.getTimerResolution() < frameTime) {
 			// This is a system-friendly way of allowing other stuff to use CPU if it wants to
@@ -685,7 +685,7 @@ public final class Display {
 		// We haven't used GLU here to do this to avoid an unnecessary dependency.
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		GL11.glOrtho(0.0, (double) current_mode.getWidth(), 0.0, (double) current_mode.getHeight(), -1.0, 1.0);
+		GL11.glOrtho(0.0, current_mode.getWidth(), 0.0, current_mode.getHeight(), -1.0, 1.0);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
 		GL11.glViewport(0, 0, current_mode.getWidth(), current_mode.getHeight());

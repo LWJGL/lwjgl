@@ -55,13 +55,14 @@ import org.lwjgl.LWJGLException;
 
 final class MacOSXFrame extends Frame implements WindowListener, ComponentListener {
 
+	private static final long serialVersionUID = -5823294716668988777L;
+	
 	private final MacOSXGLCanvas canvas;
 	private boolean close_requested;
 
 	/* States */
 	private Rectangle bounds;
 	private boolean active;
-	private boolean visible;
 	private boolean minimized;
 	private boolean should_warp_cursor;
 

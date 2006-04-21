@@ -47,6 +47,8 @@ import java.awt.event.HierarchyListener;
 
 final class MacOSXGLCanvas extends Canvas implements ComponentListener, HierarchyListener {
 
+	private static final long serialVersionUID = 6916664741667434870L;
+	
 	private int width;
 	private int height;
 	private boolean context_update;

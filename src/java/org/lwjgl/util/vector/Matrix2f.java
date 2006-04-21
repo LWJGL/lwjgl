@@ -45,6 +45,8 @@ import java.nio.FloatBuffer;
 
 public class Matrix2f extends Matrix implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	public float m00 = 1.0f, m01, m10, m11 = 1.0f;
 	
 	/**

@@ -264,7 +264,7 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 		if ( key_states[key_code_mapped] == state )
 			return;
 		key_states[key_code_mapped] = state;
-		int key_int_char = ((int)character) & 0xffff;
+		int key_int_char = character & 0xffff;
 		putKeyboardEvent(key_code_mapped, state, key_int_char);
 	}
 

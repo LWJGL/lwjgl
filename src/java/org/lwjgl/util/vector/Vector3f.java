@@ -45,6 +45,8 @@ import java.nio.FloatBuffer;
 
 public class Vector3f extends Vector implements Serializable, ReadableVector3f, WritableVector3f {
 
+	private static final long serialVersionUID = 1L;
+
 	public float x, y, z;
 
 	/**

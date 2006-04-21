@@ -43,6 +43,8 @@ import org.lwjgl.opengl.glu.GLU;
  */
 public class OpenGLException extends RuntimeException {
 
+	private static final long serialVersionUID = 1L;
+
 	/** Constructor for OpenGLException. */
 	public OpenGLException(int gl_error_code) {
 		this(createErrorMessage(gl_error_code));

@@ -234,7 +234,7 @@ public class MipMap extends Util {
 				for ( i = 0; i < heightIn; i++ ) {
 					int ubptr = i * rowstride + pss.unpackSkipRows * rowstride + pss.unpackSkipPixels * components;
 					for ( j = 0; j < widthIn * components; j++ ) {
-						tempIn[k++] = (float)((int)dataIn.get(ubptr++) & 0xff);
+						tempIn[k++] = dataIn.get(ubptr++) & 0xff;
 					}
 				}
 				break;

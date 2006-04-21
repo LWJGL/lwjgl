@@ -44,6 +44,8 @@ import java.nio.FloatBuffer;
 
 public class Quaternion extends Vector implements ReadableVector4f {
 	
+	private static final long serialVersionUID = 1L;
+
 	private float x, y, z, w;
 
 	/**

@@ -62,10 +62,8 @@ public class XPMFile {
 	 * @param is
 	 *            InputStream to read file from
 	 * @return XPMFile loaded, or exception
-	 * @throws IOException
-	 *             If any IO exceptions occurs while reading file
 	 */
-	public static XPMFile load(InputStream is) throws IOException {
+	public static XPMFile load(InputStream is) {
 		XPMFile xFile = new XPMFile();
 		xFile.readImage(is);
 		return xFile;
@@ -94,11 +92,8 @@ public class XPMFile {
 
 	/**
 	 * Read the image from the specified file.
-	 * 
-	 * @throws IOException
-	 *             If any IO exceptions occurs while reading file
 	 */
-	private void readImage(InputStream is) throws IOException {
+	private void readImage(InputStream is) {
 		try {
 			LineNumberReader reader = new LineNumberReader(
 					new InputStreamReader(is));
