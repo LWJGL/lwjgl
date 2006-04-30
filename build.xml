@@ -3,17 +3,17 @@
 	<!-- ================================================================== -->
 	<!-- Global properties for build 																				-->
 	<!-- ================================================================== -->
-	<property name="lwjgl.src" 						value="./src" />
-	<property name="lwjgl.src.native" 		value="${lwjgl.src}/native" />
-	<property name="lwjgl.src.headers" 		value="${lwjgl.src.native}/common" />
+	<property name="lwjgl.src" 			value="./src" />
+	<property name="lwjgl.src.native" 	value="${lwjgl.src}/native" />
+	<property name="lwjgl.src.headers" 	value="${lwjgl.src.native}/common" />
 	<property name="lwjgl.src.templates"	value="${lwjgl.src}/templates" />
-	<property name="lwjgl.bin" 						value="./bin" />
-	<property name="lwjgl.lib" 						value="./libs" />
-	<property name="lwjgl.dist" 					value="./dist" />
-	<property name="lwjgl.docs" 					value="./doc" />
-	<property name="lwjgl.temp" 					value="./temp" />
-	<property name="lwjgl.res" 						value="./res" />
-	<property name="lwjgl.version" 				value="0.99" />
+	<property name="lwjgl.bin" 			value="./bin" />
+	<property name="lwjgl.lib" 			value="./libs" />
+	<property name="lwjgl.dist" 			value="./dist" />
+	<property name="lwjgl.docs" 			value="./doc" />
+	<property name="lwjgl.temp" 			value="./temp" />
+	<property name="lwjgl.res" 			value="./res" />
+	<property name="lwjgl.version" 		value="1.0" />
 
 	<property name="opengl-template-pattern" value="org/lwjgl/opengl/GL*.java,org/lwjgl/opengl/ARB*.java,org/lwjgl/opengl/ATI*.java,org/lwjgl/opengl/EXT*.java,org/lwjgl/opengl/NV*.java,org/lwjgl/opengl/HP*.java,org/lwjgl/opengl/IBM*.java,org/lwjgl/opengl/SUN*.java"/>
 	<!-- ================================================================== -->
@@ -47,13 +47,19 @@
     <include name="org/lwjgl/test/opengl/shaders/shaderFSH.vsh" />
     <include name="org/lwjgl/test/opengl/shaders/shaderVP.vp" />
     <include name="org/lwjgl/test/opengl/shaders/shaderVSH.vsh" />
-	</fileset>
-  
+	</fileset>  
 
 	<!-- Files to include in the lwjgl_util.jar file -->
 	<fileset id="lwjgl_util.fileset" dir="${lwjgl.bin}">
 		<exclude name="**.*" />
+		<exclude name="org/lwjgl/util/model/**" />
 		<include name="org/lwjgl/util/**" />
+	</fileset>
+
+	<!-- Files to include in the lwjgl_model.jar file -->
+	<fileset id="lwjgl_model.fileset" dir="${lwjgl.bin}">
+		<exclude name="**.*" />
+		<include name="org/lwjgl/util/model/**" />
 	</fileset>
 
 	<!-- Files to include in the lwjgl_fmod3.jar file -->
@@ -90,43 +96,51 @@
 	<!-- Files to include in win32 package -->
 	<patternset id="lwjgl-win32.fileset">
 		<include name="lwjgl.dll" />
-		<include name="lwjgl-fmod3.dll" />
-		<include name="lwjgl-devil.dll" />
-
 		<include name="OpenAL32.dll" />
+    <include name="jinput-dx8.dll" />
+    <include name="jinput-raw.dll" />
+	</patternset>
+	
+	<!-- Files to include in win32 optional package -->
+	<patternset id="lwjgl-win32_optional.fileset">
+		<include name="lwjgl_fmod3.dll" />
+		<include name="lwjgl_devil.dll" />
 		<include name="DevIL.dll" />
 		<include name="ILU.dll" />
 		<include name="ILUT.dll" />
-    
-    <include name="jinput-dxplugin.dll" />
-	</patternset>
+	</patternset>	
 
 	<!-- Files to include in linux, glibc2.3 package -->
 	<patternset id="lwjgl-linux.fileset">
 		<include name="liblwjgl.so" />
-		<include name="liblwjgl-fmod3.so" />
-		<include name="liblwjgl-devil.so" />
-		
-		<include name="libopenal.so" />
+		<include name="libopenal.so" />    
+    <include name="libjinput-linux.so" />
+	</patternset>
+	
+	<!-- Files to include in linux optional, glibc2.3 package -->
+	<patternset id="lwjgl-linux_optional.fileset">
+		<include name="liblwjgl_fmod3.so" />
+		<include name="liblwjgl_devil.so" />
 		<include name="libIL.so" />
 		<include name="libILU.so" />
 		<include name="libILUT.so" />
-    
-    <include name="libjinput-linux.so" />
-	</patternset>
+	</patternset>	
 
 	<!-- Files to include in mac os x package -->
 	<patternset id="lwjgl-macosx.fileset">
 		<include name="liblwjgl.jnilib" />
-		<include name="liblwjgl-fmod3.jnilib" />
-		<include name="liblwjgl-devil.jnilib" />
-		
 		<include name="openal.dylib" />
+    <include name="libjinput-osx.jnilib" />
+    <include name="libjinput-osx-legacy.jnilib" />
+	</patternset>
+	
+	<!-- Files to include in mac os x optional package -->
+	<patternset id="lwjgl-macosx_optional.fileset">
+		<include name="liblwjgl_fmod3.jnilib" />
+		<include name="liblwjgl_devil.jnilib" />
 		<include name="libIL.dylib" />
 		<include name="libILU.dylib" />
 		<include name="libILUT.dylib" />
-    
-    <include name="libjinput.jnilib" />
 	</patternset>
 
 	<!-- Files to include in source distribution -->
@@ -135,6 +149,45 @@
 		<include name="src/**" />
 		<include name="platform_build/win32_ms_cmdline/*.bat" />
 	</fileset>
+	
+	<!-- files in the base package -->
+	<patternset id="lwjgl_base">
+		<include name="**" />
+		<exclude name="jar/lwjgl_fmod3.jar" />
+		<exclude name="jar/lwjgl_devil.jar" />
+		<exclude name="jar/lwjgl_model.jar" />
+		<exclude name="native/win32/DevIL.dll" />
+		<exclude name="native/win32/ILU.dll" />
+		<exclude name="native/win32/ILUT.dll" />
+		<exclude name="native/linux/libIL*.so" />
+		<exclude name="native/macosx/libIL*.dylib" />
+		<exclude name="res/model/**" />
+		<exclude name="res/ILtest.*" />
+		<exclude name="res/Missing_you.mod" />
+		<exclude name="res/phero*.*" />
+		<exclude name="doc/3rdparty/openil_license.txt" />
+	</patternset>
+	
+	<!-- files in the optional package -->
+	<patternset id="lwjgl_optional">
+		<include name="jar/lwjgl_fmod3.jar" />
+		<include name="jar/lwjgl_devil.jar" />
+		<include name="jar/lwjgl_model.jar" />
+		<include name="native/win32/DevIL.dll" />
+		<include name="native/win32/ILU.dll" />
+		<include name="native/win32/ILUT.dll" />
+		<include name="native/linux/libIL*.so" />
+		<include name="native/macosx/libIL*.dylib" />
+		<include name="res/**" />
+		<exclude name="res/logo/**" />
+		<exclude name="res/spaceinvaders/**" />
+		<exclude name="res/*.wav" />
+		<exclude name="res/*.xpm" />
+		<include name="doc/3rdparty/openil_license.txt" />
+		<include name="doc/CREDITS" />
+		<include name="doc/LICENSE" />
+		<include name="doc/README" />
+	</patternset>	
 	
 	<uptodate property="lwjgl.main.built" targetfile="${lwjgl.lib}/win32/lwjgl.dll" >
 	    <srcfiles dir= "${lwjgl.src.native}/common" includes="*.c*"/>
@@ -212,7 +265,7 @@
 
   	<!-- compile and create jars -->
   	<antcall target="compile" />
-		<antcall target="javadoc" />
+	<antcall target="javadoc" />
   	<antcall target="-createjars" />
   	
   	<!-- copy resources to res folder -->
@@ -259,6 +312,11 @@
 		<jar destfile="${lwjgl.temp}/jar/lwjgl_util.jar" taskname="lwjgl_util.jar">
 			<fileset refid="lwjgl_util.fileset" />
 		</jar>
+		
+		<!-- Create lwjgl_model.jar -->
+		<jar destfile="${lwjgl.temp}/jar/lwjgl_model.jar" taskname="lwjgl_model.jar">
+			<fileset refid="lwjgl_model.fileset" />
+		</jar>
 
 		<!-- Create lwjgl_fmod.jar -->
 		<jar destfile="${lwjgl.temp}/jar/lwjgl_fmod3.jar" taskname="lwjgl_fmod3.jar">
@@ -280,22 +338,35 @@
 		<copy todir="${lwjgl.temp}/native/win32">
 			<fileset dir="${lwjgl.lib}/win32">
 				<patternset refid="lwjgl-win32.fileset" />
+				<patternset refid="lwjgl-win32_optional.fileset" />
 			</fileset>
 		</copy>
 		<copy todir="${lwjgl.temp}/native/linux">
 			<fileset dir="${lwjgl.lib}/linux">
 				<patternset refid="lwjgl-linux.fileset" />
+				<patternset refid="lwjgl-linux_optional.fileset" />
 			</fileset>
 		</copy>
 		<copy todir="${lwjgl.temp}/native/macosx">
 			<fileset dir="${lwjgl.lib}/macosx">
 				<patternset refid="lwjgl-macosx.fileset" />
+				<patternset refid="lwjgl-macosx_optional.fileset" />
 			</fileset>
 		</copy>
 		
+		<!-- create base package -->
 		<zip destfile="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip">
-			<zipfileset dir="${lwjgl.temp}" prefix="lwjgl-${lwjgl.version}/"/>
+			<zipfileset dir="${lwjgl.temp}" prefix="lwjgl-${lwjgl.version}/">
+				<patternset refid="lwjgl_base"/>
+			</zipfileset>			
 		</zip>
+		
+		<!-- create optional package -->
+		<zip destfile="${lwjgl.dist}/lwjgl_optional-${lwjgl.version}.zip">
+			<zipfileset dir="${lwjgl.temp}" prefix="lwjgl_optional-${lwjgl.version}/">
+				<patternset refid="lwjgl_optional"/>
+			</zipfileset>			
+		</zip>		
 	</target>
 
 	<!-- Creates a versioned distribution of javadocs -->
