@@ -85,7 +85,7 @@ public class Cursor {
 	 */	
 	public Cursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
 		if ((getCapabilities() & CURSOR_ONE_BIT_TRANSPARENCY) == 0)
-			throw new IllegalStateException("Native cursors not supported");
+			throw new LWJGLException("Native cursors not supported");
 		BufferChecks.checkBuffer(images, width*height*numImages);
 		if (!Mouse.isCreated())
 			throw new IllegalStateException("Mouse must be created before creating cursor objects");
