@@ -25,7 +25,7 @@
 	</target>
 	
 	<target name="link">
-		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true">
+		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" dest="${objdir}">
 			<arg line="${linkerflags} -exported_symbols_list ../lwjgl.symbols -dynamiclib -o ${libname} -framework Foundation -framework AppKit -framework JavaVM -framework Carbon"/>
 			<fileset dir="${objdir}" includes="*.o"/>
 		</apply>
