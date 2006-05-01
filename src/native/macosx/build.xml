@@ -25,9 +25,10 @@
 	</target>
 	
 	<target name="link">
-		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" dest="${objdir}">
+		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" dest="${objdir}" skipemptyfilesets="true">
 			<arg line="${linkerflags} -exported_symbols_list ../lwjgl.symbols -dynamiclib -o ${libname} -framework Foundation -framework AppKit -framework JavaVM -framework Carbon"/>
 			<fileset dir="${objdir}" includes="*.o"/>
+			<mapper type="merge" to="${libname}"/>
 		</apply>
 		<apply dir="${objdir}" executable="strip" os="Mac OS X" failonerror="true">
 			<arg line="-S -X"/>
