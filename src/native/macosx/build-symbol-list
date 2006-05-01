@@ -1,0 +1,3 @@
+#!/bin/sh
+
+nm -g intel/*.o | grep "Java_" | cut -d ' ' -f3 | cut -c 1-
