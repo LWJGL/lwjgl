@@ -128,7 +128,7 @@ public class NativeMethodStubsGenerator {
 				writer.print(" = ");
 		}
 		writer.print(method.getSimpleName() + "(");
-		generateCallParameters(writer, method.getParameters());
+		generateCallParameters(writer, type_map, method.getParameters());
 		writer.print(")");
 		writer.println(";");
 		generateStringDeallocations(writer, method.getParameters());
@@ -156,19 +156,27 @@ public class NativeMethodStubsGenerator {
 		writer.println();
 	}
 
-	private static void generateCallParameters(PrintWriter writer, Collection<ParameterDeclaration> params) {
+	private static void generateCallParameters(PrintWriter writer, TypeMap type_map, Collection<ParameterDeclaration> params) {
 		if (params.size() > 0) {
 			Iterator<ParameterDeclaration> it = params.iterator();
-			generateCallParameter(writer, it.next());
+			generateCallParameter(writer, type_map, it.next());
 			while (it.hasNext()) {
 				writer.print(", ");
-				generateCallParameter(writer, it.next());
+				generateCallParameter(writer, type_map, it.next());
 			}
 		}
 	}
 
-	private static void generateCallParameter(PrintWriter writer, ParameterDeclaration param) {
-		if (param.getAnnotation(Result.class) != null || param.getAnnotation(Indirect.class) != null)
+	private static void generateCallParameter(PrintWriter writer, TypeMap type_map, ParameterDeclaration param) {
+		boolean is_indirect = param.getAnnotation(Indirect.class) != null;
+		if (is_indirect) {
+			writer.print("(");
+			NativeTypeTranslator translator = new NativeTypeTranslator(type_map, param);
+			param.getType().accept(translator);
+			writer.print(translator.getSignature());
+			writer.print("*)");
+		}
+		if (param.getAnnotation(Result.class) != null || is_indirect)
 			writer.print("&");
 		if (param.getAnnotation(Result.class) != null) {
 			writer.print(Utils.RESULT_VAR_NAME);

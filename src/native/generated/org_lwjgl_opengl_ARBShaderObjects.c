@@ -68,7 +68,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglCreateShaderObj
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglShaderSourceARB(JNIEnv *env, jclass clazz, jint shader, jint count, jobject string, jint string_position, jint length, jlong function_pointer) {
 	const GLcharARB *string_address = ((const GLcharARB *)(*env)->GetDirectBufferAddress(env, string)) + string_position;
 	glShaderSourceARBPROC glShaderSourceARB = (glShaderSourceARBPROC)((intptr_t)function_pointer);
-	glShaderSourceARB(shader, count, &string_address, &length);
+	glShaderSourceARB(shader, count, (const GLcharARB **)&string_address, (const GLint*)&length);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglCompileShaderARB(JNIEnv *env, jclass clazz, jint shaderObj, jlong function_pointer) {

@@ -77,7 +77,7 @@ typedef void (APIENTRY *glBlendEquationSeparatePROC) (GLenum modeRGB, GLenum mod
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglShaderSource(JNIEnv *env, jclass clazz, jint shader, jint count, jobject string, jint string_position, jint length, jlong function_pointer) {
 	const GLchar *string_address = ((const GLchar *)(*env)->GetDirectBufferAddress(env, string)) + string_position;
 	glShaderSourcePROC glShaderSource = (glShaderSourcePROC)((intptr_t)function_pointer);
-	glShaderSource(shader, count, &string_address, &length);
+	glShaderSource(shader, count, (const GLchar **)&string_address, (const GLint*)&length);
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL20_nglCreateShader(JNIEnv *env, jclass clazz, jint type, jlong function_pointer) {
