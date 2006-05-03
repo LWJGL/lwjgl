@@ -549,25 +549,37 @@ public final class Display {
 	 */
 	public static void processMessages() {
 		if (!isCreated())
-			throw new IllegalStateException("Cannot update uncreated window");
+			throw new IllegalStateException("Display not created");
 
 		display_impl.update();
 	}
 
 	/**
+	 * Swap the display buffers. This method is called from update(), and should normally not be called by
+	 * the application.
+	 * @throws OpenGLException if an OpenGL error has occured since the last call to GL11.glGetError()
+	 */
+	public static void swapBuffers() throws LWJGLException {
+		if (!isCreated())
+			throw new IllegalStateException("Display not created");
+
+		Util.checkGLError();
+		Context.swapBuffers();
+	}
+
+	/**
 	 * Update the window. This calls processMessages(), and if the window is visible
-	 * clears the dirty flag and swaps the buffers and polls the input devices.
+	 * clears the dirty flag and calls swapBuffers() and finally polls the input devices.
 	 * @throws OpenGLException if an OpenGL error has occured since the last call to GL11.glGetError()
 	 */
 	public static void update() {
 		if (!isCreated())
-			throw new IllegalStateException("Cannot update uncreated window");
+			throw new IllegalStateException("Display not created");
 
 		// We paint only when the window is visible or dirty
 		if (isVisible() || isDirty()) {
-			Util.checkGLError();
 			try {
-				Context.swapBuffers();
+				swapBuffers();
 			} catch (LWJGLException e) {
 				throw new RuntimeException(e);
 			}
