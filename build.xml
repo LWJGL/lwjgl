@@ -52,6 +52,7 @@
 	<!-- Files to include in the lwjgl_util.jar file -->
 	<fileset id="lwjgl_util.fileset" dir="${lwjgl.bin}">
 		<exclude name="**.*" />
+		<exclude name="org/lwjgl/util/generator/**" />
 		<exclude name="org/lwjgl/util/model/**" />
 		<include name="org/lwjgl/util/**" />
 	</fileset>
