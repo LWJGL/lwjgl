@@ -98,6 +98,9 @@ GLXFBConfig *getFBConfigFromPeerInfo(JNIEnv *env, X11PeerInfo *peer_info) {
 static int convertToBPE(int bpp) {
 	int bpe;
 	switch (bpp) {
+		case 0:
+			bpe = 0;
+			break;
 		case 32:
 		case 24:
 			bpe = 8;
