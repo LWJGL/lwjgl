@@ -13,7 +13,7 @@
 	<property name="lwjgl.docs" 			value="./doc" />
 	<property name="lwjgl.temp" 			value="./temp" />
 	<property name="lwjgl.res" 			value="./res" />
-	<property name="lwjgl.version" 		value="1.0" />
+	<property name="lwjgl.version" 		value="1.0beta" />
 
 	<property name="opengl-template-pattern" value="org/lwjgl/opengl/GL*.java,org/lwjgl/opengl/ARB*.java,org/lwjgl/opengl/ATI*.java,org/lwjgl/opengl/EXT*.java,org/lwjgl/opengl/NV*.java,org/lwjgl/opengl/HP*.java,org/lwjgl/opengl/IBM*.java,org/lwjgl/opengl/SUN*.java"/>
 	<!-- ================================================================== -->
@@ -98,14 +98,14 @@
 	<patternset id="lwjgl-win32.fileset">
 		<include name="lwjgl.dll" />
 		<include name="OpenAL32.dll" />
-    <include name="jinput-dx8.dll" />
-    <include name="jinput-raw.dll" />
+    		<include name="jinput-dx8.dll" />
+    		<include name="jinput-raw.dll" />
 	</patternset>
 	
 	<!-- Files to include in win32 optional package -->
 	<patternset id="lwjgl-win32_optional.fileset">
-		<include name="lwjgl_fmod3.dll" />
-		<include name="lwjgl_devil.dll" />
+		<include name="lwjgl-fmod3.dll" />
+		<include name="lwjgl-devil.dll" />
 		<include name="DevIL.dll" />
 		<include name="ILU.dll" />
 		<include name="ILUT.dll" />
@@ -115,13 +115,13 @@
 	<patternset id="lwjgl-linux.fileset">
 		<include name="liblwjgl.so" />
 		<include name="libopenal.so" />    
-    <include name="libjinput-linux.so" />
+    		<include name="libjinput-linux.so" />
 	</patternset>
 	
 	<!-- Files to include in linux optional, glibc2.3 package -->
 	<patternset id="lwjgl-linux_optional.fileset">
-		<include name="liblwjgl_fmod3.so" />
-		<include name="liblwjgl_devil.so" />
+		<include name="liblwjgl-fmod3.so" />
+		<include name="liblwjgl-devil.so" />
 		<include name="libIL.so" />
 		<include name="libILU.so" />
 		<include name="libILUT.so" />
@@ -131,14 +131,14 @@
 	<patternset id="lwjgl-macosx.fileset">
 		<include name="liblwjgl.jnilib" />
 		<include name="openal.dylib" />
-    <include name="libjinput-osx.jnilib" />
-    <include name="libjinput-osx-legacy.jnilib" />
+	    <include name="libjinput-osx.jnilib" />
+	    <include name="libjinput-osx-legacy.jnilib" />
 	</patternset>
 	
 	<!-- Files to include in mac os x optional package -->
 	<patternset id="lwjgl-macosx_optional.fileset">
-		<include name="liblwjgl_fmod3.jnilib" />
-		<include name="liblwjgl_devil.jnilib" />
+		<include name="liblwjgl-fmod3.jnilib" />
+		<include name="liblwjgl-devil.jnilib" />
 		<include name="libIL.dylib" />
 		<include name="libILU.dylib" />
 		<include name="libILUT.dylib" />
@@ -157,11 +157,14 @@
 		<exclude name="jar/lwjgl_fmod3.jar" />
 		<exclude name="jar/lwjgl_devil.jar" />
 		<exclude name="jar/lwjgl_model.jar" />
+		<exclude name="native/win32/lwjgl-*.dll" />
 		<exclude name="native/win32/DevIL.dll" />
 		<exclude name="native/win32/ILU.dll" />
 		<exclude name="native/win32/ILUT.dll" />
 		<exclude name="native/linux/libIL*.so" />
+		<exclude name="native/linux/liblwjgl-*.so" />
 		<exclude name="native/macosx/libIL*.dylib" />
+		<exclude name="native/macosx/liblwjgl-*.jnilib" />
 		<exclude name="res/model/**" />
 		<exclude name="res/ILtest.*" />
 		<exclude name="res/Missing_you.mod" />
@@ -174,11 +177,14 @@
 		<include name="jar/lwjgl_fmod3.jar" />
 		<include name="jar/lwjgl_devil.jar" />
 		<include name="jar/lwjgl_model.jar" />
+		<include name="native/win32/lwjgl-*.dll" />
 		<include name="native/win32/DevIL.dll" />
 		<include name="native/win32/ILU.dll" />
 		<include name="native/win32/ILUT.dll" />
 		<include name="native/linux/libIL*.so" />
+		<include name="native/linux/liblwjgl-*.so" />
 		<include name="native/macosx/libIL*.dylib" />
+		<include name="native/macosx/liblwjgl-*.jnilib" />
 		<include name="res/**" />
 		<exclude name="res/logo/**" />
 		<exclude name="res/spaceinvaders/**" />
@@ -412,6 +418,7 @@
 			<class name="org.lwjgl.opengl.LinuxContextImplementation" />
 			<class name="org.lwjgl.opengl.LinuxCanvasImplementation" />
 		</javah>
+		
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/win32" force="yes">
 			<class name="org.lwjgl.opengl.Win32PbufferPeerInfo" />
 			<class name="org.lwjgl.opengl.Win32Display" />
@@ -422,6 +429,7 @@
 			<class name="org.lwjgl.opengl.Win32DisplayPeerInfo" />
 			<class name="org.lwjgl.opengl.Win32ContextImplementation" />
 		</javah>
+		
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/macosx" force="yes">
 			<class name="org.lwjgl.opengl.MacOSXCanvasPeerInfo" />
 			<class name="org.lwjgl.opengl.MacOSXPeerInfo" />
@@ -429,6 +437,7 @@
 			<class name="org.lwjgl.opengl.MacOSXDisplay" />
 			<class name="org.lwjgl.opengl.MacOSXContextImplementation" />
 		</javah>
+		
 		<!-- lwjgl -->
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}" force="yes">
 			<class name="org.lwjgl.opengl.AWTSurfaceLock" />
