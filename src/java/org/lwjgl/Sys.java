@@ -51,7 +51,7 @@ import org.lwjgl.input.Mouse;
 public final class Sys {
 
   /** Current version of library */
-	private static final String VERSION = "1.0";
+	private static final String VERSION = "1.0beta";
 
 	/** The implementation instance to delegate platform specific behavior to */
 	private final static SysImplementation implementation;
