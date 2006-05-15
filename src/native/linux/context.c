@@ -142,7 +142,9 @@ static GLXFBConfig *chooseVisualGLX13FromBPP(JNIEnv *env, Display *disp, int scr
 	putAttrib(&attrib_list, GLX_ACCUM_GREEN_SIZE); putAttrib(&attrib_list, accum_bpe);
 	putAttrib(&attrib_list, GLX_ACCUM_BLUE_SIZE); putAttrib(&attrib_list, accum_bpe);
 	putAttrib(&attrib_list, GLX_ACCUM_ALPHA_SIZE); putAttrib(&attrib_list, accum_alpha);
-	putAttrib(&attrib_list, GLX_STEREO); putAttrib(&attrib_list, stereo ? True : False);
+	if (stereo) {
+		putAttrib(&attrib_list, GLX_STEREO); putAttrib(&attrib_list, True);
+	}
 	// Assume the caller has checked support for multisample
 	if (samples > 0) {
 		putAttrib(&attrib_list, GLX_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
