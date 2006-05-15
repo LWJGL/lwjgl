@@ -55,6 +55,7 @@ public class ContextCapabilities {
 	public final boolean GL_ATI_pn_triangles;
 	public final boolean GL_ATI_separate_stencil;
 	public final boolean GL_ATI_shader_texture_lod;
+	public final boolean GL_ATI_text_fragment_shader;
 	public final boolean GL_ATI_texture_compression_3dc;
 	public final boolean GL_ATI_texture_float;
 	public final boolean GL_ATI_texture_mirror_once;
@@ -2294,6 +2295,7 @@ public class ContextCapabilities {
 		this.GL_ATI_pn_triangles = supported_extensions.contains("GL_ATI_pn_triangles");
 		this.GL_ATI_separate_stencil = supported_extensions.contains("GL_ATI_separate_stencil");
 		this.GL_ATI_shader_texture_lod = supported_extensions.contains("GL_ATI_shader_texture_lod");
+		this.GL_ATI_text_fragment_shader = supported_extensions.contains("GL_ATI_text_fragment_shader");
 		this.GL_ATI_texture_compression_3dc = supported_extensions.contains("GL_ATI_texture_compression_3dc");
 		this.GL_ATI_texture_float = supported_extensions.contains("GL_ATI_texture_float");
 		this.GL_ATI_texture_mirror_once = supported_extensions.contains("GL_ATI_texture_mirror_once");
