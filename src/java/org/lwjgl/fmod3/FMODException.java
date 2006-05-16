@@ -42,6 +42,8 @@ import org.lwjgl.LWJGLException;
  */
 public class FMODException extends LWJGLException {
 
+	private static final long serialVersionUID = -1979225393145509886L;
+
 	/**
    * Creates a new FMODException
    * 
