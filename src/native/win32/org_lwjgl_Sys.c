@@ -101,15 +101,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_NativeSysImplementation_alert
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_NativeSysImplementation_openURL
   (JNIEnv * env, jobject ignored, jstring url)
 {
+#define BUFFER_SIZE 1024
+	const char *std_args = "rundll32 url.dll,FileProtocolHandler ";
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
 
 	char * urlString = GetStringNativeChars(env, url);
 
-	char command[256];
-	strcpy(command, "");
-	strcat(command, "rundll32 url.dll,FileProtocolHandler ");
-	strncat(command, urlString, 200); // Prevent buffer overflow
+	char command[BUFFER_SIZE];
+	strncpy_s(command, BUFFER_SIZE, "", 1);
+	strncat_s(command, BUFFER_SIZE, std_args, _TRUNCATE);
+	strncat_s(command, BUFFER_SIZE, urlString, _TRUNCATE);
 	free(urlString);
 
 	ZeroMemory( &si, sizeof(si) );
@@ -139,8 +141,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_NativeSysImplementation_openURL
 
 	return JNI_TRUE;
 }
-
-
 
 const void * getClipboard(int type)
 {

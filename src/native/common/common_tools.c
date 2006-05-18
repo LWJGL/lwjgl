@@ -83,7 +83,7 @@ static jstring sprintfJavaString(JNIEnv *env, const char *format, va_list ap) {
 	char buffer[BUFFER_SIZE];
 	jstring str;
 #ifdef WIN32
-	_vsnprintf(buffer, BUFFER_SIZE, format, ap);
+	vsnprintf_s(buffer, BUFFER_SIZE, _TRUNCATE, format, ap);
 #else
 	vsnprintf(buffer, BUFFER_SIZE, format, ap);
 #endif

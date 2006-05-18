@@ -263,9 +263,11 @@ void restoreDisplayMode(void) {
 
 jstring getVersion(JNIEnv * env, char *driver)
 {
+#define BUFFER_SIZE 1024
 	jstring ret = NULL;
 
-	TCHAR driverDLL[256] = "\0";
+	const char *dll_ext = ".dll";
+	TCHAR driverDLL[BUFFER_SIZE] = "\0";
 	DWORD var = 0;
 	DWORD dwInfoSize;
 	LPVOID lpInfoBuff;
@@ -274,8 +276,8 @@ jstring getVersion(JNIEnv * env, char *driver)
 	if (driver == NULL) {
 		return NULL;
 	}
-	strcat(driverDLL, driver);
-	strcat(driverDLL, ".dll");
+	strncat_s(driverDLL, BUFFER_SIZE, driver, strlen(driver));
+	strncat_s(driverDLL, BUFFER_SIZE, dll_ext, strlen(dll_ext));
 	dwInfoSize = GetFileVersionInfoSize(driverDLL, &var);
 	lpInfoBuff = malloc(dwInfoSize);
 	bRetval = GetFileVersionInfo(driverDLL, 0, dwInfoSize, lpInfoBuff);
@@ -286,11 +288,11 @@ jstring getVersion(JNIEnv * env, char *driver)
 		UINT uiLen = 0;
 		bRetval = VerQueryValue(lpInfoBuff, TEXT("\\"), (void **) &fxdFileInfo, &uiLen);
 		if (bRetval != 0) {
-			TCHAR version[256];
-			TCHAR ms[10], ls[10];
-			sprintf(ms, "%d.%d\0", fxdFileInfo->dwProductVersionMS >> 16, fxdFileInfo->dwProductVersionMS & 0xFFFF);
-			sprintf(ls, "%d.%d\0", fxdFileInfo->dwProductVersionLS >> 16, fxdFileInfo->dwProductVersionLS & 0xFFFF);
-			sprintf(version, "%s.%s\0", ms, ls);
+			TCHAR version[BUFFER_SIZE];
+			TCHAR ms[BUFFER_SIZE], ls[BUFFER_SIZE];
+			_snprintf_s(ms, BUFFER_SIZE, _TRUNCATE, "%d.%d\0", fxdFileInfo->dwProductVersionMS >> 16, fxdFileInfo->dwProductVersionMS & 0xFFFF);
+			_snprintf_s(ls, BUFFER_SIZE, _TRUNCATE, "%d.%d\0", fxdFileInfo->dwProductVersionLS >> 16, fxdFileInfo->dwProductVersionLS & 0xFFFF);
+			_snprintf_s(version, BUFFER_SIZE, _TRUNCATE, "%s.%s\0", ms, ls);
 			ret = NewStringNative(env, version);
 		}
 	}
