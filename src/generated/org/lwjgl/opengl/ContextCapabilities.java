@@ -98,6 +98,7 @@ public class ContextCapabilities {
 	public final boolean GL_EXT_texture_mirror_clamp;
 	public final boolean GL_EXT_texture_rectangle;
 	public final boolean GL_EXT_texture_sRGB;
+	public final boolean GL_EXT_timer_query;
 	public final boolean GL_EXT_vertex_shader;
 	public final boolean GL_EXT_vertex_weighting;
 	public final boolean OpenGL11;
@@ -460,6 +461,8 @@ public class ContextCapabilities {
 	long EXT_secondary_color_glSecondaryColorPointerEXT_pointer;
 	long EXT_stencil_clear_tag_glStencilClearTagEXT_pointer;
 	long EXT_stencil_two_side_glActiveStencilFaceEXT_pointer;
+	long EXT_timer_query_glGetQueryObjecti64vEXT_pointer;
+	long EXT_timer_query_glGetQueryObjectui64vEXT_pointer;
 	long EXT_vertex_shader_glBeginVertexShaderEXT_pointer;
 	long EXT_vertex_shader_glEndVertexShaderEXT_pointer;
 	long EXT_vertex_shader_glBindVertexShaderEXT_pointer;
@@ -1477,6 +1480,12 @@ public class ContextCapabilities {
 			(EXT_stencil_two_side_glActiveStencilFaceEXT_pointer = GLContext.getFunctionAddress("glActiveStencilFaceEXT")) != 0;
 	}
 
+	private boolean EXT_timer_query_initNativeFunctionAddresses() {
+		return 
+			(EXT_timer_query_glGetQueryObjecti64vEXT_pointer = GLContext.getFunctionAddress("glGetQueryObjecti64vEXT")) != 0 &&
+			(EXT_timer_query_glGetQueryObjectui64vEXT_pointer = GLContext.getFunctionAddress("glGetQueryObjectui64vEXT")) != 0;
+	}
+
 	private boolean EXT_vertex_shader_initNativeFunctionAddresses() {
 		return 
 			(EXT_vertex_shader_glBeginVertexShaderEXT_pointer = GLContext.getFunctionAddress("glBeginVertexShaderEXT")) != 0 &&
@@ -2198,6 +2207,8 @@ public class ContextCapabilities {
 			supported_extensions.remove("GL_EXT_stencil_clear_tag");
 		if (supported_extensions.contains("GL_EXT_stencil_two_side") && !EXT_stencil_two_side_initNativeFunctionAddresses())
 			supported_extensions.remove("GL_EXT_stencil_two_side");
+		if (supported_extensions.contains("GL_EXT_timer_query") && !EXT_timer_query_initNativeFunctionAddresses())
+			supported_extensions.remove("GL_EXT_timer_query");
 		if (supported_extensions.contains("GL_EXT_vertex_shader") && !EXT_vertex_shader_initNativeFunctionAddresses())
 			supported_extensions.remove("GL_EXT_vertex_shader");
 		if (supported_extensions.contains("GL_EXT_vertex_weighting") && !EXT_vertex_weighting_initNativeFunctionAddresses())
@@ -2339,6 +2350,7 @@ public class ContextCapabilities {
 		this.GL_EXT_texture_mirror_clamp = supported_extensions.contains("GL_EXT_texture_mirror_clamp");
 		this.GL_EXT_texture_rectangle = supported_extensions.contains("GL_EXT_texture_rectangle");
 		this.GL_EXT_texture_sRGB = supported_extensions.contains("GL_EXT_texture_sRGB");
+		this.GL_EXT_timer_query = supported_extensions.contains("GL_EXT_timer_query");
 		this.GL_EXT_vertex_shader = supported_extensions.contains("GL_EXT_vertex_shader");
 		this.GL_EXT_vertex_weighting = supported_extensions.contains("GL_EXT_vertex_weighting");
 		this.OpenGL11 = supported_extensions.contains("OpenGL11");

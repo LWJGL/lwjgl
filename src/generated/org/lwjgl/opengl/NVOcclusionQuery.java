@@ -59,7 +59,7 @@ public final class NVOcclusionQuery {
 	public static void glGetOcclusionQueryuNV(int id, int pname, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().NV_occlusion_query_glGetOcclusionQueryuivNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
-		BufferChecks.checkBuffer(params, 4);
+		BufferChecks.checkBuffer(params, 1);
 		nglGetOcclusionQueryuivNV(id, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetOcclusionQueryuivNV(int id, int pname, IntBuffer params, int params_position, long function_pointer);
@@ -67,7 +67,7 @@ public final class NVOcclusionQuery {
 	public static void glGetOcclusionQueryNV(int id, int pname, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().NV_occlusion_query_glGetOcclusionQueryivNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
-		BufferChecks.checkBuffer(params, 4);
+		BufferChecks.checkBuffer(params, 1);
 		nglGetOcclusionQueryivNV(id, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetOcclusionQueryivNV(int id, int pname, IntBuffer params, int params_position, long function_pointer);

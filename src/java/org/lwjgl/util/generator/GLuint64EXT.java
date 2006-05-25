@@ -29,19 +29,12 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.opengl;
+package org.lwjgl.util.generator;
 
-public interface ATI_text_fragment_shader {
+import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
-	/**
-	 * Accepted by the &lt;cap&gt; parameter of Disable, Enable, and IsEnabled,
-	 * and by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv,
-	 * and GetDoublev, and by the &lt;target&gt; parameter of ProgramStringARB,
-	 * BindProgramARB, ProgramEnvParameter4{d,dv,f,fv}ARB,
-	 * ProgramLocalParameter4{d,dv,f,fv}ARB,
-	 * GetProgramEnvParameter{dv,fv}ARB, GetProgramLocalParameter{dv,fv}ARB,
-	 * GetProgramivARB, GetProgramfvATI, and GetProgramStringARB.
-	 */
-	int GL_TEXT_FRAGMENT_SHADER_ATI = 0x8200;
-
+@NativeType
+@Target({ElementType.PARAMETER, ElementType.METHOD})
+public @interface GLuint64EXT {
 }

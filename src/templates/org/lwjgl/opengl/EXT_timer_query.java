@@ -31,17 +31,22 @@
  */
 package org.lwjgl.opengl;
 
-public interface ATI_text_fragment_shader {
+import org.lwjgl.util.generator.*;
+
+import java.nio.*;
+
+public interface EXT_timer_query {
 
 	/**
-	 * Accepted by the &lt;cap&gt; parameter of Disable, Enable, and IsEnabled,
-	 * and by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv,
-	 * and GetDoublev, and by the &lt;target&gt; parameter of ProgramStringARB,
-	 * BindProgramARB, ProgramEnvParameter4{d,dv,f,fv}ARB,
-	 * ProgramLocalParameter4{d,dv,f,fv}ARB,
-	 * GetProgramEnvParameter{dv,fv}ARB, GetProgramLocalParameter{dv,fv}ARB,
-	 * GetProgramivARB, GetProgramfvATI, and GetProgramStringARB.
+	 * Accepted by the &lt;target&gt; parameter of BeginQuery, EndQuery, and
+	 * GetQueryiv:
 	 */
-	int GL_TEXT_FRAGMENT_SHADER_ATI = 0x8200;
+	int GL_TIME_ELAPSED_EXT = 0x88BF;
+
+	@StripPostfix("params")
+	void glGetQueryObjecti64vEXT(@GLuint int id, @GLenum int pname, @Check("1") @GLint64EXT LongBuffer params);
+
+	@StripPostfix("params")
+	void glGetQueryObjectui64vEXT(@GLuint int id, @GLenum int pname, @Check("1") @GLuint64EXT LongBuffer params);
 
 }

@@ -76,6 +76,8 @@ public class GLTypeMap implements TypeMap {
 		native_types_to_primitive.put(GLsizeiptrARB.class, PrimitiveType.Kind.LONG);
 		native_types_to_primitive.put(GLubyte.class, PrimitiveType.Kind.BYTE);
 		native_types_to_primitive.put(GLvoid.class, PrimitiveType.Kind.BYTE);
+		native_types_to_primitive.put(GLint64EXT.class, PrimitiveType.Kind.LONG);
+		native_types_to_primitive.put(GLuint64EXT.class, PrimitiveType.Kind.LONG);
 	}
 
 	public PrimitiveType.Kind getPrimitiveTypeFromNativeType(Class native_type) {
@@ -106,6 +108,10 @@ public class GLTypeMap implements TypeMap {
 			return Signedness.UNSIGNED;
 		else if (GLbyte.class.equals(type))
 			return Signedness.SIGNED;
+		else if (GLuint64EXT.class.equals(type))
+			return Signedness.UNSIGNED;
+		else if (GLint64EXT.class.equals(type))
+			return Signedness.SIGNED;
 		else
 			return Signedness.NONE;
 	}
@@ -129,6 +135,10 @@ public class GLTypeMap implements TypeMap {
 			return "d";
 		else if (annotation_type.equals(GLhalf.class))
 			return "h";
+		else if (annotation_type.equals(GLuint64EXT.class))
+			return "l";
+		else if (annotation_type.equals(GLint64EXT.class))
+			return "l";
 		else if (annotation_type.equals(GLboolean.class) || annotation_type.equals(GLvoid.class))
 			return "";
 		else
@@ -152,6 +162,9 @@ public class GLTypeMap implements TypeMap {
 				break;
 			case BYTE:
 				type = GLbyte.class;
+				break;
+			case LONG:
+				type = GLint64EXT.class;
 				break;
 			case BOOLEAN:
 				type = GLboolean.class;
@@ -182,13 +195,15 @@ public class GLTypeMap implements TypeMap {
 			return new Class[]{GLhalf.class, GLshort.class, GLushort.class};
 		else if (type.equals(DoubleBuffer.class))
 			return new Class[]{GLclampd.class, GLdouble.class};
+		else if (type.equals(LongBuffer.class))
+			return new Class[]{GLint64EXT.class, GLuint64EXT.class};
 		else
 			return new Class[]{};
 	}
 
 	private static Class[] getValidPrimitiveTypes(Class type) {
-		if (type.equals(long .class))
-			return new Class[]{GLintptrARB.class, GLuint.class, GLintptr.class, GLsizeiptrARB.class, GLsizeiptr.class};
+		if (type.equals(long.class))
+			return new Class[]{GLintptrARB.class, GLuint.class, GLintptr.class, GLsizeiptrARB.class, GLsizeiptr.class, GLint64EXT.class, GLuint64EXT.class};
 		else if (type.equals(int.class))
 			return new Class[]{GLbitfield.class, GLenum.class, GLhandleARB.class, GLint.class, GLuint.class,
 							GLsizei.class};
@@ -242,6 +257,10 @@ public class GLTypeMap implements TypeMap {
 			return GLbyte.class;
 		else if (GLbyte.class.equals(type))
 			return GLubyte.class;
+		else if (GLuint64EXT.class.equals(type))
+			return GLint64EXT.class;
+		else if (GLint64EXT.class.equals(type))
+			return GLuint64EXT.class;
 		else
 			return null;
 	}

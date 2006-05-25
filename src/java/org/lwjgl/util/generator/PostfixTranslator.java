@@ -81,6 +81,8 @@ public class PostfixTranslator implements TypeVisitor {
 			return PrimitiveType.Kind.BYTE;
 		else if (FloatBuffer.class.equals(c))
 			return PrimitiveType.Kind.FLOAT;
+		else if (LongBuffer.class.equals(c))
+			return PrimitiveType.Kind.LONG;
 		else
 			throw new RuntimeException(c + " is not allowed");
 	}
@@ -149,6 +151,9 @@ public class PostfixTranslator implements TypeVisitor {
 				break;
 			case BYTE:
 				type = "b";
+				break;
+			case LONG:
+				type = "l";
 				break;
 			default:
 				throw new RuntimeException(kind + " is not allowed");

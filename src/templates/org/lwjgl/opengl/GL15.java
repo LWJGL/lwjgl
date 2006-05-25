@@ -167,11 +167,11 @@ public interface GL15 {
 	void glEndQuery(@GLenum int target);
 
 	@StripPostfix("params")
-	void glGetQueryiv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetQueryiv(@GLenum int target, @GLenum int pname, @Check("1") IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetQueryObjectiv(@GLenum int id, @GLenum int pname, @Check("4") @GLint IntBuffer params);
+	void glGetQueryObjectiv(@GLenum int id, @GLenum int pname, @Check("1") @GLint IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetQueryObjectuiv(@GLenum int id, @GLenum int pname, @Check("4") @GLuint IntBuffer params);
+	void glGetQueryObjectuiv(@GLenum int id, @GLenum int pname, @Check("1") @GLuint IntBuffer params);
 }

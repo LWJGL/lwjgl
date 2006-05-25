@@ -107,37 +107,37 @@ extern "C" {
 /* OpenGL 1.1 definition */
 
 #ifdef _MACOSX
-typedef unsigned long GLenum;
-typedef unsigned char GLboolean;
-typedef unsigned long GLbitfield;
-typedef signed char GLbyte;
-typedef short GLshort;
-typedef long GLint;
-typedef long GLsizei;
-typedef unsigned char GLubyte;
-typedef unsigned short GLushort;
-typedef unsigned long GLuint;
-typedef float GLfloat;
-typedef float GLclampf;
-typedef double GLdouble;
-typedef double GLclampd;
-typedef void GLvoid;
+	typedef unsigned long GLenum;
+	typedef unsigned char GLboolean;
+	typedef unsigned long GLbitfield;
+	typedef signed char GLbyte;
+	typedef short GLshort;
+	typedef long GLint;
+	typedef long GLsizei;
+	typedef unsigned char GLubyte;
+	typedef unsigned short GLushort;
+	typedef unsigned long GLuint;
+	typedef float GLfloat;
+	typedef float GLclampf;
+	typedef double GLdouble;
+	typedef double GLclampd;
+	typedef void GLvoid;
 #else
-typedef unsigned int GLenum;
-typedef unsigned char GLboolean;
-typedef unsigned int GLbitfield;
-typedef signed char GLbyte;
-typedef short GLshort;
-typedef int GLint;
-typedef int GLsizei;
-typedef unsigned char GLubyte;
-typedef unsigned short GLushort;
-typedef unsigned int GLuint;
-typedef float GLfloat;
-typedef float GLclampf;
-typedef double GLdouble;
-typedef double GLclampd;
-typedef void GLvoid;
+	typedef unsigned int GLenum;
+	typedef unsigned char GLboolean;
+	typedef unsigned int GLbitfield;
+	typedef signed char GLbyte;
+	typedef short GLshort;
+	typedef int GLint;
+	typedef int GLsizei;
+	typedef unsigned char GLubyte;
+	typedef unsigned short GLushort;
+	typedef unsigned int GLuint;
+	typedef float GLfloat;
+	typedef float GLclampf;
+	typedef double GLdouble;
+	typedef double GLclampd;
+	typedef void GLvoid;
 #endif
 
 // OpenGL 2.0 types
@@ -154,6 +154,10 @@ typedef unsigned char GLcharARB;
 
 // NV_half_float types
 typedef unsigned short GLhalf;
+
+// EXT_timer_query types
+typedef unsigned long GLuint64EXT;
+typedef long GLint64EXT;
 
 /* helper stuff */
 

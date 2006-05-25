@@ -279,7 +279,7 @@ public final class GL15 {
 	public static void glGetQuery(int target, int pname, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().GL15_glGetQueryiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
-		BufferChecks.checkBuffer(params, 4);
+		BufferChecks.checkBuffer(params, 1);
 		nglGetQueryiv(target, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetQueryiv(int target, int pname, IntBuffer params, int params_position, long function_pointer);
@@ -287,7 +287,7 @@ public final class GL15 {
 	public static void glGetQueryObject(int id, int pname, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().GL15_glGetQueryObjectiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
-		BufferChecks.checkBuffer(params, 4);
+		BufferChecks.checkBuffer(params, 1);
 		nglGetQueryObjectiv(id, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetQueryObjectiv(int id, int pname, IntBuffer params, int params_position, long function_pointer);
@@ -295,7 +295,7 @@ public final class GL15 {
 	public static void glGetQueryObjectu(int id, int pname, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().GL15_glGetQueryObjectuiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
-		BufferChecks.checkBuffer(params, 4);
+		BufferChecks.checkBuffer(params, 1);
 		nglGetQueryObjectuiv(id, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetQueryObjectuiv(int id, int pname, IntBuffer params, int params_position, long function_pointer);

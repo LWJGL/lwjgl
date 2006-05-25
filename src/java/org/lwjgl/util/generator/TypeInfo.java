@@ -116,6 +116,9 @@ public class TypeInfo {
 			case SHORT:
 				type = ShortBuffer.class;
 				break;
+			case LONG:
+				type = LongBuffer.class;
+				break;
 			case BYTE: /* fall through */
 			case BOOLEAN:
 				type = ByteBuffer.class;

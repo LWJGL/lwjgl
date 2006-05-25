@@ -106,6 +106,8 @@ public class NativeTypeTranslator implements TypeVisitor {
 			return PrimitiveType.Kind.BYTE;
 		else if (FloatBuffer.class.equals(c))
 			return PrimitiveType.Kind.FLOAT;
+		else if (LongBuffer.class.equals(c))
+			return PrimitiveType.Kind.LONG;
 		else
 			throw new RuntimeException(c + " is not allowed");
 	}
@@ -183,7 +185,7 @@ public class NativeTypeTranslator implements TypeVisitor {
 	public void visitReferenceType(ReferenceType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitTypeMirror(TypeMirror t) {
 		throw new RuntimeException(t + " is not allowed");
 	}

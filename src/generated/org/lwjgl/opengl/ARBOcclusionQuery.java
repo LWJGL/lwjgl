@@ -69,7 +69,7 @@ public final class ARBOcclusionQuery {
 	public static void glGetQueryARB(int target, int pname, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().ARB_occlusion_query_glGetQueryivARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
-		BufferChecks.checkBuffer(params, 4);
+		BufferChecks.checkBuffer(params, 1);
 		nglGetQueryivARB(target, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetQueryivARB(int target, int pname, IntBuffer params, int params_position, long function_pointer);
@@ -77,7 +77,7 @@ public final class ARBOcclusionQuery {
 	public static void glGetQueryObjectARB(int id, int pname, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().ARB_occlusion_query_glGetQueryObjectivARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
-		BufferChecks.checkBuffer(params, 4);
+		BufferChecks.checkBuffer(params, 1);
 		nglGetQueryObjectivARB(id, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetQueryObjectivARB(int id, int pname, IntBuffer params, int params_position, long function_pointer);
@@ -85,7 +85,7 @@ public final class ARBOcclusionQuery {
 	public static void glGetQueryObjectuARB(int id, int pname, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().ARB_occlusion_query_glGetQueryObjectuivARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
-		BufferChecks.checkBuffer(params, 4);
+		BufferChecks.checkBuffer(params, 1);
 		nglGetQueryObjectuivARB(id, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetQueryObjectuivARB(int id, int pname, IntBuffer params, int params_position, long function_pointer);
