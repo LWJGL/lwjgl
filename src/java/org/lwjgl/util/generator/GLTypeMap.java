@@ -136,9 +136,9 @@ public class GLTypeMap implements TypeMap {
 		else if (annotation_type.equals(GLhalf.class))
 			return "h";
 		else if (annotation_type.equals(GLuint64EXT.class))
-			return "l";
+			return "i64";
 		else if (annotation_type.equals(GLint64EXT.class))
-			return "l";
+			return "i64";
 		else if (annotation_type.equals(GLboolean.class) || annotation_type.equals(GLvoid.class))
 			return "";
 		else

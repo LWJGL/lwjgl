@@ -153,7 +153,7 @@ public class PostfixTranslator implements TypeVisitor {
 				type = "b";
 				break;
 			case LONG:
-				type = "l";
+				type = "i64";
 				break;
 			default:
 				throw new RuntimeException(kind + " is not allowed");
