@@ -53,8 +53,9 @@ final class StateTracker {
 	}
 	
 	static void pushAttrib(int mask) {
-		getClientAttribStack().pushState();
-		getClientAttribStack().setState(mask);
+		StateStack attrib_stack = getClientAttribStack();
+		attrib_stack.pushState();
+		attrib_stack.setState(mask);
 		if ((mask & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
 			getReferencesStack().pushState();
 		}
