@@ -178,6 +178,13 @@ public class BufferChecks {
 	}
 
 	/**
+	 * This is a separate call to help inline checkBufferSize.
+	 */
+	private static void throwBufferSizeException(Buffer buf, int size) {
+		throw new IllegalArgumentException("Number of remaining buffer elements is " + buf.remaining() + ", must be at least " + size);
+	}
+			
+	/**
 	 * Helper method to ensure a buffer is big enough to receive data from a
 	 * glGet* operation.
 	 *
@@ -189,7 +196,7 @@ public class BufferChecks {
 	 */
 	private static void checkBufferSize(Buffer buf, int size) {
 		if (buf.remaining() < size) {
-			throw new IllegalArgumentException("Number of remaining buffer elements is " + buf.remaining() + ", must be at least " + size);
+			throwBufferSizeException(buf, size);
 		}
 	}
 
