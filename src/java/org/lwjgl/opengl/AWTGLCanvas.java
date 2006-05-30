@@ -270,13 +270,16 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 					context.makeCurrent();
 					initGL();
 				}
-				if (!context.isCurrent())
-					context.makeCurrent();
-				if (update_context) {
-					context.update();
-					update_context = false;
+				context.makeCurrent();
+				try {
+					if (update_context) {
+						context.update();
+						update_context = false;
+					}
+					paintGL();
+				} finally {
+					Context.releaseCurrentContext();
 				}
-				paintGL();
 			} finally {
 				peer_info.unlock();
 			}
