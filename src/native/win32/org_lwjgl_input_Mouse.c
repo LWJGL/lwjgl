@@ -506,6 +506,9 @@ static void UpdateMouseFields(JNIEnv *env, jobject coord_buffer_obj, jobject but
 		}
 		for (j = 0; j < num_buttons; j++) {
 			buttons_buffer[j] = diMouseState.rgbButtons[j] != 0 ? JNI_TRUE : JNI_FALSE;
+			// track the button state in the windows message buffer state array
+			// to get accurate button information when releasing a grab
+			win32_message_button_states[j] = buttons_buffer[j];
 		}
 	} else {
 		coords[2] = accum_dwheel;
