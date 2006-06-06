@@ -193,7 +193,7 @@ public class FMusic {
    * Stops all songs from playing. This is useful if you have multiple songs playing at once and
    * want a quick way to stop them
    */
-  private static native void FMUSIC_StopAllSongs();
+  public static native void FMUSIC_StopAllSongs();
 
   /**
    * Sets a user callback for any Zxx commands encountered in an S3M, XM or IT file.
