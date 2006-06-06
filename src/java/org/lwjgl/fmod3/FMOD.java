@@ -277,6 +277,9 @@ public class FMOD {
 			return;
 		}
 
+		FSound.FSOUND_Close();
+		FMusic.FMUSIC_StopAllSongs();
+		
 		created = false;
 		nDestroy();
 	}
