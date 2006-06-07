@@ -56,6 +56,11 @@ interface ContextImplementation {
 	public void swapBuffers() throws LWJGLException;
 
 	/**
+	 * Release the context from its drawable, if any.
+	 */
+	public void releaseDrawable(ByteBuffer context_handle) throws LWJGLException;
+
+	/**
 	 * Release the current context (if any). After this call, no context is current.
 	 */
 	public void releaseCurrentContext() throws LWJGLException;

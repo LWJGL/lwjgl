@@ -57,6 +57,9 @@ final class LinuxContextImplementation implements ContextImplementation {
 	}
 
 	private static native ByteBuffer nCreate(ByteBuffer peer_handle, ByteBuffer shared_context_handle) throws LWJGLException;
+
+	public void releaseDrawable(ByteBuffer context_handle) throws LWJGLException {
+	}
 	
 	public void swapBuffers() throws LWJGLException {
 		Context current_context = Context.getCurrentContext();

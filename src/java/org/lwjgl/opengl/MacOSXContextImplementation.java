@@ -68,16 +68,13 @@ final class MacOSXContextImplementation implements ContextImplementation {
 	private static native void nUpdate(ByteBuffer context_handle);
 
 	public void releaseCurrentContext() throws LWJGLException {
-		Context current_context = Context.getCurrentContext();
-		if (current_context != null) {
-			synchronized (current_context) {
-				clearDrawable(current_context.getHandle());
-			}
-		}
 		nReleaseCurrentContext();
 	}
 	private static native void nReleaseCurrentContext() throws LWJGLException;
 
+	public void releaseDrawable(ByteBuffer context_handle) throws LWJGLException {
+		clearDrawable(context_handle);
+	}
 	private static native void clearDrawable(ByteBuffer handle) throws LWJGLException;
 
 	static void resetView(PeerInfo peer_info, Context context) throws LWJGLException {

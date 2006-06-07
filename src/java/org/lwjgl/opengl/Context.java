@@ -145,6 +145,18 @@ final class Context {
 	}
 
 	/**
+	 * Release the context from its drawable. This is necessary on some platforms,
+	 * like Mac OS X, where binding the context to a drawable and binding the context
+	 * for rendering are two distinct actions and where calling releaseDrawable
+	 * on every releaseCurrentContext results in artifacts.
+	 */
+	public synchronized void releaseDrawable() throws LWJGLException {
+		if (destroyed)
+			throw new IllegalStateException("Context is destroyed");
+		implementation.releaseDrawable(getHandle());
+	}
+
+	/**
 	 * Update the context. Should be called whenever it's drawable is moved or resized
 	 */
 	public synchronized void update() {
@@ -198,6 +210,7 @@ final class Context {
 	private void checkDestroy() {
 		if (!destroyed && destroy_requested) {
 			try {
+				releaseDrawable();
 				implementation.destroy(peer_info, handle);
 				destroyed = true;
 				thread = null;

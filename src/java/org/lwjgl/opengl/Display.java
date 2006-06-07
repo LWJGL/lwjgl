@@ -283,10 +283,11 @@ public final class Display {
 		}
 		try {
 			if (context.isCurrent()) {
+				context.releaseDrawable();
 				Context.releaseCurrentContext();
 			}
 		} catch (LWJGLException e) {
-			LWJGLUtil.log("Exception occurred while trying to release context");
+			LWJGLUtil.log("Exception occurred while trying to release context: " + e);
 		}
 
 		// Automatically destroy keyboard & mouse
