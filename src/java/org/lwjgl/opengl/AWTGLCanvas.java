@@ -62,6 +62,25 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	private boolean update_context;
 	private Object SYNC_LOCK = new Object();
 
+	/** The requested pixel format */
+	private final PixelFormat pixel_format;
+
+	/** The drawable to share context with */
+	private final Drawable drawable;
+	
+	/** Context handle */
+	private PeerInfo peer_info;
+	private Context context;
+
+	/**
+	 * re-entry counter for support for re-entrant
+	 * redrawing in paint(). It happens when using dialog boxes.
+	 */
+	private int reentry_count;
+
+	/** Tracks whether initGL() needs to be called */
+	private boolean first_run;
+
 	static {
 		Sys.initialize();
 		String class_name;
@@ -90,16 +109,6 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 		}
 	}
 
-	/** The requested pixel format */
-	private final PixelFormat pixel_format;
-
-	/** The drawable to share context with */
-	private final Drawable drawable;
-	
-	/** Context handle */
-	private PeerInfo peer_info;
-	private Context context;
-	
 
 	private void setUpdate() {
 		synchronized(SYNC_LOCK) {
@@ -232,6 +241,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 				if (context != null) {
 					context.forceDestroy();
 					context = null;
+					reentry_count = 0;
 					peer_info.destroy();
 					peer_info = null;
 				}
@@ -244,7 +254,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	/**
 	 * Override this to do initialising of the context.
 	 * It will be called once from paint(), immediately after 
-	 * the context is created.
+	 * the context is created and made current.
 	 */
 	protected void initGL() {
 	}
@@ -267,18 +277,26 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 			try {
 				if (context == null) {
 					this.context = new Context(peer_info, drawable != null ? drawable.getContext() : null);
-					context.makeCurrent();
-					initGL();
+					first_run = true;
 				}
-				context.makeCurrent();
+				
+				if (reentry_count == 0)
+					context.makeCurrent();
+				reentry_count++;
 				try {
 					if (update_context) {
 						context.update();
 						update_context = false;
 					}
+					if (first_run) {
+						first_run = false;
+						initGL();
+					}
 					paintGL();
 				} finally {
-					Context.releaseCurrentContext();
+					reentry_count--;
+					if (reentry_count == 0)
+						Context.releaseCurrentContext();
 				}
 			} finally {
 				peer_info.unlock();
