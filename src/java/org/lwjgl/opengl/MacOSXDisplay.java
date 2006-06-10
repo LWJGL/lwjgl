@@ -44,6 +44,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -413,7 +414,22 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public int isStateKeySet(int key) {
-		return Keyboard.STATE_UNKNOWN;
+		int awt_key;
+		switch (key) {
+			case Keyboard.KEY_CAPITAL:
+				awt_key = KeyEvent.VK_CAPS_LOCK;
+				break;
+			case Keyboard.KEY_NUMLOCK:
+				awt_key = KeyEvent.VK_NUM_LOCK;
+				break;
+			case Keyboard.KEY_SYSRQ:
+				awt_key = KeyEvent.VK_SCROLL_LOCK;
+				break;
+			default:
+				return Keyboard.STATE_UNKNOWN;
+		}
+		boolean state = Toolkit.getDefaultToolkit().getLockingKeyState(awt_key);
+		return state ? Keyboard.STATE_ON : Keyboard.STATE_OFF;
 	}
 
 	/** Native cursor handles */
