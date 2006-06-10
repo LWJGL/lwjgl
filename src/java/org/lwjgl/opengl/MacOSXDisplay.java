@@ -428,8 +428,13 @@ final class MacOSXDisplay implements DisplayImplementation {
 			default:
 				return Keyboard.STATE_UNKNOWN;
 		}
-		boolean state = Toolkit.getDefaultToolkit().getLockingKeyState(awt_key);
-		return state ? Keyboard.STATE_ON : Keyboard.STATE_OFF;
+		try {
+			boolean state = Toolkit.getDefaultToolkit().getLockingKeyState(awt_key);
+			return state ? Keyboard.STATE_ON : Keyboard.STATE_OFF;
+		} catch (Exception e) {
+			LWJGLUtil.log("Failed to query key state: " + e);
+			return Keyboard.STATE_UNKNOWN;
+		}
 	}
 
 	/** Native cursor handles */
