@@ -203,7 +203,7 @@ public interface DisplayImplementation {
 	 */
 	int readKeyboard(IntBuffer buffer, int buffer_position);
 
-	int isStateKeySet(int key);
+//	int isStateKeySet(int key);
 
 	/** Native cursor handles */
 	Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException;

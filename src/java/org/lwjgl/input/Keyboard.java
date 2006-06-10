@@ -191,10 +191,10 @@ public class Keyboard {
 	public static final int KEY_POWER           = 0xDE;
 	public static final int KEY_SLEEP           = 0xDF;
 
-	public static final int STATE_ON							= 0;
+/*	public static final int STATE_ON							= 0;
 	public static final int STATE_OFF						 = 1;
 	public static final int STATE_UNKNOWN				 = 2;
-
+*/
 	public static final int KEYBOARD_SIZE = 256;
 
 	/** Buffer size in events */
@@ -334,7 +334,6 @@ public class Keyboard {
 	 * character for that event.
 	 *
 	 * @see org.lwjgl.input.Keyboard#isKeyDown(int key)
-	 * @see org.lwjgl.input.Keyboard#isStateKeySet(int key)
 	 * @see org.lwjgl.input.Keyboard#next()
 	 * @see org.lwjgl.input.Keyboard#getEventKey()
 	 * @see org.lwjgl.input.Keyboard#getEventKeyState()
@@ -371,12 +370,12 @@ public class Keyboard {
 	 * @param key State key to test (KEY_CAPITAL | KEY_NUMLOCK | KEY_SYSRQ)
 	 * @return STATE_ON if on, STATE_OFF if off and STATE_UNKNOWN if the state is unknown
 	 */
-	public static int isStateKeySet(int key) {
+/*	public static int isStateKeySet(int key) {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can query key state");
 		return Display.getImplementation().isStateKeySet(key);
 	}
-
+*/
 	/**
 	 * Gets a key's name
 	 * @param key The key

@@ -625,10 +625,10 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native int nReadKeyboard(IntBuffer buffer, int buffer_position);
 	
-	public int isStateKeySet(int key) {
+/*	public int isStateKeySet(int key) {
 		return Keyboard.STATE_UNKNOWN;
 	}
-
+*/
 	private static native ByteBuffer nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
 
 	public Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {

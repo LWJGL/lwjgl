@@ -277,7 +277,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nReadKeyboard
 	return num_events;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_isStateKeySet(JNIEnv *env, jobject self, jint key)
+/*JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_isStateKeySet(JNIEnv *env, jobject self, jint key)
 {
   int state = org_lwjgl_input_Keyboard_STATE_UNKNOWN;
   switch(key) {
@@ -293,4 +293,4 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_isStateKeySet(JNIEnv *
   }
   
   return state;
-}
+}*/

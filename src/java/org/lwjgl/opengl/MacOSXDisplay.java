@@ -413,7 +413,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		return keyboard_queue.copyEvents(buffer);
 	}
 
-	public int isStateKeySet(int key) {
+/*	public int isStateKeySet(int key) {
 		int awt_key;
 		switch (key) {
 			case Keyboard.KEY_CAPITAL:
@@ -436,7 +436,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 			return Keyboard.STATE_UNKNOWN;
 		}
 	}
-
+*/
 	/** Native cursor handles */
 	public Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
 		BufferedImage cursor_image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);

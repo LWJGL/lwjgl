@@ -164,7 +164,7 @@ final class Win32Display implements DisplayImplementation {
 	}
 	private native int nReadKeyboard(IntBuffer buffer, int buffer_position);
 
-	public native int isStateKeySet(int key);
+//	public native int isStateKeySet(int key);
 
 	public native ByteBuffer nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
 
