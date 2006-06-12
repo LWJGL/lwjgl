@@ -363,7 +363,7 @@ int findPixelFormatOnDC(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixe
 	bool floating_point = (bool)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
 	bool use_arb_selection = samples > 0 || floating_point || pbuffer || pixelFormatCaps != NULL;
 	pixel_format_id = findPixelFormatDefault(env, hdc, pixel_format, use_hdc_bpp, double_buffer);
-	if (use_arb_selection) {
+	if (pixel_format_id != -1 && use_arb_selection) {
 		if (!applyPixelFormat(env, hdc, pixel_format_id)) {
 			return -1;
 		}
