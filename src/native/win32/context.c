@@ -183,6 +183,8 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extens
 	int accum_bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_bpp", "I"));
 	int accum_alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_alpha", "I"));
 	jboolean stereo = (*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "stereo", "Z"));
+	bool floating_point = (bool)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
+	int pixel_type = floating_point ? WGL_TYPE_RGBA_FLOAT_ARB : WGL_TYPE_RGBA_ARB;
 	int iPixelFormat;
 	unsigned int num_formats_returned;
 	attrib_list_t attrib_list;
@@ -200,7 +202,7 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extens
 	}
 	if (!getBooleanProperty(env, "org.lwjgl.opengl.Display.allowSoftwareOpenGL"))
 		putAttrib(&attrib_list, WGL_ACCELERATION_ARB); putAttrib(&attrib_list, WGL_FULL_ACCELERATION_ARB);
-	putAttrib(&attrib_list, WGL_PIXEL_TYPE_ARB); putAttrib(&attrib_list, WGL_TYPE_RGBA_ARB);
+	putAttrib(&attrib_list, WGL_PIXEL_TYPE_ARB); putAttrib(&attrib_list, pixel_type);
 	putAttrib(&attrib_list, WGL_DOUBLE_BUFFER_ARB); putAttrib(&attrib_list, double_buffer ? TRUE : FALSE);
 	putAttrib(&attrib_list, WGL_SUPPORT_OPENGL_ARB); putAttrib(&attrib_list, TRUE);
 	putAttrib(&attrib_list, WGL_COLOR_BITS_ARB); putAttrib(&attrib_list, bpp);
@@ -217,7 +219,7 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extens
 	putAttrib(&attrib_list, WGL_STEREO_ARB); putAttrib(&attrib_list, stereo ? TRUE : FALSE);
 	putAttrib(&attrib_list, WGL_AUX_BUFFERS_ARB); putAttrib(&attrib_list, num_aux_buffers);
 	// Assume caller checked extension availability
-	if ( pixelFormatCaps != NULL ) {
+	if (pixelFormatCaps != NULL) {
 		pixelFormatCaps_ptr = (GLuint *)(*env)->GetDirectBufferAddress(env, pixelFormatCaps);
 		pixelFormatCapsSize = (*env)->GetDirectBufferCapacity(env, pixelFormatCaps);
 
@@ -358,6 +360,7 @@ int findPixelFormatOnDC(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixe
 	int pixel_format_id;
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
 	int samples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "samples", "I"));
+	bool floating_point = (bool)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
 	bool use_arb_selection = samples > 0 || pbuffer || pixelFormatCaps != NULL;
 	pixel_format_id = findPixelFormatDefault(env, hdc, pixel_format, use_hdc_bpp, double_buffer);
 	if (use_arb_selection) {
@@ -390,6 +393,12 @@ int findPixelFormatOnDC(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixe
 			wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
 			wglDeleteContext(dummy_hglrc);
 			throwException(env, "No support for WGL_ARB_multisample");
+			return -1;
+		}
+		if (floating_point && !extensions.WGL_ARB_pixel_format_float) {
+			wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
+			wglDeleteContext(dummy_hglrc);
+			throwException(env, "No support for WGL_ARB_pixel_format_float");
 			return -1;
 		}
 		if (pixelFormatCaps != NULL && !extensions.WGL_ARB_render_texture) {
