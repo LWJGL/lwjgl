@@ -147,6 +147,7 @@ static void extgl_InitGLXSupportedExtensions(Display *disp, int screen, GLXExten
 	extension_flags.GLX_EXT_visual_rating = GLXQueryExtension(disp, screen, "GLX_EXT_visual_rating");*/
 	extension_flags->GLX_SGI_swap_control = symbols_flags.GLX_SGI_swap_control && GLXQueryExtension(disp, screen, "GLX_SGI_swap_control");
 	extension_flags->GLX_ARB_multisample = GLXQueryExtension(disp, screen, "GLX_ARB_multisample");
+	extension_flags->GLX_ARB_fbconfig_float = GLXQueryExtension(disp, screen, "GLX_ARB_fbconfig_float");
 }
 
 bool extgl_Open(JNIEnv *env) {

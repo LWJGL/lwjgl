@@ -252,6 +252,10 @@
 /* NV_float_buffer */
 #define GLX_FLOAT_COMPONENTS_NV         0x20B0
 
+/* GLX_ARB_fbconfig_float  */
+#define GLX_RGBA_FLOAT_TYPE             0x20B9
+#define GLX_RGBA_FLOAT_BIT              0x0004
+
 typedef XID GLXContextID;
 typedef XID GLXPixmap;
 typedef XID GLXDrawable;
@@ -319,6 +323,7 @@ typedef struct {
     bool GLX_EXT_visual_rating;*/
     bool GLX_SGI_swap_control;
     bool GLX_ARB_multisample;
+	bool GLX_ARB_fbconfig_float;
 } GLXExtensions;
 
 /* Add _ to global symbols to avoid symbol clash with the OpenGL library */

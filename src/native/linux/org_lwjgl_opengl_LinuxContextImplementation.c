@@ -60,7 +60,7 @@ static bool checkContext(JNIEnv *env, Display *display, GLXContext context) {
 	/*
 	 * Ditched the requirement that contexts have to be direct. It was
 	 * never true that all accelerated contexts are direct, but it
-	 * was a reasonable test until the appearance of Xgl and friends.
+	 * was a reasonable test until the appearance of Xgl and AIGLX.
 	 * Now the test is at best useless, and at worst wrong,
 	 * in case the current X server accelerates indirect rendering.
 	 */
@@ -77,7 +77,13 @@ static void createContextGLX13(JNIEnv *env, X11PeerInfo *peer_info, X11Context *
 	GLXFBConfig *config = getFBConfigFromPeerInfo(env, peer_info);
 	if (config == NULL)
 		return;
-	GLXContext context = lwjgl_glXCreateNewContext(peer_info->display, *config, GLX_RGBA_TYPE, shared_context, True);
+	int render_type;
+	if (lwjgl_glXGetFBConfigAttrib(peer_info->display, *config, GLX_RENDER_TYPE, &render_type) != 0) {
+		throwException(env, "Could not get GLX_RENDER_TYPE attribute");
+		return;
+	}
+	int context_render_type = (render_type & GLX_RGBA_FLOAT_BIT) != 0 ? GLX_RGBA_FLOAT_TYPE : GLX_RGBA_TYPE;
+	GLXContext context = lwjgl_glXCreateNewContext(peer_info->display, *config, context_render_type, shared_context, True);
 	XFree(config);
 	if (!checkContext(env, peer_info->display, context))
 		return;

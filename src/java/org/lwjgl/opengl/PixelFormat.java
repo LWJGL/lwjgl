@@ -33,8 +33,8 @@ package org.lwjgl.opengl;
 
 /**
  * This class describes pixel format properties for an OpenGL context. Instances
- * of this class is used as arguments to Display.create() and Pbuffer.create(), to
- * indicate minimum required properties.
+ * of this class is used as arguments to Display.create(), Pbuffer.create() and
+ * AWTGLCanvas, to indicate minimum required properties.
  *
  * WARNING: Some pixel formats are known to cause troubles on certain buggy drivers.
  *          Example: Under Windows, specifying samples != 0 will enable the ARB
@@ -67,8 +67,10 @@ public final class PixelFormat {
 	private final int accum_bpp;
 	/** The number of alpha bits in the accumulation buffer */
 	private final int accum_alpha;
-	/** Whether this format represents a stereo buffer or not */
+	/** Whether this format requires a stereo buffer */
 	private final boolean stereo;
+	/** Whether this format specifies a floating point format */
+	private final boolean floating_point;
 
 	/**
 	 * Default pixel format is minimum 8 bits depth, and no alpha
@@ -91,6 +93,10 @@ public final class PixelFormat {
 	}
 
 	public PixelFormat(int bpp, int alpha, int depth, int stencil, int samples, int num_aux_buffers, int accum_bpp, int accum_alpha, boolean stereo) {
+		this(bpp, alpha, depth, stencil, samples, num_aux_buffers, accum_bpp, accum_alpha, stereo, false);
+	}
+
+	public PixelFormat(int bpp, int alpha, int depth, int stencil, int samples, int num_aux_buffers, int accum_bpp, int accum_alpha, boolean stereo, boolean floating_point) {
 		this.bpp = bpp;
 		this.alpha = alpha;
 		this.depth = depth;
@@ -100,6 +106,7 @@ public final class PixelFormat {
 		this.accum_bpp = accum_bpp;
 		this.accum_alpha = accum_alpha;
 		this.stereo = stereo;
+		this.floating_point = floating_point;
 	}
 
 	public int getBitsPerPixel() {
@@ -136,5 +143,9 @@ public final class PixelFormat {
 
 	public boolean isStereo() {
 		return stereo;
+	}
+	
+	public boolean isFloatingPoint() {
+		return floating_point;
 	}
 }

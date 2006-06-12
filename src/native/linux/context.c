@@ -123,12 +123,14 @@ static GLXFBConfig *chooseVisualGLX13FromBPP(JNIEnv *env, Display *disp, int scr
 	int accum_bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_bpp", "I"));
 	int accum_alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_alpha", "I"));
 	bool stereo = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "stereo", "Z"));
+	bool floating_point = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
 
 	int bpe = convertToBPE(bpp);
 	int accum_bpe = convertToBPE(accum_bpp);
 	attrib_list_t attrib_list;
 	initAttribList(&attrib_list);
-	putAttrib(&attrib_list, GLX_RENDER_TYPE); putAttrib(&attrib_list, GLX_RGBA_BIT);
+	int render_type = floating_point ? GLX_RGBA_FLOAT_BIT : GLX_RGBA_BIT;
+	putAttrib(&attrib_list, GLX_RENDER_TYPE); putAttrib(&attrib_list, render_type);
 	putAttrib(&attrib_list, GLX_DOUBLEBUFFER); putAttrib(&attrib_list, double_buffer ? True : False);
 	putAttrib(&attrib_list, GLX_DRAWABLE_TYPE); putAttrib(&attrib_list, drawable_type);
 	putAttrib(&attrib_list, GLX_DEPTH_SIZE); putAttrib(&attrib_list, depth);
@@ -267,6 +269,11 @@ bool initPeerInfo(JNIEnv *env, jobject peer_info_handle, Display *display, int s
 	int samples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "samples", "I"));
 	if (samples > 0 && !extension_flags.GLX_ARB_multisample) {
 		throwException(env, "Samples > 0 specified but there's no support for GLX_ARB_multisample");
+		return false;
+	}
+	bool floating_point = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
+	if (floating_point && !extension_flags.GLX_ARB_fbconfig_float) {
+		throwException(env, "Floating point specified but there's no support for GLX_ARB_fbconfig_float");
 		return false;
 	}
 	peer_info->glx13 = extension_flags.GLX13;
