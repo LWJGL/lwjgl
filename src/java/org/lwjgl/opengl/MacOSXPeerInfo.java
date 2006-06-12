@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 
 /**
  *
@@ -44,6 +45,8 @@ import org.lwjgl.LWJGLException;
 abstract class MacOSXPeerInfo extends PeerInfo {
 	public MacOSXPeerInfo(PixelFormat pixel_format, boolean use_display_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException {
 		super(createHandle());
+		if (pixel_format.isFloatingPoint() && !LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 4))
+			throw new LWJGLException("Floating point pixel format requested, but is not supported");
 		choosePixelFormat(pixel_format, use_display_bpp, support_window, support_pbuffer, double_buffered);
 	}
 	private static native ByteBuffer createHandle();
