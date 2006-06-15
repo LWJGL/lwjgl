@@ -196,7 +196,6 @@ jobject initDisplay(JNIEnv * env)
 {
 	DEVMODE devmode;
 	jobject newMode;
-	LONG cdsret;
 
 	// Get the screen
 	HDC screenDC = GetDC(NULL);
