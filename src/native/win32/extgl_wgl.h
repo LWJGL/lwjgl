@@ -166,6 +166,12 @@ typedef HDC (APIENTRY * wglGetCurrentReadDCARBPROC) (void);
 
 #define WGL_TYPE_RGBA_FLOAT_ARB									0x21A0
 
+/*-------------------------------------------------------------------*/
+/*------------WGL_ATI_pixel_format_float ----------------------------*/
+/*-------------------------------------------------------------------*/
+
+#define WGL_TYPE_RGBA_FLOAT_ATI									0x21A0
+
 typedef struct {
     bool WGL_ARB_buffer_region;
     bool WGL_ARB_extensions_string;
@@ -179,6 +185,7 @@ typedef struct {
     bool WGL_NV_render_depth_texture;
     bool WGL_NV_render_texture_rectangle;
     bool WGL_ARB_pixel_format_float;
+    bool WGL_ATI_pixel_format_float;
 	wglGetExtensionsStringEXTPROC wglGetExtensionsStringEXT;
 
 	wglGetExtensionsStringARBPROC wglGetExtensionsStringARB;

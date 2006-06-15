@@ -50,7 +50,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32PeerInfo_createHandle
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32PeerInfo_nChoosePixelFormat
   (JNIEnv *env, jclass clazz, jobject peer_info_handle, jint origin_x, jint origin_y, jobject pixel_format, jobject pixel_format_caps, jboolean use_hdc_bpp, jboolean window, jboolean pbuffer, jboolean double_buffer) {
 	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	int pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, pixel_format_caps, use_hdc_bpp, window, pbuffer, double_buffer);
+	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
+	bool floating_point = (bool)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
+	int pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, pixel_format_caps, use_hdc_bpp, window, pbuffer, double_buffer, floating_point);
 	if (pixel_format_id == -1)
 		return;
 	// Let it throw

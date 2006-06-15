@@ -134,6 +134,7 @@ static void extgl_InitSupportedWGLExtensions(WGLExtensions *extensions) {
 	extensions->WGL_ARB_make_current_read = WGLQueryExtension(extensions, "WGL_ARB_make_current_read");
 	extensions->WGL_ARB_multisample = WGLQueryExtension(extensions, "WGL_ARB_multisample");
 	extensions->WGL_ARB_pixel_format_float = WGLQueryExtension(extensions, "WGL_ARB_pixel_format_float");
+	extensions->WGL_ATI_pixel_format_float = WGLQueryExtension(extensions, "WGL_ATI_pixel_format_float");
 	extensions->WGL_ARB_pbuffer = WGLQueryExtension(extensions, "WGL_ARB_pbuffer");
 	extensions->WGL_ARB_pixel_format = WGLQueryExtension(extensions, "WGL_ARB_pixel_format");
 	extensions->WGL_ARB_render_texture = WGLQueryExtension(extensions, "WGL_ARB_render_texture");
