@@ -4,10 +4,11 @@ if "%JAVA_HOME%" == "" goto errorjavahome
 if "%PLTSDKHOME%" == "" goto errorpltsdkhome
 if "%CHOME%" == "" goto errorchome
 if "%ALHOME%" == "" goto erroralhome
-if "%DXHOME%" == "" goto errordxhome
-set COPTIONS=/Wp64 /I"%CHOME%\include" /I"%PLTSDKHOME%\include" /I"%DXHOME%\include" /I"%JAVA_HOME%\include" /I"%JAVA_HOME%\include\win32" /I"%ALHOME%\include" /I"..\..\src\native\common" /Ox /Ob2 /Oi /Ot /Oy /FD /EHsc /MT /Gy /W2 /nologo /c /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "LWJGL_EXPORTS" /D "_WINDLL"
+if "%DXSDK_DIR%" == "" goto errordxhome
 
-set LINKEROPTS=/link /LIBPATH:"%JAVA_HOME%\lib" /LIBPATH:"%ALHOME%\libs" /LIBPATH:"%DXHOME%\Lib\x86" /LIBPATH:"%PLTSDKHOME%\Lib" /LIBPATH:"%CHOME%\Lib" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /NOLOGO /DLL /DELAYLOAD:jawt.dll
+set COPTIONS=/Wp64 /I"%CHOME%\include" /I"%PLTSDKHOME%\include" /I"%DXSDK_DIR%\include" /I"%JAVA_HOME%\include" /I"%JAVA_HOME%\include\win32" /I"%ALHOME%\include" /I"..\..\src\native\common" /Ox /Ob2 /Oi /Ot /Oy /FD /EHsc /MT /Gy /W2 /nologo /c /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "LWJGL_EXPORTS" /D "_WINDLL"
+
+set LINKEROPTS=/link /LIBPATH:"%JAVA_HOME%\lib" /LIBPATH:"%ALHOME%\libs" /LIBPATH:"%DXSDK_DIR%\Lib\x86" /LIBPATH:"%PLTSDKHOME%\Lib" /LIBPATH:"%CHOME%\Lib" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /NOLOGO /DLL /DELAYLOAD:jawt.dll
 set LIBS=Kernel32.lib dinput.lib dxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib jawt.lib delayimp.lib winmm.lib
 
 for %%x in (..\..\src\native\win32\*.c) do cl %COPTIONS% %%x
@@ -58,7 +59,7 @@ goto error
 echo -------------------------
 echo --     ** ERROR **     --
 echo -------------------------
-echo DXHOME not set.
+echo DXSDK_DIR not set.
 echo.
 goto error
 
