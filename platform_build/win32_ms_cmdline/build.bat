@@ -69,7 +69,7 @@ echo JAVA_HOME  The root directory where Java is installed
 echo PLTSDKHOME  "   "       "        "  Platform SDK is installed
 echo CHOME       "   "       "        "  Visual C++ toolkit is installed
 echo ALHOME      "   "       "        "  OpenAl is installed
-echo DXHOME      "   "       "        "  DirectX is installed
+echo DXSDK_DIR   "   "       "        "  DirectX is installed
 echo -------------------------
 echo --     ** ERROR **     --
 echo -------------------------
