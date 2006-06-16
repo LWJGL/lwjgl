@@ -76,7 +76,7 @@ public class Matrix2f extends Matrix implements Serializable {
 	 * Copy the source matrix to the destination matrix.
 	 * @param src The source matrix
 	 * @param dest The destination matrix, or null if a new one should be created.
-	 * @return dest
+	 * @return The copied matrix
 	 */
 	public static Matrix2f load(Matrix2f src, Matrix2f dest) {
 		if (dest == null)
@@ -286,14 +286,14 @@ public class Matrix2f extends Matrix implements Serializable {
 	 * @return The inverted matrix, or null if source can't be reverted.
 	 */
 	public static Matrix2f invert(Matrix2f src, Matrix2f dest) {
-		if (dest == null)
-			dest = new Matrix2f();
 		/*
 		 *inv(A) = 1/det(A) * adj(A);
 		 */
 		
 		float determinant = src.determinant();
 		if (determinant != 0) {
+			if (dest == null)
+				dest = new Matrix2f();
 			float determinant_inv = 1f/determinant;
 			float t00 =  src.m11*determinant_inv;
 			float t01 = -src.m01*determinant_inv;

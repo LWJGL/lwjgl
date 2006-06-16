@@ -78,7 +78,7 @@ public class Matrix3f extends Matrix implements Serializable {
 	 * Copy source matrix to destination matrix
 	 * @param src The source matrix
 	 * @param dest The destination matrix, or null of a new matrix is to be created
-	 * @return dest
+	 * @return The copied matrix
 	 */
 	public static Matrix3f load(Matrix3f src, Matrix3f dest) {
 		if (dest == null)
@@ -372,13 +372,15 @@ public class Matrix3f extends Matrix implements Serializable {
 	/**
 	 * Invert the source matrix and put the result into the destination matrix
 	 * @param src The source matrix to be inverted
-	 * @param dest The destination matrix
-	 * @return dest if successful, null otherwise
+	 * @param dest The destination matrix, or null if a new one is to be created
+	 * @return The inverted matrix if successful, null otherwise
 	 */
 	public static Matrix3f invert(Matrix3f src, Matrix3f dest) {
 		float determinant = src.determinant();
 		
 		if (determinant != 0) {
+			if (dest == null)
+				dest = new Matrix3f();
 			 /* do it the ordinary way
 			  *
 			  * inv(A) = 1/det(A) * adj(T), where adj(T) = transpose(Conjugate Matrix)
