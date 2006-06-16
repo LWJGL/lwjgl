@@ -47,40 +47,54 @@ public class Matrix3f extends Matrix implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public float m00 = 1.0f,
+	public float m00,
 		m01,
 		m02,
 		m10,
-		m11 = 1.0f,
+		m11,
 		m12,
 		m20,
 		m21,
-		m22 = 1.0f;
+		m22;
 
 	/**
-	 * Constructor for Matrix3f.
+	 * Constructor for Matrix3f. Matrix is initialised to the identity.
 	 */
 	public Matrix3f() {
 		super();
+		setIdentity();
 	}
+	
 	/**
-	 * Load from another matrix3f
+	 * Load from another matrix
 	 * @param src The source matrix
 	 * @return this
 	 */
 	public Matrix3f load(Matrix3f src) {
+		return load(src, this);
+	}
+	
+	/**
+	 * Copy source matrix to destination matrix
+	 * @param src The source matrix
+	 * @param dest The destination matrix, or null of a new matrix is to be created
+	 * @return dest
+	 */
+	public static Matrix3f load(Matrix3f src, Matrix3f dest) {
+		if (dest == null)
+			dest = new Matrix3f();
 
-		m00 = src.m00;
-		m10 = src.m10;
-		m20 = src.m20;
-		m01 = src.m01;
-		m11 = src.m11;
-		m21 = src.m21;
-		m02 = src.m02;
-		m12 = src.m12;
-		m22 = src.m22;
+		dest.m00 = src.m00;
+		dest.m10 = src.m10;
+		dest.m20 = src.m20;
+		dest.m01 = src.m01;
+		dest.m11 = src.m11;
+		dest.m21 = src.m21;
+		dest.m02 = src.m02;
+		dest.m12 = src.m12;
+		dest.m22 = src.m22;
 
-		return this;
+		return dest;
 	}
 	
 	/**
@@ -162,8 +176,6 @@ public class Matrix3f extends Matrix implements Serializable {
 		buf.put(m22);
 		return this;
 	}	
-	
-	
 
 	/**
 	 * Add two matrices together and place the result in a third matrix.
@@ -173,15 +185,8 @@ public class Matrix3f extends Matrix implements Serializable {
 	 * @return the destination matrix
 	 */
 	public static Matrix3f add(Matrix3f left, Matrix3f right, Matrix3f dest) {
-
-		Matrix3f temp = null;
-
 		if (dest == null)
 			dest = new Matrix3f();
-		else if (dest == left || dest == right) {
-			temp = dest;
-			dest = new Matrix3f();
-		}
 
 		dest.m00 = left.m00 + right.m00;
 		dest.m01 = left.m01 + right.m01;
@@ -193,11 +198,7 @@ public class Matrix3f extends Matrix implements Serializable {
 		dest.m21 = left.m21 + right.m21;
 		dest.m22 = left.m22 + right.m22;
 
-		if (temp != null) {
-			temp.load(dest);
-			return temp;
-		} else
-			return dest;
+		return dest;
 	}
 
 	/**
@@ -208,15 +209,8 @@ public class Matrix3f extends Matrix implements Serializable {
 	 * @return the destination matrix
 	 */
 	public static Matrix3f sub(Matrix3f left, Matrix3f right, Matrix3f dest) {
-
-		Matrix3f temp = null;
-
 		if (dest == null)
 			dest = new Matrix3f();
-		else if (dest == left || dest == right) {
-			temp = dest;
-			dest = new Matrix3f();
-		}
 
 		dest.m00 = left.m00 - right.m00;
 		dest.m01 = left.m01 - right.m01;
@@ -228,11 +222,7 @@ public class Matrix3f extends Matrix implements Serializable {
 		dest.m21 = left.m21 - right.m21;
 		dest.m22 = left.m22 - right.m22;
 
-		if (temp != null) {
-			temp.load(dest);
-			return temp;
-		} else
-			return dest;
+		return dest;
 	}
 
 	/**
@@ -243,40 +233,39 @@ public class Matrix3f extends Matrix implements Serializable {
 	 * @return the destination matrix
 	 */
 	public static Matrix3f mul(Matrix3f left, Matrix3f right, Matrix3f dest) {
-
-		Matrix3f temp = null;
-
 		if (dest == null)
 			dest = new Matrix3f();
-		else if (dest == left || dest == right) {
-			temp = dest;
-			dest = new Matrix3f();
-		}
 
-		dest.m00 =
+		float m00 =
 			left.m00 * right.m00 + left.m10 * right.m01 + left.m20 * right.m02;
-		dest.m01 =
+		float m01 =
 			left.m01 * right.m00 + left.m11 * right.m01 + left.m21 * right.m02;
-		dest.m02 =
+		float m02 =
 			left.m02 * right.m00 + left.m12 * right.m01 + left.m22 * right.m02;
-		dest.m10 =
+		float m10 =
 			left.m00 * right.m10 + left.m10 * right.m11 + left.m20 * right.m12;
-		dest.m11 =
+		float m11 =
 			left.m01 * right.m10 + left.m11 * right.m11 + left.m21 * right.m12;
-		dest.m12 =
+		float m12 =
 			left.m02 * right.m10 + left.m12 * right.m11 + left.m22 * right.m12;
-		dest.m20 =
+		float m20 =
 			left.m00 * right.m20 + left.m10 * right.m21 + left.m20 * right.m22;
-		dest.m21 =
+		float m21 =
 			left.m01 * right.m20 + left.m11 * right.m21 + left.m21 * right.m22;
-		dest.m22 =
+		float m22 =
 			left.m02 * right.m20 + left.m12 * right.m21 + left.m22 * right.m22;
 
-		if (temp != null) {
-			temp.load(dest);
-			return temp;
-		} else
-			return dest;
+		dest.m00 = m00;
+		dest.m01 = m01;
+		dest.m02 = m02;
+		dest.m10 = m10;
+		dest.m11 = m11;
+		dest.m12 = m12;
+		dest.m20 = m20;
+		dest.m21 = m21;
+		dest.m22 = m22;
+
+		return dest;
 	}
 
 	/**
@@ -288,25 +277,18 @@ public class Matrix3f extends Matrix implements Serializable {
 	 * @return the destination vector
 	 */
 	public static Vector3f transform(Matrix3f left, Vector3f right, Vector3f dest) {
-
-		Vector3f temp = null;
-
 		if (dest == null)
 			dest = new Vector3f();
-		else if (dest == right) {
-			temp = dest;
-			dest = new Vector3f();
-		}
 
-		dest.x = left.m00 * right.x + left.m10 * right.y + left.m20 * right.z;
-		dest.y = left.m01 * right.x + left.m11 * right.y + left.m21 * right.z;
-		dest.z = left.m02 * right.x + left.m12 * right.y + left.m22 * right.z;
+		float x = left.m00 * right.x + left.m10 * right.y + left.m20 * right.z;
+		float y = left.m01 * right.x + left.m11 * right.y + left.m21 * right.z;
+		float z = left.m02 * right.x + left.m12 * right.y + left.m22 * right.z;
 
-		if (temp != null) {
-			temp.set(dest);
-			return temp;
-		} else
-			return dest;
+		dest.x = x;
+		dest.y = y;
+		dest.z = z;
+
+		return dest;
 	}
 
 	/**
@@ -314,16 +296,7 @@ public class Matrix3f extends Matrix implements Serializable {
 	 * @return this
 	 */
 	public Matrix transpose() {
-		float f = m10;
-		m10 = m01;
-		m01 = f;
-		f = m20;
-		m20 = m02;
-		m02 = f;
-		f = m21;
-		m21 = m12;
-		m12 = f;
-		return this;
+		return transpose(this, this);
 	}
 
 	/**
@@ -332,26 +305,37 @@ public class Matrix3f extends Matrix implements Serializable {
 	 * @return the transposed matrix
 	 */
 	public Matrix3f transpose(Matrix3f dest) {
-		if (dest == null) { 
-		   // New matrix needed to store transpose 
+		return transpose(this, dest);
+	}
+
+	/**
+	 * Transpose the source matrix and place the result into the destination matrix
+	 * @param src The source matrix to be transposed
+	 * @param dest The destination matrix or null if a new matrix is to be created
+	 * @return the transposed matrix
+	 */
+	public static Matrix3f transpose(Matrix3f src, Matrix3f dest) {
+		if (dest == null)
 		   dest = new Matrix3f(); 
-		} 
-		if (this == dest) { 
-		   // Destination and source are the same!  Run the in-place 
-		   // transpose instead as the copy transpose will be destructive. 
-		   transpose(); 
-		} else { 
-		   // Destination differs from source.  Perform copy transpose 
-		   dest.m00 = m00; 
-		   dest.m01 = m10; 
-		   dest.m02 = m20; 
-		   dest.m10 = m01; 
-		   dest.m11 = m11; 
-		   dest.m12 = m21; 
-		   dest.m20 = m02; 
-		   dest.m21 = m12; 
-		   dest.m22 = m22; 
-		} 
+		float m00 = src.m00; 
+		float m01 = src.m10; 
+		float m02 = src.m20; 
+		float m10 = src.m01; 
+		float m11 = src.m11; 
+		float m12 = src.m21; 
+		float m20 = src.m02; 
+		float m21 = src.m12; 
+		float m22 = src.m22; 
+
+		dest.m00 = m00;
+		dest.m01 = m01;
+		dest.m02 = m02;
+		dest.m10 = m10;
+		dest.m11 = m11;
+		dest.m12 = m12;
+		dest.m20 = m20;
+		dest.m21 = m21;
+		dest.m22 = m22;
 		return dest; 
 	}
 
@@ -381,12 +365,20 @@ public class Matrix3f extends Matrix implements Serializable {
 	 * Invert this matrix
 	 * @return this if successful, null otherwise
 	 */
-	public Matrix invert() 
-	{
-		float determinant = determinant();
+	public Matrix invert() {
+		return invert(this, this);
+	}
+
+	/**
+	 * Invert the source matrix and put the result into the destination matrix
+	 * @param src The source matrix to be inverted
+	 * @param dest The destination matrix
+	 * @return dest if successful, null otherwise
+	 */
+	public static Matrix3f invert(Matrix3f src, Matrix3f dest) {
+		float determinant = src.determinant();
 		
-		if (determinant != 0)
-		{
+		if (determinant != 0) {
 			 /* do it the ordinary way
 			  *
 			  * inv(A) = 1/det(A) * adj(T), where adj(T) = transpose(Conjugate Matrix)
@@ -398,46 +390,37 @@ public class Matrix3f extends Matrix implements Serializable {
 			 float determinant_inv = 1f/determinant;
 			 
 			 // get the conjugate matrix
-			 float t00 = m11 * m22 - m12* m21;
-			 float t01 = - m10 * m22 + m12 *m20;
-			 float t02 = m10 * m21 - m11 * m20;
-			 float t10 = - m01 * m22 + m02 * m21;
-			 float t11 = m00 * m22 - m02 * m20;
-			 float t12 = - m00 * m21 + m01 * m20;
-			 float t20 = m01 * m12 - m02 * m11;
-			 float t21 = -m00 * m12 + m02 * m10;
-			 float t22 = m00 * m11 - m01 * m10;
-			 
-			 
-			 m00 = t00*determinant_inv;
-			 m11 = t11*determinant_inv;
-			 m22 = t22*determinant_inv;
-			 m01 = t10*determinant_inv;
-			 m10 = t01*determinant_inv;
-			 m20 = t02*determinant_inv;
-			 m02 = t20*determinant_inv;
-			 m12 = t21*determinant_inv;
-			 m21 = t12*determinant_inv;
-			 return this;
+			 float t00 = src.m11 * src.m22 - src.m12* src.m21;
+			 float t01 = - src.m10 * src.m22 + src.m12 * src.m20;
+			 float t02 = src.m10 * src.m21 - src.m11 * src.m20;
+			 float t10 = - src.m01 * src.m22 + src.m02 * src.m21;
+			 float t11 = src.m00 * src.m22 - src.m02 * src.m20;
+			 float t12 = - src.m00 * src.m21 + src.m01 * src.m20;
+			 float t20 = src.m01 * src.m12 - src.m02 * src.m11;
+			 float t21 = -src.m00 * src.m12 + src.m02 * src.m10;
+			 float t22 = src.m00 * src.m11 - src.m01 * src.m10;
+
+			 dest.m00 = t00*determinant_inv;
+			 dest.m11 = t11*determinant_inv;
+			 dest.m22 = t22*determinant_inv;
+			 dest.m01 = t10*determinant_inv;
+			 dest.m10 = t01*determinant_inv;
+			 dest.m20 = t02*determinant_inv;
+			 dest.m02 = t20*determinant_inv;
+			 dest.m12 = t21*determinant_inv;
+			 dest.m21 = t12*determinant_inv;
+			 return dest;
 		} else
 			 return null;
 	}
+
 
 	/**
 	 * Negate this matrix
 	 * @return this
 	 */
 	public Matrix negate() {
-		m00 = -m00;
-		m01 = -m02;
-		m02 = -m01;
-		m10 = -m10;
-		m11 = -m12;
-		m12 = -m11;
-		m20 = -m20;
-		m21 = -m22;
-		m22 = -m21;
-		return this;
+		return negate(this);
 	}
 
 	/**
@@ -446,18 +429,28 @@ public class Matrix3f extends Matrix implements Serializable {
 	 * @return the negated matrix
 	 */
 	public Matrix3f negate(Matrix3f dest) {
+		return negate(this, this);
+	}
+
+	/**
+	 * Negate the source matrix and place the result in the destination matrix.
+	 * @param src The source matrix
+	 * @param dest The destination matrix, or null if a new matrix is to be created
+	 * @return the negated matrix
+	 */
+	public static Matrix3f negate(Matrix3f src, Matrix3f dest) {
 		if (dest == null)
 			dest = new Matrix3f();
 
-		dest.m00 = -m00;
-		dest.m01 = -m02;
-		dest.m02 = -m01;
-		dest.m10 = -m10;
-		dest.m11 = -m12;
-		dest.m12 = -m11;
-		dest.m20 = -m20;
-		dest.m21 = -m22;
-		dest.m22 = -m21;
+		dest.m00 = -src.m00;
+		dest.m01 = -src.m02;
+		dest.m02 = -src.m01;
+		dest.m10 = -src.m10;
+		dest.m11 = -src.m12;
+		dest.m12 = -src.m11;
+		dest.m20 = -src.m20;
+		dest.m21 = -src.m22;
+		dest.m22 = -src.m21;
 		return dest;
 	}
 
@@ -466,16 +459,25 @@ public class Matrix3f extends Matrix implements Serializable {
 	 * @return this
 	 */
 	public Matrix setIdentity() {
-		m00 = 1.0f;
-		m01 = 0.0f;
-		m02 = 0.0f;
-		m10 = 0.0f;
-		m11 = 1.0f;
-		m12 = 0.0f;
-		m20 = 0.0f;
-		m21 = 0.0f;
-		m22 = 1.0f;
-		return this;
+		return setIdentity(this);
+	}
+	
+	/**
+	 * Set the matrix to be the identity matrix.
+	 * @param m The matrix to be set to the identity
+	 * @return m
+	 */
+	public static Matrix3f setIdentity(Matrix3f m) {
+		m.m00 = 1.0f;
+		m.m01 = 0.0f;
+		m.m02 = 0.0f;
+		m.m10 = 0.0f;
+		m.m11 = 1.0f;
+		m.m12 = 0.0f;
+		m.m20 = 0.0f;
+		m.m21 = 0.0f;
+		m.m22 = 1.0f;
+		return m;
 	}
 
 	/**
@@ -483,16 +485,24 @@ public class Matrix3f extends Matrix implements Serializable {
 	 * @return this
 	 */
 	public Matrix setZero() {
-		m00 = 0.0f;
-		m01 = 0.0f;
-		m02 = 0.0f;
-		m10 = 0.0f;
-		m11 = 0.0f;
-		m12 = 0.0f;
-		m20 = 0.0f;
-		m21 = 0.0f;
-		m22 = 0.0f;
-		return this;
+		return setZero(this);
 	}
 
+	/**
+	 * Set the matrix matrix to 0.
+	 * @param m The matrix to be set to 0
+	 * @return m
+	 */
+	public static Matrix3f setZero(Matrix3f m) {
+		m.m00 = 0.0f;
+		m.m01 = 0.0f;
+		m.m02 = 0.0f;
+		m.m10 = 0.0f;
+		m.m11 = 0.0f;
+		m.m12 = 0.0f;
+		m.m20 = 0.0f;
+		m.m21 = 0.0f;
+		m.m22 = 0.0f;
+		return m;
+	}
 }

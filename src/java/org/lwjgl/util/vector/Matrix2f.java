@@ -73,10 +73,10 @@ public class Matrix2f extends Matrix implements Serializable {
 	}
 	
 	/**
-	 * Copy src matrix to the dest matrix.
+	 * Copy the source matrix to the destination matrix.
 	 * @param src The source matrix
 	 * @param dest The destination matrix, or null if a new one should be created.
-	 * @return this
+	 * @return dest
 	 */
 	public static Matrix2f load(Matrix2f src, Matrix2f dest) {
 		if (dest == null)
@@ -253,7 +253,7 @@ public class Matrix2f extends Matrix implements Serializable {
 	}	
 
 	/**
-	 * Transpose source matrix and place the result in dest matrix.
+	 * Transpose the source matrix and place the result in the destination matrix.
 	 * @param src The source matrix or null if a new matrix is to be created
 	 * @param dest The destination matrix or null if a new matrix is to be created
 	 * @return the transposed matrix
@@ -280,19 +280,19 @@ public class Matrix2f extends Matrix implements Serializable {
 	}
 	
 	/**
-	 * Invert the source matrix and place the result in the dest matrix.
+	 * Invert the source matrix and place the result in the destination matrix.
 	 * @param src The source matrix to be inverted
 	 * @param dest The destination matrix or null if a new matrix is to be created
 	 * @return The inverted matrix, or null if source can't be reverted.
 	 */
-	public Matrix2f invert(Matrix2f src, Matrix2f dest) {
+	public static Matrix2f invert(Matrix2f src, Matrix2f dest) {
 		if (dest == null)
 			dest = new Matrix2f();
 		/*
 		 *inv(A) = 1/det(A) * adj(A);
 		 */
 		
-		float determinant = determinant();
+		float determinant = src.determinant();
 		if (determinant != 0) {
 			float determinant_inv = 1f/determinant;
 			float t00 =  src.m11*determinant_inv;
@@ -337,7 +337,7 @@ public class Matrix2f extends Matrix implements Serializable {
 	}
 	
 	/**
-	 * Negate src matrix and stash the result in dest matrix.
+	 * Negate the source matrix and stash the result in the destination matrix.
 	 * @param src The source matrix to be negated
 	 * @param dest The destination matrix, or null if a new matrix is to be created
 	 * @return the negated matrix
@@ -363,7 +363,7 @@ public class Matrix2f extends Matrix implements Serializable {
 	}
 
 	/**
-	 * Set the ssrc matrix to be the identity matrix.
+	 * Set the source matrix to be the identity matrix.
 	 * @param src The matrix to set to the identity.
 	 * @return The source matrix
 	 */
