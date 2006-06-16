@@ -69,7 +69,7 @@ public class Matrix2f extends Matrix implements Serializable {
 	 * @return this
 	 */
 	public Matrix2f load(Matrix2f src) {
-		return load(src);
+		return load(src, this);
 	}
 	
 	/**
