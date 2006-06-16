@@ -47,12 +47,13 @@ public class Matrix2f extends Matrix implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	public float m00 = 1.0f, m01, m10, m11 = 1.0f;
+	public float m00, m01, m10, m11;
 	
 	/**
-	 * Constructor for Matrix2f.
+	 * Constructor for Matrix2f. The matrix is initialised to the identity.
 	 */
 	public Matrix2f() {
+		setIdentity();
 	}
 	
 	/**
@@ -63,18 +64,30 @@ public class Matrix2f extends Matrix implements Serializable {
 	}
 	
 	/**
-	 * Load from another matrix2f
+	 * Load from another matrix
 	 * @param src The source matrix
 	 * @return this
 	 */
 	public Matrix2f load(Matrix2f src) {
+		return load(src);
+	}
+	
+	/**
+	 * Copy src matrix to the dest matrix.
+	 * @param src The source matrix
+	 * @param dest The destination matrix, or null if a new one should be created.
+	 * @return this
+	 */
+	public static Matrix2f load(Matrix2f src, Matrix2f dest) {
+		if (dest == null)
+			dest = new Matrix2f();
 		
-		m00 = src.m00;
-		m01 = src.m01;
-		m10 = src.m10;
-		m11 = src.m11;
+		dest.m00 = src.m00;
+		dest.m01 = src.m01;
+		dest.m10 = src.m10;
+		dest.m11 = src.m11;
 		
-		return this;
+		return dest;
 	}
 	
 	/**
