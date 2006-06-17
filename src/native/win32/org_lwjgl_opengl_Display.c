@@ -248,13 +248,21 @@ static void handleMessages(void) {
 	if (display_hwnd != NULL) {
 		while (PeekMessage(
 					&msg,         // message information
-					display_hwnd,           // handle to window
+					NULL,           // handle to window
 					0,  // first message
 					0,  // last message
 					PM_REMOVE      // removal options
 					))
 		{
-			DispatchMessage(&msg);
+			/*
+			 * It would be better to filter messages
+			 * to display_hwnd by specifying that to
+			 * PeekMessage instead of this check. However,
+			 * Windows will then mark LWJGL apps as "not
+			 * responding".
+			 */
+			if (msg.hwnd == display_hwnd)
+				DispatchMessage(&msg);
 		}
 	}
 }
