@@ -247,10 +247,10 @@ void handleMouseButton(int button, int state) {
 static void copyDXEvents(int num_di_events, DIDEVICEOBJECTDATA *di_buffer) {
 	int buffer_index = 0;
 	int dx = 0, dy = 0, dwheel = 0;
-        int button_state;
-        int i;
-        for (i = 0; i < num_di_events; i++) {
-                button_state = (di_buffer[i].dwData & 0x80) != 0 ? 1 : 0;
+	int button_state;
+	int i;
+	for (i = 0; i < num_di_events; i++) {
+		button_state = (di_buffer[i].dwData & 0x80) != 0 ? 1 : 0;
 		switch (di_buffer[i].dwOfs) {
 			case DIMOFS_BUTTON0:
 				putMouseEventWithCoords(0, button_state, dx, -dy, dwheel);
@@ -300,7 +300,8 @@ static void readDXBuffer(JNIEnv *env) {
 			0); 
 
 	if (ret == DI_OK) {
-		copyDXEvents(num_di_events, rgdod);
+		if (mouse_grabbed)
+			copyDXEvents(num_di_events, rgdod);
 	} else if (ret == DI_BUFFEROVERFLOW) { 
 		printfDebugJava(env, "Buffer overflowed");
 	} else if (ret == DIERR_INPUTLOST) {
@@ -314,7 +315,7 @@ static void readDXBuffer(JNIEnv *env) {
 	} else if (ret == DIERR_NOTINITIALIZED) {
 		printfDebugJava(env, "not inited");
 	} else {
-		printfDebugJava(env, "unknown keyboard error");
+		printfDebugJava(env, "unknown mouse error (%d)", ret);
 	}
 }
 
@@ -323,9 +324,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nReadMouse
 {
 	jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer_obj) + buffer_position;
 	int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer_obj))/sizeof(jint) - buffer_position;
-	if (mouse_grabbed) {
 		readDXBuffer(env);
-	}
 	return copyEvents(&event_queue, buffer_ptr, buffer_size);
 }
 
