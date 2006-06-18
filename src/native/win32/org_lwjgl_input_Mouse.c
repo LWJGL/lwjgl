@@ -324,7 +324,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nReadMouse
 {
 	jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer_obj) + buffer_position;
 	int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer_obj))/sizeof(jint) - buffer_position;
-		readDXBuffer(env);
+	readDXBuffer(env);
 	return copyEvents(&event_queue, buffer_ptr, buffer_size);
 }
 
@@ -393,6 +393,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_grabMouse
 	HRESULT di_res;
 	if(grab) {
 		if (!mouse_grabbed) {
+			// flush DX event buffer
+			readDXBuffer(env);
 			mouse_grabbed = true;
 			IDirectInputDevice_Unacquire(mDIDevice);
 			if (!acquireMouse(DISCL_EXCLUSIVE | DISCL_FOREGROUND))
