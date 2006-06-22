@@ -69,6 +69,9 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	private int last_x;
 	private int last_y;
 
+	/** Saved control key state for ctrl-click right button emulation */
+	private boolean saved_control_state;
+
 	/** Event scratch array */
 	private final int[] event = new int[EVENT_SIZE];
 
@@ -156,27 +159,6 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	}
 
 	private void handleButton(MouseEvent e) {
-		byte button;
-		switch (e.getButton()) {
-			case MouseEvent.NOBUTTON:
-				// Nothing to do, so return
-				return;
-			case MouseEvent.BUTTON1:
-				// Emulate right click if ctrl is down
-				if (!e.isControlDown())
-					button = (byte)0;
-				else
-					button = (byte)1;
-				break;
-			case MouseEvent.BUTTON2:
-				button = (byte)2;
-				break;
-			case MouseEvent.BUTTON3:
-				button = (byte)1;
-				break;
-			default:
-				throw new IllegalArgumentException("Not a valid button: " + e.getButton());
-		}
 		byte state;
 		switch (e.getID()) {
 			case MouseEvent.MOUSE_PRESSED:
@@ -187,6 +169,34 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 				break;
 			default:
 				throw new IllegalArgumentException("Not a valid event ID: " + e.getID());
+		}
+		byte button;
+		switch (e.getButton()) {
+			case MouseEvent.NOBUTTON:
+				// Nothing to do, so return
+				return;
+			case MouseEvent.BUTTON1:
+				// Emulate right click if ctrl is down
+				if (state == 1)
+					saved_control_state = e.isControlDown();
+				if (saved_control_state) {
+					if (buttons[1] == state)
+						return; // ignore
+					button = (byte)1;
+				} else {
+					button = (byte)0;
+				}
+				break;
+			case MouseEvent.BUTTON2:
+				button = (byte)2;
+				break;
+			case MouseEvent.BUTTON3:
+				if (buttons[1] == state)
+					return; // ignore
+				button = (byte)1;
+				break;
+			default:
+				throw new IllegalArgumentException("Not a valid button: " + e.getButton());
 		}
 		setButton(button, state);
 	}
