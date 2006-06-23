@@ -57,15 +57,15 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FMusic_nFMUSIC_1LoadSong(JNIEnv *en
  * Method:    nFMUSIC_LoadSongEx
  * Signature: (Ljava/nio/ByteBuffer;IIILjava/nio/IntBuffer;I)J
  */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FMusic_nFMUSIC_1LoadSongEx__Ljava_nio_ByteBuffer_2IIIILjava_nio_IntBuffer_2II
-  (JNIEnv *env, jclass clazz, jobject data, jint dataOffset, jint offset, jint length, jint mode, jobject sampleList, jint sampleListOffset, jint samplelistnum){
+JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FMusic_nFMUSIC_1LoadSongEx__Ljava_nio_ByteBuffer_2IIILjava_nio_IntBuffer_2II
+  (JNIEnv *env, jclass clazz, jobject data, jint offset, jint length, jint mode, jobject sampleList, jint sampleListOffset, jint samplelistnum){
     int *sampleData = NULL;
-    const char *songData = dataOffset + (char *) (*env)->GetDirectBufferAddress(env, data);
+    const char *songData = offset + (char *) (*env)->GetDirectBufferAddress(env, data);
     if(sampleList != NULL) {
       sampleData = sampleListOffset + (int *) (*env)->GetDirectBufferAddress(env, sampleList);
     }
     
-    return (jlong) fmod_instance->FMUSIC_LoadSongEx(songData, offset, length, mode, sampleData, samplelistnum);
+    return (jlong) fmod_instance->FMUSIC_LoadSongEx(songData, 0, length, mode, sampleData, samplelistnum);
   }
   
 /*

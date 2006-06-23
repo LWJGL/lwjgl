@@ -438,9 +438,9 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1GetName(J
 * Method:    nFSOUND_Sample_Load
 * Signature: (ILjava/nio/ByteBuffer;IIII)J
 */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Load__ILjava_nio_ByteBuffer_2IIII(JNIEnv * env, jclass clazz, jint index, jobject data, jint dataOffset, jint inputmode, jint offset, jint length) { 
-	const char * nData = dataOffset + (const char *) (*env)->GetDirectBufferAddress(env, data);
-  return (long) fmod_instance->FSOUND_Sample_Load(index, nData, inputmode, offset, length);
+JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Load__ILjava_nio_ByteBuffer_2III(JNIEnv * env, jclass clazz, jint index, jobject data, jint inputmode, jint offset, jint length) { 
+	const char * nData = offset + (const char *) (*env)->GetDirectBufferAddress(env, data);
+  return (long) fmod_instance->FSOUND_Sample_Load(index, nData, inputmode, 0, length);
 }
 
 /*
@@ -969,9 +969,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_13D_1SetRolloffFactor(
 * Method:    nFSOUND_Stream_Open
 * Signature: (Ljava/nio/ByteBuffer;IIII)J
 */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Open__Ljava_nio_ByteBuffer_2IIII(JNIEnv * env, jclass clazz, jobject data, jint dataOffset, jint mode, jint offset, jint length) {
-  const char *streamData = dataOffset + (char *) (*env)->GetDirectBufferAddress(env, data);
-  return (jlong) fmod_instance->FSOUND_Stream_Open(streamData, mode, offset, length);
+JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Open__Ljava_nio_ByteBuffer_2III(JNIEnv * env, jclass clazz, jobject data, jint mode, jint offset, jint length) {
+  const char *streamData = offset + (char *) (*env)->GetDirectBufferAddress(env, data);
+  return (jlong) fmod_instance->FSOUND_Stream_Open(streamData, mode, 0, length);
 }
 
 /*
