@@ -877,7 +877,7 @@ public class FSound {
 	 */
 	public static FSoundSample FSOUND_Sample_Alloc(int index, int length, int mode, int deffreq, int defvol, int defpan, int defpri) {
 		long result = nFSOUND_Sample_Alloc(index, length, mode, deffreq, defvol, defpan, defpri);
-		return (result != 0) ? new FSoundSample(result) : null;
+		return (result != 0) ? new FSoundSample(result, null) : null;
 	}
 	private static native long nFSOUND_Sample_Alloc(int index, int length, int mode, int deffreq, int defvol, int defpan, int defpri);
 
@@ -886,6 +886,7 @@ public class FSound {
 	 * @param sample sample definition to be freed
 	 */
 	public static void FSOUND_Sample_Free(FSoundSample sample) {
+		sample.release();
 		nFSOUND_Sample_Free(sample.sampleHandle);
 	}
 	private static native void nFSOUND_Sample_Free(long sample);
@@ -902,7 +903,7 @@ public class FSound {
 	 */
 	public static FSoundSample FSOUND_Sample_Get(int sampno) {
 		long result = nFSOUND_Sample_Get(sampno);
-		return (result != 0) ? new FSoundSample(result) : null;
+		return (result != 0) ? new FSoundSample(result, null) : null;
 	}
 
 	private static native long nFSOUND_Sample_Get(int sampno);
@@ -1056,14 +1057,12 @@ public class FSound {
    * FSOUND_UNMANAGED - Dont have this sample managed within fsounds sample management system
    * @param data ByteBuffer of memory image to load.
    * @param inputmode Description of the data format, OR in the bits defined in FSOUND_MODES to describe the data being loaded.
-   * @param offset Optional. 0 by default. If > 0, this value is used to specify an offset in a file, so fmod will seek before opening. length must also be specified if this value is used.
-   * @param length Optional. 0 by default. If > 0, this value is used to specify the length of a memory block when using FSOUND_LOADMEMORY, or it is the length of a file or file segment if the offset parameter is used. On PlayStation 2 this must be 16 byte aligned for memory loading.
    * @return On success, a sample is returned. On failure, NULL is returned.
    */
-  public static FSoundSample FSOUND_Sample_Load(int index, ByteBuffer data, int inputmode, int offset, int length) {
-    long result = nFSOUND_Sample_Load(index, data, data.position(), inputmode, offset, length);
+  public static FSoundSample FSOUND_Sample_Load(int index, ByteBuffer data, int inputmode) {
+    long result = nFSOUND_Sample_Load(index, data, inputmode, data.position(), data.remaining());
     if(result != 0) {
-     return new FSoundSample(result); 
+     return new FSoundSample(result, data); 
     }
     return null;
   }
@@ -1083,11 +1082,11 @@ public class FSound {
   public static FSoundSample FSOUND_Sample_Load(int index, String name, int inputmode, int offset, int length) {
     long result = nFSOUND_Sample_Load(index, name, inputmode, offset, length);
     if(result != 0) {
-     return new FSoundSample(result); 
+     return new FSoundSample(result, null); 
     }
     return null;
   }  
-  private static native long nFSOUND_Sample_Load(int index, ByteBuffer data, int dataOffset, int inputmode, int offset, int length);    
+  private static native long nFSOUND_Sample_Load(int index, ByteBuffer data, int inputmode, int offset, int length);    
   private static native long nFSOUND_Sample_Load(int index, String name, int inputmode, int offset, int length);
   
   /**
@@ -1693,7 +1692,7 @@ public class FSound {
   public static FSoundSample FSOUND_GetCurrentSample(int channel) {
     long result = nFSOUND_GetCurrentSample(channel);
     if(result != 0) {
-     return new FSoundSample(result); 
+     return new FSoundSample(result, null); 
     }
     return null;
   }
@@ -2088,7 +2087,7 @@ public class FSound {
   public static FSoundStream FSOUND_Stream_Open(String name, int mode, int offset, int length) {
     long result = nFSOUND_Stream_Open(name, mode, offset, length);
     if(result != 0) {
-     return new FSoundStream(result); 
+     return new FSoundStream(result, null); 
     }
     return null;    
   }
@@ -2098,18 +2097,16 @@ public class FSound {
    * @param data data when FSOUND_LOADMEMORY is used.
    * @param mode Simple description of how to play the file. For all formats except raw PCM,
    * FSOUND_LOOP*, FSOUND_HW3D, FSOUND_HW2D, FSOUND_2D, FSOUND_LOADMEMORY, FSOUND_LOADRAW, FSOUND_MPEGACCURATE, FSOUND_NONBLOCKING flags are the only ones supported.
-   * @param offset Optional. 0 by default. If > 0, this value is used to specify an offset in a file, so fmod will seek before opening. length must also be specified if this value is used.
-   * @param length Optional. 0 by default. If > 0, this value is used to specify the length of a memory block when using FSOUND_LOADMEMORY, or it is the length of a file or file segment if the offset parameter is used. On PlayStation 2 this must be 16 byte aligned for memory loading.
    * @return On success, a reference to an opened stream is returned. On failure, NULL is returned. 
    */  
-  public static FSoundStream FSOUND_Stream_Open(ByteBuffer data, int mode, int offset, int length) {
-    long result = nFSOUND_Stream_Open(data, data.position(), mode, offset, length);
+  public static FSoundStream FSOUND_Stream_Open(ByteBuffer data, int mode) {
+    long result = nFSOUND_Stream_Open(data, mode, data.position(), data.remaining());
     if(result != 0) {
-     return new FSoundStream(result); 
+     return new FSoundStream(result, data); 
     }
     return null;
   }
-  private static native long nFSOUND_Stream_Open(ByteBuffer data, int dataOffset, int mode, int offset, int length);    
+  private static native long nFSOUND_Stream_Open(ByteBuffer data, int mode, int offset, int length);    
   private static native long nFSOUND_Stream_Open(String name, int mode, int offset, int length);
   
   /**
@@ -2170,6 +2167,7 @@ public class FSound {
    * @return On success, TRUE is returned. On failure, FALSE is returned. 
    */
   public static boolean FSOUND_Stream_Close(FSoundStream stream) {
+	stream.release();
     return nFSOUND_Stream_Close(stream.streamHandle);
   }
   private static native boolean nFSOUND_Stream_Close(long streamhandle);
@@ -2243,7 +2241,7 @@ public class FSound {
    FSoundStream stream = null;
    long result = nFSOUND_Stream_Create(lenbytes, mode, samplerate);
    if(result != 0) {
-    stream = new FSoundStream(result);
+    stream = new FSoundStream(result, null);
    	FMOD.registerCallback(FMOD.FSOUND_STREAMCALLBACK, stream.streamHandle, stream, callbackHandler);
    }
    return stream;
@@ -2414,7 +2412,7 @@ public class FSound {
   public static FSoundSample FSOUND_Stream_GetSample(FSoundStream stream) {
     long result = nFSOUND_Stream_GetSample(stream.streamHandle);
     if(result != 0) {
-      return new FSoundSample(result); 
+      return new FSoundSample(result, null); 
     }
     return null;
   }

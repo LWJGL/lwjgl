@@ -31,6 +31,8 @@
  */
 package org.lwjgl.fmod3;
 
+import java.nio.Buffer;
+
 /**
  * This class is a representation of a Sound stream in FMod.
  * <br>
@@ -42,12 +44,23 @@ public class FSoundStream {
   /** Handle to stream */
   long streamHandle;
   
+  /** Handle to buffer containing sample data */
+  Buffer streamData;
+  
   /**
    * Creates a new FSoundStream
    * 
    * @param streamHandle handle to stream
    */
-  FSoundStream(long streamHandle) {
+  FSoundStream(long streamHandle, Buffer streamData) {
    this.streamHandle = streamHandle; 
+   this.streamData = streamData;
   }
+  
+  /**
+   * Releases the reference to any data contained
+   */
+  void release() {
+	  this.streamData = null;
+  }  
 }

@@ -31,6 +31,9 @@
  */
 package org.lwjgl.fmod3;
 
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+
 /**
  * This class is a representation of a Module in FMod.
  * <br>
@@ -42,12 +45,27 @@ public class FMusicModule {
   /** Handle to module */
   long moduleHandle;
   
+  /** Handle to buffer containing module data */
+  Buffer moduleData;
+  
+  /** Handle to buffer containing user data */
+  Buffer userData;
+  
   /**
    * Creates a new FMusicModule
    * 
    * @param moduleHandle
    */
-  FMusicModule(long moduleHandle) {
-    this.moduleHandle = moduleHandle;    
+  FMusicModule(long moduleHandle, Buffer moduleData) {
+    this.moduleHandle = moduleHandle;
+    this.moduleData = moduleData;
+  }
+  
+  /**
+   * Releases the reference to any data contained
+   */
+  void release() {
+	  this.moduleData = null;
+	  this.userData = null;
   }
 }

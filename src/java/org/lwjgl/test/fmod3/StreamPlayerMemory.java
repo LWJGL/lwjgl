@@ -33,6 +33,7 @@ package org.lwjgl.test.fmod3;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -54,7 +55,7 @@ public class StreamPlayerMemory {
 			System.out.println("Usage:\n StreamPlayerMemory <file>");
 			
 			// default to phero.mp3
-			args = new String[] { "phero2.ogg"};
+			args = new String[] { "res" + File.separator + "phero2.ogg"};
 			System.out.println("Using default: " + args[0]);
 		}
 		
@@ -73,7 +74,7 @@ public class StreamPlayerMemory {
 		}
 		
 		ByteBuffer data = getData(args[0]);
-		FSoundStream stream = FSound.FSOUND_Stream_Open(data, FSound.FSOUND_LOADMEMORY, 0, data.capacity());
+		FSoundStream stream = FSound.FSOUND_Stream_Open(data, FSound.FSOUND_LOADMEMORY);
 		
 		if (stream != null) {
 			FSound.FSOUND_Stream_Play(0, stream);

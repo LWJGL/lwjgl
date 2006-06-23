@@ -53,7 +53,7 @@ public class MusicPlayer {
 			System.out.println("Usage:\n MusicPlayer <file>");
 			
 			// default to Missing_you.mod
-			args = new String[] { "res\\Missing_you.mod"};
+			args = new String[] { "res" + File.separator + "Missing_you.mod"};
 			System.out.println("Using default: " + args[0]);
 		}
 		

@@ -84,7 +84,7 @@ public class FMusic {
   public static FMusicModule FMUSIC_LoadSong(String name) {
   	long result = nFMUSIC_LoadSong(name);
     if(result != FMUSIC_TYPE_NONE) {
-     return new FMusicModule(result); 
+     return new FMusicModule(result, null); 
     }
     return null;
   }
@@ -110,16 +110,14 @@ public class FMusic {
    * </p>
    * 
    * @param data containing song to load. On PlayStation 2 data must be 16 byte aligned if loading from memory
-   * @param offset Optional. 0 by default. If > 0, this value is used to specify an offset in a file, so fmod will seek before opening
-   * @param length Optional. 0 by default. If > 0, this value is used to specify the length of a memory block when using FSOUND_LOADMEMORY, or it is the length of a file or file segment if the offset parameter is used. On PlayStation 2 this must be 16 byte aligned for memory loading
    * @param mode Mode for opening song. With module files, only FSOUND_LOADMEMORY, FSOUND_NONBLOCKING, FSOUND_LOOP_NORMAL, or FSOUND_LOOP_OFF are supported. For FSB files, FSOUND_2D, FSOUND_HW3D, FSOUND_FORCEMONO also work
    * @param sampleList Optional. Buffer of sample indicies to load. Leave as Null if you want all samples to be loaded (default behaviour). See Remarks for more on this
    * @return On success, a FMusicModule instance is returned. On failure, Null is returned
    */
-  public static FMusicModule FMUSIC_LoadSongEx(ByteBuffer data, int offset, int length, int mode, IntBuffer sampleList) {
-    long result = nFMUSIC_LoadSongEx(data, data.position(), offset, length, mode, (sampleList != null) ? sampleList : null, (sampleList != null) ? sampleList.position() : 0, (sampleList != null) ? sampleList.remaining() : 0);
+  public static FMusicModule FMUSIC_LoadSongEx(ByteBuffer data, int mode, IntBuffer sampleList) {
+    long result = nFMUSIC_LoadSongEx(data, data.position(), data.remaining(), mode, (sampleList != null) ? sampleList : null, (sampleList != null) ? sampleList.position() : 0, (sampleList != null) ? sampleList.remaining() : 0);
     if(result != FMUSIC_TYPE_NONE) {
-     return new FMusicModule(result); 
+     return new FMusicModule(result, data); 
     }
     return null;
   }
@@ -137,11 +135,11 @@ public class FMusic {
     long result = nFMUSIC_LoadSongEx(name, offset, length, mode, (sampleList != null) ? sampleList : null, (sampleList != null) ? sampleList.position() : 0, (sampleList != null) ? sampleList.remaining() : 0);
 
     if(result != FMUSIC_TYPE_NONE) {
-     return new FMusicModule(result); 
+     return new FMusicModule(result, null); 
     }
     return null;
   }  
-  private static native long nFMUSIC_LoadSongEx(ByteBuffer data, int dataOffset, int offset, int length, int mode, IntBuffer sampleList, int bufferOffset, int remaining);
+  private static native long nFMUSIC_LoadSongEx(ByteBuffer data, int offset, int length, int mode, IntBuffer sampleList, int bufferOffset, int remaining);
   private static native long nFMUSIC_LoadSongEx(String name, int offset, int length, int mode, IntBuffer sampleList, int bufferOffset, int remaining);
   
   /**
@@ -165,6 +163,7 @@ public class FMusic {
     FMOD.registerCallback(FMOD.FMUSIC_ORDERCALLBACK, module.moduleHandle, null, null);
     FMOD.registerCallback(FMOD.FMUSIC_ROWCALLBACK, module.moduleHandle, null, null);
     FMOD.registerCallback(FMOD.FMUSIC_ZXXCALLBACK, module.moduleHandle, null, null);
+    module.release();
     return nFMUSIC_FreeSong(module.moduleHandle); 
   }
   private static native boolean nFMUSIC_FreeSong(long module);
@@ -335,6 +334,7 @@ public class FMusic {
    * @return On success, true is returned. On failure, false is returned
    */
   public static boolean FMUSIC_SetUserData(FMusicModule module, ByteBuffer userdata) {
+	module.userData = userdata;
     return nFMUSIC_SetUserData(module.moduleHandle, userdata, userdata.position());
   }
   private static native boolean nFMUSIC_SetUserData(long module, ByteBuffer userdata, int offset);
@@ -551,7 +551,7 @@ public class FMusic {
   public static FSoundSample FMUSIC_GetSample(FMusicModule module, int sampno) {
     long result = nFMUSIC_GetSample(module.moduleHandle, sampno);
     if(result != 0) {
-    	return new FSoundSample(result);
+    	return new FSoundSample(result, null);
     }
     return null;
   }  

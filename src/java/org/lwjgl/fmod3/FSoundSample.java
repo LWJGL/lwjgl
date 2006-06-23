@@ -31,6 +31,8 @@
  */
 package org.lwjgl.fmod3;
 
+import java.nio.Buffer;
+
 /**
  * This class is a representation of a Sound Sample in FMod.
  * <br>
@@ -42,12 +44,23 @@ public class FSoundSample {
   /** Handle to sample */
   long sampleHandle;
   
+  /** Handle to buffer containing sample data */
+  Buffer sampleData;
+  
   /**
    * Creates a new FSoundSample
    * 
    * @param sampleHandle handle to sample
    */
-  FSoundSample(long sampleHandle) {
-   this.sampleHandle = sampleHandle; 
+  FSoundSample(long sampleHandle, Buffer sampleData) {
+   this.sampleHandle = sampleHandle;
+   this.sampleData = sampleData;
   }
+  
+  /**
+   * Releases the reference to any data contained
+   */
+  void release() {
+	  this.sampleData = null;
+  }  
 }

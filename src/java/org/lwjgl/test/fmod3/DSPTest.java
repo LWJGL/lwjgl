@@ -60,7 +60,7 @@ public class DSPTest {
 			System.out.println("Usage:\n DSPTest <file>");
 
 			// default to phero.mp3
-			args = new String[] { "res\\phero.mp3"};
+			args = new String[] { "res" + File.separator + "phero.mp3"};
 			System.out.println("Using default: " + args[0]);
 		}
 
