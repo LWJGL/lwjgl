@@ -127,7 +127,7 @@ static bool EnumerateMouseCapabilities(JNIEnv *env) {
  */
 static bool CreateMouse(JNIEnv *env) {
 	HRESULT hr;
-        hr = IDirectInput_CreateDevice(lpdi, &GUID_SysMouse, &mDIDevice, NULL);
+    hr = IDirectInput_CreateDevice(lpdi, &GUID_SysMouse, &mDIDevice, NULL);
 	if FAILED(hr) {	
 		throwException(env, "CreateDevice failed");
 		return false;
@@ -445,15 +445,6 @@ static BOOL CALLBACK EnumMouseObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, 
 		printfDebug("Unhandled object found: %s\n", lpddoi->tszName);
 	}
 	return DIENUM_CONTINUE;
-}
-
-static int cap(int val, int min, int max) {
-	if (val < min)
-		return min;
-	else if (val > max)
-		return max;
-	else
-		return val;
 }
 
 /**
