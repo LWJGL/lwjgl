@@ -59,7 +59,7 @@ public class Keyboard {
 	 * The special character meaning that no
 	 * character was translated for the event.
 	 */
-	public static final char CHAR_NONE          = '\0';
+	public static final int CHAR_NONE          = '\0';
 
 	/**
 	 * The special keycode meaning that only the
@@ -243,12 +243,12 @@ public class Keyboard {
 	/**
 	 * The key events from the last read: a sequence of pairs of key number,
 	 * followed by state. The state is followed by
-	 * a 2 byte java char representing the translated character.
+	 * a 4 byte java int representing the translated character.
 	 */
 	private static IntBuffer readBuffer;
 
 	/** The current keyboard character being examined */
-	private static char eventCharacter;
+	private static int eventCharacter;
 
 	/** The current keyboard event key being examined */
 	private static int eventKey;
@@ -425,8 +425,7 @@ public class Keyboard {
 		if (readBuffer.hasRemaining()) {
 			eventKey = readBuffer.get() & 0xFF;
 			eventState = readBuffer.get() != 0;
-			int eventCharacterInt = readBuffer.get() & 0xFFFF;
-			eventCharacter = (char)eventCharacterInt;
+			eventCharacter = readBuffer.get();
 			return true;
 		} else {
 			return false;
@@ -443,7 +442,7 @@ public class Keyboard {
 	/**
 	 * @return The character from the current event
 	 */
-	public static char getEventCharacter() {
+	public static int getEventCharacter() {
 		return eventCharacter;
 	}
 
