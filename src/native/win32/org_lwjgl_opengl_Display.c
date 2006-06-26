@@ -54,7 +54,6 @@ static HDC        display_hdc = NULL;             // Device context
 static bool				isFullScreen = false;           // Whether we're fullscreen or not
 static bool				isMinimized = false;            // Whether we're minimized or not
 static bool       isFocused = false;              // whether we're focused or not
-static bool       isUndecorated = false;          // Whether we're undecorated or not
 static bool		  did_maximize = false; // A flag to tell when a window
 										// has recovered from minimized
 
@@ -248,6 +247,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nCreateWindow(JNIEnv *
 	int width = (*env)->GetIntField(env, mode, fid_width);
 	int height = (*env)->GetIntField(env, mode, fid_height);
 	BOOL result;
+	bool isUndecorated;          // Whether we're undecorated or not
 	static bool oneShotInitialised = false;
 	if (!oneShotInitialised) {
 		if (!registerWindow(lwjglWindowProc, WINDOWCLASSNAME)) {
