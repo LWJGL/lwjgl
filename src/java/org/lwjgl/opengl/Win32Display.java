@@ -60,12 +60,39 @@ final class Win32Display implements DisplayImplementation {
 	private final static int WM_MBUTTONDBLCLK                 = 0x0209;
 	private final static int WM_MOUSEWHEEL                    = 0x020A;
 
+	private final static int WM_QUIT						  = 0x0012;
+	private final static int WM_SYSCOMMAND					  = 0x0112;
+
+	private final static int SC_SIZE          = 0xF000;
+	private final static int SC_MOVE          = 0xF010;
+	private final static int SC_MINIMIZE      = 0xF020;
+	private final static int SC_MAXIMIZE      = 0xF030;
+	private final static int SC_NEXTWINDOW    = 0xF040;
+	private final static int SC_PREVWINDOW    = 0xF050;
+	private final static int SC_CLOSE         = 0xF060;
+	private final static int SC_VSCROLL       = 0xF070;
+	private final static int SC_HSCROLL       = 0xF080;
+	private final static int SC_MOUSEMENU     = 0xF090;
+	private final static int SC_KEYMENU       = 0xF100;
+	private final static int SC_ARRANGE       = 0xF110;
+	private final static int SC_RESTORE       = 0xF120;
+	private final static int SC_TASKLIST      = 0xF130;
+	private final static int SC_SCREENSAVE    = 0xF140;
+	private final static int SC_HOTKEY        = 0xF150;
+	private final static int SC_DEFAULT       = 0xF160;
+	private final static int SC_MONITORPOWER  = 0xF170;
+	private final static int SC_CONTEXTHELP   = 0xF180;
+	private final static int SC_SEPARATOR     = 0xF00F;
+
 	private static Win32DisplayPeerInfo peer_info;
 
 	private static WindowsKeyboard keyboard;
 	private static WindowsMouse mouse;
 
+	private static boolean close_requested;
+
 	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
+		close_requested = false;
 		nCreateWindow(mode, fullscreen, x, y);
 		peer_info.initDC();
 	}
@@ -109,7 +136,11 @@ final class Win32Display implements DisplayImplementation {
 	private native String nGetVersion(String driver);
 	public native DisplayMode init() throws LWJGLException;
 	public native void setTitle(String title);
-	public native boolean isCloseRequested();
+	public boolean isCloseRequested() {
+		boolean saved = close_requested;
+		close_requested = false;
+		return saved;
+	}
 	public native boolean isVisible();
 	public native boolean isActive();
 	public native boolean isDirty();
@@ -333,6 +364,23 @@ final class Win32Display implements DisplayImplementation {
 			case WM_MBUTTONUP:
 				handleMouseButton(2, 0);
 				return true;
+			case WM_QUIT:
+				close_requested = true;
+				return true;
+			case WM_SYSCOMMAND:
+				switch ((int)wParam) {
+					case SC_KEYMENU:
+					case SC_MOUSEMENU:
+					case SC_SCREENSAVE:
+					case SC_MONITORPOWER:
+						return true;
+					case SC_CLOSE:
+						close_requested = true;
+						return true;
+					default:
+						break;
+				}
+				return false;
 			default:
 				return false;
 		}

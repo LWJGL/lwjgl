@@ -59,8 +59,6 @@ static bool       isUndecorated = false;          // Whether we're undecorated o
 static bool		  did_maximize = false; // A flag to tell when a window
 										// has recovered from minimized
 
-static bool closerequested;
-
 #define WINDOWCLASSNAME "LWJGL"
 
 bool getCurrentFullscreen() {
@@ -136,24 +134,6 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 		setupCursorClipping();
 	switch (msg) {
 		// disable screen saver and monitor power down messages which wreak havoc
-		case WM_SYSCOMMAND:
-		{
-			switch (wParam) {
-			case SC_KEYMENU:
-			case SC_MOUSEMENU:
-				// Ignore system menu retrieval
-			case SC_SCREENSAVE:
-			case SC_MONITORPOWER:
-				return 0L;
-				break;
-			case SC_CLOSE:
-				closerequested = true;
-				//don't continue processing this command since this 
-				//would shutdown the window, which the application might not want to
-				return 0L;
-			}
-		}
-		break;
 		case WM_ACTIVATE:
 			switch (wParam) {
 				case WA_ACTIVE:
@@ -176,11 +156,6 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 					break;
 			}
 			break;
-		case WM_QUIT:
-		{
-			closerequested = true;
-			return 0L;
-		}
 		case WM_PAINT:
 		{
 			isDirty = true;
@@ -270,13 +245,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_isVisible
 	return isMinimized ? JNI_FALSE : JNI_TRUE;
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_isCloseRequested
-  (JNIEnv *env, jobject self) {
-	bool saved = closerequested;
-	closerequested = false;
-	return saved;
-}
-
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_isActive
   (JNIEnv *env, jobject self) {
 	return isFocused;
@@ -302,7 +270,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nCreateWindow(JNIEnv *
 		oneShotInitialised = true;
 	}
 
-	closerequested = false;
 	isMinimized = false;
 	isFocused = false;
 	isDirty = true;
