@@ -31,34 +31,47 @@
  */
  
 /**
- * $Id$
+ * $Id: org_lwjgl_input_Keyboard.c 2385 2006-06-23 16:45:21Z elias_naur $
  *
- * Basic DLL stub.
- *
- * @author cix_foo <cix_foo@users.sourceforge.net>
- * @version $Revision$
+ * @author elias_naue <elias_naur@users.sourceforge.net>
+ * @version $Revision: 2385 $
  */
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <stdio.h>
+#include "common_tools.h"
+#include "dinputhelper.h"
 #include <jni.h>
 
-HINSTANCE dll_handle;
+HRESULT objectCallback(JNIEnv *env, jobject enumerator, jint object_type, const char *tszName) {
+	jstring name;
+	jclass enum_class;
+	jmethodID nextObject_method;
+	jboolean should_continue;
 
-/*
- * DLL entry point for Windows. Called when Java loads the .dll
- */
-BOOL WINAPI DllMain(
-  HINSTANCE hinstDLL,  // handle to DLL module
-  DWORD fdwReason,     // reason for calling function
-  LPVOID lpvReserved   // reserved
-  ) 
-{
-	dll_handle = hinstDLL;
-	return TRUE; // Success
+	name = NewStringNative(env, tszName);
+	if (name == NULL)
+		return false;
+	enum_class = (*env)->GetObjectClass(env, enumerator);
+	if (enum_class == NULL)
+		return false;
+	nextObject_method = (*env)->GetMethodID(env, enum_class, "nextObject", "(ILjava/lang/String;)Z");
+	if (nextObject_method == NULL)
+		return false;
+	should_continue = (*env)->CallBooleanMethod(env, enumerator, nextObject_method, object_type, name);
+	(*env)->DeleteLocalRef(env, name);
+	return should_continue == JNI_TRUE ? true : false;
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_Win32Display_getDllInstance(JNIEnv *env, jclass unused) {
-	return (LONG_PTR)dll_handle;
+bool positionBuffer(JNIEnv *env, jobject buffer, jint position) {
+	jclass buffer_class;
+	jmethodID position_method;
+
+	buffer_class = (*env)->GetObjectClass(env, buffer);
+	if (buffer_class == NULL)
+		return false;
+	position_method = (*env)->GetMethodID(env, buffer_class, "position", "(I)Ljava/nio/Buffer;");
+	if (position_method == NULL)
+		return false;
+	(*env)->CallObjectMethod(env, buffer, position_method, position);
+	return true;
 }
+

@@ -420,6 +420,11 @@
 		</javah>
 		
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/win32" force="yes">
+			<class name="org.lwjgl.opengl.WindowsKeyboard" />
+			<class name="org.lwjgl.opengl.WindowsDirectInput8" />
+			<class name="org.lwjgl.opengl.WindowsDirectInputDevice8" />
+			<class name="org.lwjgl.opengl.WindowsDirectInput3" />
+			<class name="org.lwjgl.opengl.WindowsDirectInputDevice3" />
 			<class name="org.lwjgl.opengl.Win32PbufferPeerInfo" />
 			<class name="org.lwjgl.opengl.Win32Display" />
 			<class name="org.lwjgl.opengl.Win32Registry" />

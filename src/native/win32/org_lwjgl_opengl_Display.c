@@ -129,9 +129,9 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 							     WPARAM wParam,
 							     LPARAM lParam)
 {
-      int xPos; 
-      int yPos;
-      int dwheel;
+	JNIEnv *env;
+	jclass display_class;
+	jmethodID handleMessage_method;
 	if (isFullScreen && !isMinimized && isFocused)
 		setupCursorClipping();
 	switch (msg) {
@@ -176,50 +176,6 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 					break;
 			}
 			break;
-		case WM_MOUSEMOVE:
-		{
-                        xPos = GET_X_LPARAM(lParam); 
-                        yPos = GET_Y_LPARAM(lParam);
-			handleMouseMoved(xPos, yPos);
-			return 0;
-		}
-		case WM_MOUSEWHEEL:
-		{
-                        dwheel = GET_WHEEL_DELTA_WPARAM(wParam);
-			handleMouseScrolled(dwheel);
-			return 0;
-		}
-		case WM_LBUTTONDOWN:
-		{
-			handleMouseButton(0, 1);
-			return 0;
-		}
-		case WM_LBUTTONUP:
-		{
-			handleMouseButton(0, 0);
-			return 0;
-		}
-		case WM_RBUTTONDOWN:
-		{
-			handleMouseButton(1, 1);
-			return 0;
-		}
-		case WM_RBUTTONUP:
-		{
-			handleMouseButton(1, 0);
-			return 0;
-		}
-		case WM_MBUTTONDOWN:
-		{
-			handleMouseButton(2, 1);
-			return 0;
-		}
-		case WM_MBUTTONUP:
-		{
-			handleMouseButton(2, 0);
-			return 0;
-		}
-		break;
 		case WM_QUIT:
 		{
 			closerequested = true;
@@ -231,6 +187,17 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 		}
 	}
 
+	env = (JNIEnv *)(LONG_PTR)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+	if (env != NULL && !(*env)->ExceptionOccurred(env)) {
+		display_class = (*env)->FindClass(env, "org/lwjgl/opengl/Win32Display");
+		if (display_class != NULL) {
+			handleMessage_method = (*env)->GetStaticMethodID(env, display_class, "handleMessage", "(JIJJ)Z");
+			if (handleMessage_method != NULL)
+				if ((*env)->CallStaticBooleanMethod(env, NULL, handleMessage_method, (jlong)hWnd, (jint)msg, (jlong)wParam, (jlong)lParam))
+					return 0;
+		}
+	}
+
 	// default action
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }
@@ -238,7 +205,7 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 /*
  * Handle native Win32 messages
  */
-static void handleMessages(void) {
+static void handleMessages(JNIEnv *env) {
 	/*
 	 * Now's our chance to deal with Windows messages that are
 	 * otherwise just piling up and causing everything not to
@@ -246,7 +213,7 @@ static void handleMessages(void) {
 	 */
 	MSG msg;
 	if (display_hwnd != NULL) {
-		while (PeekMessage(
+		while (!(*env)->ExceptionOccurred(env) && PeekMessage(
 					&msg,         // message information
 					NULL,           // handle to window
 					0,  // first message
@@ -267,6 +234,10 @@ static void handleMessages(void) {
 	}
 }
 
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_Win32Display_getHwnd(JNIEnv *env, jclass unused) {
+	return (INT_PTR)display_hwnd;
+}
+
 /*
  * Class:     org_lwjgl_Window
  * Method:    nSetTitle
@@ -283,7 +254,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setTitle
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nUpdate
   (JNIEnv * env, jobject self)
 {
-	handleMessages();
+	handleMessages(env);
 }
 
 
@@ -342,6 +313,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nCreateWindow(JNIEnv *
 		throwException(env, "Failed to create the window.");
 		return;
 	}
+	SetWindowLongPtr(display_hwnd, GWLP_USERDATA, (LONG_PTR)env);
 	display_hdc = GetDC(display_hwnd);
 	ShowWindow(display_hwnd, SW_SHOWDEFAULT);
 	UpdateWindow(display_hwnd);
@@ -563,4 +535,63 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nSetWindowIcon32
 	}
 	
 	return -1;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setCursorPosition
+(JNIEnv * env, jobject self, jint x, jint y) {
+	DWORD windowflags, exstyle;
+	int transformed_x, transformed_y;
+	RECT window_rect;
+	RECT client_rect;
+	RECT adjusted_client_rect;
+
+	int left_border_width;
+	int bottom_border_width;
+
+	getWindowFlags(&windowflags, &exstyle, getCurrentFullscreen(), getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated"));
+	if (!GetClientRect(getCurrentHWND(), &client_rect)) {
+		printfDebugJava(env, "GetClientRect failed");
+		return;
+	}
+
+	adjusted_client_rect = client_rect;
+	if (!AdjustWindowRectEx(&adjusted_client_rect, windowflags, FALSE, exstyle)) {
+		printfDebugJava(env, "AdjustWindowRectEx failed");
+		return;
+	}
+	
+	if (!GetWindowRect(getCurrentHWND(), &window_rect)) {
+		printfDebugJava(env, "GetWindowRect failed");
+		return;
+	}
+	left_border_width = -adjusted_client_rect.left;
+	bottom_border_width = adjusted_client_rect.bottom - client_rect.bottom;
+	
+	transformed_x = window_rect.left + left_border_width + x;
+	transformed_y = window_rect.bottom - bottom_border_width - 1 - y;
+	if (!SetCursorPos(transformed_x, transformed_y))
+		printfDebugJava(env, "SetCursorPos failed");
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setNativeCursor
+	(JNIEnv *env, jobject self, jobject handle_buffer)
+{
+	HCURSOR *cursor_handle;
+	HCURSOR cursor;
+	if (handle_buffer != NULL) {
+		cursor_handle = (HCURSOR *)(*env)->GetDirectBufferAddress(env, handle_buffer);
+		cursor = *cursor_handle;
+		SetClassLongPtr(getCurrentHWND(), GCL_HCURSOR, (LONG_PTR)cursor);
+		SetCursor(cursor);
+	} else {
+		SetClassLongPtr(getCurrentHWND(), GCL_HCURSOR, (LONG_PTR)NULL);
+		SetCursor(LoadCursor(NULL, IDC_ARROW));
+	}
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_transformY(JNIEnv *env, jclass unused, jlong hwnd_int, jint y) {
+	HWND hwnd = (HWND)(INT_PTR)hwnd_int;
+	RECT clientRect;
+	GetClientRect(hwnd, &clientRect);
+	return (clientRect.bottom - clientRect.top) - 1 - y;
 }

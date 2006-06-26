@@ -348,7 +348,7 @@ public class Keyboard {
 
 	private static void read() {
 		readBuffer.compact();
-		int numEvents = Display.getImplementation().readKeyboard(readBuffer, readBuffer.position());
+		int numEvents = Display.getImplementation().readKeyboard(readBuffer);
 		readBuffer.position(readBuffer.position() + numEvents*EVENT_SIZE);
 		readBuffer.flip();
 	}

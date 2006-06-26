@@ -60,16 +60,5 @@
 	
 	WINDOW_H_API HDC getCurrentHDC();
 
-	WINDOW_H_API void handleMouseMoved(int x, int y);
-
-	WINDOW_H_API void handleMouseScrolled(int dwheel);
-
-	WINDOW_H_API void handleMouseButton(int button, int state);
-
 	WINDOW_H_API bool getCurrentFullscreen();
-	/*
-	 * Handle native Win32 messages
-	 */
-	WINDOW_H_API void handleMessage(JNIEnv * env, jobject obj);
-
 #endif /* _LWJGL_WINDOW_H_INCLUDED_ */

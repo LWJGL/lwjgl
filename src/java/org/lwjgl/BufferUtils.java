@@ -71,6 +71,16 @@ public final class BufferUtils {
 	}
 
 	/**
+	 * Construct a direct native-order charbuffer with the specified number
+	 * of elements.
+	 * @param size The size, in chars
+	 * @return an CharBuffer
+	 */
+	public static CharBuffer createCharBuffer(int size) {
+		return createByteBuffer(size << 1).asCharBuffer();
+	}
+
+	/**
 	 * Construct a direct native-order intbuffer with the specified number
 	 * of elements.
 	 * @param size The size, in ints
@@ -81,10 +91,10 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Construct a direct native-order intbuffer with the specified number
+	 * Construct a direct native-order longbuffer with the specified number
 	 * of elements.
-	 * @param size The size, in ints
-	 * @return an IntBuffer
+	 * @param size The size, in longs
+	 * @return an LongBuffer
 	 */
 	public static LongBuffer createLongBuffer(int size) {
 		return createByteBuffer(size << 3).asLongBuffer();

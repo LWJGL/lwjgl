@@ -31,34 +31,27 @@
  */
  
 /**
- * $Id$
+ * $Id: org_lwjgl_input_Keyboard.c 2385 2006-06-23 16:45:21Z elias_naur $
  *
- * Basic DLL stub.
- *
- * @author cix_foo <cix_foo@users.sourceforge.net>
- * @version $Revision$
+ * @author elias_naue <elias_naur@users.sourceforge.net>
+ * @version $Revision: 2385 $
  */
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <stdio.h>
+#include "Window.h"
 #include <jni.h>
+#include "org_lwjgl_opengl_WindowsKeyboard.h"
 
-HINSTANCE dll_handle;
-
-/*
- * DLL entry point for Windows. Called when Java loads the .dll
- */
-BOOL WINAPI DllMain(
-  HINSTANCE hinstDLL,  // handle to DLL module
-  DWORD fdwReason,     // reason for calling function
-  LPVOID lpvReserved   // reserved
-  ) 
-{
-	dll_handle = hinstDLL;
-	return TRUE; // Success
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsKeyboard_MapVirtualKey(JNIEnv *env, jclass unused, jint uCode, jint uMapType) {
+	return MapVirtualKey(uCode, uMapType);
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_Win32Display_getDllInstance(JNIEnv *env, jclass unused) {
-	return (LONG_PTR)dll_handle;
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsKeyboard_ToUnicode(JNIEnv *env, jclass unused, jint wVirtKey, jint wScanCode, jobject lpKeyState_obj, jobject pwszBuff_obj, jint cchBuff, jint flags) {
+	const PBYTE lpKeyState = (*env)->GetDirectBufferAddress(env, lpKeyState_obj);
+	LPWSTR pwszBuff = (*env)->GetDirectBufferAddress(env, pwszBuff_obj);
+	return ToUnicode(wVirtKey, wScanCode, lpKeyState, pwszBuff, cchBuff, flags);
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsKeyboard_GetKeyboardState(JNIEnv *env, jclass unused, jobject lpKeyState_obj) {
+	PBYTE lpKeyState = (*env)->GetDirectBufferAddress(env, lpKeyState_obj);
+	return GetKeyboardState(lpKeyState);
 }

@@ -97,12 +97,16 @@ void printfDebugJava(JNIEnv *env, const char *format, ...) {
 	jclass org_lwjgl_LWJGLUtil_class;
 	jmethodID log_method;
 	va_list ap;
-	if (isDebugEnabled()) {
+	if (isDebugEnabled() && !(*env)->ExceptionOccurred(env)) {
 		va_start(ap, format);
 		str = sprintfJavaString(env, format, ap);
 		va_end(ap);
 		org_lwjgl_LWJGLUtil_class = (*env)->FindClass(env, "org/lwjgl/LWJGLUtil");
+		if (org_lwjgl_LWJGLUtil_class == NULL)
+			return;
 		log_method = (*env)->GetStaticMethodID(env, org_lwjgl_LWJGLUtil_class, "log", "(Ljava/lang/String;)V");
+		if (log_method == NULL)
+			return;
 		(*env)->CallStaticVoidMethod(env, org_lwjgl_LWJGLUtil_class, log_method, str);
 	}
 }

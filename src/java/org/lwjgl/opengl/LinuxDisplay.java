@@ -513,10 +513,10 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native void nPollMouse(IntBuffer coord_buffer, ByteBuffer buttons);
 	
-	public int readMouse(IntBuffer buffer, int buffer_position) {
+	public int readMouse(IntBuffer buffer) {
 		update();
 		lockAWT();
-		int count = nReadMouse(buffer, buffer_position);
+		int count = nReadMouse(buffer, buffer.position());
 		unlockAWT();
 		return count;
 	}
@@ -616,10 +616,10 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native void nPollKeyboard(ByteBuffer keyDownBuffer);
 
-	public int readKeyboard(IntBuffer buffer, int buffer_position) {
+	public int readKeyboard(IntBuffer buffer) {
 		update();
 		lockAWT();
-		int count = nReadKeyboard(buffer, buffer_position);
+		int count = nReadKeyboard(buffer, buffer.position());
 		unlockAWT();
 		return count;
 	}

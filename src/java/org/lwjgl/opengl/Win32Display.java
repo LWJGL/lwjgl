@@ -48,8 +48,22 @@ import org.lwjgl.input.Cursor;
 
 final class Win32Display implements DisplayImplementation {
 	private final static int GAMMA_LENGTH = 256;
+	private final static int WM_MOUSEMOVE                     = 0x0200;
+	private final static int WM_LBUTTONDOWN                   = 0x0201;
+	private final static int WM_LBUTTONUP                     = 0x0202;
+	private final static int WM_LBUTTONDBLCLK                 = 0x0203;
+	private final static int WM_RBUTTONDOWN                   = 0x0204;
+	private final static int WM_RBUTTONUP                     = 0x0205;
+	private final static int WM_RBUTTONDBLCLK                 = 0x0206;
+	private final static int WM_MBUTTONDOWN                   = 0x0207;
+	private final static int WM_MBUTTONUP                     = 0x0208;
+	private final static int WM_MBUTTONDBLCLK                 = 0x0209;
+	private final static int WM_MOUSEWHEEL                    = 0x020A;
 
 	private static Win32DisplayPeerInfo peer_info;
+
+	private static WindowsKeyboard keyboard;
+	private static WindowsMouse mouse;
 
 	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
 		nCreateWindow(mode, fullscreen, x, y);
@@ -126,47 +140,70 @@ final class Win32Display implements DisplayImplementation {
 	public native DisplayMode[] getAvailableDisplayModes() throws LWJGLException;
 
 	/* Mouse */
-	public native boolean hasWheel();
-	public native int getButtonCount();
-	public native void createMouse() throws LWJGLException;
-	public native void destroyMouse();
+	public boolean hasWheel() {
+		return mouse.hasWheel();
+	}
+
+	public int getButtonCount() {
+		return mouse.getButtonCount();
+	}
+
+	public void createMouse() throws LWJGLException {
+		mouse = new WindowsMouse(createDirectInput(), getHwnd());
+	}
+
+	public void destroyMouse() {
+		mouse.destroy();
+		mouse = null;
+	}
+
 	public void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons) {
 		update();
-		nPollMouse(coord_buffer, buttons);
+		mouse.poll(coord_buffer, buttons);
 	}
-	private native void nPollMouse(IntBuffer coord_buffer, ByteBuffer buttons);
 	
-	public int readMouse(IntBuffer buffer, int buffer_position) {
+	public int readMouse(IntBuffer buffer) {
 		update();
-		return nReadMouse(buffer, buffer_position);
+		return mouse.read(buffer);
 	}
-	private native int nReadMouse(IntBuffer buffer, int buffer_position);
 		
-	public native void grabMouse(boolean grab);
+	public void grabMouse(boolean grab) {
+		mouse.grab(grab);
+	}
+
 	public int getNativeCursorCapabilities() {
 		return Cursor.CURSOR_ONE_BIT_TRANSPARENCY;
 	}
 
 	public native void setCursorPosition(int x, int y);
+
 	public native void setNativeCursor(Object handle) throws LWJGLException;
+
 	public native int getMinCursorSize();
 	public native int getMaxCursorSize();
 
+	private static native long getDllInstance();
+	private static native long getHwnd();
+
 	/* Keyboard */
-	public native void createKeyboard() throws LWJGLException;
-	public native void destroyKeyboard();
+	public void createKeyboard() throws LWJGLException {
+		keyboard = new WindowsKeyboard(createDirectInput(), getHwnd());
+	}
+
+	public void destroyKeyboard() {
+		keyboard.destroy();
+		keyboard = null;
+	}
 	
 	public void pollKeyboard(ByteBuffer keyDownBuffer) {
 		update();
-		nPollKeyboard(keyDownBuffer);
+		keyboard.poll(keyDownBuffer);
 	}
-	private native void nPollKeyboard(ByteBuffer keyDownBuffer);
 	
-	public int readKeyboard(IntBuffer buffer, int buffer_position) {
+	public int readKeyboard(IntBuffer buffer) {
 		update();
-		return nReadKeyboard(buffer, buffer_position);
+		return keyboard.read(buffer);
 	}
-	private native int nReadKeyboard(IntBuffer buffer, int buffer_position);
 
 //	public native int isStateKeySet(int key);
 
@@ -249,4 +286,64 @@ final class Win32Display implements DisplayImplementation {
 	private static native int nSetWindowIcon16(IntBuffer icon);
 	
 	private static native int nSetWindowIcon32(IntBuffer icon);
+
+	private static void handleMouseButton(int button, int state) {
+		if (mouse != null)
+			mouse.handleMouseButton(button, state);
+	}
+
+	private static void handleMouseMoved(int x, int y) {
+		if (mouse != null)
+			mouse.handleMouseMoved(x, y);
+	}
+
+	private static void handleMouseScrolled(int amount) {
+		if (mouse != null)
+			mouse.handleMouseScrolled(amount);
+	}
+
+	private static native int transformY(long hwnd, int y);
+
+	private static boolean handleMessage(long hwnd, int msg, long wParam, long lParam) {
+		switch (msg) {
+			case WM_MOUSEMOVE:
+				int xPos = (int)(short)(lParam & 0xFFFF);
+				int yPos = transformY(getHwnd(), (int)(short)((lParam >> 16) & 0xFFFF));
+				handleMouseMoved(xPos, yPos);
+				return true;
+			case WM_MOUSEWHEEL:
+				int dwheel = (int)(short)((wParam >> 16) & 0xFFFF);
+				handleMouseScrolled(dwheel);
+				return true;
+			case WM_LBUTTONDOWN:
+				handleMouseButton(0, 1);
+				return true;
+			case WM_LBUTTONUP:
+				handleMouseButton(0, 0);
+				return true;
+			case WM_RBUTTONDOWN:
+				handleMouseButton(1, 1);
+				return true;
+			case WM_RBUTTONUP:
+				handleMouseButton(1, 0);
+				return true;
+			case WM_MBUTTONDOWN:
+				handleMouseButton(2, 1);
+				return true;
+			case WM_MBUTTONUP:
+				handleMouseButton(2, 0);
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	private static WindowsDirectInput createDirectInput() throws LWJGLException {
+		try {
+			return new WindowsDirectInput8(getDllInstance());
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Failed to create DirectInput 8 interface, falling back to DirectInput 3");
+			return new WindowsDirectInput3(getDllInstance());
+		}
+	}
 }
