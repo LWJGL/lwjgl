@@ -62,6 +62,7 @@ final class Win32Display implements DisplayImplementation {
 
 	private final static int WM_QUIT						  = 0x0012;
 	private final static int WM_SYSCOMMAND					  = 0x0112;
+	private final static int WM_PAINT 						  = 0x000F;
 
 	private final static int SC_SIZE          = 0xF000;
 	private final static int SC_MOVE          = 0xF010;
@@ -90,9 +91,11 @@ final class Win32Display implements DisplayImplementation {
 	private static WindowsMouse mouse;
 
 	private static boolean close_requested;
+	private static boolean is_dirty;
 
 	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
 		close_requested = false;
+		is_dirty = false;
 		nCreateWindow(mode, fullscreen, x, y);
 		peer_info.initDC();
 	}
@@ -136,14 +139,22 @@ final class Win32Display implements DisplayImplementation {
 	private native String nGetVersion(String driver);
 	public native DisplayMode init() throws LWJGLException;
 	public native void setTitle(String title);
+
 	public boolean isCloseRequested() {
 		boolean saved = close_requested;
 		close_requested = false;
 		return saved;
 	}
+
 	public native boolean isVisible();
 	public native boolean isActive();
-	public native boolean isDirty();
+
+	public boolean isDirty() {
+		boolean saved = is_dirty;
+		is_dirty = false;
+		return saved;
+	}
+
 	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
 		peer_info = new Win32DisplayPeerInfo(pixel_format);
 		return peer_info;
@@ -380,6 +391,9 @@ final class Win32Display implements DisplayImplementation {
 					default:
 						break;
 				}
+				return false;
+			case WM_PAINT:
+				is_dirty = true;
 				return false;
 			default:
 				return false;

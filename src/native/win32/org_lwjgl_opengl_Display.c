@@ -54,7 +54,6 @@ static HDC        display_hdc = NULL;             // Device context
 static bool				isFullScreen = false;           // Whether we're fullscreen or not
 static bool				isMinimized = false;            // Whether we're minimized or not
 static bool       isFocused = false;              // whether we're focused or not
-static bool       isDirty = false;                // Whether we're dirty or not
 static bool       isUndecorated = false;          // Whether we're undecorated or not
 static bool		  did_maximize = false; // A flag to tell when a window
 										// has recovered from minimized
@@ -156,10 +155,6 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 					break;
 			}
 			break;
-		case WM_PAINT:
-		{
-			isDirty = true;
-		}
 	}
 
 	env = (JNIEnv *)(LONG_PTR)GetWindowLongPtr(hWnd, GWLP_USERDATA);
@@ -232,14 +227,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nUpdate
 	handleMessages(env);
 }
 
-
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_isDirty
-  (JNIEnv *env, jobject self) {
-	bool result = isDirty;
-	isDirty = false;
-	return result ? JNI_TRUE : JNI_FALSE;
-}
-
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_isVisible
   (JNIEnv *env, jobject self) {
 	return isMinimized ? JNI_FALSE : JNI_TRUE;
@@ -272,7 +259,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nCreateWindow(JNIEnv *
 
 	isMinimized = false;
 	isFocused = false;
-	isDirty = true;
 	isFullScreen = fullscreen == JNI_TRUE;
 	isUndecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
 	display_hwnd = createWindow(WINDOWCLASSNAME, x, y, width, height, isFullScreen, isUndecorated);
