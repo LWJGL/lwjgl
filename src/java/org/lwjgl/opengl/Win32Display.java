@@ -85,6 +85,8 @@ final class Win32Display implements DisplayImplementation {
 	private final static int SC_CONTEXTHELP   = 0xF180;
 	private final static int SC_SEPARATOR     = 0xF00F;
 
+	private final static int SM_CXCURSOR      = 13;
+
 	private static Win32DisplayPeerInfo peer_info;
 
 	private static WindowsKeyboard keyboard;
@@ -221,8 +223,15 @@ final class Win32Display implements DisplayImplementation {
 
 	public native void setNativeCursor(Object handle) throws LWJGLException;
 
-	public native int getMinCursorSize();
-	public native int getMaxCursorSize();
+	public int getMinCursorSize() {
+		return getSystemMetrics(SM_CXCURSOR);
+	}
+
+	public int getMaxCursorSize() {
+		return getSystemMetrics(SM_CXCURSOR);
+	}
+
+	public native int getSystemMetrics(int index);
 
 	private static native long getDllInstance();
 	private static native long getHwnd();

@@ -548,3 +548,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_transformY(JNIEnv *env
 	GetClientRect(hwnd, &clientRect);
 	return (clientRect.bottom - clientRect.top) - 1 - y;
 }
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getSystemMetrics(JNIEnv *env, jclass unused, jint index) {
+	return GetSystemMetrics(index);
+}
+
