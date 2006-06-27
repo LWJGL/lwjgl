@@ -257,7 +257,7 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 		key_down_buffer.position(old_position);
 	}
 
-	private synchronized void handleKey(int key_code_mapped, byte state, char character) {
+	private synchronized void handleKey(int key_code_mapped, byte state, int character) {
 		if ( character == KeyEvent.CHAR_UNDEFINED )
 			character = Keyboard.CHAR_NONE;
 		/* Ignore repeating presses */
