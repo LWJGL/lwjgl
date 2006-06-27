@@ -75,6 +75,12 @@
 		<include name="org/lwjgl/devil/**"/>
 	</fileset>
 	
+	<!-- Files to include in the lwjgl_applet.jar file -->
+	<fileset id="lwjgl_applet.fileset" dir="${lwjgl.bin}">
+		<exclude name="**.*"/>
+		<include name="org/lwjgl/test/applet/**"/>
+	</fileset>
+	
 	<!-- Files to make Javadoc from -->
 	<fileset id="lwjgl.javadoc.fileset" dir="${lwjgl.src}">
 		<include name="**/*.java" />
@@ -334,6 +340,16 @@
 		<jar destfile="${lwjgl.temp}/jar/lwjgl_devil.jar" taskname="lwjgl_devil.jar">
 			<fileset refid="lwjgl_devil.fileset" />
 		</jar>
+
+	</target>
+
+	<target name="applet" depends="jars">
+		<!-- Create lwjgl_applet.jar -->
+		<jar destfile="applet/lwjgl_applet.jar" taskname="lwjgl_applet.jar">
+			<fileset refid="lwjgl_applet.fileset" />
+		</jar>
+		<copy file="${lwjgl.lib}/lwjgl.jar" todir="applet"/>
+		<signjar jar="applet/lwjgl.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
 	</target>
 
 	<!-- Distributes files  -->
