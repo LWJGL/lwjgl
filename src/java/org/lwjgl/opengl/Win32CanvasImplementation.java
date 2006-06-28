@@ -33,6 +33,8 @@ package org.lwjgl.opengl;
 
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
+import java.security.PrivilegedAction;
+import java.security.AccessController;
 
 import org.lwjgl.LWJGLException;
 
@@ -44,7 +46,12 @@ import org.lwjgl.LWJGLException;
  */
 final class Win32CanvasImplementation implements AWTCanvasImplementation {
 	static {
-		System.loadLibrary("jawt");
+		AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				System.loadLibrary("jawt");
+				return null;
+			}
+		});
 	}
 
 	public PeerInfo createPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) throws LWJGLException {
