@@ -243,7 +243,7 @@ public class Keyboard {
 	/**
 	 * The key events from the last read: a sequence of pairs of key number,
 	 * followed by state. The state is followed by
-	 * a 4 byte java int representing the translated character.
+	 * a 4 byte code point representing the translated character.
 	 */
 	private static IntBuffer readBuffer;
 
@@ -442,8 +442,8 @@ public class Keyboard {
 	/**
 	 * @return The character from the current event
 	 */
-	public static int getEventCharacter() {
-		return eventCharacter;
+	public static char getEventCharacter() {
+		return (char)eventCharacter;
 	}
 
 	/**
