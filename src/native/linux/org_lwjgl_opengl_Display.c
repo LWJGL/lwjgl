@@ -167,7 +167,7 @@ static void setRepeatMode(JNIEnv *env, int mode) {
 	XCloseDisplay(disp);
 }
 
-void __attribute__ ((destructor)) my_fini(void) { 
+static void __attribute__ ((destructor)) my_fini(void) { 
 	setRepeatMode(NULL, AutoRepeatModeDefault);
 } 
 
