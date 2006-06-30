@@ -242,7 +242,7 @@ static void checkInput(JNIEnv *env, jint extension, jint window_mode, jobject sa
 	}
 }
 
-void handleMessages(JNIEnv *env, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma, jobject saved_mode, jobject current_mode) {
+static void handleMessages(JNIEnv *env, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma, jobject saved_mode, jobject current_mode) {
 	XEvent event;
 	while (XPending(getDisplay()) > 0) {
 		XNextEvent(getDisplay(), &event);

@@ -53,7 +53,6 @@
 #include "org_lwjgl_opengl_LinuxDisplay.h"
 
 #define KEYBOARD_BUFFER_SIZE 50
-#define KEY_EVENT_BACKLOG 40
 
 static jbyte key_buf[org_lwjgl_input_Keyboard_KEYBOARD_SIZE];
 static int numlock_mask;
