@@ -54,10 +54,6 @@ public class KeyboardTest {
   /** Display mode selected */
   private DisplayMode displayMode;
 
-  private boolean bufferedKeyboard;
-  private boolean translatedKeyboard;
-  private int bufferSize;
-
   /** Creates a new instance of MouseTest */
   public KeyboardTest() {
   }
@@ -110,7 +106,6 @@ public class KeyboardTest {
 
   private void initializeOpenGL() {
     GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    GLU.gluOrtho2D(0.0f, 640f, 0f, 480f);
   }
 
   public void executeTest() {
@@ -158,24 +153,23 @@ public class KeyboardTest {
         if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
           return;
         }
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-          position.x += 1;
-        }
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-          position.x -= 1;
-        }
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-          position.y += 1;
-        }
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-          position.y -= 1;
-        }
-
       }
+      if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+        position.x += 1;
+      }
+
+      if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+        position.x -= 1;
+      }
+
+      if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+        position.y += 1;
+      }
+
+      if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+        position.y -= 1;
+      }
+
       if (count > 0) {
         System.out.println();
       }
@@ -207,7 +201,6 @@ public class KeyboardTest {
     GL11.glBegin(GL11.GL_POLYGON);
     {
       float color = 1.0f;
-      int buttonDown = 0;
       GL11.glColor3f(color, color, color);
 
       GL11.glVertex2f(position.x + 0.0f, position.y + 0.0f);
