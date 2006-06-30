@@ -242,5 +242,5 @@ public interface DisplayImplementation {
 	 * @param icons Array of icons in RGBA mode
 	 * @return number of icons used.
 	 */
-	public int setIcon(ByteBuffer[] icons); 
+	public int setIcon(ByteBuffer[] icons);
 }

@@ -692,6 +692,27 @@ final class LinuxDisplay implements DisplayImplementation {
 		throw new UnsupportedOperationException();
 	}
 	
+	private static void convertIcon(ByteBuffer icon, int width, int height) {
+		int x = 0;
+		int y = 5;
+		byte r,g,b,a;
+
+		int depth = 4;
+
+		for (y = 0; y < height; y++) {
+			for (x = 0; x < width; x++) {
+				r = icon.get((x*4)+(y*width*4));
+				g = icon.get((x*4)+(y*width*4)+1);
+				b = icon.get((x*4)+(y*width*4)+2);
+				a = icon.get((x*4)+(y*width*4)+3);
+
+				icon.put((x*depth)+(y*width*depth), b); // blue
+				icon.put((x*depth)+(y*width*depth)+1, g); // green
+				icon.put((x*depth)+(y*width*depth)+2, r);
+				icon.put((x*depth)+(y*width*depth)+3, a);
+			}
+		}
+	}
 
 	/**
 	 * Sets one or more icons for the Display.
@@ -700,23 +721,36 @@ final class LinuxDisplay implements DisplayImplementation {
 	 * <li>Linux (and similar platforms) expect one 32x32 icon.</li>
 	 * <li>Mac OS X should be supplied one 128x128 icon</li>
 	 * </ul>
-	 * The implementation will use the supplied ByteBuffers with image data in RGBA and perform any conversions nescesarry for the specific platform.
+	 * The implementation will use the supplied ByteBuffers with image data in RGBA and perform any conversions necessary for the specific platform.
 	 *
 	 * @param icons Array of icons in RGBA mode
 	 * @return number of icons used.
 	 */
 	public int setIcon(ByteBuffer[] icons) {
-		for (int i=0;i<icons.length;i++) {
-			int size = icons[i].limit() / 4;
-			
-			if (((int) Math.sqrt(size)) == 32) {
-				nSetWindowIcon(icons[i]);
-				return 1;
+		lockAWT();
+		try {
+			incDisplay();
+			try {
+				for (int i=0;i<icons.length;i++) {
+					int size = icons[i].limit() / 4;
+					int dimension = (int)Math.sqrt(size);
+					if (dimension == 32) {
+						convertIcon(icons[i], dimension, dimension);
+						nSetWindowIcon(icons[i], icons[i].capacity(), dimension, dimension);
+						return 1;
+					}
+				}
+				return 0;
+			} finally {
+				decDisplay();
 			}
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Failed to set display icon: " + e);
+			return 0;
+		} finally {
+			unlockAWT();
 		}
-		
-		return 0;
 	}
 	
-	private static native int nSetWindowIcon(ByteBuffer icon);
+	private static native void nSetWindowIcon(ByteBuffer icon, int icons_size, int width, int height);
 }
