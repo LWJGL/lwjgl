@@ -49,6 +49,8 @@
 #include "org_lwjgl_opengl_Win32Display.h"
 #include "context.h"
 
+static HICON small_icon = NULL;
+static HICON large_icon = NULL;
 static HWND       display_hwnd = NULL;            // Handle to the window
 static HDC        display_hdc = NULL;             // Device context
 static bool				isFullScreen = false;           // Whether we're fullscreen or not
@@ -108,6 +110,20 @@ static void appActivate(bool active)
 		resetDisplayModeAndClipping(NULL);
 	}
 	inAppActivate = false;
+}
+
+static void freeLargeIcon() {
+	if (large_icon != NULL) {
+		DestroyIcon(large_icon);
+		large_icon = NULL;
+	}
+}
+
+static void freeSmallIcon() {
+	if (small_icon != NULL) {
+		DestroyIcon(small_icon);
+		small_icon = NULL;
+	}
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_didMaximize
@@ -278,6 +294,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyWindow(JNIEnv *
 	closeWindow(&display_hwnd, &display_hdc);
 	if (isFullScreen)
 		ClipCursor(NULL);
+	freeLargeIcon();
+	freeSmallIcon();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_switchDisplayMode(JNIEnv *env, jobject self, jobject mode) {
@@ -461,10 +479,11 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nSetWindowIcon16
 {
 	int *imgData = (int *)(*env)->GetDirectBufferAddress(env, iconBuffer);
 	
-	HICON newIcon = createWindowIcon(env, imgData, 16, 16);
+	freeSmallIcon();
+	small_icon = createWindowIcon(env, imgData, 16, 16);
 	if (newIcon != NULL) {
 		if (display_hwnd != NULL) {
-			SendMessage(display_hwnd, WM_SETICON, ICON_SMALL,  (LPARAM) (newIcon));
+			SendMessage(display_hwnd, WM_SETICON, ICON_SMALL,  (LPARAM) (small_icon));
 			
 			return 0;
 		}
@@ -478,10 +497,11 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nSetWindowIcon32
 {
 	int *imgData = (int *)(*env)->GetDirectBufferAddress(env, iconBuffer);
 	
-	HICON newIcon = createWindowIcon(env, imgData, 32, 32);
+	freeLargeIcon();
+	large_icon = createWindowIcon(env, imgData, 32, 32);
 	if (newIcon != NULL) {
 		if (display_hwnd != NULL) {
-			SendMessage(display_hwnd, WM_SETICON, ICON_BIG,  (LPARAM) (newIcon));
+			SendMessage(display_hwnd, WM_SETICON, ICON_BIG,  (LPARAM) (large_icon));
 			
 			return 0;
 		}
