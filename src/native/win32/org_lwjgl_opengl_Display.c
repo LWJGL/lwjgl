@@ -481,7 +481,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nSetWindowIcon16
 	
 	freeSmallIcon();
 	small_icon = createWindowIcon(env, imgData, 16, 16);
-	if (newIcon != NULL) {
+	if (small_icon != NULL) {
 		if (display_hwnd != NULL) {
 			SendMessage(display_hwnd, WM_SETICON, ICON_SMALL,  (LPARAM) (small_icon));
 			
@@ -499,7 +499,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nSetWindowIcon32
 	
 	freeLargeIcon();
 	large_icon = createWindowIcon(env, imgData, 32, 32);
-	if (newIcon != NULL) {
+	if (large_icon != NULL) {
 		if (display_hwnd != NULL) {
 			SendMessage(display_hwnd, WM_SETICON, ICON_BIG,  (LPARAM) (large_icon));
 			
