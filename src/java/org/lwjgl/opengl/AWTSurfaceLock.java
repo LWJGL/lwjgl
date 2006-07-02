@@ -75,7 +75,7 @@ final class AWTSurfaceLock {
 
 	private boolean privilegedLockAndInitHandle(final Canvas canvas) throws LWJGLException {
 		// Workaround for Sun JDK bug 4796548 which still exists in java for OS X
-		// We need to elevate priveleges because of an AWT bug. Please see
+		// We need to elevate privileges because of an AWT bug. Please see
 		// http://192.18.37.44/forums/index.php?topic=10572 for a discussion.
 		// It is only needed on first call, so we avoid it on all subsequent calls
 		// due to performance.		

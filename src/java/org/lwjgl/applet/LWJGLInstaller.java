@@ -123,7 +123,7 @@ public class LWJGLInstaller {
 		}
 
 		// create a temporary dir for the native files
-		String user_temp_dir = getPriveledgedString("java.io.tmpdir");
+		String user_temp_dir = getPriviledgedString("java.io.tmpdir");
 		String path = createTemporaryDir(user_temp_dir);
 		if(path == null) {
 			throw new LWJGLException("Failed creation of temporary directory in " + user_temp_dir);
@@ -251,7 +251,7 @@ public class LWJGLInstaller {
 	/**
 	 * Gets a property as a privileged action.
 	 */
-	private static String getPriveledgedString(final String property) {
+	private static String getPriviledgedString(final String property) {
 		return (String) AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
 				return System.getProperty(property);
