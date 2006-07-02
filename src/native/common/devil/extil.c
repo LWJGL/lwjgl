@@ -8,6 +8,17 @@
  static void* devILhandle;
 #endif
 
+static const char* VERSION = "1.0beta2";
+
+/*
+ * Class:     org_lwjgl_devil_ILNative
+ * Method:    getNativeLibraryVersion
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_org_lwjgl_devil_ILNative_getNativeLibraryVersion(JNIEnv *env, jclass clazz) {
+  return NewStringNative(env, VERSION);
+}
+
 /**
  * Retrieves a function pointer from the devil library
  * @param function Name of function to retrieve
