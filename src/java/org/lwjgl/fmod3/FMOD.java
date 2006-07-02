@@ -31,13 +31,17 @@
  */
 package org.lwjgl.fmod3;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.nio.FloatBuffer;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.applet.LWJGLInstaller;
 
 /**
  * <br>
@@ -189,17 +193,8 @@ public class FMOD {
 	/** The native JNI library name */
 	private static String JNI_LIBRARY_NAME = "lwjgl-fmod3";
 
-	/** The native library name on win32 */
-	private static String FMOD_WIN32_LIBRARY_NAME = "fmod";
-
-	/** The native library name on win32 */
-	private static String FMOD_LINUX_LIBRARY_NAME = "fmod";
-
-	/** The native library name on win32 */
-	private static String FMOD_OSX_LIBRARY_NAME = "fmod";
-
 	/** Version of FMOD */
-	public static final String VERSION = "1.0beta";
+	public static final String VERSION = "1.0beta2";
 
 	static {
 		initialize();
@@ -214,7 +209,11 @@ public class FMOD {
 		}
 		initialized = true;
 
-		System.loadLibrary(JNI_LIBRARY_NAME);    
+		if (LWJGLInstaller.installed) {
+			loadLibrary(LWJGLInstaller.installDirectory + File.separator + System.mapLibraryName(JNI_LIBRARY_NAME), true);
+		} else {
+			loadLibrary(JNI_LIBRARY_NAME, false);
+		}
 
 		// check for mismatch
 		String nativeVersion = getNativeLibraryVersion();
@@ -229,6 +228,19 @@ public class FMOD {
 			callbacks[i] = new HashMap();
 		}
 	}
+	
+	private static void loadLibrary(final String name, final boolean usingPath) {
+		AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				if(usingPath) {
+					System.load(name);
+				} else {
+					System.loadLibrary(name);
+				}
+				return null;
+			}
+		});
+	}	
 
 	/**
 	 * Return the version of the native library
