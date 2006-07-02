@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2004 LWJGL Project
+ * Copyright (c) 2002-2006 LWJGL Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,7 @@
  */
 package org.lwjgl;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -38,6 +39,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
 
+import org.lwjgl.applet.LWJGLInstaller;
 import org.lwjgl.input.Mouse;
 
 /**
@@ -51,15 +53,24 @@ import org.lwjgl.input.Mouse;
 public final class Sys {
 
   /** Current version of library */
-	private static final String VERSION = "1.0beta";
+	private static final String VERSION = "1.0beta2";
 
 	/** The implementation instance to delegate platform specific behavior to */
 	private final static SysImplementation implementation;
   
-	private static void loadLibrary(final String name) {
+	/**
+	 * utility loadlibrary to load the native library using elevated priviledges
+	 * @param name Name of library to load, or full path if usingPath is true
+	 * @param usingPath true if using the full path to the native
+	 */
+	private static void loadLibrary(final String name, final boolean usingPath) {
 		AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
-				System.loadLibrary(name);
+				if(usingPath) {
+					System.load(name);
+				} else {
+					System.loadLibrary(name);
+				}
 				return null;
 			}
 		});
@@ -71,15 +82,32 @@ public final class Sys {
 		UnsatisfiedLinkError last_load_error = null;
 		for (int i = 0; i < library_names.length; i++) {
 			try {
-				loadLibrary(library_names[i]);
+				loadLibrary(library_names[i], false);
 				last_load_error = null;
 				break;
 			} catch (UnsatisfiedLinkError e) {
 				last_load_error = e;
 			}
 		}
-		if (last_load_error != null)
+		
+		// failed normal loading - check installer
+		if (last_load_error != null && LWJGLInstaller.installed) {
+			for (int i = 0; i < library_names.length; i++) {
+				try {
+					loadLibrary(LWJGLInstaller.installDirectory + File.separator + System.mapLibraryName(library_names[i]), true);
+					last_load_error = null;
+					break;
+				} catch (UnsatisfiedLinkError e) {
+					last_load_error = e;
+				}
+			}				
+		}
+		
+		// check for error
+		if (last_load_error != null) {
 			throw last_load_error;
+		}
+		
 		String native_version = implementation.getNativeLibraryVersion();
 		if (!native_version.equals(getVersion()))
 			throw new LinkageError("Version mismatch: jar version is '" + getVersion() +
