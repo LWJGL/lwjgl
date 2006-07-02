@@ -13,7 +13,7 @@
 	<property name="lwjgl.docs" 			value="./doc" />
 	<property name="lwjgl.temp" 			value="./temp" />
 	<property name="lwjgl.res" 			value="./res" />
-	<property name="lwjgl.version" 		value="1.0beta" />
+	<property name="lwjgl.version" 		value="1.0beta2" />
 
 	<property name="opengl-template-pattern" value="org/lwjgl/opengl/GL*.java,org/lwjgl/opengl/ARB*.java,org/lwjgl/opengl/ATI*.java,org/lwjgl/opengl/EXT*.java,org/lwjgl/opengl/NV*.java,org/lwjgl/opengl/HP*.java,org/lwjgl/opengl/IBM*.java,org/lwjgl/opengl/SUN*.java"/>
 	<!-- ================================================================== -->
@@ -340,7 +340,6 @@
 		<jar destfile="${lwjgl.temp}/jar/lwjgl_devil.jar" taskname="lwjgl_devil.jar">
 			<fileset refid="lwjgl_devil.fileset" />
 		</jar>
-
 	</target>
 
 	<target name="applet" depends="jars">
@@ -349,7 +348,20 @@
 			<fileset refid="lwjgl_applet.fileset" />
 		</jar>
 		<copy file="${lwjgl.lib}/lwjgl.jar" todir="applet"/>
+		<copy file="${lwjgl.lib}/lwjgl_util.jar" todir="applet"/>
+		<copy file="${lwjgl.lib}/lwjgl_fmod3.jar" todir="applet"/>
+		<copy file="${lwjgl.lib}/lwjgl_devil.jar" todir="applet"/>
+		<zip destfile="applet/res.jar">
+		  <zipfileset dir="${lwjgl.res}" includes="Footsteps.wav, ILtest.tga, Missing_you.mod"/>
+		</zip>
+		<zip destfile="applet/lwjgl.jar" update="true">
+			<zipfileset dir="${lwjgl.lib}" prefix="native" includes="win32/**"/>
+<!--			<zipfileset dir="${lwjgl.lib}" prefix="native" includes="linux/**"/> -->
+<!--			<zipfileset dir="${lwjgl.lib}" prefix="native" includes="macosx/**"/> -->
+		</zip>
 		<signjar jar="applet/lwjgl.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		<signjar jar="applet/lwjgl_fmod3.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		<signjar jar="applet/lwjgl_devil.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>		
 	</target>
 
 	<!-- Distributes files  -->
@@ -440,7 +452,7 @@
 			<class name="org.lwjgl.opengl.WindowsDirectInput8" />
 			<class name="org.lwjgl.opengl.WindowsDirectInputDevice8" />
 			<class name="org.lwjgl.opengl.WindowsDirectInput3" />
-			<class name="org.lwjgl.opengl.WindowsDirectInputDevice3" />
+			<class name="org.lwjgl.opengl.WindowsDirectInputDevice3" />			
 			<class name="org.lwjgl.opengl.Win32PbufferPeerInfo" />
 			<class name="org.lwjgl.opengl.Win32Display" />
 			<class name="org.lwjgl.opengl.Win32Registry" />
@@ -693,9 +705,8 @@
 		<delete dir="${lwjgl.temp}"/>		
 		
 		<!-- unzip common files -->
-		<unzip src="${lwjgl.dist}/lwjgl-win32-${lwjgl.version}.zip" dest="${lwjgl.temp}/jnlp/temp" overwrite="true"/>
-		<unzip src="${lwjgl.dist}/lwjgl-linux-${lwjgl.version}.zip" dest="${lwjgl.temp}/jnlp/temp" overwrite="true"/>
-		<unzip src="${lwjgl.dist}/lwjgl-macosx-${lwjgl.version}.zip" dest="${lwjgl.temp}/jnlp/temp" overwrite="true"/>
+		<unzip src="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip" dest="${lwjgl.temp}/jnlp/temp" overwrite="true"/>
+		<unzip src="${lwjgl.dist}/lwjgl_optional-${lwjgl.version}.zip" dest="${lwjgl.temp}/jnlp/temp" overwrite="true"/>
 		
 		<!-- move relevant files to root -->
 		<move todir="${lwjgl.temp}/jnlp" flatten="true">
@@ -705,25 +716,31 @@
 		</move>
 		
 		<!-- create native jars -->
-		<jar destfile="${lwjgl.temp}/jnlp/native_win32.jar" basedir="${lwjgl.temp}/jnlp/temp/lwjgl-win32-${lwjgl.version}/native/"/>
-		<jar destfile="${lwjgl.temp}/jnlp/native_linux.jar" basedir="${lwjgl.temp}/jnlp/temp/lwjgl-linux-${lwjgl.version}/native/"/>
-		<jar destfile="${lwjgl.temp}/jnlp/native_macosx.jar" basedir="${lwjgl.temp}/jnlp/temp/lwjgl-macosx-${lwjgl.version}/native/"/>
+		<jar destfile="${lwjgl.temp}/jnlp/native_win32.jar" basedir="${lwjgl.temp}/jnlp/temp/lwjgl-${lwjgl.version}/native/win32"/>
+		<jar destfile="${lwjgl.temp}/jnlp/native_linux.jar" basedir="${lwjgl.temp}/jnlp/temp/lwjgl-${lwjgl.version}/native/linux"/>
+		<jar destfile="${lwjgl.temp}/jnlp/native_macosx.jar" basedir="${lwjgl.temp}/jnlp/temp/lwjgl-${lwjgl.version}/native/macosx"/>
 		
 		<!-- create media jar -->
 		<jar destfile="${lwjgl.temp}/jnlp/media.jar" basedir="${lwjgl.res}"/>	
 	
 		<!-- sign 'em -->
 		<input message="Please enter store password:" addproperty="store.pwd" />
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 		alias="matzon" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_devil.jar" 	alias="matzon" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_fmod3.jar" 	alias="matzon" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_test.jar" 	alias="matzon" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_util.jar" 	alias="matzon" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/media.jar" 		alias="matzon" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/native_linux.jar" 	alias="matzon" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" alias="matzon" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/native_win32.jar" 	alias="matzon" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/jinput.jar" 		alias="matzon" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 		storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_devil.jar" 	storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_fmod3.jar" 	storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_test.jar" 	storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_util.jar" 	storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/media.jar" 		storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_linux.jar" 	storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_win32.jar" 	storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/jinput.jar" 		storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
+	</target>
+	
+	<!-- -->
+	<target name="signapplet">
+		<input message="Please enter store password:" addproperty="store.pwd" />
+		<signjar jar="applet_loader.jar" storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
 	</target>
 	
 	<target name="changelog">
