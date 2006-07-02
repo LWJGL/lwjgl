@@ -356,8 +356,8 @@
 		</zip>
 		<zip destfile="applet/lwjgl.jar" update="true">
 			<zipfileset dir="${lwjgl.lib}" prefix="native" includes="win32/**"/>
-<!--			<zipfileset dir="${lwjgl.lib}" prefix="native" includes="linux/**"/> -->
-<!--			<zipfileset dir="${lwjgl.lib}" prefix="native" includes="macosx/**"/> -->
+			<zipfileset dir="${lwjgl.lib}" prefix="native" includes="linux/**"/>
+			<zipfileset dir="${lwjgl.lib}" prefix="native" includes="macosx/**"/>
 		</zip>
 		<signjar jar="applet/lwjgl.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
 		<signjar jar="applet/lwjgl_fmod3.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
