@@ -42,6 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.lwjgl.applet.LWJGLInstaller;
+
 /**
  * <p>
  * Internal library methods
@@ -52,12 +54,16 @@ import java.util.StringTokenizer;
  * $Id$
  */
 public class LWJGLUtil {
-	public static final int PLATFORM_LINUX 			= 1;
-	public static final int PLATFORM_MACOSX 		= 2;
-	public static final int PLATFORM_WINDOWS 		= 3;
+	public static final int PLATFORM_LINUX 				= 1;
+	public static final int PLATFORM_MACOSX 			= 2;
+	public static final int PLATFORM_WINDOWS 			= 3;
+	public static final String PLATFORM_LINUX_NAME 		= "linux";
+	public static final String PLATFORM_MACOSX_NAME 	= "macosx";
+	public static final String PLATFORM_WINDOWS_NAME	= "win32";
 	
 	/** LWJGL Logo - 16 by 16 pixels */
-	public static final ByteBuffer	LWJGLIcon16x16		= BufferUtils.createByteBuffer(16 * 16 * 4).put(new byte[] { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	public static final ByteBuffer	LWJGLIcon16x16		= BufferUtils.createByteBuffer(16 * 16 * 4).put(new byte[] { 
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -62, -41, -24, -1, 116, -92, -53, -1, 80, -117,
 			-67, -1, 84, -114, -65, -1, -122, -81, -46, -1, -25, -17, -10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -11, -11, -11, -1,
@@ -101,7 +107,8 @@ public class LWJGLUtil {
 	});
 
 	/** LWJGL Logo - 32 by 32 pixels */
-	public static final ByteBuffer	LWJGLIcon32x32		= BufferUtils.createByteBuffer(32 * 32 * 4).put(new byte[] { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	public static final ByteBuffer	LWJGLIcon32x32		= BufferUtils.createByteBuffer(32 * 32 * 4).put(new byte[] { 
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -6, -4, -3, -1, -53, -35,
 			-20, -1, -109, -73, -42, -1, 111, -96, -55, -1, 92, -109, -62, -1, 96, -106, -61, -1, 122, -89, -51, -1,
@@ -267,7 +274,10 @@ public class LWJGLUtil {
 	}
 	
 	/**
-	 * Get the current platform
+	 * @see #PLATFORM_WINDOWS
+	 * @see #PLATFORM_LINUX
+	 * @see #PLATFORM_MACOSX
+	 * @return the current platform type
 	 */
 	public static int getPlatform() {
 		String osName = System.getProperty("os.name");
@@ -282,6 +292,26 @@ public class LWJGLUtil {
 			throw new LinkageError("Unknown platform: " + osName);
 		}
 	}
+	
+
+	/**
+	 * @see #PLATFORM_WINDOWS_NAME
+	 * @see #PLATFORM_LINUX_NAME
+	 * @see #PLATFORM_MACOSX_NAME
+	 * @return current platform name
+	 */
+	public static String getPlatformName() {
+		switch (LWJGLUtil.getPlatform()) {
+			case LWJGLUtil.PLATFORM_LINUX:
+				return "linux";
+			case LWJGLUtil.PLATFORM_MACOSX:
+				return "macosx";
+			case LWJGLUtil.PLATFORM_WINDOWS:
+				return "win32";
+			default:
+				return "unknown";
+		}
+	}	
 
 	/**
 	 * Locates the paths required by a library.
@@ -326,6 +356,11 @@ public class LWJGLUtil {
 			possible_paths.add(lwjgl_classloader_path.substring(0, lwjgl_classloader_path.lastIndexOf(File.separator))
 					+ File.separator + platform_lib_name);
 		}
+		
+		// add Installer path
+		if (LWJGLInstaller.installed) {
+			possible_paths.add(LWJGLInstaller.installDirectory + File.separator + platform_lib_name);
+		}		
 
 		// Add all possible paths from java.library.path
 		String java_library_path = (String)AccessController.doPrivileged(new PrivilegedAction() {
@@ -348,7 +383,6 @@ public class LWJGLUtil {
 		});
 		possible_paths.add(current_dir + File.separator + platform_lib_name);
 
-		
 		//add pure library (no path, let OS search)
 		possible_paths.add(platform_lib_name);
 
@@ -398,8 +432,7 @@ public class LWJGLUtil {
 	}
 
 	/**
-	 * Gets a boolean property as a privileged action. Helper method
-	 * for native.
+	 * Gets a boolean property as a privileged action.
 	 */
 	private static boolean getPrivilegedBoolean(final String property_name) {
 		Boolean value = (Boolean)AccessController.doPrivileged(new PrivilegedAction() {
@@ -408,7 +441,7 @@ public class LWJGLUtil {
 			}
 		});
 		return value.booleanValue();
-	}
+	}	
 	
 	/**
 	 * Prints the given message to System.err if DEBUG is true.
