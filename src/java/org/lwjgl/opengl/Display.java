@@ -711,7 +711,7 @@ public final class Display {
 	/**
 	 * Gets a boolean property as a privileged action.
 	 */
-	private static boolean getPrivilegedBoolean(final String property_name) {
+	static boolean getPrivilegedBoolean(final String property_name) {
 		Boolean value = (Boolean)AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {	
 				return new Boolean(Boolean.getBoolean(property_name));

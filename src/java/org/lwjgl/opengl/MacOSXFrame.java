@@ -48,7 +48,6 @@ import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 
@@ -73,7 +72,7 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 		addComponentListener(this);
 		canvas = new MacOSXGLCanvas();
 		add(canvas, BorderLayout.CENTER);
-		boolean undecorated = getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated");
+		boolean undecorated = Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated");
 		setUndecorated(fullscreen || undecorated);
 		if ( fullscreen ) {
 			try {
@@ -213,16 +212,4 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 		}
 		return result;
 	}
-	
-	/**
-	 * Gets a boolean property as a privileged action.
-	 */
-	private static boolean getPrivilegedBoolean(final String property_name) {
-		Boolean value = (Boolean)AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {	
-				return new Boolean(Boolean.getBoolean(property_name));
-			}
-		});
-		return value.booleanValue();
-	}	
 }
