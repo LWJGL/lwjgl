@@ -58,9 +58,6 @@ class EventQueue {
 
 	/**
 	 * Copy available events into the specified buffer.
-	 * Note that the buffer position is maintained, to emulate
-	 * the behaviour of the native event queues.
-	 * @return the number of events copied
 	 */
 	public synchronized void copyEvents(IntBuffer dest) {
 		queue.flip();
