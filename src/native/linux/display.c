@@ -408,15 +408,16 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetAvailableD
 	return getAvailableDisplayModes(env, getDisplay(), getCurrentScreen(), extension);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwitchDisplayMode(JNIEnv *env, jclass clazz, jint extension, jobject mode) {
-	switchDisplayMode(env, getCurrentScreen(), extension, mode);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwitchDisplayMode(JNIEnv *env, jclass clazz, jint screen, jint extension, jobject mode) {
+	switchDisplayMode(env, screen, extension, mode);
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetGammaRampLength(JNIEnv *env, jclass clazz) {
-	return (jint)getGammaRampLengthOfDisplay(env, getDisplay(), getCurrentScreen());
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetGammaRampLength(JNIEnv *env, jclass clazz, jlong display_ptr, jint screen) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	return (jint)getGammaRampLengthOfDisplay(env, disp, screen);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetGammaRamp(JNIEnv *env, jclass clazz, jobject gamma_buffer) {
-	setGammaRamp(env, getCurrentScreen(), gamma_buffer);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetGammaRamp(JNIEnv *env, jclass clazz, jint screen, jobject gamma_buffer) {
+	setGammaRamp(env, screen, gamma_buffer);
 }
 

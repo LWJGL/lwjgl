@@ -1,0 +1,305 @@
+/*
+ * Copyright (c) 2002-2004 LWJGL Project
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
+ *   from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package org.lwjgl.opengl;
+
+/**
+ * @author elias_naur
+ */
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.nio.CharBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Keyboard;
+
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.Charset;
+
+final class LinuxKeyboard {
+	private static final int LockMapIndex                      = 1;
+	private static final int KeyPress = 2;
+	private static final int KeyRelease = 3;
+	private static final long NoSymbol = 0;
+	private static final long ShiftMask = 1 << 0;
+	private static final long LockMask = 1 << 1;
+	private static final int XLookupChars            = 2;
+	private static final int XLookupBoth             = 4;
+
+
+	private static final int EVENT_SIZE = 3;
+	private static final int KEYBOARD_BUFFER_SIZE = 50;
+
+	private final long xim;
+	private final long xic;
+	
+	private final int numlock_mask;
+	private final int modeswitch_mask;
+	private final int caps_lock_mask;
+	private final int shift_lock_mask;
+
+	private final ByteBuffer compose_status;
+
+	private final byte[] key_down_buffer = new byte[Keyboard.KEYBOARD_SIZE];
+	private final EventQueue event_queue = new EventQueue(EVENT_SIZE);
+
+	private final int[] tmp_event = new int[3];
+	private final int[] temp_translation_buffer = new int[KEYBOARD_BUFFER_SIZE];
+	private final ByteBuffer native_translation_buffer = BufferUtils.createByteBuffer(KEYBOARD_BUFFER_SIZE);
+	private final CharsetDecoder utf8_decoder = Charset.forName("UTF-8").newDecoder();
+	private final CharBuffer char_buffer = CharBuffer.allocate(KEYBOARD_BUFFER_SIZE);
+
+	public LinuxKeyboard(long display, long window) {
+		long modifier_map = getModifierMapping(display);
+		int tmp_numlock_mask = 0;
+		int tmp_modeswitch_mask = 0;
+		int tmp_caps_lock_mask = 0;
+		int tmp_shift_lock_mask = 0;
+		if (modifier_map != 0) {
+			int max_keypermod = getMaxKeyPerMod(modifier_map);
+			// Find modifier masks
+			int i, j;
+			for (i = 0; i < 8; i++) {
+				for (j = 0; j < max_keypermod; j++) {
+					int key_code = lookupModifierMap(modifier_map, i*max_keypermod + j);
+					int key_sym = (int)keycodeToKeySym(display, key_code);
+					int mask = 1 << i;
+					switch (key_sym) {
+						case LinuxKeycodes.XK_Num_Lock:
+							tmp_numlock_mask |= mask;
+							break;
+						case LinuxKeycodes.XK_Mode_switch:
+							tmp_modeswitch_mask |= mask;
+							break;
+						case LinuxKeycodes.XK_Caps_Lock:
+							if (i == LockMapIndex) {
+								tmp_caps_lock_mask = mask;
+								tmp_shift_lock_mask = 0;
+							}
+							break;
+						case LinuxKeycodes.XK_Shift_Lock:
+							if (i == LockMapIndex && tmp_caps_lock_mask == 0)
+								tmp_shift_lock_mask = mask;
+							break;
+						default:
+							break;
+					}
+				}
+			}
+			freeModifierMapping(modifier_map);
+		}
+		numlock_mask = tmp_numlock_mask;
+		modeswitch_mask = tmp_modeswitch_mask;
+		caps_lock_mask = tmp_caps_lock_mask;
+		shift_lock_mask = tmp_shift_lock_mask;
+		xim = openIM(display);
+		if (xim != 0) {
+			xic = createIC(xim, window);
+			if (xic != 0) {
+				setupIMEventMask(display, window, xic);
+			} else {
+				destroy();
+			}
+		} else {
+			xic = 0;
+		}
+		compose_status = allocateComposeStatus();
+	}
+	private static native long getModifierMapping(long display);
+	private static native void freeModifierMapping(long modifier_map);
+	private static native int getMaxKeyPerMod(long modifier_map);
+	private static native int lookupModifierMap(long modifier_map, int index);
+	private static native long keycodeToKeySym(long display, int key_code);
+
+	private static native long openIM(long display);
+	private static native long createIC(long xim, long window);
+	private static native void setupIMEventMask(long display, long window, long xic);
+	private static native ByteBuffer allocateComposeStatus();
+
+	public void destroy() {
+		destroyIC(xic);
+		closeIM(xim);
+	}
+	private static native void destroyIC(long xic);
+	private static native void closeIM(long xim);
+
+	public int read(IntBuffer buffer) {
+		return event_queue.copyEvents(buffer);
+	}
+
+	public void poll(ByteBuffer keyDownBuffer) {
+		int old_position = keyDownBuffer.position();
+		keyDownBuffer.put(key_down_buffer);
+		keyDownBuffer.position(old_position);
+	}
+
+	private void putKeyboardEvent(int keycode, int state, int ch) {
+		tmp_event[0] = keycode;
+		tmp_event[1] = state;
+		tmp_event[2] = ch;
+		event_queue.putEvent(tmp_event);
+	}
+
+	private int lookupStringISO88591(long event_ptr, int[] translation_buffer) {
+		int i;
+
+		int num_chars = lookupString(event_ptr, native_translation_buffer, compose_status);
+		for (i = 0; i < num_chars; i++) {
+			translation_buffer[i] = ((int)native_translation_buffer.get(i)) & 0xff;
+		}
+		return num_chars;
+	}
+	private static native int lookupString(long event_ptr, ByteBuffer buffer, ByteBuffer compose_status);
+	
+	private int lookupStringUnicode(long event_ptr, int[] translation_buffer) {
+		int status = utf8LookupString(xic, event_ptr, native_translation_buffer, native_translation_buffer.position(), native_translation_buffer.remaining());
+		if (status != XLookupChars && status != XLookupBoth)
+			return 0;
+		native_translation_buffer.flip();
+		utf8_decoder.decode(native_translation_buffer, char_buffer, true);
+		native_translation_buffer.compact();
+		char_buffer.flip();
+		int i = 0;
+		while (char_buffer.hasRemaining() && i < translation_buffer.length) {
+			translation_buffer[i++] = char_buffer.get();
+		}
+		char_buffer.compact();
+		return i;
+	}
+	private static native int utf8LookupString(long xic, long event_ptr, ByteBuffer buffer, int pos, int size);
+
+	private int lookupString(long event_ptr, int[] translation_buffer) {
+		if (xic != 0) {
+			return lookupStringUnicode(event_ptr, translation_buffer);
+		} else
+			return lookupStringISO88591(event_ptr, translation_buffer);
+	}
+
+	private void translateEvent(long event_ptr, int event_type, int keycode, int key_state) {
+		int num_chars, i;
+		int ch;
+
+		if (event_type == KeyRelease) {
+			putKeyboardEvent(keycode, key_state, 0);
+			return;
+		}
+		num_chars = lookupString(event_ptr, temp_translation_buffer);
+		if (num_chars > 0) {
+			ch = temp_translation_buffer[0];
+			putKeyboardEvent(keycode, key_state, ch);
+			for (i = 1; i < num_chars; i++) {
+				ch = temp_translation_buffer[i];
+				putKeyboardEvent(0, 0, ch);
+			}
+		} else {
+			putKeyboardEvent(keycode, key_state, 0);
+		}
+	}
+
+	private static boolean isKeypadKeysym(long keysym) {
+		return (0xFF80 <= keysym && keysym <= 0xFFBD) ||
+			(0x11000000 <= keysym && keysym <= 0x1100FFFF);
+	}
+
+	private static boolean isNoSymbolOrVendorSpecific(long keysym) {
+		return keysym == NoSymbol || (keysym & (1 << 28)) != 0;
+	}
+
+	private static long getKeySym(long event_ptr, int group, int index) {
+		long keysym = lookupKeysym(event_ptr, group*2 + index);
+		if (isNoSymbolOrVendorSpecific(keysym) && index == 1) {
+			keysym = lookupKeysym(event_ptr, group*2 + 0);
+		}
+		if (isNoSymbolOrVendorSpecific(keysym) && group == 1)
+			keysym = getKeySym(event_ptr, 0, index);
+		return keysym;
+	}
+	private static native long lookupKeysym(long event_ptr, int index);
+	private static native long toUpper(long keysym);
+
+	private long mapEventToKeySym(long event_ptr, int event_state) {
+		int group;
+		long keysym;
+		if ((event_state & modeswitch_mask) != 0)
+			group = 1;
+		else
+			group = 0;
+		if ((event_state & numlock_mask) != 0 && isKeypadKeysym(keysym = getKeySym(event_ptr, group, 1))) {
+			if ((event_state & (ShiftMask | shift_lock_mask)) != 0) {
+				return getKeySym(event_ptr, group, 0);
+			} else {
+				return keysym;
+			}
+		} else if ((event_state & (ShiftMask | LockMask)) == 0) {
+			return getKeySym(event_ptr, group, 0);
+		} else if ((event_state & ShiftMask) == 0) {
+			keysym = getKeySym(event_ptr, group, 0);
+			if ((event_state & caps_lock_mask) != 0)
+				keysym = toUpper(keysym);
+			return keysym;
+		} else {
+			keysym = getKeySym(event_ptr, group, 1);
+			if ((event_state & caps_lock_mask) != 0)
+				keysym = toUpper(keysym);
+			return keysym;
+		}
+	}
+
+	private int getKeycode(long event_ptr, int event_state) {
+		long keysym = mapEventToKeySym(event_ptr, event_state);
+		int keycode = LinuxKeycodes.mapKeySymToLWJGLKeyCode(keysym);
+		if (keycode == Keyboard.KEY_NONE) {
+			// Try unshifted keysym mapping
+			keysym = lookupKeysym(event_ptr, 0);
+			keycode = LinuxKeycodes.mapKeySymToLWJGLKeyCode(keysym);
+		}
+		return keycode;
+	}
+
+	private byte getKeyState(int event_type) {
+		switch (event_type) {
+			case KeyPress:
+				return 1;
+			case KeyRelease:
+				return 0;
+			default:
+				throw new IllegalArgumentException("Unknown event_type: " + event_type);
+		}
+	}
+
+	public void handleKeyEvent(long event_ptr, long millis, int event_type, int event_keycode, int event_state) {
+		int keycode = getKeycode(event_ptr, event_state);
+		byte key_state = getKeyState(event_type);
+		key_down_buffer[keycode] = key_state;
+		translateEvent(event_ptr, event_type, keycode, key_state);
+	}
+}

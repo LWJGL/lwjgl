@@ -61,17 +61,3 @@ HRESULT objectCallback(JNIEnv *env, jobject enumerator, jint object_type, const 
 	return should_continue == JNI_TRUE ? true : false;
 }
 
-bool positionBuffer(JNIEnv *env, jobject buffer, jint position) {
-	jclass buffer_class;
-	jmethodID position_method;
-
-	buffer_class = (*env)->GetObjectClass(env, buffer);
-	if (buffer_class == NULL)
-		return false;
-	position_method = (*env)->GetMethodID(env, buffer_class, "position", "(I)Ljava/nio/Buffer;");
-	if (position_method == NULL)
-		return false;
-	(*env)->CallObjectMethod(env, buffer, position_method, position);
-	return true;
-}
-

@@ -51,19 +51,6 @@
 
 	extern bool checkXError(JNIEnv *, Display *);
 	extern Atom getWarpAtom(void);
-	/*
-	 * Various functions to release/acquire keyboard and mouse
-	 */
-	extern void handleWarpEvent(XClientMessageEvent *);
-	extern void handlePointerMotion(XMotionEvent *);
-	extern void handleButtonPress(XButtonEvent *);
-	extern void handleButtonRelease(XButtonEvent *);
-	extern void handleKeyEvent(XKeyEvent *);
-	extern void updatePointerGrab(jint);
-	extern void updateKeyboardGrab(jint);
-	extern void setGrab(jint, bool);
-	extern bool isGrabbed(void);
-	extern bool shouldGrab(void);
 
 	/*
 	 * get the current display
@@ -79,15 +66,5 @@
 	 * get the current window
 	 */
 	extern Window getCurrentWindow(void);
-
-	/*
-	 * Return true if we are in fullscreen mode
-	 */
-	extern bool isFullscreen(jint window_mode);
-	
-	/*
-	 * Return true if we are in exclusive fullscreen mode
-	 */
-	extern bool isLegacyFullscreen(jint window_mode);
 
 #endif /* _LWJGL_WINDOW_H_INCLUDED_ */

@@ -42,6 +42,7 @@
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <X11/extensions/xf86vmode.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -78,11 +79,8 @@ static Pixmap current_icon_pixmap;
 
 static Visual *current_visual;
 
-static bool input_released;
-
 static bool dirty;
 static bool minimized;
-static bool focused;
 static bool closerequested;
 static bool grab;
 
@@ -151,25 +149,15 @@ static void waitMapped(Window win) {
 	} while ((event.type != MapNotify) || (event.xmap.event != win));
 }
 
-static void updateInputGrab(jint window_mode) {
-	updatePointerGrab(window_mode);
-	updateKeyboardGrab(window_mode);
-}
-
-static void setRepeatMode(JNIEnv *env, int mode) {
-	XKeyboardControl repeat_mode;
-	repeat_mode.auto_repeat_mode = mode;
+static void __attribute__ ((destructor)) my_fini(void) { 
 	Display *disp = XOpenDisplay(NULL);
-	if (disp == NULL && env != NULL) {
-		printfDebugJava(env, "Could not open display to set repeat mode");
+	if (disp == NULL) {
 		return;
 	}
+	XKeyboardControl repeat_mode;
+	repeat_mode.auto_repeat_mode = AutoRepeatModeDefault;
 	XChangeKeyboardControl(disp, KBAutoRepeatMode, &repeat_mode);
 	XCloseDisplay(disp);
-}
-
-static void __attribute__ ((destructor)) my_fini(void) { 
-	setRepeatMode(NULL, AutoRepeatModeDefault);
 } 
 
 static void setDecorations(int dec) {
@@ -180,71 +168,25 @@ static void setDecorations(int dec) {
 	XChangeProperty (getDisplay(), getCurrentWindow(), motif_hints_atom, motif_hints_atom, 32, PropModeReplace, (unsigned char *)&motif_hints, sizeof(MotifWmHints)/sizeof(long));
 }
 
-static bool releaseInput(JNIEnv *env, jint extension, jint window_mode, jobject gamma_ramp, jobject saved_mode) {
-	if (isLegacyFullscreen(window_mode) || input_released)
-		return false;
-	input_released = true;
-	setRepeatMode(env, AutoRepeatModeDefault);
-	updateInputGrab(window_mode);
-	if (window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_NETWM) {
-		XIconifyWindow(getDisplay(), getCurrentWindow(), getCurrentScreen());
-		switchDisplayMode(env, getCurrentScreen(), extension, saved_mode);
-		setGammaRamp(env, getCurrentScreen(), gamma_ramp);
-	}
-	return true;
-}
-
-static void acquireInput(JNIEnv *env, jint extension, jint window_mode, jobject gamma_ramp, jobject mode) {
-	if (isLegacyFullscreen(window_mode) || !input_released)
-		return;
-	input_released = false;
-	setRepeatMode(env, AutoRepeatModeOff);
-	updateInputGrab(window_mode);
-	if (window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_NETWM) {
-		switchDisplayMode(env, getCurrentScreen(), extension, mode);
-		setGammaRamp(env, getCurrentScreen(), gamma_ramp);
-	}
-}
-
-bool isFullscreen(jint window_mode) {
-	return window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_LEGACY || window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_NETWM;
-}
-
-bool isLegacyFullscreen(jint window_mode) {
+static bool isLegacyFullscreen(jint window_mode) {
 	return window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_LEGACY;
 }
 
-bool shouldGrab(void) {
-	return !input_released && grab;
-}
-
-bool isGrabbed(void) {
-	return grab;
-}
-
-void setGrab(jint window_mode, bool new_grab) {
-	if (new_grab != grab) {
-		grab = new_grab;
-		updateInputGrab(window_mode);
-	}
-}
-
-static void checkInput(JNIEnv *env, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma, jobject saved_mode, jobject current_mode) {
-	Window win;
-	int revert_mode;
-	XGetInputFocus(getDisplay(), &win, &revert_mode);
-	if (win == current_win) {
-		acquireInput(env, extension, window_mode, current_gamma, current_mode);
-		focused = true;
-	} else {
-		releaseInput(env, extension, window_mode, saved_gamma, saved_mode);
-		focused = false;
-	}
-}
-
-static void handleMessages(JNIEnv *env, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma, jobject saved_mode, jobject current_mode) {
+static void handleMessages(JNIEnv *env, jclass disp_class) {
 	XEvent event;
-	while (XPending(getDisplay()) > 0) {
+	jmethodID handleKeyEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleKeyEvent", "(JJIII)V");
+	if (handleKeyEvent_method == NULL)
+		return;
+	jmethodID handleButtonEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleButtonEvent", "(JIII)V");
+	if (handleButtonEvent_method == NULL)
+		return;
+	jmethodID handlePointerMotionEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handlePointerMotionEvent", "(JIIIII)V");
+	if (handlePointerMotionEvent_method == NULL)
+		return;
+	jmethodID handleWarpEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleWarpEvent", "(II)V");
+	if (handleWarpEvent_method == NULL)
+		return;
+	while (!(*env)->ExceptionOccurred(env) && XPending(getDisplay()) > 0) {
 		XNextEvent(getDisplay(), &event);
 		if (XFilterEvent(&event, None) == True)
 			continue;
@@ -254,7 +196,7 @@ static void handleMessages(JNIEnv *env, jint extension, jint window_mode, jobjec
 		switch (event.type) {
 			case ClientMessage:
 				if (event.xclient.message_type == warp_atom) {
-					handleWarpEvent(&(event.xclient));
+					(*env)->CallStaticVoidMethod(env, disp_class, handleWarpEvent_method, (jint)event.xclient.data.l[0], (jint)event.xclient.data.l[1]);
 				} else if ((event.xclient.format == 32) && ((Atom)event.xclient.data.l[0] == delete_atom))
 					closerequested = true;
 				break;
@@ -269,22 +211,19 @@ static void handleMessages(JNIEnv *env, jint extension, jint window_mode, jobjec
 			case Expose:
 				dirty = true;
 				break;
-			case ButtonPress:
-				handleButtonPress(&(event.xbutton));
-				break;
+			case ButtonPress: /* Fall through */
 			case ButtonRelease:
-				handleButtonRelease(&(event.xbutton));
+				(*env)->CallStaticVoidMethod(env, disp_class, handleButtonEvent_method, (jlong)event.xbutton.time, (jint)event.xbutton.type, (jint)event.xbutton.button, (jint)event.xbutton.state);
 				break;
 			case MotionNotify:
-				handlePointerMotion(&(event.xmotion));
+				(*env)->CallStaticVoidMethod(env, disp_class, handlePointerMotionEvent_method, (jlong)event.xbutton.root, (jint)event.xbutton.x_root, (jint)event.xbutton.y_root, (jint)event.xbutton.x, (jint)event.xbutton.y, (jint)event.xbutton.state);
 				break;
 			case KeyPress:
 			case KeyRelease:
-				handleKeyEvent(&(event.xkey));
+				(*env)->CallStaticVoidMethod(env, disp_class, handleKeyEvent_method, (jlong)(intptr_t)&(event.xkey), (jlong)event.xkey.time, (jint)event.xkey.type, (jint)event.xkey.keycode, (jint)event.xkey.state);
 				break;
 		}
 	}
-	checkInput(env, extension, window_mode, saved_gamma, current_gamma, saved_mode, current_mode);
 }
 
 static void setWindowTitle(const char *title) {
@@ -332,7 +271,6 @@ static void destroyWindow(JNIEnv *env) {
 	XDestroyWindow(getDisplay(), current_win);
 	XFreeColormap(getDisplay(), cmap);
 	freeIconPixmap();
-	setRepeatMode(env, AutoRepeatModeDefault);
 }
 
 static bool isNetWMFullscreenSupported(JNIEnv *env) {
@@ -371,7 +309,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReshape(JNIEnv *env, 
 static bool createWindow(JNIEnv* env, jint window_mode, X11PeerInfo *peer_info, int x, int y, int width, int height) {
 	bool undecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
 	dirty = true;
-	focused = true;
 	minimized = false;
 	closerequested = false;
 	grab = false;
@@ -380,7 +317,6 @@ static bool createWindow(JNIEnv* env, jint window_mode, X11PeerInfo *peer_info, 
 	XSetWindowAttributes attribs;
 	int attribmask;
 
-	input_released = false;
 	root_win = RootWindow(getDisplay(), getCurrentScreen());
 	XVisualInfo *vis_info = getVisualInfoFromPeerInfo(env, peer_info);
 	if (vis_info == NULL)
@@ -429,7 +365,6 @@ static bool createWindow(JNIEnv* env, jint window_mode, X11PeerInfo *peer_info, 
 	XMapRaised(getDisplay(), win);
 	waitMapped(win);
 	XClearWindow(getDisplay(), win);
-	setRepeatMode(env, AutoRepeatModeOff);
 	if (!checkXError(env, getDisplay())) {
 		destroyWindow(env);
 		return false;
@@ -444,7 +379,7 @@ Window getCurrentWindow(void) {
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUpdate
   (JNIEnv *env, jclass clazz, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma, jobject saved_mode, jobject current_mode)
 {
-	handleMessages(env, extension, window_mode, saved_gamma, current_gamma, saved_mode, current_mode);
+	handleMessages(env, clazz);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject mode, jint window_mode, jint x, jint y) {
@@ -495,11 +430,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsCloseRequested
 	bool saved = closerequested;
 	closerequested = false;
 	return saved;
-}
-
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsActive
-  (JNIEnv *env, jclass clazz, jint window_mode) {
-	return focused || isLegacyFullscreen(window_mode) ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nLockAWT(JNIEnv *env, jclass clazz) {
@@ -572,3 +502,103 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetWindowIcon
 	setIcon(env, imgData, icon_size, width, height);
 }
 
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getDisplay(JNIEnv *env, jclass unused) {
+	return (intptr_t)getDisplay();
+}
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getWindow(JNIEnv *env, jclass unused) {
+	return getCurrentWindow();
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUngrabKeyboard(JNIEnv *env, jclass unused, jlong display_ptr) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	return XUngrabKeyboard(disp, CurrentTime);
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGrabKeyboard(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	Window win = (Window)window_ptr;
+	return XGrabKeyboard(disp, win, False, GrabModeAsync, GrabModeAsync, CurrentTime);
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGrabPointer(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	Window win = (Window)window_ptr;
+	int grab_mask = PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
+	return XGrabPointer(disp, win, False, grab_mask, GrabModeAsync, GrabModeAsync, win, None, CurrentTime);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetViewPort(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr, jint screen) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	Window win = (Window)window_ptr;
+	XWindowAttributes win_attribs;
+
+	XGetWindowAttributes(disp, win, &win_attribs);
+	XF86VidModeSetViewPort(disp, screen, win_attribs.x, win_attribs.y);
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUngrabPointer(JNIEnv *env, jclass unused, jlong display_ptr) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	return XUngrabPointer(disp, CurrentTime);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDefineCursor(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr, jobject cursor_handle) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	Window win = (Window)window_ptr;
+	Cursor cursor;
+	if (cursor_handle != NULL)
+		cursor = *((Cursor *)(*env)->GetDirectBufferAddress(env, cursor_handle));
+	else
+		cursor = None;
+	XDefineCursor(disp, win, cursor);
+}
+
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateBlankCursor(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	Window win = (Window)window_ptr;
+	jobject handle_buffer = newJavaManagedByteBuffer(env, sizeof(Cursor));
+	if (handle_buffer == NULL) {
+		return NULL;
+	}
+	Cursor *cursor = (Cursor *)(*env)->GetDirectBufferAddress(env, handle_buffer);
+	unsigned int best_width, best_height;
+	if (XQueryBestCursor(disp, win, 1, 1, &best_width, &best_height) == 0) {
+		throwException(env, "Could not query best cursor size");
+		return false;
+	}
+	Pixmap mask = XCreatePixmap(disp, win, best_width, best_height, 1);
+	XGCValues gc_values;
+	gc_values.foreground = 0;
+	GC gc = XCreateGC(disp, mask, GCForeground, &gc_values);
+	XFillRectangle(disp, mask, gc, 0, 0, best_width, best_height);
+	XFreeGC(disp, gc);
+	XColor dummy_color;
+	*cursor = XCreatePixmapCursor(disp, mask, mask, &dummy_color, &dummy_color, 0, 0);
+	XFreePixmap(disp, mask);
+	return handle_buffer;
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getScreen(JNIEnv *env, jclass unsused) {
+	return getCurrentScreen();
+}
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetInputFocus(JNIEnv *env, jclass unused, jlong display_ptr) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	int revert_mode;
+	Window win;
+	XGetInputFocus(disp, &win, &revert_mode);
+	return win;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetRepeatMode(JNIEnv *env, jclass unused, jlong display_ptr, jint mode) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	XKeyboardControl repeat_mode;
+	repeat_mode.auto_repeat_mode = mode;
+	XChangeKeyboardControl(disp, KBAutoRepeatMode, &repeat_mode);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIconifyWindow(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr, jint screen) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	Window win = (Window)window_ptr;
+	XIconifyWindow(disp, win, screen);
+}

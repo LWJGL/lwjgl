@@ -119,66 +119,6 @@ void printfDebug(const char *format, ...) {
 	va_end(ap);
 }
 
-int getElementCapacity(event_queue_t *queue) {
-	return queue->limit - queue->position;
-}
-
-void initEventQueue(event_queue_t *queue, int event_size) {
-	queue->position = 0;
-	queue->limit = EVENT_BUFFER_SIZE;
-	queue->event_size = event_size;
-}
-
-bool putEvent(event_queue_t *queue, jint *event) {
-	int i;
-	if (getElementCapacity(queue) < queue->event_size) {
-		return false;
-	}
-	for (i = 0; i < queue->event_size; i++) {
-		queue->input_event_buffer[queue->position] = event[i];
-		queue->position++;
-	}
-	return true;
-}
-
-static void flip(event_queue_t *queue) {
-	queue->limit = queue->position;
-	queue->position = 0;
-}
-
-static void compact(event_queue_t *queue) {
-	int new_position = 0;
-	while (getElementCapacity(queue) > 0) {
-		queue->input_event_buffer[new_position] = queue->input_event_buffer[queue->position];
-		queue->position++;
-		new_position++;
-	}
-	queue->position = new_position;
-	queue->limit = EVENT_BUFFER_SIZE;
-}
-
-static void copyEvent(event_queue_t *queue, jint *output_event_buffer, int output_index) {
-	int i;
-	for (i = 0; i < queue->event_size; i++) {
-		output_event_buffer[output_index] = queue->input_event_buffer[queue->position];
-		queue->position++;
-		output_index++;
-	}
-}
-
-int copyEvents(event_queue_t *queue, jint *output_event_buffer, int buffer_size) {
-	int num_events = 0;
-	int index = 0;
-	flip(queue);
-	while (index + queue->event_size <= buffer_size && getElementCapacity(queue) >= queue->event_size) {
-		copyEvent(queue, output_event_buffer, index);
-		num_events++;
-		index += queue->event_size;
-	}
-	compact(queue);
-	return num_events;
-}
-
 static void throwFormattedGeneralException(JNIEnv * env, const char *exception_name, const char *format, va_list ap) {
 	jclass cls;
 	jstring str;
@@ -360,4 +300,18 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
 }
 
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {
+}
+
+bool positionBuffer(JNIEnv *env, jobject buffer, jint position) {
+	jclass buffer_class;
+	jmethodID position_method;
+
+	buffer_class = (*env)->GetObjectClass(env, buffer);
+	if (buffer_class == NULL)
+		return false;
+	position_method = (*env)->GetMethodID(env, buffer_class, "position", "(I)Ljava/nio/Buffer;");
+	if (position_method == NULL)
+		return false;
+	(*env)->CallObjectMethod(env, buffer, position_method, position);
+	return true;
 }

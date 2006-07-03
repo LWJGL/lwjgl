@@ -49,6 +49,5 @@ typedef struct {
 } enum_context_t;
 
 HRESULT objectCallback(JNIEnv *env, jobject enumerator, jint object_type, const char *tszName);
-bool positionBuffer(JNIEnv *env, jobject buffer, jint position);
 
 #endif

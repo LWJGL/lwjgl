@@ -44,15 +44,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define EVENT_BUFFER_SIZE 256
 #define ATTRIB_LIST_SIZE (256)
-
-typedef struct {
-	int event_size;
-	int position;
-	int limit;
-	jint input_event_buffer[EVENT_BUFFER_SIZE];
-} event_queue_t;
 
 typedef struct {
 	int current_index;
@@ -135,9 +127,6 @@ extern void putAttrib(attrib_list_t *list, int attrib);
 
 extern bool isDebugEnabled(void);
 extern jstring getVersionString(JNIEnv *env);
-extern void initEventQueue(event_queue_t *event_queue, int event_size);
-extern int copyEvents(event_queue_t *event_queue, jint *output_event_buffer, int buffer_size);
-extern bool putEvent(event_queue_t *queue, jint *event);
 extern void throwGeneralException(JNIEnv * env, const char *exception_name, const char * err);
 extern void throwException(JNIEnv *env, const char *msg);
 extern void throwFormattedException(JNIEnv * env, const char *format, ...);
@@ -149,6 +138,7 @@ extern bool getBooleanProperty(JNIEnv *env, const char* propertyName);
 extern char * GetStringNativeChars(JNIEnv *env, jstring jstr);
 extern jstring NewStringNative(JNIEnv *env, const char *str);
 extern jobject newJavaManagedByteBuffer(JNIEnv *env, const int size);
+extern bool positionBuffer(JNIEnv *env, jobject buffer, jint position);
 
 extern void ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions);
 extern bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFunction *functions);
