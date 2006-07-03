@@ -31,6 +31,17 @@
 		<exclude name="org/lwjgl/examples/**" />
 	</fileset>
 
+	<fileset id="lwjgl_util_applet.fileset" dir="${lwjgl.bin}">
+		<exclude name="**.*"/>
+		<include name="org/lwjgl/util/applet/**"/>
+	</fileset>
+
+	<fileset id="lwjgl_util_applet_natives.fileset" dir="${lwjgl.lib}">
+		<include name="win32/**"/>
+		<include name="linux/**"/>
+		<include name="macosx/**"/>
+	</fileset>
+
 	<!-- Files to include in the lwjgl_test.jar file -->
 	<fileset id="lwjgl_test.fileset" dir="${lwjgl.bin}">
 		<exclude name="**.*" />
@@ -53,14 +64,8 @@
 	<fileset id="lwjgl_util.fileset" dir="${lwjgl.bin}">
 		<exclude name="**.*" />
 		<exclude name="org/lwjgl/util/generator/**" />
-		<exclude name="org/lwjgl/util/model/**" />
+		<exclude name="org/lwjgl/util/applet/**" />
 		<include name="org/lwjgl/util/**" />
-	</fileset>
-
-	<!-- Files to include in the lwjgl_model.jar file -->
-	<fileset id="lwjgl_model.fileset" dir="${lwjgl.bin}">
-		<exclude name="**.*" />
-		<include name="org/lwjgl/util/model/**" />
 	</fileset>
 
 	<!-- Files to include in the lwjgl_fmod3.jar file -->
@@ -162,7 +167,6 @@
 		<include name="**" />
 		<exclude name="jar/lwjgl_fmod3.jar" />
 		<exclude name="jar/lwjgl_devil.jar" />
-		<exclude name="jar/lwjgl_model.jar" />
 		<exclude name="native/win32/lwjgl-*.dll" />
 		<exclude name="native/win32/DevIL.dll" />
 		<exclude name="native/win32/ILU.dll" />
@@ -171,7 +175,6 @@
 		<exclude name="native/linux/liblwjgl-*.so" />
 		<exclude name="native/macosx/libIL*.dylib" />
 		<exclude name="native/macosx/liblwjgl-*.jnilib" />
-		<exclude name="res/model/**" />
 		<exclude name="res/ILtest.*" />
 		<exclude name="res/Missing_you.mod" />
 		<exclude name="res/phero*.*" />
@@ -182,7 +185,6 @@
 	<patternset id="lwjgl_optional">
 		<include name="jar/lwjgl_fmod3.jar" />
 		<include name="jar/lwjgl_devil.jar" />
-		<include name="jar/lwjgl_model.jar" />
 		<include name="native/win32/lwjgl-*.dll" />
 		<include name="native/win32/DevIL.dll" />
 		<include name="native/win32/ILU.dll" />
@@ -314,6 +316,12 @@
 		<jar destfile="${lwjgl.temp}/jar/lwjgl.jar" taskname="lwjgl.jar">
 			<fileset refid="lwjgl.fileset" />
 		</jar>
+		
+		<!-- Create lwjgl_util_applet.jar -->
+		<jar destfile="${lwjgl.temp}/jar/lwjgl_util_applet.jar" taskname="lwjgl_util_applet.jar">
+			<fileset refid="lwjgl_util_applet.fileset" />
+			<fileset refid="lwjgl_util_applet_natives.fileset"/>
+		</jar>
 
 		<!-- Create lwjgl_test.jar -->
 		<jar destfile="${lwjgl.temp}/jar/lwjgl_test.jar" taskname="lwjgl_test.jar">
@@ -326,11 +334,6 @@
 			<fileset refid="lwjgl_util.fileset" />
 		</jar>
 		
-		<!-- Create lwjgl_model.jar -->
-		<jar destfile="${lwjgl.temp}/jar/lwjgl_model.jar" taskname="lwjgl_model.jar">
-			<fileset refid="lwjgl_model.fileset" />
-		</jar>
-
 		<!-- Create lwjgl_fmod.jar -->
 		<jar destfile="${lwjgl.temp}/jar/lwjgl_fmod3.jar" taskname="lwjgl_fmod3.jar">
 			<fileset refid="lwjgl_fmod3.fileset" />
@@ -348,18 +351,15 @@
 			<fileset refid="lwjgl_applet.fileset" />
 		</jar>
 		<copy file="${lwjgl.lib}/lwjgl.jar" todir="applet"/>
+		<copy file="${lwjgl.lib}/lwjgl_util_applet.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/lwjgl_util.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/lwjgl_fmod3.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/lwjgl_devil.jar" todir="applet"/>
 		<zip destfile="applet/res.jar">
 		  <zipfileset dir="${lwjgl.res}" includes="Footsteps.wav, ILtest.tga, Missing_you.mod"/>
 		</zip>
-		<zip destfile="applet/lwjgl.jar" update="true">
-			<zipfileset dir="${lwjgl.lib}" prefix="native" includes="win32/**"/>
-			<zipfileset dir="${lwjgl.lib}" prefix="native" includes="linux/**"/>
-			<zipfileset dir="${lwjgl.lib}" prefix="native" includes="macosx/**"/>
-		</zip>
 		<signjar jar="applet/lwjgl.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		<signjar jar="applet/lwjgl_util_applet.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
 		<signjar jar="applet/lwjgl_fmod3.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
 		<signjar jar="applet/lwjgl_devil.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>		
 	</target>
@@ -438,6 +438,7 @@
 	<target name="headers" description="invokes javah on java classes" depends="compile">
 		<!-- platform specific classes -->
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/linux" force="yes">
+			<class name="org.lwjgl.opengl.LinuxKeyboard" />
 			<class name="org.lwjgl.opengl.LinuxDisplay" />
 			<class name="org.lwjgl.opengl.LinuxPeerInfo" />
 			<class name="org.lwjgl.opengl.LinuxPbufferPeerInfo" />
