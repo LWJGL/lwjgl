@@ -33,6 +33,8 @@ package org.lwjgl.util.applet;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
@@ -41,9 +43,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
+import java.security.cert.Certificate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
 
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.Sys;
 
 /**
  * <p>
@@ -55,16 +66,6 @@ import org.lwjgl.LWJGLUtil;
  */
 public class LWJGLInstaller {
 
-	/** 
-	 * Files to install for each supported platform
-	 * @see org.lwjgl.LWJGLUtil#getPlatform() 
-	 */
-	public static final String[][]	PLATFORM_FILES = {
-		{ "lwjgl", "lwjgl-fmod3", "lwjgl-devil", "openal", "fmod", "IL", "ILU", "ILUT", "jinput-osx"},
-		{ "lwjgl", "lwjgl-fmod3", "lwjgl-devil", "openal", "fmod", "IL", "ILU", "ILUT", "jinput-linux"},
-		{ "lwjgl", "lwjgl-fmod3", "lwjgl-devil", "OpenAL32", "fmod", "DevIL", "ILU", "ILUT", "jinput-dx8", "jinput-raw"}
-	};
-
 	/** Whether the installer has been called */
 	public static boolean installed;
 	
@@ -73,6 +74,12 @@ public class LWJGLInstaller {
 	
 	/** Buffer used when copying files */
 	private static final byte[] COPY_BUFFER = new byte[4096];
+
+	/** Directory all lwjgl installations go into */
+	public static String MASTER_INSTALL_DIR = ".lwjglinstall";
+	
+	/** Name of the native jar we're expected to load and install */
+	public static final String 	NATIVES_PLATFORM_JAR = "/" + LWJGLUtil.getPlatformName() + "_natives.jar";	
 	
 	private LWJGLInstaller() {
 		/* Unused */
@@ -99,11 +106,13 @@ public class LWJGLInstaller {
 		}
 
 		try {
-			// libraries to validate and install
-			String[] libraries = PLATFORM_FILES[LWJGLUtil.getPlatform() - 1];
-
-			// Validate the certificates of the native files
-			validateCertificates();
+			// Validate the certificates of the platform native jar
+			HashMap files = (HashMap) 
+			AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws PrivilegedActionException{
+					return validateCertificates();
+				}
+			});
 
 			// install shutdown installer hook
 			if(!disableUninstall) {
@@ -123,11 +132,8 @@ public class LWJGLInstaller {
 			String user_temp_dir = getPriviledgedString("java.io.tmpdir");
 			final String path = createTemporaryDir(user_temp_dir);
 
-			// extract natives
-			for (int i = 0; i < libraries.length; i++) {
-				String library = System.mapLibraryName(libraries[i]);
-				extract(library, path);
-			}
+			// extract natives from jar
+			writeFiles(files, path);
 
 			AccessController.doPrivileged(new PrivilegedAction() {
 				public Object run() {
@@ -137,6 +143,8 @@ public class LWJGLInstaller {
 					return null;
 				}
 			});
+			
+			installed = true;
 		} catch (Exception e) {
 			LWJGLUtil.log("Failed extraction e = " + e.getMessage());
 			uninstall();
@@ -153,8 +161,73 @@ public class LWJGLInstaller {
 	 * installer, we can also be sure that the native libraries indeed are correct.
 	 * @throws Exception If we encounter a certificate mismatch
 	 */
-	private static void validateCertificates() throws Exception {
-		/* TODO */
+	private static HashMap validateCertificates() throws PrivilegedActionException {
+		InputStream is = LWJGLInstaller.class.getResourceAsStream(NATIVES_PLATFORM_JAR);
+		if(is == null) {
+			throw new PrivilegedActionException(new Exception("Unable to open " + NATIVES_PLATFORM_JAR + ", which was expected to be on the classpath"));
+		}
+		
+		// get our certificate chain
+		Certificate[] ownCerts = LWJGLInstaller.class.getProtectionDomain().getCodeSource().getCertificates();
+		if(ownCerts == null || ownCerts.length == 0) {
+			throw new PrivilegedActionException(new Exception("Unable to get certificate chain for LWJGLInstaller"));
+		}
+		
+		// check that each of the entries in the jar is signed by same certificate as LWJGLInstaller
+		try {
+			HashMap files = new HashMap();
+			JarInputStream jis = new JarInputStream(is);
+			
+			JarEntry native_entry = null;
+			while((native_entry = jis.getNextJarEntry()) != null) {
+				// skip directories and anything in directories
+				// conveniently ignores the manifest
+				if(native_entry.isDirectory() || native_entry.getName().indexOf('/') != -1) {
+					continue;
+				}
+				
+				// need to read the file, before the certificate is retrievable
+				// since we dont want to do two reads, we store it in memory for later use
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				copyFile(jis, baos, false);
+				files.put(native_entry.getName(), baos.toByteArray());				
+				
+				// now check the chain of an actual file 
+				if(!validateCertificateChain(ownCerts, native_entry.getCertificates())) {
+					throw new Exception("Failed to validate certificate chain for " + native_entry.getName());
+				}
+			}
+			
+			return files;
+		} catch (Exception e) {
+			throw new PrivilegedActionException(e);
+		}
+	}
+
+	/**
+	 * Validates the certificate chain for a single file
+	 * @param ownCerts Chain of certificates to check against
+	 * @param native_certs Chain of certificates to check
+	 * @return true if the chains match
+	 */
+	private static boolean validateCertificateChain(Certificate[] ownCerts, Certificate[] native_certs) {
+		if(native_certs == null) {
+			LWJGLUtil.log("Unable to validate certificate chain. Native entry did not have a certificate chain at all");
+			return false;
+		}
+		
+		if(ownCerts.length != native_certs.length) {
+			LWJGLUtil.log("Unable to validate certificate chain. Chain differs in length [" + ownCerts.length + " vs " + native_certs.length + "]");
+			return false;
+		}		
+		
+		for(int i=0; i<ownCerts.length; i++) {
+			if(!ownCerts[i].equals(native_certs[i])) {
+				LWJGLUtil.log("Certificate mismatch: " + ownCerts[i] + " != " + native_certs[i]);
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -163,39 +236,20 @@ public class LWJGLInstaller {
 	 * @param file File to extract
 	 * @param path Path to extract to
 	 */
-	private static void extract(final String file, final String path) {
+	private static void writeFiles(final HashMap files, final String path) {
 		AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
-				// check for existing file, and get out
-				File out = new File(path + File.separator + file);
-				if (out.exists()) {
-					return null;
-				}
-
-				// create the new file and copy it to its destination
 				try {
-					out.createNewFile();
-					String in = "/native/" + LWJGLUtil.getPlatformName() + "/" + file;
-					OutputStream os = new BufferedOutputStream(new FileOutputStream(out));
-					InputStream is = new BufferedInputStream(getClass().getResourceAsStream(in));
-					
-					// Sanity check
-					// ===========================================
-					if (os == null) {
-						LWJGLUtil.log("Unable to write to outputstream at " + out.getAbsolutePath());
-						return null;
+					for(Iterator i = files.keySet().iterator(); i.hasNext();) {
+						String key = (String) i.next();
+						File out = new File(path + File.separator + key);
+						out.createNewFile();
+						InputStream is = new ByteArrayInputStream((byte[]) files.get(key));
+						OutputStream os = new BufferedOutputStream(new FileOutputStream(out));
+						copyFile(is, os, true);
 					}
-
-					if (is == null) {
-						LWJGLUtil.log("Unable to read classpath inputstream from " + in);
-						return null;
-					}
-					// -------------------------------------------
-					
-					// copy the actual file
-					copyFile(is, os);
 				} catch (IOException ioe) {
-					LWJGLUtil.log("Exception while extracting " + file + ": " + ioe.getMessage());
+					LWJGLUtil.log("Exception while extracting: " + ioe.getMessage());
 					return null;
 				}
 				return null;
@@ -209,12 +263,15 @@ public class LWJGLInstaller {
 	 * @param os OutputStream to write to
 	 * @throws IOException if the copy process fail in any way
 	 */
-	static void copyFile(InputStream is, OutputStream os) throws IOException {
+	static void copyFile(InputStream is, OutputStream os, boolean closeInput) throws IOException {
 		int len;
 		while ((len = is.read(COPY_BUFFER)) > 0) {
 			os.write(COPY_BUFFER, 0, len);
 		}
-		is.close();
+		
+		if(closeInput) {
+			is.close();
+		}
 		os.close();
 	}
 
@@ -229,8 +286,8 @@ public class LWJGLInstaller {
 		return (String) AccessController.doPrivileged(new PrivilegedExceptionAction() {
 			public Object run() throws Exception {
 				// create the temp directory
-				File tempDir = new File(user_temp_dir + File.separator + "lwjgl-" + System.currentTimeMillis());
-				if(!tempDir.mkdir()) {
+				File tempDir = new File(user_temp_dir + File.separator + ".lwjglinstall" + File.separator + System.currentTimeMillis());
+				if(!tempDir.mkdirs()) {
 					throw new IOException("Failed to create directory: " + tempDir);
 				}
 
@@ -238,6 +295,7 @@ public class LWJGLInstaller {
 				// TODO: Write some info to the file ?
 				File watermark = new File(tempDir.getAbsolutePath() + File.separator + ".lwjglinstaller");
 				watermark.createNewFile();
+				watermark.deleteOnExit();
 				return tempDir.getAbsolutePath();
 			}
 		});
@@ -267,14 +325,14 @@ public class LWJGLInstaller {
 		AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
 				String temp = System.getProperty("java.io.tmpdir");
-				File tempDir = new File(temp);
+				File tempDir = new File(temp + File.separator + MASTER_INSTALL_DIR);
 				File[] files = tempDir.listFiles(new FileFilter() {
 
 					/*
 					 * @see java.io.FileFilter#accept(java.io.File)
 					 */
 					public boolean accept(File pathname) {
-						return pathname.getAbsolutePath().indexOf("lwjgl") != -1 && isInstallDirectory(pathname);
+						return isStale(pathname);
 					}
 
 					/**
@@ -283,9 +341,9 @@ public class LWJGLInstaller {
 					 * @param directory Directory to check
 					 * @return true if the directory is an install directory
 					 */
-					private boolean isInstallDirectory(File directory) {
+					private boolean isStale(File directory) {
 						File installFile = new File(directory.getAbsolutePath() + File.separator + ".lwjglinstaller");
-						return installFile.exists();
+						return !installFile.exists();
 					}
 
 				});
