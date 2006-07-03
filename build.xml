@@ -245,8 +245,10 @@
 	</target>
 
 	<target name="clean-generated" description="Deletes the generated java and native source">
-		<delete dir="${lwjgl.src}/generated" quiet="true" failonerror="false" taskname="cleaning java source"/>
-		<delete dir="${lwjgl.src.native}/generated" quiet="true" failonerror="false" taskname="cleaning native source"/>
+		<delete quiet="true" failonerror="false">
+			<fileset dir="${lwjgl.src}/generated" includes="**"/>
+			<fileset dir="${lwjgl.src.native}/generated" includes="**"/>
+		</delete>
 	</target>
 	
 	<!-- Cleans up any files created during the execution of this script -->
