@@ -132,6 +132,8 @@ public class LWJGLInstaller {
 			AccessController.doPrivileged(new PrivilegedAction() {
 				public Object run() {
 					System.setProperty("org.lwjgl.librarypath", path);
+					// Make sure jinput knows about the new path too
+					System.setProperty("net.java.games.input.librarypath", path);
 					return null;
 				}
 			});
