@@ -97,6 +97,9 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static boolean input_released;
 	private static boolean grab;
 	private static boolean focused;
+	private static boolean minimized;
+	private static boolean dirty;
+	private static boolean close_requested;
 	private static ByteBuffer current_cursor;
 	private static ByteBuffer blank_cursor;
 
@@ -372,7 +375,10 @@ final class LinuxDisplay implements DisplayImplementation {
 					input_released = false;
 					pointer_grabbed = false;
 					keyboard_grabbed = false;
+					close_requested = false;
 					grab = false;
+					minimized = false;
+					dirty = true;
 					updateInputGrab();
 					nSetRepeatMode(getDisplay(), AutoRepeatModeOff);
 				} finally {
@@ -548,41 +554,24 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native void nSetTitle(String title);
 
 	public boolean isCloseRequested() {
-		lockAWT();
-		try {
-			return nIsCloseRequested();
-		} finally {
-			unlockAWT();
-		}
+		boolean result = close_requested;
+		close_requested = false;
+		return result;
 	}
-	private static native boolean nIsCloseRequested();
 
 	public boolean isVisible() {
-		lockAWT();
-		try {
-			return nIsVisible();
-		} finally {
-			unlockAWT();
-		}
+		return !minimized;
 	}
-	private static native boolean nIsVisible();
 
 	public boolean isActive() {
-		lockAWT();
-		try {
-			return focused || isLegacyFullscreen();
-		} finally {
-			unlockAWT();
-		}
+		return focused || isLegacyFullscreen();
 	}
 
 	public boolean isDirty() {
-		lockAWT();
-		boolean result = nIsDirty();
-		unlockAWT();
+		boolean result = dirty;
+		dirty = false;
 		return result;
 	}
-	private static native boolean nIsDirty();
 
 	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
 		peer_info = new LinuxDisplayPeerInfo(pixel_format);
@@ -1000,5 +989,23 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static void handleWarpEvent(int x, int y) {
 		if (mouse != null)
 			mouse.handleWarpEvent(x, y);
+	}
+
+	private static void handleExposeEvent() {
+		dirty = true;
+	}
+
+	private static void handleUnmapNotifyEvent() {
+		dirty = true;
+		minimized = true;
+	}
+
+	private static void handleMapNotifyEvent() {
+		dirty = true;
+		minimized = false;
+	}
+
+	private static void handleCloseEvent() {
+		close_requested = true;
 	}
 }

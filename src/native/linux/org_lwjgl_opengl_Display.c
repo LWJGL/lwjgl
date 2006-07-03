@@ -79,11 +79,6 @@ static Pixmap current_icon_pixmap;
 
 static Visual *current_visual;
 
-static bool dirty;
-static bool minimized;
-static bool closerequested;
-static bool grab;
-
 static int current_screen;
 static Display *display_connection = NULL;
 static bool async_x_error;
@@ -186,6 +181,18 @@ static void handleMessages(JNIEnv *env, jclass disp_class) {
 	jmethodID handleWarpEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleWarpEvent", "(II)V");
 	if (handleWarpEvent_method == NULL)
 		return;
+	jmethodID handleMapNotifyEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleMapNotifyEvent", "()V");
+	if (handleMapNotifyEvent_method == NULL)
+		return;
+	jmethodID handleUnmapNotifyEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleUnmapNotifyEvent", "()V");
+	if (handleUnmapNotifyEvent_method == NULL)
+		return;
+	jmethodID handleExposeEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleExposeEvent", "()V");
+	if (handleExposeEvent_method == NULL)
+		return;
+	jmethodID handleCloseEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleCloseEvent", "()V");
+	if (handleCloseEvent_method == NULL)
+		return;
 	while (!(*env)->ExceptionOccurred(env) && XPending(getDisplay()) > 0) {
 		XNextEvent(getDisplay(), &event);
 		if (XFilterEvent(&event, None) == True)
@@ -198,18 +205,16 @@ static void handleMessages(JNIEnv *env, jclass disp_class) {
 				if (event.xclient.message_type == warp_atom) {
 					(*env)->CallStaticVoidMethod(env, disp_class, handleWarpEvent_method, (jint)event.xclient.data.l[0], (jint)event.xclient.data.l[1]);
 				} else if ((event.xclient.format == 32) && ((Atom)event.xclient.data.l[0] == delete_atom))
-					closerequested = true;
+					(*env)->CallStaticVoidMethod(env, disp_class, handleCloseEvent_method);
 				break;
 			case MapNotify:
-				dirty = true;
-				minimized = false;
+				(*env)->CallStaticVoidMethod(env, disp_class, handleMapNotifyEvent_method);
 				break;
 			case UnmapNotify:
-				dirty = true;
-				minimized = true;
+				(*env)->CallStaticVoidMethod(env, disp_class, handleUnmapNotifyEvent_method);
 				break;
 			case Expose:
-				dirty = true;
+				(*env)->CallStaticVoidMethod(env, disp_class, handleExposeEvent_method);
 				break;
 			case ButtonPress: /* Fall through */
 			case ButtonRelease:
@@ -308,10 +313,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReshape(JNIEnv *env, 
 
 static bool createWindow(JNIEnv* env, jint window_mode, X11PeerInfo *peer_info, int x, int y, int width, int height) {
 	bool undecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
-	dirty = true;
-	minimized = false;
-	closerequested = false;
-	grab = false;
 	Window root_win;
 	Window win;
 	XSetWindowAttributes attribs;
@@ -411,25 +412,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyWindow(JNIEnv *env, jclass clazz) {
 	destroyWindow(env);
-}
-
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsDirty
-  (JNIEnv *env, jclass clazz) {
-	bool result = dirty;
-	dirty = false;
-	return result ? JNI_TRUE : JNI_FALSE;
-}
-
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsVisible
-  (JNIEnv *env, jclass clazz) {
-	return minimized ? JNI_FALSE : JNI_TRUE;
-}
-
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsCloseRequested
-  (JNIEnv *env, jclass clazz) {
-	bool saved = closerequested;
-	closerequested = false;
-	return saved;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nLockAWT(JNIEnv *env, jclass clazz) {
