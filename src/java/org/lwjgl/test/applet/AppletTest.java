@@ -38,7 +38,7 @@ import java.awt.Toolkit;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
-import org.lwjgl.applet.LWJGLInstaller;
+import org.lwjgl.util.applet.LWJGLInstaller;
 
 public class AppletTest extends Applet {
 	
