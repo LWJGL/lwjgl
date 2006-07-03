@@ -315,12 +315,18 @@
 		<!-- Create lwjgl.jar -->
 		<jar destfile="${lwjgl.temp}/jar/lwjgl.jar" taskname="lwjgl.jar">
 			<fileset refid="lwjgl.fileset" />
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+			</manifest>
 		</jar>
 		
 		<!-- Create lwjgl_util_applet.jar -->
 		<jar destfile="${lwjgl.temp}/jar/lwjgl_util_applet.jar" taskname="lwjgl_util_applet.jar">
 			<fileset refid="lwjgl_util_applet.fileset" />
 			<fileset refid="lwjgl_util_applet_natives.fileset"/>
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+			</manifest>
 		</jar>
 
 		<!-- Create lwjgl_test.jar -->
@@ -337,11 +343,17 @@
 		<!-- Create lwjgl_fmod.jar -->
 		<jar destfile="${lwjgl.temp}/jar/lwjgl_fmod3.jar" taskname="lwjgl_fmod3.jar">
 			<fileset refid="lwjgl_fmod3.fileset" />
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+			</manifest>
 		</jar>
 		
 		<!-- Create lwjgl_devil.jar -->
 		<jar destfile="${lwjgl.temp}/jar/lwjgl_devil.jar" taskname="lwjgl_devil.jar">
 			<fileset refid="lwjgl_devil.fileset" />
+			<manifest>
+				<attribute name="Sealed" value="false"/>
+			</manifest>
 		</jar>
 	</target>
 
