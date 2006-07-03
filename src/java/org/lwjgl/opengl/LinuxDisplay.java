@@ -648,11 +648,11 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 	
-	public int readMouse(IntBuffer buffer) {
+	public void readMouse(IntBuffer buffer) {
 		update();
 		lockAWT();
 		try {
-			return mouse.read(buffer);
+			mouse.read(buffer);
 		} finally {
 			unlockAWT();
 		}
@@ -818,11 +818,11 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 
-	public int readKeyboard(IntBuffer buffer) {
+	public void readKeyboard(IntBuffer buffer) {
 		update();
 		lockAWT();
 		try {
-			return keyboard.read(buffer);
+			keyboard.read(buffer);
 		} finally {
 			unlockAWT();
 		}

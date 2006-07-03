@@ -206,9 +206,9 @@ final class Win32Display implements DisplayImplementation {
 		mouse.poll(coord_buffer, buttons);
 	}
 	
-	public int readMouse(IntBuffer buffer) {
+	public void readMouse(IntBuffer buffer) {
 		update();
-		return mouse.read(buffer);
+		mouse.read(buffer);
 	}
 		
 	public void grabMouse(boolean grab) {
@@ -251,9 +251,9 @@ final class Win32Display implements DisplayImplementation {
 		keyboard.poll(keyDownBuffer);
 	}
 	
-	public int readKeyboard(IntBuffer buffer) {
+	public void readKeyboard(IntBuffer buffer) {
 		update();
-		return keyboard.read(buffer);
+		keyboard.read(buffer);
 	}
 
 //	public native int isStateKeySet(int key);

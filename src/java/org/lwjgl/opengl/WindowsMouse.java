@@ -261,9 +261,9 @@ final class WindowsMouse {
 		}
 	}
 
-	public int read(IntBuffer buffer) {
+	public void read(IntBuffer buffer) {
 		readDXBuffer();
-		return event_queue.copyEvents(buffer);
+		event_queue.copyEvents(buffer);
 	}
 		
 	public void grab(boolean grab) {

@@ -103,15 +103,13 @@ final class WindowsKeyboard {
 		}
 	}
 	
-	private int translateData(IntBuffer src, IntBuffer dst) {
+	private void translateData(IntBuffer src, IntBuffer dst) {
 		int dst_index = dst.position();
-		int num_events = 0;
-		while (dst_index < dst.limit() && src.hasRemaining()) {
-			num_events++;
+		while (dst.hasRemaining() && src.hasRemaining()) {
 			int dwOfs = src.get();
-			dst.put(dst_index++, dwOfs);
+			dst.put(dwOfs);
 			int dwData = src.get();
-			dst.put(dst_index++, dwData);
+			dst.put(dwData);
 			boolean key_down = (dwData & 0x80) != 0;
 			if (key_down) {
 				int virt_key = MapVirtualKey(dwOfs, 1);
@@ -128,33 +126,31 @@ final class WindowsKeyboard {
 						int current_char = 0;
 						do {
 							if (current_char >= 1) {
-								num_events++;
-								dst.put(dst_index++, 0);
-								dst.put(dst_index++, 0);
+								dst.put(0);
+								dst.put(0);
 							}
 							int char_int = ((int)unicode_buffer.get()) & 0xFFFF;
-							dst.put(dst_index++, char_int);
+							dst.put(char_int);
 							current_char++;
-						} while (dst_index < dst.limit() && current_char < num_chars);
+						} while (dst.hasRemaining() && current_char < num_chars);
 					} else {
-						dst.put(dst_index++, 0);
+						dst.put(0);
 					}
 				} else {
-					dst.put(dst_index++, 0);
+					dst.put(0);
 				}
 			} else
-				dst.put(dst_index++, 0);
+				dst.put(0);
 		}
-		return num_events;
 	}
 	private static native int MapVirtualKey(int uCode, int uMapType);
 	private static native int ToUnicode(int wVirtKey, int wScanCode, ByteBuffer lpKeyState, CharBuffer pwszBuff, int cchBuff, int flags);
 	private static native int GetKeyboardState(ByteBuffer lpKeyState);
 
-	public int read(IntBuffer buffer) {
+	public void read(IntBuffer buffer) {
 		int ret = keyboard.acquire();
 		if (ret != WindowsDirectInput.DI_OK && ret != WindowsDirectInput.DI_NOEFFECT)
-			return 0;
+			return;
 		keyboard.poll();
 		temp_data_buffer.clear();
 		ret = keyboard.getDeviceData(temp_data_buffer);
@@ -173,6 +169,6 @@ final class WindowsKeyboard {
 				break;
 		}
 		temp_data_buffer.flip();
-		return translateData(temp_data_buffer, buffer);
+		translateData(temp_data_buffer, buffer);
 	}
 }

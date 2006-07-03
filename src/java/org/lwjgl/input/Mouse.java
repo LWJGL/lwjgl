@@ -306,8 +306,7 @@ public class Mouse {
 
 	private static void read() {
 		readBuffer.compact();
-		int numEvents = Display.getImplementation().readMouse(readBuffer);
-		readBuffer.position(readBuffer.position() + numEvents * EVENT_SIZE);
+		Display.getImplementation().readMouse(readBuffer);
 		readBuffer.flip();
 	}
 

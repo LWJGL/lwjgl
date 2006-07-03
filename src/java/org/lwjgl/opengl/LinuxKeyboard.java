@@ -152,8 +152,8 @@ final class LinuxKeyboard {
 	private static native void destroyIC(long xic);
 	private static native void closeIM(long xim);
 
-	public int read(IntBuffer buffer) {
-		return event_queue.copyEvents(buffer);
+	public void read(IntBuffer buffer) {
+		event_queue.copyEvents(buffer);
 	}
 
 	public void poll(ByteBuffer keyDownBuffer) {

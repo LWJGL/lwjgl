@@ -150,10 +150,8 @@ public interface DisplayImplementation {
 
 	/**
 	 * Method to read the keyboard buffer
-	 *
-	 * @return the total number of events read.
 	 */
-	int readMouse(IntBuffer buffer);
+	void readMouse(IntBuffer buffer);
 
 	void grabMouse(boolean grab);
 
@@ -198,9 +196,8 @@ public interface DisplayImplementation {
 
 	/**
 	 * Method to read the keyboard buffer
-	 * @return the total number of events read.
 	 */
-	int readKeyboard(IntBuffer buffer);
+	void readKeyboard(IntBuffer buffer);
 
 //	int isStateKeySet(int key);
 

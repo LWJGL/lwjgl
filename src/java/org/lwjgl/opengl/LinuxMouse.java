@@ -86,8 +86,8 @@ final class LinuxMouse {
 		accum_dx = accum_dy = 0;
 	}
 
-	public int read(IntBuffer buffer) {
-		return event_queue.copyEvents(buffer);
+	public void read(IntBuffer buffer) {
+		event_queue.copyEvents(buffer);
 	}
 
 	public void poll(boolean grab, IntBuffer coord_buffer, ByteBuffer buttons_buffer) {

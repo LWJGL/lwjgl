@@ -62,8 +62,7 @@ class EventQueue {
 	 * the behaviour of the native event queues.
 	 * @return the number of events copied
 	 */
-	public synchronized int copyEvents(IntBuffer dest) {
-		int old_position = dest.position();
+	public synchronized void copyEvents(IntBuffer dest) {
 		queue.flip();
 		int old_limit = queue.limit();
 		if (dest.remaining() < queue.remaining())
@@ -71,9 +70,6 @@ class EventQueue {
 		dest.put(queue);
 		queue.limit(old_limit);
 		queue.compact();
-		int num_events = (dest.position() - old_position)/event_size;
-		dest.position(old_position);
-		return num_events;
 	}
 
 	/**
