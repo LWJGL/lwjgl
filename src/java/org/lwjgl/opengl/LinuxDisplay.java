@@ -44,6 +44,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 
 final class LinuxDisplay implements DisplayImplementation {
@@ -916,7 +917,8 @@ final class LinuxDisplay implements DisplayImplementation {
 		throw new UnsupportedOperationException();
 	}
 	
-	private static void convertIcon(ByteBuffer icon, int width, int height) {
+	private static ByteBuffer convertIcon(ByteBuffer icon, int width, int height) {
+		ByteBuffer icon_copy = BufferUtils.createByteBuffer(icon.capacity());
 		int x = 0;
 		int y = 5;
 		byte r,g,b,a;
@@ -930,12 +932,13 @@ final class LinuxDisplay implements DisplayImplementation {
 				b = icon.get((x*4)+(y*width*4)+2);
 				a = icon.get((x*4)+(y*width*4)+3);
 
-				icon.put((x*depth)+(y*width*depth), b); // blue
-				icon.put((x*depth)+(y*width*depth)+1, g); // green
-				icon.put((x*depth)+(y*width*depth)+2, r);
-				icon.put((x*depth)+(y*width*depth)+3, a);
+				icon_copy.put((x*depth)+(y*width*depth), b); // blue
+				icon_copy.put((x*depth)+(y*width*depth)+1, g); // green
+				icon_copy.put((x*depth)+(y*width*depth)+2, r);
+				icon_copy.put((x*depth)+(y*width*depth)+3, a);
 			}
 		}
+		return icon_copy;
 	}
 
 	/**
@@ -959,8 +962,8 @@ final class LinuxDisplay implements DisplayImplementation {
 					int size = icons[i].limit() / 4;
 					int dimension = (int)Math.sqrt(size);
 					if (dimension == 32) {
-						convertIcon(icons[i], dimension, dimension);
-						nSetWindowIcon(icons[i], icons[i].capacity(), dimension, dimension);
+						ByteBuffer icon = convertIcon(icons[i], dimension, dimension);
+						nSetWindowIcon(icon, icon.capacity(), dimension, dimension);
 						return 1;
 					}
 				}
