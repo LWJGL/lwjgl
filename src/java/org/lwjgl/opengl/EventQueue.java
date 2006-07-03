@@ -33,7 +33,6 @@ package org.lwjgl.opengl;
 
 /**
  * A java implementation of a LWJGL compatible event queue.
- * Currently only used by the Mac OS X implementation.
  * @author elias_naur
  */
 

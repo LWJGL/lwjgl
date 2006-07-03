@@ -54,7 +54,6 @@ final class LinuxDisplay implements DisplayImplementation {
 	private final static int AutoRepeatModeOn = 1;
 	private final static int AutoRepeatModeDefault = 2;
 
-
 	/** Window mode enum */
 	private static final int FULLSCREEN_LEGACY = 1;
 	private static final int FULLSCREEN_NETWM = 2;
