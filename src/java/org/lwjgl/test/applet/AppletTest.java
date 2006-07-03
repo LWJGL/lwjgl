@@ -65,7 +65,7 @@ public class AppletTest extends Applet {
 		
 		try {
 			LWJGLInstaller.tempInstall();
-		} catch (LWJGLException le) {
+		} catch (Exception le) {
 			/* screwed */
 			le.printStackTrace();
 		}

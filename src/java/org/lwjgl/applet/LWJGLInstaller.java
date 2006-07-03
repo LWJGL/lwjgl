@@ -225,7 +225,7 @@ public class LWJGLInstaller {
 	 */
 	static String createTemporaryDir(final String user_temp_dir) throws Exception {
 		return (String) AccessController.doPrivileged(new PrivilegedExceptionAction() {
-			public Object run() {
+			public Object run() throws Exception {
 				// create the temp directory
 				File tempDir = new File(user_temp_dir + File.separator + "lwjgl-" + System.currentTimeMillis());
 				if(!tempDir.mkdir()) {

@@ -39,13 +39,6 @@ package org.lwjgl;
  * $Id$
  */
 abstract class DefaultSysImplementation implements SysImplementation {
-	/** The native library name */
-	protected static final String LIBRARY_NAME = "lwjgl";
-
-	public String[] getNativeLibraryNames() {
-		return new String[]{LIBRARY_NAME};
-	}
-
 	public native String getNativeLibraryVersion();
 	public native void setDebug(boolean debug);
 

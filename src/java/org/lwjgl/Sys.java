@@ -50,8 +50,10 @@ import org.lwjgl.input.Mouse;
  * $Id$
  */
 public final class Sys {
+	/** The native library name */
+	private static final String JNI_LIBRARY_NAME = "lwjgl";
 
-  /** Current version of library */
+	/** Current version of library */
 	private static final String VERSION = "1.0beta2";
 
 	/** The implementation instance to delegate platform specific behavior to */
@@ -74,22 +76,7 @@ public final class Sys {
 
 	static {
 		implementation = createImplementation();
-		String[] library_names = implementation.getNativeLibraryNames();
-		UnsatisfiedLinkError last_load_error = null;
-		for (int i = 0; i < library_names.length; i++) {
-			try {
-				loadLibrary(library_names[i]);
-				last_load_error = null;
-				break;
-			} catch (UnsatisfiedLinkError e) {
-				last_load_error = e;
-			}
-		}
-		
-		// check for error
-		if (last_load_error != null) {
-			throw last_load_error;
-		}
+		loadLibrary(JNI_LIBRARY_NAME);
 		
 		String native_version = implementation.getNativeLibraryVersion();
 		if (!native_version.equals(getVersion()))
