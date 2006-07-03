@@ -44,19 +44,16 @@ public class AppletTest extends Applet {
 	
 	Test test = null;
 
-	@Override
 	public void destroy() {
 		super.destroy();
 		System.out.println("*** destroy ***");
 	}
 
-	@Override
 	public void start() {
 		super.start();
 		System.out.println("*** start ***");
 	}
 
-	@Override
 	public void stop() {
 		super.stop();
 		System.out.println("*** stop ***");

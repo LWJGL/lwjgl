@@ -37,7 +37,6 @@ import java.security.PrivilegedAction;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
-import org.lwjgl.applet.LWJGLInstaller;
 
 /**
  * <p>
@@ -56,30 +55,23 @@ class ILNative {
 	/** Version of IL */
 	public static final String VERSION = "1.0beta2";
 
-	/**
-	 * utility loadlibrary to load the native library using elevated priviledges
-	 * @param name Name of library to load, or full path if usingPath is true
-	 * @param usingPath true if using the full path to the native
-	 */
-	private static void loadLibrary(final String name, final boolean usingPath) {
+	private static void loadLibrary(final String lib_name) {
 		AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
-				if(usingPath) {
-					System.load(name);
+				String library_path = System.getProperty("org.lwjgl.librarypath");
+				if (library_path != null) {
+					System.load(library_path + File.separator + 
+						System.mapLibraryName(lib_name));
 				} else {
-					System.loadLibrary(name);
+					System.loadLibrary(lib_name);
 				}
 				return null;
 			}
 		});
-	}
-	
+	}	
+
 	static {
-		if (LWJGLInstaller.installed) {
-			loadLibrary(LWJGLInstaller.installDirectory + File.separator + System.mapLibraryName(JNI_LIBRARY_NAME), true);
-		} else {
-			loadLibrary(JNI_LIBRARY_NAME, false);
-		}
+		loadLibrary(JNI_LIBRARY_NAME);
 		
 		// check for mismatch
 		String nativeVersion = getNativeLibraryVersion();

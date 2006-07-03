@@ -42,7 +42,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.lwjgl.applet.LWJGLInstaller;
 
 /**
  * <p>
@@ -280,7 +279,7 @@ public class LWJGLUtil {
 	 * @return the current platform type
 	 */
 	public static int getPlatform() {
-		String osName = System.getProperty("os.name");
+		String osName = getPrivilegedProperty("os.name");
 
 		if (osName.startsWith("Windows")) {
 			return PLATFORM_WINDOWS;
@@ -358,16 +357,13 @@ public class LWJGLUtil {
 		}
 		
 		// add Installer path
-		if (LWJGLInstaller.installed) {
-			possible_paths.add(LWJGLInstaller.installDirectory + File.separator + platform_lib_name);
+		String alternative_path = getPrivilegedProperty("org.lwjgl.librarypath");
+		if (alternative_path != null) {
+			possible_paths.add(alternative_path + File.separator + platform_lib_name);
 		}		
 
 		// Add all possible paths from java.library.path
-		String java_library_path = (String)AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				return System.getProperty("java.library.path");
-			}
-		});
+		String java_library_path = getPrivilegedProperty("java.library.path");
 		
 		StringTokenizer st = new StringTokenizer(java_library_path, File.pathSeparator);
 		while (st.hasMoreTokens()) {
@@ -376,11 +372,7 @@ public class LWJGLUtil {
 		}
 
 		//add current path
-		String current_dir = (String)AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				return System.getProperty("user.dir");
-			}
-		});
+		String current_dir = getPrivilegedProperty("user.dir");
 		possible_paths.add(current_dir + File.separator + platform_lib_name);
 
 		//add pure library (no path, let OS search)
@@ -391,6 +383,14 @@ public class LWJGLUtil {
 		possible_paths.toArray(paths);
 
 		return paths;
+	}
+
+	private static String getPrivilegedProperty(final String property_name) {
+		return (String)AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				return System.getProperty(property_name);
+			}
+		});
 	}
 
 	/**
@@ -460,7 +460,7 @@ public class LWJGLUtil {
 	 * specific code and will not work for any other platform.
 	 */
 	public static boolean isMacOSXEqualsOrBetterThan(int major_required, int minor_required) {
-		String os_version = System.getProperty("os.version");
+		String os_version = getPrivilegedProperty("os.version");
 		StringTokenizer version_tokenizer = new StringTokenizer(os_version, ".");
 		int major;
 		int minor;

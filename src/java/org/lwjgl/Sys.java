@@ -39,7 +39,6 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
 
-import org.lwjgl.applet.LWJGLInstaller;
 import org.lwjgl.input.Mouse;
 
 /**
@@ -58,49 +57,33 @@ public final class Sys {
 	/** The implementation instance to delegate platform specific behavior to */
 	private final static SysImplementation implementation;
   
-	/**
-	 * utility loadlibrary to load the native library using elevated priviledges
-	 * @param name Name of library to load, or full path if usingPath is true
-	 * @param usingPath true if using the full path to the native
-	 */
-	private static void loadLibrary(final String name, final boolean usingPath) {
+	private static void loadLibrary(final String lib_name) {
 		AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
-				if(usingPath) {
-					System.load(name);
+				String library_path = System.getProperty("org.lwjgl.librarypath");
+				if (library_path != null) {
+					System.load(library_path + File.separator + 
+						System.mapLibraryName(lib_name));
 				} else {
-					System.loadLibrary(name);
+					System.loadLibrary(lib_name);
 				}
 				return null;
 			}
 		});
-	}
-	
+	}	
+
 	static {
 		implementation = createImplementation();
 		String[] library_names = implementation.getNativeLibraryNames();
 		UnsatisfiedLinkError last_load_error = null;
 		for (int i = 0; i < library_names.length; i++) {
 			try {
-				loadLibrary(library_names[i], false);
+				loadLibrary(library_names[i]);
 				last_load_error = null;
 				break;
 			} catch (UnsatisfiedLinkError e) {
 				last_load_error = e;
 			}
-		}
-		
-		// failed normal loading - check installer
-		if (last_load_error != null && LWJGLInstaller.installed) {
-			for (int i = 0; i < library_names.length; i++) {
-				try {
-					loadLibrary(LWJGLInstaller.installDirectory + File.separator + System.mapLibraryName(library_names[i]), true);
-					last_load_error = null;
-					break;
-				} catch (UnsatisfiedLinkError e) {
-					last_load_error = e;
-				}
-			}				
 		}
 		
 		// check for error

@@ -41,8 +41,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.security.PrivilegedExceptionAction;
 
-import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 
 /**
@@ -71,9 +71,6 @@ public class LWJGLInstaller {
 	/** Whether to hook uninstall rutine. Must be called prior to installation */
 	public static boolean disableUninstall = false;
 	
-	/** Directory that was installed into */
-	public static String installDirectory;
-	
 	/** Buffer used when copying files */
 	private static final byte[] COPY_BUFFER = new byte[4096];
 	
@@ -94,53 +91,55 @@ public class LWJGLInstaller {
 	 * will always be present in the users temp dir.
 	 * 
 	 * @see java.lang.ClassLoader#getResource(String)
-	 * @return true if the installation was successfull
 	 */
-	public static boolean tempInstall() throws LWJGLException {
+	public static void tempInstall() throws Exception {
 		// only need to install once
 		if (installed) {
-			return true;
+			return;
 		}
-		
-		// libraries to validate and install
-		String[] libraries = PLATFORM_FILES[LWJGLUtil.getPlatform() - 1];
-		
-		// Validate the certificates of the native files
-		validateCertificates();
 
-		// install shutdown installer hook
-		if(!disableUninstall) {
+		try {
+			// libraries to validate and install
+			String[] libraries = PLATFORM_FILES[LWJGLUtil.getPlatform() - 1];
+
+			// Validate the certificates of the native files
+			validateCertificates();
+
+			// install shutdown installer hook
+			if(!disableUninstall) {
+				AccessController.doPrivileged(new PrivilegedAction() {
+					public Object run() {
+						Runtime.getRuntime().addShutdownHook(new Thread() {
+							public void run() {
+								uninstall();
+							}
+						});
+						return null;
+					}
+				});
+			}
+
+			// create a temporary dir for the native files
+			String user_temp_dir = getPriviledgedString("java.io.tmpdir");
+			final String path = createTemporaryDir(user_temp_dir);
+
+			// extract natives
+			for (int i = 0; i < libraries.length; i++) {
+				String library = System.mapLibraryName(libraries[i]);
+				extract(library, path);
+			}
+
 			AccessController.doPrivileged(new PrivilegedAction() {
 				public Object run() {
-					Runtime.getRuntime().addShutdownHook(new Thread() {
-						public void run() {
-							LWJGLInstaller.uninstall();
-						}
-					});
+					System.setProperty("org.lwjgl.librarypath", path);
 					return null;
 				}
 			});
+		} catch (Exception e) {
+			LWJGLUtil.log("Failed extraction e = " + e.getMessage());
+			uninstall();
+			throw e;
 		}
-
-		// create a temporary dir for the native files
-		String user_temp_dir = getPriviledgedString("java.io.tmpdir");
-		String path = createTemporaryDir(user_temp_dir);
-		if(path == null) {
-			throw new LWJGLException("Failed creation of temporary directory in " + user_temp_dir);
-		}
-
-		// extract natives
-		for (int i = 0; i < libraries.length; i++) {
-			String library = System.mapLibraryName(libraries[i]);
-			if(!extract(library, path)) {
-				LWJGLUtil.log("Failed extract of " + library + " to " + path);
-				uninstall();
-				return false;
-			}
-		}
-		
-		installDirectory = path;
-		return installed = true; 
 	}
 
 	/**
@@ -150,9 +149,9 @@ public class LWJGLInstaller {
 	 * before the "real" LWJGL jar, containing native libraries with unwanted code.
 	 * By forcing all the native libraries to have the same certificate as the signed
 	 * installer, we can also be sure that the native libraries indeed are correct.
-	 * @throws LWJGLException If we encounter a certificate mismatch
+	 * @throws Exception If we encounter a certificate mismatch
 	 */
-	private static void validateCertificates() throws LWJGLException {
+	private static void validateCertificates() throws Exception {
 		/* TODO */
 	}
 
@@ -161,15 +160,14 @@ public class LWJGLInstaller {
 	 * 
 	 * @param file File to extract
 	 * @param path Path to extract to
-	 * @return true if the file was extracted successdully
 	 */
-	private static boolean extract(final String file, final String path) throws LWJGLException {
-		return (Boolean) AccessController.doPrivileged(new PrivilegedAction() {
+	private static void extract(final String file, final String path) {
+		AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
 				// check for existing file, and get out
 				File out = new File(path + File.separator + file);
 				if (out.exists()) {
-					return false;
+					return null;
 				}
 
 				// create the new file and copy it to its destination
@@ -183,12 +181,12 @@ public class LWJGLInstaller {
 					// ===========================================
 					if (os == null) {
 						LWJGLUtil.log("Unable to write to outputstream at " + out.getAbsolutePath());
-						return false;
+						return null;
 					}
 
 					if (is == null) {
 						LWJGLUtil.log("Unable to read classpath inputstream from " + in);
-						return false;
+						return null;
 					}
 					// -------------------------------------------
 					
@@ -196,9 +194,9 @@ public class LWJGLInstaller {
 					copyFile(is, os);
 				} catch (IOException ioe) {
 					LWJGLUtil.log("Exception while extracting " + file + ": " + ioe.getMessage());
-					return false;
+					return null;
 				}
-				return true;
+				return null;
 			}
 		});
 	}
@@ -225,23 +223,19 @@ public class LWJGLInstaller {
 	 * called '.lwjglinstaller' will also be created in the directory.
 	 * @return Name of temp directory or null if directory creation failed
 	 */
-	static String createTemporaryDir(final String user_temp_dir) {
-		return (String) AccessController.doPrivileged(new PrivilegedAction() {
+	static String createTemporaryDir(final String user_temp_dir) throws Exception {
+		return (String) AccessController.doPrivileged(new PrivilegedExceptionAction() {
 			public Object run() {
 				// create the temp directory
 				File tempDir = new File(user_temp_dir + File.separator + "lwjgl-" + System.currentTimeMillis());
 				if(!tempDir.mkdir()) {
-					return null;
+					throw new IOException("Failed to create directory: " + tempDir);
 				}
 
 				// add the watermark file
 				// TODO: Write some info to the file ?
-				try {
-					File watermark = new File(tempDir.getAbsolutePath() + File.separator + ".lwjglinstaller");
-					watermark.createNewFile();
-				} catch (IOException ioe) {
-					return null;
-				}
+				File watermark = new File(tempDir.getAbsolutePath() + File.separator + ".lwjglinstaller");
+				watermark.createNewFile();
 				return tempDir.getAbsolutePath();
 			}
 		});
