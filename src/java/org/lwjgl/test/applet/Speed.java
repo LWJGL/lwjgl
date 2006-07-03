@@ -33,7 +33,6 @@ package org.lwjgl.test.applet;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.AWTGLCanvas;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 public class Speed extends AWTGLCanvas implements Test {

@@ -34,10 +34,7 @@ package org.lwjgl.test.applet;
 import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
-import java.awt.Toolkit;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.LWJGLUtil;
 import org.lwjgl.util.applet.LWJGLInstaller;
 
 public class AppletTest extends Applet {

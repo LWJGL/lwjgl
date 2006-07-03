@@ -33,7 +33,6 @@ package org.lwjgl.test.applet;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
@@ -48,14 +47,9 @@ import org.lwjgl.fmod3.FMOD;
 import org.lwjgl.fmod3.FMusic;
 import org.lwjgl.fmod3.FMusicModule;
 import org.lwjgl.fmod3.FSound;
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.AWTGLCanvas;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.test.devil.BasicTest;
-import org.lwjgl.test.fmod3.StreamPlayerMemory;
-import org.lwjgl.util.WaveData;
 
 public class Optional extends AWTGLCanvas implements Test {
 
