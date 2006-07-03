@@ -46,7 +46,6 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.Charset;
 
 final class LinuxMouse {
-	private static final int EVENT_SIZE = 5;
 	private static final int NUM_BUTTONS = 3;
 	private static final int POINTER_WARP_BORDER = 10;
 	// scale the mouse wheel according to DirectInput
@@ -65,7 +64,7 @@ final class LinuxMouse {
 	private final long display;
 	private final long window;
 	private final IntBuffer query_pointer_buffer = BufferUtils.createIntBuffer(4);
-	private final int[] event_buffer = new int[EVENT_SIZE];
+	private final ByteBuffer event_buffer = ByteBuffer.allocate(Mouse.EVENT_SIZE);
 
 	private int last_x;
 	private int last_y;
@@ -82,11 +81,11 @@ final class LinuxMouse {
 	}
 
 	private void reset() {
-		event_queue = new EventQueue(EVENT_SIZE);
+		event_queue = new EventQueue(event_buffer.capacity());
 		accum_dx = accum_dy = 0;
 	}
 
-	public void read(IntBuffer buffer) {
+	public void read(ByteBuffer buffer) {
 		event_queue.copyEvents(buffer);
 	}
 
@@ -104,13 +103,11 @@ final class LinuxMouse {
 			buttons_buffer.put(i, buttons[i]);
 	}
 
-	private boolean putMouseEventWithCoords(int button, int state, int coord1, int coord2, int dz) {
-		event_buffer[0] = button;
-		event_buffer[1] = state;
-		event_buffer[2] = coord1;
-		event_buffer[3] = coord2;
-		event_buffer[4] = dz;
-		return event_queue.putEvent(event_buffer);
+	private void putMouseEventWithCoords(byte button, byte state, int coord1, int coord2, int dz) {
+		event_buffer.put(button).put(state).putInt(coord1).putInt(coord2).putInt(dz);
+		event_buffer.flip();
+		event_queue.putEvent(event_buffer);
+		event_buffer.compact();
 	}
 
 	private void setCursorPos(boolean grab, int x, int y) {
@@ -122,9 +119,9 @@ final class LinuxMouse {
 		last_x = x;
 		last_y = y;
 		if (grab) {
-			putMouseEventWithCoords(-1, 0, dx, dy, 0);
+			putMouseEventWithCoords((byte)-1, (byte)0, dx, dy, 0);
 		} else {
-			putMouseEventWithCoords(-1, 0, x, y, 0);
+			putMouseEventWithCoords((byte)-1, (byte)0, x, y, 0);
 		}
 	}
 
@@ -192,16 +189,16 @@ final class LinuxMouse {
 	}
 	
 	private void handleButton(boolean grab, int button, byte state) {
-		int button_num;
+		byte button_num;
 		switch (button) {
 			case Button1:
-				button_num = 0;
+				button_num = (byte)0;
 				break;
 			case Button2:
-				button_num = 2;
+				button_num = (byte)2;
 				break;
 			case Button3:
-				button_num = 1;
+				button_num = (byte)1;
 				break;
 			default:
 				return;
@@ -210,24 +207,24 @@ final class LinuxMouse {
 		putMouseEvent(grab, button_num, state, 0);
 	}
 
-	private void putMouseEvent(boolean grab, int button, int state, int dz) {
+	private void putMouseEvent(boolean grab, byte button, byte state, int dz) {
 		if (grab)
 			putMouseEventWithCoords(button, state, 0, 0, dz);
 		else
 			putMouseEventWithCoords(button, state, last_x, last_y, dz);
 	}
 
-	private void handleButtonPress(boolean grab, int button) {
+	private void handleButtonPress(boolean grab, byte button) {
 		int delta = 0;
 		switch (button) {
 			case Button4:
 				delta = WHEEL_SCALE;
-				putMouseEvent(grab, -1, 0, delta);
+				putMouseEvent(grab, (byte)-1, (byte)0, delta);
 				accum_dz += delta;
 				break;
 			case Button5:
 				delta = -WHEEL_SCALE;
-				putMouseEvent(grab, -1, 0, delta);
+				putMouseEvent(grab, (byte)-1, (byte)0, delta);
 				accum_dz += delta;
 				break;
 			default:
@@ -240,7 +237,7 @@ final class LinuxMouse {
 		handleButton(grab, button, (byte)0);
 	}
 	
-	public void handleButtonEvent(boolean grab, int type, int button) {
+	public void handleButtonEvent(boolean grab, int type, byte button) {
 		switch (type) {
 			case ButtonRelease:
 				handleButton(grab, button, (byte)0);

@@ -206,7 +206,7 @@ final class Win32Display implements DisplayImplementation {
 		mouse.poll(coord_buffer, buttons);
 	}
 	
-	public void readMouse(IntBuffer buffer) {
+	public void readMouse(ByteBuffer buffer) {
 		update();
 		mouse.read(buffer);
 	}
@@ -251,7 +251,7 @@ final class Win32Display implements DisplayImplementation {
 		keyboard.poll(keyDownBuffer);
 	}
 	
-	public void readKeyboard(IntBuffer buffer) {
+	public void readKeyboard(ByteBuffer buffer) {
 		update();
 		keyboard.read(buffer);
 	}
@@ -340,7 +340,7 @@ final class Win32Display implements DisplayImplementation {
 
 	private static void handleMouseButton(int button, int state) {
 		if (mouse != null)
-			mouse.handleMouseButton(button, state);
+			mouse.handleMouseButton((byte)button, (byte)state);
 	}
 
 	private static void handleMouseMoved(int x, int y) {

@@ -55,6 +55,9 @@ import org.lwjgl.opengl.Display;
  * $Id$
  */
 public class Keyboard {
+	/** Internal use - event size in bytes */
+	public static final int EVENT_SIZE = 4 + 1 + 4;
+
 	/**
 	 * The special character meaning that no
 	 * character was translated for the event.
@@ -199,8 +202,6 @@ public class Keyboard {
 
 	/** Buffer size in events */
 	private static final int BUFFER_SIZE = 50;
-	/** Event size in elements */
-	private static final int EVENT_SIZE = 3;
 
 	/** Key names */
 	private static final String[] keyName = new String[255];
@@ -245,7 +246,7 @@ public class Keyboard {
 	 * followed by state. The state is followed by
 	 * a 4 byte code point representing the translated character.
 	 */
-	private static IntBuffer readBuffer;
+	private static ByteBuffer readBuffer;
 
 	/** The current keyboard character being examined */
 	private static int eventCharacter;
@@ -290,7 +291,7 @@ public class Keyboard {
 			return;
 		Display.getImplementation().createKeyboard();
 		created = true;
-		readBuffer = BufferUtils.createIntBuffer(EVENT_SIZE*BUFFER_SIZE);
+		readBuffer = ByteBuffer.allocate(EVENT_SIZE*BUFFER_SIZE);
 		reset();
 	}
 
@@ -422,9 +423,9 @@ public class Keyboard {
 			throw new IllegalStateException("Keyboard must be created before you can read events");
 
 		if (readBuffer.hasRemaining()) {
-			eventKey = readBuffer.get() & 0xFF;
+			eventKey = readBuffer.getInt() & 0xFF;
 			eventState = readBuffer.get() != 0;
-			eventCharacter = readBuffer.get();
+			eventCharacter = readBuffer.getInt();
 			return true;
 		} else {
 			return false;

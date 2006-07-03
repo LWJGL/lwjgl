@@ -648,7 +648,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 	
-	public void readMouse(IntBuffer buffer) {
+	public void readMouse(ByteBuffer buffer) {
 		update();
 		lockAWT();
 		try {
@@ -818,7 +818,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 
-	public void readKeyboard(IntBuffer buffer) {
+	public void readKeyboard(ByteBuffer buffer) {
 		update();
 		lockAWT();
 		try {
@@ -972,7 +972,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	/* Callbacks from nUpdate() */
 	private static void handleButtonEvent(long millis, int type, int button, int state) {
 		if (mouse != null)
-			mouse.handleButtonEvent(grab, type, button);
+			mouse.handleButtonEvent(grab, type, (byte)button);
 	}
 
 	private static void handleKeyEvent(long event_ptr, long millis, int type, int keycode, int state) {

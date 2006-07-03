@@ -46,12 +46,11 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Mouse;
 
 final class MouseEventQueue extends EventQueue implements MouseListener, MouseMotionListener, MouseWheelListener {
-
 	private static final int WHEEL_SCALE = 120;
 	public static final int NUM_BUTTONS = 3;
-	private static final int EVENT_SIZE = 5;
 
 	private final int width;
 	private final int height;
@@ -73,13 +72,13 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	private boolean saved_control_state;
 
 	/** Event scratch array */
-	private final int[] event = new int[EVENT_SIZE];
+	private final ByteBuffer event = ByteBuffer.allocate(Mouse.EVENT_SIZE);
 
 	/** Buttons array */
 	private final byte[] buttons = new byte[NUM_BUTTONS];
 
 	MouseEventQueue(int width, int height) {
-		super(EVENT_SIZE);
+		super(Mouse.EVENT_SIZE);
 		this.width = width;
 		this.height = height;
 		resetCursorToCenter();
@@ -105,20 +104,18 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 		((MacOSXDisplay)Display.getImplementation()).getMouseDeltas(delta_buffer);
 	}
 
-	private boolean putMouseEvent(int button, int state, int dz) {
-		if ( grabbed )
-			return putMouseEventWithCoords(button, state, 0, 0, dz);
+	private void putMouseEvent(byte button, byte state, int dz) {
+		if (grabbed)
+			putMouseEventWithCoords(button, state, 0, 0, dz);
 		else
-			return putMouseEventWithCoords(button, state, last_x, last_y, dz);
+			putMouseEventWithCoords(button, state, last_x, last_y, dz);
 	}
 
-	private boolean putMouseEventWithCoords(int button, int state, int coord1, int coord2, int dz) {
-		event[0] = button;
-		event[1] = state;
-		event[2] = coord1;
-		event[3] = coord2;
-		event[4] = dz;
-		return putEvent(event);
+	private void putMouseEventWithCoords(byte button, byte state, int coord1, int coord2, int dz) {
+		event.put(button).put(state).putInt(coord1).putInt(coord2).putInt(dz);
+		event.flip();
+		putEvent(event);
+		event.compact();
 	}
 
 	public synchronized void poll(IntBuffer coord_buffer, ByteBuffer buttons_buffer) {
@@ -146,7 +143,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 		accum_dy += dy;
 		last_x = x;
 		last_y = y;
-		putMouseEventWithCoords(-1, 0, x, y, 0);
+		putMouseEventWithCoords((byte)-1, (byte)0, x, y, 0);
 	}
 
 	public void mouseClicked(MouseEvent e) {
@@ -232,7 +229,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 
 	private synchronized void handleWheel(int amount) {
 		accum_dz += amount;
-		putMouseEvent(-1, 0, amount);
+		putMouseEvent((byte)-1, (byte)0, amount);
 	}
 
 	private void updateDeltas() {
@@ -243,7 +240,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 			int dx = delta_buffer.get(0);
 			int dy = -delta_buffer.get(1);
 			if ( dx != 0 || dy != 0 ) {
-				putMouseEventWithCoords(-1, 0, dx, dy, 0);
+				putMouseEventWithCoords((byte)-1, (byte)0, dx, dy, 0);
 				accum_dx += dx;
 				accum_dy += dy;
 			}

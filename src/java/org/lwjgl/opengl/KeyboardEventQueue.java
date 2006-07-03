@@ -44,14 +44,12 @@ import java.nio.ByteBuffer;
 import org.lwjgl.input.Keyboard;
 
 final class KeyboardEventQueue extends EventQueue implements KeyListener {
-
 	private static final int[] KEY_MAP = new int[0xffff];
-	private static final int EVENT_SIZE = 3;
 
 	private final byte[] key_states = new byte[Keyboard.KEYBOARD_SIZE];
 
 	/** Event scratch array */
-	private final int[] event = new int[EVENT_SIZE];
+	private final ByteBuffer event = ByteBuffer.allocate(Keyboard.EVENT_SIZE);
 
 	static {
 		KEY_MAP[KeyEvent.VK_0] = Keyboard.KEY_0;
@@ -241,14 +239,14 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 	}
 
 	public KeyboardEventQueue() {
-		super(EVENT_SIZE);
+		super(Keyboard.EVENT_SIZE);
 	}
 
-	private void putKeyboardEvent(int key_code, int state, int character) {
-		event[0] = key_code;
-		event[1] = state;
-		event[2] = character;
+	private void putKeyboardEvent(int key_code, byte state, int character) {
+		event.putInt(key_code).put(state).putInt(character);
+		event.flip();
 		putEvent(event);
+		event.compact();
 	}
 
 	public synchronized void poll(ByteBuffer key_down_buffer) {

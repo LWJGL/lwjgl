@@ -43,11 +43,11 @@ import java.nio.CharBuffer;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Mouse;
 
 final class WindowsMouse {
 	private final static int BUFFER_SIZE = 50;
 	private final static int BUTTON_STATES_SIZE = 7;
-	private final static int MOUSE_EVENT_SIZE = 5;
 
 	private final static int DIMOFS_X = 0;
 	private final static int DIMOFS_Y = 4;
@@ -64,12 +64,12 @@ final class WindowsMouse {
 	private final int mouse_button_count;
 	private final boolean has_wheel;
 
-	private final EventQueue event_queue = new EventQueue(MOUSE_EVENT_SIZE);
+	private final EventQueue event_queue = new EventQueue(Mouse.EVENT_SIZE);
 	/* Buffer to hold a DIMOUSESTATE */
 	private final ByteBuffer mouse_state;
 	private final IntBuffer temp_data_buffer;
 
-	private final int[] mouse_event = new int[MOUSE_EVENT_SIZE];
+	private final ByteBuffer mouse_event = ByteBuffer.allocate(Mouse.EVENT_SIZE);
 
 	private boolean mouse_grabbed;
 	private byte[] win32_message_button_states = new byte[BUTTON_STATES_SIZE];
@@ -180,46 +180,44 @@ final class WindowsMouse {
 		}
 	}
 	
-	private boolean putMouseEventWithCoords(int button, int state, int coord1, int coord2, int dz) {
-		mouse_event[0] = button;
-		mouse_event[1] = state;
-		mouse_event[2] = coord1;
-		mouse_event[3] = coord2;
-		mouse_event[4] = dz;
-		return event_queue.putEvent(mouse_event);
+	private void putMouseEventWithCoords(byte button, byte state, int coord1, int coord2, int dz) {
+		mouse_event.put(button).put(state).putInt(coord1).putInt(coord2).putInt(dz);
+		mouse_event.flip();
+		event_queue.putEvent(mouse_event);
+		mouse_event.compact();
 	}
 
-	private boolean putMouseEvent(int button, int state, int dz) {
+	private void putMouseEvent(byte button, byte state, int dz) {
 		if (mouse_grabbed)
-			return putMouseEventWithCoords(button, state, 0, 0, dz);
+			putMouseEventWithCoords(button, state, 0, 0, dz);
 		else
-			return putMouseEventWithCoords(button, state, last_x, last_y, dz);
+			putMouseEventWithCoords(button, state, last_x, last_y, dz);
 	}
 
 	private void copyDXEvents(IntBuffer buffer) {
 		int buffer_index = 0;
 		int dx = 0, dy = 0, dwheel = 0;
-		int button_state;
+		byte button_state;
 		int i;
 		while (buffer.hasRemaining()) {
 			int dwOfs = buffer.get();
 			int dwData = buffer.get();
-			button_state = (dwData & 0x80) != 0 ? 1 : 0;
+			button_state = (dwData & 0x80) != 0 ? (byte)1 : (byte)0;
 			switch (dwOfs) {
 				case DIMOFS_BUTTON0:
-					putMouseEventWithCoords(0, button_state, dx, -dy, dwheel);
+					putMouseEventWithCoords((byte)0, button_state, dx, -dy, dwheel);
 					dx = dy = dwheel = 0;
 					break;
 				case DIMOFS_BUTTON1:
-					putMouseEventWithCoords(1, button_state, dx, -dy, dwheel);
+					putMouseEventWithCoords((byte)1, button_state, dx, -dy, dwheel);
 					dx = dy = dwheel = 0;
 					break;
 				case DIMOFS_BUTTON2:
-					putMouseEventWithCoords(2, button_state, dx, -dy, dwheel);
+					putMouseEventWithCoords((byte)2, button_state, dx, -dy, dwheel);
 					dx = dy = dwheel = 0;
 					break;
 				case DIMOFS_BUTTON3:
-					putMouseEventWithCoords(3, button_state, dx, -dy, dwheel);
+					putMouseEventWithCoords((byte)3, button_state, dx, -dy, dwheel);
 					dx = dy = dwheel = 0;
 					break;
 				case DIMOFS_X:
@@ -234,7 +232,7 @@ final class WindowsMouse {
 			}
 		}
 		if (dx != 0 || dy != 0 || dwheel != 0)
-			putMouseEventWithCoords(-1, 0, dx, -dy, dwheel);
+			putMouseEventWithCoords((byte)-1, (byte)0, dx, -dy, dwheel);
 	}
 
 	private void readDXBuffer() {
@@ -261,7 +259,7 @@ final class WindowsMouse {
 		}
 	}
 
-	public void read(IntBuffer buffer) {
+	public void read(ByteBuffer buffer) {
 		readDXBuffer();
 		event_queue.copyEvents(buffer);
 	}
@@ -288,7 +286,7 @@ final class WindowsMouse {
 
 	public void handleMouseScrolled(int event_dwheel) {
 		accum_dwheel += event_dwheel;
-		putMouseEvent(-1, 0, event_dwheel);
+		putMouseEvent((byte)-1, (byte)0, event_dwheel);
 	}
 
 	public void handleMouseMoved(int x, int y) {
@@ -299,13 +297,13 @@ final class WindowsMouse {
 		last_x = x;
 		last_y = y;
 		if (mouse_grabbed) {
-			putMouseEventWithCoords(-1, 0, dx, dy, 0);
+			putMouseEventWithCoords((byte)-1, (byte)0, dx, dy, 0);
 		} else {
-			putMouseEventWithCoords(-1, 0, x, y, 0);
+			putMouseEventWithCoords((byte)-1, (byte)0, x, y, 0);
 		}		
 	}
 
-	public void handleMouseButton(int button, int state) {
+	public void handleMouseButton(byte button, byte state) {
 		putMouseEvent(button, state, 0);
 		if (button < BUTTON_STATES_SIZE)
 			win32_message_button_states[button] = state != 0 ? (byte)1 : (byte)0;

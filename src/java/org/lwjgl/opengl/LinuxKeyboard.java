@@ -55,8 +55,6 @@ final class LinuxKeyboard {
 	private static final int XLookupChars            = 2;
 	private static final int XLookupBoth             = 4;
 
-
-	private static final int EVENT_SIZE = 3;
 	private static final int KEYBOARD_BUFFER_SIZE = 50;
 
 	private final long xim;
@@ -70,9 +68,9 @@ final class LinuxKeyboard {
 	private final ByteBuffer compose_status;
 
 	private final byte[] key_down_buffer = new byte[Keyboard.KEYBOARD_SIZE];
-	private final EventQueue event_queue = new EventQueue(EVENT_SIZE);
+	private final EventQueue event_queue = new EventQueue(Keyboard.EVENT_SIZE);
 
-	private final int[] tmp_event = new int[3];
+	private final ByteBuffer tmp_event = ByteBuffer.allocate(Keyboard.EVENT_SIZE);
 	private final int[] temp_translation_buffer = new int[KEYBOARD_BUFFER_SIZE];
 	private final ByteBuffer native_translation_buffer = BufferUtils.createByteBuffer(KEYBOARD_BUFFER_SIZE);
 	private final CharsetDecoder utf8_decoder = Charset.forName("UTF-8").newDecoder();
@@ -152,7 +150,7 @@ final class LinuxKeyboard {
 	private static native void destroyIC(long xic);
 	private static native void closeIM(long xim);
 
-	public void read(IntBuffer buffer) {
+	public void read(ByteBuffer buffer) {
 		event_queue.copyEvents(buffer);
 	}
 
@@ -162,11 +160,11 @@ final class LinuxKeyboard {
 		keyDownBuffer.position(old_position);
 	}
 
-	private void putKeyboardEvent(int keycode, int state, int ch) {
-		tmp_event[0] = keycode;
-		tmp_event[1] = state;
-		tmp_event[2] = ch;
+	private void putKeyboardEvent(int keycode, byte state, int ch) {
+		tmp_event.putInt(keycode).put(state).putInt(ch);
+		tmp_event.flip();
 		event_queue.putEvent(tmp_event);
+		tmp_event.compact();
 	}
 
 	private int lookupStringISO88591(long event_ptr, int[] translation_buffer) {
@@ -204,7 +202,7 @@ final class LinuxKeyboard {
 			return lookupStringISO88591(event_ptr, translation_buffer);
 	}
 
-	private void translateEvent(long event_ptr, int event_type, int keycode, int key_state) {
+	private void translateEvent(long event_ptr, int event_type, int keycode, byte key_state) {
 		int num_chars, i;
 		int ch;
 
@@ -218,7 +216,7 @@ final class LinuxKeyboard {
 			putKeyboardEvent(keycode, key_state, ch);
 			for (i = 1; i < num_chars; i++) {
 				ch = temp_translation_buffer[i];
-				putKeyboardEvent(0, 0, ch);
+				putKeyboardEvent(0, (byte)0, ch);
 			}
 		} else {
 			putKeyboardEvent(keycode, key_state, 0);

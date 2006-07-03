@@ -103,14 +103,13 @@ final class WindowsKeyboard {
 		}
 	}
 	
-	private void translateData(IntBuffer src, IntBuffer dst) {
-		int dst_index = dst.position();
+	private void translateData(IntBuffer src, ByteBuffer dst) {
 		while (dst.hasRemaining() && src.hasRemaining()) {
 			int dwOfs = src.get();
-			dst.put(dwOfs);
-			int dwData = src.get();
-			dst.put(dwData);
+			dst.putInt(dwOfs);
+			byte dwData = (byte)src.get();
 			boolean key_down = (dwData & 0x80) != 0;
+			dst.put(key_down ? (byte)1 : (byte)0);
 			if (key_down) {
 				int virt_key = MapVirtualKey(dwOfs, 1);
 				if (virt_key != 0 && GetKeyboardState(keyboard_state) != 0) {
@@ -126,28 +125,28 @@ final class WindowsKeyboard {
 						int current_char = 0;
 						do {
 							if (current_char >= 1) {
-								dst.put(0);
-								dst.put(0);
+								dst.putInt(0);
+								dst.put((byte)0);
 							}
 							int char_int = ((int)unicode_buffer.get()) & 0xFFFF;
-							dst.put(char_int);
+							dst.putInt(char_int);
 							current_char++;
 						} while (dst.hasRemaining() && current_char < num_chars);
 					} else {
-						dst.put(0);
+						dst.putInt(0);
 					}
 				} else {
-					dst.put(0);
+					dst.putInt(0);
 				}
 			} else
-				dst.put(0);
+				dst.putInt(0);
 		}
 	}
 	private static native int MapVirtualKey(int uCode, int uMapType);
 	private static native int ToUnicode(int wVirtKey, int wScanCode, ByteBuffer lpKeyState, CharBuffer pwszBuff, int cchBuff, int flags);
 	private static native int GetKeyboardState(ByteBuffer lpKeyState);
 
-	public void read(IntBuffer buffer) {
+	public void read(ByteBuffer buffer) {
 		int ret = keyboard.acquire();
 		if (ret != WindowsDirectInput.DI_OK && ret != WindowsDirectInput.DI_NOEFFECT)
 			return;

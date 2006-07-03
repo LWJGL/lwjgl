@@ -40,16 +40,15 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 class EventQueue {
-
 	private static final int QUEUE_SIZE = 200;
 
 	private final int event_size;
 
-	private final IntBuffer queue;
+	private final ByteBuffer queue;
 
 	protected EventQueue(int event_size) {
 		this.event_size = event_size;
-		this.queue = ByteBuffer.allocateDirect(QUEUE_SIZE*event_size).asIntBuffer();
+		this.queue = ByteBuffer.allocate(QUEUE_SIZE*event_size);
 	}
 
 	protected synchronized void clearEvents() {
@@ -59,7 +58,7 @@ class EventQueue {
 	/**
 	 * Copy available events into the specified buffer.
 	 */
-	public synchronized void copyEvents(IntBuffer dest) {
+	public synchronized void copyEvents(ByteBuffer dest) {
 		queue.flip();
 		int old_limit = queue.limit();
 		if (dest.remaining() < queue.remaining())
@@ -73,10 +72,10 @@ class EventQueue {
 	 * Put an event into the queue.
 	 * @return true if the event fitted into the queue, false otherwise
 	 */
-	public synchronized boolean putEvent(int[] event) {
-		if (event.length != event_size)
-			throw new IllegalArgumentException("Internal error: event size " + event_size + " does not equals the given event size " + event.length);
-		if (queue.remaining() >= event.length) {
+	public synchronized boolean putEvent(ByteBuffer event) {
+		if (event.remaining() != event_size)
+			throw new IllegalArgumentException("Internal error: event size " + event_size + " does not equal the given event size " + event.remaining());
+		if (queue.remaining() >= event.remaining()) {
 			queue.put(event);
 			return true;
 		} else

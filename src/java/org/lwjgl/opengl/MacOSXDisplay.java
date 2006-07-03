@@ -321,7 +321,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		mouse_queue.poll(coord_buffer, buttons_buffer);
 	}
 
-	public void readMouse(IntBuffer buffer) {
+	public void readMouse(ByteBuffer buffer) {
 		mouse_queue.copyEvents(buffer);
 	}
 
@@ -407,7 +407,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		keyboard_queue.poll(keyDownBuffer);
 	}
 
-	public void readKeyboard(IntBuffer buffer) {
+	public void readKeyboard(ByteBuffer buffer) {
 		keyboard_queue.copyEvents(buffer);
 	}
 

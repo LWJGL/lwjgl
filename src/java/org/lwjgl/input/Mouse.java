@@ -59,6 +59,9 @@ import org.lwjgl.opengl.Display;
  * $Id$
  */
 public class Mouse {
+	/** Internal use - event size in bytes */
+	public static final int	EVENT_SIZE									= 1 + 1 + 4 + 4 + 4;
+
 	/** Has the mouse been created? */
 	private static boolean		created;
 
@@ -102,7 +105,7 @@ public class Mouse {
 	private static boolean		initialized;
 
 	/** The mouse button events from the last read */
-	private static IntBuffer	readBuffer;
+	private static ByteBuffer	readBuffer;
 
 	/** The current mouse event button being examined */
 	private static int				eventButton;
@@ -120,8 +123,6 @@ public class Mouse {
 
 	/** Buffer size in events */
 	private static final int	BUFFER_SIZE									= 50;
-	/** Event size in elements */
-	private static final int	EVENT_SIZE									= 5;
 
 	private static boolean		isGrabbed;
   
@@ -232,7 +233,7 @@ public class Mouse {
 		coord_buffer = BufferUtils.createIntBuffer(3);
 		if (currentCursor != null)
 			setNativeCursor(currentCursor);
-		readBuffer = BufferUtils.createIntBuffer(EVENT_SIZE * BUFFER_SIZE);
+		readBuffer = ByteBuffer.allocate(EVENT_SIZE * BUFFER_SIZE);
 		readBuffer.limit(0);
 		setGrabbed(isGrabbed);
 	}
@@ -363,13 +364,13 @@ public class Mouse {
 			eventButton = readBuffer.get();
 			eventState = readBuffer.get() != 0;
 			if (isGrabbed()) {
-				event_dx = readBuffer.get();
-				event_dy = readBuffer.get();
+				event_dx = readBuffer.getInt();
+				event_dy = readBuffer.getInt();
 				event_x += event_dx;
 				event_y += event_dy;
 			} else {
-				int new_event_x = readBuffer.get();
-				int new_event_y = readBuffer.get();
+				int new_event_x = readBuffer.getInt();
+				int new_event_y = readBuffer.getInt();
 				event_dx = new_event_x - event_x;
 				event_dy = new_event_y - event_y;
 				event_x = new_event_x;
@@ -377,7 +378,7 @@ public class Mouse {
 			}
 			event_x = Math.min(Display.getDisplayMode().getWidth() - 1, Math.max(0, event_x));
 			event_y = Math.min(Display.getDisplayMode().getHeight() - 1, Math.max(0, event_y));
-			event_dwheel = readBuffer.get();
+			event_dwheel = readBuffer.getInt();
 			return true;
 		} else
 			return false;
