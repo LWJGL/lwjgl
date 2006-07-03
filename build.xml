@@ -36,12 +36,6 @@
 		<include name="org/lwjgl/util/applet/**"/>
 	</fileset>
 
-	<fileset id="lwjgl_util_applet_natives.fileset" dir="${lwjgl.lib}">
-		<include name="win32/**"/>
-		<include name="linux/**"/>
-		<include name="macosx/**"/>
-	</fileset>
-
 	<!-- Files to include in the lwjgl_test.jar file -->
 	<fileset id="lwjgl_test.fileset" dir="${lwjgl.bin}">
 		<exclude name="**.*" />
@@ -109,8 +103,8 @@
 	<patternset id="lwjgl-win32.fileset">
 		<include name="lwjgl.dll" />
 		<include name="OpenAL32.dll" />
-    		<include name="jinput-dx8.dll" />
-    		<include name="jinput-raw.dll" />
+    	<include name="jinput-dx8.dll" />
+    	<include name="jinput-raw.dll" />
 	</patternset>
 	
 	<!-- Files to include in win32 optional package -->
@@ -325,7 +319,6 @@
 		<!-- Create lwjgl_util_applet.jar -->
 		<jar destfile="${lwjgl.temp}/jar/lwjgl_util_applet.jar" taskname="lwjgl_util_applet.jar">
 			<fileset refid="lwjgl_util_applet.fileset" />
-			<fileset refid="lwjgl_util_applet_natives.fileset"/>
 			<manifest>
 				<attribute name="Sealed" value="true"/>
 			</manifest>
@@ -334,7 +327,7 @@
 		<!-- Create lwjgl_test.jar -->
 		<jar destfile="${lwjgl.temp}/jar/lwjgl_test.jar" taskname="lwjgl_test.jar">
 			<fileset refid="lwjgl_test.fileset" />
-      <fileset refid="lwjgl_test_extra.fileset" />
+			<fileset refid="lwjgl_test_extra.fileset" />
 		</jar>
 
 		<!-- Create lwjgl_util.jar -->
@@ -364,6 +357,47 @@
 		<jar destfile="applet/lwjgl_applet.jar" taskname="lwjgl_applet.jar">
 			<fileset refid="lwjgl_applet.fileset" />
 		</jar>
+		
+		<!-- create each of the native jars -->
+		<jar destfile="applet/win32_natives.jar" taskname="win32_natives.jar">
+			<fileset dir="${lwjgl.lib}/win32">
+				<patternset refid="lwjgl-win32.fileset"/>
+				<patternset refid="lwjgl-win32_optional.fileset"/>
+				<include name="fmod.dll"/>
+			</fileset>
+		</jar>
+		<signjar jar="applet/win32_natives.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		
+		<jar destfile="applet/linux_natives.jar" taskname="linux_natives.jar">
+			<fileset dir="${lwjgl.lib}/linux">
+				<patternset refid="lwjgl-linux.fileset"/>
+				<patternset refid="lwjgl-linux_optional.fileset"/>
+				<include name="libfmod.so"/>
+			</fileset>
+		</jar>
+		<signjar jar="applet/linux_natives.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+			
+		<jar destfile="applet/macosx_natives.jar" taskname="macosx_natives.jar">
+			<fileset dir="${lwjgl.lib}/macosx">
+				<patternset refid="lwjgl-macosx.fileset"/>
+				<patternset refid="lwjgl-macosx_optional.fileset"/>
+				<include name="libfmod.dylib"/>
+			</fileset>
+		</jar>
+		<signjar jar="applet/macosx_natives.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		
+		<!-- add it to a natives jar -->
+		<jar destfile="applet/natives.jar" taskname="natives.jar">
+			<fileset dir="applet">
+				<include name="win32_natives.jar"/>
+				<include name="linux_natives.jar"/>
+				<include name="macosx_natives.jar"/>					
+			</fileset>
+		</jar>
+		<delete file="applet/win32_natives.jar"/>
+		<delete file="applet/linux_natives.jar"/>
+		<delete file="applet/macosx_natives.jar"/>
+		
 		<copy file="${lwjgl.lib}/lwjgl.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/lwjgl_util_applet.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/lwjgl_util.jar" todir="applet"/>
