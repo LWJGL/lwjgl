@@ -47,9 +47,12 @@ import java.security.cert.Certificate;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.jar.JarEntry;
-import java.util.jar.JarInputStream;
+import java.util.Enumeration;
+import java.util.jar.JarFile;
 
 import org.lwjgl.LWJGLUtil;
+
+
 
 /**
  * <p>
@@ -157,11 +160,6 @@ public class LWJGLInstaller {
 	 * @throws Exception If we encounter a certificate mismatch
 	 */
 	private static HashMap validateCertificates() throws Exception {
-		InputStream is = LWJGLInstaller.class.getResourceAsStream(NATIVES_PLATFORM_JAR);
-		if(is == null) {
-			throw new Exception("Unable to open " + NATIVES_PLATFORM_JAR + ", which was expected to be on the classpath");
-		}
-		
 		// get our certificate chain
 		Certificate[] ownCerts = LWJGLInstaller.class.getProtectionDomain().getCodeSource().getCertificates();
 		if(ownCerts == null || ownCerts.length == 0) {
@@ -169,11 +167,28 @@ public class LWJGLInstaller {
 		}
 		
 		// check that each of the entries in the jar is signed by same certificate as LWJGLInstaller
-		HashMap files = new HashMap();
-		JarInputStream jis = new JarInputStream(is);
+		InputStream is = LWJGLInstaller.class.getResourceAsStream(NATIVES_PLATFORM_JAR);
+		if(is == null) {
+			throw new Exception("Unable to open " + NATIVES_PLATFORM_JAR + ", which was expected to be on the classpath");
+		}
+
+		/* Copy the jar containing the natives to a tmp file and unpack and verify it from there.
+		 * A better way would have been to use JarInputStream, but there's a bug with JIS and
+		 * JarEntry.getCertificates() on java 1.5 (bug id. 6284489, duplicate id: 6348368).
+		 * JarEntry.getCodeSigners() does work on java 1.5 with JIS, but that API was introduced
+		 * in 1.5, and can't be relied upon for java 1.4.
+		 */
+		File tmp_jar_file = File.createTempFile("lwjgl", ".jar");
+		copyFile(is, new FileOutputStream(tmp_jar_file));
+		is.close();
+		
+		JarFile jar_file = new JarFile(tmp_jar_file);
 
 		JarEntry native_entry;
-		while ((native_entry = jis.getNextJarEntry()) != null) {
+		HashMap files = new HashMap();
+		Enumeration jar_entries = jar_file.entries();
+		while (jar_entries.hasMoreElements()) {
+			native_entry = (JarEntry)jar_entries.nextElement();
 			// skip directories and anything in directories
 			// conveniently ignores the manifest
 			if(native_entry.isDirectory() || native_entry.getName().indexOf('/') != -1) {
@@ -183,6 +198,7 @@ public class LWJGLInstaller {
 			// need to read the file, before the certificate is retrievable
 			// since we dont want to do two reads, we store it in memory for later use
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			InputStream jis = jar_file.getInputStream(native_entry);
 			copyFile(jis, baos);
 			files.put(native_entry.getName(), baos.toByteArray());				
 
