@@ -42,7 +42,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.security.cert.Certificate;
 import java.util.HashMap;
@@ -105,7 +104,7 @@ public class LWJGLInstaller {
 			// Validate the certificates of the platform native jar
 			HashMap files = (HashMap) 
 			AccessController.doPrivileged(new PrivilegedExceptionAction() {
-				public Object run() throws PrivilegedActionException{
+				public Object run() throws Exception {
 					return validateCertificates();
 				}
 			});
@@ -157,45 +156,41 @@ public class LWJGLInstaller {
 	 * installer, we can also be sure that the native libraries indeed are correct.
 	 * @throws Exception If we encounter a certificate mismatch
 	 */
-	private static HashMap validateCertificates() throws PrivilegedActionException {
+	private static HashMap validateCertificates() throws Exception {
 		InputStream is = LWJGLInstaller.class.getResourceAsStream(NATIVES_PLATFORM_JAR);
 		if(is == null) {
-			throw new PrivilegedActionException(new Exception("Unable to open " + NATIVES_PLATFORM_JAR + ", which was expected to be on the classpath"));
+			throw new Exception("Unable to open " + NATIVES_PLATFORM_JAR + ", which was expected to be on the classpath");
 		}
 		
 		// get our certificate chain
 		Certificate[] ownCerts = LWJGLInstaller.class.getProtectionDomain().getCodeSource().getCertificates();
 		if(ownCerts == null || ownCerts.length == 0) {
-			throw new PrivilegedActionException(new Exception("Unable to get certificate chain for LWJGLInstaller"));
+			throw new Exception("Unable to get certificate chain for LWJGLInstaller");
 		}
 		
 		// check that each of the entries in the jar is signed by same certificate as LWJGLInstaller
-		try {
-			HashMap files = new HashMap();
-			JarInputStream jis = new JarInputStream(is);
-			
-			JarEntry native_entry = null;
-			while((native_entry = jis.getNextJarEntry()) != null) {
-				// skip directories and anything in directories
-				// conveniently ignores the manifest
-				if(native_entry.isDirectory() || native_entry.getName().indexOf('/') != -1) {
-					continue;
-				}
-				
-				// need to read the file, before the certificate is retrievable
-				// since we dont want to do two reads, we store it in memory for later use
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				copyFile(jis, baos, false);
-				files.put(native_entry.getName(), baos.toByteArray());				
-				
-				// now check the chain of an actual file 
-				validateCertificateChain(ownCerts, native_entry.getCertificates());
+		HashMap files = new HashMap();
+		JarInputStream jis = new JarInputStream(is);
+
+		JarEntry native_entry = null;
+		while((native_entry = jis.getNextJarEntry()) != null) {
+			// skip directories and anything in directories
+			// conveniently ignores the manifest
+			if(native_entry.isDirectory() || native_entry.getName().indexOf('/') != -1) {
+				continue;
 			}
-			
-			return files;
-		} catch (Exception e) {
-			throw new PrivilegedActionException(e);
+
+			// need to read the file, before the certificate is retrievable
+			// since we dont want to do two reads, we store it in memory for later use
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			copyFile(jis, baos, false);
+			files.put(native_entry.getName(), baos.toByteArray());				
+
+			// now check the chain of an actual file 
+			validateCertificateChain(ownCerts, native_entry.getCertificates());
 		}
+
+		return files;
 	}
 
 	/**
