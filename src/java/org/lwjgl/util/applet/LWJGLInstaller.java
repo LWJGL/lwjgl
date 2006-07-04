@@ -83,7 +83,7 @@ public class LWJGLInstaller {
 	/**
 	 * Create a temporary installation of LWJGL.
 	 * This will extract the relevant native files (for the platform) into
-	 * the users temp directory, and instruct the LWJGL subsystem to load its
+	 * the user's temp directory, and instruct the LWJGL subsystem to load its
 	 * native files from there.
 	 * The files required by the installer, are gotten from the classloader via its
 	 * getResource command, and are assumed to in the path: /native/<win32|linux|macosx>/
@@ -246,7 +246,7 @@ public class LWJGLInstaller {
 	 * @param os OutputStream to write to
 	 * @throws IOException if the copy process fail in any way
 	 */
-	static void copyFile(InputStream is, OutputStream os, boolean closeInput) throws IOException {
+	private static void copyFile(InputStream is, OutputStream os, boolean closeInput) throws IOException {
 		int len;
 		while ((len = is.read(COPY_BUFFER)) > 0) {
 			os.write(COPY_BUFFER, 0, len);
@@ -265,7 +265,7 @@ public class LWJGLInstaller {
 	 * called '.lwjglinstaller' will also be created in the directory.
 	 * @return Name of temp directory or null if directory creation failed
 	 */
-	static String createTemporaryDir(final String user_temp_dir) throws Exception {
+	private static String createTemporaryDir(final String user_temp_dir) throws Exception {
 		return (String) AccessController.doPrivileged(new PrivilegedExceptionAction() {
 			public Object run() throws Exception {
 				// create the temp directory
