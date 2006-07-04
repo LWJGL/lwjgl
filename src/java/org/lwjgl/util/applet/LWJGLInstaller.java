@@ -189,9 +189,7 @@ public class LWJGLInstaller {
 				files.put(native_entry.getName(), baos.toByteArray());				
 				
 				// now check the chain of an actual file 
-				if(!validateCertificateChain(ownCerts, native_entry.getCertificates())) {
-					throw new Exception("Failed to validate certificate chain for " + native_entry.getName());
-				}
+				validateCertificateChain(ownCerts, native_entry.getCertificates());
 			}
 			
 			return files;
@@ -206,24 +204,18 @@ public class LWJGLInstaller {
 	 * @param native_certs Chain of certificates to check
 	 * @return true if the chains match
 	 */
-	private static boolean validateCertificateChain(Certificate[] ownCerts, Certificate[] native_certs) {
-		if(native_certs == null) {
-			LWJGLUtil.log("Unable to validate certificate chain. Native entry did not have a certificate chain at all");
-			return false;
-		}
+	private static void validateCertificateChain(Certificate[] ownCerts, Certificate[] native_certs) throws Exception {
+		if(native_certs == null)
+			throw new Exception("Unable to validate certificate chain. Native entry did not have a certificate chain at all");
 		
-		if(ownCerts.length != native_certs.length) {
-			LWJGLUtil.log("Unable to validate certificate chain. Chain differs in length [" + ownCerts.length + " vs " + native_certs.length + "]");
-			return false;
-		}		
+		if(ownCerts.length != native_certs.length)
+			throw new Exception("Unable to validate certificate chain. Chain differs in length [" + ownCerts.length + " vs " + native_certs.length + "]");
 		
 		for(int i=0; i<ownCerts.length; i++) {
 			if(!ownCerts[i].equals(native_certs[i])) {
-				LWJGLUtil.log("Certificate mismatch: " + ownCerts[i] + " != " + native_certs[i]);
-				return false;
+				throw new Exception("Certificate mismatch: " + ownCerts[i] + " != " + native_certs[i]);
 			}
 		}
-		return true;
 	}
 
 	/**
@@ -344,9 +336,11 @@ public class LWJGLInstaller {
 
 				});
 
-				// uninstall each of the dirs
-				for (int i = 0; i < files.length; i++) {
-					uninstall(files[i]);
+				if (files != null) {
+					// uninstall each of the dirs
+					for (int i = 0; i < files.length; i++) {
+						uninstall(files[i]);
+					}
 				}
 				return null;
 			}
