@@ -60,7 +60,7 @@ import org.lwjgl.opengl.Display;
  */
 public class Mouse {
 	/** Internal use - event size in bytes */
-	public static final int	EVENT_SIZE									= 1 + 1 + 4 + 4 + 4;
+	public static final int	EVENT_SIZE									= 1 + 1 + 4 + 4 + 4 + 8;
 
 	/** Has the mouse been created? */
 	private static boolean		created;
@@ -120,6 +120,7 @@ public class Mouse {
 	/** The current absolute position of the mouse in the event queue */
 	private static int			event_x;
 	private static int			event_y;
+	private static long			event_nanos;
 
 	/** Buffer size in events */
 	private static final int	BUFFER_SIZE									= 50;
@@ -379,6 +380,7 @@ public class Mouse {
 			event_x = Math.min(Display.getDisplayMode().getWidth() - 1, Math.max(0, event_x));
 			event_y = Math.min(Display.getDisplayMode().getHeight() - 1, Math.max(0, event_y));
 			event_dwheel = readBuffer.getInt();
+			event_nanos = readBuffer.getLong();
 			return true;
 		} else
 			return false;
@@ -435,6 +437,18 @@ public class Mouse {
 	 */
 	public static int getEventDWheel() {
 		return event_dwheel;
+	}
+
+	/**
+	 * Gets the time in nanoseconds of the current event.
+	 * Only useful for relative comparisons with other
+	 * Mouse events, as the absolute time has no defined
+	 * origin.
+	 *
+	 * @return The time in nanoseconds of the current event
+	 */
+	public static long getEventNanoseconds() {
+		return event_nanos;
 	}
 
 	/**

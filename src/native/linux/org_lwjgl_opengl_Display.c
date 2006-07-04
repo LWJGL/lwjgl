@@ -175,7 +175,7 @@ static void handleMessages(JNIEnv *env, jclass disp_class) {
 	jmethodID handleButtonEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleButtonEvent", "(JIII)V");
 	if (handleButtonEvent_method == NULL)
 		return;
-	jmethodID handlePointerMotionEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handlePointerMotionEvent", "(JIIIII)V");
+	jmethodID handlePointerMotionEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handlePointerMotionEvent", "(JJIIIII)V");
 	if (handlePointerMotionEvent_method == NULL)
 		return;
 	jmethodID handleWarpEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleWarpEvent", "(II)V");
@@ -221,7 +221,7 @@ static void handleMessages(JNIEnv *env, jclass disp_class) {
 				(*env)->CallStaticVoidMethod(env, disp_class, handleButtonEvent_method, (jlong)event.xbutton.time, (jint)event.xbutton.type, (jint)event.xbutton.button, (jint)event.xbutton.state);
 				break;
 			case MotionNotify:
-				(*env)->CallStaticVoidMethod(env, disp_class, handlePointerMotionEvent_method, (jlong)event.xbutton.root, (jint)event.xbutton.x_root, (jint)event.xbutton.y_root, (jint)event.xbutton.x, (jint)event.xbutton.y, (jint)event.xbutton.state);
+				(*env)->CallStaticVoidMethod(env, disp_class, handlePointerMotionEvent_method, (jlong)event.xbutton.time, (jlong)event.xbutton.root, (jint)event.xbutton.x_root, (jint)event.xbutton.y_root, (jint)event.xbutton.x, (jint)event.xbutton.y, (jint)event.xbutton.state);
 				break;
 			case KeyPress:
 			case KeyRelease:

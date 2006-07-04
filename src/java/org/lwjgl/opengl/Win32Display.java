@@ -338,51 +338,51 @@ final class Win32Display implements DisplayImplementation {
 	
 	private static native int nSetWindowIcon32(IntBuffer icon);
 
-	private static void handleMouseButton(int button, int state) {
+	private static void handleMouseButton(int button, int state, long millis) {
 		if (mouse != null)
-			mouse.handleMouseButton((byte)button, (byte)state);
+			mouse.handleMouseButton((byte)button, (byte)state, millis);
 	}
 
-	private static void handleMouseMoved(int x, int y) {
+	private static void handleMouseMoved(int x, int y, long millis) {
 		if (mouse != null)
-			mouse.handleMouseMoved(x, y);
+			mouse.handleMouseMoved(x, y, millis);
 	}
 
-	private static void handleMouseScrolled(int amount) {
+	private static void handleMouseScrolled(int amount, long millis) {
 		if (mouse != null)
-			mouse.handleMouseScrolled(amount);
+			mouse.handleMouseScrolled(amount, millis);
 	}
 
 	private static native int transformY(long hwnd, int y);
 
-	private static boolean handleMessage(long hwnd, int msg, long wParam, long lParam) {
+	private static boolean handleMessage(long hwnd, int msg, long wParam, long lParam, long millis) {
 		switch (msg) {
 			case WM_MOUSEMOVE:
 				int xPos = (int)(short)(lParam & 0xFFFF);
 				int yPos = transformY(getHwnd(), (int)(short)((lParam >> 16) & 0xFFFF));
-				handleMouseMoved(xPos, yPos);
+				handleMouseMoved(xPos, yPos, millis);
 				return true;
 			case WM_MOUSEWHEEL:
 				int dwheel = (int)(short)((wParam >> 16) & 0xFFFF);
-				handleMouseScrolled(dwheel);
+				handleMouseScrolled(dwheel, millis);
 				return true;
 			case WM_LBUTTONDOWN:
-				handleMouseButton(0, 1);
+				handleMouseButton(0, 1, millis);
 				return true;
 			case WM_LBUTTONUP:
-				handleMouseButton(0, 0);
+				handleMouseButton(0, 0, millis);
 				return true;
 			case WM_RBUTTONDOWN:
-				handleMouseButton(1, 1);
+				handleMouseButton(1, 1, millis);
 				return true;
 			case WM_RBUTTONUP:
-				handleMouseButton(1, 0);
+				handleMouseButton(1, 0, millis);
 				return true;
 			case WM_MBUTTONDOWN:
-				handleMouseButton(2, 1);
+				handleMouseButton(2, 1, millis);
 				return true;
 			case WM_MBUTTONUP:
-				handleMouseButton(2, 0);
+				handleMouseButton(2, 0, millis);
 				return true;
 			case WM_QUIT:
 				close_requested = true;

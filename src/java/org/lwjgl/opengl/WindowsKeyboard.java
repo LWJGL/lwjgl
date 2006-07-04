@@ -110,6 +110,8 @@ final class WindowsKeyboard {
 			byte dwData = (byte)src.get();
 			boolean key_down = (dwData & 0x80) != 0;
 			dst.put(key_down ? (byte)1 : (byte)0);
+			long dwTimeStamp = ((long)src.get()) & 0xFFFFFFFF;
+			long nanos = dwTimeStamp*1000000;
 			if (key_down) {
 				int virt_key = MapVirtualKey(dwOfs, 1);
 				if (virt_key != 0 && GetKeyboardState(keyboard_state) != 0) {
@@ -130,16 +132,21 @@ final class WindowsKeyboard {
 							}
 							int char_int = ((int)unicode_buffer.get()) & 0xFFFF;
 							dst.putInt(char_int);
+							dst.putLong(nanos);
 							current_char++;
 						} while (dst.hasRemaining() && current_char < num_chars);
 					} else {
 						dst.putInt(0);
+						dst.putLong(nanos);
 					}
 				} else {
 					dst.putInt(0);
+					dst.putLong(nanos);
 				}
-			} else
+			} else {
 				dst.putInt(0);
+				dst.putLong(nanos);
+			}
 		}
 	}
 	private static native int MapVirtualKey(int uCode, int uMapType);

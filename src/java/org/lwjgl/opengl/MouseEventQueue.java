@@ -104,18 +104,18 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 		((MacOSXDisplay)Display.getImplementation()).getMouseDeltas(delta_buffer);
 	}
 
-	private void putMouseEvent(byte button, byte state, int dz) {
+	private void putMouseEvent(byte button, byte state, int dz, long nanos) {
 		if (grabbed)
-			putMouseEventWithCoords(button, state, 0, 0, dz);
+			putMouseEventWithCoords(button, state, 0, 0, dz, nanos);
 		else
-			putMouseEventWithCoords(button, state, last_x, last_y, dz);
+			putMouseEventWithCoords(button, state, last_x, last_y, dz, nanos);
 	}
 
-	private void putMouseEventWithCoords(byte button, byte state, int coord1, int coord2, int dz) {
-		event.put(button).put(state).putInt(coord1).putInt(coord2).putInt(dz);
+	private void putMouseEventWithCoords(byte button, byte state, int coord1, int coord2, int dz, long nanos) {
+		event.clear();
+		event.put(button).put(state).putInt(coord1).putInt(coord2).putInt(dz).putLong(nanos);
 		event.flip();
 		putEvent(event);
-		event.compact();
 	}
 
 	public synchronized void poll(IntBuffer coord_buffer, ByteBuffer buttons_buffer) {
@@ -133,7 +133,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 		buttons_buffer.position(old_position);
 	}
 
-	private synchronized void setCursorPos(int x, int y) {
+	private synchronized void setCursorPos(int x, int y, long nanos) {
 		y = transformY(y);
 		if ( grabbed )
 			return;
@@ -143,7 +143,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 		accum_dy += dy;
 		last_x = x;
 		last_y = y;
-		putMouseEventWithCoords((byte)-1, (byte)0, x, y, 0);
+		putMouseEventWithCoords((byte)-1, (byte)0, x, y, 0, nanos);
 	}
 
 	public void mouseClicked(MouseEvent e) {
@@ -195,16 +195,16 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 			default:
 				throw new IllegalArgumentException("Not a valid button: " + e.getButton());
 		}
-		setButton(button, state);
+		setButton(button, state, e.getWhen()*1000000);
 	}
 
 	public void mousePressed(MouseEvent e) {
 		handleButton(e);
 	}
 
-	private synchronized void setButton(byte button, byte state) {
+	private synchronized void setButton(byte button, byte state, long nanos) {
 		buttons[button] = state;
-		putMouseEvent(button, state, 0);
+		putMouseEvent(button, state, 0, nanos);
 	}
 
 	public void mouseReleased(MouseEvent e) {
@@ -212,10 +212,10 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	}
 
 	private void handleMotion(MouseEvent e) {
-		if ( grabbed ) {
-			updateDeltas();
+		if (grabbed) {
+			updateDeltas(e.getWhen()*1000000);
 		} else {
-			setCursorPos(e.getX(), e.getY());
+			setCursorPos(e.getX(), e.getY(), e.getWhen()*1000000);
 		}
 	}
 
@@ -227,20 +227,20 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 		handleMotion(e);
 	}
 
-	private synchronized void handleWheel(int amount) {
+	private synchronized void handleWheel(int amount, long nanos) {
 		accum_dz += amount;
-		putMouseEvent((byte)-1, (byte)0, amount);
+		putMouseEvent((byte)-1, (byte)0, amount, nanos);
 	}
 
-	private void updateDeltas() {
-		if ( !grabbed )
+	private void updateDeltas(long nanos) {
+		if (!grabbed)
 			return;
 		synchronized ( this ) {
 			((MacOSXDisplay)Display.getImplementation()).getMouseDeltas(delta_buffer);
 			int dx = delta_buffer.get(0);
 			int dy = -delta_buffer.get(1);
 			if ( dx != 0 || dy != 0 ) {
-				putMouseEventWithCoords((byte)-1, (byte)0, dx, dy, 0);
+				putMouseEventWithCoords((byte)-1, (byte)0, dx, dy, 0, nanos);
 				accum_dx += dx;
 				accum_dy += dy;
 			}
@@ -249,6 +249,6 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		int wheel_amount = -e.getWheelRotation() * WHEEL_SCALE;
-		handleWheel(wheel_amount);
+		handleWheel(wheel_amount, e.getWhen()*1000000);
 	}
 }

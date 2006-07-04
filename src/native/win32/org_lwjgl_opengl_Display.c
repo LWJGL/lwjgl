@@ -144,6 +144,7 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 	JNIEnv *env;
 	jclass display_class;
 	jmethodID handleMessage_method;
+	LONG message_time;
 	if (isFullScreen && !isMinimized && isFocused)
 		setupCursorClipping();
 	switch (msg) {
@@ -176,9 +177,10 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 	if (env != NULL && !(*env)->ExceptionOccurred(env)) {
 		display_class = (*env)->FindClass(env, "org/lwjgl/opengl/Win32Display");
 		if (display_class != NULL) {
-			handleMessage_method = (*env)->GetStaticMethodID(env, display_class, "handleMessage", "(JIJJ)Z");
+			message_time = GetMessageTime();
+			handleMessage_method = (*env)->GetStaticMethodID(env, display_class, "handleMessage", "(JIJJJ)Z");
 			if (handleMessage_method != NULL)
-				if ((*env)->CallStaticBooleanMethod(env, NULL, handleMessage_method, (jlong)hWnd, (jint)msg, (jlong)wParam, (jlong)lParam))
+				if ((*env)->CallStaticBooleanMethod(env, NULL, handleMessage_method, (jlong)hWnd, (jint)msg, (jlong)wParam, (jlong)lParam, (jlong)message_time))
 					return 0;
 		}
 	}

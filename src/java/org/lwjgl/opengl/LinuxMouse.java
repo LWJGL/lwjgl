@@ -73,6 +73,7 @@ final class LinuxMouse {
 	private int accum_dz;
 	private byte[] buttons = new byte[NUM_BUTTONS];
 	private EventQueue event_queue;
+	private long last_event_nanos;
 
 	public LinuxMouse(long display, long window) {
 		this.display = display;
@@ -103,25 +104,28 @@ final class LinuxMouse {
 			buttons_buffer.put(i, buttons[i]);
 	}
 
-	private void putMouseEventWithCoords(byte button, byte state, int coord1, int coord2, int dz) {
-		event_buffer.put(button).put(state).putInt(coord1).putInt(coord2).putInt(dz);
+	private void putMouseEventWithCoords(byte button, byte state, int coord1, int coord2, int dz, long nanos) {
+		event_buffer.clear();
+		event_buffer.put(button).put(state).putInt(coord1).putInt(coord2).putInt(dz).putLong(nanos);
 		event_buffer.flip();
 		event_queue.putEvent(event_buffer);
-		event_buffer.compact();
+		last_event_nanos = nanos;
 	}
 
-	private void setCursorPos(boolean grab, int x, int y) {
+	private void setCursorPos(boolean grab, int x, int y, long nanos) {
 		y = transformY(y);
 		int dx = x - last_x;
 		int dy = y - last_y;
-		accum_dx += dx;
-		accum_dy += dy;
-		last_x = x;
-		last_y = y;
-		if (grab) {
-			putMouseEventWithCoords((byte)-1, (byte)0, dx, dy, 0);
-		} else {
-			putMouseEventWithCoords((byte)-1, (byte)0, x, y, 0);
+		if (dx != 0 || dy != 0) {
+			accum_dx += dx;
+			accum_dy += dy;
+			last_x = x;
+			last_y = y;
+			if (grab) {
+				putMouseEventWithCoords((byte)-1, (byte)0, dx, dy, 0, nanos);
+			} else {
+				putMouseEventWithCoords((byte)-1, (byte)0, x, y, 0, nanos);
+			}
 		}
 	}
 
@@ -131,8 +135,8 @@ final class LinuxMouse {
 	}
 	private static native void nSendWarpEvent(long display, long window, int center_x, int center_y);
 
-	private void doHandlePointerMotion(boolean grab, boolean pointer_grabbed, boolean should_grab, long root_window, int root_x, int root_y, int win_x, int win_y) {
-		setCursorPos(grab, win_x, win_y);
+	private void doHandlePointerMotion(boolean grab, boolean pointer_grabbed, boolean should_grab, long root_window, int root_x, int root_y, int win_x, int win_y, long nanos) {
+		setCursorPos(grab, win_x, win_y, nanos);
 		if (!pointer_grabbed || !should_grab)
 			return;
 		int root_window_height = nGetWindowHeight(display, root_window);
@@ -164,7 +168,7 @@ final class LinuxMouse {
 	public void changeGrabbed(boolean grab, boolean pointer_grabbed, boolean should_grab) {
 		reset();
 		long root_window = nQueryPointer(display, window, query_pointer_buffer);
-		doHandlePointerMotion(grab, pointer_grabbed, should_grab, root_window, query_pointer_buffer.get(0), query_pointer_buffer.get(1), query_pointer_buffer.get(2), query_pointer_buffer.get(3));
+		doHandlePointerMotion(grab, pointer_grabbed, should_grab, root_window, query_pointer_buffer.get(0), query_pointer_buffer.get(1), query_pointer_buffer.get(2), query_pointer_buffer.get(3), last_event_nanos);
 	}
 
 	public int getButtonCount() {
@@ -184,11 +188,11 @@ final class LinuxMouse {
 	}
 	private static native void nWarpCursor(long display, long window, int x, int y);
 
-	public void handlePointerMotion(boolean grab, boolean pointer_grabbed, boolean should_grab, long root_window, int x_root, int y_root, int x, int y) {
-	    doHandlePointerMotion(grab, pointer_grabbed, should_grab, root_window, x_root, y_root, x, y);
+	public void handlePointerMotion(boolean grab, boolean pointer_grabbed, boolean should_grab, long millis, long root_window, int x_root, int y_root, int x, int y) {
+	    doHandlePointerMotion(grab, pointer_grabbed, should_grab, root_window, x_root, y_root, x, y, millis*1000000);
 	}
 	
-	private void handleButton(boolean grab, int button, byte state) {
+	private void handleButton(boolean grab, int button, byte state, long nanos) {
 		byte button_num;
 		switch (button) {
 			case Button1:
@@ -204,46 +208,43 @@ final class LinuxMouse {
 				return;
 		}
 		buttons[button_num] = state;
-		putMouseEvent(grab, button_num, state, 0);
+		putMouseEvent(grab, button_num, state, 0, nanos);
 	}
 
-	private void putMouseEvent(boolean grab, byte button, byte state, int dz) {
+	private void putMouseEvent(boolean grab, byte button, byte state, int dz, long nanos) {
 		if (grab)
-			putMouseEventWithCoords(button, state, 0, 0, dz);
+			putMouseEventWithCoords(button, state, 0, 0, dz, nanos);
 		else
-			putMouseEventWithCoords(button, state, last_x, last_y, dz);
+			putMouseEventWithCoords(button, state, last_x, last_y, dz, nanos);
 	}
 
-	private void handleButtonPress(boolean grab, byte button) {
+	private void handleButtonPress(boolean grab, byte button, long nanos) {
 		int delta = 0;
 		switch (button) {
 			case Button4:
 				delta = WHEEL_SCALE;
-				putMouseEvent(grab, (byte)-1, (byte)0, delta);
+				putMouseEvent(grab, (byte)-1, (byte)0, delta, nanos);
 				accum_dz += delta;
 				break;
 			case Button5:
 				delta = -WHEEL_SCALE;
-				putMouseEvent(grab, (byte)-1, (byte)0, delta);
+				putMouseEvent(grab, (byte)-1, (byte)0, delta, nanos);
 				accum_dz += delta;
 				break;
 			default:
-				handleButton(grab, button, (byte)1);
+				handleButton(grab, button, (byte)1, nanos);
 				break;
 		}
 	}
 
-	private void handleButtonRelease(boolean grab, int button) {
-		handleButton(grab, button, (byte)0);
-	}
-	
-	public void handleButtonEvent(boolean grab, int type, byte button) {
+	public void handleButtonEvent(boolean grab, long millis, int type, byte button) {
+		long nanos = millis*1000000;
 		switch (type) {
 			case ButtonRelease:
-				handleButton(grab, button, (byte)0);
+				handleButton(grab, button, (byte)0, nanos);
 				break;
 			case ButtonPress:
-				handleButtonPress(grab, button);
+				handleButtonPress(grab, button, nanos);
 				break;
 			default:
 				break;

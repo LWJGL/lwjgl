@@ -48,6 +48,8 @@ final class WindowsDirectInputDevice3 extends WindowsDirectInputDevice {
 	public final static int GUID_Button = WindowsDirectInputDevice.GUID_Button;
 	public final static int GUID_Unknown = WindowsDirectInputDevice.GUID_Unknown;
 
+	public final static int DATA_SIZE = WindowsDirectInputDevice.DATA_SIZE;
+
 	public WindowsDirectInputDevice3(long di_device) {
 		super(di_device);
 	}

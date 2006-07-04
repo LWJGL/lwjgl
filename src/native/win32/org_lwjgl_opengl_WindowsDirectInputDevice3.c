@@ -86,7 +86,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDirectInputDevice3_getDevice
 	DIDEVICEOBJECTDATA *current_event;
 	DWORD num_events = event_buffer_size/sizeof(DIDEVICEOBJECTDATA);
 	HRESULT ret = IDirectInputDevice_GetDeviceData(lpdevice, sizeof(DIDEVICEOBJECTDATA), event_buffer, &num_events, 0);
-	jint num_buffer_events = buffer_size/2;
+	jint num_buffer_events = buffer_size/org_lwjgl_opengl_WindowsDirectInputDevice3_DATA_SIZE;
 	jint i;
 	if (ret != DI_OK && ret != DI_BUFFEROVERFLOW)
 		return ret;
@@ -99,6 +99,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDirectInputDevice3_getDevice
 		current_event = event_buffer + i;
 		buffer[buffer_pos++] = current_event->dwOfs;
 		buffer[buffer_pos++] = current_event->dwData;
+		buffer[buffer_pos++] = current_event->dwTimeStamp;
 	}
 	positionBuffer(env, buffer_obj, buffer_pos);
 	return ret;

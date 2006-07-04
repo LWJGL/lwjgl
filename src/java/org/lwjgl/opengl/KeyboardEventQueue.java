@@ -242,11 +242,11 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 		super(Keyboard.EVENT_SIZE);
 	}
 
-	private void putKeyboardEvent(int key_code, byte state, int character) {
-		event.putInt(key_code).put(state).putInt(character);
+	private void putKeyboardEvent(int key_code, byte state, int character, long nanos) {
+		event.clear();
+		event.putInt(key_code).put(state).putInt(character).putLong(nanos);
 		event.flip();
 		putEvent(event);
-		event.compact();
 	}
 
 	public synchronized void poll(ByteBuffer key_down_buffer) {
@@ -255,7 +255,7 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 		key_down_buffer.position(old_position);
 	}
 
-	private synchronized void handleKey(int key_code_mapped, byte state, int character) {
+	private synchronized void handleKey(int key_code_mapped, byte state, int character, long nanos) {
 		if ( character == KeyEvent.CHAR_UNDEFINED )
 			character = Keyboard.CHAR_NONE;
 		/* Ignore repeating presses */
@@ -263,7 +263,7 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 			return;
 		key_states[key_code_mapped] = state;
 		int key_int_char = character & 0xffff;
-		putKeyboardEvent(key_code_mapped, state, key_int_char);
+		putKeyboardEvent(key_code_mapped, state, key_int_char, nanos);
 	}
 
 	private int getMappedKeyCode(int key_code, int position) {
@@ -291,11 +291,11 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 	}
 
 	public void keyPressed(KeyEvent e) {
-		handleKey(getMappedKeyCode(e.getKeyCode(), e.getKeyLocation()), (byte)1, e.getKeyChar());
+		handleKey(getMappedKeyCode(e.getKeyCode(), e.getKeyLocation()), (byte)1, e.getKeyChar(), e.getWhen()*1000000);
 	}
 
 	public void keyReleased(KeyEvent e) {
-		handleKey(getMappedKeyCode(e.getKeyCode(), e.getKeyLocation()), (byte)0, Keyboard.CHAR_NONE);
+		handleKey(getMappedKeyCode(e.getKeyCode(), e.getKeyLocation()), (byte)0, Keyboard.CHAR_NONE, e.getWhen()*1000000);
 	}
 
 	public void keyTyped(KeyEvent e) {

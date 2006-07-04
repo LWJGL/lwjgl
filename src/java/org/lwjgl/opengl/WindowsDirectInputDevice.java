@@ -54,6 +54,8 @@ abstract class WindowsDirectInputDevice {
 	public final static int GUID_Button = 4;
 	public final static int GUID_Unknown = 5;
 
+	public final static int DATA_SIZE = 3;
+
 	private final long di_device;
 	private ByteBuffer event_buffer;
 
@@ -100,7 +102,7 @@ abstract class WindowsDirectInputDevice {
 	protected abstract int setBufferSize(long di_device, int buffer_size);
 
 	public int getDeviceData(IntBuffer buffer) {
-		int events_remaining = buffer.remaining()/2;
+		int events_remaining = buffer.remaining()/DATA_SIZE;
 		if (event_buffer == null || events_remaining > event_buffer.remaining()/getEventSize())
 			event_buffer = BufferUtils.createByteBuffer(events_remaining*getEventSize());
 		return getDeviceData(di_device, event_buffer, event_buffer.capacity(), buffer, buffer.position(), buffer.remaining());

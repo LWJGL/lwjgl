@@ -160,11 +160,11 @@ final class LinuxKeyboard {
 		keyDownBuffer.position(old_position);
 	}
 
-	private void putKeyboardEvent(int keycode, byte state, int ch) {
-		tmp_event.putInt(keycode).put(state).putInt(ch);
+	private void putKeyboardEvent(int keycode, byte state, int ch, long nanos) {
+		tmp_event.clear();
+		tmp_event.putInt(keycode).put(state).putInt(ch).putLong(nanos);
 		tmp_event.flip();
 		event_queue.putEvent(tmp_event);
-		tmp_event.compact();
 	}
 
 	private int lookupStringISO88591(long event_ptr, int[] translation_buffer) {
@@ -202,24 +202,24 @@ final class LinuxKeyboard {
 			return lookupStringISO88591(event_ptr, translation_buffer);
 	}
 
-	private void translateEvent(long event_ptr, int event_type, int keycode, byte key_state) {
+	private void translateEvent(long event_ptr, int event_type, int keycode, byte key_state, long nanos) {
 		int num_chars, i;
 		int ch;
 
 		if (event_type == KeyRelease) {
-			putKeyboardEvent(keycode, key_state, 0);
+			putKeyboardEvent(keycode, key_state, 0, nanos);
 			return;
 		}
 		num_chars = lookupString(event_ptr, temp_translation_buffer);
 		if (num_chars > 0) {
 			ch = temp_translation_buffer[0];
-			putKeyboardEvent(keycode, key_state, ch);
+			putKeyboardEvent(keycode, key_state, ch, nanos);
 			for (i = 1; i < num_chars; i++) {
 				ch = temp_translation_buffer[i];
-				putKeyboardEvent(0, (byte)0, ch);
+				putKeyboardEvent(0, (byte)0, ch, nanos);
 			}
 		} else {
-			putKeyboardEvent(keycode, key_state, 0);
+			putKeyboardEvent(keycode, key_state, 0, nanos);
 		}
 	}
 
@@ -298,6 +298,6 @@ final class LinuxKeyboard {
 		int keycode = getKeycode(event_ptr, event_state);
 		byte key_state = getKeyState(event_type);
 		key_down_buffer[keycode] = key_state;
-		translateEvent(event_ptr, event_type, keycode, key_state);
+		translateEvent(event_ptr, event_type, keycode, key_state, millis*1000000);
 	}
 }

@@ -972,7 +972,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	/* Callbacks from nUpdate() */
 	private static void handleButtonEvent(long millis, int type, int button, int state) {
 		if (mouse != null)
-			mouse.handleButtonEvent(grab, type, (byte)button);
+			mouse.handleButtonEvent(grab, millis, type, (byte)button);
 	}
 
 	private static void handleKeyEvent(long event_ptr, long millis, int type, int keycode, int state) {
@@ -980,9 +980,9 @@ final class LinuxDisplay implements DisplayImplementation {
 			keyboard.handleKeyEvent(event_ptr, millis, type, keycode, state);
 	}
 
-	private static void handlePointerMotionEvent(long root_window, int x_root, int y_root, int x, int y, int state) {
+	private static void handlePointerMotionEvent(long millis, long root_window, int x_root, int y_root, int x, int y, int state) {
 		if (mouse != null)
-			mouse.handlePointerMotion(grab, pointer_grabbed, shouldGrab(), root_window, x_root, y_root, x, y);
+			mouse.handlePointerMotion(grab, pointer_grabbed, shouldGrab(), millis, root_window, x_root, y_root, x, y);
 	}
 
 	private static void handleWarpEvent(int x, int y) {

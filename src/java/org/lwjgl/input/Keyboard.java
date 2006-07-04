@@ -56,7 +56,7 @@ import org.lwjgl.opengl.Display;
  */
 public class Keyboard {
 	/** Internal use - event size in bytes */
-	public static final int EVENT_SIZE = 4 + 1 + 4;
+	public static final int EVENT_SIZE = 4 + 1 + 4 + 8;
 
 	/**
 	 * The special character meaning that no
@@ -256,6 +256,9 @@ public class Keyboard {
 
 	/** The current state of the key being examined in the event queue */
 	private static boolean eventState;
+	
+	/** The current event time */
+	private static long eventNanos;
 
 	/** One time initialization */
 	private static boolean initialized;
@@ -426,6 +429,7 @@ public class Keyboard {
 			eventKey = readBuffer.getInt() & 0xFF;
 			eventState = readBuffer.get() != 0;
 			eventCharacter = readBuffer.getInt();
+			eventNanos = readBuffer.getLong();
 			return true;
 		} else {
 			return false;
@@ -465,5 +469,16 @@ public class Keyboard {
 	 */
 	public static boolean getEventKeyState() {
 		return eventState;
+	}
+
+	/**
+	 * Gets the time in nanoseconds of the current event.
+	 * Only useful for relative comparisons with other
+	 * Keyboard events, as the absolute time has no defined
+	 * origin.
+	 * @return The time in nanoseconds of the current event
+	 */
+	public static long getEventNanoseconds() {
+		return eventNanos;
 	}
 }
