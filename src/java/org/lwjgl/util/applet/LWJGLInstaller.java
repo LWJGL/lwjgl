@@ -172,8 +172,8 @@ public class LWJGLInstaller {
 		HashMap files = new HashMap();
 		JarInputStream jis = new JarInputStream(is);
 
-		JarEntry native_entry = null;
-		while((native_entry = jis.getNextJarEntry()) != null) {
+		JarEntry native_entry;
+		while ((native_entry = jis.getNextJarEntry()) != null) {
 			// skip directories and anything in directories
 			// conveniently ignores the manifest
 			if(native_entry.isDirectory() || native_entry.getName().indexOf('/') != -1) {
@@ -183,7 +183,7 @@ public class LWJGLInstaller {
 			// need to read the file, before the certificate is retrievable
 			// since we dont want to do two reads, we store it in memory for later use
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			copyFile(jis, baos, false);
+			copyFile(jis, baos);
 			files.put(native_entry.getName(), baos.toByteArray());				
 
 			// now check the chain of an actual file 
@@ -219,21 +219,17 @@ public class LWJGLInstaller {
 	 * @param file File to extract
 	 * @param path Path to extract to
 	 */
-	private static void writeFiles(final HashMap files, final String path) {
-		AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				try {
-					for(Iterator i = files.keySet().iterator(); i.hasNext();) {
-						String key = (String) i.next();
-						File out = new File(path + File.separator + key);
-						out.createNewFile();
-						InputStream is = new ByteArrayInputStream((byte[]) files.get(key));
-						OutputStream os = new BufferedOutputStream(new FileOutputStream(out));
-						copyFile(is, os, true);
-					}
-				} catch (IOException ioe) {
-					LWJGLUtil.log("Exception while extracting: " + ioe.getMessage());
-					return null;
+	private static void writeFiles(final HashMap files, final String path) throws Exception {
+		AccessController.doPrivileged(new PrivilegedExceptionAction() {
+			public Object run() throws IOException {
+				for(Iterator i = files.keySet().iterator(); i.hasNext();) {
+					String key = (String) i.next();
+					File out = new File(path + File.separator + key);
+					out.createNewFile();
+					InputStream is = new ByteArrayInputStream((byte[]) files.get(key));
+					OutputStream os = new BufferedOutputStream(new FileOutputStream(out));
+					copyFile(is, os);
+					is.close();
 				}
 				return null;
 			}
@@ -246,15 +242,12 @@ public class LWJGLInstaller {
 	 * @param os OutputStream to write to
 	 * @throws IOException if the copy process fail in any way
 	 */
-	private static void copyFile(InputStream is, OutputStream os, boolean closeInput) throws IOException {
+	private static void copyFile(InputStream is, OutputStream os) throws IOException {
 		int len;
 		while ((len = is.read(COPY_BUFFER)) > 0) {
 			os.write(COPY_BUFFER, 0, len);
 		}
 		
-		if(closeInput) {
-			is.close();
-		}
 		os.close();
 	}
 
