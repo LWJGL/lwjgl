@@ -70,7 +70,7 @@ final class WindowsKeyboard {
 			throw e;
 		}
 		keyboard.acquire();
-		temp_data_buffer = BufferUtils.createIntBuffer(BUFFER_SIZE*2);
+		temp_data_buffer = BufferUtils.createIntBuffer(BUFFER_SIZE*WindowsDirectInputDevice.DATA_SIZE);
 		keyboard_state = BufferUtils.createByteBuffer(256);
 		unicode_buffer = BufferUtils.createCharBuffer(BUFFER_SIZE);
 	}

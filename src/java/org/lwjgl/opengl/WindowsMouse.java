@@ -100,7 +100,7 @@ final class WindowsMouse {
 		this.mouse_button_count = Math.min(enumerator.getButtonCount(), 4);
 		this.has_wheel = enumerator.hasWheel();
 		mouse_state = BufferUtils.createByteBuffer(3*4 + 4);
-		temp_data_buffer = BufferUtils.createIntBuffer(BUFFER_SIZE*2);
+		temp_data_buffer = BufferUtils.createIntBuffer(BUFFER_SIZE*WindowsDirectInputDevice.DATA_SIZE);
 	}
 
 	public boolean hasWheel() {
