@@ -464,8 +464,9 @@ final class MacOSXDisplay implements DisplayImplementation {
 		private final Method handleQuit;
 
 		public MacOSXApplicationListener() {
+			Method m = null;
 			try {
-				handleQuit = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				m = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
 					public Object run() throws Exception {
 						/* Get the com.apple.eawt.Application class */
 						Class com_apple_eawt_Application = Class.forName("com.apple.eawt.Application");
@@ -483,8 +484,14 @@ final class MacOSXDisplay implements DisplayImplementation {
 					}
 				});
 			} catch (PrivilegedActionException e) {
-				throw new RuntimeException(e);
+				/**
+				 * In an applet environment, referencing com.apple.eawt.Application can fail with
+				 * a native exception. So log any exceptions instead of re-throwing.
+				 */
+				LWJGLUtil.log("Failed to register quit handler: " + e.getCause().getMessage());
+//				throw new RuntimeException(e);
 			}
+			handleQuit = m;
 		}
 
 		public Object invoke(Object proxy, Method method, Object[] args) {
