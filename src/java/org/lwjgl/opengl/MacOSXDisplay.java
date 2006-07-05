@@ -483,12 +483,12 @@ final class MacOSXDisplay implements DisplayImplementation {
 						return com_apple_eawt_ApplicationListener.getMethod("handleQuit", new Class[]{com_apple_eawt_ApplicationEvent});
 					}
 				});
-			} catch (PrivilegedActionException e) {
+			} catch (Throwable e) {
 				/**
 				 * In an applet environment, referencing com.apple.eawt.Application can fail with
 				 * a native exception. So log any exceptions instead of re-throwing.
 				 */
-				LWJGLUtil.log("Failed to register quit handler: " + e.getCause().getMessage());
+				LWJGLUtil.log("Failed to register quit handler: " + e.getMessage());
 //				throw new RuntimeException(e);
 			}
 			handleQuit = m;
