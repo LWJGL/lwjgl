@@ -646,10 +646,10 @@
 		</condition>
 		<antcall target="-compile_native_linux" />
 
-		<condition property="lwjgl.platform.mac">
+		<condition property="lwjgl.platform.macosx">
 			<os name="Mac OS X" />
 		</condition>
-		<antcall target="-compile_native_mac" />
+		<antcall target="-compile_native_macosx" />
 	</target>	
 
 	<target name="compile_native_optional" depends="headers" description="Compiles the native files">
@@ -658,6 +658,10 @@
 			<os name="Linux" />
 		</condition>
 		<antcall target="-compile_native_linux_optional" />
+		<condition property="lwjgl.platform.macosx">
+			<os name="Mac OS X" />
+		</condition>
+		<antcall target="-compile_native_macosx_optional" />
 	</target>	
 	
 	
@@ -706,7 +710,7 @@
 	<!-- Compiles LWJGL on Linux platforms -->
 	<target name="-compile_native_linux" if="lwjgl.platform.linux">
 		<ant antfile="platform_build/linux_ant/build.xml" inheritAll="false"/>
-		<copy file="${lwjgl.bin}/liblwjgl.so" tofile="${lwjgl.lib}/linux/liblwjgl.so" />
+		<copy file="${lwjgl.bin}/liblwjgl.so" todir="${lwjgl.lib}/linux"/>
 	</target>
 
 	<target name="-compile_native_linux_optional" if="lwjgl.platform.linux">
@@ -715,7 +719,6 @@
 		<fail message="Missing JAVA_HOME path environment property" unless="env.JAVA_HOME"/>		
 		<fail message="Missing FMOD path environment property" unless="env.FMOD"/>		
 		
-		<exec executable="make" dir="${lwjgl.src.native}/linux"/>
 		<exec executable="make" dir="${lwjgl.src.native}/common/devil">
 			<arg line="-f Makefile.linux"/>
 		</exec>
@@ -726,22 +729,25 @@
 		<move file="${lwjgl.src.native}/common/fmod3/liblwjgl-fmod3.so" tofile="${lwjgl.lib}/linux/liblwjgl-fmod3.so" />
 	</target>
 
+	<target name="-compile_native_macosx" if="lwjgl.platform.macosx">
+		<ant antfile="platform_build/macosx_ant/build.xml" inheritAll="false"/>
+		<copy file="${lwjgl.bin}/liblwjgl.jnilib" todir="${lwjgl.lib}/macosx"/>
+	</target>
+
 	<!-- Compiles LWJGL on Mac OS X platforms  -->
-	<target name="-compile_native_mac" if="lwjgl.platform.mac">
+	<target name="-compile_native_macosx_optional" if="lwjgl.platform.macosx">
 	
 		<!-- check for required properties -->
 		<property environment="env"/>
 		<fail message="Missing AL path environment property" unless="env.AL"/>		
 		<fail message="Missing FMOD path environment property" unless="env.FMOD"/>			
 	
-    		<exec executable="make" dir="${lwjgl.src.native}/macosx" failonerror="true"/>
 		<exec executable="make" dir="${lwjgl.src.native}/common/devil">
                         <arg line="-f Makefile.macosx"/>
                 </exec>
                 <exec executable="make" dir="${lwjgl.src.native}/common/fmod3">
                         <arg line="-f Makefile.macosx"/>
                 </exec>
-    		<move file="${lwjgl.src.native}/macosx/liblwjgl.jnilib" tofile="${lwjgl.lib}/macosx/liblwjgl.jnilib" />   
 		<move file="${lwjgl.src.native}/common/devil/liblwjgl-devil.jnilib" tofile="${lwjgl.lib}/macosx/liblwjgl-devil.jnilib" />
 		<move file="${lwjgl.src.native}/common/fmod3/liblwjgl-fmod3.jnilib" tofile="${lwjgl.lib}/macosx/liblwjgl-fmod3.jnilib" />
   </target> 	
