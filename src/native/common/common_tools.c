@@ -197,6 +197,13 @@ char * GetStringNativeChars(JNIEnv *env, jstring jstr) {
   return (char*) result;
 }
 
+/* creates locale specific string, unsigned argument to
+ * match GLuchar and ALuchar types
+ */
+jstring NewStringNativeUnsigned(JNIEnv *env, const unsigned char *str) {
+	return NewStringNative(env, (const char *)str);
+}
+
 // creates locale specific string
 jstring NewStringNative(JNIEnv *env, const char *str) { 
   jclass jcls_str;

@@ -155,7 +155,7 @@ static void JNICALL Java_org_lwjgl_openal_AL10_nalGetDoublev(JNIEnv *env, jclass
 
 static jobject JNICALL Java_org_lwjgl_openal_AL10_alGetString(JNIEnv *env, jclass clazz, jint pname) {
 	ALubyte * __result = alGetString(pname);
-	return NewStringNative(env, __result);
+	return NewStringNativeUnsigned(env, __result);
 }
 
 static jint JNICALL Java_org_lwjgl_openal_AL10_alGetError(JNIEnv *env, jclass clazz) {

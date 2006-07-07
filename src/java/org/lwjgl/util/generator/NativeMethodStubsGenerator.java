@@ -141,7 +141,7 @@ public class NativeMethodStubsGenerator {
 				else
 					writer.print("safeNewBuffer(env, ");
 			} else if (String.class.equals(java_result_type))
-				writer.print("NewStringNative(env, ");
+				writer.print("NewStringNativeUnsigned(env, ");
 			writer.print(Utils.RESULT_VAR_NAME);
 			if (Buffer.class.isAssignableFrom(java_result_type)) {
 				writer.print(", ");

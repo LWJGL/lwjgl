@@ -17,7 +17,7 @@ public final class EXTTimerQuery {
 	}
 
 
-	public static void glGetQueryObjecti64EXT(int id, int pname, LongBuffer params) {
+	public static void glGetQueryObjectEXT(int id, int pname, LongBuffer params) {
 		long function_pointer = GLContext.getCapabilities().EXT_timer_query_glGetQueryObjecti64vEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(params, 1);
@@ -25,7 +25,7 @@ public final class EXTTimerQuery {
 	}
 	private static native void nglGetQueryObjecti64vEXT(int id, int pname, LongBuffer params, int params_position, long function_pointer);
 
-	public static void glGetQueryObjectui64EXT(int id, int pname, LongBuffer params) {
+	public static void glGetQueryObjectuEXT(int id, int pname, LongBuffer params) {
 		long function_pointer = GLContext.getCapabilities().EXT_timer_query_glGetQueryObjectui64vEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(params, 1);
