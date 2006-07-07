@@ -747,19 +747,19 @@
   </target> 	
 	 
 	<!-- Creates a build of LWJGL directly from CVS -->
-	<target name="cvsbuild" description="Builds lwjgl from cvs">
+	<!--	<target name="cvsbuild" description="Builds lwjgl from cvs">-->
 		<!-- Check that files do not exist BEFORE doing the CVS build -->
-		<available file="LWJGL/build.xml" property="lwjgl.preexistingfiles" />
+		<!--		<available file="LWJGL/build.xml" property="lwjgl.preexistingfiles" />
 		<available file="${lwjgl.src}/java/org/lwjgl/Sys.java" property="lwjgl.preexistingfiles" />
-		<fail if="lwjgl.preexistingfiles" message="Cannot perform webbuild from nonempty folder" />
+		<fail if="lwjgl.preexistingfiles" message="Cannot perform webbuild from nonempty folder" />-->
 
 		<!-- checkout files and build using checked out buildfiles 'all' target -->
-		<cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/build.xml" dest="." />
+		<!--		<cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/build.xml" dest="." />
 		<cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/src" dest="." />
 		<cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/doc" dest="." />
 		<ant dir="LWJGL" target="compile_native_all" />
 		<ant dir="LWJGL" target="release" />
-	</target>	 
+	</target>	 -->
 	
 	<!-- -->
 	<target name="sign" description="Using released files, creates the necessary files used for jnlp demos">
