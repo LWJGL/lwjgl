@@ -167,30 +167,33 @@ static bool isLegacyFullscreen(jint window_mode) {
 	return window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_LEGACY;
 }
 
-static void handleMessages(JNIEnv *env, jclass disp_class) {
+static void handleMessages(JNIEnv *env, jobject disp_obj) {
 	XEvent event;
-	jmethodID handleKeyEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleKeyEvent", "(JJIII)V");
+	jclass disp_class = (*env)->GetObjectClass(env, disp_obj);
+	if (disp_class == NULL)
+		return;
+	jmethodID handleKeyEvent_method = (*env)->GetMethodID(env, disp_class, "handleKeyEvent", "(JJIII)V");
 	if (handleKeyEvent_method == NULL)
 		return;
-	jmethodID handleButtonEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleButtonEvent", "(JIII)V");
+	jmethodID handleButtonEvent_method = (*env)->GetMethodID(env, disp_class, "handleButtonEvent", "(JIII)V");
 	if (handleButtonEvent_method == NULL)
 		return;
-	jmethodID handlePointerMotionEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handlePointerMotionEvent", "(JJIIIII)V");
+	jmethodID handlePointerMotionEvent_method = (*env)->GetMethodID(env, disp_class, "handlePointerMotionEvent", "(JJIIIII)V");
 	if (handlePointerMotionEvent_method == NULL)
 		return;
-	jmethodID handleWarpEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleWarpEvent", "(II)V");
+	jmethodID handleWarpEvent_method = (*env)->GetMethodID(env, disp_class, "handleWarpEvent", "(II)V");
 	if (handleWarpEvent_method == NULL)
 		return;
-	jmethodID handleMapNotifyEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleMapNotifyEvent", "()V");
+	jmethodID handleMapNotifyEvent_method = (*env)->GetMethodID(env, disp_class, "handleMapNotifyEvent", "()V");
 	if (handleMapNotifyEvent_method == NULL)
 		return;
-	jmethodID handleUnmapNotifyEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleUnmapNotifyEvent", "()V");
+	jmethodID handleUnmapNotifyEvent_method = (*env)->GetMethodID(env, disp_class, "handleUnmapNotifyEvent", "()V");
 	if (handleUnmapNotifyEvent_method == NULL)
 		return;
-	jmethodID handleExposeEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleExposeEvent", "()V");
+	jmethodID handleExposeEvent_method = (*env)->GetMethodID(env, disp_class, "handleExposeEvent", "()V");
 	if (handleExposeEvent_method == NULL)
 		return;
-	jmethodID handleCloseEvent_method = (*env)->GetStaticMethodID(env, disp_class, "handleCloseEvent", "()V");
+	jmethodID handleCloseEvent_method = (*env)->GetMethodID(env, disp_class, "handleCloseEvent", "()V");
 	if (handleCloseEvent_method == NULL)
 		return;
 	while (!(*env)->ExceptionOccurred(env) && XPending(getDisplay()) > 0) {
@@ -203,29 +206,29 @@ static void handleMessages(JNIEnv *env, jclass disp_class) {
 		switch (event.type) {
 			case ClientMessage:
 				if (event.xclient.message_type == warp_atom) {
-					(*env)->CallStaticVoidMethod(env, disp_class, handleWarpEvent_method, (jint)event.xclient.data.l[0], (jint)event.xclient.data.l[1]);
+					(*env)->CallVoidMethod(env, disp_obj, handleWarpEvent_method, (jint)event.xclient.data.l[0], (jint)event.xclient.data.l[1]);
 				} else if ((event.xclient.format == 32) && ((Atom)event.xclient.data.l[0] == delete_atom))
-					(*env)->CallStaticVoidMethod(env, disp_class, handleCloseEvent_method);
+					(*env)->CallVoidMethod(env, disp_obj, handleCloseEvent_method);
 				break;
 			case MapNotify:
-				(*env)->CallStaticVoidMethod(env, disp_class, handleMapNotifyEvent_method);
+				(*env)->CallVoidMethod(env, disp_obj, handleMapNotifyEvent_method);
 				break;
 			case UnmapNotify:
-				(*env)->CallStaticVoidMethod(env, disp_class, handleUnmapNotifyEvent_method);
+				(*env)->CallVoidMethod(env, disp_obj, handleUnmapNotifyEvent_method);
 				break;
 			case Expose:
-				(*env)->CallStaticVoidMethod(env, disp_class, handleExposeEvent_method);
+				(*env)->CallVoidMethod(env, disp_obj, handleExposeEvent_method);
 				break;
 			case ButtonPress: /* Fall through */
 			case ButtonRelease:
-				(*env)->CallStaticVoidMethod(env, disp_class, handleButtonEvent_method, (jlong)event.xbutton.time, (jint)event.xbutton.type, (jint)event.xbutton.button, (jint)event.xbutton.state);
+				(*env)->CallVoidMethod(env, disp_obj, handleButtonEvent_method, (jlong)event.xbutton.time, (jint)event.xbutton.type, (jint)event.xbutton.button, (jint)event.xbutton.state);
 				break;
 			case MotionNotify:
-				(*env)->CallStaticVoidMethod(env, disp_class, handlePointerMotionEvent_method, (jlong)event.xbutton.time, (jlong)event.xbutton.root, (jint)event.xbutton.x_root, (jint)event.xbutton.y_root, (jint)event.xbutton.x, (jint)event.xbutton.y, (jint)event.xbutton.state);
+				(*env)->CallVoidMethod(env, disp_obj, handlePointerMotionEvent_method, (jlong)event.xbutton.time, (jlong)event.xbutton.root, (jint)event.xbutton.x_root, (jint)event.xbutton.y_root, (jint)event.xbutton.x, (jint)event.xbutton.y, (jint)event.xbutton.state);
 				break;
 			case KeyPress:
 			case KeyRelease:
-				(*env)->CallStaticVoidMethod(env, disp_class, handleKeyEvent_method, (jlong)(intptr_t)&(event.xkey), (jlong)event.xkey.time, (jint)event.xkey.type, (jint)event.xkey.keycode, (jint)event.xkey.state);
+				(*env)->CallVoidMethod(env, disp_obj, handleKeyEvent_method, (jlong)(intptr_t)&(event.xkey), (jlong)event.xkey.time, (jint)event.xkey.type, (jint)event.xkey.keycode, (jint)event.xkey.state);
 				break;
 		}
 	}
@@ -378,9 +381,8 @@ Window getCurrentWindow(void) {
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUpdate
-  (JNIEnv *env, jclass clazz, jint extension, jint window_mode, jobject saved_gamma, jobject current_gamma, jobject saved_mode, jobject current_mode)
-{
-	handleMessages(env, clazz);
+  (JNIEnv *env, jobject disp_obj) {
+	handleMessages(env, disp_obj);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject mode, jint window_mode, jint x, jint y) {

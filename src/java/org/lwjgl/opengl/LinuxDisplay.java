@@ -67,9 +67,6 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static final int XF86VIDMODE = 11;
 	private static final int NONE = 12;
 	
-	/** Current mode swithcing API */
-	private static int current_displaymode_extension = NONE;
-
 	/** Keep track on the current awt lock owner to avoid
 	 * depending on JAWT locking to be re-entrant (This is a
 	 * problem with GCJ). JAWT locking is not that well specified
@@ -81,29 +78,32 @@ final class LinuxDisplay implements DisplayImplementation {
 	
 	private static int display_connection_usage_count = 0;
 
-	private static PeerInfo peer_info;
+	/** Current mode swithcing API */
+	private int current_displaymode_extension = NONE;
+
+	private PeerInfo peer_info;
 
 	/** Saved gamma used to restore display settings */
-	private static ByteBuffer saved_gamma;
-	private static ByteBuffer current_gamma;
+	private ByteBuffer saved_gamma;
+	private ByteBuffer current_gamma;
 
 	/** Saved mode to restore with */
-	private static DisplayMode saved_mode;
-	private static DisplayMode current_mode;
+	private DisplayMode saved_mode;
+	private DisplayMode current_mode;
 
-	private static boolean keyboard_grabbed;
-	private static boolean pointer_grabbed;
-	private static boolean input_released;
-	private static boolean grab;
-	private static boolean focused;
-	private static boolean minimized;
-	private static boolean dirty;
-	private static boolean close_requested;
-	private static ByteBuffer current_cursor;
-	private static ByteBuffer blank_cursor;
+	private boolean keyboard_grabbed;
+	private boolean pointer_grabbed;
+	private boolean input_released;
+	private boolean grab;
+	private boolean focused;
+	private boolean minimized;
+	private boolean dirty;
+	private boolean close_requested;
+	private ByteBuffer current_cursor;
+	private ByteBuffer blank_cursor;
 
-	private static LinuxKeyboard keyboard;
-	private static LinuxMouse mouse;
+	private LinuxKeyboard keyboard;
+	private LinuxMouse mouse;
 
 	private static ByteBuffer getCurrentGammaRamp() throws LWJGLException {
 		lockAWT();
@@ -263,7 +263,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native void openDisplay() throws LWJGLException;
 	private static native void closeDisplay();
 
-	private static int getWindowMode(boolean fullscreen) throws LWJGLException {
+	private int getWindowMode(boolean fullscreen) throws LWJGLException {
 		if (fullscreen) {
 			if (current_displaymode_extension == XRANDR && isNetWMFullscreenSupported()) {
 				LWJGLUtil.log("Using NetWM for fullscreen window");
@@ -280,7 +280,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native int getScreen();
 	private static native long getWindow();
 
-	private static void ungrabKeyboard() {
+	private void ungrabKeyboard() {
 		if (keyboard_grabbed) {
 			nUngrabKeyboard(getDisplay());
 			keyboard_grabbed = false;
@@ -288,7 +288,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native int nUngrabKeyboard(long display);
 	
-	private static void grabKeyboard() {
+	private void grabKeyboard() {
 		if (!keyboard_grabbed) {
 			int res = nGrabKeyboard(getDisplay(), getWindow());
 			if (res == GrabSuccess)
@@ -297,7 +297,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native int nGrabKeyboard(long display, long window);
 	
-	private static void grabPointer() {
+	private void grabPointer() {
 		if (!pointer_grabbed) {
 			int result = nGrabPointer(getDisplay(), getWindow());
 			if (result == GrabSuccess) {
@@ -312,7 +312,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native int nGrabPointer(long display, long window);
 	private static native void nSetViewPort(long display, long window, int screen);
 
-	private static void ungrabPointer() {
+	private void ungrabPointer() {
 		if (pointer_grabbed) {
 			pointer_grabbed = false;
 			nUngrabPointer(getDisplay());
@@ -320,15 +320,15 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native int nUngrabPointer(long display);
 
-	private static boolean isFullscreen() {
+	private boolean isFullscreen() {
 		return current_window_mode == FULLSCREEN_LEGACY || current_window_mode == FULLSCREEN_NETWM;
 	}
 
-	private static boolean shouldGrab() {
+	private boolean shouldGrab() {
 		return !input_released && grab;
 	}
 
-	private static void updatePointerGrab() {
+	private void updatePointerGrab() {
 		if (isFullscreen() || shouldGrab()) {
 			grabPointer();
 		} else {
@@ -337,7 +337,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		updateCursor();
 	}
 	
-	private static void updateCursor() {
+	private void updateCursor() {
 		ByteBuffer cursor;
 		if (shouldGrab()) {
 			cursor = blank_cursor;
@@ -348,11 +348,11 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native void nDefineCursor(long display, long window, ByteBuffer cursor_handle);
 	
-	private static boolean isLegacyFullscreen() {
+	private boolean isLegacyFullscreen() {
 		return current_window_mode == FULLSCREEN_LEGACY;
 	}
 
-	private static void updateKeyboardGrab() {
+	private void updateKeyboardGrab() {
 		if (isLegacyFullscreen())
 			grabKeyboard();
 		else
@@ -393,7 +393,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native void nCreateWindow(ByteBuffer peer_info_handle, DisplayMode mode, int window_mode, int x, int y) throws LWJGLException;
 
-	private static void updateInputGrab() {
+	private void updateInputGrab() {
 		updatePointerGrab();
 		updateKeyboardGrab();
 	}
@@ -473,7 +473,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		doSetGamma(convertToNativeRamp(gammaRamp));
 	}
 
-	private static void doSetGamma(ByteBuffer native_gamma) throws LWJGLException {
+	private void doSetGamma(ByteBuffer native_gamma) throws LWJGLException {
 		lockAWT();
 		try {
 			nSetGammaRamp(getScreen(), native_gamma);
@@ -580,7 +580,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void update() {
 		lockAWT();
 		try {
-			nUpdate(current_displaymode_extension, current_window_mode, saved_gamma, current_gamma, saved_mode, current_mode);
+			nUpdate();
 			checkInput();
 		} catch (LWJGLException e) {
 			LWJGLUtil.log("Caught exception while processing messages: " + e);
@@ -588,7 +588,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	private static native void nUpdate(int extension, int current_window_mode, ByteBuffer saved_gamma, ByteBuffer current_gamma, DisplayMode saved_mode, DisplayMode current_mode) throws LWJGLException;
+	private native void nUpdate() throws LWJGLException;
 
 	public void reshape(int x, int y, int width, int height) {
 		lockAWT();
@@ -667,7 +667,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 	
-	private static void checkInput() {
+	private void checkInput() {
 		focused = nGetInputFocus(getDisplay()) == getWindow();
 		if (focused) {
 			acquireInput();
@@ -677,7 +677,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native long nGetInputFocus(long display);
 
-	private static void releaseInput() {
+	private void releaseInput() {
 		if (isLegacyFullscreen() || input_released)
 			return;
 		input_released = true;
@@ -695,7 +695,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native void nIconifyWindow(long display, long window, int screen);
 
-	private static void acquireInput() {
+	private void acquireInput() {
 		if (isLegacyFullscreen() || !input_released)
 			return;
 		input_released = false;
@@ -970,41 +970,41 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native void nSetWindowIcon(ByteBuffer icon, int icons_size, int width, int height);
 
 	/* Callbacks from nUpdate() */
-	private static void handleButtonEvent(long millis, int type, int button, int state) {
+	private void handleButtonEvent(long millis, int type, int button, int state) {
 		if (mouse != null)
 			mouse.handleButtonEvent(grab, millis, type, (byte)button);
 	}
 
-	private static void handleKeyEvent(long event_ptr, long millis, int type, int keycode, int state) {
+	private void handleKeyEvent(long event_ptr, long millis, int type, int keycode, int state) {
 		if (keyboard != null)
 			keyboard.handleKeyEvent(event_ptr, millis, type, keycode, state);
 	}
 
-	private static void handlePointerMotionEvent(long millis, long root_window, int x_root, int y_root, int x, int y, int state) {
+	private void handlePointerMotionEvent(long millis, long root_window, int x_root, int y_root, int x, int y, int state) {
 		if (mouse != null)
 			mouse.handlePointerMotion(grab, pointer_grabbed, shouldGrab(), millis, root_window, x_root, y_root, x, y);
 	}
 
-	private static void handleWarpEvent(int x, int y) {
+	private void handleWarpEvent(int x, int y) {
 		if (mouse != null)
 			mouse.handleWarpEvent(x, y);
 	}
 
-	private static void handleExposeEvent() {
+	private void handleExposeEvent() {
 		dirty = true;
 	}
 
-	private static void handleUnmapNotifyEvent() {
+	private void handleUnmapNotifyEvent() {
 		dirty = true;
 		minimized = true;
 	}
 
-	private static void handleMapNotifyEvent() {
+	private void handleMapNotifyEvent() {
 		dirty = true;
 		minimized = false;
 	}
 
-	private static void handleCloseEvent() {
+	private void handleCloseEvent() {
 		close_requested = true;
 	}
 }
