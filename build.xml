@@ -654,6 +654,11 @@
 
 	<target name="compile_native_optional" depends="headers" description="Compiles the native files">
 		<!-- check each platform, and run their build target -->
+		<condition property="lwjgl.platform.windows">
+			<os family="windows" />
+		</condition>
+		<antcall target="-compile_native_win32_optional" />
+
 		<condition property="lwjgl.platform.linux">
 			<os name="Linux" />
 		</condition>
@@ -670,15 +675,20 @@
 		<echo>Compiling Win32 LWJGL version</echo>
 		
 		<!-- check for required properties -->
-		<property environment="env"/>
+		<!--		<property environment="env"/>
 		<fail message="Missing PLTSDKHOME path environment property" unless="env.PLTSDKHOME"/>
 		<fail message="Missing ALHOME path environment property" unless="env.ALHOME"/>
 		<fail message="Missing JAVA_HOME path environment property" unless="env.JAVA_HOME"/>
 		<fail message="Missing CHOME path environment property" unless="env.CHOME"/>
 		<fail message="Missing DXHOME path environment property" unless="env.DXHOME"/>
-		<fail message="Missing FMODHOME path environment property" unless="env.FMODHOME"/>
 		
-		<antcall target="-compile_native_win32_main" />
+		<antcall target="-compile_native_win32_main" />-->
+		<ant antfile="platform_build/windows_ant/build.xml" inheritAll="false"/>
+		<copy file="${lwjgl.bin}/lwjgl.dll" todir="${lwjgl.lib}/win32"/>
+	</target>
+
+	<target name="-compile_native_win32_optional" if="lwjgl.platform.windows">
+		<fail message="Missing FMODHOME path environment property" unless="env.FMODHOME"/>
 		<antcall target="-compile_native_win32_fmod" />
 		<antcall target="-compile_native_win32_devil" />
 	</target>	

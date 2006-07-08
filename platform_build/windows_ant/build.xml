@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<project name="lwjgl native code, native code" basedir="../../bin" default="compile">
+	<property name="native" location="../src/native"/>
+
+	<target name="compile_dir">
+		<apply dir="." failonerror="true" executable="cl" dest="." skipemptyfilesets="true">
+			<arg line="/Ox /Wp64 /W2 /nologo /Ox /Ob2 /Oi /Ot /Oy /FD /EHsc /MT /Gy /W2 /nologo /c /D WIN32 /c"/>
+			<arg value="/I${toolkithome}\include"/>
+			<arg value="/I${sdkhome}\include"/>
+			<arg value="/I${dxhome}\include"/>
+			<arg value="/I${alhome}\include"/>
+			<arg value="/I${java.home}\..\include"/>
+			<arg value="/I${java.home}\..\include\win32"/>
+			<arg value="/I${native}/common"/>
+			<arg value="/I${native}/win32"/>
+			<srcfile/>
+			<fileset dir="${native}/win32" includes="*.c"/>
+			<fileset dir="${native}/common" includes="*.c"/>
+			<fileset dir="${native}/generated" includes="*.c"/>
+			<mapper type="glob" from="*.c" to="*.obj"/>
+		</apply>
+	</target>
+
+	<target name="link">
+		<apply dir="." parallel="true" executable="cl" failonerror="true">
+			<arg line="/LD /nologo"/>
+			<srcfile/>
+			<arg line="/Fe${dllname} /link"/>
+			<arg value="/LIBPATH:${java.home}\..\lib"/>
+			<arg value="/LIBPATH:${dxhome}\lib\x86"/>
+			<arg value="/LIBPATH:${sdkhome}\lib"/>
+			<arg value="/LIBPATH:${alhome}\libs"/>
+			<arg value="/LIBPATH:${toolkithome}\lib"/>
+			<arg value="/OPT:REF"/>
+			<arg value="/OPT:ICF"/>
+			<arg line="/DLL /DELAYLOAD:jawt.dll ${libs}"/>
+			<fileset dir="." includes="*.obj"/>
+		</apply>
+	</target>
+
+	<target name="clean">
+		<delete>
+			<fileset dir="." includes="*.obj"/>
+			<fileset dir="." includes="*.dll"/>
+		</delete>
+	</target>
+
+	<target name="compile">
+		<property name="program_files" location="c:\Program Files"/>
+		<property name="dxhome" location="${program_files}\Microsoft DirectX SDK (February 2006)"/>
+		<property name="toolkithome" location="${program_files}\Microsoft Visual C++ Toolkit 2003"/>
+		<property name="sdkhome" location="${program_files}\Microsoft Platform SDK"/>
+		<property name="alhome" location="${program_files}\OpenAL 1.0 Software Development Kit"/>
+		<property name="dllname" value="lwjgl.dll"/>
+		<property name="libs" value="Kernel32.lib ole32.lib dinput.lib dxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib jawt.lib delayimp.lib winmm.lib"/>
+		<antcall target="compile_dir"/>
+		<antcall target="link"/>
+    </target>
+</project>
+
