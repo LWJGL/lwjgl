@@ -230,10 +230,14 @@ public class DisplayTest {
    * @param time milliseconds to sleep
    */
   private void pause(long time) {
-    try {
-      Thread.sleep(time);
-    } catch (InterruptedException inte) {
-    }
+	  int SLEEP_DELAY = 100;
+	  for (int i = 0; i < time; i += SLEEP_DELAY) {
+		  try {
+			  Display.processMessages();
+			  Thread.sleep(SLEEP_DELAY);
+		  } catch (InterruptedException inte) {
+		  }
+	  }
   }  
   
   /**

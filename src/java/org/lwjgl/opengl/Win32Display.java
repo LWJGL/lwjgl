@@ -87,30 +87,145 @@ final class Win32Display implements DisplayImplementation {
 
 	private final static int SM_CXCURSOR      = 13;
 
-	private static Win32DisplayPeerInfo peer_info;
+	private final static int SIZE_RESTORED        = 0;
+	private final static int SIZE_MINIMIZED       = 1;
+	private final static int SIZE_MAXIMIZED       = 2;
+	private final static int WM_SIZE          = 0x0005;
+	private final static int WM_ACTIVATE          = 0x0006;
+	private final static int     WA_INACTIVE      = 0;
+	private final static int     WA_ACTIVE        = 1;
+	private final static int     WA_CLICKACTIVE   = 2;
+	private final static int SW_SHOWMINNOACTIVE   = 7;
+	private final static int SW_RESTORE           = 9;
 
-	private static WindowsKeyboard keyboard;
-	private static WindowsMouse mouse;
+	private static Win32Display current_display;
 
-	private static boolean close_requested;
-	private static boolean is_dirty;
+	private Win32DisplayPeerInfo peer_info;
+
+	private WindowsKeyboard keyboard;
+	private WindowsMouse mouse;
+
+	private boolean close_requested;
+	private boolean is_dirty;
+
+	private ByteBuffer current_gamma;
+	private ByteBuffer saved_gamma;
+	private DisplayMode current_mode;
+
+	private boolean mode_set;
+	private boolean isFullscreen;
+	private boolean isMinimized;
+	private boolean isFocused;
+	private boolean did_maximize;
+	private boolean inAppActivate;
+
+	public Win32Display() {
+		current_display = this;
+	}
 
 	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
 		close_requested = false;
 		is_dirty = false;
+		isFullscreen = fullscreen;
+		isMinimized = false;
+		isFocused = false;
+		did_maximize = false;
 		nCreateWindow(mode, fullscreen, x, y);
 		peer_info.initDC();
 	}
 	private native void nCreateWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException;
-	public native void destroyWindow();
-	public native void switchDisplayMode(DisplayMode mode) throws LWJGLException;
-	public native void resetDisplayMode();
+
+	public void destroyWindow() {
+		nDestroyWindow();
+		if (isFullscreen)
+			resetCursorClipping();
+	}
+	private static native void nDestroyWindow();
+	private static native void resetCursorClipping();
+	private static native void setupCursorClipping(long hwnd) throws LWJGLException;
+
+	public void switchDisplayMode(DisplayMode mode) throws LWJGLException {
+		nSwitchDisplayMode(mode);
+		current_mode = mode;
+		mode_set = true;
+	}
+	private static native void nSwitchDisplayMode(DisplayMode mode) throws LWJGLException;
+
+	/*
+	 * Called when the application is alt-tabbed to or from
+	 */
+	private void appActivate(boolean active) {
+		if (inAppActivate) {
+			return;
+		}
+		inAppActivate = true;
+		isFocused = active;
+		if (active) {
+			if (isFullscreen) {
+				restoreDisplayMode();
+			}
+			showWindow(getHwnd(), SW_RESTORE);
+			setForegroundWindow(getHwnd());
+			setFocus(getHwnd());
+			did_maximize = true;
+		} else if (isFullscreen) {
+			showWindow(getHwnd(), SW_SHOWMINNOACTIVE);
+			resetDisplayMode();
+		}
+		inAppActivate = false;
+	}
+	private static native void showWindow(long hwnd, int mode);
+	private static native void setForegroundWindow(long hwnd);
+	private static native void setFocus(long hwnd);
+
+	private void restoreDisplayMode() {
+		try {
+			doSetGammaRamp(current_gamma);
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Failed to restore gamma: " + e.getMessage());
+		}
+
+		if (!mode_set) {
+			mode_set = true;
+			try {
+				nSwitchDisplayMode(current_mode);
+			} catch (LWJGLException e) {
+				LWJGLUtil.log("Failed to restore display mode: " + e.getMessage());
+			}
+		}
+	}
+
+	public void resetDisplayMode() {
+		try {
+			doSetGammaRamp(saved_gamma);
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Failed to reset gamma ramp: " + e.getMessage());
+		}
+		current_gamma = saved_gamma;
+		if (mode_set) {
+			mode_set = false;
+			nResetDisplayMode();
+		}
+		resetCursorClipping();
+	}
+	private static native void nResetDisplayMode();
 
 	public int getGammaRampLength() {
 		return GAMMA_LENGTH;
 	}
 
-	public native void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLException;
+	public void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLException {
+		doSetGammaRamp(convertToNativeRamp(gammaRamp));
+	}
+	private static native ByteBuffer convertToNativeRamp(FloatBuffer gamma_ramp) throws LWJGLException;
+	private static native ByteBuffer getCurrentGammaRamp() throws LWJGLException;
+
+	private void doSetGammaRamp(ByteBuffer native_gamma) throws LWJGLException {
+		nSetGammaRamp(native_gamma);
+		current_gamma = native_gamma;
+	}
+	private static native void nSetGammaRamp(ByteBuffer native_ramp) throws LWJGLException;
+
 	public String getAdapter() {
 		try {
 			String adapter_string = Win32Registry.queryRegistrationKey(
@@ -139,7 +254,13 @@ final class Win32Display implements DisplayImplementation {
 			return null;
 	}
 	private native String nGetVersion(String driver);
-	public native DisplayMode init() throws LWJGLException;
+
+	public DisplayMode init() throws LWJGLException {
+		current_gamma = saved_gamma = getCurrentGammaRamp();
+		return current_mode = getCurrentDisplayMode();
+	}
+	private static native DisplayMode getCurrentDisplayMode() throws LWJGLException;
+
 	public native void setTitle(String title);
 
 	public boolean isCloseRequested() {
@@ -148,8 +269,13 @@ final class Win32Display implements DisplayImplementation {
 		return saved;
 	}
 
-	public native boolean isVisible();
-	public native boolean isActive();
+	public boolean isVisible() {
+		return !isMinimized;
+	}
+
+	public boolean isActive() {
+		return isFocused;
+	}
 
 	public boolean isDirty() {
 		boolean saved = is_dirty;
@@ -163,7 +289,8 @@ final class Win32Display implements DisplayImplementation {
 	}
 	public void update() {
 		nUpdate();
-		if (didMaximize()) {
+		if (did_maximize) {
+			did_maximize = false;
 			/**
 			 * WORKAROUND:
 			 * Making the context current (redundantly) when the window
@@ -177,10 +304,13 @@ final class Win32Display implements DisplayImplementation {
 			}
 		}
 	}
-	private native void nUpdate();
-	private native boolean didMaximize();
+	private static native void nUpdate();
 
-	public native void reshape(int x, int y, int width, int height);
+	public void reshape(int x, int y, int width, int height) {
+		if (!isFullscreen)
+			nReshape(getHwnd(), x, y, width, height);
+	}
+	private static native void nReshape(long hwnd, int x, int y, int width, int height);
 	public native DisplayMode[] getAvailableDisplayModes() throws LWJGLException;
 
 	/* Mouse */
@@ -219,7 +349,10 @@ final class Win32Display implements DisplayImplementation {
 		return Cursor.CURSOR_ONE_BIT_TRANSPARENCY;
 	}
 
-	public native void setCursorPosition(int x, int y);
+	public void setCursorPosition(int x, int y) {
+		nSetCursorPosition(x, y, isFullscreen);
+	}
+	private static native void nSetCursorPosition(int x, int y, boolean fullscreen);
 
 	public native void setNativeCursor(Object handle) throws LWJGLException;
 
@@ -338,17 +471,17 @@ final class Win32Display implements DisplayImplementation {
 	
 	private static native int nSetWindowIcon32(IntBuffer icon);
 
-	private static void handleMouseButton(int button, int state, long millis) {
+	private void handleMouseButton(int button, int state, long millis) {
 		if (mouse != null)
 			mouse.handleMouseButton((byte)button, (byte)state, millis);
 	}
 
-	private static void handleMouseMoved(int x, int y, long millis) {
+	private void handleMouseMoved(int x, int y, long millis) {
 		if (mouse != null)
 			mouse.handleMouseMoved(x, y, millis);
 	}
 
-	private static void handleMouseScrolled(int amount, long millis) {
+	private void handleMouseScrolled(int amount, long millis) {
 		if (mouse != null)
 			mouse.handleMouseScrolled(amount, millis);
 	}
@@ -356,7 +489,44 @@ final class Win32Display implements DisplayImplementation {
 	private static native int transformY(long hwnd, int y);
 
 	private static boolean handleMessage(long hwnd, int msg, long wParam, long lParam, long millis) {
+		if (current_display != null)
+			return current_display.doHandleMessage(hwnd, msg, wParam, lParam, millis);
+		else
+			return false;
+	}
+
+	private boolean doHandleMessage(long hwnd, int msg, long wParam, long lParam, long millis) {
+		if (isFullscreen && !isMinimized && isFocused) {
+			try {
+				setupCursorClipping(getHwnd());
+			} catch (LWJGLException e) {
+				LWJGLUtil.log("setupCursorClipping failed: " + e.getMessage());
+			}
+		}
 		switch (msg) {
+			// disable screen saver and monitor power down messages which wreak havoc
+			case WM_ACTIVATE:
+				switch ((int)wParam) {
+					case WA_ACTIVE:
+					case WA_CLICKACTIVE:
+						appActivate(true);
+						break;
+					case WA_INACTIVE:
+						appActivate(false);
+						break;
+				}
+				return true;
+			case WM_SIZE:
+				switch ((int)wParam) {
+					case SIZE_RESTORED:
+					case SIZE_MAXIMIZED:
+						isMinimized = false;
+						break;
+					case SIZE_MINIMIZED:
+						isMinimized = true;
+						break;
+				}
+				return false;
 			case WM_MOUSEMOVE:
 				int xPos = (int)(short)(lParam & 0xFFFF);
 				int yPos = transformY(getHwnd(), (int)(short)((lParam >> 16) & 0xFFFF));

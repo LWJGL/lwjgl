@@ -56,9 +56,7 @@
 		#define WINDOW_H_API extern
 	#endif /* _PRIVATE_WINDOW_H_ */
 
-	WINDOW_H_API HWND getCurrentHWND();
-	
 	WINDOW_H_API HDC getCurrentHDC();
 
-	WINDOW_H_API bool getCurrentFullscreen();
+	WINDOW_H_API HWND getCurrentHWND();
 #endif /* _LWJGL_WINDOW_H_INCLUDED_ */

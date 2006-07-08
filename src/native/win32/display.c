@@ -42,17 +42,12 @@
 #include <windows.h>
 // Multimon.h enables multi monitor emulation on win95 and winnt4
 // So we only need the extended, multi-monitor aware path
-#define COMPILE_MULTIMON_STUBS
-#include <Multimon.h>
+//#define COMPILE_MULTIMON_STUBS
+//#include <Multimon.h>
 #include <jni.h>
 #include "org_lwjgl_opengl_Win32Display.h"
 #include "display.h"
 #include "common_tools.h"
-
-static bool modeSet = false; // Whether we've done a display mode change
-static WORD originalGamma[3*org_lwjgl_opengl_Win32Display_GAMMA_LENGTH]; // Original gamma settings
-static WORD currentGamma[3*org_lwjgl_opengl_Win32Display_GAMMA_LENGTH]; // Current gamma settings
-static DEVMODE devmode; // Now we'll remember this value for the future
 
 static jobject createDisplayMode(JNIEnv *env, DEVMODE *devmode) {
 	jclass displayModeClass;
@@ -127,8 +122,9 @@ jobjectArray getAvailableDisplayModes(JNIEnv * env) {
 	return ret;
 }
 
-void switchDisplayMode(JNIEnv * env, jobject mode)
-{
+void switchDisplayMode(JNIEnv * env, jobject mode) {
+	DEVMODE devmode;
+
 	jclass cls_displayMode = (*env)->GetObjectClass(env, mode);
 	jfieldID fid_width = (*env)->GetFieldID(env, cls_displayMode, "width", "I");
 	jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
@@ -165,99 +161,85 @@ void switchDisplayMode(JNIEnv * env, jobject mode)
 			return;
 //		}
 	}
-	modeSet = true;
 }
 
-void setGammaRamp(JNIEnv * env, jobject gammaRampBuffer)
-{
-	int i;
-	float scaledRampEntry;
-	WORD rampEntry;
-	HDC screenDC;
-	const float *gammaRamp = (const float *)(*env)->GetDirectBufferAddress(env, gammaRampBuffer);
-	// Turn array of floats into array of RGB WORDs
+static jobject createNativeGammaBuffer(JNIEnv *env) {
+	return newJavaManagedByteBuffer(env, sizeof(WORD)*3*org_lwjgl_opengl_Win32Display_GAMMA_LENGTH);
+}
 
-	for (i = 0; i < org_lwjgl_opengl_Win32Display_GAMMA_LENGTH; i ++) {
-		scaledRampEntry = gammaRamp[i]*0xffff;
-		rampEntry = (WORD)scaledRampEntry;
-		currentGamma[i] = rampEntry;
-		currentGamma[i + org_lwjgl_opengl_Win32Display_GAMMA_LENGTH] = rampEntry;
-		currentGamma[i + 2*org_lwjgl_opengl_Win32Display_GAMMA_LENGTH] = rampEntry;
-	}
+jobject getCurrentGammaRamp(JNIEnv *env) {
+	jobject gamma_buffer;
+	WORD *gamma;
+	HDC screenDC;
+
+	gamma_buffer = createNativeGammaBuffer(env);
+	if (gamma_buffer == NULL)
+		return NULL;
+	gamma = (WORD *)(*env)->GetDirectBufferAddress(env, gamma_buffer);
+
+	// Get the screen
 	screenDC = GetDC(NULL);
-	if (SetDeviceGammaRamp(screenDC, currentGamma) == FALSE) {
+	if (screenDC == NULL) {
+		throwException(env, "Couldn't get screen DC!");
+		return NULL;
+	}
+	// Get the default gamma ramp
+	if (GetDeviceGammaRamp(screenDC, gamma) == FALSE) {
+		printfDebugJava(env, "Failed to get initial device gamma");
+	}
+	ReleaseDC(NULL, screenDC);
+	return gamma_buffer;
+}
+
+void setGammaRamp(JNIEnv * env, jobject gammaRampBuffer) {
+	HDC screenDC;
+	WORD *gammaRamp = (WORD *)(*env)->GetDirectBufferAddress(env, gammaRampBuffer);
+
+	screenDC = GetDC(NULL);
+	if (SetDeviceGammaRamp(screenDC, gammaRamp) == FALSE) {
 		throwException(env, "Failed to set device gamma.");
 	}
 	ReleaseDC(NULL, screenDC);
 }
 
+jobject convertToNativeRamp(JNIEnv *env, jobject float_gamma_obj) {
+	int i;
+	float scaledRampEntry;
+	WORD rampEntry;
+	HDC screenDC;
+	const float *gammaRamp = (const float *)(*env)->GetDirectBufferAddress(env, float_gamma_obj);
+	jint gamma_ramp_length = (*env)->GetDirectBufferCapacity(env, float_gamma_obj);
+	jobject native_ramp;
+	WORD *native_ramp_buffer;
 
-jobject initDisplay(JNIEnv * env)
-{
-	DEVMODE devmode;
-	jobject newMode;
-
-	// Get the screen
-	HDC screenDC = GetDC(NULL);
-	if (!screenDC) {
-		throwException(env, "Couldn't get screen DC!");
+	native_ramp = createNativeGammaBuffer(env);
+	if (native_ramp == NULL)
 		return NULL;
-	}
-	// Get the default gamma ramp
-	if (GetDeviceGammaRamp(screenDC, originalGamma) == FALSE) {
-		printfDebugJava(env, "Failed to get initial device gamma");
-	}
-	memcpy(currentGamma, originalGamma, sizeof(WORD)*3*org_lwjgl_opengl_Win32Display_GAMMA_LENGTH);
-	ReleaseDC(NULL, screenDC);
+	native_ramp_buffer = (WORD *)(*env)->GetDirectBufferAddress(env, native_ramp);
+	// Turn array of floats into array of RGB WORDs
 
+	for (i = 0; i < gamma_ramp_length; i++) {
+		scaledRampEntry = gammaRamp[i]*0xffff;
+		rampEntry = (WORD)scaledRampEntry;
+		native_ramp_buffer[i] = rampEntry;
+		native_ramp_buffer[i + org_lwjgl_opengl_Win32Display_GAMMA_LENGTH] = rampEntry;
+		native_ramp_buffer[i + 2*org_lwjgl_opengl_Win32Display_GAMMA_LENGTH] = rampEntry;
+	}
+	return native_ramp;
+}
+
+jobject getCurrentDisplayMode(JNIEnv * env) {
+	DEVMODE devmode;
 	if (!EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &devmode)) {
 		throwFormattedException(env, "Couldn't get current display settings (%ld)", GetLastError());
 		return NULL;
 	}
-	newMode = createDisplayMode(env, &devmode);
-	return newMode;
+	return createDisplayMode(env, &devmode);
 }
 
 void resetDisplayMode(JNIEnv * env) {
-	// Return device gamma to normal
-	HDC screenDC = GetDC(NULL);
-	if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
-		printfDebugJava(env, "Could not reset device gamma");
-	}
-	ReleaseDC(NULL, screenDC);	
-
-	if (modeSet) {
-		modeSet = false;
-		// Under Win32, all we have to do is:
-		ChangeDisplaySettings(NULL, 0);
-
-		// And we'll call init() again to put the correct mode back in Display
-		if (env != NULL)
-			initDisplay(env);
-	}
-}
-
-/*
- * Put display settings back to what they were when the window is maximized.
- */
-void restoreDisplayMode(void) {
-	// Restore gamma
-	HDC screenDC = GetDC(NULL);
-	LONG cdsret;
-	if (!SetDeviceGammaRamp(screenDC, currentGamma)) {
-		printfDebug("Could not restore device gamma\n");
-	}
-	ReleaseDC(NULL, screenDC);
-
-	if (!modeSet) {
-		printfDebug("Attempting to restore the display mode\n");
-		modeSet = true;
-		cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
-
-		if (cdsret != DISP_CHANGE_SUCCESSFUL) {
-			printfDebug("Failed to restore display mode\n");
-		}
-	}
+	// Under Win32, all we have to do is:
+	ChangeDisplaySettings(NULL, 0);
 }
 
 jstring getVersion(JNIEnv * env, char *driver)
