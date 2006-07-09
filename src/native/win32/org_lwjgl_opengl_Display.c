@@ -87,11 +87,10 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 							     WPARAM wParam,
 							     LPARAM lParam)
 {
-	JNIEnv *env;
 	jclass display_class;
 	jmethodID handleMessage_method;
 	LONG message_time;
-	env = (JNIEnv *)(LONG_PTR)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+	JNIEnv *env = getThreadEnv();
 	if (env != NULL && !(*env)->ExceptionOccurred(env)) {
 		display_class = (*env)->FindClass(env, "org/lwjgl/opengl/Win32Display");
 		if (display_class != NULL) {
@@ -186,7 +185,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nCreateWindow(JNIEnv *
 		throwException(env, "Failed to create the window.");
 		return;
 	}
-	SetWindowLongPtr(display_hwnd, GWLP_USERDATA, (LONG_PTR)env);
 	display_hdc = GetDC(display_hwnd);
 	ShowWindow(display_hwnd, SW_SHOWDEFAULT);
 	UpdateWindow(display_hwnd);

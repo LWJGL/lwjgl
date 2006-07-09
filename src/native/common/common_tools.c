@@ -301,6 +301,12 @@ JavaVM *getJVM() {
 	return jvm;
 }
 
+JNIEnv *getThreadEnv() {
+	JNIEnv *env;
+	(*jvm)->GetEnv(jvm, (void **)&env, JNI_VERSION_1_4);
+	return env;
+}
+
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
   jvm = vm;
   return JNI_VERSION_1_4;
