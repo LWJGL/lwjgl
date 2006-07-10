@@ -38,6 +38,7 @@ import java.security.PrivilegedAction;
 import java.security.AccessController;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 
 /**
  *
@@ -49,6 +50,19 @@ final class Win32CanvasImplementation implements AWTCanvasImplementation {
 	static {
 		// Make sure the awt stuff is properly initialised (the jawt library in particular)
 		Toolkit.getDefaultToolkit();
+		AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				try {
+					System.loadLibrary("jawt");
+				} catch (UnsatisfiedLinkError e) {
+					/* It is probably already loaded, potentially by a different ClassLoader
+					 * so just log the exception and continue
+					 */
+					LWJGLUtil.log("Failed to load jawt: " + e.getMessage());
+				}
+				return null;
+			}
+		});
 	}
 
 	public PeerInfo createPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) throws LWJGLException {
