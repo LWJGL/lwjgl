@@ -91,7 +91,7 @@ final class LWJGLKeyboard extends Keyboard {
 		if (key == null)
 			return false;
 		float value = org.lwjgl.input.Keyboard.getEventKeyState() ? 1 : 0;
-		event.set(key, value, System.currentTimeMillis()*1000000);
+		event.set(key, value, org.lwjgl.input.Keyboard.getEventNanoseconds());
 		return true;
 	}
 

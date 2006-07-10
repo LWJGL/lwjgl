@@ -89,8 +89,8 @@ final class LWJGLMouse extends Mouse {
 	protected final synchronized boolean getNextDeviceEvent(Event event) throws IOException {
 		if (!org.lwjgl.input.Mouse.isCreated())
 			return false;
-		long nanos = System.currentTimeMillis()*1000000;
 		while (true) {
+			long nanos = org.lwjgl.input.Mouse.getEventNanoseconds();
 			switch (event_state) {
 				case EVENT_X:
 					event_state = EVENT_Y;
