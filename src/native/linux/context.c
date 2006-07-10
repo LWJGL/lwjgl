@@ -271,7 +271,7 @@ bool initPeerInfo(JNIEnv *env, jobject peer_info_handle, Display *display, int s
 		throwException(env, "Samples > 0 specified but there's no support for GLX_ARB_multisample");
 		return false;
 	}
-	bool floating_point = (bool)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
+	bool floating_point = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
 	if (floating_point && !extension_flags.GLX_ARB_fbconfig_float) {
 		throwException(env, "Floating point specified but there's no support for GLX_ARB_fbconfig_float");
 		return false;
