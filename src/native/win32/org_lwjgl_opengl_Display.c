@@ -88,14 +88,36 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 							     LPARAM lParam)
 {
 	jclass display_class;
+	jclass display_class_global;
 	jmethodID handleMessage_method;
 	LONG message_time;
 	JNIEnv *env = getThreadEnv();
 	if (env != NULL && !(*env)->ExceptionOccurred(env)) {
-		display_class = (*env)->FindClass(env, "org/lwjgl/opengl/Win32Display");
-		if (display_class != NULL) {
+		/*
+		 * We'll cache a global reference to the Win32Display class in the window's user data.
+		 * This is not so much to avoid lookup overhead as it is to avoid problems
+		 * with AWT. Specifically, awt code can indirectly call this message handler
+		 * when it does a SendMessage on the main thread to the currently focused window,
+		 * which could be a LWJGL window. The FindClass will then fail because the calling
+		 * internal awt class is using the system class loader, not the application loader
+		 * where lwjgl is found.
+		 *
+		 * The very first message sent to this handler is sent when
+		 * a window is created, where we are sure that the calling class' classloader has
+		 * LWJGL classes in it.
+		 */
+		display_class_global = (jclass)(LONG_PTR)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+		if (display_class_global == NULL) {
+			display_class = (*env)->FindClass(env, "org/lwjgl/opengl/Win32Display");
+			if (display_class != NULL) {
+				display_class_global = (*env)->NewGlobalRef(env, display_class);
+				if (display_class_global != NULL)
+					SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)display_class_global);
+			}
+		}
+		if (display_class_global != NULL) {
 			message_time = GetMessageTime();
-			handleMessage_method = (*env)->GetStaticMethodID(env, display_class, "handleMessage", "(JIJJJ)Z");
+			handleMessage_method = (*env)->GetStaticMethodID(env, display_class_global, "handleMessage", "(JIJJJ)Z");
 			if (handleMessage_method != NULL)
 				if ((*env)->CallStaticBooleanMethod(env, NULL, handleMessage_method, (jlong)hWnd, (jint)msg, (jlong)wParam, (jlong)lParam, (jlong)message_time))
 					return 0;
@@ -193,7 +215,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nCreateWindow(JNIEnv *
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nDestroyWindow(JNIEnv *env, jclass clazz) {
+	jclass display_class_global = (jclass)(LONG_PTR)GetWindowLongPtr(display_hwnd, GWLP_USERDATA);
 	closeWindow(&display_hwnd, &display_hdc);
+	if (display_class_global != NULL)
+		(*env)->DeleteGlobalRef(env, display_class_global);
 	freeLargeIcon();
 	freeSmallIcon();
 }
