@@ -119,7 +119,7 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			message_time = GetMessageTime();
 			handleMessage_method = (*env)->GetStaticMethodID(env, display_class_global, "handleMessage", "(JIJJJ)Z");
 			if (handleMessage_method != NULL)
-				if ((*env)->CallStaticBooleanMethod(env, NULL, handleMessage_method, (jlong)hWnd, (jint)msg, (jlong)wParam, (jlong)lParam, (jlong)message_time))
+				if ((*env)->CallStaticBooleanMethod(env, display_class_global, handleMessage_method, (jlong)hWnd, (jint)msg, (jlong)wParam, (jlong)lParam, (jlong)message_time))
 					return 0;
 		}
 	}
