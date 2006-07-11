@@ -84,7 +84,7 @@ public class LWJGLInstaller {
 	 * the user's temp directory, and instruct the LWJGL subsystem to load its
 	 * native files from there.
 	 * The file required by the installer, is gotten from the classloader via its
-	 * getResource command, and is expected to be named <win32 | linux | macosx>_natives.jar.
+	 * getResource command, and is expected to be named <windows | linux | macosx>_natives.jar.
 	 * Note: Due to the nature of native libraries, we cannot actually uninstall the currently
 	 * loaded files, but rather the "last" installed. This means that the most recent install of LWJGL
 	 * will always be present in the users temp dir. When invoking the tempInstall method, all old installations

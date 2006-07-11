@@ -2,7 +2,8 @@
 
 <project name="lwjgl native code, linux" basedir="../../bin" default="compile">
 	<property name="native" location="../src/native"/>
-	<property name="libname" value="liblwjgl.so"/>
+	<property name="libname32" value="liblwjgl.so"/>
+	<property name="libname64" value="liblwjgl64.so"/>
 	<property name="libs32" value="-L/usr/X11R6/lib -L/usr/X11/lib -lm -lX11 -lXext -lpthread -L${java.home}/lib/i386 -ljawt -Wl,-static,-lXxf86vm,-lXcursor,-lXrender,-lXrandr,-lXfixes,-call_shared"/>
 	<property name="libs64" value="-L/usr/X11R6/lib64 -L/usr/X11/lib64 -lm -lX11 -lXext -lpthread -L${java.home}/lib/amd64 -ljawt -lXxf86vm -lXcursor -lXrender -lXrandr -lXfixes"/>
 	<property name="cflags" value="-O2 -Wall -c -fPIC -std=c99 -pthread"/>
@@ -19,6 +20,9 @@
 			<arg value="-i"/>
 		</exec>
 		<condition property="libs" value="${libs64}" else="${libs32}">
+			<equals arg1="${hwplatform}" arg2="x86_64"/>
+		</condition>
+		<condition property="libname" value="${libname64}" else="${libname32}">
 			<equals arg1="${hwplatform}" arg2="x86_64"/>
 		</condition>
 		<property name="linker_flags" value="-Wl,--version-script=${native}/linux/lwjgl.map -shared -O2 -Wall -o ${libname} ${libs}"/>

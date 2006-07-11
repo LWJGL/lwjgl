@@ -58,7 +58,7 @@ public class LWJGLUtil {
 	public static final int PLATFORM_WINDOWS 			= 3;
 	public static final String PLATFORM_LINUX_NAME 		= "linux";
 	public static final String PLATFORM_MACOSX_NAME 	= "macosx";
-	public static final String PLATFORM_WINDOWS_NAME	= "win32";
+	public static final String PLATFORM_WINDOWS_NAME	= "windows";
 	
 	/** LWJGL Logo - 16 by 16 pixels */
 	public static final ByteBuffer	LWJGLIcon16x16		= BufferUtils.createByteBuffer(16 * 16 * 4).put(new byte[] { 

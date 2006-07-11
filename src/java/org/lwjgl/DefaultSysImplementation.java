@@ -46,6 +46,10 @@ abstract class DefaultSysImplementation implements SysImplementation {
 		return 1000;
 	}
 
+	public boolean has64Bit() {
+		return false;
+	}
+
 	public abstract long getTime();
 	public abstract void alert(String title, String message);
 	public abstract String getClipboard();

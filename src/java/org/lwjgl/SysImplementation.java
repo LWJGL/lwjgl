@@ -44,22 +44,28 @@ interface SysImplementation {
 	/**
 	 * Return the version of the native library
 	 */
-	public String getNativeLibraryVersion();
+	String getNativeLibraryVersion();
 
-	public void setDebug(boolean debug);
+	void setDebug(boolean debug);
 
 	/**
 	 * Obtains the number of ticks that the hires timer does in a second.
 	 *
 	 * @return timer resolution in ticks per second or 0 if no timer is present.
 	 */
-	public long getTimerResolution();
+	long getTimerResolution();
 
-	public long getTime();
+	long getTime();
 
-	public void alert(String title, String message);
+	void alert(String title, String message);
 
 	boolean openURL(String url);
 
-	public String getClipboard();
+	String getClipboard();
+
+	/**
+	 * Returns true there exists a separate 64 bit library
+	 * on the platform
+	 */
+	boolean has64Bit();
 }

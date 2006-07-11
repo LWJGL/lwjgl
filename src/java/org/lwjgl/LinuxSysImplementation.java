@@ -71,4 +71,8 @@ class LinuxSysImplementation extends J2SESysImplementation {
 		// Seems to have failed
 		return false;
 	}
+
+	public boolean has64Bit() {
+		return true;
+	}
 }

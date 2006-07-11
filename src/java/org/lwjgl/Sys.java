@@ -58,8 +58,10 @@ public final class Sys {
 
 	/** The implementation instance to delegate platform specific behavior to */
 	private final static SysImplementation implementation;
+
+	private final static String POSTFIX64BIT = "64";
   
-	private static void loadLibrary(final String lib_name) {
+	private static void doLoadLibrary(final String lib_name) {
 		AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
 				String library_path = System.getProperty("org.lwjgl.librarypath");
@@ -72,6 +74,21 @@ public final class Sys {
 				return null;
 			}
 		});
+	}
+
+	private static void loadLibrary(final String lib_name) {
+		try {
+			loadLibrary(lib_name);
+		} catch (UnsatisfiedLinkError e) {
+			if (implementation.has64Bit()) {
+				try {
+					loadLibrary(lib_name + POSTFIX64BIT);
+				} catch (UnsatisfiedLinkError e2) {
+					LWJGLUtil.log("Failed to load 64 bit library:" + e2.getMessage());
+				}
+			}
+			throw e;
+		}
 	}	
 
 	static {
