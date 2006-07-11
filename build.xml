@@ -224,6 +224,9 @@
 	<!-- ================================================================== -->
 	<target name="-initialize">
 		<mkdir dir="${lwjgl.bin}" taskname="initialiazing bin folder" />
+		<mkdir dir="${lwjgl.bin}/lwjgl" taskname="initialiazing bin folder" />
+		<mkdir dir="${lwjgl.bin}/devil" taskname="initialiazing bin folder" />
+		<mkdir dir="${lwjgl.bin}/fmod3" taskname="initialiazing bin folder" />
 		<mkdir dir="${lwjgl.lib}" taskname="initialiazing lib folder" />
 		<mkdir dir="${lwjgl.dist}" taskname="initialiazing dist folder" />
 		<mkdir dir="${lwjgl.docs}/javadoc" taskname="initialiazing docs folder" />
@@ -669,64 +672,30 @@
 		<antcall target="-compile_native_macosx_optional" />
 	</target>	
 	
-	
 	<!-- Compiles LWJGL on Win32 platforms  -->
 	<target name="-compile_native_win32" if="lwjgl.platform.windows">
-		<echo>Compiling Win32 LWJGL version</echo>
-		
-		<!-- check for required properties -->
-		<!--		<property environment="env"/>
-		<fail message="Missing PLTSDKHOME path environment property" unless="env.PLTSDKHOME"/>
-		<fail message="Missing ALHOME path environment property" unless="env.ALHOME"/>
-		<fail message="Missing JAVA_HOME path environment property" unless="env.JAVA_HOME"/>
-		<fail message="Missing CHOME path environment property" unless="env.CHOME"/>
-		<fail message="Missing DXHOME path environment property" unless="env.DXHOME"/>
-		
-		<antcall target="-compile_native_win32_main" />-->
 		<ant antfile="platform_build/windows_ant/build.xml" inheritAll="false"/>
-		<copy file="${lwjgl.bin}/lwjgl.dll" todir="${lwjgl.lib}/win32"/>
+		<copy file="${lwjgl.bin}/lwjgl/lwjgl.dll" todir="${lwjgl.lib}/win32"/>
 	</target>
 
 	<target name="-compile_native_win32_optional" if="lwjgl.platform.windows">
-		<fail message="Missing FMODHOME path environment property" unless="env.FMODHOME"/>
-		<antcall target="-compile_native_win32_fmod" />
-		<antcall target="-compile_native_win32_devil" />
+		<ant antfile="platform_build/windows_ant/build_fmod3.xml" inheritAll="false"/>
+		<copy file="${lwjgl.bin}/fmod3/lwjgl-fmod3.dll" todir="${lwjgl.lib}/win32"/>
+
+		<ant antfile="platform_build/windows_ant/build_devil.xml" inheritAll="false"/>
+		<copy file="${lwjgl.bin}/devil/lwjgl-devil.dll" todir="${lwjgl.lib}/win32"/>
 	</target>	
-
-	<target name="-compile_native_win32_main" unless="lwjgl.main.built">
-		<!-- build main -->
-		<exec dir="platform_build/win32_ms_cmdline" executable="cmd.exe" failonerror="true">
-			<arg line="/c build.bat" />
-		</exec>
-		<move file="platform_build/win32_ms_cmdline/lwjgl.dll" tofile="${lwjgl.lib}/win32/lwjgl.dll"/>
-	</target>
-
-	<target name="-compile_native_win32_fmod" unless="lwjgl.fmod.built">
-		<!-- build fmod -->
-		<exec dir="platform_build/win32_ms_cmdline" executable="cmd.exe" failonerror="true">
-			<arg line="/c build-fmod.bat" />
-		</exec>
-		<move file="platform_build/win32_ms_cmdline/lwjgl-fmod3.dll" tofile="${lwjgl.lib}/win32/lwjgl-fmod3.dll"/>
-	</target>
-
-	<target name="-compile_native_win32_devil" unless="lwjgl.devil.built">
-		<!-- build devil -->
-		<exec dir="platform_build/win32_ms_cmdline" executable="cmd.exe" failonerror="true">
-			<arg line="/c build-devil.bat"/>
-		</exec>
-		<move file="platform_build/win32_ms_cmdline/lwjgl-devil.dll" tofile="${lwjgl.lib}/win32/lwjgl-devil.dll"/>
-	</target>
 
 	<!-- Compiles LWJGL on Linux platforms -->
 	<target name="-compile_native_linux" if="lwjgl.platform.linux">
 		<ant antfile="platform_build/linux_ant/build.xml" inheritAll="false"/>
 		<copy todir="${lwjgl.lib}/linux">
-			<fileset dir="${lwjgl.bin}" includes="liblwjgl*.so"/>
+			<fileset dir="${lwjgl.bin}/lwjgl" includes="liblwjgl*.so"/>
 		</copy>
 	</target>
 
 	<target name="-compile_native_linux_optional" if="lwjgl.platform.linux">
-				<!-- check for required properties -->
+	<!-- check for required properties -->
 		<property environment="env"/>
 		<fail message="Missing JAVA_HOME path environment property" unless="env.JAVA_HOME"/>		
 		<fail message="Missing FMOD path environment property" unless="env.FMOD"/>		
@@ -762,22 +731,7 @@
                 </exec>
 		<move file="${lwjgl.src.native}/common/devil/liblwjgl-devil.jnilib" tofile="${lwjgl.lib}/macosx/liblwjgl-devil.jnilib" />
 		<move file="${lwjgl.src.native}/common/fmod3/liblwjgl-fmod3.jnilib" tofile="${lwjgl.lib}/macosx/liblwjgl-fmod3.jnilib" />
-  </target> 	
-	 
-	<!-- Creates a build of LWJGL directly from CVS -->
-	<!--	<target name="cvsbuild" description="Builds lwjgl from cvs">-->
-		<!-- Check that files do not exist BEFORE doing the CVS build -->
-		<!--		<available file="LWJGL/build.xml" property="lwjgl.preexistingfiles" />
-		<available file="${lwjgl.src}/java/org/lwjgl/Sys.java" property="lwjgl.preexistingfiles" />
-		<fail if="lwjgl.preexistingfiles" message="Cannot perform webbuild from nonempty folder" />-->
-
-		<!-- checkout files and build using checked out buildfiles 'all' target -->
-		<!--		<cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/build.xml" dest="." />
-		<cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/src" dest="." />
-		<cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/doc" dest="." />
-		<ant dir="LWJGL" target="compile_native_all" />
-		<ant dir="LWJGL" target="release" />
-	</target>	 -->
+  </target>
 	
 	<!-- -->
 	<target name="sign" description="Using released files, creates the necessary files used for jnlp demos">
