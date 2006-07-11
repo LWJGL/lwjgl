@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
-<project name="devil" basedir="../../bin" default="compile">
-	<property name="native" location="../src/native"/>
+<project name="devil" basedir="../../bin/devil" default="compile">
+	<property name="native" location="../../src/native"/>
 	<property environment="env"/>
 	<property name="sdkhome" location="${env.MSSDK}"/>
 	<property name="fmodhome" location="${env.FMODHOME}"/>

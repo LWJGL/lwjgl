@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
-<project name="fmod3" basedir="../../bin" default="compile">
-	<property name="native" location="../src/native"/>
+<project name="fmod3" basedir="../../bin/fmod3" default="compile">
+	<property name="native" location="../../src/native"/>
 	<property environment="env"/>
 	<property name="sdkhome" location="${env.MSSDK}"/>
 	<property name="fmodhome" location="${env.FMODHOME}"/>
