@@ -354,6 +354,14 @@
 		</jar>
 	</target>
 
+	<target name="runtest" depends="all">
+		<fail message="test.mainclass is not set. Use 'ant -Dtest.mainclass=&lt;main-class&gt; runtest'" unless="test.mainclass"/>
+		<java classname="${test.mainclass}" classpath="${lwjgl.lib}/lwjgl.jar:${lwjgl.lib}/lwjgl_util.jar:${lwjgl.lib}/lwjgl_test.jar" fork="true">
+			<jvmarg value="-Dorg.lwjgl.util.Debug=true"/>
+			<jvmarg value="-Djava.library.path=libs/linux:libs/win32:libs/macosx"/>
+		</java>
+	</target>
+
 	<target name="applet" depends="jars">
 		<!-- Create lwjgl_applet.jar -->
 		<jar destfile="applet/lwjgl_applet.jar" taskname="lwjgl_applet.jar">
