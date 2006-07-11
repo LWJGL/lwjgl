@@ -63,9 +63,6 @@ import org.lwjgl.LWJGLUtil;
  * $Id$
  */
 public class LWJGLInstaller {
-	/** Whether to hook uninstall rutine. Must be called prior to installation */
-	public static boolean disableUninstall = false;
-
 	/** Whether the installer has been called */
 	private static boolean installed;
 	
@@ -93,7 +90,7 @@ public class LWJGLInstaller {
 	 * 
 	 * @see java.lang.ClassLoader#getResource(String)
 	 */
-	public static void tempInstall() throws Exception {
+	public synchronized static void tempInstall() throws Exception {
 		// only need to install once
 		if (installed) {
 			return;
@@ -108,19 +105,16 @@ public class LWJGLInstaller {
 				}
 			});
 
-			// install shutdown installer hook
-			if(!disableUninstall) {
-				AccessController.doPrivileged(new PrivilegedAction() {
-					public Object run() {
-						Runtime.getRuntime().addShutdownHook(new Thread() {
-							public void run() {
-								uninstall();
-							}
-						});
-						return null;
-					}
-				});
-			}
+			AccessController.doPrivileged(new PrivilegedAction() {
+				public Object run() {
+					Runtime.getRuntime().addShutdownHook(new Thread() {
+						public void run() {
+							uninstall();
+						}
+					});
+					return null;
+				}
+			});
 
 			// create a temporary dir for the native files
 			String user_temp_dir = getPriviledgedString("java.io.tmpdir");
