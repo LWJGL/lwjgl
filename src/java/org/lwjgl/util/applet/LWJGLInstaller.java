@@ -68,6 +68,9 @@ public class LWJGLInstaller {
 	
 	/** Directory all lwjgl installations go into */
 	private static final String MASTER_INSTALL_DIR = ".lwjglinstall";
+
+	/** Directory all lwjgl installations go into */
+	private static final String WATERMARK_FILE = ".lwjglinuse";
 	
 	/** Name of the native jar we're expected to load and install */
 	private static final String 	NATIVES_PLATFORM_JAR = "/" + LWJGLUtil.getPlatformName() + "_natives.jar";	
@@ -263,7 +266,7 @@ public class LWJGLInstaller {
 	 * Creates the temporary dir to store lwjgl files in.
 	 * The temporary dir will be created in the users temp dir and
 	 * called 'lwjgl-' and appended System.currentTimeMillis(). A watermark file
-	 * called '.lwjglinstaller' will also be created in the directory.
+	 * called '.lwjglinuse' will also be created in the directory.
 	 * @return Name of temp directory or null if directory creation failed
 	 */
 	private static String createTemporaryDir(final String user_temp_dir) throws Exception {
@@ -277,7 +280,7 @@ public class LWJGLInstaller {
 
 				// add the watermark file
 				// TODO: Write some info to the file ?
-				File watermark = new File(tempDir.getAbsolutePath() + File.separator + ".lwjglinstaller");
+				File watermark = new File(tempDir.getAbsolutePath() + File.separator + WATERMARK_FILE);
 				watermark.createNewFile();
 				watermark.deleteOnExit();
 				return tempDir.getAbsolutePath();
@@ -326,7 +329,7 @@ public class LWJGLInstaller {
 					 * @return true if the directory is an install directory
 					 */
 					private boolean isStale(File directory) {
-						File installFile = new File(directory.getAbsolutePath() + File.separator + ".lwjglinstaller");
+						File installFile = new File(directory.getAbsolutePath() + File.separator + WATERMARK_FILE);
 						return !installFile.exists();
 					}
 
