@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
-<project name="OS X Native code" basedir="../../bin" default="nativelibrary">
-	<property name="native" location="../src/native"/>
+<project name="OS X Native code" basedir="../../bin/lwjgl" default="nativelibrary">
+	<property name="native" location="../../src/native"/>
 
 	<target name="init">
 		<mkdir dir="ppc"/>
