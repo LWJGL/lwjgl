@@ -110,11 +110,7 @@ public class LWJGLInstaller {
 
 			AccessController.doPrivileged(new PrivilegedAction() {
 				public Object run() {
-					Runtime.getRuntime().addShutdownHook(new Thread() {
-						public void run() {
-							uninstall();
-						}
-					});
+					uninstall();
 					return null;
 				}
 			});
