@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
-<project name="lwjgl native code, linux" basedir="../../bin" default="compile">
-	<property name="native" location="../src/native"/>
+<project name="lwjgl native code, linux" basedir="../../bin/lwjgl" default="compile">
+	<property name="native" location="../../src/native"/>
 	<property name="libname32" value="liblwjgl.so"/>
 	<property name="libname64" value="liblwjgl64.so"/>
 	<property name="libs32" value="-L/usr/X11R6/lib -L/usr/X11/lib -lm -lX11 -lXext -lpthread -L${java.home}/lib/i386 -ljawt -Wl,-static,-lXxf86vm,-lXcursor,-lXrender,-lXrandr,-lXfixes,-call_shared"/>
