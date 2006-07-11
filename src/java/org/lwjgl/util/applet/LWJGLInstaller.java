@@ -63,21 +63,17 @@ import org.lwjgl.LWJGLUtil;
  * $Id$
  */
 public class LWJGLInstaller {
-
-	/** Whether the installer has been called */
-	public static boolean installed;
-	
 	/** Whether to hook uninstall rutine. Must be called prior to installation */
 	public static boolean disableUninstall = false;
-	
-	/** Buffer used when copying files */
-	private static final byte[] COPY_BUFFER = new byte[4096];
 
+	/** Whether the installer has been called */
+	private static boolean installed;
+	
 	/** Directory all lwjgl installations go into */
-	public static final String MASTER_INSTALL_DIR = ".lwjglinstall";
+	private static final String MASTER_INSTALL_DIR = ".lwjglinstall";
 	
 	/** Name of the native jar we're expected to load and install */
-	public static final String 	NATIVES_PLATFORM_JAR = "/" + LWJGLUtil.getPlatformName() + "_natives.jar";	
+	private static final String 	NATIVES_PLATFORM_JAR = "/" + LWJGLUtil.getPlatformName() + "_natives.jar";	
 	
 	private LWJGLInstaller() {
 		/* Unused */
@@ -259,9 +255,11 @@ public class LWJGLInstaller {
 	 * @throws IOException if the copy process fail in any way
 	 */
 	private static void copyFile(InputStream is, OutputStream os) throws IOException {
+		byte[] copy_buffer = new byte[4096];
+
 		int len;
-		while ((len = is.read(COPY_BUFFER)) > 0) {
-			os.write(COPY_BUFFER, 0, len);
+		while ((len = is.read(copy_buffer)) > 0) {
+			os.write(copy_buffer, 0, len);
 		}
 		
 		os.close();
