@@ -74,7 +74,7 @@ public class LWJGLInstaller {
 	private static final byte[] COPY_BUFFER = new byte[4096];
 
 	/** Directory all lwjgl installations go into */
-	public static String MASTER_INSTALL_DIR = ".lwjglinstall";
+	public static final String MASTER_INSTALL_DIR = ".lwjglinstall";
 	
 	/** Name of the native jar we're expected to load and install */
 	public static final String 	NATIVES_PLATFORM_JAR = "/" + LWJGLUtil.getPlatformName() + "_natives.jar";	
