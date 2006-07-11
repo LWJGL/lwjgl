@@ -118,9 +118,9 @@
 
 	<!-- Files to include in linux, glibc2.3 package -->
 	<patternset id="lwjgl-linux.fileset">
-		<include name="liblwjgl.so" />
+		<include name="liblwjgl*.so" />
 		<include name="libopenal.so" />    
-    		<include name="libjinput-linux.so" />
+		<include name="libjinput-linux.so" />
 	</patternset>
 	
 	<!-- Files to include in linux optional, glibc2.3 package -->
@@ -720,7 +720,9 @@
 	<!-- Compiles LWJGL on Linux platforms -->
 	<target name="-compile_native_linux" if="lwjgl.platform.linux">
 		<ant antfile="platform_build/linux_ant/build.xml" inheritAll="false"/>
-		<copy file="${lwjgl.bin}/liblwjgl.so" todir="${lwjgl.lib}/linux"/>
+		<copy todir="${lwjgl.lib}/linux">
+			<fileset dir="${lwjgl.bin}" includes="liblwjgl*.so"/>
+		</copy>
 	</target>
 
 	<target name="-compile_native_linux_optional" if="lwjgl.platform.linux">

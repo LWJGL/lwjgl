@@ -78,11 +78,11 @@ public final class Sys {
 
 	private static void loadLibrary(final String lib_name) {
 		try {
-			loadLibrary(lib_name);
+			doLoadLibrary(lib_name);
 		} catch (UnsatisfiedLinkError e) {
 			if (implementation.has64Bit()) {
 				try {
-					loadLibrary(lib_name + POSTFIX64BIT);
+					doLoadLibrary(lib_name + POSTFIX64BIT);
 				} catch (UnsatisfiedLinkError e2) {
 					LWJGLUtil.log("Failed to load 64 bit library:" + e2.getMessage());
 				}
