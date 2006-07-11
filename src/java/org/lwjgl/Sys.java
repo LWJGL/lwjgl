@@ -83,10 +83,12 @@ public final class Sys {
 			if (implementation.has64Bit()) {
 				try {
 					doLoadLibrary(lib_name + POSTFIX64BIT);
+					return;
 				} catch (UnsatisfiedLinkError e2) {
 					LWJGLUtil.log("Failed to load 64 bit library:" + e2.getMessage());
 				}
 			}
+			// Throw original error
 			throw e;
 		}
 	}	
