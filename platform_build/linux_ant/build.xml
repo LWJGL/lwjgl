@@ -11,7 +11,7 @@
 	<target name="clean">
 		<delete>
 			<fileset dir="." includes="*.o"/>
-			<fileset file="${libname}"/>
+			<fileset dir="." includes="*.so"/>
 		</delete>
 	</target>
 	
