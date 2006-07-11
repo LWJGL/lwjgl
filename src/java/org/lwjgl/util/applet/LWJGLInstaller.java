@@ -52,11 +52,10 @@ import java.util.jar.JarFile;
 
 import org.lwjgl.LWJGLUtil;
 
-
-
 /**
  * <p>
- * 
+ * Installer class for installing LWJGL temporarily into a temp directory.
+ * This class is used for installing LWJGL for use with applets.
  * </p>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
@@ -69,11 +68,11 @@ public class LWJGLInstaller {
 	/** Directory all lwjgl installations go into */
 	private static final String MASTER_INSTALL_DIR = ".lwjglinstall";
 
-	/** Directory all lwjgl installations go into */
+	/** Name of file that we use to tag 'live' installations */
 	private static final String WATERMARK_FILE = ".lwjglinuse";
 	
 	/** Name of the native jar we're expected to load and install */
-	private static final String 	NATIVES_PLATFORM_JAR = "/" + LWJGLUtil.getPlatformName() + "_natives.jar";	
+	private static final String NATIVES_PLATFORM_JAR = "/" + LWJGLUtil.getPlatformName() + "_natives.jar";	
 	
 	private LWJGLInstaller() {
 		/* Unused */
@@ -84,12 +83,12 @@ public class LWJGLInstaller {
 	 * This will extract the relevant native files (for the platform) into
 	 * the user's temp directory, and instruct the LWJGL subsystem to load its
 	 * native files from there.
-	 * The files required by the installer, are gotten from the classloader via its
-	 * getResource command, and are assumed to in the path: /native/<win32|linux|macosx>/
-	 * Any call to this method will also add a shutdown hook to the uninstall of the libraries
+	 * The file required by the installer, is gotten from the classloader via its
+	 * getResource command, and is expected to be named <win32 | linux | macosx>_natives.jar.
 	 * Note: Due to the nature of native libraries, we cannot actually uninstall the currently
 	 * loaded files, but rather the "last" installed. This means that the most recent install of LWJGL
-	 * will always be present in the users temp dir.
+	 * will always be present in the users temp dir. When invoking the tempInstall method, all old installations
+	 * will be uninstalled first.
 	 * 
 	 * @see java.lang.ClassLoader#getResource(String)
 	 */
@@ -260,9 +259,9 @@ public class LWJGLInstaller {
 
 	/**
 	 * Creates the temporary dir to store lwjgl files in.
-	 * The temporary dir will be created in the users temp dir and
-	 * called 'lwjgl-' and appended System.currentTimeMillis(). A watermark file
-	 * called '.lwjglinuse' will also be created in the directory.
+	 * The temporary dir will be created in a subdirectory of '.lwjglinstall' in 
+	 * the users temp dir. The subdirectory will be named the current time in milliseconds. 
+	 * A watermark file called '.lwjglinuse' will also be created in the directory.
 	 * @return Name of temp directory or null if directory creation failed
 	 */
 	private static String createTemporaryDir(final String user_temp_dir) throws Exception {
