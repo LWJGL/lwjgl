@@ -268,7 +268,7 @@ public class LWJGLInstaller {
 		return (String) AccessController.doPrivileged(new PrivilegedExceptionAction() {
 			public Object run() throws Exception {
 				// create the temp directory
-				File tempDir = new File(user_temp_dir + File.separator + ".lwjglinstall" + File.separator + System.currentTimeMillis());
+				File tempDir = new File(user_temp_dir + File.separator + MASTER_INSTALL_DIR + File.separator + System.currentTimeMillis());
 				if(!tempDir.mkdirs()) {
 					throw new IOException("Failed to create directory: " + tempDir);
 				}
