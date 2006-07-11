@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
-<project name="lwjgl native code, native code" basedir="../../bin" default="compile">
-	<property name="native" location="../src/native"/>
+<project name="lwjgl native code, native code" basedir="../../bin/lwjgl" default="compile">
+	<property name="native" location="../../src/native"/>
 	<property environment="env"/>
 	<property name="dxhome" location="${env.DXSDK_DIR}"/>
 	<property name="sdkhome" location="${env.MSSDK}"/>
@@ -47,9 +47,11 @@
 		<delete>
 			<fileset dir="." includes="*.obj"/>
 			<fileset dir="." includes="*.dll"/>
+			<fileset dir="." includes="*.exp"/>
+			<fileset dir="." includes="*.lib"/>
 		</delete>
 	</target>
-
+	
 	<target name="compile">
 		<property name="libs" value="Kernel32.lib ole32.lib dinput.lib dxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib jawt.lib delayimp.lib winmm.lib"/>
 		<antcall target="compile_dir"/>
