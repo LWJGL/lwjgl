@@ -302,11 +302,11 @@ public class LWJGLUtil {
 	public static String getPlatformName() {
 		switch (LWJGLUtil.getPlatform()) {
 			case LWJGLUtil.PLATFORM_LINUX:
-				return "linux";
+				return PLATFORM_LINUX_NAME;
 			case LWJGLUtil.PLATFORM_MACOSX:
-				return "macosx";
+				return PLATFORM_MACOSX_NAME;
 			case LWJGLUtil.PLATFORM_WINDOWS:
-				return "windows";
+				return PLATFORM_WINDOWS_NAME;
 			default:
 				return "unknown";
 		}
