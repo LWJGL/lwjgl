@@ -18,9 +18,9 @@
 			<arg value="/I${java.home}\..\include"/>
 			<arg value="/I${java.home}\..\include\win32"/>
 			<arg value="/I${native}\common"/>
-			<arg value="/I${native}\win32"/>
+			<arg value="/I${native}\windows"/>
 			<srcfile/>
-			<fileset dir="${native}/win32" includes="*.c"/>
+			<fileset dir="${native}/windows" includes="*.c"/>
 			<fileset dir="${native}/common" includes="*.c"/>
 			<fileset dir="${native}/generated" includes="*.c"/>
 			<mapper type="glob" from="*.c" to="*.obj"/>

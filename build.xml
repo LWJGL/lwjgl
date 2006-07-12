@@ -153,7 +153,7 @@
 	<fileset id="lwjgl.source.fileset" dir=".">
 		<include name="build.xml" />
 		<include name="src/**" />
-		<include name="platform_build/win32_ms_cmdline/*.bat" />
+		<include name="platform_build/**/*" />
 	</fileset>
 	
 	<!-- files in the base package -->
@@ -201,7 +201,7 @@
 	<uptodate property="lwjgl.main.built" targetfile="${lwjgl.lib}/win32/lwjgl.dll" >
 	    <srcfiles dir= "${lwjgl.src.native}/common" includes="*.c*"/>
 	    <srcfiles dir= "${lwjgl.src.native}/generated" includes="*.c"/>
-	    <srcfiles dir= "${lwjgl.src.native}/win32" includes="*.cpp"/>
+	    <srcfiles dir= "${lwjgl.src.native}/windows" includes="*.c"/>
 	</uptodate>	
 	
 	<uptodate property="lwjgl.fmod.built" targetfile="${lwjgl.lib}/win32/lwjgl-fmod3.dll" >
@@ -356,9 +356,20 @@
 
 	<target name="runtest" depends="all">
 		<fail message="test.mainclass is not set. Use 'ant -Dtest.mainclass=&lt;main-class&gt; runtest'" unless="test.mainclass"/>
+		<condition property="native_path" value="libs/win32">
+			<os family="windows" />
+		</condition>
+
+		<condition property="native_path" value="libs/linux">
+			<os name="Linux" />
+		</condition>
+
+		<condition property="native_path" value="libs/macosx">
+			<os name="Mac OS X" />
+		</condition>
 		<java classname="${test.mainclass}" classpath="${lwjgl.lib}/lwjgl.jar:${lwjgl.lib}/lwjgl_util.jar:${lwjgl.lib}/lwjgl_test.jar" fork="true">
 			<jvmarg value="-Dorg.lwjgl.util.Debug=true"/>
-			<jvmarg value="-Djava.library.path=libs/linux:libs/win32:libs/macosx"/>
+			<jvmarg value="-Djava.library.path=${native_path}"/>
 		</java>
 	</target>
 
@@ -507,7 +518,7 @@
 			<class name="org.lwjgl.opengl.LinuxCanvasImplementation" />
 		</javah>
 		
-		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/win32" force="yes">
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/windows" force="yes">
 			<class name="org.lwjgl.opengl.WindowsKeyboard" />
 			<class name="org.lwjgl.opengl.WindowsDirectInput8" />
 			<class name="org.lwjgl.opengl.WindowsDirectInputDevice8" />
