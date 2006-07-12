@@ -40,7 +40,7 @@
 #include <jni.h>
 #include <stdlib.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <wtypes.h>
 #endif
 
@@ -82,7 +82,7 @@ static jstring sprintfJavaString(JNIEnv *env, const char *format, va_list ap) {
 #define BUFFER_SIZE 4000
 	char buffer[BUFFER_SIZE];
 	jstring str;
-#ifdef WIN32
+#ifdef _WIN32
 	vsnprintf_s(buffer, BUFFER_SIZE, _TRUNCATE, format, ap);
 #else
 	vsnprintf(buffer, BUFFER_SIZE, format, ap);
