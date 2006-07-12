@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
 <project name="fmod3" basedir="../../bin/fmod3" default="compile">
+	<fail message="Missing FMOD path environment property" unless="env.FMOD"/>
 	<property name="native" location="../../src/native"/>
 	<property environment="env"/>
 	<property name="fmod.home" location="${env.FMOD}"/>
