@@ -79,7 +79,7 @@ final class Context {
 				class_name = "org.lwjgl.opengl.LinuxContextImplementation";
 				break;
 			case LWJGLUtil.PLATFORM_WINDOWS:
-				class_name = "org.lwjgl.opengl.Win32ContextImplementation";
+				class_name = "org.lwjgl.opengl.WindowsContextImplementation";
 				break;
 			case LWJGLUtil.PLATFORM_MACOSX:
 				class_name = "org.lwjgl.opengl.MacOSXContextImplementation";

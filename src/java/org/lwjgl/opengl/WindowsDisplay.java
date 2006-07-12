@@ -46,7 +46,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.input.Cursor;
 
-final class Win32Display implements DisplayImplementation {
+final class WindowsDisplay implements DisplayImplementation {
 	private final static int GAMMA_LENGTH = 256;
 	private final static int WM_MOUSEMOVE                     = 0x0200;
 	private final static int WM_LBUTTONDOWN                   = 0x0201;
@@ -98,9 +98,9 @@ final class Win32Display implements DisplayImplementation {
 	private final static int SW_SHOWMINNOACTIVE   = 7;
 	private final static int SW_RESTORE           = 9;
 
-	private static Win32Display current_display;
+	private static WindowsDisplay current_display;
 
-	private Win32DisplayPeerInfo peer_info;
+	private WindowsDisplayPeerInfo peer_info;
 
 	private WindowsKeyboard keyboard;
 	private WindowsMouse mouse;
@@ -119,7 +119,7 @@ final class Win32Display implements DisplayImplementation {
 	private boolean did_maximize;
 	private boolean inAppActivate;
 
-	public Win32Display() {
+	public WindowsDisplay() {
 		current_display = this;
 	}
 
@@ -228,14 +228,14 @@ final class Win32Display implements DisplayImplementation {
 
 	public String getAdapter() {
 		try {
-			String adapter_string = Win32Registry.queryRegistrationKey(
-					Win32Registry.HKEY_LOCAL_MACHINE,
+			String adapter_string = WindowsRegistry.queryRegistrationKey(
+					WindowsRegistry.HKEY_LOCAL_MACHINE,
 					"HARDWARE\\DeviceMap\\Video",
 					"\\Device\\Video0");
 			String root_key = "\\registry\\machine\\";
 			if (adapter_string.toLowerCase().startsWith(root_key)) {
-				String driver_value = Win32Registry.queryRegistrationKey(
-						Win32Registry.HKEY_LOCAL_MACHINE,
+				String driver_value = WindowsRegistry.queryRegistrationKey(
+						WindowsRegistry.HKEY_LOCAL_MACHINE,
 						adapter_string.substring(root_key.length()),
 						"InstalledDisplayDrivers");
 				return driver_value;
@@ -284,7 +284,7 @@ final class Win32Display implements DisplayImplementation {
 	}
 
 	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
-		peer_info = new Win32DisplayPeerInfo(pixel_format);
+		peer_info = new WindowsDisplayPeerInfo(pixel_format);
 		return peer_info;
 	}
 	public void update() {
@@ -410,25 +410,25 @@ final class Win32Display implements DisplayImplementation {
 	private native int nGetPbufferCapabilities(PixelFormat format) throws LWJGLException;
 	
 	public boolean isBufferLost(PeerInfo handle) {
-		return ((Win32PbufferPeerInfo)handle).isBufferLost();
+		return ((WindowsPbufferPeerInfo)handle).isBufferLost();
 	}
 
 	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs) throws LWJGLException {
-		return new Win32PbufferPeerInfo(width, height, pixel_format, pixelFormatCaps, pBufferAttribs);
+		return new WindowsPbufferPeerInfo(width, height, pixel_format, pixelFormatCaps, pBufferAttribs);
 	}
 	
 	public void setPbufferAttrib(PeerInfo handle, int attrib, int value) {
-		((Win32PbufferPeerInfo)handle).setPbufferAttrib(attrib, value);
+		((WindowsPbufferPeerInfo)handle).setPbufferAttrib(attrib, value);
 	}
 
 	public void bindTexImageToPbuffer(PeerInfo handle, int buffer) {
-		((Win32PbufferPeerInfo)handle).bindTexImageToPbuffer(buffer);
+		((WindowsPbufferPeerInfo)handle).bindTexImageToPbuffer(buffer);
 	}
 	
 	public void releaseTexImageFromPbuffer(PeerInfo handle, int buffer) {
-		((Win32PbufferPeerInfo)handle).releaseTexImageFromPbuffer(buffer);
+		((WindowsPbufferPeerInfo)handle).releaseTexImageFromPbuffer(buffer);
 	}
 	
 

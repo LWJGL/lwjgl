@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
 
@@ -42,14 +41,44 @@ import org.lwjgl.LWJGLException;
  * @version $Revision$
  * $Id$
  */
-abstract class Win32PeerInfo extends PeerInfo {
-	public Win32PeerInfo() {
-		super(createHandle());
+final class WindowsDisplayPeerInfo extends WindowsPeerInfo {
+	public WindowsDisplayPeerInfo(PixelFormat pixel_format) throws LWJGLException {
+		GLContext.loadOpenGLLibrary();
+		try {
+			createDummyDC(getHandle());
+			try {
+				choosePixelFormat(0, 0, pixel_format, null, true, true, false, true);
+			} catch (LWJGLException e) {
+				nDestroy(getHandle());
+				throw e;
+			}
+		} catch (LWJGLException e) {
+			GLContext.unloadOpenGLLibrary();
+			throw e;
+		}
 	}
-	private static native ByteBuffer createHandle();
+	private static native void createDummyDC(ByteBuffer peer_info_handle) throws LWJGLException;
 
-	protected void choosePixelFormat(int origin_x, int origin_y, PixelFormat pixel_format, IntBuffer pixel_format_caps, boolean use_hdc_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException {
-		nChoosePixelFormat(getHandle(), origin_x, origin_y, pixel_format, pixel_format_caps, use_hdc_bpp, support_window, support_pbuffer, double_buffered);
+	void initDC() {
+		nInitDC(getHandle());
 	}
-	private static native void nChoosePixelFormat(ByteBuffer peer_info_handle, int origin_x, int origin_y, PixelFormat pixel_format, IntBuffer pixel_format_caps, boolean use_hdc_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException;
+	private static native void nInitDC(ByteBuffer peer_info_handle);
+
+	private static native void nDestroy(ByteBuffer peer_info_handle);
+	
+	protected void doLockAndInitHandle() throws LWJGLException {
+		// NO-OP
+	}
+
+	private static native void setPixelFormat(ByteBuffer peer_info_handle);
+	
+	protected void doUnlock() throws LWJGLException {
+		// NO-OP
+	}
+
+	public void destroy() {
+		super.destroy();
+		nDestroy(getHandle());
+		GLContext.unloadOpenGLLibrary();
+	}
 }

@@ -89,7 +89,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 				class_name = "org.lwjgl.opengl.LinuxCanvasImplementation";
 				break;
 			case LWJGLUtil.PLATFORM_WINDOWS:
-				class_name = "org.lwjgl.opengl.Win32CanvasImplementation";
+				class_name = "org.lwjgl.opengl.WindowsCanvasImplementation";
 				break;
 			case LWJGLUtil.PLATFORM_MACOSX:
 				class_name = "org.lwjgl.opengl.MacOSXCanvasImplementation";

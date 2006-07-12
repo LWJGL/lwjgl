@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
 
@@ -41,28 +42,14 @@ import org.lwjgl.LWJGLException;
  * @version $Revision$
  * $Id$
  */
-final class Win32AWTGLCanvasPeerInfo extends Win32PeerInfo {
-	private final AWTGLCanvas canvas;
-	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
-	private final PixelFormat pixel_format;
-	private boolean has_pixel_format= false;
-
-	public Win32AWTGLCanvasPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) {
-		this.canvas = canvas;
-		this.pixel_format = pixel_format;
+abstract class WindowsPeerInfo extends PeerInfo {
+	public WindowsPeerInfo() {
+		super(createHandle());
 	}
+	private static native ByteBuffer createHandle();
 
-	protected void doLockAndInitHandle() throws LWJGLException {
-		nInitHandle(awt_surface.lockAndGetHandle(canvas), getHandle());
-		if (!has_pixel_format) {
-			// If we haven't applied a pixel format yet, do it now
-			choosePixelFormat(canvas.getX(), canvas.getY(), pixel_format, null, true, true, false, true);
-			has_pixel_format = true;
-		}
+	protected void choosePixelFormat(int origin_x, int origin_y, PixelFormat pixel_format, IntBuffer pixel_format_caps, boolean use_hdc_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException {
+		nChoosePixelFormat(getHandle(), origin_x, origin_y, pixel_format, pixel_format_caps, use_hdc_bpp, support_window, support_pbuffer, double_buffered);
 	}
-	private static native void nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle) throws LWJGLException;
-
-	protected void doUnlock() throws LWJGLException {
-		awt_surface.unlock();
-	}
+	private static native void nChoosePixelFormat(ByteBuffer peer_info_handle, int origin_x, int origin_y, PixelFormat pixel_format, IntBuffer pixel_format_caps, boolean use_hdc_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException;
 }

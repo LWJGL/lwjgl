@@ -38,7 +38,7 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.LWJGLException;
 
-final class Win32Registry {
+final class WindowsRegistry {
 	final static int HKEY_CLASSES_ROOT = 1;
 	final static int HKEY_CURRENT_USER = 2;
 	final static int HKEY_LOCAL_MACHINE = 3;

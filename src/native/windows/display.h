@@ -33,7 +33,7 @@
 /**
  * $Id$
  *
- * Win32 specific library for display handling.
+ * Windows specific library for display handling.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$

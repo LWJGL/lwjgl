@@ -33,9 +33,7 @@
 /**
  * $Id$
  *
- * Base Win32 display
- *
- * @author cix_foo <cix_foo@users.sourceforge.net>
+ * @author elias_naue <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 

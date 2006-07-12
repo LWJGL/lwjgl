@@ -33,7 +33,7 @@
 /**
  * $Id$
  *
- * Base Win32 display
+ * Base Windows display
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
@@ -46,7 +46,7 @@
 #include "extgl_wgl.h"
 #include "common_tools.h"
 #include "display.h"
-#include "org_lwjgl_opengl_Win32Display.h"
+#include "org_lwjgl_opengl_WindowsDisplay.h"
 #include "context.h"
 
 static HICON small_icon = NULL;
@@ -94,7 +94,7 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 	JNIEnv *env = getThreadEnv();
 	if (env != NULL && !(*env)->ExceptionOccurred(env)) {
 		/*
-		 * We'll cache a global reference to the Win32Display class in the window's user data.
+		 * We'll cache a global reference to the WindowsDisplay class in the window's user data.
 		 * This is not so much to avoid lookup overhead as it is to avoid problems
 		 * with AWT. Specifically, awt code can indirectly call this message handler
 		 * when it does a SendMessage on the main thread to the currently focused window,
@@ -108,7 +108,7 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 		 */
 		display_class_global = (jclass)(LONG_PTR)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 		if (display_class_global == NULL) {
-			display_class = (*env)->FindClass(env, "org/lwjgl/opengl/Win32Display");
+			display_class = (*env)->FindClass(env, "org/lwjgl/opengl/WindowsDisplay");
 			if (display_class != NULL) {
 				display_class_global = (*env)->NewGlobalRef(env, display_class);
 				if (display_class_global != NULL)
@@ -129,7 +129,7 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 }
 
 /*
- * Handle native Win32 messages
+ * Handle native Windows messages
  */
 static void handleMessages(JNIEnv *env) {
 	/*
@@ -160,7 +160,7 @@ static void handleMessages(JNIEnv *env) {
 	}
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_Win32Display_getHwnd(JNIEnv *env, jclass unused) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getHwnd(JNIEnv *env, jclass unused) {
 	return (INT_PTR)display_hwnd;
 }
 
@@ -169,22 +169,22 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_Win32Display_getHwnd(JNIEnv *env, 
  * Method:    nSetTitle
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setTitle
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setTitle
   (JNIEnv * env, jobject self, jstring title_obj) {
 	char * title = GetStringNativeChars(env, title_obj);
 	SetWindowText(display_hwnd, title);
 	free(title);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nUpdate(JNIEnv * env, jclass class) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nUpdate(JNIEnv * env, jclass class) {
 	handleMessages(env);
 }
 
-JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_Win32Display_getAvailableDisplayModes(JNIEnv *env, jobject self) {
+JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getAvailableDisplayModes(JNIEnv *env, jobject self) {
 	return getAvailableDisplayModes(env);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nCreateWindow(JNIEnv *env, jobject self, jobject mode, jboolean fullscreen, jint x, jint y) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv *env, jobject self, jobject mode, jboolean fullscreen, jint x, jint y) {
 	jclass cls_displayMode = (*env)->GetObjectClass(env, mode);
 	jfieldID fid_width = (*env)->GetFieldID(env, cls_displayMode, "width", "I");
 	jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
@@ -214,7 +214,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nCreateWindow(JNIEnv *
 	SetFocus(display_hwnd);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nDestroyWindow(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nDestroyWindow(JNIEnv *env, jclass clazz) {
 	jclass display_class_global = (jclass)(LONG_PTR)GetWindowLongPtr(display_hwnd, GWLP_USERDATA);
 	closeWindow(&display_hwnd, &display_hdc);
 	if (display_class_global != NULL)
@@ -223,11 +223,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nDestroyWindow(JNIEnv 
 	freeSmallIcon();
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_resetCursorClipping(JNIEnv *env, jclass unused) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_resetCursorClipping(JNIEnv *env, jclass unused) {
 	ClipCursor(NULL);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setupCursorClipping(JNIEnv *env, jclass unused, jlong hwnd_ptr) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setupCursorClipping(JNIEnv *env, jclass unused, jlong hwnd_ptr) {
 	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
 	RECT hwnd_client;
 	if (display_hwnd != NULL && GetWindowRect(hwnd, &hwnd_client) != 0) {
@@ -236,46 +236,46 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setupCursorClipping(JN
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nSwitchDisplayMode(JNIEnv *env, jobject self, jobject mode) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSwitchDisplayMode(JNIEnv *env, jobject self, jobject mode) {
 	switchDisplayMode(env, mode);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nResetDisplayMode(JNIEnv *env, jobject self) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nResetDisplayMode(JNIEnv *env, jobject self) {
 	resetDisplayMode(env);
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32Display_getCurrentDisplayMode(JNIEnv *env, jclass unused) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getCurrentDisplayMode(JNIEnv *env, jclass unused) {
 	return getCurrentDisplayMode(env);
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32Display_convertToNativeRamp(JNIEnv *env, jclass unused, jobject float_ramp) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsDisplay_convertToNativeRamp(JNIEnv *env, jclass unused, jobject float_ramp) {
 	return convertToNativeRamp(env, float_ramp);
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32Display_getCurrentGammaRamp(JNIEnv *env, jclass unused) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getCurrentGammaRamp(JNIEnv *env, jclass unused) {
 	return getCurrentGammaRamp(env);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nSetGammaRamp(JNIEnv *env, jclass unused, jobject gamma_buffer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetGammaRamp(JNIEnv *env, jclass unused, jobject gamma_buffer) {
 	setGammaRamp(env, gamma_buffer);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_showWindow(JNIEnv *env, jclass unused, jlong hwnd_ptr, jint mode) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_showWindow(JNIEnv *env, jclass unused, jlong hwnd_ptr, jint mode) {
 	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
 	ShowWindow(hwnd, mode);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setForegroundWindow(JNIEnv *env, jclass unused, jlong hwnd_ptr) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setForegroundWindow(JNIEnv *env, jclass unused, jlong hwnd_ptr) {
 	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
 	SetForegroundWindow(hwnd);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setFocus(JNIEnv *env, jclass unused, jlong hwnd_ptr) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setFocus(JNIEnv *env, jclass unused, jlong hwnd_ptr) {
 	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
 	SetFocus(hwnd);
 }
 
-JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Win32Display_nGetVersion(JNIEnv *env, jobject self, jstring driver) {
+JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nGetVersion(JNIEnv *env, jobject self, jstring driver) {
 	char *driver_str;
 	jstring result;
 	driver_str = GetStringNativeChars(env, driver);
@@ -286,7 +286,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Win32Display_nGetVersion(JNIEnv 
 	return result;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nReshape(JNIEnv *env, jclass unused, jlong hwnd_ptr, jint x, jint y, jint width, jint height) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nReshape(JNIEnv *env, jclass unused, jlong hwnd_ptr, jint x, jint y, jint width, jint height) {
 	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
 	DWORD exstyle, windowflags;
 	RECT clientSize;
@@ -432,7 +432,7 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 	return icon;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nSetWindowIcon16
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetWindowIcon16
   (JNIEnv *env, jclass clazz, jobject iconBuffer)
 {
 	int *imgData = (int *)(*env)->GetDirectBufferAddress(env, iconBuffer);
@@ -450,7 +450,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nSetWindowIcon16
 	return -1;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nSetWindowIcon32
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetWindowIcon32
   (JNIEnv *env, jclass clazz, jobject iconBuffer)
 {
 	int *imgData = (int *)(*env)->GetDirectBufferAddress(env, iconBuffer);
@@ -468,7 +468,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nSetWindowIcon32
 	return -1;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setCursorPosition
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setCursorPosition
 (JNIEnv * env, jclass unused, jint x, jint y, jboolean fullscreen) {
 	DWORD windowflags, exstyle;
 	int transformed_x, transformed_y;
@@ -504,7 +504,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setCursorPosition
 		printfDebugJava(env, "SetCursorPos failed");
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setNativeCursor
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setNativeCursor
 	(JNIEnv *env, jobject self, jobject handle_buffer)
 {
 	HCURSOR *cursor_handle;
@@ -520,14 +520,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setNativeCursor
 	}
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_transformY(JNIEnv *env, jclass unused, jlong hwnd_int, jint y) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_transformY(JNIEnv *env, jclass unused, jlong hwnd_int, jint y) {
 	HWND hwnd = (HWND)(INT_PTR)hwnd_int;
 	RECT clientRect;
 	GetClientRect(hwnd, &clientRect);
 	return (clientRect.bottom - clientRect.top) - 1 - y;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getSystemMetrics(JNIEnv *env, jclass unused, jint index) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getSystemMetrics(JNIEnv *env, jclass unused, jint index) {
 	return GetSystemMetrics(index);
 }
 

@@ -31,14 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.Toolkit;
-import java.security.PrivilegedAction;
-import java.security.AccessController;
+import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.LWJGLUtil;
 
 /**
  *
@@ -46,39 +41,28 @@ import org.lwjgl.LWJGLUtil;
  * @version $Revision$
  * $Id$
  */
-final class Win32CanvasImplementation implements AWTCanvasImplementation {
-	static {
-		// Make sure the awt stuff is properly initialised (the jawt library in particular)
-		Toolkit.getDefaultToolkit();
-		AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				try {
-					System.loadLibrary("jawt");
-				} catch (UnsatisfiedLinkError e) {
-					/* It is probably already loaded, potentially by a different ClassLoader
-					 * so just log the exception and continue
-					 */
-					LWJGLUtil.log("Failed to load jawt: " + e.getMessage());
-				}
-				return null;
-			}
-		});
+final class WindowsAWTGLCanvasPeerInfo extends WindowsPeerInfo {
+	private final AWTGLCanvas canvas;
+	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
+	private final PixelFormat pixel_format;
+	private boolean has_pixel_format= false;
+
+	public WindowsAWTGLCanvasPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) {
+		this.canvas = canvas;
+		this.pixel_format = pixel_format;
 	}
 
-	public PeerInfo createPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) throws LWJGLException {
-		return new Win32AWTGLCanvasPeerInfo(canvas, pixel_format);
+	protected void doLockAndInitHandle() throws LWJGLException {
+		nInitHandle(awt_surface.lockAndGetHandle(canvas), getHandle());
+		if (!has_pixel_format) {
+			// If we haven't applied a pixel format yet, do it now
+			choosePixelFormat(canvas.getX(), canvas.getY(), pixel_format, null, true, true, false, true);
+			has_pixel_format = true;
+		}
 	}
+	private static native void nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle) throws LWJGLException;
 
-	/**
-	 * Find a proper GraphicsConfiguration from the given GraphicsDevice and PixelFormat.
-	 *
-	 * @return The GraphicsConfiguration corresponding to a visual that matches the pixel format.
-	 */
-	public GraphicsConfiguration findConfiguration(GraphicsDevice device, PixelFormat pixel_format) throws LWJGLException {
-		/*
-		 * It seems like the best way is to simply return null and
-		 * use SetPixelFormat in JNI later.
-		 */
-		return null;
+	protected void doUnlock() throws LWJGLException {
+		awt_surface.unlock();
 	}
 }

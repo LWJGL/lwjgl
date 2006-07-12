@@ -524,14 +524,14 @@
 			<class name="org.lwjgl.opengl.WindowsDirectInputDevice8" />
 			<class name="org.lwjgl.opengl.WindowsDirectInput3" />
 			<class name="org.lwjgl.opengl.WindowsDirectInputDevice3" />			
-			<class name="org.lwjgl.opengl.Win32PbufferPeerInfo" />
-			<class name="org.lwjgl.opengl.Win32Display" />
-			<class name="org.lwjgl.opengl.Win32Registry" />
+			<class name="org.lwjgl.opengl.WindowsPbufferPeerInfo" />
+			<class name="org.lwjgl.opengl.WindowsDisplay" />
+			<class name="org.lwjgl.opengl.WindowsRegistry" />
 			<class name="org.lwjgl.NativeSysImplementation" />
-			<class name="org.lwjgl.opengl.Win32AWTGLCanvasPeerInfo" />
-			<class name="org.lwjgl.opengl.Win32PeerInfo" />
-			<class name="org.lwjgl.opengl.Win32DisplayPeerInfo" />
-			<class name="org.lwjgl.opengl.Win32ContextImplementation" />
+			<class name="org.lwjgl.opengl.WindowsAWTGLCanvasPeerInfo" />
+			<class name="org.lwjgl.opengl.WindowsPeerInfo" />
+			<class name="org.lwjgl.opengl.WindowsDisplayPeerInfo" />
+			<class name="org.lwjgl.opengl.WindowsContextImplementation" />
 		</javah>
 		
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/macosx" force="yes">

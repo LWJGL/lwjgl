@@ -43,6 +43,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include <jni.h>
+#include "org_lwjgl_opengl_WindowsDisplay.h"
 
 HINSTANCE dll_handle;
 
@@ -59,6 +60,6 @@ BOOL WINAPI DllMain(
 	return TRUE; // Success
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_Win32Display_getDllInstance(JNIEnv *env, jclass unused) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getDllInstance(JNIEnv *env, jclass unused) {
 	return (LONG_PTR)dll_handle;
 }

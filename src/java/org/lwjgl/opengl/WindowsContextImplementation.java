@@ -41,7 +41,7 @@ import org.lwjgl.LWJGLException;
  * @version $Revision$
  * $Id$
  */
-final class Win32ContextImplementation implements ContextImplementation {
+final class WindowsContextImplementation implements ContextImplementation {
 	public ByteBuffer create(PeerInfo peer_info, ByteBuffer shared_context_handle) throws LWJGLException {
 		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
 		try {

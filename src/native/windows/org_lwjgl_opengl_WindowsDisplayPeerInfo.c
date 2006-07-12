@@ -39,13 +39,13 @@
 
 #include <jni.h>
 #include "Window.h"
-#include "org_lwjgl_opengl_Win32DisplayPeerInfo.h"
+#include "org_lwjgl_opengl_WindowsDisplayPeerInfo.h"
 #include "context.h"
 #include "common_tools.h"
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32DisplayPeerInfo_createDummyDC
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplayPeerInfo_createDummyDC
   (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
-	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	HWND dummy_hwnd = createDummyWindow(0, 0);
 	HDC dummy_hdc;
 	if (dummy_hwnd == NULL) {
@@ -57,15 +57,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32DisplayPeerInfo_createDummyDC
 	peer_info->format_hdc = dummy_hdc;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32DisplayPeerInfo_nDestroy
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplayPeerInfo_nDestroy
   (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
-	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	closeWindow(&peer_info->format_hwnd, &peer_info->format_hdc);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32DisplayPeerInfo_nInitDC
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplayPeerInfo_nInitDC
   (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
-	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	int pixel_format;
 	peer_info->drawable_hdc = getCurrentHDC();
 	pixel_format = GetPixelFormat(peer_info->format_hdc);

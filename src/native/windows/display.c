@@ -33,7 +33,7 @@
 /**
  * $Id$
  *
- * Win32 specific library for display handling.
+ * Windows specific library for display handling.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
@@ -45,7 +45,7 @@
 //#define COMPILE_MULTIMON_STUBS
 //#include <Multimon.h>
 #include <jni.h>
-#include "org_lwjgl_opengl_Win32Display.h"
+#include "org_lwjgl_opengl_WindowsDisplay.h"
 #include "display.h"
 #include "common_tools.h"
 
@@ -164,7 +164,7 @@ void switchDisplayMode(JNIEnv * env, jobject mode) {
 }
 
 static jobject createNativeGammaBuffer(JNIEnv *env) {
-	return newJavaManagedByteBuffer(env, sizeof(WORD)*3*org_lwjgl_opengl_Win32Display_GAMMA_LENGTH);
+	return newJavaManagedByteBuffer(env, sizeof(WORD)*3*org_lwjgl_opengl_WindowsDisplay_GAMMA_LENGTH);
 }
 
 jobject getCurrentGammaRamp(JNIEnv *env) {
@@ -222,8 +222,8 @@ jobject convertToNativeRamp(JNIEnv *env, jobject float_gamma_obj) {
 		scaledRampEntry = gammaRamp[i]*0xffff;
 		rampEntry = (WORD)scaledRampEntry;
 		native_ramp_buffer[i] = rampEntry;
-		native_ramp_buffer[i + org_lwjgl_opengl_Win32Display_GAMMA_LENGTH] = rampEntry;
-		native_ramp_buffer[i + 2*org_lwjgl_opengl_Win32Display_GAMMA_LENGTH] = rampEntry;
+		native_ramp_buffer[i + org_lwjgl_opengl_WindowsDisplay_GAMMA_LENGTH] = rampEntry;
+		native_ramp_buffer[i + 2*org_lwjgl_opengl_WindowsDisplay_GAMMA_LENGTH] = rampEntry;
 	}
 	return native_ramp;
 }
@@ -238,7 +238,7 @@ jobject getCurrentDisplayMode(JNIEnv * env) {
 }
 
 void resetDisplayMode(JNIEnv * env) {
-	// Under Win32, all we have to do is:
+	// Under Windows, all we have to do is:
 	ChangeDisplaySettings(NULL, 0);
 }
 

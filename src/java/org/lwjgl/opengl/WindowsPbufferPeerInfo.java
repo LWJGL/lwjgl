@@ -42,8 +42,8 @@ import org.lwjgl.LWJGLException;
  * @version $Revision$
  * $Id$
  */
-final class Win32PbufferPeerInfo extends Win32PeerInfo {
-	public Win32PbufferPeerInfo(int width, int height, PixelFormat pixel_format, IntBuffer pixelFormatCaps, IntBuffer pBufferAttribs) throws LWJGLException {
+final class WindowsPbufferPeerInfo extends WindowsPeerInfo {
+	public WindowsPbufferPeerInfo(int width, int height, PixelFormat pixel_format, IntBuffer pixelFormatCaps, IntBuffer pBufferAttribs) throws LWJGLException {
 		nCreate(getHandle(), width, height, pixel_format, pixelFormatCaps, pBufferAttribs);
 	}
 	private static native void nCreate(ByteBuffer handle, int width, int height, PixelFormat pixel_format, IntBuffer pixelFormatCaps, IntBuffer pBufferAttribs) throws LWJGLException;

@@ -33,7 +33,7 @@
 /**
  * $Id$
  *
- * Win32 system library.
+ * Windows system library.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$

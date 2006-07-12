@@ -39,7 +39,7 @@
 
 #include <jni.h>
 #include <windows.h>
-#include "org_lwjgl_opengl_Win32Registry.h"
+#include "org_lwjgl_opengl_WindowsRegistry.h"
 #include "common_tools.h"
 
 /*
@@ -108,20 +108,20 @@ static jstring queryRegistrationKey(JNIEnv *env, HKEY root_key, LPCTSTR subkey, 
 
 static HKEY enumToRootKey(jint root_key_enum) {
 	switch (root_key_enum) {
-		case org_lwjgl_opengl_Win32Registry_HKEY_CLASSES_ROOT:
+		case org_lwjgl_opengl_WindowsRegistry_HKEY_CLASSES_ROOT:
 			return HKEY_CLASSES_ROOT;
-		case org_lwjgl_opengl_Win32Registry_HKEY_CURRENT_USER:
+		case org_lwjgl_opengl_WindowsRegistry_HKEY_CURRENT_USER:
 			return HKEY_CURRENT_USER;
-		case org_lwjgl_opengl_Win32Registry_HKEY_LOCAL_MACHINE:
+		case org_lwjgl_opengl_WindowsRegistry_HKEY_LOCAL_MACHINE:
 			return HKEY_LOCAL_MACHINE;
-		case org_lwjgl_opengl_Win32Registry_HKEY_USERS:
+		case org_lwjgl_opengl_WindowsRegistry_HKEY_USERS:
 			return HKEY_USERS;
 		default:
 			return 0;
 	}
 }
 
-JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Win32Registry_nQueryRegistrationKey  (JNIEnv *env, jclass unused, jint root_key, jstring subkey, jstring value) {
+JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_WindowsRegistry_nQueryRegistrationKey  (JNIEnv *env, jclass unused, jint root_key, jstring subkey, jstring value) {
 	HKEY root = enumToRootKey(root_key);
 	char *subkey_native;
 	char *value_native;

@@ -41,13 +41,13 @@
 #include <jawt.h>
 #include <jawt_md.h>
 #include "awt_tools.h"
-#include "org_lwjgl_opengl_Win32AWTGLCanvasPeerInfo.h"
+#include "org_lwjgl_opengl_WindowsAWTGLCanvasPeerInfo.h"
 #include "context.h"
 #include "common_tools.h"
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32AWTGLCanvasPeerInfo_nInitHandle
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsAWTGLCanvasPeerInfo_nInitHandle
   (JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle) {
-	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	AWTSurfaceLock *surface = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
 	JAWT_Win32DrawingSurfaceInfo *win32_dsi = (JAWT_Win32DrawingSurfaceInfo *)surface->dsi->platformInfo;
 	peer_info->format_hwnd = win32_dsi->hwnd;

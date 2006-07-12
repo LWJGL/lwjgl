@@ -31,9 +31,14 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.ByteBuffer;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.Toolkit;
+import java.security.PrivilegedAction;
+import java.security.AccessController;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 
 /**
  *
@@ -41,44 +46,39 @@ import org.lwjgl.LWJGLException;
  * @version $Revision$
  * $Id$
  */
-final class Win32DisplayPeerInfo extends Win32PeerInfo {
-	public Win32DisplayPeerInfo(PixelFormat pixel_format) throws LWJGLException {
-		GLContext.loadOpenGLLibrary();
-		try {
-			createDummyDC(getHandle());
-			try {
-				choosePixelFormat(0, 0, pixel_format, null, true, true, false, true);
-			} catch (LWJGLException e) {
-				nDestroy(getHandle());
-				throw e;
+final class WindowsCanvasImplementation implements AWTCanvasImplementation {
+	static {
+		// Make sure the awt stuff is properly initialised (the jawt library in particular)
+		Toolkit.getDefaultToolkit();
+		AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				try {
+					System.loadLibrary("jawt");
+				} catch (UnsatisfiedLinkError e) {
+					/* It is probably already loaded, potentially by a different ClassLoader
+					 * so just log the exception and continue
+					 */
+					LWJGLUtil.log("Failed to load jawt: " + e.getMessage());
+				}
+				return null;
 			}
-		} catch (LWJGLException e) {
-			GLContext.unloadOpenGLLibrary();
-			throw e;
-		}
-	}
-	private static native void createDummyDC(ByteBuffer peer_info_handle) throws LWJGLException;
-
-	void initDC() {
-		nInitDC(getHandle());
-	}
-	private static native void nInitDC(ByteBuffer peer_info_handle);
-
-	private static native void nDestroy(ByteBuffer peer_info_handle);
-	
-	protected void doLockAndInitHandle() throws LWJGLException {
-		// NO-OP
+		});
 	}
 
-	private static native void setPixelFormat(ByteBuffer peer_info_handle);
-	
-	protected void doUnlock() throws LWJGLException {
-		// NO-OP
+	public PeerInfo createPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) throws LWJGLException {
+		return new WindowsAWTGLCanvasPeerInfo(canvas, pixel_format);
 	}
 
-	public void destroy() {
-		super.destroy();
-		nDestroy(getHandle());
-		GLContext.unloadOpenGLLibrary();
+	/**
+	 * Find a proper GraphicsConfiguration from the given GraphicsDevice and PixelFormat.
+	 *
+	 * @return The GraphicsConfiguration corresponding to a visual that matches the pixel format.
+	 */
+	public GraphicsConfiguration findConfiguration(GraphicsDevice device, PixelFormat pixel_format) throws LWJGLException {
+		/*
+		 * It seems like the best way is to simply return null and
+		 * use SetPixelFormat in JNI later.
+		 */
+		return null;
 	}
 }

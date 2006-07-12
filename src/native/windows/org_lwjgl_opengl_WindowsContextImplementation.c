@@ -38,38 +38,38 @@
  */
 
 #include <jni.h>
-#include "org_lwjgl_opengl_Win32ContextImplementation.h"
+#include "org_lwjgl_opengl_WindowsContextImplementation.h"
 #include "context.h"
 #include "common_tools.h"
 
 typedef struct {
 	WGLExtensions extensions;
 	HGLRC context;
-} Win32Context;
+} WindowsContext;
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nCreate
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nCreate
   (JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject shared_context_handle) {
-	Win32PeerInfo *peer_info;
-	Win32Context *shared_context_info;
-	Win32Context *context_info;
+	WindowsPeerInfo *peer_info;
+	WindowsContext *shared_context_info;
+	WindowsContext *context_info;
 	HGLRC context;
 	HGLRC shared_context = NULL;
 	HDC saved_hdc;
 	HGLRC saved_context;
 	WGLExtensions extensions;
-	jobject context_handle = newJavaManagedByteBuffer(env, sizeof(Win32Context));
+	jobject context_handle = newJavaManagedByteBuffer(env, sizeof(WindowsContext));
 	if (context_handle == NULL) {
 		throwException(env, "Could not create handle buffer");
 		return NULL;
 	}
-	peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	context = wglCreateContext(peer_info->format_hdc);
 	if (context == NULL) {
 		throwException(env, "Could not create context");
 		return NULL;
 	}
 	if (shared_context_handle != NULL) {
-		shared_context_info = (Win32Context *)(*env)->GetDirectBufferAddress(env, shared_context_handle);
+		shared_context_info = (WindowsContext *)(*env)->GetDirectBufferAddress(env, shared_context_handle);
 		shared_context = shared_context_info->context;
 		if (!wglShareLists(shared_context, context)) {
 			wglDeleteContext(context);
@@ -88,47 +88,47 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nCrea
 	extgl_InitWGL(&extensions);
 	if (!wglMakeCurrent(saved_hdc, saved_context))
 		printfDebugJava(env, "Failed to restore current context");
-	context_info = (Win32Context *)(*env)->GetDirectBufferAddress(env, context_handle);
+	context_info = (WindowsContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	context_info->context = context;
 	context_info->extensions = extensions;
 	return context_handle;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nSwapBuffers
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nSwapBuffers
   (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
-	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	SwapBuffers(peer_info->drawable_hdc);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nReleaseCurrentContext
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nReleaseCurrentContext
   (JNIEnv *env, jclass clazz) {
 	wglMakeCurrent(NULL, NULL);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nMakeCurrent
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nMakeCurrent
   (JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject context_handle) {
-	Win32Context *context_info = (Win32Context *)(*env)->GetDirectBufferAddress(env, context_handle);
-	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	WindowsContext *context_info = (WindowsContext *)(*env)->GetDirectBufferAddress(env, context_handle);
+	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	if (!wglMakeCurrent(peer_info->drawable_hdc, context_info->context))
 		throwException(env, "Could not make context current");
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nIsCurrent
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nIsCurrent
   (JNIEnv *env, jclass clazz, jobject context_handle) {
-	Win32Context *context_info = (Win32Context *)(*env)->GetDirectBufferAddress(env, context_handle);
+	WindowsContext *context_info = (WindowsContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	return wglGetCurrentContext() == context_info->context;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nSetSwapInterval
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nSetSwapInterval
   (JNIEnv *env, jclass clazz, jobject context_handle, jint value) {
-	Win32Context *context_info = (Win32Context *)(*env)->GetDirectBufferAddress(env, context_handle);
+	WindowsContext *context_info = (WindowsContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	if (context_info->extensions.WGL_EXT_swap_control) {
 		context_info->extensions.wglSwapIntervalEXT(value);
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nDestroy
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nDestroy
   (JNIEnv *env, jclass clazz, jobject context_handle) {
-	Win32Context *context_info = (Win32Context *)(*env)->GetDirectBufferAddress(env, context_handle);
+	WindowsContext *context_info = (WindowsContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	wglDeleteContext(context_info->context);
 }

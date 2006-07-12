@@ -33,9 +33,7 @@
 /**
  * $Id$
  *
- * Base Win32 display
- *
- * @author cix_foo <cix_foo@users.sourceforge.net>
+ * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 
@@ -60,7 +58,7 @@ typedef struct {
 	};
 	HDC format_hdc;
 	HDC drawable_hdc;
-} Win32PeerInfo;
+} WindowsPeerInfo;
 
 /*
  * Register the LWJGL window class.

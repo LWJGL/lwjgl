@@ -144,7 +144,7 @@ public final class Display {
 			class_name = "org.lwjgl.opengl.LinuxDisplay";
 				break;
 			case LWJGLUtil.PLATFORM_WINDOWS:
-			class_name = "org.lwjgl.opengl.Win32Display";
+			class_name = "org.lwjgl.opengl.WindowsDisplay";
 				break;
 			case LWJGLUtil.PLATFORM_MACOSX:
 			class_name = "org.lwjgl.opengl.MacOSXDisplay";
