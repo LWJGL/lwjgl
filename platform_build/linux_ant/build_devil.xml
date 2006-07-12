@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<project name="devil" basedir="../../bin/devil" default="compile">
+	<property name="native" location="../../src/native"/>
+	<property name="libname32" value="liblwjgl-devil.so"/>
+	<property name="libname64" value="liblwjgl64-devil.so"/>
+	<property name="libs32" value="-lpthread"/>
+	<property name="libs64" value="-lpthread"/>
+	<property name="cflags" value="-O2 -Wall -c -fPIC -std=c99 -pthread"/>
+	
+	<target name="clean">
+		<delete>
+			<fileset dir="." includes="*.o"/>
+			<fileset dir="." includes="*.so"/>
+		</delete>
+	</target>
+	
+    <target name="compile">
+		<exec executable="uname" outputproperty="hwplatform">
+			<arg value="-i"/>
+		</exec>
+		<condition property="libs" value="${libs64}" else="${libs32}">
+			<equals arg1="${hwplatform}" arg2="x86_64"/>
+		</condition>
+		<condition property="libname" value="${libname64}" else="${libname32}">
+			<equals arg1="${hwplatform}" arg2="x86_64"/>
+		</condition>
+		<property name="linker_flags" value="-Wl,--version-script=${native}/linux/lwjgl.map -shared -O2 -Wall -o ${libname} ${libs}"/>
+		<apply dir="." executable="cc" dest="." skipemptyfilesets="true" failonerror="true">
+			<arg line="${cflags}"/>
+			<arg value="-I${java.home}/include"/>
+			<arg value="-I${java.home}/include/linux"/>
+			<arg value="-I${native}/common"/>
+			<arg value="-I${native}/common/devil"/>
+			<mapper type="glob" from="*.c" to="*.o"/>
+			<fileset dir="${native}/common" includes="*common*.c"/>
+			<fileset dir="${native}/common/devil" includes="*.c"/>
+		</apply>
+		<apply dir="." parallel="true" executable="cc" failonerror="true">
+			<srcfile/>
+			<arg line="${linker_flags}"/>
+			<fileset dir="." includes="*.o"/>
+		</apply>
+		<apply dir="." parallel="true" executable="strip" failonerror="true">
+			<fileset file="${libname}"/>
+		</apply>
+    </target>
+</project>
+
