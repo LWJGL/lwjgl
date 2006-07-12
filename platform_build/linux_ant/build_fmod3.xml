@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
 <project name="fmod3" basedir="../../bin/fmod3" default="compile">
-	<fail message="Missing FMOD path environment property" unless="env.FMOD"/>
 	<property name="native" location="../../src/native"/>
 	<property environment="env"/>
 	<property name="fmod.home" location="${env.FMOD}"/>
@@ -10,6 +9,8 @@
 	<property name="libs32" value="-lpthread"/>
 	<property name="libs64" value="-lpthread"/>
 	<property name="cflags" value="-O2 -Wall -c -fPIC -std=c99 -pthread"/>
+
+	<fail message="Missing FMOD path environment property" unless="env.FMOD"/>
 	
 	<target name="clean">
 		<delete>
