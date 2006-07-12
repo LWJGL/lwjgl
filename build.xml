@@ -714,19 +714,11 @@
 	</target>
 
 	<target name="-compile_native_linux_optional" if="lwjgl.platform.linux">
-	<!-- check for required properties -->
-		<property environment="env"/>
-		<fail message="Missing JAVA_HOME path environment property" unless="env.JAVA_HOME"/>		
-		<fail message="Missing FMOD path environment property" unless="env.FMOD"/>		
-		
-		<exec executable="make" dir="${lwjgl.src.native}/common/devil">
-			<arg line="-f Makefile.linux"/>
-		</exec>
-		<exec executable="make" dir="${lwjgl.src.native}/common/fmod3">
-                        <arg line="-f Makefile.linux"/>
-                </exec>
-		<move file="${lwjgl.src.native}/common/devil/liblwjgl-devil.so" tofile="${lwjgl.lib}/linux/liblwjgl-devil.so" />
-		<move file="${lwjgl.src.native}/common/fmod3/liblwjgl-fmod3.so" tofile="${lwjgl.lib}/linux/liblwjgl-fmod3.so" />
+		<ant antfile="platform_build/linux_ant/build_fmod3.xml" inheritAll="false"/>
+		<copy file="${lwjgl.bin}/fmod3/liblwjgl-fmod3.so" todir="${lwjgl.lib}/linux"/>
+
+		<ant antfile="platform_build/linux_ant/build_devil.xml" inheritAll="false"/>
+		<copy file="${lwjgl.bin}/devil/liblwjgl-devil.so" todir="${lwjgl.lib}/linux"/>
 	</target>
 
 	<target name="-compile_native_macosx" if="lwjgl.platform.macosx">
