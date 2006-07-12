@@ -306,7 +306,7 @@ public class LWJGLUtil {
 			case LWJGLUtil.PLATFORM_MACOSX:
 				return "macosx";
 			case LWJGLUtil.PLATFORM_WINDOWS:
-				return "win32";
+				return "windows";
 			default:
 				return "unknown";
 		}
