@@ -149,13 +149,6 @@
 		<include name="libILUT.dylib" />
 	</patternset>
 
-	<!-- Files to include in source distribution -->
-	<fileset id="lwjgl.source.fileset" dir=".">
-		<include name="build.xml" />
-		<include name="src/**" />
-		<include name="platform_build/**/*" />
-	</fileset>
-	
 	<!-- files in the base package -->
 	<patternset id="lwjgl_base">
 		<include name="**" />
@@ -293,7 +286,6 @@
 		
 		<!-- create distribution from files in libs/ and temp/ -->
 		<antcall target="-distribution_javadoc" />
-		<antcall target="-distribution_source" />
 		<antcall target="-distribute" />
 	</target>
 
@@ -478,13 +470,6 @@
 		<zip destfile="${lwjgl.dist}/lwjgl-docs-${lwjgl.version}.zip" basedir="${lwjgl.docs}" includes="javadoc/**" />
 	</target>
 
-	<!-- Creates a versioned distribution of the source code -->
-	<target name="-distribution_source">
-		<zip destfile="${lwjgl.dist}/lwjgl-source-${lwjgl.version}.zip">
-			<fileset refid="lwjgl.source.fileset" />
-		</zip>
-	</target>
-	
 	<!-- Compiles the Java source code -->
 	<target name="compile" description="Compiles the java source code" depends="-initialize">
 		<javac debug="yes" destdir="${lwjgl.bin}" includes="org/lwjgl/opengl/**" source="1.4" target="1.4" classpath="${lwjgl.lib}/jinput.jar" taskname="core">
@@ -575,7 +560,7 @@
 		<javadoc destdir="${lwjgl.docs}/javadoc" author="true" version="true" use="true" source="1.4" windowtitle="LWJGL API">
 			<fileset refid="lwjgl.javadoc.fileset" />
 			<doctitle><![CDATA[<h1>Lightweight Java Game Toolkit</h1>]]></doctitle>
-			<bottom><![CDATA[<i>Copyright &#169; 2002-2005 lwjgl.org. All Rights Reserved.</i>]]></bottom>
+			<bottom><![CDATA[<i>Copyright &#169; 2002-2006 lwjgl.org. All Rights Reserved.</i>]]></bottom>
 		</javadoc>
 	</target>
 
@@ -753,33 +738,42 @@
 		<unzip src="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip" dest="${lwjgl.temp}/jnlp/temp" overwrite="true"/>
 		<unzip src="${lwjgl.dist}/lwjgl_optional-${lwjgl.version}.zip" dest="${lwjgl.temp}/jnlp/temp" overwrite="true"/>
 		
+		<!-- move files to unified structure -->
+		<move todir="${lwjgl.temp}/jnlp/temp">
+			<fileset dir="${lwjgl.temp}/jnlp/temp/lwjgl-${lwjgl.version}/">
+				<include name="**"/>
+			</fileset>
+			<fileset dir="${lwjgl.temp}/jnlp/temp/lwjgl_optional-${lwjgl.version}/">
+				<include name="**"/>
+			</fileset>
+		</move>
+		
 		<!-- move relevant files to root -->
-		<move todir="${lwjgl.temp}/jnlp" flatten="true">
+		<move todir="${lwjgl.temp}/jnlp/" flatten="true">
 			<fileset dir="${lwjgl.temp}/jnlp/temp">
 				<include name="**/**.jar"/>
 			</fileset>
 		</move>
 		
 		<!-- create native jars -->
-		<jar destfile="${lwjgl.temp}/jnlp/native_win32.jar" basedir="${lwjgl.temp}/jnlp/temp/lwjgl-${lwjgl.version}/native/win32"/>
-		<jar destfile="${lwjgl.temp}/jnlp/native_linux.jar" basedir="${lwjgl.temp}/jnlp/temp/lwjgl-${lwjgl.version}/native/linux"/>
-		<jar destfile="${lwjgl.temp}/jnlp/native_macosx.jar" basedir="${lwjgl.temp}/jnlp/temp/lwjgl-${lwjgl.version}/native/macosx"/>
+		<jar destfile="${lwjgl.temp}/jnlp/native_win32.jar" basedir="${lwjgl.temp}/jnlp/temp/native/win32"/>
+		<jar destfile="${lwjgl.temp}/jnlp/native_linux.jar" basedir="${lwjgl.temp}/jnlp/temp/native/linux"/>
+		<jar destfile="${lwjgl.temp}/jnlp/native_macosx.jar" basedir="${lwjgl.temp}/jnlp/temp/native/macosx"/>
 		
 		<!-- create media jar -->
 		<jar destfile="${lwjgl.temp}/jnlp/media.jar" basedir="${lwjgl.res}"/>	
 	
 		<!-- sign 'em -->
-		<input message="Please enter store password:" addproperty="store.pwd" />
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 		storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_devil.jar" 	storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_fmod3.jar" 	storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_test.jar" 	storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_util.jar" 	storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/media.jar" 		storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/native_linux.jar" 	storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/native_win32.jar" 	storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/jinput.jar" 		storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 		alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_devil.jar" 	alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_fmod3.jar" 	alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_test.jar" 	alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_util.jar" 	alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		<signjar jar="${lwjgl.temp}/jnlp/media.jar" 		alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_linux.jar" 	alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_win32.jar" 	alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		<signjar jar="${lwjgl.temp}/jnlp/jinput.jar" 		alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
 	</target>
 	
 	<!-- -->
