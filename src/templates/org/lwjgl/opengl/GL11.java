@@ -905,6 +905,7 @@ public interface GL11 {
 	@StripPostfix("params")
 	void glGetLightiv(@GLenum int light, @GLenum int pname, @Check("4") IntBuffer params);
 
+	@NoErrorCheck
 	int glGetError();
 
 	void glGetClipPlane(@GLenum int plane, @Check("4") DoubleBuffer equation);
