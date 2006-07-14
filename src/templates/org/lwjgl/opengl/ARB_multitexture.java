@@ -75,35 +75,51 @@ public interface ARB_multitexture {
 
 	void glActiveTextureARB(@GLenum int texture);
 
+	@NoErrorCheck
 	void glMultiTexCoord1fARB(@GLenum int target, float s);
 
+	@NoErrorCheck
 	void glMultiTexCoord1dARB(@GLenum int target, double s);
 
+	@NoErrorCheck
 	void glMultiTexCoord1iARB(@GLenum int target, int s);
 
+	@NoErrorCheck
 	void glMultiTexCoord1sARB(@GLenum int target, short s);
 
+	@NoErrorCheck
 	void glMultiTexCoord2fARB(@GLenum int target, float s, float t);
 
+	@NoErrorCheck
 	void glMultiTexCoord2dARB(@GLenum int target, double s, double t);
 
+	@NoErrorCheck
 	void glMultiTexCoord2iARB(@GLenum int target, int s, int t);
 
+	@NoErrorCheck
 	void glMultiTexCoord2sARB(@GLenum int target, short s, short t);
 
+	@NoErrorCheck
 	void glMultiTexCoord3fARB(@GLenum int target, float s, float t, float r);
 
+	@NoErrorCheck
 	void glMultiTexCoord3dARB(@GLenum int target, double s, double t, double r);
 
+	@NoErrorCheck
 	void glMultiTexCoord3iARB(@GLenum int target, int s, int t, int r);
 
+	@NoErrorCheck
 	void glMultiTexCoord3sARB(@GLenum int target, short s, short t, short r);
 
+	@NoErrorCheck
 	void glMultiTexCoord4fARB(@GLenum int target, float s, float t, float r, float q);
 
+	@NoErrorCheck
 	void glMultiTexCoord4dARB(@GLenum int target, double s, double t, double r, double q);
 
+	@NoErrorCheck
 	void glMultiTexCoord4iARB(@GLenum int target, int s, int t, int r, int q);
 
+	@NoErrorCheck
 	void glMultiTexCoord4sARB(@GLenum int target, short s, short t, short r, short q);
 }

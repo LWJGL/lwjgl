@@ -755,10 +755,12 @@ public interface GL11 {
 			@Check("textures.remaining()")
 			@GLboolean ByteBuffer residences);
 
+	@NoErrorCheck
 	void glBegin(@GLenum int mode);
 
 	void glEnd();
 
+	@NoErrorCheck
 	void glArrayElement(int i);
 
 	void glClearDepth(@GLclampd double depth);
@@ -793,20 +795,28 @@ public interface GL11 {
 
 	void glColorMask(boolean red, boolean green, boolean blue, boolean alpha);
 
+	@NoErrorCheck
 	void glColor3b(byte red, byte green, byte blue);
 
+	@NoErrorCheck
 	void glColor3f(float red, float green, float blue);
 
+	@NoErrorCheck
 	void glColor3d(double red, double green, double blue);
 
+	@NoErrorCheck
 	void glColor3ub(@GLubyte byte red, @GLubyte byte green, @GLubyte byte blue);
 
+	@NoErrorCheck
 	void glColor4b(byte red, byte green, byte blue, byte alpha);
 
+	@NoErrorCheck
 	void glColor4f(float red, float green, float blue, float alpha);
 
+	@NoErrorCheck
 	void glColor4d(double red, double green, double blue, double alpha);
 
+	@NoErrorCheck
 	void glColor4ub(@GLubyte byte red, @GLubyte byte green, @GLubyte byte blue, @GLubyte byte alpha);
 
 	void glClipPlane(@GLenum int plane, @Check("4") @Const DoubleBuffer equation);
@@ -1118,12 +1128,16 @@ public interface GL11 {
 	                     @GLfloat
 	                     @GLdouble Buffer pointer);
 
+	@NoErrorCheck
 	void glNormal3b(byte nx, byte ny, byte nz);
 
+	@NoErrorCheck
 	void glNormal3f(float nx, float ny, float nz);
 
+	@NoErrorCheck
 	void glNormal3d(double nx, double ny, double nz);
 
+	@NoErrorCheck
 	void glNormal3i(int nx, int ny, int nz);
 
 	void glNewList(@GLuint int list, @GLenum int mode);
@@ -1214,22 +1228,31 @@ public interface GL11 {
 	                     @GLfloat
 	                     @GLdouble Buffer pointer);
 
+	@NoErrorCheck
 	void glVertex2f(float x, float y);
 
+	@NoErrorCheck
 	void glVertex2d(double x, double y);
 
+	@NoErrorCheck
 	void glVertex2i(int x, int y);
 
+	@NoErrorCheck
 	void glVertex3f(float x, float y, float z);
 
+	@NoErrorCheck
 	void glVertex3d(double x, double y, double z);
 
+	@NoErrorCheck
 	void glVertex3i(int x, int y, int z);
 
+	@NoErrorCheck
 	void glVertex4f(float x, float y, float z, float w);
 
+	@NoErrorCheck
 	void glVertex4d(double x, double y, double z, double w);
 
+	@NoErrorCheck
 	void glVertex4i(int x, int y, int z, int w);
 
 	void glTranslatef(float x, float y, float z);
@@ -1319,20 +1342,28 @@ public interface GL11 {
 	                       @GLfloat
 	                       @GLdouble Buffer pointer);
 
+	@NoErrorCheck
 	void glTexCoord1f(float s);
 
+	@NoErrorCheck
 	void glTexCoord1d(double s);
 
+	@NoErrorCheck
 	void glTexCoord2f(float s, float t);
 
+	@NoErrorCheck
 	void glTexCoord2d(double s, double t);
 
+	@NoErrorCheck
 	void glTexCoord3f(float s, float t, float r);
 
+	@NoErrorCheck
 	void glTexCoord3d(double s, double t, double r);
 
+	@NoErrorCheck
 	void glTexCoord4f(float s, float t, float r, float q);
 
+	@NoErrorCheck
 	void glTexCoord4d(double s, double t, double r, double q);
 
 	void glStencilOp(@GLenum int fail, @GLenum int zfail, @GLenum int zpass);

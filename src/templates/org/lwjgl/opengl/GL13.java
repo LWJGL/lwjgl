@@ -218,20 +218,28 @@ public interface GL13 {
 	                             @GLshort
 	                             @GLint Buffer img);
 
+	@NoErrorCheck
 	void glMultiTexCoord1f(@GLenum int target, float s);
 
+	@NoErrorCheck
 	void glMultiTexCoord1d(@GLenum int target, double s);
 
+	@NoErrorCheck
 	void glMultiTexCoord2f(@GLenum int target, float s, float t);
 
+	@NoErrorCheck
 	void glMultiTexCoord2d(@GLenum int target, double s, double t);
 
+	@NoErrorCheck
 	void glMultiTexCoord3f(@GLenum int target, float s, float t, float r);
 
+	@NoErrorCheck
 	void glMultiTexCoord3d(@GLenum int target, double s, double t, double r);
 
+	@NoErrorCheck
 	void glMultiTexCoord4f(@GLenum int target, float s, float t, float r, float q);
 
+	@NoErrorCheck
 	void glMultiTexCoord4d(@GLenum int target, double s, double t, double r, double q);
 
 	@StripPostfix("m")
