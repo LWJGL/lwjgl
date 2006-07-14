@@ -468,7 +468,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetWindowIcon32
 	return -1;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setCursorPosition
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetCursorPosition
 (JNIEnv * env, jclass unused, jint x, jint y, jboolean fullscreen) {
 	DWORD windowflags, exstyle;
 	int transformed_x, transformed_y;
