@@ -56,6 +56,9 @@ public final class Sys {
 	/** Current version of library */
 	private static final String VERSION = "1.0beta2";
 
+	/** Current version of the JNI library */
+	static final int JNI_VERSION = 1;
+
 	/** The implementation instance to delegate platform specific behavior to */
 	private final static SysImplementation implementation;
 
@@ -97,10 +100,10 @@ public final class Sys {
 		implementation = createImplementation();
 		loadLibrary(JNI_LIBRARY_NAME);
 		
-		String native_version = implementation.getNativeLibraryVersion();
-		if (!native_version.equals(getVersion()))
-			throw new LinkageError("Version mismatch: jar version is '" + getVersion() +
-                             "', native libary version is '" + native_version + "'");
+		int native_jni_version = implementation.getJNIVersion();
+		if (native_jni_version != JNI_VERSION)
+			throw new LinkageError("Version mismatch: jar version is '" + JNI_VERSION +
+                             "', native libary version is '" + native_jni_version + "'");
 		implementation.setDebug(LWJGLUtil.DEBUG);
 	}
 

@@ -39,7 +39,10 @@ package org.lwjgl;
  * $Id$
  */
 abstract class DefaultSysImplementation implements SysImplementation {
-	public native String getNativeLibraryVersion();
+	/** Included to let native have easy access to Sys.JNI_VERSION */
+	private final static int JNI_VERSION = Sys.JNI_VERSION;
+
+	public native int getJNIVersion();
 	public native void setDebug(boolean debug);
 
 	public long getTimerResolution() {

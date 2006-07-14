@@ -48,7 +48,6 @@
 #include "org_lwjgl_DefaultSysImplementation.h"
 
 static bool debug = false;
-static const char* VERSION = "1.0beta2";
 static JavaVM *jvm;
 
 void initAttribList(attrib_list_t *list) {
@@ -64,9 +63,9 @@ void putAttrib(attrib_list_t *list, int attrib) {
 	list->current_index++;
 }
 
-JNIEXPORT jstring JNICALL Java_org_lwjgl_DefaultSysImplementation_getNativeLibraryVersion
+JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getJNIVersion
   (JNIEnv *env, jobject ignored) {
-	return NewStringNative(env, VERSION);
+	return org_lwjgl_DefaultSysImplementation_JNI_VERSION;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_DefaultSysImplementation_setDebug

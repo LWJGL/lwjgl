@@ -44,7 +44,7 @@ interface SysImplementation {
 	/**
 	 * Return the version of the native library
 	 */
-	String getNativeLibraryVersion();
+	int getJNIVersion();
 
 	void setDebug(boolean debug);
 
