@@ -359,7 +359,7 @@
 		<condition property="native_path" value="libs/macosx">
 			<os name="Mac OS X" />
 		</condition>
-		<java classname="${test.mainclass}" classpath="${lwjgl.lib}/lwjgl.jar:${lwjgl.lib}/lwjgl_util.jar:${lwjgl.lib}/lwjgl_test.jar" fork="true">
+		<java classname="${test.mainclass}" classpath="${lwjgl.lib}/lwjgl.jar:${lwjgl.lib}/lwjgl_util.jar:${lwjgl.lib}/lwjgl_test.jar:${lwjgl.lib}/jinput.jar" fork="true">
 			<jvmarg value="-Dorg.lwjgl.util.Debug=true"/>
 			<jvmarg value="-Djava.library.path=${native_path}"/>
 		</java>
@@ -416,10 +416,12 @@
 		<copy file="${lwjgl.lib}/lwjgl_util.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/lwjgl_fmod3.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/lwjgl_devil.jar" todir="applet"/>
+		<copy file="${lwjgl.lib}/jinput.jar" todir="applet"/>
 		<zip destfile="applet/res.jar">
 		  <zipfileset dir="${lwjgl.res}" includes="Footsteps.wav, ILtest.tga, Missing_you.mod"/>
 		</zip>
 		<signjar jar="applet/lwjgl.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		<signjar jar="applet/jinput.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
 		<signjar jar="applet/lwjgl_util_applet.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
 		<signjar jar="applet/lwjgl_fmod3.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
 		<signjar jar="applet/lwjgl_devil.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>		
