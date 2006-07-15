@@ -248,12 +248,13 @@ final class WindowsDisplay implements DisplayImplementation {
 	
 	public String getVersion() {
 		String driver = getAdapter();
-		if (driver != null)
-			return nGetVersion(driver);
-		else
+		if (driver != null) {
+			WindowsFileVersion version = nGetVersion(driver + ".dll");
+			return version.toString();
+		} else
 			return null;
 	}
-	private native String nGetVersion(String driver);
+	private native WindowsFileVersion nGetVersion(String driver);
 
 	public DisplayMode init() throws LWJGLException {
 		current_gamma = saved_gamma = getCurrentGammaRamp();

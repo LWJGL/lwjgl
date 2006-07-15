@@ -275,7 +275,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setFocus(JNIEnv *env
 	SetFocus(hwnd);
 }
 
-JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nGetVersion(JNIEnv *env, jobject self, jstring driver) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nGetVersion(JNIEnv *env, jobject self, jstring driver) {
 	char *driver_str;
 	jstring result;
 	driver_str = GetStringNativeChars(env, driver);

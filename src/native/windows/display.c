@@ -241,16 +241,22 @@ void resetDisplayMode(JNIEnv * env) {
 	ChangeDisplaySettings(NULL, 0);
 }
 
-jstring getVersion(JNIEnv * env, char *driver)
+jobject getVersion(JNIEnv * env, char *driver)
 {
-#define BUFFER_SIZE 1024
-	jstring ret = NULL;
-
-	const char *dll_ext = ".dll";
 	DWORD var = 0;
 	DWORD dwInfoSize;
 	LPVOID lpInfoBuff;
 	BOOL bRetval;
+	jclass version_class;
+	jmethodID version_cons;
+	jobject ret = NULL;
+
+	version_class = (*env)->FindClass(env, "org/lwjgl/opengl/WindowsFileVersion");
+	if (version_class == NULL)
+		return NULL;
+	version_cons = (*env)->GetMethodID(env, version_class, "<init>", "(II)V");
+	if (version_cons == NULL)
+		return NULL;
 
 	dwInfoSize = GetFileVersionInfoSize(driver, &var);
 	lpInfoBuff = malloc(dwInfoSize);
@@ -259,20 +265,13 @@ jstring getVersion(JNIEnv * env, char *driver)
 		return NULL;
 	}
 	bRetval = GetFileVersionInfo(driver, 0, dwInfoSize, lpInfoBuff);
-	if (bRetval == 0) {
-	} else {
+	if (bRetval != 0) {
 		VS_FIXEDFILEINFO * fxdFileInfo;
 
 		UINT uiLen = 0;
-		bRetval = VerQueryValue(lpInfoBuff, TEXT("\\"), (void *)&fxdFileInfo, &uiLen);
-		if (bRetval != 0) {
-			TCHAR version[BUFFER_SIZE];
-			TCHAR ms[BUFFER_SIZE], ls[BUFFER_SIZE];
-			_snprintf_s(ms, BUFFER_SIZE, _TRUNCATE, "%d.%d\0", fxdFileInfo->dwProductVersionMS >> 16, fxdFileInfo->dwProductVersionMS & 0xFFFF);
-			_snprintf_s(ls, BUFFER_SIZE, _TRUNCATE, "%d.%d\0", fxdFileInfo->dwProductVersionLS >> 16, fxdFileInfo->dwProductVersionLS & 0xFFFF);
-			_snprintf_s(version, BUFFER_SIZE, _TRUNCATE, "%s.%s\0", ms, ls);
-			ret = NewStringNative(env, version);
-		}
+		bRetval = VerQueryValue(lpInfoBuff, TEXT("\\"), &fxdFileInfo, &uiLen);
+		if (bRetval != 0)
+			ret = (*env)->NewObject(env, version_class, version_cons, fxdFileInfo->dwProductVersionMS, fxdFileInfo->dwProductVersionLS);
 	}
 
 	free(lpInfoBuff);
