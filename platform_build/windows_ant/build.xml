@@ -4,7 +4,7 @@
 	<property name="native" location="../../src/native"/>
 	<property environment="env"/>
 	<property name="dxhome" location="${env.DXSDK_DIR}"/>
-	<property name="sdkhome" location="${env.MSSDK}"/>
+	<property name="sdkhome" location="${env.MSSdk}"/>
 	<property name="program_files" location="${env.ProgramFiles}"/>
 	<property name="alhome" location="${program_files}\OpenAL 1.1 with EFX SDK"/>
 	<property name="dllname" value="lwjgl.dll"/>
