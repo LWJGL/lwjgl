@@ -142,43 +142,50 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_NativeSysImplementation_openURL
 	return JNI_TRUE;
 }
 
-const void * getClipboard(int type)
-{
-
-	void * ret;
-	HANDLE hglb;
-	// Open the clipboard
-	if (!OpenClipboard(NULL)) 
-		return NULL; 
-
-	hglb = GetClipboardData(type); 
-	if (hglb != NULL) { 
-		ret = GlobalLock(hglb); 
-		if (ret != NULL) { 
-			GlobalUnlock(hglb); 
-		} 
-	} 
-
-	// Close the clipboard now we're done
-	CloseClipboard(); 
-
-	return ret;
-
-}
-
 JNIEXPORT jstring JNICALL Java_org_lwjgl_NativeSysImplementation_getClipboard
   (JNIEnv * env, jobject ignored)
 {
 	// Check to see if there's text available in the clipboard
 	BOOL textAvailable = IsClipboardFormatAvailable(CF_TEXT);
 	BOOL unicodeAvailable = IsClipboardFormatAvailable(CF_UNICODETEXT);
+	void *clipboard_data;
+	jstring ret;
+	HANDLE hglb;
+	const wchar_t * str;
 
 	if (unicodeAvailable) {
-		const wchar_t * str = (const wchar_t *) getClipboard(CF_UNICODETEXT);
-		return (*env)->NewString(env, str, wcslen(str));
+		if (!OpenClipboard(NULL))
+			return NULL;
+		hglb = GetClipboardData(CF_UNICODETEXT);
+		if (hglb == NULL) {
+			CloseClipboard();
+			return NULL;
+		}
+		clipboard_data = GlobalLock(hglb);
+		if (clipboard_data == NULL) {
+			CloseClipboard();
+			return NULL;
+		}
+		str = (const wchar_t *)clipboard_data;
+		ret = (*env)->NewString(env, str, wcslen(str));
 	} else if (textAvailable) {
-		return NewStringNative(env, (const char *) getClipboard(CF_TEXT));
+		if (!OpenClipboard(NULL))
+			return NULL;
+		hglb = GetClipboardData(CF_TEXT);
+		if (hglb == NULL) {
+			CloseClipboard();
+			return NULL;
+		}
+		clipboard_data = GlobalLock(hglb);
+		if (clipboard_data == NULL) {
+			CloseClipboard();
+			return NULL;
+		}
+		ret = NewStringNative(env, (const char *) clipboard_data);
 	} else {
 		return NULL;
 	}
+	GlobalUnlock(hglb);
+	CloseClipboard();
+	return ret;
 }
