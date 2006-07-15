@@ -34,10 +34,10 @@
 			<arg value="-Wl,--kill-at"/>
 			<arg line="-shared -o ${dllname}"/>
 			<srcfile/>
-			<arg value="-L${java.home}\..\lib"/>
-			<arg value="-L${dxhome}\lib\x86"/>
-			<arg value="-L${sdkhome}\lib"/>
-			<arg value="-L${alhome}\libs"/>
+			<arg value="-L${java.home}/../lib"/>
+			<arg value="-L${dxhome}/lib/x86"/>
+			<arg value="-L${sdkhome}/lib"/>
+			<arg value="-L${alhome}/libs"/>
 			<arg line="${libs}"/>
 			<fileset dir="." includes="*.o"/>
 		</apply>
