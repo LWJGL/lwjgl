@@ -54,7 +54,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDirectInput8_createDirectIn
 		throwFormattedException(env, "CoInitializeEx failed (%x)", ret);
 		return (LONG_PTR)NULL;
 	}
-	ret = CoCreateInstance(&CLSID_DirectInput8, NULL, CLSCTX_INPROC_SERVER, &IID_IDirectInput8, &lpdi);
+	ret = CoCreateInstance(&CLSID_DirectInput8, NULL, CLSCTX_INPROC_SERVER, &IID_IDirectInput8, (void *)&lpdi);
 	if (ret != DI_OK && ret != DIERR_BETADIRECTINPUTVERSION) {
 		throwFormattedException(env, "Failed to create DirectInput (%x)", ret);
 		return (LONG_PTR)NULL;
