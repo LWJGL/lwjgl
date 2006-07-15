@@ -269,7 +269,7 @@ jobject getVersion(JNIEnv * env, char *driver)
 		VS_FIXEDFILEINFO * fxdFileInfo;
 
 		UINT uiLen = 0;
-		bRetval = VerQueryValue(lpInfoBuff, TEXT("\\"), &fxdFileInfo, &uiLen);
+		bRetval = VerQueryValue(lpInfoBuff, TEXT("\\"), (void *)&fxdFileInfo, &uiLen);
 		if (bRetval != 0)
 			ret = (*env)->NewObject(env, version_class, version_cons, fxdFileInfo->dwProductVersionMS, fxdFileInfo->dwProductVersionLS);
 	}

@@ -128,11 +128,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsPbufferPeerInfo_nCreate
 	int origin_x = 0; int origin_y = 0;
 	HWND dummy_hwnd;
 	HDC dummy_hdc;
-	HGLRC dummy_context;
 	HPBUFFERARB Pbuffer;
 	HDC Pbuffer_dc;
-	HDC saved_hdc;
-	HGLRC saved_context;
 	WGLExtensions extensions;
 	const int *pBufferAttribs_ptr;
 	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
