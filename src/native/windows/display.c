@@ -254,6 +254,10 @@ jstring getVersion(JNIEnv * env, char *driver)
 
 	dwInfoSize = GetFileVersionInfoSize(driver, &var);
 	lpInfoBuff = malloc(dwInfoSize);
+	if (lpInfoBuff == NULL) {
+		throwException(env, "Failed to allocate lpInfoBuff");
+		return NULL;
+	}
 	bRetval = GetFileVersionInfo(driver, 0, dwInfoSize, lpInfoBuff);
 	if (bRetval == 0) {
 	} else {
