@@ -247,26 +247,20 @@ jstring getVersion(JNIEnv * env, char *driver)
 	jstring ret = NULL;
 
 	const char *dll_ext = ".dll";
-	TCHAR driverDLL[BUFFER_SIZE] = "\0";
 	DWORD var = 0;
 	DWORD dwInfoSize;
 	LPVOID lpInfoBuff;
 	BOOL bRetval;
 
-	if (driver == NULL) {
-		return NULL;
-	}
-	strncat_s(driverDLL, BUFFER_SIZE, driver, strlen(driver));
-	strncat_s(driverDLL, BUFFER_SIZE, dll_ext, strlen(dll_ext));
-	dwInfoSize = GetFileVersionInfoSize(driverDLL, &var);
+	dwInfoSize = GetFileVersionInfoSize(driver, &var);
 	lpInfoBuff = malloc(dwInfoSize);
-	bRetval = GetFileVersionInfo(driverDLL, 0, dwInfoSize, lpInfoBuff);
+	bRetval = GetFileVersionInfo(driver, 0, dwInfoSize, lpInfoBuff);
 	if (bRetval == 0) {
 	} else {
 		VS_FIXEDFILEINFO * fxdFileInfo;
 
 		UINT uiLen = 0;
-		bRetval = VerQueryValue(lpInfoBuff, TEXT("\\"), (void **) &fxdFileInfo, &uiLen);
+		bRetval = VerQueryValue(lpInfoBuff, TEXT("\\"), (void *)&fxdFileInfo, &uiLen);
 		if (bRetval != 0) {
 			TCHAR version[BUFFER_SIZE];
 			TCHAR ms[BUFFER_SIZE], ls[BUFFER_SIZE];
