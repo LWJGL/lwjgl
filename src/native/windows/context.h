@@ -55,7 +55,7 @@ typedef struct {
 			// created the pbuffer
 			WGLExtensions extensions;
 		} pbuffer;
-	};
+	} u;
 	HDC format_hdc;
 	HDC drawable_hdc;
 } WindowsPeerInfo;

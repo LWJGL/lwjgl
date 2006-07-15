@@ -166,23 +166,23 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsPbufferPeerInfo_nCreate
 		return;
 	}
 	peer_info->format_hdc = Pbuffer_dc;
-	peer_info->pbuffer.extensions = extensions;
-	peer_info->pbuffer.pbuffer = Pbuffer;
+	peer_info->u.pbuffer.extensions = extensions;
+	peer_info->u.pbuffer.pbuffer = Pbuffer;
 	peer_info->drawable_hdc = Pbuffer_dc;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsPbufferPeerInfo_nDestroy
   (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
 	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	peer_info->pbuffer.extensions.wglReleasePbufferDCARB(peer_info->pbuffer.pbuffer, peer_info->drawable_hdc);
-	peer_info->pbuffer.extensions.wglDestroyPbufferARB(peer_info->pbuffer.pbuffer);
+	peer_info->u.pbuffer.extensions.wglReleasePbufferDCARB(peer_info->u.pbuffer.pbuffer, peer_info->drawable_hdc);
+	peer_info->u.pbuffer.extensions.wglDestroyPbufferARB(peer_info->u.pbuffer.pbuffer);
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsPbufferPeerInfo_nIsBufferLost
   (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
 	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	BOOL buffer_lost;
-	peer_info->pbuffer.extensions.wglQueryPbufferARB(peer_info->pbuffer.pbuffer, WGL_PBUFFER_LOST_ARB, &buffer_lost);
+	peer_info->u.pbuffer.extensions.wglQueryPbufferARB(peer_info->u.pbuffer.pbuffer, WGL_PBUFFER_LOST_ARB, &buffer_lost);
 	return buffer_lost ? JNI_TRUE : JNI_FALSE;
 }
 
@@ -195,17 +195,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsPbufferPeerInfo_nSetPbufferA
 	attribs[1] = value;
 	attribs[2] = 0;
 
-	peer_info->pbuffer.extensions.wglSetPbufferAttribARB(peer_info->pbuffer.pbuffer, attribs);
+	peer_info->u.pbuffer.extensions.wglSetPbufferAttribARB(peer_info->u.pbuffer.pbuffer, attribs);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsPbufferPeerInfo_nBindTexImageToPbuffer
   (JNIEnv *env, jclass clazz, jobject peer_info_handle, jint buffer) {
 	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	peer_info->pbuffer.extensions.wglBindTexImageARB(peer_info->pbuffer.pbuffer, buffer);
+	peer_info->u.pbuffer.extensions.wglBindTexImageARB(peer_info->u.pbuffer.pbuffer, buffer);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsPbufferPeerInfo_nReleaseTexImageFromPbuffer
   (JNIEnv *env, jclass clazz, jobject peer_info_handle, jint buffer) {
 	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	peer_info->pbuffer.extensions.wglReleaseTexImageARB(peer_info->pbuffer.pbuffer, buffer);
+	peer_info->u.pbuffer.extensions.wglReleaseTexImageARB(peer_info->u.pbuffer.pbuffer, buffer);
 }

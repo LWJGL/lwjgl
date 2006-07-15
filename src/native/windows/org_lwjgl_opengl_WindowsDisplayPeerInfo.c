@@ -53,14 +53,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplayPeerInfo_createDummyD
 		return;
 	}
 	dummy_hdc = GetDC(dummy_hwnd);
-	peer_info->format_hwnd = dummy_hwnd;
+	peer_info->u.format_hwnd = dummy_hwnd;
 	peer_info->format_hdc = dummy_hdc;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplayPeerInfo_nDestroy
   (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
 	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	closeWindow(&peer_info->format_hwnd, &peer_info->format_hdc);
+	closeWindow(&peer_info->u.format_hwnd, &peer_info->format_hdc);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplayPeerInfo_nInitDC
