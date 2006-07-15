@@ -41,48 +41,21 @@
 
 #include "Window.h"
 #include "mmsystem.h"
-#include "org_lwjgl_NativeSysImplementation.h"
+#include "org_lwjgl_WindowsSysImplementation.h"
 #include "common_tools.h"
 #include <malloc.h>
 
-/*
- * Class:     org_lwjgl_Sys
- * Method:    getTimerResolution
- * Signature: ()J
- */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_NativeSysImplementation_getTimerResolution
-  (JNIEnv * env, jobject ignored)
-{
-	return (jlong) 1000L;
-}
-
-/*
- * Class:     org_lwjgl_Sys
- * Method:    ngetTime
- * Signature: ()J
- */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_NativeSysImplementation_getTime
-  (JNIEnv * env, jobject ignored)
-{
-
-	MMRESULT result;
+JNIEXPORT jlong JNICALL Java_org_lwjgl_WindowsSysImplementation_getTime(JNIEnv * env, jobject ignored) {
 	DWORD time;
 
-	result = timeBeginPeriod(1);
+	timeBeginPeriod(1);
 	time = timeGetTime();
-	result = timeEndPeriod(1);
+	timeEndPeriod(1);
 
 	return time;
 }
 
-/*
- * Class:     org_lwjgl_Sys
- * Method:    alert
- * Signature: (Ljava/lang/String;Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_NativeSysImplementation_alert
-  (JNIEnv * env, jobject ignored, jstring title, jstring message)
-{
+JNIEXPORT void JNICALL Java_org_lwjgl_WindowsSysImplementation_alert(JNIEnv * env, jobject ignored, jstring title, jstring message) {
 	char * eMessageText = GetStringNativeChars(env, message);
 	char * cTitleBarText = GetStringNativeChars(env, title);
 	MessageBox(getCurrentHWND(), eMessageText, cTitleBarText, MB_OK | MB_TOPMOST);
@@ -93,56 +66,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_NativeSysImplementation_alert
 	free(cTitleBarText);
 }
 
-/*
- * Class:     org_lwjgl_Sys
- * Method:    openURL
- * Signature: (Ljava/lang/String;)V
- */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_NativeSysImplementation_openURL
-  (JNIEnv * env, jobject ignored, jstring url)
-{
-#define BUFFER_SIZE 1024
-	const char *std_args = "rundll32 url.dll,FileProtocolHandler ";
-	STARTUPINFO si;
-	PROCESS_INFORMATION pi;
-
-	char * urlString = GetStringNativeChars(env, url);
-
-	char command[BUFFER_SIZE];
-	strncpy_s(command, BUFFER_SIZE, "", 1);
-	strncat_s(command, BUFFER_SIZE, std_args, _TRUNCATE);
-	strncat_s(command, BUFFER_SIZE, urlString, _TRUNCATE);
-	free(urlString);
-
-	ZeroMemory( &si, sizeof(si) );
-	si.cb = sizeof(si);
-	ZeroMemory( &pi, sizeof(pi) );
-
-	// Start the child process. 
-	if( !CreateProcess( NULL, // No module name (use command line). 
-		command,		  // Command line. 
-		NULL,			 // Process handle not inheritable. 
-		NULL,			 // Thread handle not inheritable. 
-		FALSE,			// Set handle inheritance to FALSE. 
-		0,				// No creation flags. 
-		NULL,			 // Use parent's environment block. 
-		NULL,			 // Use parent's starting directory. 
-		&si,			  // Pointer to STARTUPINFO structure.
-		&pi )			 // Pointer to PROCESS_INFORMATION structure.
-	) 
-	{
-		printfDebugJava(env, "Failed to open URL %s", urlString);
-		return JNI_FALSE;
-	}
-
-	// Close process and thread handles. 
-	CloseHandle( pi.hProcess );
-	CloseHandle( pi.hThread );
-
-	return JNI_TRUE;
-}
-
-JNIEXPORT jstring JNICALL Java_org_lwjgl_NativeSysImplementation_getClipboard
+JNIEXPORT jstring JNICALL Java_org_lwjgl_WindowsSysImplementation_getClipboard
   (JNIEnv * env, jobject ignored)
 {
 	// Check to see if there's text available in the clipboard

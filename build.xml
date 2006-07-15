@@ -514,7 +514,7 @@
 			<class name="org.lwjgl.opengl.WindowsPbufferPeerInfo" />
 			<class name="org.lwjgl.opengl.WindowsDisplay" />
 			<class name="org.lwjgl.opengl.WindowsRegistry" />
-			<class name="org.lwjgl.NativeSysImplementation" />
+			<class name="org.lwjgl.WindowsSysImplementation" />
 			<class name="org.lwjgl.opengl.WindowsAWTGLCanvasPeerInfo" />
 			<class name="org.lwjgl.opengl.WindowsPeerInfo" />
 			<class name="org.lwjgl.opengl.WindowsDisplayPeerInfo" />

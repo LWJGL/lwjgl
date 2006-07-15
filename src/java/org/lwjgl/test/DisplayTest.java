@@ -69,6 +69,7 @@ public class DisplayTest {
     
     System.out.println("Info about current:");
     System.out.println("Graphics card: " + Display.getAdapter() + ", version: " + Display.getVersion());
+System.exit(1);
     System.out.println("Resolution: " + 
         Display.getDisplayMode().getWidth()      + "x" + 
         Display.getDisplayMode().getHeight()     + "x" + 

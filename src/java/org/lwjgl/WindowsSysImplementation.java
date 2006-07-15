@@ -31,26 +31,43 @@
  */
 package org.lwjgl;
 
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
+import java.security.PrivilegedActionException;
+
 /**
- * A SysImplementation that uses native calls only.
  * <p>
  * @author $Author$
  * @version $Revision$
  * $Id$
  */
-class NativeSysImplementation extends DefaultSysImplementation {
-	
+class WindowsSysImplementation extends DefaultSysImplementation {
 	static {
 		Sys.initialize();
 	}
 	
-	public native long getTimerResolution();
+	public long getTimerResolution() {
+		return 1000;
+	}
 
 	public native long getTime();
 
 	public native void alert(String title, String message);
 
-	public native boolean openURL(String url);
+	public boolean openURL(final String url) {
+		try {
+			AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws Exception {
+					Runtime.getRuntime().exec(new String[]{"rundll32", "url.dll,FileProtocolHandler", url});
+					return null;
+				}
+			});
+			return true;
+		} catch (PrivilegedActionException e) {
+			LWJGLUtil.log("Failed to open url (" + url + "): " + e.getCause().getMessage());
+			return false;
+		}
+	}
 
 	public native String getClipboard();
 }
