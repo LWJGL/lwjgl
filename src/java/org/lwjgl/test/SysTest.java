@@ -100,9 +100,9 @@ public class SysTest {
   
     pause(2000);
   
-    time = Sys.getTime();
-    System.out.println("Current time: " + time);
-    System.out.println("Actually slept for: " + (time / (float) resolution) + " seconds");
+    long time2 = Sys.getTime();
+    System.out.println("Current time: " + time2);
+    System.out.println("Actually slept for: " + ((time2 - time) / (float) resolution) + " seconds");
     System.out.println("---- Test Timer ----\n"); 
   }
   
