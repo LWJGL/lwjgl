@@ -206,7 +206,6 @@ jobject convertToNativeRamp(JNIEnv *env, jobject float_gamma_obj) {
 	int i;
 	float scaledRampEntry;
 	WORD rampEntry;
-	HDC screenDC;
 	const float *gammaRamp = (const float *)(*env)->GetDirectBufferAddress(env, float_gamma_obj);
 	jint gamma_ramp_length = (*env)->GetDirectBufferCapacity(env, float_gamma_obj);
 	jobject native_ramp;
