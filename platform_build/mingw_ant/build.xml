@@ -9,6 +9,7 @@
 	<property name="alhome" location="${program_files}\OpenAL 1.1 with EFX SDK"/>
 	<property name="chome" location="c:/MinGW"/>
 	<property name="gcc" location="${chome}/bin/gcc"/>
+	<property name="strip" location="${chome}/bin/strip"/>
 	<property name="dllname" value="lwjgl.dll"/>
 
 	<target name="compile_dir">
@@ -54,6 +55,9 @@
 		<property name="libs" value="-lKernel32 -lole32 -ldinput -ldxguid -lOpenGL32 -lVersion -luser32 -lGdi32 -lAdvapi32 -ljawt -lwinmm"/>
 		<antcall target="compile_dir"/>
 		<antcall target="link"/>
+		<apply dir="." executable="${strip}">
+			<fileset file="${dllname}"/>
+		</apply>
     </target>
 </project>
 
