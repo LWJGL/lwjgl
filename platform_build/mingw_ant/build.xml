@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<project name="lwjgl native code, native code" basedir="../../bin/lwjgl" default="compile">
+	<property name="native" location="../../src/native"/>
+	<property environment="env"/>
+	<property name="dxhome" location="${env.DXSDK_DIR}"/>
+	<property name="sdkhome" location="${env.MSSDK}"/>
+	<property name="program_files" location="${env.ProgramFiles}"/>
+	<property name="alhome" location="${program_files}\OpenAL 1.1 with EFX SDK"/>
+	<property name="chome" location="c:/MinGW"/>
+	<property name="gcc" location="${chome}/bin/gcc"/>
+	<property name="dllname" value="lwjgl.dll"/>
+
+	<target name="compile_dir">
+		<apply dir="." failonerror="true" executable="${gcc}" dest="." skipemptyfilesets="true">
+			<arg line="-c -Wall -O2 -std=gnu99"/>
+			<arg value="-I${sdkhome}/include"/>
+			<arg value="-I${dxhome}/include"/>
+			<arg value="-I${alhome}/include"/>
+			<arg value="-I${java.home}/../include"/>
+			<arg value="-I${java.home}/../include/win32"/>
+			<arg value="-I${native}/common"/>
+			<arg value="-I${native}/windows"/>
+			<srcfile/>
+			<fileset dir="${native}/windows" includes="*.c"/>
+			<fileset dir="${native}/common" includes="*.c"/>
+			<fileset dir="${native}/generated" includes="*.c"/>
+			<mapper type="glob" from="*.c" to="*.o"/>
+		</apply>
+	</target>
+
+	<target name="link">
+		<apply dir="." parallel="true" executable="${gcc}" failonerror="true">
+			<arg value="-Wl,--kill-at"/>
+			<arg line="-shared -o ${dllname}"/>
+			<srcfile/>
+			<arg value="-L${java.home}\..\lib"/>
+			<arg value="-L${dxhome}\lib\x86"/>
+			<arg value="-L${sdkhome}\lib"/>
+			<arg value="-L${alhome}\libs"/>
+			<arg line="${libs}"/>
+			<fileset dir="." includes="*.o"/>
+		</apply>
+	</target>
+
+	<target name="clean">
+		<delete>
+			<fileset dir="." includes="*.o"/>
+			<fileset dir="." includes="*.dll"/>
+		</delete>
+	</target>
+	
+	<target name="compile">
+		<property name="libs" value="-lKernel32 -lole32 -ldinput -ldxguid -lOpenGL32 -lVersion -luser32 -lGdi32 -lAdvapi32 -ljawt -lwinmm"/>
+		<antcall target="compile_dir"/>
+		<antcall target="link"/>
+    </target>
+</project>
+

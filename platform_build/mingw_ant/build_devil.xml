@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<project name="devil" basedir="../../bin/devil" default="compile">
+	<property name="native" location="../../src/native"/>
+	<property environment="env"/>
+	<property name="sdkhome" location="${env.MSSDK}"/>
+	<property name="fmodhome" location="${env.FMODHOME}"/>
+	<property name="dllname" value="lwjgl-devil.dll"/>
+
+	<target name="compile_dir">
+		<apply dir="." failonerror="true" executable="cl" dest="." skipemptyfilesets="true">
+			<arg line="/Ox /Wp64 /W2 /nologo /Ox /Ob2 /Oi /Ot /Oy /FD /EHsc /MT /Gy /W2 /nologo /c /D WIN32 /c"/>
+			<arg value="/I${sdkhome}\include"/>
+			<arg value="/I${java.home}\..\include"/>
+			<arg value="/I${java.home}\..\include\win32"/>
+			<arg value="/I${native}\common"/>
+			<srcfile/>
+			<fileset dir="${native}/common/devil" includes="*.c"/>
+			<fileset dir="${native}/common" includes="*common*.c"/>
+			<mapper type="glob" from="*.c" to="*.obj"/>
+		</apply>
+	</target>
+
+	<target name="link">
+		<apply dir="." parallel="true" executable="cl" failonerror="true">
+			<arg line="/LD /nologo"/>
+			<srcfile/>
+			<arg line="/Fe${dllname} /link"/>
+			<arg value="/LIBPATH:${java.home}\..\lib"/>
+			<arg value="/LIBPATH:${sdkhome}\lib"/>
+			<arg value="/OPT:REF"/>
+			<arg value="/OPT:ICF"/>
+			<fileset dir="." includes="*.obj"/>
+		</apply>
+	</target>
+
+	<target name="clean">
+		<delete>
+			<fileset dir="." includes="*.obj"/>
+			<fileset dir="." includes="*.dll"/>
+			<fileset dir="." includes="*.exp"/>
+			<fileset dir="." includes="*.lib"/>			
+		</delete>
+	</target>
+
+	<target name="compile" depends="clean">
+		<property name="libs" value="user32.lib Gdi32.lib Advapi32.lib"/>
+		<antcall target="compile_dir"/>
+		<antcall target="link"/>
+    </target>
+</project>
+
