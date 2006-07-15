@@ -119,7 +119,7 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			message_time = GetMessageTime();
 			handleMessage_method = (*env)->GetStaticMethodID(env, display_class_global, "handleMessage", "(JIJJJ)Z");
 			if (handleMessage_method != NULL)
-				if ((*env)->CallStaticBooleanMethod(env, display_class_global, handleMessage_method, (jlong)hWnd, (jint)msg, (jlong)wParam, (jlong)lParam, (jlong)message_time))
+				if ((*env)->CallStaticBooleanMethod(env, display_class_global, handleMessage_method, (jlong)(intptr_t)hWnd, (jint)msg, (jlong)wParam, (jlong)lParam, (jlong)message_time))
 					return 0;
 		}
 	}
@@ -190,7 +190,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv
 	jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
 	int width = (*env)->GetIntField(env, mode, fid_width);
 	int height = (*env)->GetIntField(env, mode, fid_height);
-	BOOL result;
 	bool isUndecorated;          // Whether we're undecorated or not
 	static bool oneShotInitialised = false;
 	if (!oneShotInitialised) {
@@ -321,8 +320,6 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 	char *ptrCursorImage;
 	int x, y;
 	char *dstPtr;
-	int pixelCount;
-	int scanlinePad;
 	int wordAlignedWidth;
 	int imageSize;
 	unsigned char *maskPixels;
@@ -331,8 +328,6 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 	int maskPixelsOff;
 	int scanlineWidth;
 	HBITMAP colorDIB;
-	
-    jsize pixelsLen = width * height;
 	
 	memset(&bitmapInfo, 0, sizeof(BITMAPINFO));
 	bitmapInfo.bmiHeader.biSize              = sizeof(BITMAPINFOHEADER);
@@ -343,7 +338,7 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 	bitmapInfo.bmiHeader.biCompression       = BI_RGB;
 
 	colorDIB = CreateDIBSection(GetDC(NULL), (BITMAPINFO*)&(bitmapInfo),
-			DIB_RGB_COLORS, (void**)&(ptrCursorImage), NULL, 0);
+			DIB_RGB_COLORS, (void*)&(ptrCursorImage), NULL, 0);
 	if (!ptrCursorImage) {
 		throwException(env, "Could not allocate DIB section.");
 	}
@@ -435,7 +430,7 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetWindowIcon16
   (JNIEnv *env, jclass clazz, jobject iconBuffer)
 {
-	int *imgData = (int *)(*env)->GetDirectBufferAddress(env, iconBuffer);
+	jint *imgData = (jint *)(*env)->GetDirectBufferAddress(env, iconBuffer);
 	
 	freeSmallIcon();
 	small_icon = createWindowIcon(env, imgData, 16, 16);
@@ -453,7 +448,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetWindowIcon16
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetWindowIcon32
   (JNIEnv *env, jclass clazz, jobject iconBuffer)
 {
-	int *imgData = (int *)(*env)->GetDirectBufferAddress(env, iconBuffer);
+	jint *imgData = (jint *)(*env)->GetDirectBufferAddress(env, iconBuffer);
 	
 	freeLargeIcon();
 	large_icon = createWindowIcon(env, imgData, 32, 32);

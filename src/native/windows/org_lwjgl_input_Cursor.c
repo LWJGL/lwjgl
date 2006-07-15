@@ -88,7 +88,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateCursor
 
 	colorDIB = CreateDIBSection(GetDC(NULL), (BITMAPINFO*)&(bitmapInfo),
 			DIB_RGB_COLORS,
-			(void**)&(ptrCursorImage),
+			(void*)&(ptrCursorImage),
 			NULL, 0);
 	srcPtr = pixels;
 	dstPtr = ptrCursorImage;

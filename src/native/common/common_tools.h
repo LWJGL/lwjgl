@@ -57,7 +57,7 @@ typedef enum {false, true} bool;
 #endif
 #endif
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #define inline __inline
 #include <Basetsd.h>
 #else
