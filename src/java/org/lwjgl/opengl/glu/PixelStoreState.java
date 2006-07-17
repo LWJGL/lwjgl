@@ -42,14 +42,14 @@ import org.lwjgl.opengl.GL11;
  */
 class PixelStoreState extends Util {
 
-	public int unpackRowLength = glGetIntegerv(GL11.GL_UNPACK_ROW_LENGTH);
-	public int unpackAlignment = glGetIntegerv(GL11.GL_UNPACK_ALIGNMENT);
-	public int unpackSkipRows = glGetIntegerv(GL11.GL_UNPACK_SKIP_ROWS);
-	public int unpackSkipPixels = glGetIntegerv(GL11.GL_UNPACK_SKIP_PIXELS);
-	public int packRowLength = glGetIntegerv(GL11.GL_PACK_ROW_LENGTH);
-	public int packAlignment = glGetIntegerv(GL11.GL_PACK_ALIGNMENT);
-	public int packSkipRows = glGetIntegerv(GL11.GL_PACK_SKIP_ROWS);
-	public int packSkipPixels = glGetIntegerv(GL11.GL_PACK_SKIP_PIXELS);
+	public int unpackRowLength;
+	public int unpackAlignment;
+	public int unpackSkipRows;
+	public int unpackSkipPixels;
+	public int packRowLength;
+	public int packAlignment;
+	public int packSkipRows;
+	public int packSkipPixels;
 
 	/**
 	 * Constructor for PixelStoreState.
