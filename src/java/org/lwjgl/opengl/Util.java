@@ -68,24 +68,4 @@ public final class Util {
 		GL11.glGetInteger(gl_enum, int_buffer);
 		return int_buffer.get(0);
 	}
-
-	/** Handy mutable integer value class */
-	static final class IntValue {
-
-		int value;
-
-		IntValue(int value) {
-			this.value = value;
-		}
-
-		public boolean equals(Object obj) {
-			return ((IntValue)obj).value == value;
-		}
-
-		public int hashCode() {
-			return value;
-		}
-	}
-
-
 }
