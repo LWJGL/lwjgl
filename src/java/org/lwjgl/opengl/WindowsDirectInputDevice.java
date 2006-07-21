@@ -94,7 +94,7 @@ abstract class WindowsDirectInputDevice {
 
 	public void setBufferSize(int buffer_size) throws LWJGLException {
 		int ret = setBufferSize(di_device, buffer_size);
-		if (ret != WindowsDirectInput.DI_OK)
+		if (ret != WindowsDirectInput.DI_OK && ret != WindowsDirectInput.DI_PROPNOEFFECT && ret != WindowsDirectInput.DI_POLLEDDEVICE)
 			throw new LWJGLException("Failed to set buffer size (" + ret + ")");
 		int event_buffer_size = getEventSize()*buffer_size;
 		event_buffer = BufferUtils.createByteBuffer(event_buffer_size);

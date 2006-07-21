@@ -46,6 +46,7 @@ abstract class WindowsDirectInput {
 	public final static int DI_OK					= 0x00000000;
 	public final static int DI_NOEFFECT             = 0x00000001;
 	public final static int DI_PROPNOEFFECT         = 0x00000001;
+	public final static int DI_POLLEDDEVICE         = 0x00000002;
 
 	public final static int DI_DOWNLOADSKIPPED            = 0x00000003;
 	public final static int DI_EFFECTRESTARTED            = 0x00000004;
