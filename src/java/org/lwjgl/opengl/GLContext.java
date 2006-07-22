@@ -79,7 +79,7 @@ public final class GLContext {
 	 *
 	 * 'fast_path_cache' is the most recent ContextCapabilities (potentially null) and its owner. By
 	 * recent I mean the last thread setting the value in setCapabilities(). When getCapabilities()
-	 * is called, a check to see if the current is the owner of the ContextCapabilities instance inf
+	 * is called, a check to see if the current is the owner of the ContextCapabilities instance in
 	 * fast_path_cache. If so, the instance is returned, if not, some thread has since taken ownership
 	 * of the cache entry and the slower current_capabilities ThreadLocal is queried instead.
 	 *
@@ -87,7 +87,7 @@ public final class GLContext {
 	 * from multiple threads at once, we are guaranteed by the JVM spec that its value is always valid.
 	 * Furthermore, if the ownership test in getCapabilities() succeeds, the cache entry can only contain
 	 * the correct ContextCapabilites (that is, the one from getThreadLocalCapabilites()),
-	 * since no other thread can sets the owner to anyone else than itself.
+	 * since no other thread can set the owner to anyone else than itself.
 	 */
 	private static CapabilitiesCacheEntry fast_path_cache = new CapabilitiesCacheEntry();
 	
