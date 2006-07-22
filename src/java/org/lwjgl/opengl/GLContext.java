@@ -208,7 +208,7 @@ public final class GLContext {
 			LWJGLUtil.log("The major and/or minor OpenGL version is malformed: " + e.getMessage());
 		}
 
-		if (majorVersion == 2) {
+		if (majorVersion >= 2) {
 			// ----------------------[ 2.X ]----------------------
 			supported_extensions.add("OpenGL20");
 			// ----------------------[ 1.X ]----------------------
@@ -217,7 +217,7 @@ public final class GLContext {
 			supported_extensions.add("OpenGL13");
 			supported_extensions.add("OpenGL14");
 			supported_extensions.add("OpenGL15");
-		} else {
+		} else if (majorVersion == 1) {
 			switch (minorVersion) {
 				case 5:
 					supported_extensions.add("OpenGL15");
