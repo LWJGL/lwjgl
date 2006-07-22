@@ -273,7 +273,7 @@ public final class Display {
 		if(cached_icons != null) {
 			setIcon(cached_icons);
 		} else {
-			setIcon(new ByteBuffer[] { LWJGLUtil.LWJGLIcon16x16, LWJGLUtil.LWJGLIcon32x32 });
+			setIcon(new ByteBuffer[] { LWJGLUtil.LWJGLIcon32x32, LWJGLUtil.LWJGLIcon16x16 });
 		}
 	}
 
@@ -879,7 +879,7 @@ public final class Display {
 	 * of recreating the icons when you go back and forth fullscreen mode. You therefore only need to 
 	 * set the icon once per instance.
 	 *
-	 * @param icons Array of icons in RGBA mode
+	 * @param icons Array of icons in RGBA mode. Pass the icons in order of preference.
 	 * @return number of icons used, or 0 if display hasn't been created
 	 */
 	public static int setIcon(ByteBuffer[] icons) {

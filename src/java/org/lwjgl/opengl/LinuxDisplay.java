@@ -949,11 +949,9 @@ final class LinuxDisplay implements DisplayImplementation {
 				for (int i=0;i<icons.length;i++) {
 					int size = icons[i].limit() / 4;
 					int dimension = (int)Math.sqrt(size);
-					if (dimension == 32) {
-						ByteBuffer icon = convertIcon(icons[i], dimension, dimension);
-						nSetWindowIcon(icon, icon.capacity(), dimension, dimension);
-						return 1;
-					}
+					ByteBuffer icon = convertIcon(icons[i], dimension, dimension);
+					nSetWindowIcon(icon, icon.capacity(), dimension, dimension);
+					return 1;
 				}
 				return 0;
 			} finally {
