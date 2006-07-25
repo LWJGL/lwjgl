@@ -144,6 +144,8 @@ public class ContextCapabilities {
 	public final boolean GL_NV_vertex_program2;
 	public final boolean GL_NV_vertex_program2_option;
 	public final boolean GL_NV_vertex_program3;
+	public final boolean GL_SGIS_generate_mipmap;
+	public final boolean GL_SGIS_texture_lod;
 	public final boolean GL_SUN_slice_accum;
 
 	long ARB_buffer_object_glBindBufferARB_pointer;
@@ -2398,6 +2400,8 @@ public class ContextCapabilities {
 		this.GL_NV_vertex_program2 = supported_extensions.contains("GL_NV_vertex_program2");
 		this.GL_NV_vertex_program2_option = supported_extensions.contains("GL_NV_vertex_program2_option");
 		this.GL_NV_vertex_program3 = supported_extensions.contains("GL_NV_vertex_program3");
+		this.GL_SGIS_generate_mipmap = supported_extensions.contains("GL_SGIS_generate_mipmap");
+		this.GL_SGIS_texture_lod = supported_extensions.contains("GL_SGIS_texture_lod");
 		this.GL_SUN_slice_accum = supported_extensions.contains("GL_SUN_slice_accum");
 	}
 }
