@@ -144,8 +144,10 @@ final class LinuxKeyboard {
 	private static native ByteBuffer allocateComposeStatus();
 
 	public void destroy() {
-		destroyIC(xic);
-		closeIM(xim);
+		if (xic != 0)
+			destroyIC(xic);
+		if (xim != 0)
+			closeIM(xim);
 	}
 	private static native void destroyIC(long xic);
 	private static native void closeIM(long xim);
