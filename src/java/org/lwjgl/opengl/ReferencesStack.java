@@ -32,7 +32,7 @@
 package org.lwjgl.opengl;
 
 class ReferencesStack {
-	private final References[] references_stack;
+	private References[] references_stack;
 	private int stack_pos;
 
 	public References getReferences() {
@@ -41,6 +41,12 @@ class ReferencesStack {
 
 	public void pushState() {
 		stack_pos++;
+		if (stack_pos == references_stack.length) {
+			References[] new_references_stack = new References[references_stack.length + 1];
+			System.arraycopy(references_stack, 0, new_references_stack, 0, references_stack.length);
+			references_stack = new_references_stack;
+			references_stack[references_stack.length - 1] = new References();
+		}
 		references_stack[stack_pos].copy(references_stack[stack_pos - 1]);
 	}
 
@@ -51,8 +57,8 @@ class ReferencesStack {
 		return result;
 	}
 
-	ReferencesStack(int stack_size) {
-		references_stack = new References[stack_size];
+	ReferencesStack() {
+		references_stack = new References[1];
 		stack_pos = 0;
 		for (int i = 0; i < references_stack.length; i++)
 			references_stack[i] = new References();

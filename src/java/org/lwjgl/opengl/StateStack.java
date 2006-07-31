@@ -32,9 +32,7 @@
 package org.lwjgl.opengl;
 
 class StateStack {
-
-	/** Only int state is tracked */
-	private final int[] state_stack;
+	private int[] state_stack;
 	private int stack_pos;
 
 	public int getState() {
@@ -47,6 +45,11 @@ class StateStack {
 
 	public void pushState() {
 		stack_pos++;
+		if (stack_pos == state_stack.length) {
+			int[] new_state_stack = new int[state_stack.length + 1];
+			System.arraycopy(state_stack, 0, new_state_stack, 0, state_stack.length);
+			state_stack = new_state_stack;
+		}
 		state_stack[stack_pos] = state_stack[stack_pos - 1];
 	}
 
@@ -56,8 +59,8 @@ class StateStack {
 		return result;
 	}
 
-	StateStack(int stack_size, int initial_value) {
-		state_stack = new int[stack_size];
+	StateStack(int initial_value) {
+		state_stack = new int[1];
 		stack_pos = 0;
 		state_stack[stack_pos] = initial_value;
 	}

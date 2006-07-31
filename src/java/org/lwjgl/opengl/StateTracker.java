@@ -31,19 +31,14 @@
  */
 package org.lwjgl.opengl;
 
-
-/** Track Vertex Buffer Objects by context. */
 final class StateTracker {
 	private final ReferencesStack references_stack;
 	
 	private final StateStack attrib_stack;
 
 	StateTracker() {
-		int stack_size = Math.max(1, Util.glGetInteger(GL11.GL_MAX_CLIENT_ATTRIB_STACK_DEPTH));
-
-		references_stack = new ReferencesStack(stack_size);
-
-		attrib_stack = new StateStack(stack_size, 0);
+		references_stack = new ReferencesStack();
+		attrib_stack = new StateStack(0);
 	}
 
 	static void popAttrib() {
