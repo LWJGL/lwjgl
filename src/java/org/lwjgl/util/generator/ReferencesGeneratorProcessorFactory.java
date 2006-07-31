@@ -105,6 +105,17 @@ public class ReferencesGeneratorProcessorFactory implements AnnotationProcessorF
 			}
 		}
 
+		private static void generateClearsFromParameters(PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method) {
+			for (ParameterDeclaration param : method.getParameters()) {
+				CachedReference cached_reference_annotation = param.getAnnotation(CachedReference.class);
+				if (cached_reference_annotation != null) {
+					Class nio_type = Utils.getNIOBufferType(param.getType());
+					String reference_name = Utils.getReferenceName(interface_decl, method, param);
+					writer.println("\t\tthis." + reference_name + " = null;");
+				}
+			}
+		}
+		
 		private static void generateCopiesFromParameters(PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method) {
 			for (ParameterDeclaration param : method.getParameters()) {
 				CachedReference cached_reference_annotation = param.getAnnotation(CachedReference.class);
@@ -117,6 +128,12 @@ public class ReferencesGeneratorProcessorFactory implements AnnotationProcessorF
 			}
 		}
 		
+		private static void generateClearsFromMethods(PrintWriter writer, InterfaceDeclaration interface_decl) {
+			for (MethodDeclaration method : interface_decl.getMethods()) {
+				generateClearsFromParameters(writer, interface_decl, method);
+			}
+		}
+
 		private static void generateCopiesFromMethods(PrintWriter writer, InterfaceDeclaration interface_decl) {
 			for (MethodDeclaration method : interface_decl.getMethods()) {
 				generateCopiesFromParameters(writer, interface_decl, method);
@@ -161,6 +178,12 @@ public class ReferencesGeneratorProcessorFactory implements AnnotationProcessorF
 			for (TypeDeclaration typedecl : interface_decls) {
 				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
 				generateCopiesFromMethods(writer, interface_decl);
+			}
+			writer.println("\t}");
+			writer.println("\tvoid clear() {");
+			for (TypeDeclaration typedecl : interface_decls) {
+				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				generateClearsFromMethods(writer, interface_decl);
 			}
 			writer.println("\t}");
 			writer.println("}");

@@ -42,4 +42,24 @@ class References {
 		this.GL20_glVertexAttribPointer_buffer = references.GL20_glVertexAttribPointer_buffer;
 		this.NV_vertex_program_glVertexAttribPointerNV_buffer = references.NV_vertex_program_glVertexAttribPointerNV_buffer;
 	}
+	void clear() {
+		this.ARB_matrix_palette_glMatrixIndexPointerARB_pPointer = null;
+		this.ARB_vertex_blend_glWeightPointerARB_pPointer = null;
+		this.ARB_vertex_program_glVertexAttribPointerARB_buffer = null;
+		this.ARB_vertex_shader_glVertexAttribPointerARB_buffer = null;
+		this.ATI_element_array_glElementPointerATI_pPointer = null;
+		this.EXT_fog_coord_glFogCoordPointerEXT_data = null;
+		this.EXT_secondary_color_glSecondaryColorPointerEXT_pPointer = null;
+		this.EXT_vertex_shader_glVariantPointerEXT_pAddr = null;
+		this.EXT_vertex_weighting_glVertexWeightPointerEXT_pPointer = null;
+		this.GL11_glColorPointer_pointer = null;
+		this.GL11_glEdgeFlagPointer_pointer = null;
+		this.GL11_glNormalPointer_pointer = null;
+		this.GL11_glSelectBuffer_buffer = null;
+		this.GL11_glVertexPointer_pointer = null;
+		this.GL11_glTexCoordPointer_pointer = null;
+		this.GL14_glFogCoordPointer_data = null;
+		this.GL20_glVertexAttribPointer_buffer = null;
+		this.NV_vertex_program_glVertexAttribPointerNV_buffer = null;
+	}
 }

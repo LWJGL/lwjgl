@@ -46,6 +46,7 @@ class ReferencesStack {
 
 	public References popState() {
 		References result = references_stack[stack_pos];
+		references_stack[stack_pos].clear();
 		stack_pos--;
 		return result;
 	}
