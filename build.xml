@@ -711,7 +711,7 @@
 
 	<target name="-compile_native_macosx" if="lwjgl.platform.macosx">
 		<ant antfile="platform_build/macosx_ant/build.xml" inheritAll="false"/>
-		<copy file="${lwjgl.bin}/liblwjgl.jnilib" todir="${lwjgl.lib}/macosx"/>
+		<copy file="${lwjgl.bin}/lwjgl/liblwjgl.jnilib" todir="${lwjgl.lib}/macosx"/>
 	</target>
 
 	<!-- Compiles LWJGL on Mac OS X platforms  -->
