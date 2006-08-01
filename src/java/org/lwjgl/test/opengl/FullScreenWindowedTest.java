@@ -245,7 +245,7 @@ public class FullScreenWindowedTest {
 				return modes[i];
 			}
 		}
-		return null;
+		return Display.getDisplayMode();
 	}
 	/**
 	 * Initializes OGL
