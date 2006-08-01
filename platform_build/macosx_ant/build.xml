@@ -55,7 +55,7 @@
 			<param name="sdkroot" location="${legacy_sdkroot}"/>
 			<param name="cflags" value=""/>
 		</antcall>
-		<exec vmlauncher="false" executable="../platform_build/macosx_ant/build-symbol-list" output="lwjgl.symbols" failonerror="true">
+		<exec vmlauncher="false" executable="../../platform_build/macosx_ant/build-symbol-list" output="lwjgl.symbols" failonerror="true">
 			<arg path="intel"/>
 		</exec>
 		<antcall target="link">
