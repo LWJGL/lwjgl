@@ -52,7 +52,7 @@ import org.lwjgl.Sys;
  * pointers.
  *
  * This class is thread-safe in the sense that multiple threads can safely call all public methods. The class is also
- * thread-aware in the sense that it tracks a per-thread current context (including capabilities and function pointers). 
+ * thread-aware in the sense that it tracks a per-thread current context (including capabilities and function pointers).
  * That way, multiple threads can have multiple contexts current and render to them concurrently.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
@@ -64,7 +64,7 @@ public final class GLContext {
 	 * Maps threads to their current context's ContextCapabilities, if any
 	 */
 	private final static ThreadLocal current_capabilities = new ThreadLocal();
-	
+
 	/**
 	 * The getCapabilities() method is a potential hot spot in any LWJGL application, since
 	 * it is needed for context capability discovery (e.g. is OpenGL 2.0 supported?), and
@@ -90,14 +90,14 @@ public final class GLContext {
 	 * since no other thread can set the owner to anyone else than itself.
 	 */
 	private static CapabilitiesCacheEntry fast_path_cache = new CapabilitiesCacheEntry();
-	
+
 	/**
 	 * Simple lock-free cache of CapabilitesEntryCache to avoid allocating more than one
 	 * cache entry per thread
 	 */
 	private final static ThreadLocal thread_cache_entries = new ThreadLocal();
-	
-	/** 
+
+	/**
 	 * The weak mapping from context Object instances to ContextCapabilities. Used
 	 * to avoid recreating a ContextCapabilities every time a context is made current.
 	 */
@@ -121,14 +121,14 @@ public final class GLContext {
 		CapabilitiesCacheEntry recent_cache_entry = fast_path_cache;
 		// Check owner of cache entry
 		if (recent_cache_entry.owner == Thread.currentThread()) {
-			/* The owner ship test succeeded, so the cache must contain the current ContextCapabilities instance 
+			/* The owner ship test succeeded, so the cache must contain the current ContextCapabilities instance
 			 * assert recent_cache_entry.capabilities == getThreadLocalCapabilities();
 			 */
 			return recent_cache_entry.capabilities;
 		} else // Some other thread has written to the cache since, and we fall back to the slower path
 			return getThreadLocalCapabilities();
 	}
-	
+
 	private static ContextCapabilities getThreadLocalCapabilities() {
 		return ((ContextCapabilities)current_capabilities.get());
 	}
@@ -152,7 +152,7 @@ public final class GLContext {
 
 		fast_path_cache = thread_cache_entry;
 	}
-	
+
 	/**
 	 * Helper method to get a pointer to a named function in the OpenGL library
 	 * with a name dependent on the current platform
@@ -210,7 +210,13 @@ public final class GLContext {
 
 		if (majorVersion >= 2) {
 			// ----------------------[ 2.X ]----------------------
-			supported_extensions.add("OpenGL20");
+			switch (minorVersion) {
+				case 1:
+					supported_extensions.add("OpenGL21");
+					// Intentional fall through
+				case 0:
+					supported_extensions.add("OpenGL20");
+			}
 			// ----------------------[ 1.X ]----------------------
 			supported_extensions.add("OpenGL11");
 			supported_extensions.add("OpenGL12");
