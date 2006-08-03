@@ -107,6 +107,7 @@ public class ContextCapabilities {
 	public final boolean OpenGL14;
 	public final boolean OpenGL15;
 	public final boolean OpenGL20;
+	public final boolean OpenGL21;
 	public final boolean GL_HP_occlusion_test;
 	public final boolean GL_IBM_rasterpos_clip;
 	public final boolean GL_NV_blend_square;
@@ -874,6 +875,12 @@ public class ContextCapabilities {
 	long GL20_glStencilFuncSeparate_pointer;
 	long GL20_glStencilMaskSeparate_pointer;
 	long GL20_glBlendEquationSeparate_pointer;
+	long GL21_glUniformMatrix2x3fv_pointer;
+	long GL21_glUniformMatrix3x2fv_pointer;
+	long GL21_glUniformMatrix2x4fv_pointer;
+	long GL21_glUniformMatrix4x2fv_pointer;
+	long GL21_glUniformMatrix3x4fv_pointer;
+	long GL21_glUniformMatrix4x3fv_pointer;
 	long NV_evaluators_glGetMapControlPointsNV_pointer;
 	long NV_evaluators_glMapControlPointsNV_pointer;
 	long NV_evaluators_glMapParameterfvNV_pointer;
@@ -1929,6 +1936,16 @@ public class ContextCapabilities {
 			(GL20_glBlendEquationSeparate_pointer = GLContext.getFunctionAddress("glBlendEquationSeparate")) != 0;
 	}
 
+	private boolean GL21_initNativeFunctionAddresses() {
+		return 
+			(GL21_glUniformMatrix2x3fv_pointer = GLContext.getFunctionAddress("glUniformMatrix2x3fv")) != 0 &&
+			(GL21_glUniformMatrix3x2fv_pointer = GLContext.getFunctionAddress("glUniformMatrix3x2fv")) != 0 &&
+			(GL21_glUniformMatrix2x4fv_pointer = GLContext.getFunctionAddress("glUniformMatrix2x4fv")) != 0 &&
+			(GL21_glUniformMatrix4x2fv_pointer = GLContext.getFunctionAddress("glUniformMatrix4x2fv")) != 0 &&
+			(GL21_glUniformMatrix3x4fv_pointer = GLContext.getFunctionAddress("glUniformMatrix3x4fv")) != 0 &&
+			(GL21_glUniformMatrix4x3fv_pointer = GLContext.getFunctionAddress("glUniformMatrix4x3fv")) != 0;
+	}
+
 	private boolean NV_evaluators_initNativeFunctionAddresses() {
 		return 
 			(NV_evaluators_glGetMapControlPointsNV_pointer = GLContext.getFunctionAddress("glGetMapControlPointsNV")) != 0 &&
@@ -2225,6 +2242,8 @@ public class ContextCapabilities {
 			supported_extensions.remove("OpenGL15");
 		if (supported_extensions.contains("OpenGL20") && !GL20_initNativeFunctionAddresses())
 			supported_extensions.remove("OpenGL20");
+		if (supported_extensions.contains("OpenGL21") && !GL21_initNativeFunctionAddresses())
+			supported_extensions.remove("OpenGL21");
 		if (supported_extensions.contains("GL_NV_evaluators") && !NV_evaluators_initNativeFunctionAddresses())
 			supported_extensions.remove("GL_NV_evaluators");
 		if (supported_extensions.contains("GL_NV_fence") && !NV_fence_initNativeFunctionAddresses())
@@ -2361,6 +2380,7 @@ public class ContextCapabilities {
 		this.OpenGL14 = supported_extensions.contains("OpenGL14");
 		this.OpenGL15 = supported_extensions.contains("OpenGL15");
 		this.OpenGL20 = supported_extensions.contains("OpenGL20");
+		this.OpenGL21 = supported_extensions.contains("OpenGL21");
 		this.GL_HP_occlusion_test = supported_extensions.contains("GL_HP_occlusion_test");
 		this.GL_IBM_rasterpos_clip = supported_extensions.contains("GL_IBM_rasterpos_clip");
 		this.GL_NV_blend_square = supported_extensions.contains("GL_NV_blend_square");
