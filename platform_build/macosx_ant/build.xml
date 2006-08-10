@@ -29,11 +29,11 @@
 	</target>
 	
 	<target name="link">
-		<apply dir="." parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
-			<arg line="${linkerflags} -exported_symbols_list lwjgl.symbols -dynamiclib -o ${libname} -framework Foundation -framework AppKit -framework JavaVM -framework Carbon"/>
+		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
+			<arg line="${linkerflags} -exported_symbols_list ../lwjgl.symbols -dynamiclib -o ${libname} -framework Foundation -framework AppKit -framework JavaVM -framework Carbon"/>
 			<fileset dir="${objdir}" includes="*.o"/>
 		</apply>
-		<apply dir="." executable="strip" os="Mac OS X" failonerror="true">
+		<apply dir="${objdir}" executable="strip" os="Mac OS X" failonerror="true">
 			<arg line="-S -X"/>
 			<fileset dir="." file="${libname}"/>
 		</apply>
