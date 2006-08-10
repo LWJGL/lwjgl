@@ -8,7 +8,7 @@
  static void* devILhandle;
 #endif
 
-static const char* VERSION = "1.0beta2";
+static const char* VERSION = "1.0beta3";
 
 /*
  * Class:     org_lwjgl_devil_ILNative
