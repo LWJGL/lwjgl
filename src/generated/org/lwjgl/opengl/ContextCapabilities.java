@@ -64,8 +64,10 @@ public class ContextCapabilities {
 	public final boolean GL_ATI_vertex_streams;
 	public final boolean GL_EXT_abgr;
 	public final boolean GL_EXT_bgra;
+	public final boolean GL_EXT_blend_color;
 	public final boolean GL_EXT_blend_equation_separate;
 	public final boolean GL_EXT_blend_func_separate;
+	public final boolean GL_EXT_blend_minmax;
 	public final boolean GL_EXT_blend_subtract;
 	public final boolean GL_EXT_cg_shader;
 	public final boolean GL_EXT_compiled_vertex_array;
@@ -421,8 +423,10 @@ public class ContextCapabilities {
 	long ATI_vertex_streams_glClientActiveVertexStreamATI_pointer;
 	long ATI_vertex_streams_glVertexBlendEnvfATI_pointer;
 	long ATI_vertex_streams_glVertexBlendEnviATI_pointer;
+	long EXT_blend_color_glBlendColorEXT_pointer;
 	long EXT_blend_equation_separate_glBlendEquationSeparateEXT_pointer;
 	long EXT_blend_func_separate_glBlendFuncSeparateEXT_pointer;
+	long EXT_blend_minmax_glBlendEquationEXT_pointer;
 	long EXT_compiled_vertex_array_glLockArraysEXT_pointer;
 	long EXT_compiled_vertex_array_glUnlockArraysEXT_pointer;
 	long EXT_depth_bounds_test_glDepthBoundsEXT_pointer;
@@ -1386,6 +1390,11 @@ public class ContextCapabilities {
 			(ATI_vertex_streams_glVertexBlendEnviATI_pointer = GLContext.getFunctionAddress("glVertexBlendEnviATI")) != 0;
 	}
 
+	private boolean EXT_blend_color_initNativeFunctionAddresses() {
+		return 
+			(EXT_blend_color_glBlendColorEXT_pointer = GLContext.getFunctionAddress("glBlendColorEXT")) != 0;
+	}
+
 	private boolean EXT_blend_equation_separate_initNativeFunctionAddresses() {
 		return 
 			(EXT_blend_equation_separate_glBlendEquationSeparateEXT_pointer = GLContext.getFunctionAddress("glBlendEquationSeparateEXT")) != 0;
@@ -1394,6 +1403,11 @@ public class ContextCapabilities {
 	private boolean EXT_blend_func_separate_initNativeFunctionAddresses() {
 		return 
 			(EXT_blend_func_separate_glBlendFuncSeparateEXT_pointer = GLContext.getFunctionAddress("glBlendFuncSeparateEXT")) != 0;
+	}
+
+	private boolean EXT_blend_minmax_initNativeFunctionAddresses() {
+		return 
+			(EXT_blend_minmax_glBlendEquationEXT_pointer = GLContext.getFunctionAddress("glBlendEquationEXT")) != 0;
 	}
 
 	private boolean EXT_compiled_vertex_array_initNativeFunctionAddresses() {
@@ -2196,10 +2210,14 @@ public class ContextCapabilities {
 			supported_extensions.remove("GL_ATI_vertex_attrib_array_object");
 		if (supported_extensions.contains("GL_ATI_vertex_streams") && !ATI_vertex_streams_initNativeFunctionAddresses())
 			supported_extensions.remove("GL_ATI_vertex_streams");
+		if (supported_extensions.contains("GL_EXT_blend_color") && !EXT_blend_color_initNativeFunctionAddresses())
+			supported_extensions.remove("GL_EXT_blend_color");
 		if (supported_extensions.contains("GL_EXT_blend_equation_separate") && !EXT_blend_equation_separate_initNativeFunctionAddresses())
 			supported_extensions.remove("GL_EXT_blend_equation_separate");
 		if (supported_extensions.contains("GL_EXT_blend_func_separate") && !EXT_blend_func_separate_initNativeFunctionAddresses())
 			supported_extensions.remove("GL_EXT_blend_func_separate");
+		if (supported_extensions.contains("GL_EXT_blend_minmax") && !EXT_blend_minmax_initNativeFunctionAddresses())
+			supported_extensions.remove("GL_EXT_blend_minmax");
 		if (supported_extensions.contains("GL_EXT_compiled_vertex_array") && !EXT_compiled_vertex_array_initNativeFunctionAddresses())
 			supported_extensions.remove("GL_EXT_compiled_vertex_array");
 		if (supported_extensions.contains("GL_EXT_depth_bounds_test") && !EXT_depth_bounds_test_initNativeFunctionAddresses())
@@ -2336,8 +2354,10 @@ public class ContextCapabilities {
 		this.GL_ATI_vertex_streams = supported_extensions.contains("GL_ATI_vertex_streams");
 		this.GL_EXT_abgr = supported_extensions.contains("GL_EXT_abgr");
 		this.GL_EXT_bgra = supported_extensions.contains("GL_EXT_bgra");
+		this.GL_EXT_blend_color = supported_extensions.contains("GL_EXT_blend_color");
 		this.GL_EXT_blend_equation_separate = supported_extensions.contains("GL_EXT_blend_equation_separate");
 		this.GL_EXT_blend_func_separate = supported_extensions.contains("GL_EXT_blend_func_separate");
+		this.GL_EXT_blend_minmax = supported_extensions.contains("GL_EXT_blend_minmax");
 		this.GL_EXT_blend_subtract = supported_extensions.contains("GL_EXT_blend_subtract");
 		this.GL_EXT_cg_shader = supported_extensions.contains("GL_EXT_cg_shader");
 		this.GL_EXT_compiled_vertex_array = supported_extensions.contains("GL_EXT_compiled_vertex_array");
