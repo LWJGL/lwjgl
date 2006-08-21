@@ -96,21 +96,9 @@ public class TestControllers extends JPanel {
 		frame.setSize(230,400);
 		frame.setLocation(index*30,index*30);
 		frame.setVisible(true);
-		
-		Thread t = new Thread() {
-			public void run() {
-				while (true) {
-					try { Thread.sleep(100); } catch (Exception e) {};
-					pollAndUpdate();
-				}
-			}
-		};
-		t.start();
 	}
 	
-	public void pollAndUpdate() {
-		Controllers.poll();
-		
+	public void updateDetails() {
 		for (int i=0;i<controller.getButtonCount();i++) {
 			values[i].setText(""+controller.isButtonPressed(i));
 		}
@@ -120,12 +108,6 @@ public class TestControllers extends JPanel {
 		
 		values[itemCount-2].setText(""+controller.getPovX());
 		values[itemCount-1].setText(""+controller.getPovY());
-		
-		while (Controllers.next()) {
-			System.out.println("Event Fired: ");
-			System.out.println("\t"+Controllers.getEventSource()+":"+Controllers.getEventControlIndex()+":"+Controllers.isEventButton());
-			System.out.println("\t"+Controllers.isEventXAxis()+":"+Controllers.isEventYAxis());
-		}
 	}
 	
 	public static void main(String[] argv) {
@@ -147,8 +129,26 @@ public class TestControllers extends JPanel {
 			System.exit(0);
 		}
 		
+		TestControllers[] controllerWindows = new TestControllers[count];
 		for (int i=0;i<count;i++) {
-			new TestControllers(i);
+			controllerWindows[i] = new TestControllers(i);
+		}
+		
+		boolean running = true;
+		while (running) {
+			try { Thread.sleep(100); } catch (Exception e) {};
+			
+			Controllers.poll();
+
+			while (Controllers.next()) {
+				System.out.println("Event Fired: ");
+				System.out.println("\t"+Controllers.getEventSource()+":"+Controllers.getEventControlIndex()+":"+Controllers.isEventButton());
+				System.out.println("\t"+Controllers.isEventXAxis()+":"+Controllers.isEventYAxis());
+			}
+			
+			for (int i=0;i<count;i++) {
+				controllerWindows[i].updateDetails();
+			}
 		}
 	}
 }
