@@ -72,18 +72,6 @@ public class Controllers {
 		if (sub.length == 0) {
 			JInputController controller = new JInputController(controllerCount,c);
 			
-			// sanity checks to ensure we're actually getting game controllers rather than
-			// any old detected device
-			
-			// if we've got no buttons at all we're not a game controller
-			if (controller.getButtonCount() == 0) {
-				return;
-			}
-			// if we've got no axis at all we're not a game controller
-			if (controller.getAxisCount() == 0) {
-				return;
-			}
-			
 			controllers.add(controller);
 			controllerCount++;
 		} else {
