@@ -1656,7 +1656,7 @@ public class FSound {
    * @param max The channels maximum volume distance in "units". See remarks for more on units.
    * @return On success, TRUE is returned. On failure, FALSE is returned.
    */
-  public static native boolean FSOUND_3D_SetMinMaxDistance(int channel, int min, int max); 
+  public static native boolean FSOUND_3D_SetMinMaxDistance(int channel, float min, float max); 
   
   /**
    * Sets the current position of the sound in SAMPLES not bytes

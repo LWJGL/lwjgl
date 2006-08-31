@@ -730,7 +730,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_13D_1SetAttribute
 * Method:    FSOUND_3D_SetMinMaxDistance
 * Signature: (III)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_13D_1SetMinMaxDistance(JNIEnv * env, jclass clazz, jint channel, jint min, jint max) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_13D_1SetMinMaxDistance(JNIEnv * env, jclass clazz, jint channel, jfloat min, jfloat max) {
   return fmod_instance->FSOUND_3D_SetMinMaxDistance(channel, min, max);
 }
 
