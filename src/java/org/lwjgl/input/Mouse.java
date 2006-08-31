@@ -394,13 +394,10 @@ public class Mouse {
 	}
 
 	/**
-	 * Get the current events button state. If <code>getEventButton()</code> is -1,
-	 * and IllegalStateException is thrown.
+	 * Get the current events button state.
 	 * @return Current events button state.
 	 */
 	public static boolean getEventButtonState() {
-		if (eventButton == -1)
-			throw new IllegalStateException("Current event has no button state change");
 		return eventState;
 	}
 
