@@ -250,9 +250,10 @@ final class WindowsDisplay implements DisplayImplementation {
 		String driver = getAdapter();
 		if (driver != null) {
 			WindowsFileVersion version = nGetVersion(driver + ".dll");
-			return version.toString();
-		} else
-			return null;
+			if (version != null)
+				return version.toString();
+		}
+		return null;
 	}
 	private native WindowsFileVersion nGetVersion(String driver);
 
