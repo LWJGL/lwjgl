@@ -21,7 +21,7 @@
 	
     <target name="compile">
 		<exec executable="uname" outputproperty="hwplatform">
-			<arg value="-i"/>
+			<arg value="-m"/>
 		</exec>
 		<condition property="libs" value="${libs64}" else="${libs32}">
 			<equals arg1="${hwplatform}" arg2="x86_64"/>
