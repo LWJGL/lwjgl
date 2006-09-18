@@ -431,6 +431,8 @@ final class LinuxKeycodes {
 	public final static int XK_thorn                         = 0x00fe;
 	public final static int XK_ydiaeresis                    = 0x00ff;
 
+	public final static int XK_ISO_Level3_Shift              = 0xfe03;
+
 	public static int mapKeySymToLWJGLKeyCode(long keysym) {
 		switch ((int)keysym) {
 			case XK_BackSpace:
@@ -608,6 +610,7 @@ final class LinuxKeycodes {
 
 			case XK_Meta_L:
 				return Keyboard.KEY_LMENU;
+			case XK_ISO_Level3_Shift:
 			case XK_Meta_R:
 				return Keyboard.KEY_RMENU;
 			case XK_Alt_L:
