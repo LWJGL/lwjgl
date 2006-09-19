@@ -70,8 +70,6 @@ final class WindowsDisplayPeerInfo extends WindowsPeerInfo {
 		// NO-OP
 	}
 
-	private static native void setPixelFormat(ByteBuffer peer_info_handle);
-	
 	protected void doUnlock() throws LWJGLException {
 		// NO-OP
 	}
