@@ -147,15 +147,7 @@ static void handleMessages(JNIEnv *env) {
 					PM_REMOVE      // removal options
 					))
 		{
-			/*
-			 * It would be better to filter messages
-			 * to display_hwnd by specifying that to
-			 * PeekMessage instead of this check. However,
-			 * Windows will then mark LWJGL apps as "not
-			 * responding".
-			 */
-			if (msg.hwnd == display_hwnd)
-				DispatchMessage(&msg);
+			DispatchMessage(&msg);
 		}
 	}
 }
