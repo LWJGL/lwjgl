@@ -123,7 +123,7 @@ public final class Display {
 	/**
 	 * Fetch the Drawable from the Display.
 	 *
-	 * @return the Drawable corresponding to the Display context, or null it display is
+	 * @return the Drawable corresponding to the Display context, or null if display is
 	 *			not created.
 	 */
 	public static Drawable getDrawable() {
@@ -230,8 +230,10 @@ public final class Display {
 				if (fullscreen)
 					switchDisplayMode();
 				createWindow();
+				makeCurrent();
 			} catch (LWJGLException e) {
 				destroyContext();
+				destroyPeerInfo();
 				display_impl.resetDisplayMode();
 				throw e;
 			}
@@ -262,12 +264,10 @@ public final class Display {
 			window_y = 0;
 		}
 		display_impl.createWindow(current_mode, fullscreen, window_x, window_y);
-		makeCurrent();
+		window_created = true;
 		
 		setTitle(title);
 		initControls();
-		setSwapInterval(swap_interval);
-		window_created = true;
 		
 		// set cached window icon if exists
 		if(cached_icons != null) {
@@ -468,8 +468,10 @@ public final class Display {
 					display_impl.resetDisplayMode();
 				}
 				createWindow();
+				makeCurrent();
 			} catch (LWJGLException e) {
 				destroyContext();
+				destroyPeerInfo();
 				display_impl.resetDisplayMode();
 				throw e;
 			}
@@ -679,12 +681,23 @@ public final class Display {
 			switchDisplayMode();
 		try {
 			peer_info = display_impl.createPeerInfo(pixel_format);
-			context = new Context(peer_info, shared_drawable != null ? shared_drawable.getContext() : null);
 			try {
 				createWindow();
-				initContext();
+				try {
+					context = new Context(peer_info, shared_drawable != null ? shared_drawable.getContext() : null);
+					try {
+						makeCurrent();
+						initContext();
+					} catch (LWJGLException e) {
+						destroyContext();
+						throw e;
+					}
+				} catch (LWJGLException e) {
+					destroyWindow();
+					throw e;
+				}
 			} catch (LWJGLException e) {
-				destroyContext();
+				destroyPeerInfo();
 				throw e;
 			}
 		} catch (LWJGLException e) {
@@ -694,6 +707,7 @@ public final class Display {
 	}
 
 	private static void initContext() {
+		setSwapInterval(swap_interval);
 		// Put the window into orthographic projection mode with 1:1 pixel ratio.
 		// We haven't used GLU here to do this to avoid an unnecessary dependency.
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -759,15 +773,20 @@ public final class Display {
 
 		destroyWindow();
 		destroyContext();
+		destroyPeerInfo();
 		x = y = -1;
 		cached_icons = null;
 		reset();
 	}
 
+	private static void destroyPeerInfo() {
+		peer_info.destroy();
+		peer_info = null;
+	}
+
 	private static void destroyContext() {
 		try {
 			context.forceDestroy();
-			peer_info.destroy();
 		} catch (LWJGLException e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -795,7 +814,7 @@ public final class Display {
 	 * @return true if the window's native peer has been created
 	 */
 	public static boolean isCreated() {
-		return context != null;
+		return window_created;
 	}
 
 	/**
