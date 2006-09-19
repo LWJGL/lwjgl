@@ -42,30 +42,19 @@ import org.lwjgl.LWJGLException;
  * $Id$
  */
 final class WindowsDisplayPeerInfo extends WindowsPeerInfo {
+	private final PixelFormat pixel_format;
+	
 	public WindowsDisplayPeerInfo(PixelFormat pixel_format) throws LWJGLException {
+		this.pixel_format = pixel_format;
 		GLContext.loadOpenGLLibrary();
-		try {
-			createDummyDC(getHandle());
-			try {
-				choosePixelFormat(0, 0, pixel_format, null, true, true, false, true);
-			} catch (LWJGLException e) {
-				nDestroy(getHandle());
-				throw e;
-			}
-		} catch (LWJGLException e) {
-			GLContext.unloadOpenGLLibrary();
-			throw e;
-		}
 	}
-	private static native void createDummyDC(ByteBuffer peer_info_handle) throws LWJGLException;
 
-	void initDC() {
+	void initDC() throws LWJGLException {
 		nInitDC(getHandle());
+		choosePixelFormat(0, 0, pixel_format, null, true, true, false, true);
 	}
 	private static native void nInitDC(ByteBuffer peer_info_handle);
 
-	private static native void nDestroy(ByteBuffer peer_info_handle);
-	
 	protected void doLockAndInitHandle() throws LWJGLException {
 		// NO-OP
 	}
@@ -76,7 +65,6 @@ final class WindowsDisplayPeerInfo extends WindowsPeerInfo {
 
 	public void destroy() {
 		super.destroy();
-		nDestroy(getHandle());
 		GLContext.unloadOpenGLLibrary();
 	}
 }

@@ -63,7 +63,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nCr
 		return NULL;
 	}
 	peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	context = wglCreateContext(peer_info->format_hdc);
+	context = wglCreateContext(peer_info->drawable_hdc);
 	if (context == NULL) {
 		throwException(env, "Could not create context");
 		return NULL;
@@ -79,7 +79,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nCr
 	}
 	saved_hdc = wglGetCurrentDC();
 	saved_context = wglGetCurrentContext();
-	if (!wglMakeCurrent(peer_info->format_hdc, context)) {
+	if (!wglMakeCurrent(peer_info->drawable_hdc, context)) {
 		wglMakeCurrent(saved_hdc, saved_context);
 		wglDeleteContext(context);
 		throwException(env, "Could not make context current");

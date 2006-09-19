@@ -56,5 +56,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsPeerInfo_nChoosePixelFormat
 	if (pixel_format_id == -1)
 		return;
 	// Let it throw
-	applyPixelFormat(env, peer_info->format_hdc, pixel_format_id);
+	applyPixelFormat(env, peer_info->drawable_hdc, pixel_format_id);
 }

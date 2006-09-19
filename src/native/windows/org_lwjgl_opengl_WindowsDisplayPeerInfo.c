@@ -43,36 +43,8 @@
 #include "context.h"
 #include "common_tools.h"
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplayPeerInfo_createDummyDC
-  (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
-	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	HWND dummy_hwnd = createDummyWindow(0, 0);
-	HDC dummy_hdc;
-	if (dummy_hwnd == NULL) {
-		throwException(env, "Failed to create a dummy window.");
-		return;
-	}
-	dummy_hdc = GetDC(dummy_hwnd);
-	peer_info->u.format_hwnd = dummy_hwnd;
-	peer_info->format_hdc = dummy_hdc;
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplayPeerInfo_nDestroy
-  (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
-	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	closeWindow(&peer_info->u.format_hwnd, &peer_info->format_hdc);
-}
-
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplayPeerInfo_nInitDC
   (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
 	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	int pixel_format;
 	peer_info->drawable_hdc = getCurrentHDC();
-	pixel_format = GetPixelFormat(peer_info->format_hdc);
-	if (pixel_format == 0) {
-		throwException(env, "Could not get pixel format from dummy hdc");
-		return;
-	}
-	// If applyPixelFormat fails, just let it throw
-	applyPixelFormat(env, peer_info->drawable_hdc, pixel_format);
 }
