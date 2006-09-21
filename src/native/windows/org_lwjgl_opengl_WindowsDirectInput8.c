@@ -49,9 +49,9 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDirectInput8_createDirectIn
 	LPDIRECTINPUT8 lpdi;
 	HRESULT ret;
 
-	ret = CoInitializeEx(NULL, COINIT_MULTITHREADED);
-	if (ret != S_OK && ret != S_FALSE && ret != RPC_E_CHANGED_MODE) {
-		throwFormattedException(env, "CoInitializeEx failed (%x)", ret);
+	ret = CoInitialize(NULL);
+	if (ret != S_OK && ret != S_FALSE) {
+		throwFormattedException(env, "CoInitialize failed (%x)", ret);
 		return (LONG_PTR)NULL;
 	}
 	ret = CoCreateInstance(&CLSID_DirectInput8, NULL, CLSCTX_INPROC_SERVER, &IID_IDirectInput8, (void *)&lpdi);
@@ -97,4 +97,5 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDirectInput8_nCreateDevice(
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDirectInput8_release(JNIEnv *env, jobject unused, jlong di_interface) {
 	LPDIRECTINPUT8 lpdi = (LPDIRECTINPUT8)(LONG_PTR)di_interface;
 	IDirectInput8_Release(lpdi);
+	CoUninitialize();
 }
