@@ -65,7 +65,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxAWTGLCanvasPeerInfo_nInitHandl
 		int num_infos;
 		template.visualid = dsi_x11->visualID;
 		template.depth = dsi_x11->depth;
-		XVisualInfo *vis_info = XGetVisualInfo(peer_info->display, VisualIDMask | VisualDepthMask, &template, &num_infos);
+		XVisualInfo *vis_info = XGetVisualInfo(dsi_x11->display, VisualIDMask | VisualDepthMask, &template, &num_infos);
 		if (vis_info == NULL) {
 			throwException(env, "Could not determine screen");
 			return;
