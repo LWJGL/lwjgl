@@ -42,6 +42,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayImplementation;
 
 /**
  * <br>
@@ -263,6 +264,8 @@ public class Keyboard {
 	/** One time initialization */
 	private static boolean initialized;
 
+	private static DisplayImplementation implementation;
+
 	/**
 	 * Keyboard cannot be constructed.
 	 */
@@ -292,7 +295,8 @@ public class Keyboard {
 			initialize();
 		if (created)
 			return;
-		Display.getImplementation().createKeyboard();
+		implementation = Mouse.getImplementation();
+		implementation.createKeyboard();
 		created = true;
 		readBuffer = ByteBuffer.allocate(EVENT_SIZE*BUFFER_SIZE);
 		reset();
@@ -321,7 +325,7 @@ public class Keyboard {
 		if (!created)
 			return;
 		created = false;
-		Display.getImplementation().destroyKeyboard();
+		implementation.destroyKeyboard();
 		reset();
 	}
 
@@ -346,13 +350,13 @@ public class Keyboard {
 	public static void poll() {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can poll the device");
-		Display.getImplementation().pollKeyboard(keyDownBuffer);
+		implementation.pollKeyboard(keyDownBuffer);
 		read();
 	}
 
 	private static void read() {
 		readBuffer.compact();
-		Display.getImplementation().readKeyboard(readBuffer);
+		implementation.readKeyboard(readBuffer);
 		readBuffer.flip();
 	}
 
@@ -376,7 +380,7 @@ public class Keyboard {
 /*	public static int isStateKeySet(int key) {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can query key state");
-		return Display.getImplementation().isStateKeySet(key);
+		return implementation.isStateKeySet(key);
 	}
 */
 	/**

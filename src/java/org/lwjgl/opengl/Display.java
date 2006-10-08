@@ -718,7 +718,7 @@ public final class Display {
 		GL11.glViewport(0, 0, current_mode.getWidth(), current_mode.getHeight());
 	}
 
-	public static DisplayImplementation getImplementation() {
+	static DisplayImplementation getImplementation() {
 		return display_impl;
 	}
 

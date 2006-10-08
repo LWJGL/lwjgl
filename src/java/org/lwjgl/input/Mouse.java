@@ -40,7 +40,14 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
+import org.lwjgl.opengl.DisplayImplementation;
 import org.lwjgl.opengl.Display;
+
+import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
+import java.security.PrivilegedActionException;
+
 
 /**
  * <br>
@@ -126,6 +133,8 @@ public class Mouse {
 	private static final int	BUFFER_SIZE									= 50;
 
 	private static boolean		isGrabbed;
+
+	private static DisplayImplementation implementation;
   
   /** Whether we're running windows - which need to manually update cursor animation */
   private static final boolean isWindows = LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_WINDOWS;
@@ -163,10 +172,10 @@ public class Mouse {
 		currentCursor = cursor;
 		if (isCreated()) {
 			if (currentCursor != null) {
-				Display.getImplementation().setNativeCursor(currentCursor.getHandle());
+				implementation.setNativeCursor(currentCursor.getHandle());
 				currentCursor.setTimeout();
 			} else {
-				Display.getImplementation().setNativeCursor(null);
+				implementation.setNativeCursor(null);
 			}
 		}
 		return oldCursor;
@@ -187,7 +196,7 @@ public class Mouse {
 		x = event_x = new_x;
 		y = event_y = new_y;
 		if (!isGrabbed() && (Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) != 0)
-			Display.getImplementation().setCursorPosition(x, y);
+			implementation.setCursorPosition(x, y);
 	}
 	
 	/**
@@ -211,6 +220,23 @@ public class Mouse {
 		readBuffer.position(readBuffer.limit());
 	}
 
+	static DisplayImplementation getImplementation() {
+		/* Use reflection since we can't make Display.getImplementation
+		 * public
+		 */
+		try {
+			return (DisplayImplementation)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws Exception{
+					Method getImplementation_method = Display.class.getDeclaredMethod("getImplementation", null);
+					getImplementation_method.setAccessible(true);
+					return getImplementation_method.invoke(null, null);
+				}
+			});
+		} catch (PrivilegedActionException e) {
+			throw new Error(e);
+		}
+	}
+
 	/**
 	 * "Create" the mouse. The display must first have been created.
 	 * Initially, the mouse is not grabbed and the delta values are reported
@@ -224,12 +250,13 @@ public class Mouse {
 		if (!initialized)
 			initialize();
 		if (created) return;
-		Display.getImplementation().createMouse();
-		hasWheel = Display.getImplementation().hasWheel();
+		implementation = getImplementation();
+		implementation.createMouse();
+		hasWheel = implementation.hasWheel();
 		created = true;
 
 		// set mouse buttons
-		buttonCount = Display.getImplementation().getButtonCount();
+		buttonCount = implementation.getButtonCount();
 		buttons = BufferUtils.createByteBuffer(buttonCount);
 		coord_buffer = BufferUtils.createIntBuffer(3);
 		if (currentCursor != null)
@@ -255,7 +282,7 @@ public class Mouse {
 		buttons = null;
 		coord_buffer = null;
 
-		Display.getImplementation().destroyMouse();
+		implementation.destroyMouse();
 	}
 
 	/**
@@ -281,7 +308,7 @@ public class Mouse {
 	 */
 	public static void poll() {
 		if (!created) throw new IllegalStateException("Mouse must be created before you can poll it");
-		Display.getImplementation().pollMouse(coord_buffer, buttons);
+		implementation.pollMouse(coord_buffer, buttons);
 
 		/* If we're grabbed, poll returns mouse deltas, if not it returns absolute coordinates */
 		int poll_coord1 = coord_buffer.get(0);
@@ -308,7 +335,7 @@ public class Mouse {
 
 	private static void read() {
 		readBuffer.compact();
-		Display.getImplementation().readMouse(readBuffer);
+		implementation.readMouse(readBuffer);
 		readBuffer.flip();
 	}
 
@@ -527,7 +554,7 @@ public class Mouse {
 	public static void setGrabbed(boolean grab) {
 		isGrabbed = grab;
 		if (isCreated()) {
-			Display.getImplementation().grabMouse(isGrabbed);
+			implementation.grabMouse(isGrabbed);
 			resetMouse();
 		}
 	}

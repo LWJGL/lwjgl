@@ -38,7 +38,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
-import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayImplementation;
 
 /**
  *
@@ -115,7 +115,7 @@ public class Cursor {
 	 * @return the maximum size of a native cursor
 	 */
 	public static int getMinCursorSize() {
-		return Display.getImplementation().getMinCursorSize();
+		return Mouse.getImplementation().getMinCursorSize();
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class Cursor {
 	 * @return the maximum size of a native cursor
 	 */
 	public static int getMaxCursorSize() {
-		return Display.getImplementation().getMaxCursorSize();
+		return Mouse.getImplementation().getMaxCursorSize();
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class Cursor {
 	 * @return A bit mask with native cursor capabilities.
 	 */
 	public static int getCapabilities() {
-		return Display.getImplementation().getNativeCursorCapabilities();
+		return Mouse.getImplementation().getNativeCursorCapabilities();
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class Cursor {
 				// create our cursor elements
 				cursors = new CursorElement[numImages];
 				for(int i=0; i<numImages; i++) {
-					Object handle = Display.getImplementation().createCursor(width, height, xHotspot, yHotspot, 1, images_copy, null);
+					Object handle = Mouse.getImplementation().createCursor(width, height, xHotspot, yHotspot, 1, images_copy, null);
 					long delay = (delays != null) ? delays.get(i) : 0;
 					long timeout = System.currentTimeMillis();
 					cursors[i] = new CursorElement(handle, delay, timeout);
@@ -175,7 +175,7 @@ public class Cursor {
 				break;
 			case LWJGLUtil.PLATFORM_LINUX:
 				// create our cursor elements
-				Object handle = Display.getImplementation().createCursor(width, height, xHotspot, yHotspot, numImages, images_copy, delays);
+				Object handle = Mouse.getImplementation().createCursor(width, height, xHotspot, yHotspot, numImages, images_copy, delays);
 				CursorElement cursor_element = new CursorElement(handle, -1, -1);
 				cursors = new CursorElement[]{cursor_element};
 				break;
@@ -251,7 +251,7 @@ public class Cursor {
 			}
 		}
 		for(int i=0; i<cursors.length; i++) {
-			Display.getImplementation().destroyCursor(cursors[i].cursorHandle);
+			Mouse.getImplementation().destroyCursor(cursors[i].cursorHandle);
 		}
 		destroyed = true;
 	}
