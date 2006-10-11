@@ -52,7 +52,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsPeerInfo_nChoosePixelFormat
 	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
 	bool floating_point = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
-	int pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, pixel_format_caps, use_hdc_bpp, window, pbuffer, double_buffer, floating_point);
+	int pixel_format_id = findPixelFormatOnDC(env, peer_info->drawable_hdc, origin_x, origin_y, pixel_format, pixel_format_caps, use_hdc_bpp, window, pbuffer, double_buffer, floating_point);
 	if (pixel_format_id == -1)
 		return;
 	// Let it throw

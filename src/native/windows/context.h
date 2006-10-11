@@ -88,6 +88,6 @@ extern void getWindowFlags(DWORD *windowflags_return, DWORD *exstyle_return, boo
  */
 extern HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height, bool fullscreen, bool undecorated);
 
-extern int findPixelFormat(JNIEnv *env, int origin_x, int origin_y, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer, bool floating_point);
+extern int findPixelFormatOnDC(JNIEnv *env, HDC hdc, int origin_x, int origin_y, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer, bool floating_point);
 
 #endif

@@ -370,68 +370,76 @@ static int findPixelFormatDefault(JNIEnv *env, HDC hdc, jobject pixel_format, bo
 	return findPixelFormatFromBPP(env, hdc, pixel_format, bpp, double_buffer);
 }
 
-static int findPixelFormatOnDC(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer, bool floating_point) {
+static bool validateAndGetExtensions(JNIEnv *env, WGLExtensions *extensions, HDC dummy_hdc, HGLRC dummy_hglrc, int samples, bool floating_point, jobject pixelFormatCaps) {
+	if (!wglMakeCurrent(dummy_hdc, dummy_hglrc)) {
+		throwException(env, "Could not bind context to dummy window");
+		return false;
+	}
+	extgl_InitWGL(extensions);
+
+	if (!extensions->WGL_ARB_pixel_format) {
+		throwException(env, "No support for WGL_ARB_pixel_format");
+		return false;
+	}
+	if (samples > 0 && !extensions->WGL_ARB_multisample) {
+		throwException(env, "No support for WGL_ARB_multisample");
+		return false;
+	}
+	/*
+	 * Apparently, some drivers don't report WGL_ARB_pixel_format_float
+	 * even though GL_ARB_color_buffer_float and WGL_ATI_color_format_float
+	 * is supported.
+	 */
+	if (floating_point && !(extensions->WGL_ARB_pixel_format_float || extensions->WGL_ATI_pixel_format_float)) {
+		throwException(env, "No support for WGL_ARB_pixel_format_float nor WGL_ATI_pixel_format_float");
+		return false;
+	}
+	if (pixelFormatCaps != NULL && !extensions->WGL_ARB_render_texture) {
+		throwException(env, "No support for WGL_ARB_render_texture");
+		return false;
+	}
+	return true;
+}
+
+int findPixelFormatOnDC(JNIEnv *env, HDC hdc, int origin_x, int origin_y, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer, bool floating_point) {
 	HGLRC dummy_hglrc;
 	HDC saved_current_hdc;
 	HGLRC saved_current_hglrc;
 	WGLExtensions extensions;
+	HWND dummy_hwnd;
+	HDC dummy_hdc;
 	int pixel_format_id;
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
 	int samples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "samples", "I"));
 	bool use_arb_selection = samples > 0 || floating_point || pbuffer || pixelFormatCaps != NULL;
 	pixel_format_id = findPixelFormatDefault(env, hdc, pixel_format, use_hdc_bpp, double_buffer);
 	if (pixel_format_id != -1 && use_arb_selection) {
-		if (!applyPixelFormat(env, hdc, pixel_format_id)) {
+		dummy_hwnd = createDummyWindow(origin_x, origin_y);
+		if (dummy_hwnd == NULL) {
+			throwException(env, "Could not create dummy window");
 			return -1;
 		}
-		dummy_hglrc = wglCreateContext(hdc);
+		dummy_hdc = GetDC(dummy_hwnd);
+		if (!applyPixelFormat(env, dummy_hdc, pixel_format_id)) {
+			closeWindow(&dummy_hwnd, &dummy_hdc);
+			return -1;
+		}
+		dummy_hglrc = wglCreateContext(dummy_hdc);
 		if (dummy_hglrc == NULL) {
+			closeWindow(&dummy_hwnd, &dummy_hdc);
 			throwException(env, "Failed to create OpenGL rendering context");
 			return -1;
 		}
 		// Save the current HDC and HGLRC to avoid disruption
 		saved_current_hdc = wglGetCurrentDC();
 		saved_current_hglrc = wglGetCurrentContext();
-		if (!wglMakeCurrent(hdc, dummy_hglrc)) {
-			wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
-			wglDeleteContext(dummy_hglrc);
-			throwException(env, "Could not bind context to dummy window");
-			return -1;
-		}
-		extgl_InitWGL(&extensions);
-		
-		if (!extensions.WGL_ARB_pixel_format) {
-			wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
-			wglDeleteContext(dummy_hglrc);
-			throwException(env, "No support for WGL_ARB_pixel_format");
-			return -1;
-		}
-		if (samples > 0 && !extensions.WGL_ARB_multisample) {
-			wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
-			wglDeleteContext(dummy_hglrc);
-			throwException(env, "No support for WGL_ARB_multisample");
-			return -1;
-		}
-		/*
-		 * Apparently, some drivers don't report WGL_ARB_pixel_format_float
-		 * even though GL_ARB_color_buffer_float and WGL_ATI_color_format_float
-		 * is supported.
-		 */
-		if (floating_point && !(extensions.WGL_ARB_pixel_format_float || extensions.WGL_ATI_pixel_format_float)) {
-			wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
-			wglDeleteContext(dummy_hglrc);
-			throwException(env, "No support for WGL_ARB_pixel_format_float nor WGL_ATI_pixel_format_float");
-			return -1;
-		}
-		if (pixelFormatCaps != NULL && !extensions.WGL_ARB_render_texture) {
-			wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
-			wglDeleteContext(dummy_hglrc);
-			throwException(env, "No support for WGL_ARB_render_texture");
-			return -1;
-		}
-		pixel_format_id = findPixelFormatARB(env, hdc, &extensions, pixel_format, pixelFormatCaps, use_hdc_bpp, window, pbuffer, double_buffer, floating_point);
+		if (validateAndGetExtensions(env, &extensions, dummy_hdc, dummy_hglrc, samples, floating_point, pixelFormatCaps)) {
+			pixel_format_id = findPixelFormatARB(env, hdc, &extensions, pixel_format, pixelFormatCaps, use_hdc_bpp, window, pbuffer, double_buffer, floating_point);
+		} else
+			pixel_format_id = -1;
 		wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
 		wglDeleteContext(dummy_hglrc);
+		closeWindow(&dummy_hwnd, &dummy_hdc);
 	}
 	if (pixel_format_id == -1) {
 		throwException(env, "Could not find a valid pixel format");
@@ -454,19 +462,4 @@ HWND createDummyWindow(int origin_x, int origin_y) {
 	if (!registerDummyWindow())
 		return NULL;
 	return createWindow(_CONTEXT_PRIVATE_CLASS_NAME, origin_x, origin_y, 1, 1, false, false);
-}
-
-int findPixelFormat(JNIEnv *env, int origin_x, int origin_y, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer, bool floating_point) {
-	HWND dummy_hwnd;
-	HDC dummy_hdc;
-	int pixel_format_id;
-	dummy_hwnd = createDummyWindow(origin_x, origin_y);
-	if (dummy_hwnd == NULL) {
-		throwException(env, "Failed to create the dummy window.");
-		return -1;
-	}
-	dummy_hdc = GetDC(dummy_hwnd);
-	pixel_format_id = findPixelFormatOnDC(env, dummy_hdc, pixel_format, pixelFormatCaps, use_hdc_bpp, window, pbuffer, double_buffer, floating_point);
-	closeWindow(&dummy_hwnd, &dummy_hdc);
-	return pixel_format_id;
 }

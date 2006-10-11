@@ -40,10 +40,6 @@
  */
 
 #include <windows.h>
-// Multimon.h enables multi monitor emulation on win95 and winnt4
-// So we only need the extended, multi-monitor aware path
-//#define COMPILE_MULTIMON_STUBS
-//#include <Multimon.h>
 #include <jni.h>
 #include "org_lwjgl_opengl_WindowsDisplay.h"
 #include "display.h"

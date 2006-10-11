@@ -80,7 +80,7 @@ public class FullScreenWindowedTest {
 	private void initialize() {
 		try {
 			//find displaymode
-			mode = findDisplayMode(800, 600, 16);
+			mode = findDisplayMode(800, 600, Display.getDisplayMode().getBitsPerPixel());
 			// start of in windowed mode
 			Display.create();
 			glInit();

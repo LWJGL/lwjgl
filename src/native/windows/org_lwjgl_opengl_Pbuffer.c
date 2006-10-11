@@ -62,15 +62,17 @@ static bool getExtensions(JNIEnv *env, WGLExtensions *extensions, jobject pixel_
 	HGLRC saved_context;
 	int pixel_format_id;
 	
-	pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, pixelFormatCaps, false, true, false, false, false);
-	if (pixel_format_id == -1)
-		return false;
 	dummy_hwnd = createDummyWindow(origin_x, origin_y);
 	if (dummy_hwnd == NULL) {
 		throwException(env, "Could not create dummy window");
 		return false;
 	}
 	dummy_hdc = GetDC(dummy_hwnd);
+	pixel_format_id = findPixelFormatOnDC(env, dummy_hdc, origin_x, origin_y, pixel_format, pixelFormatCaps, false, true, false, false, false);
+	if (pixel_format_id == -1) {
+		closeWindow(&dummy_hwnd, &dummy_hdc);
+		return false;
+	}
 	if (!applyPixelFormat(env, dummy_hdc, pixel_format_id)) {
 		closeWindow(&dummy_hwnd, &dummy_hdc);
 		return false;
@@ -142,9 +144,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsPbufferPeerInfo_nCreate
 	} else {
 		pBufferAttribs_ptr = NULL;
 	}
-	pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, pixelFormatCaps, false, false, true, false, floating_point);
-	if (pixel_format_id == -1)
-		return;
 	if (!getExtensions(env, &extensions, pixel_format, pixelFormatCaps))
 		return;
 	dummy_hwnd = createDummyWindow(origin_x, origin_y);
@@ -153,6 +152,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsPbufferPeerInfo_nCreate
 		return;
 	}
 	dummy_hdc = GetDC(dummy_hwnd);
+	pixel_format_id = findPixelFormatOnDC(env, dummy_hdc, origin_x, origin_y, pixel_format, pixelFormatCaps, false, false, true, false, floating_point);
+	if (pixel_format_id == -1) {
+		closeWindow(&dummy_hwnd, &dummy_hdc);
+		return;
+	}
 	Pbuffer = extensions.wglCreatePbufferARB(dummy_hdc, pixel_format_id, width, height, pBufferAttribs_ptr);
 	closeWindow(&dummy_hwnd, &dummy_hdc);
 	if (Pbuffer == NULL) {
