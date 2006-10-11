@@ -51,7 +51,9 @@ final class WindowsKeyboard {
 	private final WindowsDirectInputDevice keyboard;
 	private final IntBuffer temp_data_buffer;
 	private final ByteBuffer keyboard_state;
+	private final boolean unicode;
 	private final CharBuffer unicode_buffer;
+	private final ByteBuffer ascii_buffer;
 
 	public WindowsKeyboard(WindowsDirectInput dinput, long hwnd) throws LWJGLException {
 		this.dinput = dinput;
@@ -72,8 +74,18 @@ final class WindowsKeyboard {
 		keyboard.acquire();
 		temp_data_buffer = BufferUtils.createIntBuffer(BUFFER_SIZE*WindowsDirectInputDevice.DATA_SIZE);
 		keyboard_state = BufferUtils.createByteBuffer(256);
-		unicode_buffer = BufferUtils.createCharBuffer(BUFFER_SIZE);
+		unicode = isWindowsNT();
+		if (unicode) {
+			unicode_buffer = BufferUtils.createCharBuffer(BUFFER_SIZE);
+			ascii_buffer = null;
+		} else {
+			unicode_buffer = null;
+			// ToAscii returns at most 2 characters
+			ascii_buffer = BufferUtils.createByteBuffer(2);
+		}
 	}
+
+	private static native boolean isWindowsNT();
 
 	public void destroy() {
 		keyboard.unacquire();
@@ -117,12 +129,22 @@ final class WindowsKeyboard {
 				if (virt_key != 0 && GetKeyboardState(keyboard_state) != 0) {
 					// Mark key down in the scan code
 					dwOfs = dwOfs & 0x7fff;
-					unicode_buffer.clear();
-					int num_chars = ToUnicode(virt_key, 
+					int num_chars;
+					if (unicode) {
+						unicode_buffer.clear();
+						num_chars = ToUnicode(virt_key, 
 							dwOfs,
 							keyboard_state,
 							unicode_buffer,
 							unicode_buffer.capacity(), 0);
+					} else {
+						ascii_buffer.clear();
+						num_chars = ToAscii(virt_key, 
+							dwOfs,
+							keyboard_state,
+							ascii_buffer,
+							0);
+					}
 					if (num_chars > 0) {
 						int current_char = 0;
 						do {
@@ -130,7 +152,12 @@ final class WindowsKeyboard {
 								dst.putInt(0);
 								dst.put((byte)0);
 							}
-							int char_int = ((int)unicode_buffer.get()) & 0xFFFF;
+							int char_int;
+							if (unicode) {
+								char_int = ((int)unicode_buffer.get()) & 0xFFFF;
+							} else {
+								char_int = ((int)ascii_buffer.get()) & 0xFF;
+							}
 							dst.putInt(char_int);
 							dst.putLong(nanos);
 							current_char++;
@@ -151,6 +178,7 @@ final class WindowsKeyboard {
 	}
 	private static native int MapVirtualKey(int uCode, int uMapType);
 	private static native int ToUnicode(int wVirtKey, int wScanCode, ByteBuffer lpKeyState, CharBuffer pwszBuff, int cchBuff, int flags);
+	private static native int ToAscii(int wVirtKey, int wScanCode, ByteBuffer lpKeyState, ByteBuffer lpChar, int flags);
 	private static native int GetKeyboardState(ByteBuffer lpKeyState);
 
 	public void read(ByteBuffer buffer) {

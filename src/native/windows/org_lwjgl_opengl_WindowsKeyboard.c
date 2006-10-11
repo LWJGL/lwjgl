@@ -45,10 +45,24 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsKeyboard_MapVirtualKey(JNIEn
 	return MapVirtualKey(uCode, uMapType);
 }
 
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsKeyboard_isWindowsNT(JNIEnv *env, jclass unused) {
+	OSVERSIONINFO osvi;
+
+	osvi.dwOSVersionInfoSize = sizeof(osvi);
+	GetVersionEx(&osvi);
+	return osvi.dwPlatformId == VER_PLATFORM_WIN32_NT ? JNI_TRUE : JNI_FALSE;
+}
+
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsKeyboard_ToUnicode(JNIEnv *env, jclass unused, jint wVirtKey, jint wScanCode, jobject lpKeyState_obj, jobject pwszBuff_obj, jint cchBuff, jint flags) {
 	const PBYTE lpKeyState = (*env)->GetDirectBufferAddress(env, lpKeyState_obj);
 	LPWSTR pwszBuff = (*env)->GetDirectBufferAddress(env, pwszBuff_obj);
 	return ToUnicode(wVirtKey, wScanCode, lpKeyState, pwszBuff, cchBuff, flags);
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsKeyboard_ToAscii(JNIEnv *env, jclass unused, jint wVirtKey, jint wScanCode, jobject lpKeyState_obj, jobject lpChar_obj, jint flags) {
+	const PBYTE lpKeyState = (*env)->GetDirectBufferAddress(env, lpKeyState_obj);
+	LPWORD lpChar = (*env)->GetDirectBufferAddress(env, lpChar_obj);
+	return ToAscii(wVirtKey, wScanCode, lpKeyState, lpChar, flags);
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsKeyboard_GetKeyboardState(JNIEnv *env, jclass unused, jobject lpKeyState_obj) {
