@@ -39,7 +39,7 @@ public final class GL21 {
 	/**
 	 * Accepted by the &lt;pname&gt; parameter of GetIntegerv and GetFloatv.
 	 */
-	public static final int GL_CURRENT_RASTER_SECONDARY_COLOR = 0xffffffff;
+	public static final int GL_CURRENT_RASTER_SECONDARY_COLOR = 0x845f;
 
 	private GL21() {
 	}

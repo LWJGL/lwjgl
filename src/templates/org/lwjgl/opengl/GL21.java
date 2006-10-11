@@ -112,6 +112,6 @@ public interface GL21 {
 	/**
 	 * Accepted by the &lt;pname&gt; parameter of GetIntegerv and GetFloatv.
 	 */
-	int GL_CURRENT_RASTER_SECONDARY_COLOR = -1; // TODO: Find this value
+	int GL_CURRENT_RASTER_SECONDARY_COLOR = 0x845F;
 
 }

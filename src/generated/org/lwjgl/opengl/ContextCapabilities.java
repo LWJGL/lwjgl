@@ -77,6 +77,7 @@ public class ContextCapabilities {
 	public final boolean GL_EXT_framebuffer_blit;
 	public final boolean GL_EXT_framebuffer_multisample;
 	public final boolean GL_EXT_framebuffer_object;
+	public final boolean GL_EXT_gpu_program_parameters;
 	public final boolean GL_EXT_multi_draw_arrays;
 	public final boolean GL_EXT_packed_depth_stencil;
 	public final boolean GL_EXT_packed_pixels;
@@ -453,6 +454,8 @@ public class ContextCapabilities {
 	long EXT_framebuffer_object_glFramebufferRenderbufferEXT_pointer;
 	long EXT_framebuffer_object_glGetFramebufferAttachmentParameterivEXT_pointer;
 	long EXT_framebuffer_object_glGenerateMipmapEXT_pointer;
+	long EXT_gpu_program_parameters_glProgramEnvParameter4fvEXT_pointer;
+	long EXT_gpu_program_parameters_glProgramLocalParameter4fvEXT_pointer;
 	long EXT_multi_draw_arrays_glMultiDrawArraysEXT_pointer;
 	long EXT_paletted_texture_glColorTableEXT_pointer;
 	long EXT_paletted_texture_glColorSubTableEXT_pointer;
@@ -1464,6 +1467,12 @@ public class ContextCapabilities {
 			(EXT_framebuffer_object_glGenerateMipmapEXT_pointer = GLContext.getFunctionAddress("glGenerateMipmapEXT")) != 0;
 	}
 
+	private boolean EXT_gpu_program_parameters_initNativeFunctionAddresses() {
+		return 
+			(EXT_gpu_program_parameters_glProgramEnvParameter4fvEXT_pointer = GLContext.getFunctionAddress("glProgramEnvParameter4fvEXT")) != 0 &&
+			(EXT_gpu_program_parameters_glProgramLocalParameter4fvEXT_pointer = GLContext.getFunctionAddress("glProgramLocalParameter4fvEXT")) != 0;
+	}
+
 	private boolean EXT_multi_draw_arrays_initNativeFunctionAddresses() {
 		return 
 			(EXT_multi_draw_arrays_glMultiDrawArraysEXT_pointer = GLContext.getFunctionAddress("glMultiDrawArraysEXT")) != 0;
@@ -2232,6 +2241,8 @@ public class ContextCapabilities {
 			supported_extensions.remove("GL_EXT_framebuffer_multisample");
 		if (supported_extensions.contains("GL_EXT_framebuffer_object") && !EXT_framebuffer_object_initNativeFunctionAddresses())
 			supported_extensions.remove("GL_EXT_framebuffer_object");
+		if (supported_extensions.contains("GL_EXT_gpu_program_parameters") && !EXT_gpu_program_parameters_initNativeFunctionAddresses())
+			supported_extensions.remove("GL_EXT_gpu_program_parameters");
 		if (supported_extensions.contains("GL_EXT_multi_draw_arrays") && !EXT_multi_draw_arrays_initNativeFunctionAddresses())
 			supported_extensions.remove("GL_EXT_multi_draw_arrays");
 		if (supported_extensions.contains("GL_EXT_paletted_texture") && !EXT_paletted_texture_initNativeFunctionAddresses())
@@ -2367,6 +2378,7 @@ public class ContextCapabilities {
 		this.GL_EXT_framebuffer_blit = supported_extensions.contains("GL_EXT_framebuffer_blit");
 		this.GL_EXT_framebuffer_multisample = supported_extensions.contains("GL_EXT_framebuffer_multisample");
 		this.GL_EXT_framebuffer_object = supported_extensions.contains("GL_EXT_framebuffer_object");
+		this.GL_EXT_gpu_program_parameters = supported_extensions.contains("GL_EXT_gpu_program_parameters");
 		this.GL_EXT_multi_draw_arrays = supported_extensions.contains("GL_EXT_multi_draw_arrays");
 		this.GL_EXT_packed_depth_stencil = supported_extensions.contains("GL_EXT_packed_depth_stencil");
 		this.GL_EXT_packed_pixels = supported_extensions.contains("GL_EXT_packed_pixels");
