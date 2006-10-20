@@ -47,33 +47,33 @@
 #include "org_lwjgl_opengl_LinuxAWTGLCanvasPeerInfo.h"
 #include "context.h"
 
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxAWTGLCanvasPeerInfo_getScreenFromSurfaceInfo
+  (JNIEnv *env, jclass clazz, jobject lock_buffer_handle) {
+	const AWTSurfaceLock *awt_lock = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
+	// Get the platform-specific drawing info
+	JAWT_X11DrawingSurfaceInfo *dsi_x11 = (JAWT_X11DrawingSurfaceInfo*)awt_lock->dsi->platformInfo;
+
+	XVisualInfo template;
+	int num_infos;
+	template.visualid = dsi_x11->visualID;
+	template.depth = dsi_x11->depth;
+	XVisualInfo *vis_info = XGetVisualInfo(dsi_x11->display, VisualIDMask | VisualDepthMask, &template, &num_infos);
+	if (vis_info == NULL) {
+		throwException(env, "Could not determine screen");
+		return -1;
+	}
+	int screen = vis_info[0].screen;
+	XFree(vis_info);
+	return screen;
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxAWTGLCanvasPeerInfo_nInitHandle
   (JNIEnv *env, jclass clazz, int screen, jobject lock_buffer_handle, jobject peer_info_handle) {
-	if ((*env)->GetDirectBufferCapacity(env, peer_info_handle) < sizeof(X11PeerInfo)) {
-		throwException(env, "PeerInfo handle buffer not large enough");
-		return;
-	}
 	const AWTSurfaceLock *awt_lock = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
 	X11PeerInfo *peer_info = (X11PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	// Get the platform-specific drawing info
 	JAWT_X11DrawingSurfaceInfo *dsi_x11 = (JAWT_X11DrawingSurfaceInfo*)awt_lock->dsi->platformInfo;
 
-	// If we couldn't get a screen from java side, attempt to determine a sane screen
-	// from the information we do have, namely the visualid and the depth
-	if (screen == -1) {
-		XVisualInfo template;
-		int num_infos;
-		template.visualid = dsi_x11->visualID;
-		template.depth = dsi_x11->depth;
-		XVisualInfo *vis_info = XGetVisualInfo(dsi_x11->display, VisualIDMask | VisualDepthMask, &template, &num_infos);
-		if (vis_info == NULL) {
-			throwException(env, "Could not determine screen");
-			return;
-		}
-		screen = vis_info[0].screen;
-		XFree(vis_info);
-	}
-	
 	peer_info->display = dsi_x11->display;
 	peer_info->screen = screen;
 	peer_info->drawable = dsi_x11->drawable;

@@ -45,20 +45,25 @@ import org.lwjgl.LWJGLUtil;
 final class LinuxAWTGLCanvasPeerInfo extends LinuxPeerInfo {
 	private final AWTGLCanvas canvas;
 	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
+	private int screen = -1;
 
 	public LinuxAWTGLCanvasPeerInfo(AWTGLCanvas canvas) {
 		this.canvas = canvas;
 	}
 	
 	protected void doLockAndInitHandle() throws LWJGLException {
-		int screen = -1;
-		try {
-			screen = LinuxCanvasImplementation.getScreenFromDevice(canvas.getGraphicsConfiguration().getDevice());
-		} catch (LWJGLException e) {
-			LWJGLUtil.log("Got exception while trying to determine screen: " + e);
+		ByteBuffer surface_handle = awt_surface.lockAndGetHandle(canvas);
+		if (screen == -1) {
+			try {
+				screen = getScreenFromSurfaceInfo(surface_handle);
+			} catch (LWJGLException e) {
+				LWJGLUtil.log("Got exception while trying to determine screen: " + e);
+				screen = 0;
+			}
 		}
-		nInitHandle(screen, awt_surface.lockAndGetHandle(canvas), getHandle());
+		nInitHandle(screen, surface_handle, getHandle());
 	}
+	private static native int getScreenFromSurfaceInfo(ByteBuffer surface_handle) throws LWJGLException;
 	private static native void nInitHandle(int screen, ByteBuffer surface_buffer, ByteBuffer peer_info_handle) throws LWJGLException;
 
 	protected void doUnlock() throws LWJGLException {
