@@ -53,7 +53,7 @@ public class AWTTest extends Frame {
 	/** AWT GL canvas */
 	private AWTGLCanvas canvas0, canvas1;
 	
-	private	float angle;
+	private	volatile float angle;
 
 	/**
 	 * C'tor
@@ -80,6 +80,7 @@ public class AWTTest extends Frame {
 					GL11.glRectf(-50.0f, -50.0f, 50.0f, 50.0f);
 					GL11.glPopMatrix();
 					swapBuffers();
+					repaint();
 				} catch (LWJGLException e) {
 					throw new RuntimeException(e);
 				}
@@ -89,6 +90,7 @@ public class AWTTest extends Frame {
 		add(canvas1 = new AWTGLCanvas() {
 			public void paintGL() {
 				try {
+					angle += 1.0f;
 					makeCurrent();
 					GL11.glViewport(0, 0, getWidth(), getHeight());
 					GL11.glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
@@ -103,6 +105,7 @@ public class AWTTest extends Frame {
 					GL11.glRectf(-50.0f, -50.0f, 50.0f, 50.0f);
 					GL11.glPopMatrix();
 					swapBuffers();
+					repaint();
 				} catch (LWJGLException e) {
 					throw new RuntimeException(e);
 				}
@@ -117,24 +120,6 @@ public class AWTTest extends Frame {
 		});
 		setResizable(true);
 		setVisible(true);
-		
-		new Thread() {
-			{
-				setDaemon(true);
-			}
-			public void run() {
-				for (;;) {
-					angle += 1.0f;
-					canvas0.repaint();
-					canvas1.repaint();
-					try {
-						sleep(20);
-					} catch (InterruptedException e) {
-						break;
-					}
-				}
-			}
-		}.start();
 	}
 
 	public static void main(String[] args) throws LWJGLException {

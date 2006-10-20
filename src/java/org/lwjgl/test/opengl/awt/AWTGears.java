@@ -116,6 +116,7 @@ public class AWTGears extends Frame {
 
 					GL11.glPopMatrix();					
 					swapBuffers();
+					repaint();
 				} catch (LWJGLException e) {
 					throw new RuntimeException(e);
 				}
@@ -139,17 +140,6 @@ public class AWTGears extends Frame {
 		});
 		setResizable(true);
 		setVisible(true);
-		
-		new Thread() {
-			{
-				setDaemon(true);
-			}
-			public void run() {
-				for (;;) {
-					canvas0.repaint();
-				}
-			}
-		}.start();
 	}
 	
 	private void setup() {
