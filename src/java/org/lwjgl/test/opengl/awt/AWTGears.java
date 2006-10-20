@@ -76,10 +76,11 @@ public class AWTGears extends Frame {
 	public AWTGears() throws LWJGLException {
 		setTitle("Gears");
 		setSize(300, 300);
-		setLayout(null);
 		add(canvas0 = new AWTGLCanvas() {
 			long startTime = 0;
-			long fps = 0;			
+			long fps = 0;
+			int current_width;
+			int current_height;
 			public void paintGL() {
 				
 				if(startTime == 0) {
@@ -89,6 +90,11 @@ public class AWTGears extends Frame {
 				
 				try {
 					angle += 2.0f;
+					if (getWidth() != current_width || getHeight() != current_height) {
+						current_width = getWidth();
+						current_height = getHeight();
+						GL11.glViewport(0, 0, current_width, current_height);
+					}
 					GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
 					GL11.glPushMatrix();

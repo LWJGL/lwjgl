@@ -32,6 +32,7 @@
 package org.lwjgl.test.opengl.awt;
 
 import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -61,11 +62,17 @@ public class AWTTest extends Frame {
 	public AWTTest() throws LWJGLException {
 		setTitle("LWJGL AWT Canvas Test");
 		setSize(640, 320);
-		setLayout(null);
+		setLayout(new GridLayout(1, 2));
 		add(canvas0 = new AWTGLCanvas() {
+			int current_height;
+			int current_width;
 			public void paintGL() {
 				try {
-					makeCurrent();
+					if (getWidth() != current_width || getHeight() != current_height) {
+						current_width = getWidth();
+						current_height = getHeight();
+						GL11.glViewport(0, 0, current_width, current_height);
+					}
 					GL11.glViewport(0, 0, getWidth(), getHeight());
 					GL11.glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 					GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
@@ -88,10 +95,16 @@ public class AWTTest extends Frame {
 		});
 		canvas0.setBounds(0, 0, 320, 320);
 		add(canvas1 = new AWTGLCanvas() {
+			int current_height;
+			int current_width;
 			public void paintGL() {
 				try {
 					angle += 1.0f;
-					makeCurrent();
+					if (getWidth() != current_width || getHeight() != current_height) {
+						current_width = getWidth();
+						current_height = getHeight();
+						GL11.glViewport(0, 0, current_width, current_height);
+					}
 					GL11.glViewport(0, 0, getWidth(), getHeight());
 					GL11.glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
 					GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
