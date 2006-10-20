@@ -32,6 +32,7 @@
 package org.lwjgl.test.opengl.awt;
 
 import java.awt.Frame;
+import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.nio.FloatBuffer;
@@ -76,6 +77,7 @@ public class AWTGears extends Frame {
 	public AWTGears() throws LWJGLException {
 		setTitle("Gears");
 		setSize(300, 300);
+		setBackground(Color.BLACK);
 		add(canvas0 = new AWTGLCanvas() {
 			long startTime = 0;
 			long fps = 0;
