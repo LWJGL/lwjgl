@@ -93,7 +93,6 @@ public class AWTTest extends Frame {
 				}
 			}
 		});
-		canvas0.setBounds(0, 0, 320, 320);
 		add(canvas1 = new AWTGLCanvas() {
 			int current_height;
 			int current_width;
@@ -124,7 +123,6 @@ public class AWTTest extends Frame {
 				}
 			}
 		});	
-		canvas1.setBounds(320, 0, 320, 320);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				dispose();

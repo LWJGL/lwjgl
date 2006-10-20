@@ -137,7 +137,6 @@ public class AWTGears extends Frame {
 				}				
 			}
 		});
-		canvas0.setBounds(0, 0, 300, 300);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				dispose();
