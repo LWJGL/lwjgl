@@ -47,7 +47,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "display.h"
 #include "common_tools.h"
 #include "Window.h"
 #include "org_lwjgl_opengl_LinuxDisplay.h"
@@ -319,7 +318,7 @@ static void setGamma(JNIEnv *env, Display *disp, int screen, jobject ramp_buffer
 	}
 }
 
-bool switchDisplayMode(JNIEnv * env, int screen, jint extension, jobject mode) {
+static bool switchDisplayMode(JNIEnv * env, Display *disp, int screen, jint extension, jobject mode) {
 	if (mode == NULL) {
 		throwException(env, "mode must be non-null");
 		return false;
@@ -331,17 +330,11 @@ bool switchDisplayMode(JNIEnv * env, int screen, jint extension, jobject mode) {
 	int width = (*env)->GetIntField(env, mode, fid_width);
 	int height = (*env)->GetIntField(env, mode, fid_height);
 	int freq = (*env)->GetIntField(env, mode, fid_freq);
-	Display *disp = XOpenDisplay(NULL);
-	if (disp == NULL) {
-		throwException(env, "Could not open display");
-		return false;
-	}
 	if (!setMode(env, disp, screen, extension, width, height, freq)) {
 		XCloseDisplay(disp);
 		throwException(env, "Could not switch mode.");
 		return false;
 	}
-	XCloseDisplay(disp);
 	return true;
 }
 
@@ -403,8 +396,9 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetAvailableD
 	return getAvailableDisplayModes(env, disp, getCurrentScreen(), extension);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwitchDisplayMode(JNIEnv *env, jclass clazz, jint screen, jint extension, jobject mode) {
-	switchDisplayMode(env, screen, extension, mode);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwitchDisplayMode(JNIEnv *env, jclass clazz, jlong display, jint screen, jint extension, jobject mode) {
+	Display *disp = (Display *)(intptr_t)display;
+	switchDisplayMode(env, disp, screen, extension, mode);
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetGammaRampLength(JNIEnv *env, jclass clazz, jlong display_ptr, jint screen) {

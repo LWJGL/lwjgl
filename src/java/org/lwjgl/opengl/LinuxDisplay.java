@@ -430,13 +430,22 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void switchDisplayMode(DisplayMode mode) throws LWJGLException {
 		lockAWT();
 		try {
-			nSwitchDisplayMode(getScreen(), current_displaymode_extension, mode);
+			switchDisplayModeOnTmpDisplay(mode);
 			current_mode = mode;
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native void nSwitchDisplayMode(int screen, int extension, DisplayMode mode) throws LWJGLException;
+
+	private void switchDisplayModeOnTmpDisplay(DisplayMode mode) throws LWJGLException {
+		long tmp_display = openDisplay();
+		try {
+			nSwitchDisplayMode(tmp_display, getScreen(), current_displaymode_extension, mode);
+		} finally {
+			closeDisplay(tmp_display);
+		}
+	}
+	private static native void nSwitchDisplayMode(long display, int screen, int extension, DisplayMode mode) throws LWJGLException;
 
 	public void resetDisplayMode() {
 		lockAWT();
@@ -704,7 +713,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		if (current_window_mode == FULLSCREEN_NETWM) {
 			nIconifyWindow(getDisplay(), getWindow(), getScreen());
 			try {
-				nSwitchDisplayMode(getScreen(), current_displaymode_extension, saved_mode);
+				switchDisplayModeOnTmpDisplay(saved_mode);
 				setGammaRampOnTmpDisplay(saved_gamma);
 			} catch (LWJGLException e) {
 				LWJGLUtil.log("Failed to restore saved mode: " + e.getMessage());
@@ -721,7 +730,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		updateInputGrab();
 		if (current_window_mode == FULLSCREEN_NETWM) {
 			try {
-				nSwitchDisplayMode(getScreen(), current_displaymode_extension, current_mode);
+				switchDisplayModeOnTmpDisplay(current_mode);
 				setGammaRampOnTmpDisplay(current_gamma);
 			} catch (LWJGLException e) {
 				LWJGLUtil.log("Failed to restore mode: " + e.getMessage());

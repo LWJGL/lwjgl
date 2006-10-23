@@ -53,7 +53,6 @@
 #include "extgl_glx.h"
 #include "Window.h"
 #include "context.h"
-#include "display.h"
 #include "org_lwjgl_opengl_LinuxDisplay.h"
 #include "org_lwjgl_opengl_LinuxDisplayPeerInfo.h"
 
