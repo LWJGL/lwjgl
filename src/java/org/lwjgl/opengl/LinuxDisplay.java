@@ -258,7 +258,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		if (display_connection_usage_count < 0)
 			throw new InternalError("display_connection_usage_count < 0: " + display_connection_usage_count);
 		if (display_connection_usage_count == 0) {
-			closeDisplay(getDisplay());
+			closeDisplay(display);
 			display = 0;
 			GLContext.unloadOpenGLLibrary();	
 		}
@@ -281,6 +281,8 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	
 	static long getDisplay() {
+		if (display_connection_usage_count <= 0)
+			throw new InternalError("display_connection_usage_count = " + display_connection_usage_count);
 		return display;
 	}
 
