@@ -485,13 +485,22 @@ final class LinuxDisplay implements DisplayImplementation {
 	private void doSetGamma(ByteBuffer native_gamma) throws LWJGLException {
 		lockAWT();
 		try {
-			nSetGammaRamp(getScreen(), native_gamma);
+			setGammaRampOnTmpDisplay(native_gamma);
 			current_gamma = native_gamma;
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native void nSetGammaRamp(int screen, ByteBuffer gammaRamp) throws LWJGLException;
+
+	private void setGammaRampOnTmpDisplay(ByteBuffer native_gamma) throws LWJGLException {
+		long tmp_display = openDisplay();
+		try {
+			nSetGammaRamp(tmp_display, getScreen(), native_gamma);
+		} finally {
+			closeDisplay(tmp_display);
+		}
+	}
+	private static native void nSetGammaRamp(long display, int screen, ByteBuffer gammaRamp) throws LWJGLException;
 
 	private static ByteBuffer convertToNativeRamp(FloatBuffer ramp) throws LWJGLException {
 		return nConvertToNativeRamp(ramp, ramp.position(), ramp.remaining());
@@ -696,7 +705,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			nIconifyWindow(getDisplay(), getWindow(), getScreen());
 			try {
 				nSwitchDisplayMode(getScreen(), current_displaymode_extension, saved_mode);
-				nSetGammaRamp(getScreen(), saved_gamma);
+				setGammaRampOnTmpDisplay(saved_gamma);
 			} catch (LWJGLException e) {
 				LWJGLUtil.log("Failed to restore saved mode: " + e.getMessage());
 			}
@@ -713,7 +722,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		if (current_window_mode == FULLSCREEN_NETWM) {
 			try {
 				nSwitchDisplayMode(getScreen(), current_displaymode_extension, current_mode);
-				nSetGammaRamp(getScreen(), current_gamma);
+				setGammaRampOnTmpDisplay(current_gamma);
 			} catch (LWJGLException e) {
 				LWJGLUtil.log("Failed to restore mode: " + e.getMessage());
 			}

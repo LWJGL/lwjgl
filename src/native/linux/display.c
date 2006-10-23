@@ -319,16 +319,6 @@ static void setGamma(JNIEnv *env, Display *disp, int screen, jobject ramp_buffer
 	}
 }
 
-void setGammaRamp(JNIEnv *env, int screen, jobject gamma_ramp_buffer) {
-	Display * disp = XOpenDisplay(NULL);
-	if (disp == NULL) {
-		throwException(env, "Could not open display");
-		return;
-	}
-	setGamma(env, disp, screen, gamma_ramp_buffer);
-	XCloseDisplay(disp);
-}
-
 bool switchDisplayMode(JNIEnv * env, int screen, jint extension, jobject mode) {
 	if (mode == NULL) {
 		throwException(env, "mode must be non-null");
@@ -422,7 +412,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetGammaRampLength(JN
 	return (jint)getGammaRampLengthOfDisplay(env, disp, screen);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetGammaRamp(JNIEnv *env, jclass clazz, jint screen, jobject gamma_buffer) {
-	setGammaRamp(env, screen, gamma_buffer);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetGammaRamp(JNIEnv *env, jclass clazz, jlong display, jint screen, jobject gamma_buffer) {
+	Display *disp = (Display *)(intptr_t)display;
+	setGamma(env, disp, screen, gamma_buffer);
 }
 

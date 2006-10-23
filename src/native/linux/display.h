@@ -46,6 +46,5 @@
 #include "common_tools.h"
 
 extern bool switchDisplayMode(JNIEnv * env, int screen, jint extension, jobject mode);
-extern void setGammaRamp(JNIEnv *env, int screen, jobject gamma_ramp_buffer);
 
 #endif
