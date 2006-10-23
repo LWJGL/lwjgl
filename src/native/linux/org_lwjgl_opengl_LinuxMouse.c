@@ -91,13 +91,14 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxMouse_nQueryPointer(JNIEnv *e
 	return root_return;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxMouse_nSendWarpEvent(JNIEnv *env, jclass unusued, jlong display_ptr, jlong window_ptr, jint x, jint y) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxMouse_nSendWarpEvent(JNIEnv *env, jclass unusued, jlong display_ptr, jlong window_ptr, jlong warp_atom_ptr, jint x, jint y) {
+	Atom warp_atom = (Atom)warp_atom_ptr;
 	Display *disp = (Display *)(intptr_t)display_ptr;
 	Window win = (Window)window_ptr;
 	XEvent warp_event;
 	warp_event.type = ClientMessage;
 	warp_event.xclient.window = win;
-	warp_event.xclient.message_type = getWarpAtom();
+	warp_event.xclient.message_type = warp_atom;
 	warp_event.xclient.format = 32;
 	warp_event.xclient.data.l[0] = x;
 	warp_event.xclient.data.l[1] = y;

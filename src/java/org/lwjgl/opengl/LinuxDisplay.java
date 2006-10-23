@@ -84,6 +84,9 @@ final class LinuxDisplay implements DisplayImplementation {
 	/** Current mode swithcing API */
 	private int current_displaymode_extension = NONE;
 
+	/** Atom used for the pointer warp messages */
+	private long warp_atom;
+
 	private PeerInfo peer_info;
 
 	/** Saved gamma used to restore display settings */
@@ -447,6 +450,20 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native void nSwitchDisplayMode(long display, int screen, int extension, DisplayMode mode) throws LWJGLException;
 
+	static long getWarpAtom() throws LWJGLException {
+		return internAtom("_LWJGL", false);
+	}
+
+	private static long internAtom(String atom_name, boolean only_if_exists) throws LWJGLException {
+		incDisplay();
+		try {
+			return nInternAtom(getDisplay(), atom_name, only_if_exists);
+		} finally {
+			decDisplay();
+		}
+	}
+	private static native long nInternAtom(long display, String atom_name, boolean only_if_exists);
+
 	public void resetDisplayMode() {
 		lockAWT();
 		try {
@@ -527,6 +544,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	public DisplayMode init() throws LWJGLException {
 		lockAWT();
 		try {
+			warp_atom = getWarpAtom();
 			current_displaymode_extension = getBestDisplayModeExtension();
 			if (current_displaymode_extension == NONE)
 				throw new LWJGLException("No display mode extension is available");
@@ -607,7 +625,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void update() {
 		lockAWT();
 		try {
-			nUpdate(getDisplay());
+			nUpdate(getDisplay(), warp_atom);
 			checkInput();
 		} catch (LWJGLException e) {
 			LWJGLUtil.log("Caught exception while processing messages: " + e);
@@ -615,7 +633,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	private native void nUpdate(long display) throws LWJGLException;
+	private native void nUpdate(long display, long warp_atom) throws LWJGLException;
 
 	public void reshape(int x, int y, int width, int height) {
 		lockAWT();
@@ -655,7 +673,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void createMouse() {
 		lockAWT();
 		try {
-			mouse = new LinuxMouse(getDisplay(), getWindow());
+			mouse = new LinuxMouse(getDisplay(), getWindow(), warp_atom);
 		} finally {
 			unlockAWT();
 		}

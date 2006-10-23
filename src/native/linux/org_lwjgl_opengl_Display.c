@@ -81,7 +81,6 @@ static Visual *current_visual;
 static int current_screen;
 static bool async_x_error;
 static char error_message[ERR_MSG_SIZE];
-static Atom warp_atom;
 
 int getCurrentScreen(void) {
 	return current_screen;
@@ -119,12 +118,18 @@ static jlong openDisplay(JNIEnv *env) {
 		return (intptr_t)NULL;
 	}
 	current_screen = XDefaultScreen(display_connection);
-	warp_atom = XInternAtom(display_connection, "_LWJGL_WARP", False);
 	return (intptr_t)display_connection;
 }
 
-Atom getWarpAtom(void) {
-	return warp_atom;
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nInternAtom(JNIEnv *env, jclass unused, jlong display_ptr, jstring atom_name_obj, jboolean only_if_exists) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	char *atom_name = GetStringNativeChars(env, atom_name_obj);
+	if (atom_name == NULL)
+		return 0;
+	Atom atom = XInternAtom(disp, atom_name, only_if_exists ? True : False);
+	free(atom_name);
+	return atom;
 }
 
 static void waitMapped(Display *disp, Window win) {
@@ -157,7 +162,7 @@ static bool isLegacyFullscreen(jint window_mode) {
 	return window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_LEGACY;
 }
 
-static void handleMessages(JNIEnv *env, Display *disp, jobject disp_obj) {
+static void handleMessages(JNIEnv *env, Display *disp, jobject disp_obj, Atom warp_atom) {
 	XEvent event;
 	jclass disp_class = (*env)->GetObjectClass(env, disp_obj);
 	if (disp_class == NULL)
@@ -375,9 +380,10 @@ Window getCurrentWindow(void) {
 	return current_win;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUpdate(JNIEnv *env, jobject disp_obj, jlong display) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUpdate(JNIEnv *env, jobject disp_obj, jlong display, jlong warp_atom_ptr) {
 	Display *disp = (Display *)(intptr_t)display;
-	handleMessages(env, disp, disp_obj);
+	Atom warp_atom = (Atom)warp_atom_ptr;
+	handleMessages(env, disp, disp_obj, warp_atom);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jclass clazz, jlong display, jobject peer_info_handle, jobject mode, jint window_mode, jint x, jint y) {
