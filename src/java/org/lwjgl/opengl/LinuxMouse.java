@@ -63,6 +63,7 @@ final class LinuxMouse {
 
 	private final long display;
 	private final long window;
+	private final long warp_atom;
 	private final IntBuffer query_pointer_buffer = BufferUtils.createIntBuffer(4);
 	private final ByteBuffer event_buffer = ByteBuffer.allocate(Mouse.EVENT_SIZE);
 
@@ -75,9 +76,10 @@ final class LinuxMouse {
 	private EventQueue event_queue;
 	private long last_event_nanos;
 
-	public LinuxMouse(long display, long window) {
+	public LinuxMouse(long display, long window, long warp_atom) {
 		this.display = display;
 		this.window = window;
+		this.warp_atom = warp_atom;
 		reset();
 	}
 
@@ -130,10 +132,10 @@ final class LinuxMouse {
 	}
 
 	private void doWarpPointer(int center_x, int center_y) {
-		nSendWarpEvent(display, window, center_x, center_y);
+		nSendWarpEvent(display, window, warp_atom, center_x, center_y);
 		nWarpCursor(display, window, center_x, center_y);
 	}
-	private static native void nSendWarpEvent(long display, long window, int center_x, int center_y);
+	private static native void nSendWarpEvent(long display, long window, long warp_atom, int center_x, int center_y);
 
 	private void doHandlePointerMotion(boolean grab, boolean warp_pointer, long root_window, int root_x, int root_y, int win_x, int win_y, long nanos) {
 		setCursorPos(grab, win_x, win_y, nanos);

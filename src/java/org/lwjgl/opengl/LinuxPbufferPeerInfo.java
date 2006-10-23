@@ -49,7 +49,7 @@ final class LinuxPbufferPeerInfo extends LinuxPeerInfo {
 			try {
 				LinuxDisplay.incDisplay();
 				try {
-					nInitHandle(LinuxDisplay.getDisplay(), getHandle(), width, height, pixel_format);
+					nInitHandle(LinuxDisplay.getDisplay(), LinuxDisplay.getDefaultScreen(), getHandle(), width, height, pixel_format);
 				} catch (LWJGLException e) {
 					LinuxDisplay.decDisplay();
 					throw e;
@@ -62,7 +62,7 @@ final class LinuxPbufferPeerInfo extends LinuxPeerInfo {
 			LinuxDisplay.unlockAWT();
 		}
 	}
-	private static native void nInitHandle(long display, ByteBuffer handle, int width, int height, PixelFormat pixel_format) throws LWJGLException;
+	private static native void nInitHandle(long display, int screen, ByteBuffer handle, int width, int height, PixelFormat pixel_format) throws LWJGLException;
 
 	public void destroy() {
 		LinuxDisplay.lockAWT();

@@ -78,13 +78,8 @@ static Pixmap current_icon_pixmap;
 
 static Visual *current_visual;
 
-static int current_screen;
 static bool async_x_error;
 static char error_message[ERR_MSG_SIZE];
-
-int getCurrentScreen(void) {
-	return current_screen;
-}
 
 bool checkXError(JNIEnv *env, Display *disp) {
 	XSync(disp, False);
@@ -117,10 +112,13 @@ static jlong openDisplay(JNIEnv *env) {
 		throwException(env, "Could not open X display connection");
 		return (intptr_t)NULL;
 	}
-	current_screen = XDefaultScreen(display_connection);
 	return (intptr_t)display_connection;
 }
 
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetDefaultScreen(JNIEnv *env, jclass unused, jlong display_ptr) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	return XDefaultScreen(disp);
+}
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nInternAtom(JNIEnv *env, jclass unused, jlong display_ptr, jstring atom_name_obj, jboolean only_if_exists) {
 	Display *disp = (Display *)(intptr_t)display_ptr;
@@ -250,9 +248,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplayPeerInfo_initDrawable(J
 		peer_info->drawable = getCurrentWindow();
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplayPeerInfo_initDefaultPeerInfo(JNIEnv *env, jclass clazz, jlong display, jobject peer_info_handle, jobject pixel_format) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplayPeerInfo_initDefaultPeerInfo(JNIEnv *env, jclass clazz, jlong display, jint screen, jobject peer_info_handle, jobject pixel_format) {
 	Display *disp = (Display *)(intptr_t)display;
-	initPeerInfo(env, peer_info_handle, disp, getCurrentScreen(), pixel_format, true, GLX_WINDOW_BIT, true, false);
+	initPeerInfo(env, peer_info_handle, disp, screen, pixel_format, true, GLX_WINDOW_BIT, true, false);
 }
   
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetTitle(JNIEnv * env, jclass clazz, jlong display, jstring title_obj) {
@@ -279,14 +277,14 @@ static void destroyWindow(JNIEnv *env, Display *disp) {
 	freeIconPixmap(disp);
 }
 
-static bool isNetWMFullscreenSupported(JNIEnv *env, Display *disp) {
+static bool isNetWMFullscreenSupported(JNIEnv *env, Display *disp, int screen) {
 	unsigned long nitems;
 	Atom actual_type;
 	int actual_format;
 	unsigned long bytes_after;
 	Atom *supported_list;
 	Atom netwm_supported_atom = XInternAtom(disp, "_NET_SUPPORTED", False);
-	int result = XGetWindowProperty(disp, RootWindow(disp, getCurrentScreen()), netwm_supported_atom, 0, 10000, False, AnyPropertyType, &actual_type, &actual_format, &nitems, &bytes_after, (void *)&supported_list);
+	int result = XGetWindowProperty(disp, RootWindow(disp, screen), netwm_supported_atom, 0, 10000, False, AnyPropertyType, &actual_type, &actual_format, &nitems, &bytes_after, (void *)&supported_list);
 	if (result != Success) {
 		throwException(env, "Unable to query _NET_SUPPORTED window property");
 		return false;
@@ -304,9 +302,9 @@ static bool isNetWMFullscreenSupported(JNIEnv *env, Display *disp) {
 	return supported;
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsNetWMFullscreenSupported(JNIEnv *env, jclass unused, jlong display) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsNetWMFullscreenSupported(JNIEnv *env, jclass unused, jlong display, jint screen) {
 	Display *disp = (Display *)(intptr_t)display;
-	return isNetWMFullscreenSupported(env, disp) ? JNI_TRUE : JNI_FALSE;
+	return isNetWMFullscreenSupported(env, disp, screen) ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReshape(JNIEnv *env, jclass clazz, jlong display, jint x, jint y, jint width, jint height) {
@@ -314,14 +312,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReshape(JNIEnv *env, 
 	XMoveWindow(disp, getCurrentWindow(), x, y);
 }
 
-static bool createWindow(JNIEnv* env, Display *disp, jint window_mode, X11PeerInfo *peer_info, int x, int y, int width, int height) {
+static bool createWindow(JNIEnv* env, Display *disp, int screen, jint window_mode, X11PeerInfo *peer_info, int x, int y, int width, int height) {
 	bool undecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
 	Window root_win;
 	Window win;
 	XSetWindowAttributes attribs;
 	int attribmask;
 
-	root_win = RootWindow(disp, getCurrentScreen());
+	root_win = RootWindow(disp, screen);
 	XVisualInfo *vis_info = getVisualInfoFromPeerInfo(env, peer_info);
 	if (vis_info == NULL)
 		return false;
@@ -386,7 +384,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUpdate(JNIEnv *env, j
 	handleMessages(env, disp, disp_obj, warp_atom);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jclass clazz, jlong display, jobject peer_info_handle, jobject mode, jint window_mode, jint x, jint y) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jclass clazz, jlong display, jint screen, jobject peer_info_handle, jobject mode, jint window_mode, jint x, jint y) {
 	Display *disp = (Display *)(intptr_t)display;
 	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, peer_info_handle);
 	GLXFBConfig *fb_config = NULL;
@@ -400,7 +398,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *
 	jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
 	int width = (*env)->GetIntField(env, mode, fid_width);
 	int height = (*env)->GetIntField(env, mode, fid_height);
-	bool window_created = createWindow(env, disp, window_mode, peer_info, x, y, width, height);
+	bool window_created = createWindow(env, disp, screen, window_mode, peer_info, x, y, width, height);
 	if (!window_created) {
 		return;
 	}
@@ -560,10 +558,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateBlankCursor(
 	*cursor = XCreatePixmapCursor(disp, mask, mask, &dummy_color, &dummy_color, 0, 0);
 	XFreePixmap(disp, mask);
 	return handle_buffer;
-}
-
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getScreen(JNIEnv *env, jclass unsused) {
-	return getCurrentScreen();
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetInputFocus(JNIEnv *env, jclass unused, jlong display_ptr) {

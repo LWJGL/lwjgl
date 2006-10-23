@@ -117,7 +117,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			incDisplay();
 			try {
 				if (isXF86VidModeSupported())
-					return nGetCurrentGammaRamp(getDisplay());
+					return nGetCurrentGammaRamp(getDisplay(), getDefaultScreen());
 				else
 					return null;
 			} finally {
@@ -127,7 +127,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	private static native ByteBuffer nGetCurrentGammaRamp(long display) throws LWJGLException;
+	private static native ByteBuffer nGetCurrentGammaRamp(long display, int screen) throws LWJGLException;
 	
 	private static int getBestDisplayModeExtension() {
 		int result;
@@ -189,7 +189,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		try {
 			incDisplay();
 			try {
-				return nIsNetWMFullscreenSupported(getDisplay());
+				return nIsNetWMFullscreenSupported(getDisplay(), getDefaultScreen());
 			} finally {
 				decDisplay();
 			}
@@ -200,7 +200,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	private static native boolean nIsNetWMFullscreenSupported(long display) throws LWJGLException;
+	private static native boolean nIsNetWMFullscreenSupported(long display, int screen) throws LWJGLException;
 	
 	/* Since Xlib is not guaranteed to be thread safe, we need a way to synchronize LWJGL
 	 * Xlib calls with AWT Xlib calls. Fortunately, JAWT implements Lock()/Unlock() to
@@ -289,7 +289,11 @@ final class LinuxDisplay implements DisplayImplementation {
 		return display;
 	}
 
-	private static native int getScreen();
+	static int getDefaultScreen() {
+		return nGetDefaultScreen(getDisplay());
+	}
+	private static native int nGetDefaultScreen(long display);
+
 	private static native long getWindow();
 
 	private void ungrabKeyboard() {
@@ -316,7 +320,7 @@ final class LinuxDisplay implements DisplayImplementation {
 				pointer_grabbed = true;
 				// make sure we have a centered window
 				if (isLegacyFullscreen()) {
-					nSetViewPort(getDisplay(), getWindow(), getScreen());
+					nSetViewPort(getDisplay(), getWindow(), getDefaultScreen());
 				}
 			}
 		}
@@ -379,7 +383,7 @@ final class LinuxDisplay implements DisplayImplementation {
 				ByteBuffer handle = peer_info.lockAndGetHandle();
 				try {
 					current_window_mode = getWindowMode(fullscreen);
-					nCreateWindow(getDisplay(), handle, mode, current_window_mode, x, y);
+					nCreateWindow(getDisplay(), getDefaultScreen(), handle, mode, current_window_mode, x, y);
 					blank_cursor = createBlankCursor();
 					current_cursor = null;
 					focused = true;
@@ -403,7 +407,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	private static native void nCreateWindow(long display, ByteBuffer peer_info_handle, DisplayMode mode, int window_mode, int x, int y) throws LWJGLException;
+	private static native void nCreateWindow(long display, int screen, ByteBuffer peer_info_handle, DisplayMode mode, int window_mode, int x, int y) throws LWJGLException;
 
 	private void updateInputGrab() {
 		updatePointerGrab();
@@ -443,7 +447,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private void switchDisplayModeOnTmpDisplay(DisplayMode mode) throws LWJGLException {
 		long tmp_display = openDisplay();
 		try {
-			nSwitchDisplayMode(tmp_display, getScreen(), current_displaymode_extension, mode);
+			nSwitchDisplayMode(tmp_display, nGetDefaultScreen(tmp_display), current_displaymode_extension, mode);
 		} finally {
 			closeDisplay(tmp_display);
 		}
@@ -485,7 +489,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			try {
 				incDisplay();
 				try {
-					return nGetGammaRampLength(getDisplay(), getScreen());
+					return nGetGammaRampLength(getDisplay(), getDefaultScreen());
 				} catch (LWJGLException e) {
 					LWJGLUtil.log("Got exception while querying gamma length: " + e);
 					return 0;
@@ -521,7 +525,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private void setGammaRampOnTmpDisplay(ByteBuffer native_gamma) throws LWJGLException {
 		long tmp_display = openDisplay();
 		try {
-			nSetGammaRamp(tmp_display, getScreen(), native_gamma);
+			nSetGammaRamp(tmp_display, nGetDefaultScreen(tmp_display), native_gamma);
 		} finally {
 			closeDisplay(tmp_display);
 		}
@@ -575,7 +579,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		try {
 			incDisplay();
 			try {
-				return nGetCurrentXRandrMode(getDisplay());
+				return nGetCurrentXRandrMode(getDisplay(), getDefaultScreen());
 			} finally {
 				decDisplay();
 			}
@@ -585,7 +589,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	
 	/** Assumes extension == XRANDR */
-	private static native DisplayMode nGetCurrentXRandrMode(long display) throws LWJGLException;
+	private static native DisplayMode nGetCurrentXRandrMode(long display, int screen) throws LWJGLException;
 
 	public void setTitle(String title) {
 		lockAWT();
@@ -650,7 +654,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		try {
 			incDisplay();
 			try {
-				DisplayMode[] modes = nGetAvailableDisplayModes(getDisplay(), current_displaymode_extension);
+				DisplayMode[] modes = nGetAvailableDisplayModes(getDisplay(), getDefaultScreen(), current_displaymode_extension);
 				return modes;
 			} finally {
 				decDisplay();
@@ -659,7 +663,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	private static native DisplayMode[] nGetAvailableDisplayModes(long display, int extension) throws LWJGLException;
+	private static native DisplayMode[] nGetAvailableDisplayModes(long display, int screen, int extension) throws LWJGLException;
 
 	/* Mouse */
 	public boolean hasWheel() {
@@ -729,7 +733,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		nSetRepeatMode(getDisplay(), AutoRepeatModeDefault);
 		updateInputGrab();
 		if (current_window_mode == FULLSCREEN_NETWM) {
-			nIconifyWindow(getDisplay(), getWindow(), getScreen());
+			nIconifyWindow(getDisplay(), getWindow(), getDefaultScreen());
 			try {
 				switchDisplayModeOnTmpDisplay(saved_mode);
 				setGammaRampOnTmpDisplay(saved_gamma);
@@ -919,7 +923,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		try {
 			incDisplay();
 			try {
-				return nGetPbufferCapabilities(getDisplay());
+				return nGetPbufferCapabilities(getDisplay(), getDefaultScreen());
 			} finally {
 				decDisplay();
 			}
@@ -930,7 +934,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	private static native int nGetPbufferCapabilities(long display);
+	private static native int nGetPbufferCapabilities(long display, int screen);
 
 	public boolean isBufferLost(PeerInfo handle) {
 		return false;

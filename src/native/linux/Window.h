@@ -50,17 +50,6 @@
 	#include "extgl_glx.h"
 
 	extern bool checkXError(JNIEnv *, Display *);
-	extern Atom getWarpAtom(void);
-
-	/*
-	 * get the current display
-	 */
-	extern Display *getDisplay(void);
-	
-	/*
-	 * get the current screen
-	 */
-	extern int getCurrentScreen(void);
 	
 	/*
 	 * get the current window
