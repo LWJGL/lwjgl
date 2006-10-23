@@ -72,7 +72,6 @@ static GLXWindow glx_window = None;
 
 static Atom delete_atom;
 static Colormap cmap;
-static Window current_win;
 static int current_depth;
 static Pixmap current_icon_pixmap;	
 
@@ -148,19 +147,19 @@ static void __attribute__ ((destructor)) my_fini(void) {
 	XCloseDisplay(disp);
 } 
 
-static void setDecorations(Display *disp, int dec) {
+static void setDecorations(Display *disp, Window window, int dec) {
 	Atom motif_hints_atom = XInternAtom(disp, "_MOTIF_WM_HINTS", False);
 	MotifWmHints motif_hints;
 	motif_hints.flags = MWM_HINTS_DECORATIONS;
 	motif_hints.decorations = dec;
-	XChangeProperty(disp, getCurrentWindow(), motif_hints_atom, motif_hints_atom, 32, PropModeReplace, (unsigned char *)&motif_hints, sizeof(MotifWmHints)/sizeof(long));
+	XChangeProperty(disp, window, motif_hints_atom, motif_hints_atom, 32, PropModeReplace, (unsigned char *)&motif_hints, sizeof(MotifWmHints)/sizeof(long));
 }
 
 static bool isLegacyFullscreen(jint window_mode) {
 	return window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_LEGACY;
 }
 
-static void handleMessages(JNIEnv *env, Display *disp, jobject disp_obj, Atom warp_atom) {
+static void handleMessages(JNIEnv *env, jobject disp_obj, Display *disp, Window window, Atom warp_atom) {
 	XEvent event;
 	jclass disp_class = (*env)->GetObjectClass(env, disp_obj);
 	if (disp_class == NULL)
@@ -194,7 +193,7 @@ static void handleMessages(JNIEnv *env, Display *disp, jobject disp_obj, Atom wa
 		if (XFilterEvent(&event, None) == True)
 			continue;
 		// Ignore events from old windows
-		if (event.xany.window != getCurrentWindow())
+		if (event.xany.window != window)
 			continue;
 		switch (event.type) {
 			case ClientMessage:
@@ -227,8 +226,8 @@ static void handleMessages(JNIEnv *env, Display *disp, jobject disp_obj, Atom wa
 	}
 }
 
-static void setWindowTitle(Display *disp, const char *title) {
-	XStoreName(disp, current_win, title);
+static void setWindowTitle(Display *disp, Window window, const char *title) {
+	XStoreName(disp, window, title);
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_openDisplay(JNIEnv *env, jclass clazz) {
@@ -240,12 +239,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_closeDisplay(JNIEnv *e
 	XCloseDisplay(disp);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplayPeerInfo_initDrawable(JNIEnv *env, jclass clazz, jobject peer_info_handle) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplayPeerInfo_initDrawable(JNIEnv *env, jclass clazz, jlong window, jobject peer_info_handle) {
 	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, peer_info_handle);
 	if (peer_info->glx13)
 		peer_info->drawable = glx_window;
 	else
-		peer_info->drawable = getCurrentWindow();
+		peer_info->drawable = window;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplayPeerInfo_initDefaultPeerInfo(JNIEnv *env, jclass clazz, jlong display, jint screen, jobject peer_info_handle, jobject pixel_format) {
@@ -253,10 +252,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplayPeerInfo_initDefaultPee
 	initPeerInfo(env, peer_info_handle, disp, screen, pixel_format, true, GLX_WINDOW_BIT, true, false);
 }
   
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetTitle(JNIEnv * env, jclass clazz, jlong display, jstring title_obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetTitle(JNIEnv * env, jclass clazz, jlong display, jlong window_ptr, jstring title_obj) {
 	Display *disp = (Display *)(intptr_t)display;
+	Window window = (Window)window_ptr;
 	char * title = GetStringNativeChars(env, title_obj);
-	setWindowTitle(disp, title);
+	setWindowTitle(disp, window, title);
 	free(title);
 }
 
@@ -267,12 +267,12 @@ static void freeIconPixmap(Display *disp) {
 	}
 }
 
-static void destroyWindow(JNIEnv *env, Display *disp) {
+static void destroyWindow(JNIEnv *env, Display *disp, Window window) {
 	if (glx_window != None) {
 		lwjgl_glXDestroyWindow(disp, glx_window);
 		glx_window = None;
 	}
-	XDestroyWindow(disp, current_win);
+	XDestroyWindow(disp, window);
 	XFreeColormap(disp, cmap);
 	freeIconPixmap(disp);
 }
@@ -307,12 +307,13 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsNetWMFullscreen
 	return isNetWMFullscreenSupported(env, disp, screen) ? JNI_TRUE : JNI_FALSE;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReshape(JNIEnv *env, jclass clazz, jlong display, jint x, jint y, jint width, jint height) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReshape(JNIEnv *env, jclass clazz, jlong display, jlong window_ptr, jint x, jint y, jint width, jint height) {
 	Display *disp = (Display *)(intptr_t)display;
-	XMoveWindow(disp, getCurrentWindow(), x, y);
+	Window window = (Window)window_ptr;
+	XMoveWindow(disp, window, x, y);
 }
 
-static bool createWindow(JNIEnv* env, Display *disp, int screen, jint window_mode, X11PeerInfo *peer_info, int x, int y, int width, int height) {
+static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_mode, X11PeerInfo *peer_info, int x, int y, int width, int height) {
 	bool undecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
 	Window root_win;
 	Window win;
@@ -344,10 +345,9 @@ static bool createWindow(JNIEnv* env, Display *disp, int screen, jint window_mod
 		return false;
 	}
 	printfDebugJava(env, "Created window");
-	current_win = win;
 	if (window_mode != org_lwjgl_opengl_LinuxDisplay_WINDOWED || undecorated) {
 		// Use Motif decoration hint property and hope the window manager respects them
-		setDecorations(disp, 0);
+		setDecorations(disp, win, 0);
 	}
 	XSizeHints * size_hints = XAllocSizeHints();
 	size_hints->flags = PMinSize | PMaxSize;
@@ -361,60 +361,59 @@ static bool createWindow(JNIEnv* env, Display *disp, int screen, jint window_mod
 	XSetWMProtocols(disp, win, &delete_atom, 1);
 	if (window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_NETWM) {
 		Atom fullscreen_atom = XInternAtom(disp, "_NET_WM_STATE_FULLSCREEN", False);
-		XChangeProperty(disp, getCurrentWindow(), XInternAtom(disp, "_NET_WM_STATE", False),
+		XChangeProperty(disp, win, XInternAtom(disp, "_NET_WM_STATE", False),
 						XInternAtom(disp, "ATOM", False), 32, PropModeReplace, (const unsigned char*)&fullscreen_atom, 1);
 	}
 	XMapRaised(disp, win);
 	waitMapped(disp, win);
 	XClearWindow(disp, win);
 	if (!checkXError(env, disp)) {
-		destroyWindow(env, disp);
-		return false;
+		destroyWindow(env, disp, win);
+		return 0;
 	}
-	return true;
+	return win;
 }
 
-Window getCurrentWindow(void) {
-	return current_win;
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUpdate(JNIEnv *env, jobject disp_obj, jlong display, jlong warp_atom_ptr) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUpdate(JNIEnv *env, jobject disp_obj, jlong display, jlong window_ptr, jlong warp_atom_ptr) {
 	Display *disp = (Display *)(intptr_t)display;
+	Window window = (Window)window_ptr;
 	Atom warp_atom = (Atom)warp_atom_ptr;
-	handleMessages(env, disp, disp_obj, warp_atom);
+	handleMessages(env, disp_obj, disp, window, warp_atom);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jclass clazz, jlong display, jint screen, jobject peer_info_handle, jobject mode, jint window_mode, jint x, jint y) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jclass clazz, jlong display, jint screen, jobject peer_info_handle, jobject mode, jint window_mode, jint x, jint y) {
 	Display *disp = (Display *)(intptr_t)display;
 	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, peer_info_handle);
 	GLXFBConfig *fb_config = NULL;
 	if (peer_info->glx13) {
 		fb_config = getFBConfigFromPeerInfo(env, peer_info);
 		if (fb_config == NULL)
-			return;
+			return 0;
 	}
 	jclass cls_displayMode = (*env)->GetObjectClass(env, mode);
 	jfieldID fid_width = (*env)->GetFieldID(env, cls_displayMode, "width", "I");
 	jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
 	int width = (*env)->GetIntField(env, mode, fid_width);
 	int height = (*env)->GetIntField(env, mode, fid_height);
-	bool window_created = createWindow(env, disp, screen, window_mode, peer_info, x, y, width, height);
-	if (!window_created) {
-		return;
+	Window win = createWindow(env, disp, screen, window_mode, peer_info, x, y, width, height);
+	if ((*env)->ExceptionOccurred(env)) {
+		return 0;
 	}
 	if (peer_info->glx13) {
-		glx_window = lwjgl_glXCreateWindow(disp, *fb_config, getCurrentWindow(), NULL);
+		glx_window = lwjgl_glXCreateWindow(disp, *fb_config, win, NULL);
 		XFree(fb_config);
 	}
 	if (!checkXError(env, disp)) {
 		lwjgl_glXDestroyWindow(disp, glx_window);
-		destroyWindow(env, disp);
+		destroyWindow(env, disp, win);
 	}
+	return win;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyWindow(JNIEnv *env, jclass clazz, jlong display) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyWindow(JNIEnv *env, jclass clazz, jlong display, jlong window_ptr) {
 	Display *disp = (Display *)(intptr_t)display;
-	destroyWindow(env, disp);
+	Window window = (Window)window_ptr;
+	destroyWindow(env, disp, window);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nLockAWT(JNIEnv *env, jclass clazz) {
@@ -437,10 +436,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUnlockAWT(JNIEnv *env
 	jawt.Unlock(env);
 }
 
-static void setIcon(JNIEnv *env, Display *disp, char *data, int icon_size, int width,int height) {
+static void setIcon(JNIEnv *env, Display *disp, Window window, char *data, int icon_size, int width,int height) {
 	XWMHints* win_hints;
 	freeIconPixmap(disp);
-	current_icon_pixmap = XCreatePixmap(disp, getCurrentWindow(), width, height, current_depth);
+	current_icon_pixmap = XCreatePixmap(disp, window, width, height, current_depth);
 	/* We need to copy the image data since XDestroyImage will also free its data buffer, which can't be allowed
 	 * since the data buffer is managed by the jvm (it's the storage for the direct ByteBuffer)
 	 */
@@ -474,22 +473,19 @@ static void setIcon(JNIEnv *env, Display *disp, char *data, int icon_size, int w
 	win_hints->flags = IconPixmapHint;               
 	win_hints->icon_pixmap = current_icon_pixmap;
 	
-	XSetWMHints(disp, getCurrentWindow(), win_hints);
+	XSetWMHints(disp, window, win_hints);
 	XFree(win_hints);
 	XFlush(disp);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetWindowIcon
-  (JNIEnv *env, jclass clazz, jlong display, jobject iconBuffer, jint icon_size, jint width, jint height)
+  (JNIEnv *env, jclass clazz, jlong display, jlong window_ptr, jobject iconBuffer, jint icon_size, jint width, jint height)
 {
 	Display *disp = (Display *)(intptr_t)display;
+	Window window = (Window)window_ptr;
 	char *imgData = (char *)(*env)->GetDirectBufferAddress(env, iconBuffer);
 
-	setIcon(env, disp, imgData, icon_size, width, height);
-}
-
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getWindow(JNIEnv *env, jclass unused) {
-	return getCurrentWindow();
+	setIcon(env, disp, window, imgData, icon_size, width, height);
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUngrabKeyboard(JNIEnv *env, jclass unused, jlong display_ptr) {

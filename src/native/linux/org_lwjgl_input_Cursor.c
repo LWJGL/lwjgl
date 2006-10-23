@@ -61,22 +61,24 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetNativeCursorCapabi
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetMinCursorSize
-  (JNIEnv *env, jclass clazz, jlong display)
+  (JNIEnv *env, jclass clazz, jlong display, jlong window_ptr)
 {
 	Display *disp = (Display *)(intptr_t)display;
+	Window window = (Window)window_ptr;
 	unsigned int width_return = 0;
 	unsigned int height_return = 0;
-	XQueryBestCursor(disp, getCurrentWindow(), 1, 1, &width_return, &height_return);
+	XQueryBestCursor(disp, window, 1, 1, &width_return, &height_return);
 	return width_return > height_return ? width_return : height_return;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetMaxCursorSize
-  (JNIEnv *env, jclass clazz, jlong display)
+  (JNIEnv *env, jclass clazz, jlong display, jlong window_ptr)
 {
 	Display *disp = (Display *)(intptr_t)display;
+	Window window = (Window)window_ptr;
 	unsigned int width_return = 0;
 	unsigned int height_return = 0;
-	XQueryBestCursor(disp, getCurrentWindow(), 0xffffffff, 0xffffffff, &width_return, &height_return);
+	XQueryBestCursor(disp, window, 0xffffffff, 0xffffffff, &width_return, &height_return);
 	return width_return > height_return ? height_return : width_return;
 }
 

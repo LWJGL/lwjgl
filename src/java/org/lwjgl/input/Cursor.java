@@ -115,6 +115,8 @@ public class Cursor {
 	 * @return the maximum size of a native cursor
 	 */
 	public static int getMinCursorSize() {
+		if (!Mouse.isCreated())
+			throw new IllegalStateException("Mouse must be created.");
 		return Mouse.getImplementation().getMinCursorSize();
 	}
 
@@ -126,6 +128,8 @@ public class Cursor {
 	 * @return the maximum size of a native cursor
 	 */
 	public static int getMaxCursorSize() {
+		if (!Mouse.isCreated())
+			throw new IllegalStateException("Mouse must be created.");
 		return Mouse.getImplementation().getMaxCursorSize();
 	}
 

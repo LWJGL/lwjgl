@@ -67,12 +67,12 @@ final class LinuxDisplayPeerInfo extends LinuxPeerInfo {
 	protected void doLockAndInitHandle() throws LWJGLException {
 		LinuxDisplay.lockAWT();
 		try {
-			initDrawable(getHandle());
+			initDrawable(LinuxDisplay.getWindow(), getHandle());
 		} finally {
 			LinuxDisplay.unlockAWT();
 		}
 	}
-	private static native void initDrawable(ByteBuffer peer_info_handle);
+	private static native void initDrawable(long window, ByteBuffer peer_info_handle);
 	
 	protected void doUnlock() throws LWJGLException {
 		// NO-OP

@@ -78,6 +78,7 @@ final class LinuxDisplay implements DisplayImplementation {
 
 	/** Current X11 Display pointer */
 	private static long display;
+	private static long current_window;
 	
 	private static int display_connection_usage_count = 0;
 
@@ -294,7 +295,9 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native int nGetDefaultScreen(long display);
 
-	private static native long getWindow();
+	static long getWindow() {
+		return current_window;
+	}
 
 	private void ungrabKeyboard() {
 		if (keyboard_grabbed) {
@@ -383,7 +386,7 @@ final class LinuxDisplay implements DisplayImplementation {
 				ByteBuffer handle = peer_info.lockAndGetHandle();
 				try {
 					current_window_mode = getWindowMode(fullscreen);
-					nCreateWindow(getDisplay(), getDefaultScreen(), handle, mode, current_window_mode, x, y);
+					current_window = nCreateWindow(getDisplay(), getDefaultScreen(), handle, mode, current_window_mode, x, y);
 					blank_cursor = createBlankCursor();
 					current_cursor = null;
 					focused = true;
@@ -407,7 +410,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	private static native void nCreateWindow(long display, int screen, ByteBuffer peer_info_handle, DisplayMode mode, int window_mode, int x, int y) throws LWJGLException;
+	private static native long nCreateWindow(long display, int screen, ByteBuffer peer_info_handle, DisplayMode mode, int window_mode, int x, int y) throws LWJGLException;
 
 	private void updateInputGrab() {
 		updatePointerGrab();
@@ -425,14 +428,14 @@ final class LinuxDisplay implements DisplayImplementation {
 			nDestroyCursor(getDisplay(), blank_cursor);
 			blank_cursor = null;
 			ungrabKeyboard();
-			nDestroyWindow(getDisplay());
+			nDestroyWindow(getDisplay(), getWindow());
 			nSetRepeatMode(getDisplay(), AutoRepeatModeDefault);
 			decDisplay();
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native void nDestroyWindow(long display);
+	private static native void nDestroyWindow(long display, long window);
 
 	public void switchDisplayMode(DisplayMode mode) throws LWJGLException {
 		lockAWT();
@@ -594,12 +597,12 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void setTitle(String title) {
 		lockAWT();
 		try {
-			nSetTitle(getDisplay(), title);
+			nSetTitle(getDisplay(), getWindow(), title);
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native void nSetTitle(long display, String title);
+	private static native void nSetTitle(long display, long window, String title);
 
 	public boolean isCloseRequested() {
 		boolean result = close_requested;
@@ -629,7 +632,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void update() {
 		lockAWT();
 		try {
-			nUpdate(getDisplay(), warp_atom);
+			nUpdate(getDisplay(), getWindow(), warp_atom);
 			checkInput();
 		} catch (LWJGLException e) {
 			LWJGLUtil.log("Caught exception while processing messages: " + e);
@@ -637,17 +640,17 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	private native void nUpdate(long display, long warp_atom) throws LWJGLException;
+	private native void nUpdate(long display, long window, long warp_atom) throws LWJGLException;
 
 	public void reshape(int x, int y, int width, int height) {
 		lockAWT();
 		try {
-			nReshape(getDisplay(), x, y, width, height);
+			nReshape(getDisplay(), getWindow(), x, y, width, height);
 		} finally {
 			unlockAWT();
 		}
 	}
-	private static native void nReshape(long display, int x, int y, int width, int height);
+	private static native void nReshape(long display, long window, int x, int y, int width, int height);
 
 	public DisplayMode[] getAvailableDisplayModes() throws LWJGLException {
 		lockAWT();
@@ -810,7 +813,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		try {
 			incDisplay();
 			try {
-				return nGetMinCursorSize(getDisplay());
+				return nGetMinCursorSize(getDisplay(), getWindow());
 			} finally {
 				decDisplay();
 			}
@@ -821,14 +824,14 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	private static native int nGetMinCursorSize(long display);
+	private static native int nGetMinCursorSize(long display, long window);
 
 	public int getMaxCursorSize() {
 		lockAWT();
 		try {
 			incDisplay();
 			try {
-				return nGetMaxCursorSize(getDisplay());
+				return nGetMaxCursorSize(getDisplay(), getWindow());
 			} finally {
 				decDisplay();
 			}
@@ -839,7 +842,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	private static native int nGetMaxCursorSize(long display);
+	private static native int nGetMaxCursorSize(long display, long window);
 	
 	/* Keyboard */
 	public void createKeyboard() throws LWJGLException {
@@ -1003,7 +1006,7 @@ final class LinuxDisplay implements DisplayImplementation {
 					int size = icons[i].limit() / 4;
 					int dimension = (int)Math.sqrt(size);
 					ByteBuffer icon = convertIcon(icons[i], dimension, dimension);
-					nSetWindowIcon(getDisplay(), icon, icon.capacity(), dimension, dimension);
+					nSetWindowIcon(getDisplay(), getWindow(), icon, icon.capacity(), dimension, dimension);
 					return 1;
 				}
 				return 0;
@@ -1018,7 +1021,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 	
-	private static native void nSetWindowIcon(long display, ByteBuffer icon, int icons_size, int width, int height);
+	private static native void nSetWindowIcon(long display, long window, ByteBuffer icon, int icons_size, int width, int height);
 
 	/* Callbacks from nUpdate() */
 	private void handleButtonEvent(long millis, int type, int button, int state) {
