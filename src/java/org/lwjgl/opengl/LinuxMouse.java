@@ -135,9 +135,9 @@ final class LinuxMouse {
 	}
 	private static native void nSendWarpEvent(long display, long window, int center_x, int center_y);
 
-	private void doHandlePointerMotion(boolean grab, boolean pointer_grabbed, boolean should_grab, long root_window, int root_x, int root_y, int win_x, int win_y, long nanos) {
+	private void doHandlePointerMotion(boolean grab, boolean warp_pointer, long root_window, int root_x, int root_y, int win_x, int win_y, long nanos) {
 		setCursorPos(grab, win_x, win_y, nanos);
-		if (!pointer_grabbed || !should_grab)
+		if (!warp_pointer)
 			return;
 		int root_window_height = nGetWindowHeight(display, root_window);
 		int root_window_width = nGetWindowWidth(display, root_window);
@@ -165,10 +165,10 @@ final class LinuxMouse {
 		}
 	}
 
-	public void changeGrabbed(boolean grab, boolean pointer_grabbed, boolean should_grab) {
+	public void changeGrabbed(boolean grab, boolean warp_pointer) {
 		reset();
 		long root_window = nQueryPointer(display, window, query_pointer_buffer);
-		doHandlePointerMotion(grab, pointer_grabbed, should_grab, root_window, query_pointer_buffer.get(0), query_pointer_buffer.get(1), query_pointer_buffer.get(2), query_pointer_buffer.get(3), last_event_nanos);
+		doHandlePointerMotion(grab, warp_pointer, root_window, query_pointer_buffer.get(0), query_pointer_buffer.get(1), query_pointer_buffer.get(2), query_pointer_buffer.get(3), last_event_nanos);
 	}
 
 	public int getButtonCount() {
@@ -188,8 +188,8 @@ final class LinuxMouse {
 	}
 	private static native void nWarpCursor(long display, long window, int x, int y);
 
-	public void handlePointerMotion(boolean grab, boolean pointer_grabbed, boolean should_grab, long millis, long root_window, int x_root, int y_root, int x, int y) {
-	    doHandlePointerMotion(grab, pointer_grabbed, should_grab, root_window, x_root, y_root, x, y, millis*1000000);
+	public void handlePointerMotion(boolean grab, boolean warp_pointer, long millis, long root_window, int x_root, int y_root, int x, int y) {
+	    doHandlePointerMotion(grab, warp_pointer, root_window, x_root, y_root, x, y, millis*1000000);
 	}
 	
 	private void handleButton(boolean grab, int button, byte state, long nanos) {

@@ -718,11 +718,15 @@ final class LinuxDisplay implements DisplayImplementation {
 			if (new_grab != grab) {
 				grab = new_grab;
 				updateInputGrab();
-				mouse.changeGrabbed(grab, pointer_grabbed, shouldGrab());
+				mouse.changeGrabbed(grab, shouldWarpPointer());
 			}
 		} finally {
 			unlockAWT();
 		}
+	}
+
+	private boolean shouldWarpPointer() {
+		return pointer_grabbed && shouldGrab();
 	}
 	
 	public int getNativeCursorCapabilities() {
@@ -980,7 +984,7 @@ final class LinuxDisplay implements DisplayImplementation {
 
 	private void handlePointerMotionEvent(long millis, long root_window, int x_root, int y_root, int x, int y, int state) {
 		if (mouse != null)
-			mouse.handlePointerMotion(grab, pointer_grabbed, shouldGrab(), millis, root_window, x_root, y_root, x, y);
+			mouse.handlePointerMotion(grab, shouldWarpPointer(), millis, root_window, x_root, y_root, x, y);
 	}
 
 	private void handleWarpEvent(int x, int y) {
