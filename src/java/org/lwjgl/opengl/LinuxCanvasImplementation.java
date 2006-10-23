@@ -107,7 +107,7 @@ final class LinuxCanvasImplementation implements AWTCanvasImplementation {
 				GLContext.loadOpenGLLibrary();
 				try {
 					LinuxDisplay.incDisplay();
-					return nFindVisualIDFromFormat(screen, pixel_format);
+					return nFindVisualIDFromFormat(LinuxDisplay.getDisplay(), screen, pixel_format);
 				} finally {
 					LinuxDisplay.decDisplay();
 				}
@@ -118,5 +118,5 @@ final class LinuxCanvasImplementation implements AWTCanvasImplementation {
 			LinuxDisplay.unlockAWT();
 		}
 	}
-	private static native int nFindVisualIDFromFormat(int screen, PixelFormat pixel_format) throws LWJGLException;
+	private static native int nFindVisualIDFromFormat(long display, int screen, PixelFormat pixel_format) throws LWJGLException;
 }

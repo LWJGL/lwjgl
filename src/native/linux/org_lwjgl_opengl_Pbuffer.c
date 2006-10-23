@@ -48,23 +48,25 @@
 #include "common_tools.h"
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetPbufferCapabilities
-  (JNIEnv *env, jclass clazz)
+  (JNIEnv *env, jclass clazz, jlong display)
 {
+	Display *disp = (Display *)(intptr_t)display;
 	GLXExtensions extension_flags;
-	if (!extgl_InitGLX(getDisplay(), getCurrentScreen(), &extension_flags))
+	if (!extgl_InitGLX(disp, getCurrentScreen(), &extension_flags))
 		return 0;
 	// Only support the GLX 1.3 Pbuffers and ignore the GLX_SGIX_pbuffer extension
 	return extension_flags.GLX13 ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxPbufferPeerInfo_nInitHandle
-  (JNIEnv *env, jclass clazz, jobject peer_info_handle, jint width, jint height, jobject pixel_format) {
+  (JNIEnv *env, jclass clazz, jlong display, jobject peer_info_handle, jint width, jint height, jobject pixel_format) {
+	Display *disp = (Display *)(intptr_t)display;
 	GLXExtensions extension_flags;
-	if (!extgl_InitGLX(getDisplay(), getCurrentScreen(), &extension_flags) || !extension_flags.GLX13) {
+	if (!extgl_InitGLX(disp, getCurrentScreen(), &extension_flags) || !extension_flags.GLX13) {
 		throwException(env, "No Pbuffer support");
 		return;
 	}
-	bool result = initPeerInfo(env, peer_info_handle, getDisplay(), getCurrentScreen(), pixel_format, false, GLX_PBUFFER_BIT, false, true);
+	bool result = initPeerInfo(env, peer_info_handle, disp, getCurrentScreen(), pixel_format, false, GLX_PBUFFER_BIT, false, true);
 	if (!result)
 		return;
 	const int buffer_attribs[] = {GLX_PBUFFER_WIDTH, width,

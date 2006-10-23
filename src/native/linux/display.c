@@ -108,13 +108,15 @@ static bool isXF86VidModeSupported(JNIEnv *env, Display *disp) {
 	return major_ver >= 2;
 }
 	
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsXrandrSupported(JNIEnv *env, jclass unused) {
-	jboolean result = isXrandrSupported(env, getDisplay()) ? JNI_TRUE : JNI_FALSE;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsXrandrSupported(JNIEnv *env, jclass unused, jlong display) {
+	Display *disp = (Display *)(intptr_t)display;
+	jboolean result = isXrandrSupported(env, disp) ? JNI_TRUE : JNI_FALSE;
 	return result;
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsXF86VidModeSupported(JNIEnv *env, jclass unused) {
-	jboolean result = isXF86VidModeSupported(env, getDisplay()) ? JNI_TRUE : JNI_FALSE;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsXF86VidModeSupported(JNIEnv *env, jclass unused, jlong display) {
+	Display *disp = (Display *)(intptr_t)display;
+	jboolean result = isXF86VidModeSupported(env, disp) ? JNI_TRUE : JNI_FALSE;
 	return result;
 }
 
@@ -287,15 +289,16 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nConvertToNativeRam
 	return native_ramp;
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetCurrentGammaRamp(JNIEnv *env, jclass unused) {
-	int ramp_size = getGammaRampLengthOfDisplay(env, getDisplay(), getCurrentScreen());
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetCurrentGammaRamp(JNIEnv *env, jclass unused, jlong display) {
+	Display *disp = (Display *)(intptr_t)display;
+	int ramp_size = getGammaRampLengthOfDisplay(env, disp, getCurrentScreen());
 	jobject ramp_buffer = newJavaManagedByteBuffer(env, sizeof(unsigned short)*3*ramp_size);
 	if (ramp_buffer == NULL) {
 		throwException(env, "Could not allocate gamma ramp buffer");
 		return NULL;
 	}
 	unsigned short *ramp = (unsigned short *)(*env)->GetDirectBufferAddress(env, ramp_buffer);
-	if (!XF86VidModeGetGammaRamp(getDisplay(), getCurrentScreen(), ramp_size, ramp,
+	if (!XF86VidModeGetGammaRamp(disp, getCurrentScreen(), ramp_size, ramp,
 				ramp + ramp_size, ramp + ramp_size*2)) {
 		throwException(env, "Could not get the current gamma ramp");
 		return NULL;
@@ -400,12 +403,14 @@ static jobject getCurrentXRandrMode(JNIEnv * env, Display *disp, int screen) {
 	return displayMode;
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetCurrentXRandrMode(JNIEnv *env, jclass unused) {
-	return getCurrentXRandrMode(env, getDisplay(), getCurrentScreen());
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetCurrentXRandrMode(JNIEnv *env, jclass unused, jlong display) {
+	Display *disp = (Display *)(intptr_t)display;
+	return getCurrentXRandrMode(env, disp, getCurrentScreen());
 }
 
-JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetAvailableDisplayModes(JNIEnv *env, jclass clazz, jint extension) {
-	return getAvailableDisplayModes(env, getDisplay(), getCurrentScreen(), extension);
+JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetAvailableDisplayModes(JNIEnv *env, jclass clazz, jlong display, jint extension) {
+	Display *disp = (Display *)(intptr_t)display;
+	return getAvailableDisplayModes(env, disp, getCurrentScreen(), extension);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwitchDisplayMode(JNIEnv *env, jclass clazz, jint screen, jint extension, jobject mode) {

@@ -47,13 +47,14 @@
 #include "Window.h"
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxCanvasImplementation_nFindVisualIDFromFormat
-	(JNIEnv *env, jclass clazz, jint screen, jobject pixel_format) {
+	(JNIEnv *env, jclass clazz, jlong display, jint screen, jobject pixel_format) {
+	Display *disp = (Display *)(intptr_t)display;
 	GLXExtensions extension_flags;
-	if (!extgl_InitGLX(getDisplay(), screen, &extension_flags)) {
+	if (!extgl_InitGLX(disp, screen, &extension_flags)) {
 		throwException(env, "Could not initialize GLX");
 		return -1;
 	}
-	XVisualInfo *vis_info = chooseVisualGLX(env, getDisplay(), screen, pixel_format, true, true);
+	XVisualInfo *vis_info = chooseVisualGLX(env, disp, screen, pixel_format, true, true);
 	if (vis_info == NULL) {
 		throwException(env, "Could not choose a VisualInfo");
 		return -1;
