@@ -48,7 +48,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include "common_tools.h"
-#include "Window.h"
 #include "org_lwjgl_opengl_LinuxDisplay.h"
 
 #define NUM_XRANDR_RETRIES 5

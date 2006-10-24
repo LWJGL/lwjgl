@@ -42,7 +42,6 @@
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include "Window.h"
 #include "common_tools.h"
 #include "org_lwjgl_opengl_LinuxMouse.h"
 

@@ -45,7 +45,6 @@
 #include "extgl_glx.h"
 #include "context.h"
 #include "common_tools.h"
-#include "Window.h"
 
 typedef struct {
 	GLXExtensions extension_flags;

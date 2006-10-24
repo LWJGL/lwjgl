@@ -44,7 +44,6 @@
 #include "org_lwjgl_opengl_Pbuffer.h"
 #include "extgl.h"
 #include "context.h"
-#include "Window.h"
 #include "common_tools.h"
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetPbufferCapabilities

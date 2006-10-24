@@ -44,7 +44,6 @@
 #include <X11/Xcursor/Xcursor.h>
 #include "org_lwjgl_input_Cursor.h"
 #include "org_lwjgl_opengl_LinuxDisplay.h"
-#include "Window.h"
 #include "common_tools.h"
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetNativeCursorCapabilities
