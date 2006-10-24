@@ -296,10 +296,22 @@ final class LinuxKeyboard {
 		}
 	}
 
-	public void handleKeyEvent(long event_ptr, long millis, int event_type, int event_keycode, int event_state) {
+	private void handleKeyEvent(long event_ptr, long millis, int event_type, int event_keycode, int event_state) {
 		int keycode = getKeycode(event_ptr, event_state);
 		byte key_state = getKeyState(event_type);
 		key_down_buffer[keycode] = key_state;
 		translateEvent(event_ptr, event_type, keycode, key_state, millis*1000000);
+	}
+
+	public boolean filterEvent(LinuxEvent event) {
+		switch (event.getType()) {
+			case LinuxEvent.KeyPress: /* Fall through */
+			case LinuxEvent.KeyRelease:
+				handleKeyEvent(event.getKeyAddress(), event.getKeyTime(), event.getKeyType(), event.getKeyKeyCode(), event.getKeyState());
+				return true;
+			default:
+				break;
+		}
+		return false;
 	}
 }

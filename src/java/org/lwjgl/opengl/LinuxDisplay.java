@@ -638,16 +638,13 @@ final class LinuxDisplay implements DisplayImplementation {
 		while (LinuxEvent.getPending(getDisplay()) > 0) {
 			event_buffer.nextEvent(getDisplay());
 			long event_window = event_buffer.getWindow();
-			if (event_window != getWindow())
-				continue;
-			if (event_buffer.filterEvent(event_window))
+			if (event_window != getWindow() || event_buffer.filterEvent(event_window) ||
+					(mouse != null && mouse.filterEvent(grab, shouldWarpPointer(), event_buffer)) ||
+					 (keyboard != null && keyboard.filterEvent(event_buffer)))
 				continue;
 			switch (event_buffer.getType()) {
 				case LinuxEvent.ClientMessage:
-					if (event_buffer.getClientMessageType() == warp_atom) {
-						if (mouse != null)
-							mouse.handleWarpEvent(event_buffer.getClientData(0), event_buffer.getClientData(1));
-					} else if ((event_buffer.getClientFormat() == 32) && (event_buffer.getClientData(0) == delete_atom))
+					if ((event_buffer.getClientFormat() == 32) && (event_buffer.getClientData(0) == delete_atom))
 						close_requested = true;
 					break;
 				case LinuxEvent.MapNotify:
@@ -660,20 +657,6 @@ final class LinuxDisplay implements DisplayImplementation {
 					break;
 				case LinuxEvent.Expose:
 					dirty = true;
-					break;
-				case LinuxEvent.ButtonPress: /* Fall through */
-				case LinuxEvent.ButtonRelease:
-					if (mouse != null)
-						mouse.handleButtonEvent(grab, event_buffer.getButtonTime(), event_buffer.getButtonType(), (byte)event_buffer.getButtonButton());
-					break;
-				case LinuxEvent.MotionNotify:
-					if (mouse != null)
-						mouse.handlePointerMotion(grab, shouldWarpPointer(), event_buffer.getButtonTime(), event_buffer.getButtonRoot(), event_buffer.getButtonXRoot(), event_buffer.getButtonYRoot(), event_buffer.getButtonX(), event_buffer.getButtonY());
-					break;
-				case LinuxEvent.KeyPress: /* Fall through */
-				case LinuxEvent.KeyRelease:
-					if (keyboard != null)
-						keyboard.handleKeyEvent(event_buffer.getKeyAddress(), event_buffer.getKeyTime(), event_buffer.getKeyType(), event_buffer.getKeyKeyCode(), event_buffer.getKeyState());
 					break;
 				default:
 					break;

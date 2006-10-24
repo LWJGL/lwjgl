@@ -190,7 +190,7 @@ final class LinuxMouse {
 	}
 	private static native void nWarpCursor(long display, long window, int x, int y);
 
-	public void handlePointerMotion(boolean grab, boolean warp_pointer, long millis, long root_window, int x_root, int y_root, int x, int y) {
+	private void handlePointerMotion(boolean grab, boolean warp_pointer, long millis, long root_window, int x_root, int y_root, int x, int y) {
 	    doHandlePointerMotion(grab, warp_pointer, root_window, x_root, y_root, x, y, millis*1000000);
 	}
 	
@@ -239,7 +239,7 @@ final class LinuxMouse {
 		}
 	}
 
-	public void handleButtonEvent(boolean grab, long millis, int type, byte button) {
+	private void handleButtonEvent(boolean grab, long millis, int type, byte button) {
 		long nanos = millis*1000000;
 		switch (type) {
 			case ButtonRelease:
@@ -258,7 +258,28 @@ final class LinuxMouse {
 		last_y = transformY(y);
 	}
 
-	public void handleWarpEvent(int x, int y) {
+	private void handleWarpEvent(int x, int y) {
 		resetCursor(x, y);
+	}
+
+	public boolean filterEvent(boolean grab, boolean warp_pointer, LinuxEvent event) {
+		switch (event.getType()) {
+			case LinuxEvent.ClientMessage:
+				if (event.getClientMessageType() == warp_atom) {
+					handleWarpEvent(event.getClientData(0), event.getClientData(1));
+					return true;
+				}
+				break;
+			case LinuxEvent.ButtonPress: /* Fall through */
+			case LinuxEvent.ButtonRelease:
+				handleButtonEvent(grab, event.getButtonTime(), event.getButtonType(), (byte)event.getButtonButton());
+				return true;
+			case LinuxEvent.MotionNotify:
+				handlePointerMotion(grab, warp_pointer, event.getButtonTime(), event.getButtonRoot(), event.getButtonXRoot(), event.getButtonYRoot(), event.getButtonX(), event.getButtonY());
+				return true;
+			default:
+				break;
+		}
+		return false;
 	}
 }
