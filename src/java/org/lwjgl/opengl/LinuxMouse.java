@@ -80,7 +80,12 @@ final class LinuxMouse {
 	public LinuxMouse(long display, long window) throws LWJGLException {
 		this.display = display;
 		this.window = window;
-		this.warp_atom = LinuxDisplay.nInternAtom(display, "_LWJGL", false);
+		LinuxDisplay.lockAWT();
+		try {
+			this.warp_atom = LinuxDisplay.nInternAtom(display, "_LWJGL", false);
+		} finally {
+			LinuxDisplay.unlockAWT();
+		}
 		reset();
 	}
 
