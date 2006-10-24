@@ -82,11 +82,15 @@ final class LinuxDisplay implements DisplayImplementation {
 	
 	private static int display_connection_usage_count = 0;
 
+	/** Event buffer */
+	private final LinuxEvent event_buffer = new LinuxEvent();
+
 	/** Current mode swithcing API */
 	private int current_displaymode_extension = NONE;
 
 	/** Atom used for the pointer warp messages */
 	private long warp_atom;
+	private long delete_atom;
 
 	private PeerInfo peer_info;
 
@@ -268,8 +272,8 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 
-	private static native long openDisplay() throws LWJGLException;
-	private static native void closeDisplay(long display);
+	static native long openDisplay() throws LWJGLException;
+	static native void closeDisplay(long display);
 
 	private int getWindowMode(boolean fullscreen) throws LWJGLException {
 		if (fullscreen) {
@@ -552,6 +556,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		lockAWT();
 		try {
 			warp_atom = getWarpAtom();
+			delete_atom = internAtom("WM_DELETE_WINDOW", false);
 			current_displaymode_extension = getBestDisplayModeExtension();
 			if (current_displaymode_extension == NONE)
 				throw new LWJGLException("No display mode extension is available");
@@ -629,18 +634,56 @@ final class LinuxDisplay implements DisplayImplementation {
 		return peer_info;
 	}
 	
+	private void processEvents() {
+		while (LinuxEvent.getPending(getDisplay()) > 0) {
+			event_buffer.nextEvent(getDisplay());
+			long event_window = event_buffer.getWindow();
+			if (event_window != getWindow())
+				continue;
+			if (event_buffer.filterEvent(event_window))
+				continue;
+			switch (event_buffer.getType()) {
+				case LinuxEvent.ClientMessage:
+					if (event_buffer.getClientMessageType() == warp_atom) {
+						handleWarpEvent(event_buffer.getClientData(0), event_buffer.getClientData(1));
+					} else if ((event_buffer.getClientFormat() == 32) && (event_buffer.getClientData(0) == delete_atom))
+						handleCloseEvent();
+					break;
+				case LinuxEvent.MapNotify:
+					handleMapNotifyEvent();
+					break;
+				case LinuxEvent.UnmapNotify:
+					handleUnmapNotifyEvent();
+					break;
+				case LinuxEvent.Expose:
+					handleExposeEvent();
+					break;
+				case LinuxEvent.ButtonPress: /* Fall through */
+				case LinuxEvent.ButtonRelease:
+					handleButtonEvent(event_buffer.getButtonTime(), event_buffer.getButtonType(), event_buffer.getButtonButton(), event_buffer.getButtonState());
+					break;
+				case LinuxEvent.MotionNotify:
+					handlePointerMotionEvent(event_buffer.getButtonTime(), event_buffer.getButtonRoot(), event_buffer.getButtonXRoot(), event_buffer.getButtonYRoot(), event_buffer.getButtonX(), event_buffer.getButtonY(), event_buffer.getButtonState());
+					break;
+				case LinuxEvent.KeyPress: /* Fall through */
+				case LinuxEvent.KeyRelease:
+					handleKeyEvent(event_buffer.getKeyAddress(), event_buffer.getKeyTime(), event_buffer.getKeyType(), event_buffer.getKeyKeyCode(), event_buffer.getKeyState());
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
 	public void update() {
 		lockAWT();
 		try {
-			nUpdate(getDisplay(), getWindow(), warp_atom);
+			processEvents();
 			checkInput();
-		} catch (LWJGLException e) {
-			LWJGLUtil.log("Caught exception while processing messages: " + e);
 		} finally {
 			unlockAWT();
 		}
 	}
-	private native void nUpdate(long display, long window, long warp_atom) throws LWJGLException;
 
 	public void reshape(int x, int y, int width, int height) {
 		lockAWT();
@@ -1023,7 +1066,6 @@ final class LinuxDisplay implements DisplayImplementation {
 	
 	private static native void nSetWindowIcon(long display, long window, ByteBuffer icon, int icons_size, int width, int height);
 
-	/* Callbacks from nUpdate() */
 	private void handleButtonEvent(long millis, int type, int button, int state) {
 		if (mouse != null)
 			mouse.handleButtonEvent(grab, millis, type, (byte)button);

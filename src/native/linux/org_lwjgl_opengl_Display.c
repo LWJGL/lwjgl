@@ -69,7 +69,6 @@ typedef struct {
 
 static GLXWindow glx_window = None;
 
-static Atom delete_atom;
 static Colormap cmap;
 static int current_depth;
 static Pixmap current_icon_pixmap;	
@@ -156,73 +155,6 @@ static void setDecorations(Display *disp, Window window, int dec) {
 
 static bool isLegacyFullscreen(jint window_mode) {
 	return window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_LEGACY;
-}
-
-static void handleMessages(JNIEnv *env, jobject disp_obj, Display *disp, Window window, Atom warp_atom) {
-	XEvent event;
-	jclass disp_class = (*env)->GetObjectClass(env, disp_obj);
-	if (disp_class == NULL)
-		return;
-	jmethodID handleKeyEvent_method = (*env)->GetMethodID(env, disp_class, "handleKeyEvent", "(JJIII)V");
-	if (handleKeyEvent_method == NULL)
-		return;
-	jmethodID handleButtonEvent_method = (*env)->GetMethodID(env, disp_class, "handleButtonEvent", "(JIII)V");
-	if (handleButtonEvent_method == NULL)
-		return;
-	jmethodID handlePointerMotionEvent_method = (*env)->GetMethodID(env, disp_class, "handlePointerMotionEvent", "(JJIIIII)V");
-	if (handlePointerMotionEvent_method == NULL)
-		return;
-	jmethodID handleWarpEvent_method = (*env)->GetMethodID(env, disp_class, "handleWarpEvent", "(II)V");
-	if (handleWarpEvent_method == NULL)
-		return;
-	jmethodID handleMapNotifyEvent_method = (*env)->GetMethodID(env, disp_class, "handleMapNotifyEvent", "()V");
-	if (handleMapNotifyEvent_method == NULL)
-		return;
-	jmethodID handleUnmapNotifyEvent_method = (*env)->GetMethodID(env, disp_class, "handleUnmapNotifyEvent", "()V");
-	if (handleUnmapNotifyEvent_method == NULL)
-		return;
-	jmethodID handleExposeEvent_method = (*env)->GetMethodID(env, disp_class, "handleExposeEvent", "()V");
-	if (handleExposeEvent_method == NULL)
-		return;
-	jmethodID handleCloseEvent_method = (*env)->GetMethodID(env, disp_class, "handleCloseEvent", "()V");
-	if (handleCloseEvent_method == NULL)
-		return;
-	while (!(*env)->ExceptionOccurred(env) && XPending(disp) > 0) {
-		XNextEvent(disp, &event);
-		if (XFilterEvent(&event, None) == True)
-			continue;
-		// Ignore events from old windows
-		if (event.xany.window != window)
-			continue;
-		switch (event.type) {
-			case ClientMessage:
-				if (event.xclient.message_type == warp_atom) {
-					(*env)->CallVoidMethod(env, disp_obj, handleWarpEvent_method, (jint)event.xclient.data.l[0], (jint)event.xclient.data.l[1]);
-				} else if ((event.xclient.format == 32) && ((Atom)event.xclient.data.l[0] == delete_atom))
-					(*env)->CallVoidMethod(env, disp_obj, handleCloseEvent_method);
-				break;
-			case MapNotify:
-				(*env)->CallVoidMethod(env, disp_obj, handleMapNotifyEvent_method);
-				break;
-			case UnmapNotify:
-				(*env)->CallVoidMethod(env, disp_obj, handleUnmapNotifyEvent_method);
-				break;
-			case Expose:
-				(*env)->CallVoidMethod(env, disp_obj, handleExposeEvent_method);
-				break;
-			case ButtonPress: /* Fall through */
-			case ButtonRelease:
-				(*env)->CallVoidMethod(env, disp_obj, handleButtonEvent_method, (jlong)event.xbutton.time, (jint)event.xbutton.type, (jint)event.xbutton.button, (jint)event.xbutton.state);
-				break;
-			case MotionNotify:
-				(*env)->CallVoidMethod(env, disp_obj, handlePointerMotionEvent_method, (jlong)event.xbutton.time, (jlong)event.xbutton.root, (jint)event.xbutton.x_root, (jint)event.xbutton.y_root, (jint)event.xbutton.x, (jint)event.xbutton.y, (jint)event.xbutton.state);
-				break;
-			case KeyPress:
-			case KeyRelease:
-				(*env)->CallVoidMethod(env, disp_obj, handleKeyEvent_method, (jlong)(intptr_t)&(event.xkey), (jlong)event.xkey.time, (jint)event.xkey.type, (jint)event.xkey.keycode, (jint)event.xkey.state);
-				break;
-		}
-	}
 }
 
 static void setWindowTitle(Display *disp, Window window, const char *title) {
@@ -356,7 +288,7 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 	size_hints->max_height = height;
 	XSetWMNormalHints(disp, win, size_hints);
 	XFree(size_hints);
-	delete_atom = XInternAtom(disp, "WM_DELETE_WINDOW", False);
+	Atom delete_atom = XInternAtom(disp, "WM_DELETE_WINDOW", False);
 	XSetWMProtocols(disp, win, &delete_atom, 1);
 	if (window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_NETWM) {
 		Atom fullscreen_atom = XInternAtom(disp, "_NET_WM_STATE_FULLSCREEN", False);
@@ -371,13 +303,6 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 		return 0;
 	}
 	return win;
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUpdate(JNIEnv *env, jobject disp_obj, jlong display, jlong window_ptr, jlong warp_atom_ptr) {
-	Display *disp = (Display *)(intptr_t)display;
-	Window window = (Window)window_ptr;
-	Atom warp_atom = (Atom)warp_atom_ptr;
-	handleMessages(env, disp_obj, disp, window, warp_atom);
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jclass clazz, jlong display, jint screen, jobject peer_info_handle, jobject mode, jint window_mode, jint x, jint y) {

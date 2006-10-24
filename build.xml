@@ -494,6 +494,7 @@
 	<target name="headers" description="invokes javah on java classes" depends="compile">
 		<!-- platform specific classes -->
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/linux" force="yes">
+			<class name="org.lwjgl.opengl.LinuxEvent" />
 			<class name="org.lwjgl.opengl.LinuxMouse" />
 			<class name="org.lwjgl.opengl.LinuxKeyboard" />
 			<class name="org.lwjgl.opengl.LinuxDisplay" />
