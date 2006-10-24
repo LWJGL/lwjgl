@@ -89,7 +89,6 @@ final class LinuxDisplay implements DisplayImplementation {
 	private int current_displaymode_extension = NONE;
 
 	/** Atom used for the pointer warp messages */
-	private long warp_atom;
 	private long delete_atom;
 
 	private PeerInfo peer_info;
@@ -461,10 +460,6 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native void nSwitchDisplayMode(long display, int screen, int extension, DisplayMode mode) throws LWJGLException;
 
-	static long getWarpAtom() throws LWJGLException {
-		return internAtom("_LWJGL", false);
-	}
-
 	private static long internAtom(String atom_name, boolean only_if_exists) throws LWJGLException {
 		incDisplay();
 		try {
@@ -473,7 +468,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			decDisplay();
 		}
 	}
-	private static native long nInternAtom(long display, String atom_name, boolean only_if_exists);
+	static native long nInternAtom(long display, String atom_name, boolean only_if_exists);
 
 	public void resetDisplayMode() {
 		lockAWT();
@@ -555,7 +550,6 @@ final class LinuxDisplay implements DisplayImplementation {
 	public DisplayMode init() throws LWJGLException {
 		lockAWT();
 		try {
-			warp_atom = getWarpAtom();
 			delete_atom = internAtom("WM_DELETE_WINDOW", false);
 			current_displaymode_extension = getBestDisplayModeExtension();
 			if (current_displaymode_extension == NONE)
@@ -709,10 +703,10 @@ final class LinuxDisplay implements DisplayImplementation {
 		return mouse.getButtonCount();
 	}
 
-	public void createMouse() {
+	public void createMouse() throws LWJGLException {
 		lockAWT();
 		try {
-			mouse = new LinuxMouse(getDisplay(), getWindow(), warp_atom);
+			mouse = new LinuxMouse(getDisplay(), getWindow());
 		} finally {
 			unlockAWT();
 		}

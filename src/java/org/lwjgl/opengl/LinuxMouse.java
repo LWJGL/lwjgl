@@ -40,6 +40,7 @@ import java.nio.IntBuffer;
 import java.nio.CharBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 
 import java.nio.charset.CharsetDecoder;
@@ -76,10 +77,10 @@ final class LinuxMouse {
 	private EventQueue event_queue;
 	private long last_event_nanos;
 
-	public LinuxMouse(long display, long window, long warp_atom) {
+	public LinuxMouse(long display, long window) throws LWJGLException {
 		this.display = display;
 		this.window = window;
-		this.warp_atom = warp_atom;
+		this.warp_atom = LinuxDisplay.nInternAtom(display, "_LWJGL", false);
 		reset();
 	}
 
