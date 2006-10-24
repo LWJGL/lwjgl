@@ -645,29 +645,35 @@ final class LinuxDisplay implements DisplayImplementation {
 			switch (event_buffer.getType()) {
 				case LinuxEvent.ClientMessage:
 					if (event_buffer.getClientMessageType() == warp_atom) {
-						handleWarpEvent(event_buffer.getClientData(0), event_buffer.getClientData(1));
+						if (mouse != null)
+							mouse.handleWarpEvent(event_buffer.getClientData(0), event_buffer.getClientData(1));
 					} else if ((event_buffer.getClientFormat() == 32) && (event_buffer.getClientData(0) == delete_atom))
-						handleCloseEvent();
+						close_requested = true;
 					break;
 				case LinuxEvent.MapNotify:
-					handleMapNotifyEvent();
+					dirty = true;
+					minimized = false;
 					break;
 				case LinuxEvent.UnmapNotify:
-					handleUnmapNotifyEvent();
+					dirty = true;
+					minimized = true;
 					break;
 				case LinuxEvent.Expose:
-					handleExposeEvent();
+					dirty = true;
 					break;
 				case LinuxEvent.ButtonPress: /* Fall through */
 				case LinuxEvent.ButtonRelease:
-					handleButtonEvent(event_buffer.getButtonTime(), event_buffer.getButtonType(), event_buffer.getButtonButton(), event_buffer.getButtonState());
+					if (mouse != null)
+						mouse.handleButtonEvent(grab, event_buffer.getButtonTime(), event_buffer.getButtonType(), (byte)event_buffer.getButtonButton());
 					break;
 				case LinuxEvent.MotionNotify:
-					handlePointerMotionEvent(event_buffer.getButtonTime(), event_buffer.getButtonRoot(), event_buffer.getButtonXRoot(), event_buffer.getButtonYRoot(), event_buffer.getButtonX(), event_buffer.getButtonY(), event_buffer.getButtonState());
+					if (mouse != null)
+						mouse.handlePointerMotion(grab, shouldWarpPointer(), event_buffer.getButtonTime(), event_buffer.getButtonRoot(), event_buffer.getButtonXRoot(), event_buffer.getButtonYRoot(), event_buffer.getButtonX(), event_buffer.getButtonY());
 					break;
 				case LinuxEvent.KeyPress: /* Fall through */
 				case LinuxEvent.KeyRelease:
-					handleKeyEvent(event_buffer.getKeyAddress(), event_buffer.getKeyTime(), event_buffer.getKeyType(), event_buffer.getKeyKeyCode(), event_buffer.getKeyState());
+					if (keyboard != null)
+						keyboard.handleKeyEvent(event_buffer.getKeyAddress(), event_buffer.getKeyTime(), event_buffer.getKeyType(), event_buffer.getKeyKeyCode(), event_buffer.getKeyState());
 					break;
 				default:
 					break;
@@ -1065,42 +1071,4 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	
 	private static native void nSetWindowIcon(long display, long window, ByteBuffer icon, int icons_size, int width, int height);
-
-	private void handleButtonEvent(long millis, int type, int button, int state) {
-		if (mouse != null)
-			mouse.handleButtonEvent(grab, millis, type, (byte)button);
-	}
-
-	private void handleKeyEvent(long event_ptr, long millis, int type, int keycode, int state) {
-		if (keyboard != null)
-			keyboard.handleKeyEvent(event_ptr, millis, type, keycode, state);
-	}
-
-	private void handlePointerMotionEvent(long millis, long root_window, int x_root, int y_root, int x, int y, int state) {
-		if (mouse != null)
-			mouse.handlePointerMotion(grab, shouldWarpPointer(), millis, root_window, x_root, y_root, x, y);
-	}
-
-	private void handleWarpEvent(int x, int y) {
-		if (mouse != null)
-			mouse.handleWarpEvent(x, y);
-	}
-
-	private void handleExposeEvent() {
-		dirty = true;
-	}
-
-	private void handleUnmapNotifyEvent() {
-		dirty = true;
-		minimized = true;
-	}
-
-	private void handleMapNotifyEvent() {
-		dirty = true;
-		minimized = false;
-	}
-
-	private void handleCloseEvent() {
-		close_requested = true;
-	}
 }
