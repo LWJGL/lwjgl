@@ -42,6 +42,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.Component;
+import java.awt.Rectangle;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -55,16 +56,22 @@ final class MacOSXMouseEventQueue extends MouseEventQueue {
 		super(component);
 	}
 
+	public void setGrabbed(boolean grab) {
+		super.setGrabbed(grab);
+		warpCursor();
+		nGrabMouse(grab);
+	}
+	
 	protected void resetCursorToCenter() {
 		super.resetCursorToCenter();
 		/* Clear accumulated deltas */
-		((MacOSXDisplay)Display.getImplementation()).getMouseDeltas(delta_buffer);
+		getMouseDeltas(delta_buffer);
 	}
 
 	protected void updateDeltas(long nanos) {
 		super.updateDeltas(nanos);
 		synchronized ( this ) {
-			((MacOSXDisplay)Display.getImplementation()).getMouseDeltas(delta_buffer);
+			getMouseDeltas(delta_buffer);
 			int dx = delta_buffer.get(0);
 			int dy = -delta_buffer.get(1);
 			if ( dx != 0 || dy != 0 ) {
@@ -73,4 +80,19 @@ final class MacOSXMouseEventQueue extends MouseEventQueue {
 			}
 		}
 	}
+
+	void warpCursor() {
+		if (isGrabbed()) {
+			Rectangle bounds = getComponent().getBounds();
+			int x = bounds.x + bounds.width/2;
+			int y = bounds.y + bounds.height/2;
+			nWarpCursor(x, y);
+		}
+	}
+
+	private static native void getMouseDeltas(IntBuffer delta_buffer);
+
+	private static native void nWarpCursor(int x, int y);
+
+	private static native void nGrabMouse(boolean grab);
 }

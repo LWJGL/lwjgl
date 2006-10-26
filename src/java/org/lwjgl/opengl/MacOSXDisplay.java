@@ -69,7 +69,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private static final int GAMMA_LENGTH = 256;
 
 	private MacOSXFrame frame;
-	private MouseEventQueue mouse_queue;
+	private MacOSXMouseEventQueue mouse_queue;
 	private KeyboardEventQueue keyboard_queue;
 	private java.awt.DisplayMode requested_mode;
 
@@ -256,17 +256,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 			GL11.glGetInteger(GL11.GL_VIEWPORT, current_viewport);
 			GL11.glViewport(current_viewport.get(0), current_viewport.get(1), current_viewport.get(2), current_viewport.get(3));
 		}
-		if (frame.syncShouldWarpCursor()) {
-			warpCursor();
-		}
-	}
-
-	private void warpCursor() {
-		if (mouse_queue != null && mouse_queue.isGrabbed()) {
-			Rectangle bounds = frame.syncGetBounds();
-			int x = bounds.x + bounds.width/2;
-			int y = bounds.y + bounds.height/2;
-			nWarpCursor(x, y);
+		if (frame.syncShouldWarpCursor() && mouse_queue != null) {
+			mouse_queue.warpCursor();
 		}
 	}
 
@@ -285,8 +276,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	private native void nHideUI(boolean hide);
-
-	native void getMouseDeltas(IntBuffer delta_buffer);
 
 	public void reshape(int x, int y, int width, int height) {
 		frame.resize(x, y, width, height);
@@ -323,13 +312,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public void grabMouse(boolean grab) {
 		mouse_queue.setGrabbed(grab);
-		warpCursor();
-		nGrabMouse(grab);
 	}
-
-	private native void nWarpCursor(int x, int y);
-
-	private native void nGrabMouse(boolean grab);
 
 	public int getNativeCursorCapabilities() {
 		return AWTUtil.getNativeCursorCapabilities();

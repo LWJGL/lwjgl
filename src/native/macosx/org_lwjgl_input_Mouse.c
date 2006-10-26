@@ -41,11 +41,12 @@
 
 #include <jni.h>
 #include <ApplicationServices/ApplicationServices.h>
+#include "org_lwjgl_opengl_MacOSXMouseEventQueue.h"
 #include "common_tools.h"
 
 static bool is_grabbed;
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGrabMouse(JNIEnv *env, jobject this, jboolean grab) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXMouseEventQueue_nGrabMouse(JNIEnv *env, jclass unused, jboolean grab) {
 	bool new_grabbed = grab == JNI_TRUE;
 	if (is_grabbed != new_grabbed) {
 		is_grabbed = new_grabbed;
@@ -57,14 +58,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGrabMouse(JNIEnv *en
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nWarpCursor(JNIEnv *env, jobject this, jint x, jint y) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXMouseEventQueue_nWarpCursor(JNIEnv *env, jclass unused, jint x, jint y) {
 	CGPoint p;
 	p.x = x;
 	p.y = y;
 	CGWarpMouseCursorPosition(p);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_getMouseDeltas(JNIEnv *env, jobject this, jobject delta_buffer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXMouseEventQueue_getMouseDeltas(JNIEnv *env, jclass unused, jobject delta_buffer) {
 	CGMouseDelta dx, dy;
 	CGGetLastMouseDelta(&dx, &dy);
 	int buffer_length = (*env)->GetDirectBufferCapacity(env, delta_buffer);

@@ -56,7 +56,6 @@ class MouseEventQueue extends EventQueue implements MouseListener, MouseMotionLi
 
 	private boolean grabbed;
 
-
 	/** The accumulated mouse deltas returned by poll() */
 	private int accum_dx;
 	private int accum_dy;
@@ -91,6 +90,10 @@ class MouseEventQueue extends EventQueue implements MouseListener, MouseMotionLi
 		component.removeMouseListener(this);
 		component.removeMouseMotionListener(this);
 		component.removeMouseWheelListener(this);
+	}
+
+	protected Component getComponent() {
+		return component;
 	}
 
 	public synchronized void setGrabbed(boolean grabbed) {
