@@ -113,7 +113,6 @@ final class LinuxAWTInput extends AbstractAWTInput {
 	}
 
 	public synchronized void processInput(PeerInfo peer_info) {
-		super.processInput(peer_info);
 		LinuxDisplay.lockAWT();
 		try {
 			LinuxPeerInfo linux_peer_info = (LinuxPeerInfo)peer_info;

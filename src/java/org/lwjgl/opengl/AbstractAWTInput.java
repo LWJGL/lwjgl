@@ -37,7 +37,6 @@ import java.nio.ByteBuffer;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 
-import java.awt.event.FocusListener;
 import java.awt.Cursor;
 
 /**
@@ -49,14 +48,16 @@ import java.awt.Cursor;
 abstract class AbstractAWTInput implements AWTCanvasInputImplementation {
 	private AWTGLCanvas canvas;
 
-	private volatile int current_height;
-	private volatile int current_width;
 	private KeyboardEventQueue keyboard_queue;
 	private MouseEventQueue mouse_queue;
 	private volatile boolean grab;
 
-	protected AbstractAWTInput(AWTGLCanvas canvas) throws LWJGLException {
+	protected AbstractAWTInput(AWTGLCanvas canvas) {
 		this.canvas = canvas;
+	}
+
+	protected synchronized MouseEventQueue getMouseEventQueue() {
+		return mouse_queue;
 	}
 
 	public synchronized void grabMouse(boolean grab) {
@@ -83,16 +84,11 @@ abstract class AbstractAWTInput implements AWTCanvasInputImplementation {
 	}
 
 	public final int getWidth() {
-		return current_width;
+		return canvas.getWidth();
 	}
 
 	public final int getHeight() {
-		return current_height;
-	}
-
-	public synchronized void processInput(PeerInfo peer_info) {
-		current_width = canvas.getWidth();
-		current_height = canvas.getHeight();
+		return canvas.getHeight();
 	}
 
 	public boolean hasWheel() {
@@ -104,8 +100,12 @@ abstract class AbstractAWTInput implements AWTCanvasInputImplementation {
 	}
 
 	public void createMouse() throws LWJGLException {
-		mouse_queue = new MouseEventQueue(canvas);
+		mouse_queue = createMouseQueue();
 		mouse_queue.register();
+	}
+
+	protected MouseEventQueue createMouseQueue() {
+		return new MouseEventQueue(getCanvas());
 	}
 
 	public void destroyMouse() {

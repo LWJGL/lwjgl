@@ -31,39 +31,39 @@
  */
 package org.lwjgl.opengl;
 
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
+import java.nio.IntBuffer;
+import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 
 /**
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
- * @version $Revision$
- * $Id$
+ * @version $Revision: 2586 $
+ * $Id: LinuxAWTGLCanvasPeerInfo.java 2586 2006-10-20 11:51:34Z elias_naur $
  */
-final class MacOSXCanvasImplementation implements AWTCanvasImplementation {
-	public PeerInfo createPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) throws LWJGLException {
-		try {
-			return new MacOSXAWTGLCanvasPeerInfo(canvas, pixel_format, true);
-		} catch (LWJGLException e) {
-			return new MacOSXAWTGLCanvasPeerInfo(canvas, pixel_format, false);
-		}
+final class MacOSXAWTInput extends AbstractAWTInput {
+	private boolean had_focus;
+
+	MacOSXAWTInput(AWTGLCanvas canvas) {
+		super(canvas);
+	}
+	
+	protected MouseEventQueue createMouseQueue() {
+		return new MacOSXMouseEventQueue(getCanvas());
 	}
 
-	/**
-	 * Find a proper GraphicsConfiguration from the given GraphicsDevice and PixelFormat.
-	 *
-	 * @return The GraphicsConfiguration corresponding to a visual that matches the pixel format.
-	 */
-	public GraphicsConfiguration findConfiguration(GraphicsDevice device, PixelFormat pixel_format) throws LWJGLException {
-		/*
-		 * It seems like the best way is to simply return null
-		 */
-		return null;
+	public synchronized void processInput(PeerInfo peer_info) {
+		boolean has_focus = getCanvas().isFocusOwner();
+		if (!had_focus && has_focus)
+			((MacOSXMouseEventQueue)getMouseEventQueue()).warpCursor();
+		had_focus = has_focus;
 	}
 
-	public AWTCanvasInputImplementation createInput(AWTGLCanvas canvas) throws LWJGLException {
-		return new MacOSXAWTInput(canvas);
+	public void destroy() {
+	}
+
+	public void update() {
 	}
 }
