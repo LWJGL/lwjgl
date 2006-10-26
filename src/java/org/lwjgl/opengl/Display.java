@@ -59,6 +59,11 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 public final class Display {
+	private static final Thread shutdown_hook = new Thread() {
+						public void run() {
+							reset();
+						}
+					};
 
 	/** The display implementor */
 	private static final DisplayImplementation display_impl;
@@ -105,16 +110,6 @@ public final class Display {
 		try {
 			current_mode = initial_mode = display_impl.init();
 			LWJGLUtil.log("Initial mode: " + initial_mode);
-			AccessController.doPrivileged(new PrivilegedAction() {
-				public Object run() {
-					Runtime.getRuntime().addShutdownHook(new Thread() {
-						public void run() {
-							reset();
-						}
-					});
-					return null;
-				}
-			});
 		} catch (LWJGLException e) {
 			throw new RuntimeException(e);
 		}
@@ -589,7 +584,10 @@ public final class Display {
 		}
 
 		processMessages();
+		pollDevices();
+	}
 
+	static void pollDevices() {
 		// Poll the input devices while we're here
 		if (Mouse.isCreated()) {
 			Mouse.poll();
@@ -677,6 +675,12 @@ public final class Display {
 			throw new IllegalStateException("Only one LWJGL context may be instantiated at any one time.");
 		if (pixel_format == null)
 			throw new NullPointerException("pixel_format cannot be null");
+		AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				Runtime.getRuntime().addShutdownHook(shutdown_hook);
+				return null;
+			}
+		});
 		if (fullscreen)
 			switchDisplayMode();
 		try {
@@ -777,6 +781,12 @@ public final class Display {
 		x = y = -1;
 		cached_icons = null;
 		reset();
+		AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				Runtime.getRuntime().removeShutdownHook(shutdown_hook);
+				return null;
+			}
+		});
 	}
 
 	private static void destroyPeerInfo() {
