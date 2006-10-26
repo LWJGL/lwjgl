@@ -303,17 +303,13 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public void createMouse() throws LWJGLException {
 		MacOSXGLCanvas canvas = frame.getCanvas();
-		this.mouse_queue = new MouseEventQueue(canvas.getWidth(), canvas.getHeight());
-		canvas.addMouseListener(mouse_queue);
-		canvas.addMouseMotionListener(mouse_queue);
-		canvas.addMouseWheelListener(mouse_queue);
+		this.mouse_queue = new MouseEventQueue(canvas);
+		mouse_queue.register();
 	}
 
 	public void destroyMouse() {
-		MacOSXGLCanvas canvas = frame.getCanvas();
-		canvas.removeMouseListener(mouse_queue);
-		canvas.removeMouseWheelListener(mouse_queue);
-		canvas.removeMouseMotionListener(mouse_queue);
+		if (mouse_queue != null)
+			mouse_queue.unregister();
 		this.mouse_queue = null;
 	}
 
@@ -359,17 +355,13 @@ final class MacOSXDisplay implements DisplayImplementation {
 	/* Keyboard */
 	public void createKeyboard() throws LWJGLException {
 		MacOSXGLCanvas canvas = frame.getCanvas();
-		this.keyboard_queue = new KeyboardEventQueue();
-		canvas.addKeyListener(keyboard_queue);
+		this.keyboard_queue = new KeyboardEventQueue(canvas);
+		keyboard_queue.register();
 	}
 
 	public void destroyKeyboard() {
-		/*
-		 * This line is commented out to work around AWT bug 4867453:
-		 * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4867453
-		 */
-//		frame.getCanvas().removeKeyListener(keyboard_queue);
-
+		if (keyboard_queue != null)
+			keyboard_queue.unregister();
 		this.keyboard_queue = null;
 	}
 

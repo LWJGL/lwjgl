@@ -32,8 +32,7 @@
 package org.lwjgl.opengl;
 
 /**
- * A java implementation of a LWJGL compatible Mouse event queue.
- * Currently only used by the Mac OS X implementation.
+ * An AWT implementation of a LWJGL compatible Mouse event queue.
  * @author elias_naur
  */
 
@@ -42,6 +41,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.Component;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -52,8 +52,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	private static final int WHEEL_SCALE = 120;
 	public static final int NUM_BUTTONS = 3;
 
-	private final int width;
-	private final int height;
+	private final Component component;
 
 	private boolean grabbed;
 
@@ -77,11 +76,22 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	/** Buttons array */
 	private final byte[] buttons = new byte[NUM_BUTTONS];
 
-	MouseEventQueue(int width, int height) {
+	MouseEventQueue(Component component) {
 		super(Mouse.EVENT_SIZE);
-		this.width = width;
-		this.height = height;
+		this.component = component;
 		resetCursorToCenter();
+	}
+
+	public void register() {
+		component.addMouseListener(this);
+		component.addMouseMotionListener(this);
+		component.addMouseWheelListener(this);
+	}
+
+	public void unregister() {
+		component.removeMouseListener(this);
+		component.removeMouseMotionListener(this);
+		component.removeMouseWheelListener(this);
 	}
 
 	public synchronized void setGrabbed(boolean grabbed) {
@@ -94,7 +104,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	}
 
 	private int transformY(int y) {
-		return height - 1 - y;
+		return component.getHeight() - 1 - y;
 	}
 
 	private void resetCursorToCenter() {

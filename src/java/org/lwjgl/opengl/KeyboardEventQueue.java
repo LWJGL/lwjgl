@@ -39,6 +39,7 @@ package org.lwjgl.opengl;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.Component;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.input.Keyboard;
@@ -50,6 +51,8 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 
 	/** Event scratch array */
 	private final ByteBuffer event = ByteBuffer.allocate(Keyboard.EVENT_SIZE);
+
+	private final Component component;
 
 	static {
 		KEY_MAP[KeyEvent.VK_0] = Keyboard.KEY_0;
@@ -238,8 +241,21 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 		KEY_MAP[KeyEvent.VK_Z] = Keyboard.KEY_Z;
 	}
 
-	public KeyboardEventQueue() {
+	public KeyboardEventQueue(Component component) {
 		super(Keyboard.EVENT_SIZE);
+		this.component = component;
+	}
+
+	public void register() {
+		component.addKeyListener(this);
+	}
+
+	public void unregister() {
+		/*
+		 * This line is commented out to work around AWT bug 4867453:
+		 * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4867453
+		 */
+		//component.removeKeyListener(this);
 	}
 
 	private void putKeyboardEvent(int key_code, byte state, int character, long nanos) {
