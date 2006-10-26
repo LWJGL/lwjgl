@@ -81,15 +81,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetMaxCursorSize
 	return width_return > height_return ? height_return : width_return;
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateCursor
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateCursor
   (JNIEnv *env, jclass clazz, jlong display, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset)
 {
 	Display *disp = (Display *)(intptr_t)display;
-	jobject handle_buffer = newJavaManagedByteBuffer(env, sizeof(Cursor));
-	if (handle_buffer == NULL) {
-		throwException(env, "Could not allocate handle buffer");
-		return NULL;
-	}
 	const int *delays = NULL;
 	if (delay_buffer != NULL)
 		delays = (const int *)(*env)->GetDirectBufferAddress(env, delay_buffer) + delays_offset;		
@@ -98,7 +93,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateCursor
 	XcursorImages *cursor_images = XcursorImagesCreate(num_images);
 	if (cursor_images == NULL) {
 		throwException(env, "Could not allocate cursor.");
-		return NULL;
+		return None;
 	}
 	cursor_images->nimage = num_images;
 	int i;
@@ -111,16 +106,15 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateCursor
 			cursor_image->delay = delays[i];		
 		cursor_images->images[i] = cursor_image;
 	}
-	Cursor *cursor = (Cursor *)(*env)->GetDirectBufferAddress(env, handle_buffer);
-	*cursor = XcursorImagesLoadCursor(disp, cursor_images);
+	Cursor cursor = XcursorImagesLoadCursor(disp, cursor_images);
 	XcursorImagesDestroy(cursor_images);
-	return handle_buffer;
+	return cursor;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyCursor
-  (JNIEnv *env, jclass clazz, jlong display, jobject cursor_handle_buffer)
+  (JNIEnv *env, jclass clazz, jlong display, jlong cursor_ptr)
 {
 	Display *disp = (Display *)(intptr_t)display;
-	Cursor *cursor = (Cursor *)(*env)->GetDirectBufferAddress(env, cursor_handle_buffer);
-	XFreeCursor(disp, *cursor);
+	Cursor cursor = (Cursor)cursor_ptr;
+	XFreeCursor(disp, cursor);
 }

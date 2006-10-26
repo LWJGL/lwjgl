@@ -64,6 +64,7 @@ final class LinuxMouse {
 
 	private final long display;
 	private final long window;
+	private final long input_window;
 	private final long warp_atom;
 	private final IntBuffer query_pointer_buffer = BufferUtils.createIntBuffer(4);
 	private final ByteBuffer event_buffer = ByteBuffer.allocate(Mouse.EVENT_SIZE);
@@ -77,15 +78,11 @@ final class LinuxMouse {
 	private EventQueue event_queue;
 	private long last_event_nanos;
 
-	public LinuxMouse(long display, long window) throws LWJGLException {
+	public LinuxMouse(long display, long window, long input_window) throws LWJGLException {
 		this.display = display;
 		this.window = window;
-		LinuxDisplay.lockAWT();
-		try {
-			this.warp_atom = LinuxDisplay.nInternAtom(display, "_LWJGL", false);
-		} finally {
-			LinuxDisplay.unlockAWT();
-		}
+		this.input_window = input_window;
+		this.warp_atom = LinuxDisplay.nInternAtom(display, "_LWJGL", false);
 		reset();
 	}
 
@@ -138,7 +135,7 @@ final class LinuxMouse {
 	}
 
 	private void doWarpPointer(int center_x, int center_y) {
-		nSendWarpEvent(display, window, warp_atom, center_x, center_y);
+		nSendWarpEvent(display, input_window, warp_atom, center_x, center_y);
 		nWarpCursor(display, window, center_x, center_y);
 	}
 	private static native void nSendWarpEvent(long display, long window, long warp_atom, int center_x, int center_y);

@@ -423,11 +423,12 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGrabKeyboard(JNIEnv *
 	return XGrabKeyboard(disp, win, False, GrabModeAsync, GrabModeAsync, CurrentTime);
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGrabPointer(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGrabPointer(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr, jlong cursor_ptr) {
 	Display *disp = (Display *)(intptr_t)display_ptr;
 	Window win = (Window)window_ptr;
+	Cursor cursor = (Cursor)cursor_ptr;
 	int grab_mask = PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
-	return XGrabPointer(disp, win, False, grab_mask, GrabModeAsync, GrabModeAsync, win, None, CurrentTime);
+	return XGrabPointer(disp, win, False, grab_mask, GrabModeAsync, GrabModeAsync, win, cursor, CurrentTime);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetViewPort(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr, jint screen) {
@@ -444,25 +445,16 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUngrabPointer(JNIEnv 
 	return XUngrabPointer(disp, CurrentTime);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDefineCursor(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr, jobject cursor_handle) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDefineCursor(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr, jlong cursor_ptr) {
 	Display *disp = (Display *)(intptr_t)display_ptr;
 	Window win = (Window)window_ptr;
-	Cursor cursor;
-	if (cursor_handle != NULL)
-		cursor = *((Cursor *)(*env)->GetDirectBufferAddress(env, cursor_handle));
-	else
-		cursor = None;
+	Cursor cursor = (Cursor)cursor_ptr;
 	XDefineCursor(disp, win, cursor);
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateBlankCursor(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateBlankCursor(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr) {
 	Display *disp = (Display *)(intptr_t)display_ptr;
 	Window win = (Window)window_ptr;
-	jobject handle_buffer = newJavaManagedByteBuffer(env, sizeof(Cursor));
-	if (handle_buffer == NULL) {
-		return NULL;
-	}
-	Cursor *cursor = (Cursor *)(*env)->GetDirectBufferAddress(env, handle_buffer);
 	unsigned int best_width, best_height;
 	if (XQueryBestCursor(disp, win, 1, 1, &best_width, &best_height) == 0) {
 		throwException(env, "Could not query best cursor size");
@@ -475,9 +467,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateBlankCursor(
 	XFillRectangle(disp, mask, gc, 0, 0, best_width, best_height);
 	XFreeGC(disp, gc);
 	XColor dummy_color;
-	*cursor = XCreatePixmapCursor(disp, mask, mask, &dummy_color, &dummy_color, 0, 0);
+	Cursor cursor = XCreatePixmapCursor(disp, mask, mask, &dummy_color, &dummy_color, 0, 0);
 	XFreePixmap(disp, mask);
-	return handle_buffer;
+	return cursor;
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetInputFocus(JNIEnv *env, jclass unused, jlong display_ptr) {
