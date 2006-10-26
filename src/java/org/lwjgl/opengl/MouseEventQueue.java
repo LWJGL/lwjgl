@@ -78,10 +78,10 @@ class MouseEventQueue extends EventQueue implements MouseListener, MouseMotionLi
 	MouseEventQueue(Component component) {
 		super(Mouse.EVENT_SIZE);
 		this.component = component;
-		resetCursorToCenter();
 	}
 
 	public void register() {
+		resetCursorToCenter();
 		component.addMouseListener(this);
 		component.addMouseMotionListener(this);
 		component.addMouseWheelListener(this);
