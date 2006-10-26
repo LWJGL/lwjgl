@@ -294,11 +294,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	/* Mouse */
 	public boolean hasWheel() {
-		return true;
+		return AWTUtil.hasWheel();
 	}
 
 	public int getButtonCount() {
-		return MouseEventQueue.NUM_BUTTONS;
+		return AWTUtil.getButtonCount();
 	}
 
 	public void createMouse() throws LWJGLException {
@@ -336,39 +336,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private native void nGrabMouse(boolean grab);
 
 	public int getNativeCursorCapabilities() {
-		if (LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 4)) {
-			int cursor_colors = Toolkit.getDefaultToolkit().getMaximumCursorColors();
-			boolean supported = cursor_colors >= Short.MAX_VALUE && getMaxCursorSize() > 0;
-			int caps = supported ? org.lwjgl.input.Cursor.CURSOR_8_BIT_ALPHA | org.lwjgl.input.Cursor.CURSOR_ONE_BIT_TRANSPARENCY: 0;
-			return caps;
-		} else {
-			/* Return no capability in Mac OS X 10.3 and earlier , as there are two unsolved bugs (both reported to apple along with
-			   minimal test case):
-			   1. When a custom cursor (or some standard) java.awt.Cursor is assigned to a
-			   Componennt, it is reset to the default pointer cursor when the window is de-
-			   activated and the re-activated. The Cursor can not be reset to the custom cursor,
-			   with another setCursor.
-			   2. When the cursor is moving in the top pixel row (y = 0 in AWT coordinates) in fullscreen
-			   mode, no mouse moved events are reported, even though mouse pressed/released and dragged
-			   events are reported
-			 */
-			return 0;
-		}
+		return AWTUtil.getNativeCursorCapabilities();
 	}
 
 	public void setCursorPosition(int x, int y) {
-		try {
-			Robot robot = (Robot)AccessController.doPrivileged(new PrivilegedExceptionAction() {
-				public Object run() throws Exception {
-					return new Robot(frame.getGraphicsConfiguration().getDevice());
-				}
-			});
-			int transformed_x = frame.getX() + x;
-			int transformed_y = frame.getY() + frame.getHeight() - 1 - y;
-			robot.mouseMove(transformed_x, transformed_y);
-		} catch (PrivilegedActionException e) {
-			LWJGLUtil.log("Got exception while setting mouse cursor position: " + e);
-		}
+		AWTUtil.setCursorPosition(frame, x, y);
 	}
 
 	public void setNativeCursor(Object handle) throws LWJGLException {
@@ -377,13 +349,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public int getMinCursorSize() {
-		Dimension min_size = Toolkit.getDefaultToolkit().getBestCursorSize(0, 0);
-		return Math.max(min_size.width, min_size.height);
+		return AWTUtil.getMinCursorSize();
 	}
 
 	public int getMaxCursorSize() {
-		Dimension max_size = Toolkit.getDefaultToolkit().getBestCursorSize(10000, 10000);
-		return Math.min(max_size.width, max_size.height);
+		return AWTUtil.getMaxCursorSize();
 	}
 
 	/* Keyboard */
@@ -437,13 +407,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 */
 	/** Native cursor handles */
 	public Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
-		BufferedImage cursor_image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		int[] pixels = new int[images.remaining()];
-		int old_position = images.position();
-		images.get(pixels);
-		images.position(old_position);
-		cursor_image.setRGB(0, 0, width, height, pixels, 0, width);
-		return Toolkit.getDefaultToolkit().createCustomCursor(cursor_image, new Point(xHotspot, yHotspot), "LWJGL Custom cursor");
+		return AWTUtil.createCursor(width, height, xHotspot, yHotspot, numImages, images, delays);
 	}
 
 	public void destroyCursor(Object cursor_handle) {
