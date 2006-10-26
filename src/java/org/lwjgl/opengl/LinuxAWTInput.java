@@ -37,8 +37,6 @@ import java.nio.ByteBuffer;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 
-import java.awt.event.FocusEvent;
-
 /**
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
@@ -141,7 +139,7 @@ final class LinuxAWTInput extends AbstractAWTInput {
 	}
 
 	private void checkFocus() {
-		if (getCanvas().hasFocus()) {
+		if (getCanvas().isFocusOwner()) {
 			input_released = false;
 		} else {
 			input_released = true;
