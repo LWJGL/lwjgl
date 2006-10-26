@@ -589,4 +589,12 @@ final class WindowsDisplay implements DisplayImplementation {
 			return new WindowsDirectInput3(getDllInstance());
 		}
 	}
+
+	public int getWidth() {
+		return Display.getDisplayMode().getWidth();
+	}
+
+	public int getHeight() {
+		return Display.getDisplayMode().getHeight();
+	}
 }

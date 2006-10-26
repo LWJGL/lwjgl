@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2004 LWJGL Project
+ * Copyright (c) 2002-2006 LWJGL Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,27 +31,17 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.ByteBuffer;
+import org.lwjgl.LWJGLException;
 
 /**
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
- * @version $Revision$
- * $Id$
+ * @version $Revision: 2286 $
+ * $Id: AWTCanvasImplementation.java 2286 2006-03-23 19:32:21Z matzon $
  */
-abstract class LinuxPeerInfo extends PeerInfo {
-	public LinuxPeerInfo() {
-		super(createHandle());
-	}
-	private static native ByteBuffer createHandle();
-
-	public final long getDisplay() {
-		return nGetDisplay(getHandle());
-	}
-	private static native long nGetDisplay(ByteBuffer handle);
-
-	public final long getDrawable() {
-		return nGetDrawable(getHandle());
-	}
-	private static native long nGetDrawable(ByteBuffer handle);
+interface AWTCanvasInputImplementation extends InputImplementation {
+	void processInput(PeerInfo peer_info);
+	void update();
+	void init();
+	void destroy();
 }

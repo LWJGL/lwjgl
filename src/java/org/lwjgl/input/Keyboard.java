@@ -42,7 +42,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayImplementation;
+import org.lwjgl.opengl.InputImplementation;
 
 /**
  * <br>
@@ -264,7 +264,7 @@ public class Keyboard {
 	/** One time initialization */
 	private static boolean initialized;
 
-	private static DisplayImplementation implementation;
+	private static InputImplementation implementation;
 
 	/**
 	 * Keyboard cannot be constructed.
@@ -283,23 +283,31 @@ public class Keyboard {
 	}
 
 	/**
+	 * "Create" the keyboard with the given implementation. This is used
+	 * reflectively from AWTInputAdapter.
+	 *
+	 * @throws LWJGLException if the keyboard could not be created for any reason
+	 */
+	private static void create(InputImplementation impl) throws LWJGLException {
+		if (created)
+			throw new IllegalStateException("Destroy the Keyboard first.");
+		if (!initialized)
+			initialize();
+		implementation = impl;
+		implementation.createKeyboard();
+		created = true;
+		readBuffer = ByteBuffer.allocate(EVENT_SIZE*BUFFER_SIZE);
+		reset();
+	}
+
+	/**
 	 * "Create" the keyboard. The display must first have been created. The
 	 * reason for this is so the keyboard has a window to "focus" in.
 	 *
 	 * @throws LWJGLException if the keyboard could not be created for any reason
 	 */
 	public static void create() throws LWJGLException {
-		if (!Display.isCreated())
-			throw new IllegalStateException("Display must be created before you can create Keyboard");
-		if (!initialized)
-			initialize();
-		if (created)
-			return;
-		implementation = Mouse.getImplementation();
-		implementation.createKeyboard();
-		created = true;
-		readBuffer = ByteBuffer.allocate(EVENT_SIZE*BUFFER_SIZE);
-		reset();
+		create(Mouse.createImplementation());
 	}
 
 	private static void reset() {

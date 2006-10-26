@@ -31,28 +31,21 @@
  */
 
 /**
- * $Id$
+ * $Id: org_lwjgl_opengl_LinuxEvent.c 2598 2006-10-24 08:33:09Z elias_naur $
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
- * @version $Revision$
+ * @version $Revision: 2598 $
  */
 
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
 #include <jni.h>
-#include "org_lwjgl_opengl_LinuxPeerInfo.h"
-#include "context.h"
 #include "common_tools.h"
+#include "org_lwjgl_opengl_LinuxAWTInput.h"
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxPeerInfo_createHandle
-  (JNIEnv *env, jclass clazz) {
-	return newJavaManagedByteBuffer(env, sizeof(X11PeerInfo));
-}
-
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxPeerInfo_nGetDisplay(JNIEnv *env, jclass unused, jobject handle) {
-	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, handle);
-	return (jlong)(intptr_t)peer_info->display;
-}
-
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxPeerInfo_nGetDrawable(JNIEnv *env, jclass unused, jobject handle) {
-	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, handle);
-	return peer_info->drawable;
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxAWTInput_createInputOnlyWindow(JNIEnv *env, jclass unused, jlong display_ptr, jint screen) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	Window window = XCreateWindow(disp, RootWindow(disp, screen), 0, 0, 1, 1, 0, CopyFromParent, InputOnly, CopyFromParent, 0, NULL);
+	return window;
 }

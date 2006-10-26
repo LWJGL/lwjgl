@@ -40,8 +40,8 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
-import org.lwjgl.opengl.DisplayImplementation;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.InputImplementation;
 
 import java.lang.reflect.Method;
 import java.security.AccessController;
@@ -57,7 +57,7 @@ import java.security.PrivilegedActionException;
  * n buttons supported, n being a native limit. A scrolly wheel is also
  * supported, if one such is available. Movement is reported as delta from
  * last position or as an absolute position. If the window has been created
- * the absolute position will be clamped to 0 - Display (width | height)
+ * the absolute position will be clamped to 0 - width | height.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @author elias_naur <elias_naur@users.sourceforge.net>
@@ -134,10 +134,10 @@ public class Mouse {
 
 	private static boolean		isGrabbed;
 
-	private static DisplayImplementation implementation;
+	private static InputImplementation implementation;
   
-  /** Whether we're running windows - which need to manually update cursor animation */
-  private static final boolean isWindows = LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_WINDOWS;
+	/** Whether we're running windows - which need to manually update cursor animation */
+	private static final boolean isWindows = LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_WINDOWS;
 
 	/**
 	 * Mouse cannot be constructed.
@@ -220,13 +220,19 @@ public class Mouse {
 		readBuffer.position(readBuffer.limit());
 	}
 
-	static DisplayImplementation getImplementation() {
+	static InputImplementation getImplementation() {
+		return implementation;
+	}
+
+	static InputImplementation createImplementation() {
+		if (!Display.isCreated()) throw new IllegalStateException("Display must be created.");
+
 		/* Use reflection since we can't make Display.getImplementation
 		 * public
 		 */
 		try {
-			return (DisplayImplementation)AccessController.doPrivileged(new PrivilegedExceptionAction() {
-				public Object run() throws Exception{
+			return (InputImplementation)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws Exception {
 					Method getImplementation_method = Display.class.getDeclaredMethod("getImplementation", null);
 					getImplementation_method.setAccessible(true);
 					return getImplementation_method.invoke(null, null);
@@ -238,19 +244,17 @@ public class Mouse {
 	}
 
 	/**
-	 * "Create" the mouse. The display must first have been created.
-	 * Initially, the mouse is not grabbed and the delta values are reported
-	 * with respect to the center of the display.
+	 * "Create" the mouse with the given custom implementation.	This is used
+	 * reflectively by AWTInputAdapter.
 	 *
 	 * @throws LWJGLException if the mouse could not be created for any reason
 	 */
-	public static void create() throws LWJGLException {
-		if (!Display.isCreated()) throw new IllegalStateException("Display must be created prior to creating mouse");
-
+	private static void create(InputImplementation impl) throws LWJGLException {
+		if (created)
+			throw new IllegalStateException("Destroy the mouse first.");
 		if (!initialized)
 			initialize();
-		if (created) return;
-		implementation = getImplementation();
+		implementation = impl;
 		implementation.createMouse();
 		hasWheel = implementation.hasWheel();
 		created = true;
@@ -259,11 +263,22 @@ public class Mouse {
 		buttonCount = implementation.getButtonCount();
 		buttons = BufferUtils.createByteBuffer(buttonCount);
 		coord_buffer = BufferUtils.createIntBuffer(3);
-		if (currentCursor != null)
+		if (currentCursor != null && implementation.getNativeCursorCapabilities() != 0)
 			setNativeCursor(currentCursor);
 		readBuffer = ByteBuffer.allocate(EVENT_SIZE * BUFFER_SIZE);
 		readBuffer.limit(0);
 		setGrabbed(isGrabbed);
+	}
+
+	/**
+	 * "Create" the mouse. The display must first have been created.
+	 * Initially, the mouse is not grabbed and the delta values are reported
+	 * with respect to the center of the display.
+	 *
+	 * @throws LWJGLException if the mouse could not be created for any reason
+	 */
+	public static void create() throws LWJGLException {
+		create(createImplementation());
 	}
 
 	/**
@@ -327,8 +342,8 @@ public class Mouse {
 			x = poll_coord1;
 			y = poll_coord2;
 		}
-		x = Math.min(Display.getDisplayMode().getWidth() - 1, Math.max(0, x));
-		y = Math.min(Display.getDisplayMode().getHeight() - 1, Math.max(0, y));
+		x = Math.min(implementation.getWidth() - 1, Math.max(0, x));
+		y = Math.min(implementation.getHeight() - 1, Math.max(0, y));
 		dwheel += poll_dwheel;
 		read();
 	}
@@ -404,8 +419,8 @@ public class Mouse {
 				event_x = new_event_x;
 				event_y = new_event_y;
 			}
-			event_x = Math.min(Display.getDisplayMode().getWidth() - 1, Math.max(0, event_x));
-			event_y = Math.min(Display.getDisplayMode().getHeight() - 1, Math.max(0, event_y));
+			event_x = Math.min(implementation.getWidth() - 1, Math.max(0, event_x));
+			event_y = Math.min(implementation.getHeight() - 1, Math.max(0, event_y));
 			event_dwheel = readBuffer.getInt();
 			event_nanos = readBuffer.getLong();
 			return true;
@@ -476,8 +491,8 @@ public class Mouse {
 	}
 
 	/**
-	 * Retrieves the absolute position. If the Display has been created
-	 * x will be clamped to 0...width-1.
+	 * Retrieves the absolute position. It will be clamped to
+	 * 0...width-1.
 	 *
 	 * @return Absolute x axis position of mouse
 	 */
@@ -486,8 +501,8 @@ public class Mouse {
 	}
 
 	/**
-	 * Retrieves the absolute position. If the Display has been created
-	 * y will be clamped to 0...height-1.
+	 * Retrieves the absolute position. It will be clamped to
+	 * 0...height-1.
 	 *
 	 * @return Absolute y axis position of mouse
 	 */

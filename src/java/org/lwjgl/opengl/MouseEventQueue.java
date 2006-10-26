@@ -48,7 +48,7 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
 
-final class MouseEventQueue extends EventQueue implements MouseListener, MouseMotionListener, MouseWheelListener {
+class MouseEventQueue extends EventQueue implements MouseListener, MouseMotionListener, MouseWheelListener {
 	private static final int WHEEL_SCALE = 120;
 	public static final int NUM_BUTTONS = 3;
 
@@ -56,7 +56,6 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 
 	private boolean grabbed;
 
-	private final IntBuffer delta_buffer = BufferUtils.createIntBuffer(2);
 
 	/** The accumulated mouse deltas returned by poll() */
 	private int accum_dx;
@@ -107,11 +106,9 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 		return component.getHeight() - 1 - y;
 	}
 
-	private void resetCursorToCenter() {
+	protected void resetCursorToCenter() {
 		clearEvents();
 		accum_dx = accum_dy = 0;
-		/* Clear accumulated deltas */
-		((MacOSXDisplay)Display.getImplementation()).getMouseDeltas(delta_buffer);
 	}
 
 	private void putMouseEvent(byte button, byte state, int dz, long nanos) {
@@ -121,7 +118,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 			putMouseEventWithCoords(button, state, last_x, last_y, dz, nanos);
 	}
 
-	private void putMouseEventWithCoords(byte button, byte state, int coord1, int coord2, int dz, long nanos) {
+	protected void putMouseEventWithCoords(byte button, byte state, int coord1, int coord2, int dz, long nanos) {
 		event.clear();
 		event.put(button).put(state).putInt(coord1).putInt(coord2).putInt(dz).putLong(nanos);
 		event.flip();
@@ -149,11 +146,15 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 			return;
 		int dx = x - last_x;
 		int dy = y - last_y;
-		accum_dx += dx;
-		accum_dy += dy;
+		addDelta(dx, dy);
 		last_x = x;
 		last_y = y;
 		putMouseEventWithCoords((byte)-1, (byte)0, x, y, 0, nanos);
+	}
+
+	protected void addDelta(int dx, int dy) {
+		accum_dx += dx;
+		accum_dy += dy;
 	}
 
 	public void mouseClicked(MouseEvent e) {
@@ -242,19 +243,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 		putMouseEvent((byte)-1, (byte)0, amount, nanos);
 	}
 
-	private void updateDeltas(long nanos) {
-		if (!grabbed)
-			return;
-		synchronized ( this ) {
-			((MacOSXDisplay)Display.getImplementation()).getMouseDeltas(delta_buffer);
-			int dx = delta_buffer.get(0);
-			int dy = -delta_buffer.get(1);
-			if ( dx != 0 || dy != 0 ) {
-				putMouseEventWithCoords((byte)-1, (byte)0, dx, dy, 0, nanos);
-				accum_dx += dx;
-				accum_dy += dy;
-			}
-		}
+	protected void updateDeltas(long nanos) {
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent e) {

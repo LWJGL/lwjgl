@@ -46,7 +46,7 @@ interface AWTCanvasImplementation {
 	/**
 	 * Return an opaque handle to the canvas peer information required to create a context from it.
 	 */
-	public PeerInfo createPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) throws LWJGLException;
+	PeerInfo createPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) throws LWJGLException;
 
 	/**
 	 * Find a proper GraphicsConfiguration from the given GraphicsDevice and PixelFormat.
@@ -54,5 +54,13 @@ interface AWTCanvasImplementation {
 	 * @return A GraphicsConfiguration matching the given GraphicsConfiguration and PixelFormat.
 	 * @throws LWJGLException if no suitable configuration could be found.
 	 */
-	public GraphicsConfiguration findConfiguration(GraphicsDevice device, PixelFormat pixel_format) throws LWJGLException;
+	GraphicsConfiguration findConfiguration(GraphicsDevice device, PixelFormat pixel_format) throws LWJGLException;
+
+	/**
+	 * Create an AWTCanvasInputImplementation for a specified AWTGLCanvas.
+	 *
+	 * @return A platform specific AWTCanvasInputImplementation.
+	 * @param canvas An AWTGLCanvas
+	 */
+	AWTCanvasInputImplementation createInput(AWTGLCanvas canvas) throws LWJGLException;
 }

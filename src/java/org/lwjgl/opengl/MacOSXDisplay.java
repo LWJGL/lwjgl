@@ -303,7 +303,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public void createMouse() throws LWJGLException {
 		MacOSXGLCanvas canvas = frame.getCanvas();
-		this.mouse_queue = new MouseEventQueue(canvas);
+		this.mouse_queue = new MacOSXMouseEventQueue(canvas);
 		mouse_queue.register();
 	}
 
@@ -519,5 +519,13 @@ final class MacOSXDisplay implements DisplayImplementation {
 		frame.setIconImage(img);
 		
 		return 1;
+	}
+
+	public int getWidth() {
+		return Display.getDisplayMode().getWidth();
+	}
+
+	public int getHeight() {
+		return Display.getDisplayMode().getHeight();
 	}
 }

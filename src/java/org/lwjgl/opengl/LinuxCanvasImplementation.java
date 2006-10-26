@@ -119,4 +119,8 @@ final class LinuxCanvasImplementation implements AWTCanvasImplementation {
 		}
 	}
 	private static native int nFindVisualIDFromFormat(long display, int screen, PixelFormat pixel_format) throws LWJGLException;
+
+	public AWTCanvasInputImplementation createInput(AWTGLCanvas canvas) throws LWJGLException {
+		return new LinuxAWTInput(canvas);
+	}
 }

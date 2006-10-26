@@ -31,27 +31,46 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.ByteBuffer;
-
 /**
- *
- * @author elias_naur <elias_naur@users.sourceforge.net>
- * @version $Revision$
- * $Id$
+ * An AWT implementation of a LWJGL compatible Mouse event queue.
+ * @author elias_naur
  */
-abstract class LinuxPeerInfo extends PeerInfo {
-	public LinuxPeerInfo() {
-		super(createHandle());
-	}
-	private static native ByteBuffer createHandle();
 
-	public final long getDisplay() {
-		return nGetDisplay(getHandle());
-	}
-	private static native long nGetDisplay(ByteBuffer handle);
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.Component;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
-	public final long getDrawable() {
-		return nGetDrawable(getHandle());
+import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Mouse;
+
+final class MacOSXMouseEventQueue extends MouseEventQueue {
+	private final IntBuffer delta_buffer = BufferUtils.createIntBuffer(2);
+
+	MacOSXMouseEventQueue(Component component) {
+		super(component);
 	}
-	private static native long nGetDrawable(ByteBuffer handle);
+
+	protected void resetCursorToCenter() {
+		super.resetCursorToCenter();
+		/* Clear accumulated deltas */
+		((MacOSXDisplay)Display.getImplementation()).getMouseDeltas(delta_buffer);
+	}
+
+	protected void updateDeltas(long nanos) {
+		super.updateDeltas(nanos);
+		synchronized ( this ) {
+			((MacOSXDisplay)Display.getImplementation()).getMouseDeltas(delta_buffer);
+			int dx = delta_buffer.get(0);
+			int dy = -delta_buffer.get(1);
+			if ( dx != 0 || dy != 0 ) {
+				putMouseEventWithCoords((byte)-1, (byte)0, dx, dy, 0, nanos);
+				addDelta(dx, dy);
+			}
+		}
+	}
 }

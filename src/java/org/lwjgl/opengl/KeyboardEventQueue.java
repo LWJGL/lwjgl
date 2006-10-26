@@ -32,8 +32,7 @@
 package org.lwjgl.opengl;
 
 /**
- * A java implementation of a LWJGL compatible Keyboard event queue.
- * Currently only used by the Mac OS X implementation.
+ * An AWT implementation of a LWJGL compatible Keyboard event queue.
  * @author elias_naur
  */
 

@@ -50,9 +50,9 @@ import org.lwjgl.input.Keyboard;
 final class LinuxDisplay implements DisplayImplementation {
 	/* X11 constants */
 	public final static int GrabSuccess = 0;
-	private final static int AutoRepeatModeOff  = 0;
-	private final static int AutoRepeatModeOn = 1;
-	private final static int AutoRepeatModeDefault = 2;
+	public final static int AutoRepeatModeOff  = 0;
+	public final static int AutoRepeatModeOn = 1;
+	public final static int AutoRepeatModeDefault = 2;
 	public final static int None = 0;
 
 	/** Window mode enum */
@@ -754,7 +754,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			releaseInput();
 		}
 	}
-	private static native long nGetInputFocus(long display);
+	static native long nGetInputFocus(long display);
 
 	private void releaseInput() {
 		if (isLegacyFullscreen() || input_released)
@@ -789,7 +789,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			}
 		}
 	}
-	private static native void nSetRepeatMode(long display, int mode);
+	static native void nSetRepeatMode(long display, int mode);
 
 	public void grabMouse(boolean new_grab) {
 		lockAWT();
@@ -1054,4 +1054,12 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	
 	private static native void nSetWindowIcon(long display, long window, ByteBuffer icon, int icons_size, int width, int height);
+
+	public int getWidth() {
+		return Display.getDisplayMode().getWidth();
+	}
+
+	public int getHeight() {
+		return Display.getDisplayMode().getHeight();
+	}
 }
