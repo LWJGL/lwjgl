@@ -225,8 +225,6 @@ public class Mouse {
 	}
 
 	static InputImplementation createImplementation() {
-		if (!Display.isCreated()) throw new IllegalStateException("Display must be created.");
-
 		/* Use reflection since we can't make Display.getImplementation
 		 * public
 		 */
@@ -278,6 +276,8 @@ public class Mouse {
 	 * @throws LWJGLException if the mouse could not be created for any reason
 	 */
 	public static void create() throws LWJGLException {
+		if (!Display.isCreated()) throw new IllegalStateException("Display must be created.");
+
 		create(createImplementation());
 	}
 

@@ -307,6 +307,8 @@ public class Keyboard {
 	 * @throws LWJGLException if the keyboard could not be created for any reason
 	 */
 	public static void create() throws LWJGLException {
+		if (!Display.isCreated()) throw new IllegalStateException("Display must be created.");
+
 		create(Mouse.createImplementation());
 	}
 

@@ -141,7 +141,10 @@ public class Cursor {
 	 * @return A bit mask with native cursor capabilities.
 	 */
 	public static int getCapabilities() {
-		return Mouse.getImplementation().getNativeCursorCapabilities();
+		if (Mouse.getImplementation() != null)
+			return Mouse.getImplementation().getNativeCursorCapabilities();
+		else
+			return Mouse.createImplementation().getNativeCursorCapabilities();
 	}
 
 	/**
