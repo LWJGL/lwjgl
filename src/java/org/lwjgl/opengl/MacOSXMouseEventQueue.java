@@ -43,6 +43,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.Component;
 import java.awt.Rectangle;
+import java.awt.Point;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -84,8 +85,9 @@ final class MacOSXMouseEventQueue extends MouseEventQueue {
 	void warpCursor() {
 		if (isGrabbed()) {
 			Rectangle bounds = getComponent().getBounds();
-			int x = bounds.x + bounds.width/2;
-			int y = bounds.y + bounds.height/2;
+			Point location_on_screen = getComponent().getLocationOnScreen();
+			int x = location_on_screen.x + bounds.width/2;
+			int y = location_on_screen.y + bounds.height/2;
 			nWarpCursor(x, y);
 		}
 	}
