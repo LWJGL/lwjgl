@@ -38,6 +38,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 
 import java.awt.Cursor;
+import java.awt.Robot;
 
 /**
  *
@@ -47,6 +48,7 @@ import java.awt.Cursor;
  */
 abstract class AbstractAWTInput implements AWTCanvasInputImplementation {
 	private AWTGLCanvas canvas;
+	private Robot robot;
 
 	private KeyboardEventQueue keyboard_queue;
 	private MouseEventQueue mouse_queue;
@@ -54,6 +56,7 @@ abstract class AbstractAWTInput implements AWTCanvasInputImplementation {
 
 	protected AbstractAWTInput(AWTGLCanvas canvas) {
 		this.canvas = canvas;
+		this.robot = AWTUtil.createRobot(canvas);
 	}
 
 	protected synchronized MouseEventQueue getMouseEventQueue() {
@@ -117,7 +120,7 @@ abstract class AbstractAWTInput implements AWTCanvasInputImplementation {
 	}
 
 	public void setCursorPosition(int x, int y) {
-		AWTUtil.setCursorPosition(canvas, x, y);
+		AWTUtil.setCursorPosition(canvas, robot, x, y);
 	}
 
 	public void setNativeCursor(Object handle) throws LWJGLException {

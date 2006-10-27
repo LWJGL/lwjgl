@@ -69,6 +69,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private static final int GAMMA_LENGTH = 256;
 
 	private MacOSXFrame frame;
+	private Robot robot;
 	private MacOSXMouseEventQueue mouse_queue;
 	private KeyboardEventQueue keyboard_queue;
 	private java.awt.DisplayMode requested_mode;
@@ -85,6 +86,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		close_requested = false;
 		try {
 			frame = new MacOSXFrame(mode, requested_mode, fullscreen, x, y);
+			robot = AWTUtil.createRobot(frame);
 		} catch (LWJGLException e) {
 			destroyWindow();
 			throw e;
@@ -319,7 +321,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void setCursorPosition(int x, int y) {
-		AWTUtil.setCursorPosition(frame, x, y);
+		AWTUtil.setCursorPosition(frame, robot, x, y);
 	}
 
 	public void setNativeCursor(Object handle) throws LWJGLException {

@@ -92,18 +92,25 @@ final class AWTUtil {
 		}
 	}
 
-	public static void setCursorPosition(final Component component, int x, int y) {
+	public static Robot createRobot(final Component component) {
 		try {
 			Robot robot = (Robot)AccessController.doPrivileged(new PrivilegedExceptionAction() {
 				public Object run() throws Exception {
 					return new Robot(component.getGraphicsConfiguration().getDevice());
 				}
 			});
+			return robot;
+		} catch (PrivilegedActionException e) {
+			LWJGLUtil.log("Got exception while creating robot: " + e.getCause());
+			return null;
+		}
+	}
+
+	public static void setCursorPosition(Component component, Robot robot, int x, int y) {
+		if (robot != null) {
 			int transformed_x = component.getX() + x;
 			int transformed_y = component.getY() + component.getHeight() - 1 - y;
 			robot.mouseMove(transformed_x, transformed_y);
-		} catch (PrivilegedActionException e) {
-			LWJGLUtil.log("Got exception while setting mouse cursor position: " + e);
 		}
 	}
 
