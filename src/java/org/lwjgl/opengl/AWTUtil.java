@@ -108,8 +108,9 @@ final class AWTUtil {
 
 	public static void setCursorPosition(Component component, Robot robot, int x, int y) {
 		if (robot != null) {
-			int transformed_x = component.getX() + x;
-			int transformed_y = component.getY() + component.getHeight() - 1 - y;
+			Point location = component.getLocationOnScreen();
+			int transformed_x = location.x + x;
+			int transformed_y = location.y + component.getHeight() - 1 - y;
 			robot.mouseMove(transformed_x, transformed_y);
 		}
 	}

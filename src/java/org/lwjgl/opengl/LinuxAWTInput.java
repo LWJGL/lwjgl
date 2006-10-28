@@ -117,7 +117,7 @@ final class LinuxAWTInput extends AbstractAWTInput {
 		try {
 			LinuxPeerInfo linux_peer_info = (LinuxPeerInfo)peer_info;
 			long new_window = linux_peer_info.getDrawable();
-			if (new_window != cached_window) {
+			if (cached_mouse == null || new_window != cached_window) {
 				ungrabInput();
 				cached_window = new_window;
 				try {

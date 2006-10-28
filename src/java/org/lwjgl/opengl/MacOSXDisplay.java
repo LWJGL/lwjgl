@@ -321,7 +321,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void setCursorPosition(int x, int y) {
-		AWTUtil.setCursorPosition(frame, robot, x, y);
+		AWTUtil.setCursorPosition(frame.getCanvas(), robot, x, y);
 	}
 
 	public void setNativeCursor(Object handle) throws LWJGLException {
