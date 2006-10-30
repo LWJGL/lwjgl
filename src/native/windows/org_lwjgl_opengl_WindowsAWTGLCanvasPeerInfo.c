@@ -51,4 +51,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsAWTGLCanvasPeerInfo_nInitHan
 	AWTSurfaceLock *surface = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
 	JAWT_Win32DrawingSurfaceInfo *win32_dsi = (JAWT_Win32DrawingSurfaceInfo *)surface->dsi->platformInfo;
 	peer_info->drawable_hdc = win32_dsi->hdc;
+	peer_info->u.hwnd = win32_dsi->hwnd;
 }

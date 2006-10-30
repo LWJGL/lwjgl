@@ -52,4 +52,9 @@ abstract class WindowsPeerInfo extends PeerInfo {
 		nChoosePixelFormat(getHandle(), origin_x, origin_y, pixel_format, pixel_format_caps, use_hdc_bpp, support_window, support_pbuffer, double_buffered);
 	}
 	private static native void nChoosePixelFormat(ByteBuffer peer_info_handle, int origin_x, int origin_y, PixelFormat pixel_format, IntBuffer pixel_format_caps, boolean use_hdc_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException;
+
+	public final long getHwnd() {
+		return nGetHwnd(getHandle());
+	}
+	private static native long nGetHwnd(ByteBuffer handle);
 }

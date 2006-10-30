@@ -47,4 +47,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplayPeerInfo_nInitDC
   (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
 	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	peer_info->drawable_hdc = getCurrentHDC();
+	peer_info->u.hwnd = getCurrentHWND();
 }

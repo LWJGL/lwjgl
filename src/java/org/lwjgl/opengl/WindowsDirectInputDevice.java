@@ -76,14 +76,14 @@ abstract class WindowsDirectInputDevice {
 	public void setDataFormat(int type) throws LWJGLException {
 		int ret = setDataFormat(di_device, type);
 		if (ret != WindowsDirectInput.DI_OK)
-			throw new LWJGLException("Failed to set data format (" + ret + ")");
+			throw new LWJGLException("Failed to set data format (" + Integer.toHexString(ret) + ")");
 	}
 	protected abstract int setDataFormat(long di_device, int type);
 
 	public void setCooperateLevel(long hwnd, int flags) throws LWJGLException {
 		int ret = setCooperativeLevel(di_device, hwnd, flags);
 		if (ret != WindowsDirectInput.DI_OK)
-			throw new LWJGLException("Failed to set cooperative level (" + ret + ")");
+			throw new LWJGLException("Failed to set cooperative level (" + Integer.toHexString(ret) + ")");
 	}
 	protected abstract int setCooperativeLevel(long di_device, long hwnd, int flags);
 
@@ -95,7 +95,7 @@ abstract class WindowsDirectInputDevice {
 	public void setBufferSize(int buffer_size) throws LWJGLException {
 		int ret = setBufferSize(di_device, buffer_size);
 		if (ret != WindowsDirectInput.DI_OK && ret != WindowsDirectInput.DI_PROPNOEFFECT && ret != WindowsDirectInput.DI_POLLEDDEVICE)
-			throw new LWJGLException("Failed to set buffer size (" + ret + ")");
+			throw new LWJGLException("Failed to set buffer size (" + Integer.toHexString(ret) + ")");
 		int event_buffer_size = getEventSize()*buffer_size;
 		event_buffer = BufferUtils.createByteBuffer(event_buffer_size);
 	}

@@ -508,6 +508,7 @@
 		</javah>
 		
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/windows" force="yes">
+			<class name="org.lwjgl.opengl.WindowsAWTInput" />
 			<class name="org.lwjgl.opengl.WindowsKeyboard" />
 			<class name="org.lwjgl.opengl.WindowsDirectInput8" />
 			<class name="org.lwjgl.opengl.WindowsDirectInputDevice8" />

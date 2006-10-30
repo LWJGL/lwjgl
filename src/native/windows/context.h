@@ -47,12 +47,15 @@
 #include "extgl_wgl.h"
 
 typedef struct {
-	struct {
-		HPBUFFERARB pbuffer;
-		// Contains the function pointers that
-		// created the pbuffer
-		WGLExtensions extensions;
-	} pbuffer;
+	union {
+		HWND hwnd;
+		struct {
+			HPBUFFERARB pbuffer;
+			// Contains the function pointers that
+			// created the pbuffer
+			WGLExtensions extensions;
+		} pbuffer;
+	} u;
 	HDC drawable_hdc;
 } WindowsPeerInfo;
 

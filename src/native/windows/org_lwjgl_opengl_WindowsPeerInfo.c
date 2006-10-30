@@ -58,3 +58,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsPeerInfo_nChoosePixelFormat
 	// Let it throw
 	applyPixelFormat(env, peer_info->drawable_hdc, pixel_format_id);
 }
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsPeerInfo_nGetHwnd(JNIEnv *env, jclass unused, jobject peer_info_handle) {
+	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	return peer_info->u.hwnd;
+}

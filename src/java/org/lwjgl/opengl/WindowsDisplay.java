@@ -289,6 +289,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		peer_info = new WindowsDisplayPeerInfo(pixel_format);
 		return peer_info;
 	}
+
 	public void update() {
 		nUpdate();
 		if (did_maximize) {
@@ -581,7 +582,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		}
 	}
 
-	private static WindowsDirectInput createDirectInput() throws LWJGLException {
+	static WindowsDirectInput createDirectInput() throws LWJGLException {
 		try {
 			return new WindowsDirectInput8(getDllInstance());
 		} catch (LWJGLException e) {

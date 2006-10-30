@@ -66,7 +66,7 @@ final class WindowsCanvasImplementation implements AWTCanvasImplementation {
 	}
 
 	public AWTCanvasInputImplementation createInput(AWTGLCanvas canvas) throws LWJGLException {
-		throw new UnsupportedOperationException();
+		return new WindowsAWTInput(canvas);
 	}
 
 	public PeerInfo createPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) throws LWJGLException {
