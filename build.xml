@@ -22,8 +22,7 @@
 
 	<!-- Files to include in the lwjgl.jar file -->
 	<fileset id="lwjgl.fileset" dir="${lwjgl.bin}">
-		<include name="**" />
-		<exclude name="**.*" />
+		<include name="org/**/*" />
 		<exclude name="org/lwjgl/fmod3/**" />
 		<exclude name="org/lwjgl/test/**" />
 		<exclude name="org/lwjgl/util/**" />
