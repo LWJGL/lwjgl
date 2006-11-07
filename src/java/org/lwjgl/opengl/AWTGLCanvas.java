@@ -283,43 +283,45 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	 * be overridden to do GL operations.
 	 */
 	public final void paint(Graphics g) {
-		try {
-			if (peer_info == null) {
-				this.peer_info = implementation.createPeerInfo(this, pixel_format);
-			}
-			peer_info.lockAndGetHandle();
+		synchronized (SYNC_LOCK) {
 			try {
-				if (context == null) {
-					this.context = new Context(peer_info, drawable != null ? drawable.getContext() : null);
-					first_run = true;
+				if (peer_info == null) {
+					this.peer_info = implementation.createPeerInfo(this, pixel_format);
 				}
-				
-				if (reentry_count == 0)
-					context.makeCurrent();
-				reentry_count++;
+				peer_info.lockAndGetHandle();
 				try {
-					if (update_context) {
-						context.update();
-						update_context = false;
+					if (context == null) {
+						this.context = new Context(peer_info, drawable != null ? drawable.getContext() : null);
+						first_run = true;
 					}
-					AWTCanvasInputImplementation current_input = awt_input;
-					if (current_input != null)
-						current_input.processInput(peer_info);
-					if (first_run) {
-						first_run = false;
-						initGL();
-					}
-					paintGL();
-				} finally {
-					reentry_count--;
+
 					if (reentry_count == 0)
-						Context.releaseCurrentContext();
+						context.makeCurrent();
+					reentry_count++;
+					try {
+						if (update_context) {
+							context.update();
+							update_context = false;
+						}
+						AWTCanvasInputImplementation current_input = awt_input;
+						if (current_input != null)
+							current_input.processInput(peer_info);
+						if (first_run) {
+							first_run = false;
+							initGL();
+						}
+						paintGL();
+					} finally {
+						reentry_count--;
+						if (reentry_count == 0)
+							Context.releaseCurrentContext();
+					}
+				} finally {
+					peer_info.unlock();
 				}
-			} finally {
-				peer_info.unlock();
+			} catch (LWJGLException e) {
+				throw new RuntimeException(e);
 			}
-		} catch (LWJGLException e) {
-			throw new RuntimeException(e);
 		}
 	}
 
