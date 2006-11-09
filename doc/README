@@ -4,7 +4,7 @@ Unless otherwise stated, all files distributed or in CVS are covered by
 the license as stated in the LICENSE file. If you have not received this
 file, please download it from the cvs server.
 
-Please note that DevIL and OpenAL are distributed in the optional package (lwjgl_optional-<version>.zip). Their license is also included.
+Please note that DevIL and FMOD are distributed in the optional package (lwjgl_optional-<version>.zip). Their license is also included.
 If you want to use FMOD you must download the binary from their site: http://fmod.org. Please
 note that FMOD is a commercial offering and you must accept their license before using.
 
