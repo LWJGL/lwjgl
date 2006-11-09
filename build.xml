@@ -345,6 +345,13 @@
 		</jar>
 	</target>
 
+	<target name="applettest" depends="applet">
+		<exec executable="appletviewer">
+			<arg value="-J-Djava.security.policy=applet/appletviewer.policy"/>
+			<arg path="applet/applet.html"/>
+		</exec>
+	</target>
+
 	<target name="runtest" depends="all">
 		<fail message="test.mainclass is not set. Use 'ant -Dtest.mainclass=&lt;main-class&gt; runtest'" unless="test.mainclass"/>
 		<condition property="native_path" value="libs/win32">

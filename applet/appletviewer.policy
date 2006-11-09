@@ -1,0 +1,5 @@
+keystore "lwjglkeystore";
+
+grant SignedBy "lwjgl" {
+  permission java.security.AllPermission;
+};
