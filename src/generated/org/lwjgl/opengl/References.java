@@ -9,6 +9,7 @@ class References {
 	java.nio.Buffer ARB_vertex_shader_glVertexAttribPointerARB_buffer;
 	java.nio.Buffer ATI_element_array_glElementPointerATI_pPointer;
 	java.nio.Buffer EXT_fog_coord_glFogCoordPointerEXT_data;
+	java.nio.Buffer EXT_gpu_shader4_glVertexAttribIPointerEXT_buffer;
 	java.nio.Buffer EXT_secondary_color_glSecondaryColorPointerEXT_pPointer;
 	java.nio.Buffer EXT_vertex_shader_glVariantPointerEXT_pAddr;
 	java.nio.Buffer EXT_vertex_weighting_glVertexWeightPointerEXT_pPointer;
@@ -29,6 +30,7 @@ class References {
 		this.ARB_vertex_shader_glVertexAttribPointerARB_buffer = references.ARB_vertex_shader_glVertexAttribPointerARB_buffer;
 		this.ATI_element_array_glElementPointerATI_pPointer = references.ATI_element_array_glElementPointerATI_pPointer;
 		this.EXT_fog_coord_glFogCoordPointerEXT_data = references.EXT_fog_coord_glFogCoordPointerEXT_data;
+		this.EXT_gpu_shader4_glVertexAttribIPointerEXT_buffer = references.EXT_gpu_shader4_glVertexAttribIPointerEXT_buffer;
 		this.EXT_secondary_color_glSecondaryColorPointerEXT_pPointer = references.EXT_secondary_color_glSecondaryColorPointerEXT_pPointer;
 		this.EXT_vertex_shader_glVariantPointerEXT_pAddr = references.EXT_vertex_shader_glVariantPointerEXT_pAddr;
 		this.EXT_vertex_weighting_glVertexWeightPointerEXT_pPointer = references.EXT_vertex_weighting_glVertexWeightPointerEXT_pPointer;
@@ -49,6 +51,7 @@ class References {
 		this.ARB_vertex_shader_glVertexAttribPointerARB_buffer = null;
 		this.ATI_element_array_glElementPointerATI_pPointer = null;
 		this.EXT_fog_coord_glFogCoordPointerEXT_data = null;
+		this.EXT_gpu_shader4_glVertexAttribIPointerEXT_buffer = null;
 		this.EXT_secondary_color_glSecondaryColorPointerEXT_pPointer = null;
 		this.EXT_vertex_shader_glVariantPointerEXT_pAddr = null;
 		this.EXT_vertex_weighting_glVertexWeightPointerEXT_pPointer = null;
