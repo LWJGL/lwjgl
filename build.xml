@@ -370,8 +370,27 @@
 			<jvmarg value="-Djava.library.path=${native_path}"/>
 		</java>
 	</target>
-
+	
 	<target name="applet" depends="jars">
+		<antcall target="-applet">
+		    <param name="keystore" value="applet/lwjglkeystore"/>
+			<param name="alias" value="lwjgl"/>			
+			<param name="password" value="123456"/>			
+		  </antcall>
+	</target>
+	
+	<target name="applet-release" depends="jars">
+		<input 	message="Please type the password for the keystore" addproperty="sign.pwd"/>
+
+		<antcall target="-applet">
+		    <param name="keystore" value="signing/matzon_java_code_signing.keystore"/>
+			<param name="alias" value="oddlabs_java_code_signing"/>
+			<param name="password" value="${sign.pwd}"/>
+		  </antcall>
+	</target>
+
+	<target name="-applet">
+
 		<!-- Create lwjgl_applet.jar -->
 		<jar destfile="applet/lwjgl_applet.jar" taskname="lwjgl_applet.jar">
 			<fileset refid="lwjgl_applet.fileset" />
@@ -385,7 +404,7 @@
 				<include name="fmod.dll"/>
 			</fileset>
 		</jar>
-		<signjar jar="applet/windows_natives.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		<signjar jar="applet/windows_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		
 		<jar destfile="applet/linux_natives.jar" taskname="linux_natives.jar">
 			<fileset dir="${lwjgl.lib}/linux">
@@ -394,7 +413,7 @@
 				<include name="libfmod.so"/>
 			</fileset>
 		</jar>
-		<signjar jar="applet/linux_natives.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		<signjar jar="applet/linux_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 			
 		<jar destfile="applet/macosx_natives.jar" taskname="macosx_natives.jar">
 			<fileset dir="${lwjgl.lib}/macosx">
@@ -403,7 +422,7 @@
 				<include name="libfmod.dylib"/>
 			</fileset>
 		</jar>
-		<signjar jar="applet/macosx_natives.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
+		<signjar jar="applet/macosx_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		
 		<!-- add it to a natives jar -->
 		<jar destfile="applet/natives.jar" taskname="natives.jar">
@@ -426,11 +445,11 @@
 		<zip destfile="applet/res.jar">
 		  <zipfileset dir="${lwjgl.res}" includes="Footsteps.wav, ILtest.tga, Missing_you.mod"/>
 		</zip>
-		<signjar jar="applet/lwjgl.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
-		<signjar jar="applet/jinput.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
-		<signjar jar="applet/lwjgl_util_applet.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
-		<signjar jar="applet/lwjgl_fmod3.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
-		<signjar jar="applet/lwjgl_devil.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>		
+		<signjar jar="applet/lwjgl.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="applet/jinput.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="applet/lwjgl_util_applet.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="applet/lwjgl_fmod3.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="applet/lwjgl_devil.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>		
 	</target>
 
 	<!-- Distributes files  -->
@@ -742,8 +761,28 @@
 		<move file="${lwjgl.src.native}/common/fmod3/liblwjgl-fmod3.jnilib" tofile="${lwjgl.lib}/macosx/liblwjgl-fmod3.jnilib" />
   </target>
 	
+	
+	<target name="webstart_demo" depends="jars">
+		<antcall target="-webstart_demo">
+		    <param name="keystore" value="applet/lwjglkeystore"/>
+			<param name="alias" value="lwjgl"/>			
+			<param name="password" value="123456"/>			
+		  </antcall>
+	</target>
+	
+	<target name="webstart_demo-release" depends="jars">
+		<input 	message="Please type the password for the keystore" addproperty="sign.pwd"/>
+
+		<antcall target="-webstart_demo">
+		    <param name="keystore" value="signing/matzon_java_code_signing.keystore"/>
+			<param name="alias" value="oddlabs_java_code_signing"/>
+			<param name="password" value="${sign.pwd}"/>
+		  </antcall>
+	</target>	
+	
 	<!-- -->
-	<target name="sign" description="Using released files, creates the necessary files used for jnlp demos">
+	<target name="-webstart_demo" description="Using released files, creates the necessary files used for jnlp demos">
+	
 		<!-- delete existing temp -->
 		<delete dir="${lwjgl.temp}"/>		
 		
@@ -761,6 +800,10 @@
 			</fileset>
 		</move>
 		
+		<!-- copy fmod dependent files -->
+		<copy file="${lwjgl.lib}/win32/fmod.dll" tofile="${lwjgl.temp}/jnlp/temp/native/win32/fmod.dll"/>
+		<copy file="${lwjgl.lib}/linux/libfmod.so" tofile="${lwjgl.temp}/jnlp/temp/native/linux/libfmod.so"/>
+		
 		<!-- move relevant files to root -->
 		<move todir="${lwjgl.temp}/jnlp/" flatten="true">
 			<fileset dir="${lwjgl.temp}/jnlp/temp">
@@ -777,22 +820,16 @@
 		<jar destfile="${lwjgl.temp}/jnlp/media.jar" basedir="${lwjgl.res}"/>	
 	
 		<!-- sign 'em -->
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 		alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_devil.jar" 	alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_fmod3.jar" 	alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_test.jar" 	alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_util.jar" 	alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
-		<signjar jar="${lwjgl.temp}/jnlp/media.jar" 		alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
-		<signjar jar="${lwjgl.temp}/jnlp/native_linux.jar" 	alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
-		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
-		<signjar jar="${lwjgl.temp}/jnlp/native_win32.jar" 	alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
-		<signjar jar="${lwjgl.temp}/jnlp/jinput.jar" 		alias="lwjgl" keystore="applet/lwjglkeystore" storepass="123456"/>
-	</target>
-	
-	<!-- -->
-	<target name="signapplet">
-		<input message="Please enter store password:" addproperty="store.pwd" />
-		<signjar jar="applet_loader.jar" storetype="pkcs12" keystore="matzon.p12" alias="Brian Matzon's TDC ID" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_devil.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_fmod3.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_test.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_util.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/media.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_linux.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_win32.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/jinput.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 	</target>
 	
 	<target name="changelog">
