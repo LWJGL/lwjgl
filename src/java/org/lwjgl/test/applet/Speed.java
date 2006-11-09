@@ -37,37 +37,11 @@ import org.lwjgl.opengl.GL11;
 
 public class Speed extends AWTGLCanvas implements Test {
 
-	float	angle	= 0;
+	private float	angle	= 0;
+	private long startTime = System.currentTimeMillis() + 5000;
+	private long fps = 0;
 
 	public Speed() throws LWJGLException {
-		Thread t = new Thread() {
-
-			public void run() {
-				long startTime = System.currentTimeMillis() + 5000;
-				long fps = 0;
-
-				while (true) {
-					if (isVisible())
-						repaint();
-					try {
-						Thread.sleep(1);
-					} catch (InterruptedException inte) {
-						/* */
-					}
-					if (startTime > System.currentTimeMillis()) {
-						fps++;
-					} else {
-						long timeUsed = 5000 + (startTime - System.currentTimeMillis());
-						startTime = System.currentTimeMillis() + 5000;
-						System.out.println(fps + " frames in " + (float) (timeUsed / 1000f) + " seconds = "
-								+ (fps / (timeUsed / 1000f)));
-						fps = 0;
-					}					
-				}
-			}
-		};
-		t.setDaemon(true);
-		t.start();
 	}
 
 	public void paintGL() {
@@ -92,8 +66,19 @@ public class Speed extends AWTGLCanvas implements Test {
 
 		try {
 			swapBuffers();
+			if (isVisible())
+				repaint();
 		} catch (Exception e) {/*OK*/
 		}
+		if (startTime > System.currentTimeMillis()) {
+			fps++;
+		} else {
+			long timeUsed = 5000 + (startTime - System.currentTimeMillis());
+			startTime = System.currentTimeMillis() + 5000;
+			System.out.println(fps + " frames in " + (float) (timeUsed / 1000f) + " seconds = "
+					+ (fps / (timeUsed / 1000f)));
+			fps = 0;
+		}					
 	}
 
 	public void start() {

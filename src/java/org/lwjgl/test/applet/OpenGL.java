@@ -41,26 +41,18 @@ public class OpenGL extends AWTGLCanvas implements Test {
 	float	angle	= 0;
 
 	public OpenGL() throws LWJGLException {
-		Thread t = new Thread() {
-
-			public void run() {
-				while (true) {
-					if (isVisible())
-						repaint();
-					Display.sync(60);
-				}
-			}
-		};
-		t.setDaemon(true);
-		t.start();
 	}
 
-	public void paintGL() {
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+	public void initGL() {
 		GL11.glMatrixMode(GL11.GL_PROJECTION_MATRIX);
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0, 640, 0, 480, 1, -1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW_MATRIX);
+		setVSyncEnabled(true);
+	}
+
+	public void paintGL() {
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef(320, 240, 0.0f);
@@ -77,6 +69,8 @@ public class OpenGL extends AWTGLCanvas implements Test {
 
 		try {
 			swapBuffers();
+			if (isVisible())
+				repaint();
 		} catch (Exception e) {/*OK*/
 		}
 	}
