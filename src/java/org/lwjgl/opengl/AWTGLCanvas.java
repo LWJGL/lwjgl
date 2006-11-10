@@ -320,7 +320,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 					peer_info.unlock();
 				}
 			} catch (LWJGLException e) {
-				throw new RuntimeException(e);
+				LWJGLUtil.log("Failed to lock surface, skipping paint(): " + e);
 			}
 		}
 	}
