@@ -94,11 +94,4 @@ public final class AWTInputAdapter {
 			awt_input = null;
 		}
 	}
-
-	public static synchronized void update() {
-		if (awt_input == null)
-			throw new IllegalStateException("You need to create() the adapter.");
-		awt_input.update();
-		Display.pollDevices();
-	}
 }

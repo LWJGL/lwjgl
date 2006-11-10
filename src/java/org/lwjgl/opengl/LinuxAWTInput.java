@@ -132,6 +132,7 @@ final class LinuxAWTInput extends AbstractAWTInput {
 			checkFocus();
 			if (!input_grabbed && shouldGrab())
 				grabInput(new_window);
+			update();
 		} finally {
 			LinuxDisplay.unlockAWT();
 		}
@@ -150,20 +151,15 @@ final class LinuxAWTInput extends AbstractAWTInput {
 		return !input_released && isGrabbed();
 	}
 
-	public synchronized void update() {
-		LinuxDisplay.lockAWT();
-		try {
-			while (LinuxEvent.getPending(display) > 0) {
-				event.nextEvent(display);
-				if (shouldGrab()) {
-					long event_window = event.getWindow();
-					boolean processed = event.filterEvent(event_window) ||
-						cached_mouse.filterEvent(isGrabbed(), shouldGrab(), event)/* ||
-						cached_keyboard.filterEvent(event)*/;
-				}
+	private void update() {
+		while (LinuxEvent.getPending(display) > 0) {
+			event.nextEvent(display);
+			if (shouldGrab()) {
+				long event_window = event.getWindow();
+				boolean processed = event.filterEvent(event_window) ||
+					cached_mouse.filterEvent(isGrabbed(), shouldGrab(), event);/* ||
+						cached_keyboard.filterEvent(event) */
 			}
-		} finally {
-			LinuxDisplay.unlockAWT();
 		}
 	}
 

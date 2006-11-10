@@ -129,9 +129,6 @@ final class WindowsAWTInput extends AbstractAWTInput {
 		}
 	}
 
-	public void update() {
-	}
-
 	public synchronized void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons) {
 		if (isGrabbed()) {
 			if (cached_mouse != null)

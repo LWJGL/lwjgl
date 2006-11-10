@@ -63,7 +63,4 @@ final class MacOSXAWTInput extends AbstractAWTInput {
 
 	public void destroy() {
 	}
-
-	public void update() {
-	}
 }

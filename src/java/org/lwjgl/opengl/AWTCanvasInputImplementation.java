@@ -41,7 +41,6 @@ import org.lwjgl.LWJGLException;
  */
 interface AWTCanvasInputImplementation extends InputImplementation {
 	void processInput(PeerInfo peer_info);
-	void update();
 	void init();
 	void destroy();
 }

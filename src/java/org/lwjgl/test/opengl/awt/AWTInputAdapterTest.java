@@ -140,11 +140,12 @@ public class AWTInputAdapterTest extends Frame {
 							+ (fps / (timeUsed / 1000f)));
 					fps = 0;
 				}
-				AWTInputAdapter.update();
+				Mouse.poll();
 				while (Mouse.next()) {
 					view_roty += Mouse.getEventDX()*.1;
 					view_rotx -= Mouse.getEventDY()*.1;
 				}
+				Keyboard.poll();
 				while (Keyboard.next()) {
 					if (Keyboard.getEventKeyState()) {
 						switch (Keyboard.getEventKey()) {
