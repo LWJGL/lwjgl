@@ -191,8 +191,10 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	 * @see java.awt.Component#removeNotify()
 	 */
 	public void removeNotify() {
-		destroyContext();
-		super.removeNotify();
+		synchronized (SYNC_LOCK) {
+			destroyContext();
+			super.removeNotify();
+		}
 	} 
 	
 	/**
@@ -284,6 +286,8 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	 */
 	public final void paint(Graphics g) {
 		synchronized (SYNC_LOCK) {
+			if (!isDisplayable())
+				return;
 			try {
 				if (peer_info == null) {
 					this.peer_info = implementation.createPeerInfo(this, pixel_format);
