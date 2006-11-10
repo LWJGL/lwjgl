@@ -54,6 +54,7 @@ final class WindowsAWTInput extends AbstractAWTInput {
 
 	private long cached_hwnd;
 	private WindowsMouse cached_mouse;
+	private WindowsKeyboard cached_keyboard;
 	private boolean has_grabbed;
 
 	public WindowsAWTInput(AWTGLCanvas canvas) throws LWJGLException {
@@ -81,7 +82,9 @@ final class WindowsAWTInput extends AbstractAWTInput {
 				cached_hwnd = hwnd;
 				if (cached_mouse != null)
 					cached_mouse.destroy();
-				cached_mouse = new WindowsMouse(WindowsDisplay.createDirectInput(), hwnd);
+				WindowsDirectInput dinput = WindowsDisplay.createDirectInput();
+				cached_mouse = new WindowsMouse(dinput, hwnd);
+				cached_keyboard = new WindowsKeyboard(dinput, hwnd);
 			}
 			if (isGrabbed() && getCanvas().getCursor() != blank_cursor) {
 				cached_cursor = getCanvas().getCursor();
@@ -143,5 +146,21 @@ final class WindowsAWTInput extends AbstractAWTInput {
 				cached_mouse.read(buffer);
 		} else
 			super.readMouse(buffer);
+	}
+
+	public synchronized void readKeyboard(ByteBuffer buffer) {
+		if (isGrabbed()) {
+			if (cached_keyboard != null)
+				cached_keyboard.read(buffer);
+		} else
+			super.readKeyboard(buffer);
+	}
+
+	public synchronized void pollKeyboard(ByteBuffer keyDownBuffer) {
+		if (isGrabbed()) {
+			if (cached_keyboard != null)
+				cached_keyboard.poll(keyDownBuffer);
+		} else
+			super.pollKeyboard(keyDownBuffer);
 	}
 }
