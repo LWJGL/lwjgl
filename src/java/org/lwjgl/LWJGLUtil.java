@@ -404,24 +404,24 @@ public class LWJGLUtil {
 	 * @param classloader Classloader to use
 	 * @return Absolute path to library if found, otherwise null
 	 */
-	public static String getPathFromClassLoader(String libname, ClassLoader classloader) {
+	public static String getPathFromClassLoader(final String libname, final ClassLoader classloader) {
 		try {
 			log("getPathFromClassLoader: searching for: " + libname);
-			Object o = classloader;
-			Class c = o.getClass();
+			Class c = classloader.getClass();
 			while (c != null) {
 				final Class clazz = c;
 				try {
-					Method findLibrary = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+					return (String)AccessController.doPrivileged(new PrivilegedExceptionAction() {
 						public Object run() throws Exception {
-							Method m = clazz.getDeclaredMethod("findLibrary", new Class[]{String.class});
-							m.setAccessible(true);
-							return m;
+							Method findLibrary = clazz.getDeclaredMethod("findLibrary", new Class[]{String.class});
+							findLibrary.setAccessible(true);
+							Object[] arguments = new Object[] {libname};
+							String path = (String)findLibrary.invoke(classloader, arguments);
+							return path;
 						}
 					});
-					Object[] arguments = new Object[] {libname};
-					return (String)findLibrary.invoke(o, arguments);
 				} catch (PrivilegedActionException e) {
+					log("Failed to locate findLibrary method: " + e.getCause());
 					c = c.getSuperclass();
 				}
 			}
