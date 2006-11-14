@@ -748,7 +748,6 @@
 	
 		<!-- check for required properties -->
 		<property environment="env"/>
-		<fail message="Missing AL path environment property" unless="env.AL"/>		
 		<fail message="Missing FMOD path environment property" unless="env.FMOD"/>			
 	
 		<exec executable="make" dir="${lwjgl.src.native}/common/devil">
