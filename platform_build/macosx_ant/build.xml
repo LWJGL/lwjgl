@@ -43,6 +43,7 @@
 		<property name="universal_sdkroot" location="/Developer/SDKs/MacOSX10.4u.sdk"/>
 		<property name="legacy_sdkroot" location="/Developer/SDKs/MacOSX10.3.9.sdk"/>
 		<property name="universal_flags" value="-isysroot ${universal_sdkroot} -arch i386"/>
+		<property name="legacy_flags" value="-arch ppc"/>
 		<antcall target="compile">
 			<param name="dstdir" location="intel"/>
 			<param name="compiler" value="gcc-4.0"/>
@@ -53,7 +54,7 @@
 			<param name="dstdir" location="ppc"/>
 			<param name="compiler" value="gcc-3.3"/>
 			<param name="sdkroot" location="${legacy_sdkroot}"/>
-			<param name="cflags" value=""/>
+			<param name="cflags" value="${legacy_flags}"/>
 		</antcall>
 		<exec vmlauncher="false" executable="../../platform_build/macosx_ant/build-symbol-list" output="lwjgl.symbols" failonerror="true">
 			<arg path="intel"/>
