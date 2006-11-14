@@ -69,7 +69,7 @@
 			<param name="objdir" location="ppc"/>
 			<param name="libname" value="liblwjgl-ppc.jnilib"/>
 			<param name="linker" value="gcc-3.3"/>
-			<param name="linkerflags" value=""/>
+			<param name="linkerflags" value="${legacy_flags}"/>
 		</antcall>
 		<apply dir="." parallel="true" executable="lipo" os="Mac OS X" failonerror="true" skipemptyfilesets="true" >
 			<arg value="-create"/>
