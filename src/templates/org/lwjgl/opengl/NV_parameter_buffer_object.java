@@ -52,12 +52,6 @@ public interface NV_parameter_buffer_object {
 	int GL_GEOMETRY_PROGRAM_PARAMETER_BUFFER_NV = 0x8DA3;
 	int GL_FRAGMENT_PROGRAM_PARAMETER_BUFFER_NV = 0x8DA4;
 
-	void glBindBufferRangeNV(@GLenum int target, @GLuint int index, @GLuint int buffer, @GLintptr long offset, @GLsizeiptr long size);
-
-	void glBindBufferOffsetNV(@GLenum int target, @GLuint int index, @GLuint int buffer, @GLintptr long offset);
-
-	void glBindBufferBaseNV(@GLenum int target, @GLuint int index, @GLuint int buffer);
-
 	@StripPostfix("params")
 	void glProgramBufferParametersfvNV(@GLenum int target, @GLuint int buffer, @GLuint int index,
 									   @AutoSize(value = "params", expression = " >> 2") @GLsizei int count, @Const FloatBuffer params);
@@ -69,9 +63,5 @@ public interface NV_parameter_buffer_object {
 	@StripPostfix("params")
 	void glProgramBufferParametersIuivNV(@GLenum int target, @GLuint int buffer, @GLuint int index,
 										 @AutoSize(value = "params", expression = " >> 2") @GLuint int count, @Const @GLuint IntBuffer params);
-
-	// TODO: This is weird and breaks the generator, re-examine when the spec's final version is out
-	//@StripPostfix("data")
-	//void glGetIntegerIndexedvEXT(@GLenum int value, @GLuint int index, @Check("4") @GLboolean ByteBuffer data);
 
 }

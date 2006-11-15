@@ -1040,9 +1040,6 @@ public class ContextCapabilities {
 	long NV_occlusion_query_glEndOcclusionQueryNV_pointer;
 	long NV_occlusion_query_glGetOcclusionQueryuivNV_pointer;
 	long NV_occlusion_query_glGetOcclusionQueryivNV_pointer;
-	long NV_parameter_buffer_object_glBindBufferRangeNV_pointer;
-	long NV_parameter_buffer_object_glBindBufferOffsetNV_pointer;
-	long NV_parameter_buffer_object_glBindBufferBaseNV_pointer;
 	long NV_parameter_buffer_object_glProgramBufferParametersfvNV_pointer;
 	long NV_parameter_buffer_object_glProgramBufferParametersIivNV_pointer;
 	long NV_parameter_buffer_object_glProgramBufferParametersIuivNV_pointer;
@@ -2288,9 +2285,6 @@ public class ContextCapabilities {
 
 	private boolean NV_parameter_buffer_object_initNativeFunctionAddresses() {
 		return 
-			(NV_parameter_buffer_object_glBindBufferRangeNV_pointer = GLContext.getFunctionAddress("glBindBufferRangeNV")) != 0 &&
-			(NV_parameter_buffer_object_glBindBufferOffsetNV_pointer = GLContext.getFunctionAddress("glBindBufferOffsetNV")) != 0 &&
-			(NV_parameter_buffer_object_glBindBufferBaseNV_pointer = GLContext.getFunctionAddress("glBindBufferBaseNV")) != 0 &&
 			(NV_parameter_buffer_object_glProgramBufferParametersfvNV_pointer = GLContext.getFunctionAddress("glProgramBufferParametersfvNV")) != 0 &&
 			(NV_parameter_buffer_object_glProgramBufferParametersIivNV_pointer = GLContext.getFunctionAddress("glProgramBufferParametersIivNV")) != 0 &&
 			(NV_parameter_buffer_object_glProgramBufferParametersIuivNV_pointer = GLContext.getFunctionAddress("glProgramBufferParametersIuivNV")) != 0;

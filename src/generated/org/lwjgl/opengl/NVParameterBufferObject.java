@@ -26,27 +26,6 @@ public final class NVParameterBufferObject {
 	}
 
 
-	public static void glBindBufferRangeNV(int target, int index, int buffer, long offset, long size) {
-		long function_pointer = GLContext.getCapabilities().NV_parameter_buffer_object_glBindBufferRangeNV_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
-		nglBindBufferRangeNV(target, index, buffer, offset, size, function_pointer);
-	}
-	private static native void nglBindBufferRangeNV(int target, int index, int buffer, long offset, long size, long function_pointer);
-
-	public static void glBindBufferOffsetNV(int target, int index, int buffer, long offset) {
-		long function_pointer = GLContext.getCapabilities().NV_parameter_buffer_object_glBindBufferOffsetNV_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
-		nglBindBufferOffsetNV(target, index, buffer, offset, function_pointer);
-	}
-	private static native void nglBindBufferOffsetNV(int target, int index, int buffer, long offset, long function_pointer);
-
-	public static void glBindBufferBaseNV(int target, int index, int buffer) {
-		long function_pointer = GLContext.getCapabilities().NV_parameter_buffer_object_glBindBufferBaseNV_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
-		nglBindBufferBaseNV(target, index, buffer, function_pointer);
-	}
-	private static native void nglBindBufferBaseNV(int target, int index, int buffer, long function_pointer);
-
 	public static void glProgramBufferParametersNV(int target, int buffer, int index, FloatBuffer params) {
 		long function_pointer = GLContext.getCapabilities().NV_parameter_buffer_object_glProgramBufferParametersfvNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
