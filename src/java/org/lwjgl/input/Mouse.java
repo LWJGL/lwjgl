@@ -249,7 +249,7 @@ public class Mouse {
 	 */
 	private static void create(InputImplementation impl) throws LWJGLException {
 		if (created)
-			throw new IllegalStateException("Destroy the mouse first.");
+			return;
 		if (!initialized)
 			initialize();
 		implementation = impl;

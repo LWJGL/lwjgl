@@ -290,7 +290,7 @@ public class Keyboard {
 	 */
 	private static void create(InputImplementation impl) throws LWJGLException {
 		if (created)
-			throw new IllegalStateException("Destroy the Keyboard first.");
+			return;
 		if (!initialized)
 			initialize();
 		implementation = impl;
