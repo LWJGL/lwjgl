@@ -120,7 +120,7 @@ class JInputController implements Controller {
 	 */
 	public String getName() {
 		String name = target.getName();
-		return name.substring(0,name.length()/2);
+		return name;
 	}
 
 	/*
