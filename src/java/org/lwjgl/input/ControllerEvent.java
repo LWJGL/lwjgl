@@ -25,22 +25,36 @@ class ControllerEvent {
 	private boolean xaxis;
 	/** True if this event was caused by the y axis */
 	private boolean yaxis;
+	/** The time stamp of this event */
+	private long timeStamp;
 	
 	/**
 	 * Create a new event
 	 * 
 	 * @param source The source of the event
+	 * @param timeStamp The time stamp given for this event
 	 * @param type The type of control generating this event
 	 * @param index The index of the input that generated the event
 	 * @param xaxis True if this event was caused by the x-axis
 	 * @param yaxis True if this event was caused by the y-axis
 	 */
-	public ControllerEvent(Controller source,int type,int index,boolean xaxis,boolean yaxis) {
+	public ControllerEvent(Controller source,long timeStamp, int type,int index,boolean xaxis,boolean yaxis) {
 		this.source = source;
+		this.timeStamp = timeStamp;
 		this.type = type;
 		this.index = index;
 		this.xaxis = xaxis;
 		this.yaxis = yaxis;
+	}
+	
+	/**
+	 * Get the time stamp given for this event. As with nanoTime()
+	 * this value means nothing other than giving ordering
+	 * 
+	 * @return The time stamp given for this event
+	 */
+	public long getTimeStamp() {
+		return timeStamp;
 	}
 	
 	/**

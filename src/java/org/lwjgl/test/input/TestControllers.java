@@ -142,6 +142,7 @@ public class TestControllers extends JPanel {
 
 			while (Controllers.next()) {
 				System.out.println("Event Fired: ");
+				System.out.println("\t"+Controllers.getEventNanoseconds());
 				System.out.println("\t"+Controllers.getEventSource()+":"+Controllers.getEventControlIndex()+":"+Controllers.isEventButton());
 				System.out.println("\t"+Controllers.isEventXAxis()+":"+Controllers.isEventYAxis());
 			}

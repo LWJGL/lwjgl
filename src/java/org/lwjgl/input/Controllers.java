@@ -235,6 +235,15 @@ public class Controllers {
 	}
 	
 	/**
+	 * Get the timestamp assigned to the current event
+	 * 
+	 * @return The timestamp assigned ot the current event
+	 */
+	public static long getEventNanoseconds() {
+		return event.getTimeStamp();
+	}
+	
+	/**
 	 * Add an event to the stack of events that have been caused
 	 * 
 	 * @param event The event to add to the list

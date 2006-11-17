@@ -3,6 +3,8 @@ package org.lwjgl.input;
 import java.util.ArrayList;
 
 import net.java.games.input.Component;
+import net.java.games.input.Event;
+import net.java.games.input.EventQueue;
 
 /**
  * A wrapper round a JInput controller that attempts to make the interface
@@ -159,68 +161,60 @@ class JInputController implements Controller {
 	public void poll() {
 		target.poll();
 		
-		// read buttons to update events
-		for (int i=0;i<getButtonCount();i++) {
-			Component button = (Component) buttons.get(i);
-			
-			float data = button.getPollData();
+		Event event = new Event();
+		EventQueue queue = target.getEventQueue();
+		
+		while (queue.getNextEvent(event)) {
+			// handle button event
+			if (buttons.contains(event.getComponent())) {
+				Component button = event.getComponent();
+				int buttonIndex = buttons.indexOf(button);
+				buttonState[buttonIndex] = event.getValue() != 0;
 
-			if (buttonState[i] != (data != 0)) {
 				// fire button pressed event
-				Controllers.addEvent(new ControllerEvent(this,ControllerEvent.BUTTON,i,false,false));
+				Controllers.addEvent(new ControllerEvent(this,event.getNanos(),ControllerEvent.BUTTON,buttonIndex,false,false));
 			}
 			
-			buttonState[i] = data != 0;
-		}
-
-		// read povs to update events
-		for (int i=0;i<pov.size();i++) {
-			Component p = (Component) pov.get(i);
-			
-			float data = p.getPollData();
-
-			if (povValues[i] != data) {
+			// handle pov events
+			if (pov.contains(event.getComponent())) {
+				Component povComponent = event.getComponent();
+				int povIndex = pov.indexOf(povComponent);
 				float prevX = getPovX();
 				float prevY = getPovY();
-				
-				povValues[i] = data;
-				
+				povValues[povIndex] = event.getValue();
+
 				if (prevX != getPovX()) {
-					Controllers.addEvent(new ControllerEvent(this,ControllerEvent.POVX,0,false,false));
+					Controllers.addEvent(new ControllerEvent(this,event.getNanos(),ControllerEvent.POVX,0,false,false));
 				}
 				if (prevY != getPovY()) {
-					Controllers.addEvent(new ControllerEvent(this,ControllerEvent.POVY,0,false,false));
+					Controllers.addEvent(new ControllerEvent(this,event.getNanos(),ControllerEvent.POVY,0,false,false));
 				}
 			}
 			
-			povValues[i] = data;
-		}
-		
-		// read axis to update events
-		for (int i=0;i<getAxisCount();i++) {
-			Component axis = (Component) axes.get(i);
-			
-			float value = axis.getPollData();
-			
-			// fixed dead zone since most axis don't report it :(
-			if (Math.abs(value) < deadZones[i]) {
-				value = 0;
-			}
-			if (Math.abs(value) < axis.getDeadZone()) {
-				value = 0;
-			}
-			if (Math.abs(value) > axesMax[i]) {
-				axesMax[i] = Math.abs(value);
-			}
-			
-			// normalize the value based on maximum value read in the past
-			value /= axesMax[i];
-			
-			if (axesValue[i] != value) {
+			// handle axis updates
+			if (axes.contains(event.getComponent())) {
+				Component axis = event.getComponent();
+				int axisIndex = axes.indexOf(axis);
+				float value = axis.getPollData();
+				
+				// fixed dead zone since most axis don't report it :(
+				if (Math.abs(value) < deadZones[axisIndex]) {
+					value = 0;
+				}
+				if (Math.abs(value) < axis.getDeadZone()) {
+					value = 0;
+				}
+				if (Math.abs(value) > axesMax[axisIndex]) {
+					axesMax[axisIndex] = Math.abs(value);
+				}
+				
+				// normalize the value based on maximum value read in the past
+				value /= axesMax[axisIndex];
 				// fire event
-				Controllers.addEvent(new ControllerEvent(this,ControllerEvent.AXIS,i,i == xaxis,i == yaxis));
+				Controllers.addEvent(new ControllerEvent(this,event.getNanos(),ControllerEvent.AXIS,axisIndex,
+														 axisIndex == xaxis,axisIndex == yaxis));
+				axesValue[axisIndex] = value;
 			}
-			axesValue[i] = value;
 		}
 	}
 
