@@ -10,9 +10,7 @@
 #endif
 #include "org_lwjgl_devil_ILNative.h";
 
-static const char* VERSION = "1.0beta3";
-
-/*
+ /*
  * Class:     org_lwjgl_devil_ILNative
  * Method:    getNativeLibraryVersion
  * Signature: ()I

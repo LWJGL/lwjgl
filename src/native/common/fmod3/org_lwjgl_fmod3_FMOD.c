@@ -33,8 +33,6 @@
 #include "org_lwjgl_fmod3_FMOD.h"
 #include "extfmod3.h"
 
-static const char* VERSION = "1.0beta3";
-
 /*
  * Class:     org_lwjgl_fmod3_FMOD
  * Method:    getNativeLibraryVersion
