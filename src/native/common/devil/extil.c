@@ -8,16 +8,17 @@
  #include <libgen.h>
  static void* devILhandle;
 #endif
+#include "org_lwjgl_devil_ILNative.h";
 
 static const char* VERSION = "1.0beta3";
 
 /*
  * Class:     org_lwjgl_devil_ILNative
  * Method:    getNativeLibraryVersion
- * Signature: ()Ljava/lang/String;
+ * Signature: ()I
  */
-JNIEXPORT jstring JNICALL Java_org_lwjgl_devil_ILNative_getNativeLibraryVersion(JNIEnv *env, jclass clazz) {
-  return NewStringNative(env, VERSION);
+JNIEXPORT jint JNICALL Java_org_lwjgl_devil_ILNative_getNativeLibraryVersion(JNIEnv *env, jclass clazz) {
+  return org_lwjgl_devil_ILNative_JNI_VERSION;
 }
 
 /**
