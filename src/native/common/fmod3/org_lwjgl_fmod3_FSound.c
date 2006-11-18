@@ -1391,7 +1391,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1SetTime(JNIE
 * Signature: (C)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1CD_1OpenTray(JNIEnv * env, jclass clazz, jchar drive, jboolean open) {
-#ifdef _MACOSX
+#ifdef __APPLE__ && __MACH__
   return false;
 #else
   return fmod_instance->FSOUND_CD_OpenTray(drive, open);

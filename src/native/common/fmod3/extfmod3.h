@@ -36,10 +36,10 @@
 #include <jni.h>
 #include "../common_tools.h"
 
-#ifdef _MACOSX
-#include "fmoddyn_mac.h"
+#ifdef __APPLE__ && __MACH__
+	#include "fmoddyn_mac.h"
 #else
-#include "fmoddyn.h"
+	#include "fmoddyn.h"
 #endif
 #include "fmod_errors.h"
 
