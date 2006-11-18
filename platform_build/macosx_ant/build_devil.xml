@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<project name="OS X Native code" basedir="../../bin/devil" default="nativelibrary">
+	<property name="native" location="../../src/native"/>
+
+	<target name="init">
+		<mkdir dir="ppc"/>
+		<mkdir dir="intel"/>
+	</target>
+	
+	<target name="clean">
+		<delete failonerror="false">
+			<fileset dir="intel"/>
+			<fileset dir="ppc"/>
+			<fileset dir="." includes="liblwjgl-devil.jnilib"/>
+			<fileset dir="." includes="devil.symbols"/>
+		</delete>
+	</target>
+
+	<target name="compile">
+		<apply dir="${dstdir}" executable="${compiler}" os="Mac OS X" skipemptyfilesets="true" failonerror="true" dest="${dstdir}">
+			<arg line="${cflags} -O2 -Wall -c -fPIC -I${sdkroot}/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers -I${native}/common"/>
+			<!-- Map from *.m and *.c to .o -->
+			<mapper type="regexp" from="^(.*)\.(c)" to="\1.o"/>
+			<fileset dir="${native}/common" includes="common_tools.c"/>
+			<fileset dir="${native}/common/devil" includes="*.c"/>
+		</apply>
+	</target>
+	
+	<target name="link">
+		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
+			<arg line="${linkerflags} -exported_symbols_list ../devil.symbols -dynamiclib -o ${libname} -framework Foundation -framework AppKit -framework JavaVM -framework Carbon"/>
+			<fileset dir="${objdir}" includes="*.o"/>
+		</apply>
+		<apply dir="${objdir}" executable="strip" os="Mac OS X" failonerror="true">
+			<arg line="-S -X"/>
+			<fileset dir="." file="${libname}"/>
+		</apply>
+	</target>
+	
+	<target name="nativelibrary" depends="init">
+		<property name="universal_sdkroot" location="/Developer/SDKs/MacOSX10.4u.sdk"/>
+		<property name="legacy_sdkroot" location="/Developer/SDKs/MacOSX10.3.9.sdk"/>
+		<property name="universal_flags" value="-isysroot ${universal_sdkroot} -arch i386"/>
+		<property name="legacy_flags" value="-arch ppc"/>
+		<antcall target="compile">
+			<param name="dstdir" location="intel"/>
+			<param name="compiler" value="gcc-4.0"/>
+			<param name="sdkroot" location="${universal_sdkroot}"/>
+			<param name="cflags" value="${universal_flags}"/>
+		</antcall>
+		<antcall target="compile">
+			<param name="dstdir" location="ppc"/>
+			<param name="compiler" value="gcc-3.3"/>
+			<param name="sdkroot" location="${legacy_sdkroot}"/>
+			<param name="cflags" value="${legacy_flags}"/>
+		</antcall>
+		<exec vmlauncher="false" executable="../../platform_build/macosx_ant/build-symbol-list" output="devil.symbols" failonerror="true">
+			<arg path="intel"/>
+		</exec>
+		<antcall target="link">
+			<param name="objdir" location="intel"/>
+			<param name="libname" value="liblwjgl-devil-intel.jnilib"/>
+			<param name="linker" value="gcc-4.0"/>
+			<param name="linkerflags" value="${universal_flags}"/>
+		</antcall>
+		<antcall target="link">
+			<param name="objdir" location="ppc"/>
+			<param name="libname" value="liblwjgl-devil-ppc.jnilib"/>
+			<param name="linker" value="gcc-3.3"/>
+			<param name="linkerflags" value="${legacy_flags}"/>
+		</antcall>
+		<apply dir="." parallel="true" executable="lipo" os="Mac OS X" failonerror="true" skipemptyfilesets="true" >
+			<arg value="-create"/>
+			<srcfile/>
+			<arg value="-output"/>
+			<arg path="liblwjgl-devil.jnilib"/>
+			<fileset file="ppc/liblwjgl-devil-ppc.jnilib"/>
+			<fileset file="intel/liblwjgl-devil-intel.jnilib"/>
+		</apply>
+	</target>
+</project>
