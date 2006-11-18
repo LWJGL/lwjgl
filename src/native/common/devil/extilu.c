@@ -5,6 +5,7 @@
 #else
  #include <dlfcn.h>
  #include "extilu.h"
+ #include <libgen.h>
  static void* devILUhandle;
 #endif
 
@@ -58,10 +59,18 @@ bool extilu_Open(JNIEnv *env, jobjectArray ilPaths) {
 #ifdef _WIN32
 		devILUhandle = LoadLibrary(path_str);
 #else
-		devILUhandle = dlopen(path_str, RTLD_LAZY);
+		char* directoryName = dirname(path_str);
+		char* fileName = basename(path_str);
+		char* currentDirectory = getwd(NULL);
+		if(directoryName != NULL) {
+			chdir(directoryName);
+		} 
+		devILUhandle = dlopen(fileName, RTLD_LAZY);
 		if(devILUhandle == NULL) {
-			printfDebug("dlopen failure: %s", dlerror());
+			printfDebug("dlopen failure: %s\n\n\n", dlerror());
 		}
+		chdir(currentDirectory);
+		free(currentDirectory);
 #endif
 		if (devILUhandle != NULL) {
 			printfDebug("Found ilu at '%s'\n", path_str);

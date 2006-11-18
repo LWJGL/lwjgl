@@ -5,6 +5,7 @@
 #else
  #include <dlfcn.h>
  #include "extilut.h"
+ #include <libgen.h>
  static void* devILUThandle;
 #endif
 
@@ -58,10 +59,18 @@ bool extilut_Open(JNIEnv *env, jobjectArray ilPaths) {
 #ifdef _WIN32
 		devILUThandle = LoadLibrary(path_str);
 #else
-		devILUThandle = dlopen(path_str, RTLD_LAZY);
+		char* directoryName = dirname(path_str);
+		char* fileName = basename(path_str);
+		char* currentDirectory = getwd(NULL);
+		if(directoryName != NULL) {
+			chdir(directoryName);
+		} 
+		devILUThandle = dlopen(fileName, RTLD_LAZY);
 		if(devILUThandle == NULL) {
-			printfDebug("dlopen failure: %s", dlerror());
+			printfDebug("dlopen failure: %s\n\n\n", dlerror());
 		}
+		chdir(currentDirectory);
+		free(currentDirectory);
 #endif
 		if (devILUThandle != NULL) {
 			printfDebug("Found ilut at '%s'\n", path_str);
