@@ -38,10 +38,10 @@ static const char* VERSION = "1.0beta3";
 /*
  * Class:     org_lwjgl_fmod3_FMOD
  * Method:    getNativeLibraryVersion
- * Signature: ()Ljava/lang/String;
+ * Signature: ()I
  */
-JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FMOD_getNativeLibraryVersion(JNIEnv * env, jclass clazz) {
-  return NewStringNative(env, VERSION);
+JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FMOD_getNativeLibraryVersion(JNIEnv * env, jclass clazz) {
+  return org_lwjgl_fmod3_FMOD_JNI_VERSION;
 }
 
 /*
