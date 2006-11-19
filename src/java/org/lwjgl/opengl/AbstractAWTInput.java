@@ -59,8 +59,12 @@ abstract class AbstractAWTInput implements AWTCanvasInputImplementation {
 		this.robot = AWTUtil.createRobot(canvas);
 	}
 
-	protected synchronized MouseEventQueue getMouseEventQueue() {
+	protected MouseEventQueue getMouseEventQueue() {
 		return mouse_queue;
+	}
+
+	protected KeyboardEventQueue getKeyboardEventQueue() {
+		return keyboard_queue;
 	}
 
 	public synchronized void grabMouse(boolean grab) {

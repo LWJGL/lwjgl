@@ -115,9 +115,15 @@ final class WindowsAWTInput extends AbstractAWTInput {
 	private void grab(boolean grab) {
 		if (has_grabbed != grab) {
 			cached_mouse.grab(grab);
+			cached_keyboard.grab(grab);
 			has_grabbed = grab;
-			if (!grab)
+			cached_mouse.flush();
+			cached_keyboard.flush();
+			getMouseEventQueue().clearEvents();
+			getKeyboardEventQueue().clearEvents();
+			if (!grab) {
 				getCanvas().setCursor(cached_cursor);
+			}
 		}
 	}
 

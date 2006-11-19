@@ -246,32 +246,42 @@ final class WindowsMouse {
 		temp_data_buffer.clear();
 		ret = mouse.getDeviceData(temp_data_buffer);
 
-		if (ret == WindowsDirectInput.DI_OK) {
-			if (mouse_grabbed) {
-				temp_data_buffer.flip();
-				copyDXEvents(temp_data_buffer);
-			}
-		} else if (ret == WindowsDirectInput.DI_BUFFEROVERFLOW) { 
-			LWJGLUtil.log("Mouse buffer overflowed");
-		} else if (ret == WindowsDirectInput.DIERR_INPUTLOST) {
-			LWJGLUtil.log("Mouse input lost");
-		} else if (ret == WindowsDirectInput.DIERR_NOTACQUIRED) {
-			LWJGLUtil.log("Mouse not acquired");
-		} else {
-			LWJGLUtil.log("unknown mouse error (" + Integer.toHexString(ret) + ")");
+		switch (ret) {
+			case WindowsDirectInput.DI_OK:
+				break;
+			case WindowsDirectInput.DI_BUFFEROVERFLOW:
+				LWJGLUtil.log("Mouse buffer overflowed");
+				break;
+			case WindowsDirectInput.DIERR_INPUTLOST:
+				LWJGLUtil.log("Mouse input lost");
+				break;
+			case WindowsDirectInput.DIERR_NOTACQUIRED:
+				LWJGLUtil.log("Mouse not acquired");
+				break;
+			default:
+				LWJGLUtil.log("unknown mouse error (" + Integer.toHexString(ret) + ")");
+				break;
 		}
+	}
+
+	public final void flush() {
+		readDXBuffer();
+		temp_data_buffer.clear();
 	}
 
 	public void read(ByteBuffer buffer) {
 		readDXBuffer();
+		if (mouse_grabbed) {
+			temp_data_buffer.flip();
+			copyDXEvents(temp_data_buffer);
+		}
 		event_queue.copyEvents(buffer);
 	}
 		
 	public void grab(boolean grab) {
 		if(grab) {
 			if (!mouse_grabbed) {
-				// flush DX event buffer
-				readDXBuffer();
+				flush();
 				mouse_grabbed = true;
 				mouse.unacquire();
 				if (!acquire(WindowsDirectInputDevice.DISCL_EXCLUSIVE | WindowsDirectInputDevice.DISCL_FOREGROUND))

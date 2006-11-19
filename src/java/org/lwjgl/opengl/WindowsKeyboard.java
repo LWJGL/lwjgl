@@ -47,6 +47,7 @@ import org.lwjgl.BufferUtils;
 final class WindowsKeyboard {
 	private final static int BUFFER_SIZE = 50;
 
+	private final long hwnd;
 	private final WindowsDirectInput dinput;
 	private final WindowsDirectInputDevice keyboard;
 	private final IntBuffer temp_data_buffer;
@@ -55,14 +56,17 @@ final class WindowsKeyboard {
 	private final CharBuffer unicode_buffer;
 	private final ByteBuffer ascii_buffer;
 
+	private boolean grabbed;
+
 	public WindowsKeyboard(WindowsDirectInput dinput, long hwnd) throws LWJGLException {
+		this.hwnd = hwnd;
 		this.dinput = dinput;
 		try {
 			keyboard = dinput.createDevice(WindowsDirectInput.KEYBOARD_TYPE);
 			try {
-				keyboard.setCooperateLevel(hwnd, WindowsDirectInputDevice.DISCL_NONEXCLUSIVE | WindowsDirectInputDevice.DISCL_FOREGROUND);
 				keyboard.setDataFormat(WindowsDirectInput.KEYBOARD_TYPE);
 				keyboard.setBufferSize(BUFFER_SIZE);
+				acquireNonExclusive();
 			} catch (LWJGLException e) {
 				keyboard.release();
 				throw e;
@@ -84,8 +88,23 @@ final class WindowsKeyboard {
 			ascii_buffer = BufferUtils.createByteBuffer(2);
 		}
 	}
-
 	private static native boolean isWindowsNT();
+
+	private boolean acquire(int flags) {
+		try {
+			keyboard.setCooperateLevel(hwnd, flags);
+			keyboard.acquire();
+			return true;
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Failed to acquire keyboard: " + e);
+			return false;
+		}
+	}
+
+	private boolean acquireNonExclusive() {
+		return acquire(WindowsDirectInputDevice.DISCL_NONEXCLUSIVE | WindowsDirectInputDevice.DISCL_FOREGROUND) ||
+			acquire(WindowsDirectInputDevice.DISCL_NONEXCLUSIVE | WindowsDirectInputDevice.DISCL_BACKGROUND);
+	}
 
 	public void destroy() {
 		keyboard.unacquire();
@@ -93,6 +112,24 @@ final class WindowsKeyboard {
 		dinput.release();
 	}
 	
+	public void grab(boolean grab) {
+		if(grab) {
+			if (!grabbed) {
+				flush();
+				grabbed = true;
+				keyboard.unacquire();
+				if (!acquire(WindowsDirectInputDevice.DISCL_EXCLUSIVE | WindowsDirectInputDevice.DISCL_FOREGROUND))
+					LWJGLUtil.log("Failed to reset cooperative mode");
+			}
+		} else {
+			if (grabbed) {
+				grabbed = false;
+				keyboard.unacquire();
+				acquireNonExclusive();
+			}	
+		}
+	}
+
 	public void poll(ByteBuffer keyDownBuffer) {
 		int ret = keyboard.acquire();
 		if (ret != WindowsDirectInput.DI_OK && ret != WindowsDirectInput.DI_NOEFFECT)
@@ -181,7 +218,12 @@ final class WindowsKeyboard {
 	private static native int ToAscii(int wVirtKey, int wScanCode, ByteBuffer lpKeyState, ByteBuffer lpChar, int flags);
 	private static native int GetKeyboardState(ByteBuffer lpKeyState);
 
-	public void read(ByteBuffer buffer) {
+	public void flush() {
+		processEvents();
+		temp_data_buffer.clear();
+	}
+
+	private void processEvents() {
 		int ret = keyboard.acquire();
 		if (ret != WindowsDirectInput.DI_OK && ret != WindowsDirectInput.DI_NOEFFECT)
 			return;
@@ -202,6 +244,10 @@ final class WindowsKeyboard {
 				LWJGLUtil.log("Failed to read keyboard (0x" + Integer.toHexString(ret) + ")");
 				break;
 		}
+	}
+
+	public void read(ByteBuffer buffer) {
+		processEvents();
 		temp_data_buffer.flip();
 		translateData(temp_data_buffer, buffer);
 	}
