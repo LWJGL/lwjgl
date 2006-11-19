@@ -117,7 +117,8 @@ public final class ATIFragmentShader {
 
 
 	public static int glGenFragmentShadersATI(int range) {
-		long function_pointer = GLContext.getCapabilities().ATI_fragment_shader_glGenFragmentShadersATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_fragment_shader_glGenFragmentShadersATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		int __result = nglGenFragmentShadersATI(range, function_pointer);
 		return __result;
@@ -125,91 +126,104 @@ public final class ATIFragmentShader {
 	private static native int nglGenFragmentShadersATI(int range, long function_pointer);
 
 	public static void glBindFragmentShaderATI(int id) {
-		long function_pointer = GLContext.getCapabilities().ATI_fragment_shader_glBindFragmentShaderATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_fragment_shader_glBindFragmentShaderATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglBindFragmentShaderATI(id, function_pointer);
 	}
 	private static native void nglBindFragmentShaderATI(int id, long function_pointer);
 
 	public static void glDeleteFragmentShaderATI(int id) {
-		long function_pointer = GLContext.getCapabilities().ATI_fragment_shader_glDeleteFragmentShaderATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_fragment_shader_glDeleteFragmentShaderATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglDeleteFragmentShaderATI(id, function_pointer);
 	}
 	private static native void nglDeleteFragmentShaderATI(int id, long function_pointer);
 
 	public static void glBeginFragmentShaderATI() {
-		long function_pointer = GLContext.getCapabilities().ATI_fragment_shader_glBeginFragmentShaderATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_fragment_shader_glBeginFragmentShaderATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglBeginFragmentShaderATI(function_pointer);
 	}
 	private static native void nglBeginFragmentShaderATI(long function_pointer);
 
 	public static void glEndFragmentShaderATI() {
-		long function_pointer = GLContext.getCapabilities().ATI_fragment_shader_glEndFragmentShaderATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_fragment_shader_glEndFragmentShaderATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglEndFragmentShaderATI(function_pointer);
 	}
 	private static native void nglEndFragmentShaderATI(long function_pointer);
 
 	public static void glPassTexCoordATI(int dst, int coord, int swizzle) {
-		long function_pointer = GLContext.getCapabilities().ATI_fragment_shader_glPassTexCoordATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_fragment_shader_glPassTexCoordATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglPassTexCoordATI(dst, coord, swizzle, function_pointer);
 	}
 	private static native void nglPassTexCoordATI(int dst, int coord, int swizzle, long function_pointer);
 
 	public static void glSampleMapATI(int dst, int interp, int swizzle) {
-		long function_pointer = GLContext.getCapabilities().ATI_fragment_shader_glSampleMapATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_fragment_shader_glSampleMapATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglSampleMapATI(dst, interp, swizzle, function_pointer);
 	}
 	private static native void nglSampleMapATI(int dst, int interp, int swizzle, long function_pointer);
 
 	public static void glColorFragmentOp1ATI(int op, int dst, int dstMask, int dstMod, int arg1, int arg1Rep, int arg1Mod) {
-		long function_pointer = GLContext.getCapabilities().ATI_fragment_shader_glColorFragmentOp1ATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_fragment_shader_glColorFragmentOp1ATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglColorFragmentOp1ATI(op, dst, dstMask, dstMod, arg1, arg1Rep, arg1Mod, function_pointer);
 	}
 	private static native void nglColorFragmentOp1ATI(int op, int dst, int dstMask, int dstMod, int arg1, int arg1Rep, int arg1Mod, long function_pointer);
 
 	public static void glColorFragmentOp2ATI(int op, int dst, int dstMask, int dstMod, int arg1, int arg1Rep, int arg1Mod, int arg2, int arg2Rep, int arg2Mod) {
-		long function_pointer = GLContext.getCapabilities().ATI_fragment_shader_glColorFragmentOp2ATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_fragment_shader_glColorFragmentOp2ATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglColorFragmentOp2ATI(op, dst, dstMask, dstMod, arg1, arg1Rep, arg1Mod, arg2, arg2Rep, arg2Mod, function_pointer);
 	}
 	private static native void nglColorFragmentOp2ATI(int op, int dst, int dstMask, int dstMod, int arg1, int arg1Rep, int arg1Mod, int arg2, int arg2Rep, int arg2Mod, long function_pointer);
 
 	public static void glColorFragmentOp3ATI(int op, int dst, int dstMask, int dstMod, int arg1, int arg1Rep, int arg1Mod, int arg2, int arg2Rep, int arg2Mod, int arg3, int arg3Rep, int arg3Mod) {
-		long function_pointer = GLContext.getCapabilities().ATI_fragment_shader_glColorFragmentOp3ATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_fragment_shader_glColorFragmentOp3ATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglColorFragmentOp3ATI(op, dst, dstMask, dstMod, arg1, arg1Rep, arg1Mod, arg2, arg2Rep, arg2Mod, arg3, arg3Rep, arg3Mod, function_pointer);
 	}
 	private static native void nglColorFragmentOp3ATI(int op, int dst, int dstMask, int dstMod, int arg1, int arg1Rep, int arg1Mod, int arg2, int arg2Rep, int arg2Mod, int arg3, int arg3Rep, int arg3Mod, long function_pointer);
 
 	public static void glAlphaFragmentOp1ATI(int op, int dst, int dstMod, int arg1, int arg1Rep, int arg1Mod) {
-		long function_pointer = GLContext.getCapabilities().ATI_fragment_shader_glAlphaFragmentOp1ATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_fragment_shader_glAlphaFragmentOp1ATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglAlphaFragmentOp1ATI(op, dst, dstMod, arg1, arg1Rep, arg1Mod, function_pointer);
 	}
 	private static native void nglAlphaFragmentOp1ATI(int op, int dst, int dstMod, int arg1, int arg1Rep, int arg1Mod, long function_pointer);
 
 	public static void glAlphaFragmentOp2ATI(int op, int dst, int dstMod, int arg1, int arg1Rep, int arg1Mod, int arg2, int arg2Rep, int arg2Mod) {
-		long function_pointer = GLContext.getCapabilities().ATI_fragment_shader_glAlphaFragmentOp2ATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_fragment_shader_glAlphaFragmentOp2ATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglAlphaFragmentOp2ATI(op, dst, dstMod, arg1, arg1Rep, arg1Mod, arg2, arg2Rep, arg2Mod, function_pointer);
 	}
 	private static native void nglAlphaFragmentOp2ATI(int op, int dst, int dstMod, int arg1, int arg1Rep, int arg1Mod, int arg2, int arg2Rep, int arg2Mod, long function_pointer);
 
 	public static void glAlphaFragmentOp3ATI(int op, int dst, int dstMod, int arg1, int arg1Rep, int arg1Mod, int arg2, int arg2Rep, int arg2Mod, int arg3, int arg3Rep, int arg3Mod) {
-		long function_pointer = GLContext.getCapabilities().ATI_fragment_shader_glAlphaFragmentOp3ATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_fragment_shader_glAlphaFragmentOp3ATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglAlphaFragmentOp3ATI(op, dst, dstMod, arg1, arg1Rep, arg1Mod, arg2, arg2Rep, arg2Mod, arg3, arg3Rep, arg3Mod, function_pointer);
 	}
 	private static native void nglAlphaFragmentOp3ATI(int op, int dst, int dstMod, int arg1, int arg1Rep, int arg1Mod, int arg2, int arg2Rep, int arg2Mod, int arg3, int arg3Rep, int arg3Mod, long function_pointer);
 
 	public static void glSetFragmentShaderConstantATI(int dst, FloatBuffer pfValue) {
-		long function_pointer = GLContext.getCapabilities().ATI_fragment_shader_glSetFragmentShaderConstantATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_fragment_shader_glSetFragmentShaderConstantATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(pfValue, 4);
 		nglSetFragmentShaderConstantATI(dst, pfValue, pfValue.position(), function_pointer);

@@ -34,7 +34,8 @@ public final class ARBDrawBuffers {
 
 
 	public static void glDrawBuffersARB(IntBuffer buffers) {
-		long function_pointer = GLContext.getCapabilities().ARB_draw_buffers_glDrawBuffersARB_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ARB_draw_buffers_glDrawBuffersARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(buffers);
 		nglDrawBuffersARB((buffers.remaining()), buffers, buffers.position(), function_pointer);

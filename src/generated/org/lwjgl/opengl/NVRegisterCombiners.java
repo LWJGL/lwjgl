@@ -64,14 +64,16 @@ public final class NVRegisterCombiners {
 
 
 	public static void glCombinerParameterfNV(int pname, float param) {
-		long function_pointer = GLContext.getCapabilities().NV_register_combiners_glCombinerParameterfNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_register_combiners_glCombinerParameterfNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglCombinerParameterfNV(pname, param, function_pointer);
 	}
 	private static native void nglCombinerParameterfNV(int pname, float param, long function_pointer);
 
 	public static void glCombinerParameterNV(int pname, FloatBuffer params) {
-		long function_pointer = GLContext.getCapabilities().NV_register_combiners_glCombinerParameterfvNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_register_combiners_glCombinerParameterfvNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(params, 4);
 		nglCombinerParameterfvNV(pname, params, params.position(), function_pointer);
@@ -79,14 +81,16 @@ public final class NVRegisterCombiners {
 	private static native void nglCombinerParameterfvNV(int pname, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glCombinerParameteriNV(int pname, int param) {
-		long function_pointer = GLContext.getCapabilities().NV_register_combiners_glCombinerParameteriNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_register_combiners_glCombinerParameteriNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglCombinerParameteriNV(pname, param, function_pointer);
 	}
 	private static native void nglCombinerParameteriNV(int pname, int param, long function_pointer);
 
 	public static void glCombinerParameterNV(int pname, IntBuffer params) {
-		long function_pointer = GLContext.getCapabilities().NV_register_combiners_glCombinerParameterivNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_register_combiners_glCombinerParameterivNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(params, 4);
 		nglCombinerParameterivNV(pname, params, params.position(), function_pointer);
@@ -94,28 +98,32 @@ public final class NVRegisterCombiners {
 	private static native void nglCombinerParameterivNV(int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glCombinerInputNV(int stage, int portion, int variable, int input, int mapping, int componentUsage) {
-		long function_pointer = GLContext.getCapabilities().NV_register_combiners_glCombinerInputNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_register_combiners_glCombinerInputNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglCombinerInputNV(stage, portion, variable, input, mapping, componentUsage, function_pointer);
 	}
 	private static native void nglCombinerInputNV(int stage, int portion, int variable, int input, int mapping, int componentUsage, long function_pointer);
 
 	public static void glCombinerOutputNV(int stage, int portion, int abOutput, int cdOutput, int sumOutput, int scale, int bias, boolean abDotProduct, boolean cdDotProduct, boolean muxSum) {
-		long function_pointer = GLContext.getCapabilities().NV_register_combiners_glCombinerOutputNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_register_combiners_glCombinerOutputNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglCombinerOutputNV(stage, portion, abOutput, cdOutput, sumOutput, scale, bias, abDotProduct, cdDotProduct, muxSum, function_pointer);
 	}
 	private static native void nglCombinerOutputNV(int stage, int portion, int abOutput, int cdOutput, int sumOutput, int scale, int bias, boolean abDotProduct, boolean cdDotProduct, boolean muxSum, long function_pointer);
 
 	public static void glFinalCombinerInputNV(int variable, int input, int mapping, int componentUsage) {
-		long function_pointer = GLContext.getCapabilities().NV_register_combiners_glFinalCombinerInputNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_register_combiners_glFinalCombinerInputNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglFinalCombinerInputNV(variable, input, mapping, componentUsage, function_pointer);
 	}
 	private static native void nglFinalCombinerInputNV(int variable, int input, int mapping, int componentUsage, long function_pointer);
 
 	public static void glGetCombinerInputParameterNV(int stage, int portion, int variable, int pname, FloatBuffer params) {
-		long function_pointer = GLContext.getCapabilities().NV_register_combiners_glGetCombinerInputParameterfvNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_register_combiners_glGetCombinerInputParameterfvNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(params, 4);
 		nglGetCombinerInputParameterfvNV(stage, portion, variable, pname, params, params.position(), function_pointer);
@@ -123,7 +131,8 @@ public final class NVRegisterCombiners {
 	private static native void nglGetCombinerInputParameterfvNV(int stage, int portion, int variable, int pname, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glGetCombinerInputParameterNV(int stage, int portion, int variable, int pname, IntBuffer params) {
-		long function_pointer = GLContext.getCapabilities().NV_register_combiners_glGetCombinerInputParameterivNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_register_combiners_glGetCombinerInputParameterivNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(params, 4);
 		nglGetCombinerInputParameterivNV(stage, portion, variable, pname, params, params.position(), function_pointer);
@@ -131,7 +140,8 @@ public final class NVRegisterCombiners {
 	private static native void nglGetCombinerInputParameterivNV(int stage, int portion, int variable, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetCombinerOutputParameterNV(int stage, int portion, int pname, FloatBuffer params) {
-		long function_pointer = GLContext.getCapabilities().NV_register_combiners_glGetCombinerOutputParameterfvNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_register_combiners_glGetCombinerOutputParameterfvNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(params, 4);
 		nglGetCombinerOutputParameterfvNV(stage, portion, pname, params, params.position(), function_pointer);
@@ -139,7 +149,8 @@ public final class NVRegisterCombiners {
 	private static native void nglGetCombinerOutputParameterfvNV(int stage, int portion, int pname, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glGetCombinerOutputParameterNV(int stage, int portion, int pname, IntBuffer params) {
-		long function_pointer = GLContext.getCapabilities().NV_register_combiners_glGetCombinerOutputParameterivNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_register_combiners_glGetCombinerOutputParameterivNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(params, 4);
 		nglGetCombinerOutputParameterivNV(stage, portion, pname, params, params.position(), function_pointer);
@@ -147,7 +158,8 @@ public final class NVRegisterCombiners {
 	private static native void nglGetCombinerOutputParameterivNV(int stage, int portion, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetFinalCombinerInputParameterNV(int variable, int pname, FloatBuffer params) {
-		long function_pointer = GLContext.getCapabilities().NV_register_combiners_glGetFinalCombinerInputParameterfvNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_register_combiners_glGetFinalCombinerInputParameterfvNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(params, 4);
 		nglGetFinalCombinerInputParameterfvNV(variable, pname, params, params.position(), function_pointer);
@@ -155,7 +167,8 @@ public final class NVRegisterCombiners {
 	private static native void nglGetFinalCombinerInputParameterfvNV(int variable, int pname, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glGetFinalCombinerInputParameterNV(int variable, int pname, IntBuffer params) {
-		long function_pointer = GLContext.getCapabilities().NV_register_combiners_glGetFinalCombinerInputParameterivNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_register_combiners_glGetFinalCombinerInputParameterivNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(params, 4);
 		nglGetFinalCombinerInputParameterivNV(variable, pname, params, params.position(), function_pointer);

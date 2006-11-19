@@ -15,14 +15,16 @@ public final class EXTCompiledVertexArray {
 
 
 	public static void glLockArraysEXT(int first, int count) {
-		long function_pointer = GLContext.getCapabilities().EXT_compiled_vertex_array_glLockArraysEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_compiled_vertex_array_glLockArraysEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglLockArraysEXT(first, count, function_pointer);
 	}
 	private static native void nglLockArraysEXT(int first, int count, long function_pointer);
 
 	public static void glUnlockArraysEXT() {
-		long function_pointer = GLContext.getCapabilities().EXT_compiled_vertex_array_glUnlockArraysEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_compiled_vertex_array_glUnlockArraysEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglUnlockArraysEXT(function_pointer);
 	}

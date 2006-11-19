@@ -29,7 +29,8 @@ public final class EXTTextureBufferObject {
 
 
 	public static void glTexBufferEXT(int target, int internalformat, int buffer) {
-		long function_pointer = GLContext.getCapabilities().EXT_texture_buffer_object_glTexBufferEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_texture_buffer_object_glTexBufferEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglTexBufferEXT(target, internalformat, buffer, function_pointer);
 	}

@@ -32,21 +32,24 @@ public final class NVDepthBufferFloat {
 
 
 	public static void glDepthRangedNV(double n, double f) {
-		long function_pointer = GLContext.getCapabilities().NV_depth_buffer_float_glDepthRangedNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_depth_buffer_float_glDepthRangedNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglDepthRangedNV(n, f, function_pointer);
 	}
 	private static native void nglDepthRangedNV(double n, double f, long function_pointer);
 
 	public static void glClearDepthdNV(double d) {
-		long function_pointer = GLContext.getCapabilities().NV_depth_buffer_float_glClearDepthdNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_depth_buffer_float_glClearDepthdNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglClearDepthdNV(d, function_pointer);
 	}
 	private static native void nglClearDepthdNV(double d, long function_pointer);
 
 	public static void glDepthBoundsdNV(double zmin, double zmax) {
-		long function_pointer = GLContext.getCapabilities().NV_depth_buffer_float_glDepthBoundsdNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_depth_buffer_float_glDepthBoundsdNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglDepthBoundsdNV(zmin, zmax, function_pointer);
 	}

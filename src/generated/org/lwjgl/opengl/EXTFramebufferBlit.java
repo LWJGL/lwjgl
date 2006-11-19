@@ -43,7 +43,8 @@ public final class EXTFramebufferBlit {
 	 *         stretched.
 	 */
 	public static void glBlitFramebufferEXT(int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1, int mask, int filter) {
-		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_blit_glBlitFramebufferEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_framebuffer_blit_glBlitFramebufferEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglBlitFramebufferEXT(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter, function_pointer);
 	}

@@ -26,25 +26,28 @@ public final class EXTVertexWeighting {
 
 
 	public static void glVertexWeightfEXT(float weight) {
-		long function_pointer = GLContext.getCapabilities().EXT_vertex_weighting_glVertexWeightfEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_vertex_weighting_glVertexWeightfEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglVertexWeightfEXT(weight, function_pointer);
 	}
 	private static native void nglVertexWeightfEXT(float weight, long function_pointer);
 
 	public static void glVertexWeightPointerEXT(int size, int stride, FloatBuffer pPointer) {
-		long function_pointer = GLContext.getCapabilities().EXT_vertex_weighting_glVertexWeightPointerEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_vertex_weighting_glVertexWeightPointerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
-		GLChecks.ensureArrayVBOdisabled();
+		GLChecks.ensureArrayVBOdisabled(caps);
 		BufferChecks.checkDirect(pPointer);
-		GLChecks.getReferences().EXT_vertex_weighting_glVertexWeightPointerEXT_pPointer = pPointer;
+		GLChecks.getReferences(caps).EXT_vertex_weighting_glVertexWeightPointerEXT_pPointer = pPointer;
 		nglVertexWeightPointerEXT(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position() << 2, function_pointer);
 	}
 	private static native void nglVertexWeightPointerEXT(int size, int type, int stride, Buffer pPointer, int pPointer_position, long function_pointer);
 	public static void glVertexWeightPointerEXT(int size, int type, int stride, long pPointer_buffer_offset) {
-		long function_pointer = GLContext.getCapabilities().EXT_vertex_weighting_glVertexWeightPointerEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_vertex_weighting_glVertexWeightPointerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
-		GLChecks.ensureArrayVBOenabled();
+		GLChecks.ensureArrayVBOenabled(caps);
 		nglVertexWeightPointerEXTBO(size, type, stride, pPointer_buffer_offset, function_pointer);
 	}
 	private static native void nglVertexWeightPointerEXTBO(int size, int type, int stride, long pPointer_buffer_offset, long function_pointer);

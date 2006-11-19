@@ -34,7 +34,8 @@ public final class ATIDrawBuffers {
 
 
 	public static void glDrawBuffersATI(IntBuffer buffers) {
-		long function_pointer = GLContext.getCapabilities().ATI_draw_buffers_glDrawBuffersATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_draw_buffers_glDrawBuffersATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(buffers);
 		nglDrawBuffersATI((buffers.remaining()), buffers, buffers.position(), function_pointer);

@@ -1207,10 +1207,10 @@ public interface GL11 {
 
 	void glPopMatrix();
 
-	@Code("		StateTracker.pushAttrib(mask);")
+	@Code("		StateTracker.pushAttrib(caps, mask);")
 	void glPushClientAttrib(@GLbitfield int mask);
 
-	@Code("		StateTracker.popAttrib();")
+	@Code("		StateTracker.popAttrib(caps);")
 	void glPopClientAttrib();
 
 	void glPushAttrib(@GLbitfield int mask);

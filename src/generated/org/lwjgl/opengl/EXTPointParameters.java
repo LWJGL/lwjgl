@@ -17,14 +17,16 @@ public final class EXTPointParameters {
 
 
 	public static void glPointParameterfEXT(int pname, float param) {
-		long function_pointer = GLContext.getCapabilities().EXT_point_parameters_glPointParameterfEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_point_parameters_glPointParameterfEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglPointParameterfEXT(pname, param, function_pointer);
 	}
 	private static native void nglPointParameterfEXT(int pname, float param, long function_pointer);
 
 	public static void glPointParameterEXT(int pname, FloatBuffer pfParams) {
-		long function_pointer = GLContext.getCapabilities().EXT_point_parameters_glPointParameterfvEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_point_parameters_glPointParameterfvEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(pfParams, 4);
 		nglPointParameterfvEXT(pname, pfParams, pfParams.position(), function_pointer);

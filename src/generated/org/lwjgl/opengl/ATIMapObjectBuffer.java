@@ -24,7 +24,8 @@ public final class ATIMapObjectBuffer {
 	 * @return A ByteBuffer representing the mapped object buffer memory.
 	 */
 	public static java.nio.ByteBuffer glMapObjectBufferATI(int buffer, int result_size, java.nio.ByteBuffer old_buffer) {
-		long function_pointer = GLContext.getCapabilities().ATI_map_object_buffer_glMapObjectBufferATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_map_object_buffer_glMapObjectBufferATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		if (old_buffer != null)
 			BufferChecks.checkDirect(old_buffer);
@@ -34,7 +35,8 @@ public final class ATIMapObjectBuffer {
 	private static native java.nio.ByteBuffer nglMapObjectBufferATI(int buffer, int result_size, java.nio.ByteBuffer old_buffer, long function_pointer);
 
 	public static void glUnmapObjectBufferATI(int buffer) {
-		long function_pointer = GLContext.getCapabilities().ATI_map_object_buffer_glUnmapObjectBufferATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_map_object_buffer_glUnmapObjectBufferATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglUnmapObjectBufferATI(buffer, function_pointer);
 	}

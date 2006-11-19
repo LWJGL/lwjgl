@@ -24,7 +24,8 @@ public final class EXTStencilClearTag {
 	 *         stencil clear tag update.
 	 */
 	public static void glStencilClearTagEXT(int stencilTagBits, int stencilClearTag) {
-		long function_pointer = GLContext.getCapabilities().EXT_stencil_clear_tag_glStencilClearTagEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_stencil_clear_tag_glStencilClearTagEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglStencilClearTagEXT(stencilTagBits, stencilClearTag, function_pointer);
 	}

@@ -19,7 +19,8 @@ public final class EXTBlendEquationSeparate {
 
 
 	public static void glBlendEquationSeparateEXT(int modeRGB, int modeAlpha) {
-		long function_pointer = GLContext.getCapabilities().EXT_blend_equation_separate_glBlendEquationSeparateEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_blend_equation_separate_glBlendEquationSeparateEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglBlendEquationSeparateEXT(modeRGB, modeAlpha, function_pointer);
 	}

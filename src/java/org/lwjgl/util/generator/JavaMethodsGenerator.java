@@ -158,7 +158,7 @@ public class JavaMethodsGenerator {
 			writer.print("enabled");
 		else
 			writer.print("disabled");
-		writer.println("();");
+		writer.println("(caps);");
 	}
 
 	private static void printBufferObjectChecks(PrintWriter writer, MethodDeclaration method, Mode mode) {
@@ -184,15 +184,16 @@ public class JavaMethodsGenerator {
 		generateParametersJava(writer, method, typeinfos_instance, false, mode);
 		TypeMirror result_type = Utils.getMethodReturnType(method);
 		writer.println(") {");
-		Code code_annotation = method.getAnnotation(Code.class);
-		if (code_annotation != null)
-			writer.println(code_annotation.value());
 		if (context_specific) {
-			writer.print("\t\tlong " + Utils.FUNCTION_POINTER_VAR_NAME + " = GLContext.getCapabilities().");
+			writer.println("\t\tContextCapabilities caps = GLContext.getCapabilities();");
+			writer.print("\t\tlong " + Utils.FUNCTION_POINTER_VAR_NAME + " = caps.");
 			writer.println(Utils.getFunctionAddressName(interface_decl, method) + ";");
 			writer.print("\t\tBufferChecks.checkFunctionAddress(");
 			writer.println(Utils.FUNCTION_POINTER_VAR_NAME + ");");
 		}
+		Code code_annotation = method.getAnnotation(Code.class);
+		if (code_annotation != null)
+			writer.println(code_annotation.value());
 		printBufferObjectChecks(writer, method, mode);
 		printParameterChecks(writer, method, mode);
 		printParameterCaching(writer, interface_decl, method, mode);
@@ -399,7 +400,7 @@ public class JavaMethodsGenerator {
 				param.getAnnotation(CachedReference.class) != null &&
 					(mode != Mode.BUFFEROBJECT || param.getAnnotation(BufferObject.class) == null) &&
 					param.getAnnotation(Result.class) == null) {
-				writer.print("\t\t" + Utils.CHECKS_CLASS_NAME + ".getReferences().");
+				writer.print("\t\t" + Utils.CHECKS_CLASS_NAME + ".getReferences(caps).");
 				writer.print(Utils.getReferenceName(interface_decl, method, param) + " = ");
 				writer.println(param.getSimpleName() + ";");
 			}

@@ -46,7 +46,8 @@ public final class GL21 {
 
 
 	public static void glUniformMatrix2x3(int location, boolean transpose, FloatBuffer matrices) {
-		long function_pointer = GLContext.getCapabilities().GL21_glUniformMatrix2x3fv_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.GL21_glUniformMatrix2x3fv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(matrices);
 		nglUniformMatrix2x3fv(location, (matrices.remaining()) / (2 * 3), transpose, matrices, matrices.position(), function_pointer);
@@ -54,7 +55,8 @@ public final class GL21 {
 	private static native void nglUniformMatrix2x3fv(int location, int count, boolean transpose, FloatBuffer matrices, int matrices_position, long function_pointer);
 
 	public static void glUniformMatrix3x2(int location, boolean transpose, FloatBuffer matrices) {
-		long function_pointer = GLContext.getCapabilities().GL21_glUniformMatrix3x2fv_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.GL21_glUniformMatrix3x2fv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(matrices);
 		nglUniformMatrix3x2fv(location, (matrices.remaining()) / (3 * 2), transpose, matrices, matrices.position(), function_pointer);
@@ -62,7 +64,8 @@ public final class GL21 {
 	private static native void nglUniformMatrix3x2fv(int location, int count, boolean transpose, FloatBuffer matrices, int matrices_position, long function_pointer);
 
 	public static void glUniformMatrix2x4(int location, boolean transpose, FloatBuffer matrices) {
-		long function_pointer = GLContext.getCapabilities().GL21_glUniformMatrix2x4fv_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.GL21_glUniformMatrix2x4fv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(matrices);
 		nglUniformMatrix2x4fv(location, (matrices.remaining()) >> 3, transpose, matrices, matrices.position(), function_pointer);
@@ -70,7 +73,8 @@ public final class GL21 {
 	private static native void nglUniformMatrix2x4fv(int location, int count, boolean transpose, FloatBuffer matrices, int matrices_position, long function_pointer);
 
 	public static void glUniformMatrix4x2(int location, boolean transpose, FloatBuffer matrices) {
-		long function_pointer = GLContext.getCapabilities().GL21_glUniformMatrix4x2fv_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.GL21_glUniformMatrix4x2fv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(matrices);
 		nglUniformMatrix4x2fv(location, (matrices.remaining()) >> 3, transpose, matrices, matrices.position(), function_pointer);
@@ -78,7 +82,8 @@ public final class GL21 {
 	private static native void nglUniformMatrix4x2fv(int location, int count, boolean transpose, FloatBuffer matrices, int matrices_position, long function_pointer);
 
 	public static void glUniformMatrix3x4(int location, boolean transpose, FloatBuffer matrices) {
-		long function_pointer = GLContext.getCapabilities().GL21_glUniformMatrix3x4fv_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.GL21_glUniformMatrix3x4fv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(matrices);
 		nglUniformMatrix3x4fv(location, (matrices.remaining()) / (3 * 4), transpose, matrices, matrices.position(), function_pointer);
@@ -86,7 +91,8 @@ public final class GL21 {
 	private static native void nglUniformMatrix3x4fv(int location, int count, boolean transpose, FloatBuffer matrices, int matrices_position, long function_pointer);
 
 	public static void glUniformMatrix4x3(int location, boolean transpose, FloatBuffer matrices) {
-		long function_pointer = GLContext.getCapabilities().GL21_glUniformMatrix4x3fv_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.GL21_glUniformMatrix4x3fv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(matrices);
 		nglUniformMatrix4x3fv(location, (matrices.remaining()) / (4 * 3), transpose, matrices, matrices.position(), function_pointer);

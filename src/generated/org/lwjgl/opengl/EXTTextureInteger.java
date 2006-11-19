@@ -73,21 +73,24 @@ public final class EXTTextureInteger {
 
 
 	public static void glClearColorIiEXT(int r, int g, int b, int a) {
-		long function_pointer = GLContext.getCapabilities().EXT_texture_integer_glClearColorIiEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_texture_integer_glClearColorIiEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglClearColorIiEXT(r, g, b, a, function_pointer);
 	}
 	private static native void nglClearColorIiEXT(int r, int g, int b, int a, long function_pointer);
 
 	public static void glClearColorIuiEXT(int r, int g, int b, int a) {
-		long function_pointer = GLContext.getCapabilities().EXT_texture_integer_glClearColorIuiEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_texture_integer_glClearColorIuiEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglClearColorIuiEXT(r, g, b, a, function_pointer);
 	}
 	private static native void nglClearColorIuiEXT(int r, int g, int b, int a, long function_pointer);
 
 	public static void glTexParameterIEXT(int target, int pname, IntBuffer params) {
-		long function_pointer = GLContext.getCapabilities().EXT_texture_integer_glTexParameterIivEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_texture_integer_glTexParameterIivEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(params, 4);
 		nglTexParameterIivEXT(target, pname, params, params.position(), function_pointer);
@@ -95,7 +98,8 @@ public final class EXTTextureInteger {
 	private static native void nglTexParameterIivEXT(int target, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glTexParameterIuEXT(int target, int pname, IntBuffer params) {
-		long function_pointer = GLContext.getCapabilities().EXT_texture_integer_glTexParameterIuivEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_texture_integer_glTexParameterIuivEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(params, 4);
 		nglTexParameterIuivEXT(target, pname, params, params.position(), function_pointer);
@@ -103,7 +107,8 @@ public final class EXTTextureInteger {
 	private static native void nglTexParameterIuivEXT(int target, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetTexParameterIEXT(int target, int pname, IntBuffer params) {
-		long function_pointer = GLContext.getCapabilities().EXT_texture_integer_glGetTexParameterIivEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_texture_integer_glGetTexParameterIivEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(params, 4);
 		nglGetTexParameterIivEXT(target, pname, params, params.position(), function_pointer);
@@ -111,7 +116,8 @@ public final class EXTTextureInteger {
 	private static native void nglGetTexParameterIivEXT(int target, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetTexParameterIuEXT(int target, int pname, IntBuffer params) {
-		long function_pointer = GLContext.getCapabilities().EXT_texture_integer_glGetTexParameterIuivEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_texture_integer_glGetTexParameterIuivEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(params, 4);
 		nglGetTexParameterIuivEXT(target, pname, params, params.position(), function_pointer);

@@ -17,7 +17,8 @@ public final class ARBTransposeMatrix {
 
 
 	public static void glLoadTransposeMatrixARB(FloatBuffer pfMtx) {
-		long function_pointer = GLContext.getCapabilities().ARB_transpose_matrix_glLoadTransposeMatrixfARB_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ARB_transpose_matrix_glLoadTransposeMatrixfARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(pfMtx, 16);
 		nglLoadTransposeMatrixfARB(pfMtx, pfMtx.position(), function_pointer);
@@ -25,7 +26,8 @@ public final class ARBTransposeMatrix {
 	private static native void nglLoadTransposeMatrixfARB(FloatBuffer pfMtx, int pfMtx_position, long function_pointer);
 
 	public static void glMultTransposeMatrixARB(FloatBuffer pfMtx) {
-		long function_pointer = GLContext.getCapabilities().ARB_transpose_matrix_glMultTransposeMatrixfARB_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ARB_transpose_matrix_glMultTransposeMatrixfARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(pfMtx, 16);
 		nglMultTransposeMatrixfARB(pfMtx, pfMtx.position(), function_pointer);

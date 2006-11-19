@@ -27,7 +27,8 @@ public final class NVParameterBufferObject {
 
 
 	public static void glProgramBufferParametersNV(int target, int buffer, int index, FloatBuffer params) {
-		long function_pointer = GLContext.getCapabilities().NV_parameter_buffer_object_glProgramBufferParametersfvNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_parameter_buffer_object_glProgramBufferParametersfvNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(params);
 		nglProgramBufferParametersfvNV(target, buffer, index, (params.remaining()) >> 2, params, params.position(), function_pointer);
@@ -35,7 +36,8 @@ public final class NVParameterBufferObject {
 	private static native void nglProgramBufferParametersfvNV(int target, int buffer, int index, int count, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glProgramBufferParametersINV(int target, int buffer, int index, IntBuffer params) {
-		long function_pointer = GLContext.getCapabilities().NV_parameter_buffer_object_glProgramBufferParametersIivNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_parameter_buffer_object_glProgramBufferParametersIivNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(params);
 		nglProgramBufferParametersIivNV(target, buffer, index, (params.remaining()) >> 2, params, params.position(), function_pointer);
@@ -43,7 +45,8 @@ public final class NVParameterBufferObject {
 	private static native void nglProgramBufferParametersIivNV(int target, int buffer, int index, int count, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glProgramBufferParametersIuNV(int target, int buffer, int index, IntBuffer params) {
-		long function_pointer = GLContext.getCapabilities().NV_parameter_buffer_object_glProgramBufferParametersIuivNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_parameter_buffer_object_glProgramBufferParametersIuivNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(params);
 		nglProgramBufferParametersIuivNV(target, buffer, index, (params.remaining()) >> 2, params, params.position(), function_pointer);

@@ -62,28 +62,32 @@ public final class EXTGeometryShader4 {
 
 
 	public static void glProgramParameteriEXT(int program, int pname, int value) {
-		long function_pointer = GLContext.getCapabilities().EXT_geometry_shader4_glProgramParameteriEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_geometry_shader4_glProgramParameteriEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglProgramParameteriEXT(program, pname, value, function_pointer);
 	}
 	private static native void nglProgramParameteriEXT(int program, int pname, int value, long function_pointer);
 
 	public static void glFramebufferTextureEXT(int target, int attachment, int texture, int level) {
-		long function_pointer = GLContext.getCapabilities().EXT_geometry_shader4_glFramebufferTextureEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_geometry_shader4_glFramebufferTextureEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglFramebufferTextureEXT(target, attachment, texture, level, function_pointer);
 	}
 	private static native void nglFramebufferTextureEXT(int target, int attachment, int texture, int level, long function_pointer);
 
 	public static void glFramebufferTextureLayerEXT(int target, int attachment, int texture, int level, int layer) {
-		long function_pointer = GLContext.getCapabilities().EXT_geometry_shader4_glFramebufferTextureLayerEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_geometry_shader4_glFramebufferTextureLayerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglFramebufferTextureLayerEXT(target, attachment, texture, level, layer, function_pointer);
 	}
 	private static native void nglFramebufferTextureLayerEXT(int target, int attachment, int texture, int level, int layer, long function_pointer);
 
 	public static void glFramebufferTextureFaceEXT(int target, int attachment, int texture, int level, int face) {
-		long function_pointer = GLContext.getCapabilities().EXT_geometry_shader4_glFramebufferTextureFaceEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_geometry_shader4_glFramebufferTextureFaceEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglFramebufferTextureFaceEXT(target, attachment, texture, level, face, function_pointer);
 	}

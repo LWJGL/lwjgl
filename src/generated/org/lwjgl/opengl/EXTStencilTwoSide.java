@@ -15,7 +15,8 @@ public final class EXTStencilTwoSide {
 
 
 	public static void glActiveStencilFaceEXT(int face) {
-		long function_pointer = GLContext.getCapabilities().EXT_stencil_two_side_glActiveStencilFaceEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_stencil_two_side_glActiveStencilFaceEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglActiveStencilFaceEXT(face, function_pointer);
 	}

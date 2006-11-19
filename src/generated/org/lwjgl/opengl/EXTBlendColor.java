@@ -25,7 +25,8 @@ public final class EXTBlendColor {
 
 
 	public static void glBlendColorEXT(float red, float green, float blue, float alpha) {
-		long function_pointer = GLContext.getCapabilities().EXT_blend_color_glBlendColorEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_blend_color_glBlendColorEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglBlendColorEXT(red, green, blue, alpha, function_pointer);
 	}

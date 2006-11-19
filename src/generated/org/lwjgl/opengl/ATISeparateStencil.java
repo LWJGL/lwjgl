@@ -17,14 +17,16 @@ public final class ATISeparateStencil {
 
 
 	public static void glStencilOpSeparateATI(int face, int sfail, int dpfail, int dppass) {
-		long function_pointer = GLContext.getCapabilities().ATI_separate_stencil_glStencilOpSeparateATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_separate_stencil_glStencilOpSeparateATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglStencilOpSeparateATI(face, sfail, dpfail, dppass, function_pointer);
 	}
 	private static native void nglStencilOpSeparateATI(int face, int sfail, int dpfail, int dppass, long function_pointer);
 
 	public static void glStencilFuncSeparateATI(int frontfunc, int backfunc, int ref, int mask) {
-		long function_pointer = GLContext.getCapabilities().ATI_separate_stencil_glStencilFuncSeparateATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_separate_stencil_glStencilFuncSeparateATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglStencilFuncSeparateATI(frontfunc, backfunc, ref, mask, function_pointer);
 	}

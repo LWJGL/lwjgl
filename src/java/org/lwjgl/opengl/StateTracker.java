@@ -40,8 +40,8 @@ final class StateTracker {
 		attrib_stack = new StateStack(0);
 	}
 
-	static void popAttrib() {
-		getTracker().doPopAttrib();
+	static void popAttrib(ContextCapabilities caps) {
+		caps.tracker.doPopAttrib();
 	}
 
 	private void doPopAttrib() {
@@ -50,8 +50,8 @@ final class StateTracker {
 		}
 	}
 	
-	static void pushAttrib(int mask) {
-		getTracker().doPushAttrib(mask);
+	static void pushAttrib(ContextCapabilities caps, int mask) {
+		caps.tracker.doPushAttrib(mask);
 	}
 
 	private void doPushAttrib(int mask) {
@@ -62,11 +62,7 @@ final class StateTracker {
 		}
 	}
 
-	private static StateTracker getTracker() {
-		return GLContext.getCapabilities().tracker;
-	}
-
-	static ReferencesStack getReferencesStack() {
-		return GLContext.getCapabilities().tracker.references_stack;
+	static ReferencesStack getReferencesStack(ContextCapabilities caps) {
+		return caps.tracker.references_stack;
 	}
 }

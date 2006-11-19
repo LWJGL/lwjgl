@@ -24,7 +24,8 @@ public final class EXTDepthBoundsTest {
 
 
 	public static void glDepthBoundsEXT(double zmin, double zmax) {
-		long function_pointer = GLContext.getCapabilities().EXT_depth_bounds_test_glDepthBoundsEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_depth_bounds_test_glDepthBoundsEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglDepthBoundsEXT(zmin, zmax, function_pointer);
 	}

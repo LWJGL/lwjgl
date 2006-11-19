@@ -24,7 +24,8 @@ public final class EXTBlendMinmax {
 
 
 	public static void glBlendEquationEXT(int mode) {
-		long function_pointer = GLContext.getCapabilities().EXT_blend_minmax_glBlendEquationEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_blend_minmax_glBlendEquationEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglBlendEquationEXT(mode, function_pointer);
 	}

@@ -24,21 +24,24 @@ public final class NVGeometryProgram4 {
 
 
 	public static void glProgramVertexLimitNV(int target, int limit) {
-		long function_pointer = GLContext.getCapabilities().NV_geometry_program4_glProgramVertexLimitNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_geometry_program4_glProgramVertexLimitNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglProgramVertexLimitNV(target, limit, function_pointer);
 	}
 	private static native void nglProgramVertexLimitNV(int target, int limit, long function_pointer);
 
 	public static void glFramebufferTextureEXT(int target, int attachment, int texture, int level) {
-		long function_pointer = GLContext.getCapabilities().NV_geometry_program4_glFramebufferTextureEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_geometry_program4_glFramebufferTextureEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglFramebufferTextureEXT(target, attachment, texture, level, function_pointer);
 	}
 	private static native void nglFramebufferTextureEXT(int target, int attachment, int texture, int level, long function_pointer);
 
 	public static void glFramebufferTextureLayerEXT(int target, int attachment, int texture, int level, int layer) {
-		long function_pointer = GLContext.getCapabilities().NV_geometry_program4_glFramebufferTextureLayerEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_geometry_program4_glFramebufferTextureLayerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglFramebufferTextureLayerEXT(target, attachment, texture, level, layer, function_pointer);
 	}

@@ -16,7 +16,8 @@ public final class NVFence {
 
 
 	public static void glGenFencesNV(IntBuffer piFences) {
-		long function_pointer = GLContext.getCapabilities().NV_fence_glGenFencesNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_fence_glGenFencesNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(piFences);
 		nglGenFencesNV((piFences.remaining()), piFences, piFences.position(), function_pointer);
@@ -24,7 +25,8 @@ public final class NVFence {
 	private static native void nglGenFencesNV(int n, IntBuffer piFences, int piFences_position, long function_pointer);
 
 	public static void glDeleteFencesNV(IntBuffer piFences) {
-		long function_pointer = GLContext.getCapabilities().NV_fence_glDeleteFencesNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_fence_glDeleteFencesNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(piFences);
 		nglDeleteFencesNV((piFences.remaining()), piFences, piFences.position(), function_pointer);
@@ -32,14 +34,16 @@ public final class NVFence {
 	private static native void nglDeleteFencesNV(int n, IntBuffer piFences, int piFences_position, long function_pointer);
 
 	public static void glSetFenceNV(int fence, int condition) {
-		long function_pointer = GLContext.getCapabilities().NV_fence_glSetFenceNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_fence_glSetFenceNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglSetFenceNV(fence, condition, function_pointer);
 	}
 	private static native void nglSetFenceNV(int fence, int condition, long function_pointer);
 
 	public static boolean glTestFenceNV(int fence) {
-		long function_pointer = GLContext.getCapabilities().NV_fence_glTestFenceNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_fence_glTestFenceNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		boolean __result = nglTestFenceNV(fence, function_pointer);
 		return __result;
@@ -47,14 +51,16 @@ public final class NVFence {
 	private static native boolean nglTestFenceNV(int fence, long function_pointer);
 
 	public static void glFinishFenceNV(int fence) {
-		long function_pointer = GLContext.getCapabilities().NV_fence_glFinishFenceNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_fence_glFinishFenceNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglFinishFenceNV(fence, function_pointer);
 	}
 	private static native void nglFinishFenceNV(int fence, long function_pointer);
 
 	public static boolean glIsFenceNV(int fence) {
-		long function_pointer = GLContext.getCapabilities().NV_fence_glIsFenceNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_fence_glIsFenceNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		boolean __result = nglIsFenceNV(fence, function_pointer);
 		return __result;
@@ -62,7 +68,8 @@ public final class NVFence {
 	private static native boolean nglIsFenceNV(int fence, long function_pointer);
 
 	public static void glGetFenceivNV(int fence, int pname, IntBuffer piParams) {
-		long function_pointer = GLContext.getCapabilities().NV_fence_glGetFenceivNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_fence_glGetFenceivNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(piParams, 4);
 		nglGetFenceivNV(fence, pname, piParams, piParams.position(), function_pointer);

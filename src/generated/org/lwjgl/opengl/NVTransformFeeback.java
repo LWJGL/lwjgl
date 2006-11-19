@@ -80,28 +80,32 @@ public final class NVTransformFeeback {
 
 
 	public static void glBindBufferRangeNV(int target, int index, int buffer, long offset, long size) {
-		long function_pointer = GLContext.getCapabilities().NV_transform_feeback_glBindBufferRangeNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_transform_feeback_glBindBufferRangeNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglBindBufferRangeNV(target, index, buffer, offset, size, function_pointer);
 	}
 	private static native void nglBindBufferRangeNV(int target, int index, int buffer, long offset, long size, long function_pointer);
 
 	public static void glBindBufferOffsetNV(int target, int index, int buffer, long offset) {
-		long function_pointer = GLContext.getCapabilities().NV_transform_feeback_glBindBufferOffsetNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_transform_feeback_glBindBufferOffsetNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglBindBufferOffsetNV(target, index, buffer, offset, function_pointer);
 	}
 	private static native void nglBindBufferOffsetNV(int target, int index, int buffer, long offset, long function_pointer);
 
 	public static void glBindBufferBaseNV(int target, int index, int buffer) {
-		long function_pointer = GLContext.getCapabilities().NV_transform_feeback_glBindBufferBaseNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_transform_feeback_glBindBufferBaseNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglBindBufferBaseNV(target, index, buffer, function_pointer);
 	}
 	private static native void nglBindBufferBaseNV(int target, int index, int buffer, long function_pointer);
 
 	public static void glTransformFeedbackAttribsNV(IntBuffer attribs, int bufferMode) {
-		long function_pointer = GLContext.getCapabilities().NV_transform_feeback_glTransformFeedbackAttribsNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_transform_feeback_glTransformFeedbackAttribsNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(attribs);
 		nglTransformFeedbackAttribsNV((attribs.remaining()), attribs, attribs.position(), bufferMode, function_pointer);
@@ -109,7 +113,8 @@ public final class NVTransformFeeback {
 	private static native void nglTransformFeedbackAttribsNV(int count, IntBuffer attribs, int attribs_position, int bufferMode, long function_pointer);
 
 	public static void glTransformFeedbackVaryingsNV(int program, IntBuffer locations, int bufferMode) {
-		long function_pointer = GLContext.getCapabilities().NV_transform_feeback_glTransformFeedbackVaryingsNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_transform_feeback_glTransformFeedbackVaryingsNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(locations);
 		nglTransformFeedbackVaryingsNV(program, (locations.remaining()), locations, locations.position(), bufferMode, function_pointer);
@@ -117,21 +122,24 @@ public final class NVTransformFeeback {
 	private static native void nglTransformFeedbackVaryingsNV(int program, int count, IntBuffer locations, int locations_position, int bufferMode, long function_pointer);
 
 	public static void glBeginTransformFeedbackNV(int primitiveMode) {
-		long function_pointer = GLContext.getCapabilities().NV_transform_feeback_glBeginTransformFeedbackNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_transform_feeback_glBeginTransformFeedbackNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglBeginTransformFeedbackNV(primitiveMode, function_pointer);
 	}
 	private static native void nglBeginTransformFeedbackNV(int primitiveMode, long function_pointer);
 
 	public static void glEndTransformFeedbackNV() {
-		long function_pointer = GLContext.getCapabilities().NV_transform_feeback_glEndTransformFeedbackNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_transform_feeback_glEndTransformFeedbackNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglEndTransformFeedbackNV(function_pointer);
 	}
 	private static native void nglEndTransformFeedbackNV(long function_pointer);
 
 	public static int glGetVaryingLocationNV(int program, ByteBuffer name) {
-		long function_pointer = GLContext.getCapabilities().NV_transform_feeback_glGetVaryingLocationNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_transform_feeback_glGetVaryingLocationNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(name);
 		BufferChecks.checkNullTerminated(name);
@@ -141,7 +149,8 @@ public final class NVTransformFeeback {
 	private static native int nglGetVaryingLocationNV(int program, ByteBuffer name, int name_position, long function_pointer);
 
 	public static void glGetActiveVaryingNV(int program, int index, IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
-		long function_pointer = GLContext.getCapabilities().NV_transform_feeback_glGetActiveVaryingNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_transform_feeback_glGetActiveVaryingNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(length, 1);
 		BufferChecks.checkBuffer(size, 1);
@@ -152,7 +161,8 @@ public final class NVTransformFeeback {
 	private static native void nglGetActiveVaryingNV(int program, int index, int bufSize, IntBuffer length, int length_position, IntBuffer size, int size_position, IntBuffer type, int type_position, ByteBuffer name, int name_position, long function_pointer);
 
 	public static void glActiveVaryingNV(int program, ByteBuffer name) {
-		long function_pointer = GLContext.getCapabilities().NV_transform_feeback_glActiveVaryingNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_transform_feeback_glActiveVaryingNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkDirect(name);
 		BufferChecks.checkNullTerminated(name);
@@ -161,7 +171,8 @@ public final class NVTransformFeeback {
 	private static native void nglActiveVaryingNV(int program, ByteBuffer name, int name_position, long function_pointer);
 
 	public static void glGetTransformFeedbackVaryingNV(int program, int index, IntBuffer location) {
-		long function_pointer = GLContext.getCapabilities().NV_transform_feeback_glGetTransformFeedbackVaryingNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_transform_feeback_glGetTransformFeedbackVaryingNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(location, 1);
 		nglGetTransformFeedbackVaryingNV(program, index, location, location.position(), function_pointer);

@@ -32,7 +32,8 @@ public final class ARBColorBufferFloat {
 	 * Accepted as a bit set in the GLX_RENDER_TYPE variable
 	 */
 	public static void glClampColorARB(int target, int clamp) {
-		long function_pointer = GLContext.getCapabilities().ARB_color_buffer_float_glClampColorARB_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ARB_color_buffer_float_glClampColorARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglClampColorARB(target, clamp, function_pointer);
 	}

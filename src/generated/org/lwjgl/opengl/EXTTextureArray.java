@@ -55,7 +55,8 @@ public final class EXTTextureArray {
 
 
 	public static void glFramebufferTextureLayerEXT(int target, int attachment, int texture, int level, int layer) {
-		long function_pointer = GLContext.getCapabilities().EXT_texture_array_glFramebufferTextureLayerEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_texture_array_glFramebufferTextureLayerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglFramebufferTextureLayerEXT(target, attachment, texture, level, layer, function_pointer);
 	}

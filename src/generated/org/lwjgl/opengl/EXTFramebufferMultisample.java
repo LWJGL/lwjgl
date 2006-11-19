@@ -21,7 +21,8 @@ public final class EXTFramebufferMultisample {
 	 *         samples of a renderbuffer object's image.
 	 */
 	public static void glRenderbufferStorageMultisampleEXT(int target, int samples, int internalformat, int width, int height) {
-		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_multisample_glRenderbufferStorageMultisampleEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_framebuffer_multisample_glRenderbufferStorageMultisampleEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglRenderbufferStorageMultisampleEXT(target, samples, internalformat, width, height, function_pointer);
 	}

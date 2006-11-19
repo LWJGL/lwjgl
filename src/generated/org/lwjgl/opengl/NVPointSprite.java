@@ -16,14 +16,16 @@ public final class NVPointSprite {
 
 
 	public static void glPointParameteriNV(int pname, int param) {
-		long function_pointer = GLContext.getCapabilities().NV_point_sprite_glPointParameteriNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_point_sprite_glPointParameteriNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglPointParameteriNV(pname, param, function_pointer);
 	}
 	private static native void nglPointParameteriNV(int pname, int param, long function_pointer);
 
 	public static void glPointParameterNV(int pname, IntBuffer params) {
-		long function_pointer = GLContext.getCapabilities().NV_point_sprite_glPointParameterivNV_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.NV_point_sprite_glPointParameterivNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(params, 4);
 		nglPointParameterivNV(pname, params, params.position(), function_pointer);

@@ -28,14 +28,16 @@ public final class EXTBindableUniform {
 
 
 	public static void glUniformBufferEXT(int program, int location, int buffer) {
-		long function_pointer = GLContext.getCapabilities().EXT_bindable_uniform_glUniformBufferEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_bindable_uniform_glUniformBufferEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglUniformBufferEXT(program, location, buffer, function_pointer);
 	}
 	private static native void nglUniformBufferEXT(int program, int location, int buffer, long function_pointer);
 
 	public static int glGetUniformBufferSizeEXT(int program, int location) {
-		long function_pointer = GLContext.getCapabilities().EXT_bindable_uniform_glGetUniformBufferSizeEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_bindable_uniform_glGetUniformBufferSizeEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		int __result = nglGetUniformBufferSizeEXT(program, location, function_pointer);
 		return __result;
@@ -43,7 +45,8 @@ public final class EXTBindableUniform {
 	private static native int nglGetUniformBufferSizeEXT(int program, int location, long function_pointer);
 
 	public static long glGetUniformOffsetEXT(int program, int location) {
-		long function_pointer = GLContext.getCapabilities().EXT_bindable_uniform_glGetUniformOffsetEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_bindable_uniform_glGetUniformOffsetEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		long __result = nglGetUniformOffsetEXT(program, location, function_pointer);
 		return __result;

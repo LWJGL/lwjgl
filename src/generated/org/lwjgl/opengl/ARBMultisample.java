@@ -22,7 +22,8 @@ public final class ARBMultisample {
 
 
 	public static void glSampleCoverageARB(float value, boolean invert) {
-		long function_pointer = GLContext.getCapabilities().ARB_multisample_glSampleCoverageARB_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ARB_multisample_glSampleCoverageARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglSampleCoverageARB(value, invert, function_pointer);
 	}

@@ -21,7 +21,8 @@ public final class ATIEnvmapBumpmap {
 
 
 	public static void glTexBumpParameterATI(int pname, FloatBuffer param) {
-		long function_pointer = GLContext.getCapabilities().ATI_envmap_bumpmap_glTexBumpParameterfvATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_envmap_bumpmap_glTexBumpParameterfvATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(param, 4);
 		nglTexBumpParameterfvATI(pname, param, param.position(), function_pointer);
@@ -29,7 +30,8 @@ public final class ATIEnvmapBumpmap {
 	private static native void nglTexBumpParameterfvATI(int pname, FloatBuffer param, int param_position, long function_pointer);
 
 	public static void glTexBumpParameterATI(int pname, IntBuffer param) {
-		long function_pointer = GLContext.getCapabilities().ATI_envmap_bumpmap_glTexBumpParameterivATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_envmap_bumpmap_glTexBumpParameterivATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(param, 4);
 		nglTexBumpParameterivATI(pname, param, param.position(), function_pointer);
@@ -37,7 +39,8 @@ public final class ATIEnvmapBumpmap {
 	private static native void nglTexBumpParameterivATI(int pname, IntBuffer param, int param_position, long function_pointer);
 
 	public static void glGetTexBumpParameterATI(int pname, FloatBuffer param) {
-		long function_pointer = GLContext.getCapabilities().ATI_envmap_bumpmap_glGetTexBumpParameterfvATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_envmap_bumpmap_glGetTexBumpParameterfvATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(param, 4);
 		nglGetTexBumpParameterfvATI(pname, param, param.position(), function_pointer);
@@ -45,7 +48,8 @@ public final class ATIEnvmapBumpmap {
 	private static native void nglGetTexBumpParameterfvATI(int pname, FloatBuffer param, int param_position, long function_pointer);
 
 	public static void glGetTexBumpParameterATI(int pname, IntBuffer param) {
-		long function_pointer = GLContext.getCapabilities().ATI_envmap_bumpmap_glGetTexBumpParameterivATI_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.ATI_envmap_bumpmap_glGetTexBumpParameterivATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		BufferChecks.checkBuffer(param, 4);
 		nglGetTexBumpParameterivATI(pname, param, param.position(), function_pointer);

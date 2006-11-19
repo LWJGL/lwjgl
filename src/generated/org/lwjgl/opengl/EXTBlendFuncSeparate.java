@@ -17,7 +17,8 @@ public final class EXTBlendFuncSeparate {
 
 
 	public static void glBlendFuncSeparateEXT(int sfactorRGB, int dfactorRGB, int sfactorAlpha, int dfactorAlpha) {
-		long function_pointer = GLContext.getCapabilities().EXT_blend_func_separate_glBlendFuncSeparateEXT_pointer;
+		ContextCapabilities caps = GLContext.getCapabilities();
+		long function_pointer = caps.EXT_blend_func_separate_glBlendFuncSeparateEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglBlendFuncSeparateEXT(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha, function_pointer);
 	}
