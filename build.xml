@@ -1,0 +1,866 @@
+<project name="LWJGL" default="all" basedir=".">
+
+	<!-- ================================================================== -->
+	<!-- Global properties for build 																				-->
+	<!-- ================================================================== -->
+	<property name="lwjgl.src" 				location="src" />
+	<property name="lwjgl.src.native" 		location="${lwjgl.src}/native" />
+	<property name="lwjgl.src.headers" 		location="${lwjgl.src.native}/common" />
+	<property name="lwjgl.src.templates"	location="${lwjgl.src}/templates" />
+	<property name="lwjgl.bin" 				location="bin" />
+	<property name="lwjgl.lib" 				location="libs" />
+	<property name="lwjgl.dist" 			location="dist" />
+	<property name="lwjgl.docs" 			location="doc" />
+	<property name="lwjgl.temp" 			location="temp" />
+	<property name="lwjgl.res" 				location="res" />
+	<property name="lwjgl.version" 			value="1.0beta4" />
+
+	<property name="opengl-template-pattern" value="org/lwjgl/opengl/GL*.java,org/lwjgl/opengl/ARB*.java,org/lwjgl/opengl/ATI*.java,org/lwjgl/opengl/EXT*.java,org/lwjgl/opengl/NV*.java,org/lwjgl/opengl/HP*.java,org/lwjgl/opengl/IBM*.java,org/lwjgl/opengl/SUN*.java,org/lwjgl/opengl/SGIS*.java"/>
+	<!-- ================================================================== -->
+	<!-- Filesets used for targets 																					-->
+	<!-- ================================================================== -->
+
+	<!-- Files to include in the lwjgl.jar file -->
+	<fileset id="lwjgl.fileset" dir="${lwjgl.bin}">
+		<include name="org/**/*" />
+		<exclude name="org/lwjgl/fmod3/**" />
+		<exclude name="org/lwjgl/test/**" />
+		<exclude name="org/lwjgl/util/**" />
+		<exclude name="org/lwjgl/devil/**" />
+		<exclude name="org/lwjgl/examples/**" />
+	</fileset>
+
+	<fileset id="lwjgl_util_applet.fileset" dir="${lwjgl.bin}">
+		<exclude name="**.*"/>
+		<include name="org/lwjgl/util/applet/**"/>
+	</fileset>
+
+	<!-- Files to include in the lwjgl_test.jar file -->
+	<fileset id="lwjgl_test.fileset" dir="${lwjgl.bin}">
+		<exclude name="**.*" />
+		<include name="org/lwjgl/test/**" />
+		<include name="org/lwjgl/examples/**" />
+	</fileset>
+  
+  <!-- More files to include in the lwjgl_test.jar file -->
+	<fileset id="lwjgl_test_extra.fileset" dir="${lwjgl.src}/java">
+		<exclude name="**.*" />
+		<include name="org/lwjgl/test/opengl/shaders/shaderFP.fp" />
+    <include name="org/lwjgl/test/opengl/shaders/shaderFP.vp" />
+    <include name="org/lwjgl/test/opengl/shaders/shaderFSH.fsh" />
+    <include name="org/lwjgl/test/opengl/shaders/shaderFSH.vsh" />
+    <include name="org/lwjgl/test/opengl/shaders/shaderVP.vp" />
+    <include name="org/lwjgl/test/opengl/shaders/shaderVSH.vsh" />
+	</fileset>  
+
+	<!-- Files to include in the lwjgl_util.jar file -->
+	<fileset id="lwjgl_util.fileset" dir="${lwjgl.bin}">
+		<exclude name="**.*" />
+		<exclude name="org/lwjgl/util/generator/**" />
+		<exclude name="org/lwjgl/util/applet/**" />
+		<include name="org/lwjgl/util/**" />
+	</fileset>
+
+	<!-- Files to include in the lwjgl_fmod3.jar file -->
+	<fileset id="lwjgl_fmod3.fileset" dir="${lwjgl.bin}">
+		<exclude name="**.*" />
+		<include name="org/lwjgl/fmod3/**" />
+	</fileset>
+	
+	<!-- Files to include in the lwjgl_devil.jar file -->
+	<fileset id="lwjgl_devil.fileset" dir="${lwjgl.bin}">
+		<exclude name="**.*"/>
+		<include name="org/lwjgl/devil/**"/>
+	</fileset>
+	
+	<!-- Files to include in the lwjgl_applet.jar file -->
+	<fileset id="lwjgl_applet.fileset" dir="${lwjgl.bin}">
+		<exclude name="**.*"/>
+		<include name="org/lwjgl/test/applet/**"/>
+	</fileset>
+	
+	<!-- Files to make Javadoc from -->
+	<fileset id="lwjgl.javadoc.fileset" dir="${lwjgl.src}">
+		<include name="**/*.java" />
+		<exclude name="native/**" />
+		<exclude name="templates/**" />
+		<exclude name="java/org/lwjgl/test/**" />
+		<exclude name="java/org/lwjgl/examples/**" />
+		<exclude name="java/org/lwjgl/util/generator/**" />
+	</fileset>
+
+	<!-- Files to include in doc package -->
+	<patternset id="lwjgl-docs.fileset">
+		<include name="CREDITS" />
+		<include name="LICENSE" />
+		<include name="README" />
+		<include name="lwjgl_hidden_switches.text" />
+		<include name="3rdparty/*" />
+	</patternset>
+
+	<!-- Files to include in win32 package -->
+	<patternset id="lwjgl-win32.fileset">
+		<include name="lwjgl.dll" />
+		<include name="OpenAL32.dll" />
+    	<include name="jinput-dx8.dll" />
+    	<include name="jinput-raw.dll" />
+	</patternset>
+	
+	<!-- Files to include in win32 optional package -->
+	<patternset id="lwjgl-win32_optional.fileset">
+		<include name="lwjgl-fmod3.dll" />
+		<include name="lwjgl-devil.dll" />
+		<include name="DevIL.dll" />
+		<include name="ILU.dll" />
+		<include name="ILUT.dll" />
+	</patternset>	
+
+	<!-- Files to include in linux, glibc2.3 package -->
+	<patternset id="lwjgl-linux.fileset">
+		<include name="liblwjgl*.so" />
+		<include name="libopenal.so" />    
+		<include name="libjinput-linux.so" />
+	</patternset>
+	
+	<!-- Files to include in linux optional, glibc2.3 package -->
+	<patternset id="lwjgl-linux_optional.fileset">
+		<include name="liblwjgl-fmod3.so" />
+		<include name="liblwjgl-devil.so" />
+		<include name="libIL.so" />
+		<include name="libILU.so" />
+		<include name="libILUT.so" />
+	</patternset>	
+
+	<!-- Files to include in mac os x package -->
+	<patternset id="lwjgl-macosx.fileset">
+		<include name="liblwjgl.jnilib" />
+		<include name="openal.dylib" />
+	    <include name="libjinput-osx.jnilib" />
+	    <include name="libjinput-osx-legacy.jnilib" />
+	</patternset>
+	
+	<!-- Files to include in mac os x optional package -->
+	<patternset id="lwjgl-macosx_optional.fileset">
+		<include name="liblwjgl-fmod3.jnilib" />
+		<include name="liblwjgl-devil.jnilib" />
+		<include name="libIL.dylib" />
+		<include name="libILU.dylib" />
+		<include name="libILUT.dylib" />
+	</patternset>
+	
+	<!-- Files to include in source distribution -->
+	<fileset id="lwjgl.source.fileset" dir=".">
+        <include name="build.xml" />
+        <include name="src/**" />
+    	<include name="platform_build/**/*" />
+	</fileset>
+
+	<!-- files in the base package -->
+	<patternset id="lwjgl_base">
+		<include name="**" />
+		<exclude name="jar/lwjgl_fmod3.jar" />
+		<exclude name="jar/lwjgl_devil.jar" />
+		<exclude name="native/win32/lwjgl-*.dll" />
+		<exclude name="native/win32/DevIL.dll" />
+		<exclude name="native/win32/ILU.dll" />
+		<exclude name="native/win32/ILUT.dll" />
+		<exclude name="native/linux/libIL*.so" />
+		<exclude name="native/linux/liblwjgl-*.so" />
+		<exclude name="native/macosx/libIL*.dylib" />
+		<exclude name="native/macosx/liblwjgl-*.jnilib" />
+		<exclude name="res/ILtest.*" />
+		<exclude name="res/Missing_you.mod" />
+		<exclude name="res/phero*.*" />
+		<exclude name="doc/3rdparty/openil_license.txt" />
+	</patternset>
+	
+	<!-- files in the optional package -->
+	<patternset id="lwjgl_optional">
+		<include name="jar/lwjgl_fmod3.jar" />
+		<include name="jar/lwjgl_devil.jar" />
+		<include name="native/win32/lwjgl-*.dll" />
+		<include name="native/win32/DevIL.dll" />
+		<include name="native/win32/ILU.dll" />
+		<include name="native/win32/ILUT.dll" />
+		<include name="native/linux/libIL*.so" />
+		<include name="native/linux/liblwjgl-*.so" />
+		<include name="native/macosx/libIL*.dylib" />
+		<include name="native/macosx/liblwjgl-*.jnilib" />
+		<include name="res/**" />
+		<exclude name="res/logo/**" />
+		<exclude name="res/spaceinvaders/**" />
+		<exclude name="res/*.wav" />
+		<exclude name="res/*.xpm" />
+		<include name="doc/3rdparty/openil_license.txt" />
+		<include name="doc/CREDITS" />
+		<include name="doc/LICENSE" />
+		<include name="doc/README" />
+	</patternset>	
+	
+	<!-- files in the lwjgl_applet package -->
+	<patternset id="lwjgl_applet">
+		<include name="applet/**" />
+		<exclude name="applet/appletviewer.policy" />
+		<exclude name="applet/lwjglkeystore" />
+	</patternset>		
+	
+	<uptodate property="lwjgl.main.built" targetfile="${lwjgl.lib}/win32/lwjgl.dll" >
+	    <srcfiles dir= "${lwjgl.src.native}/common" includes="*.c*"/>
+	    <srcfiles dir= "${lwjgl.src.native}/generated" includes="*.c"/>
+	    <srcfiles dir= "${lwjgl.src.native}/windows" includes="*.c"/>
+	</uptodate>	
+	
+	<uptodate property="lwjgl.fmod.built" targetfile="${lwjgl.lib}/win32/lwjgl-fmod3.dll" >
+	    <srcfiles dir= "${lwjgl.src.native}/common" includes="*.c"/>
+	    <srcfiles dir= "${lwjgl.src.native}/common/fmod3" includes="*.c"/>
+	</uptodate>	
+	
+	<uptodate property="lwjgl.devil.built" targetfile="${lwjgl.lib}/win32/lwjgl-devil.dll" >
+	    <srcfiles dir= "${lwjgl.src.native}/common" includes="*.c"/>
+	    <srcfiles dir= "${lwjgl.src.native}/common/devil" includes="*.c"/>
+	</uptodate>	
+
+	<!-- ================================================================== -->
+	<!-- Everything below this line is targets.															-->
+	<!-- Do not modify, unless you know what you're doing 									-->
+	<!-- ================================================================== -->
+
+	<!-- ================================================================== -->
+	<!-- Initialize build			 																							-->
+	<!-- ================================================================== -->
+	<target name="-initialize">
+		<mkdir dir="${lwjgl.bin}" taskname="initialiazing bin folder" />
+		<mkdir dir="${lwjgl.bin}/lwjgl" taskname="initialiazing bin folder" />
+		<mkdir dir="${lwjgl.bin}/devil" taskname="initialiazing bin folder" />
+		<mkdir dir="${lwjgl.bin}/fmod3" taskname="initialiazing bin folder" />
+		<mkdir dir="${lwjgl.lib}" taskname="initialiazing lib folder" />
+		<mkdir dir="${lwjgl.dist}" taskname="initialiazing dist folder" />
+		<mkdir dir="${lwjgl.docs}/javadoc" taskname="initialiazing docs folder" />
+		<mkdir dir="${lwjgl.res}" taskname="initialiazing res folder" />
+		<mkdir dir="${lwjgl.temp}" taskname="initialiazing temp folder" />
+		<mkdir dir="${lwjgl.temp}/jar" taskname="initialiazing temp/jar folder" />
+		<mkdir dir="${lwjgl.temp}/doc" taskname="initialiazing temp/doc folder" />
+		<mkdir dir="${lwjgl.temp}/res" taskname="initialiazing temp/res folder" />
+		<mkdir dir="${lwjgl.temp}/native" taskname="initialiazing temp/native folder" />
+		<mkdir dir="${lwjgl.temp}/native/win32" taskname="initialiazing temp/win32 folder" />
+		<mkdir dir="${lwjgl.temp}/native/linux" taskname="initialiazing temp/linux folder" />
+		<mkdir dir="${lwjgl.temp}/native/macosx" taskname="initialiazing temp/macosx folder" />
+	</target>
+
+	<target name="clean-generated" description="Deletes the generated java and native source">
+		<delete quiet="true" failonerror="false">
+			<fileset dir="${lwjgl.src}/generated" includes="**"/>
+			<fileset dir="${lwjgl.src.native}/generated" includes="**"/>
+		</delete>
+	</target>
+	
+	<!-- Cleans up any files created during the execution of this script -->
+	<target name="clean" description="Cleans the diectories controlled by this ant script">
+		<delete dir="${lwjgl.temp}" quiet="true" failonerror="false" taskname="cleaning temp folder" />
+		<delete dir="${lwjgl.docs}/javadoc" quiet="true" failonerror="false" taskname="cleaning javadoc folder" />
+		<delete dir="${lwjgl.bin}" quiet="true" failonerror="false" taskname="cleaning bin folder" />
+	</target>
+	
+	<!-- Creates a distribution of LWJGL -->
+	<target name="release" description="Creates a distribution of LWJGL using supplied native binaries">
+		<!-- Warn user -->
+		<echo message="Before running the release target, please manually compile all platforms and place required files in ${lwjgl.lib}/win32, ${lwjgl.lib}/linux and ${lwjgl.lib}/macosx${line.separator}Missing files will result in a successfull built, but with incomplete release zips"/>
+  	<input 
+  		message="All data in the ${lwjgl.dist} folder will be deleted. Continue? "
+    	validargs="yes,no"
+    	addproperty="do.delete"
+  	/>
+  	<condition property="do.abort">
+    	<equals arg1="no" arg2="${do.delete}"/>
+  	</condition>
+  	<fail if="do.abort">Build aborted by user.</fail>
+  	
+  	<!-- prepare -->
+  	<delete dir="${lwjgl.dist}" quiet="true" failonerror="false" />
+  	<antcall target="clean" />
+  	<antcall target="-initialize" />
+
+  	<!-- compile and create jars -->
+  	<antcall target="compile" />
+ 	<antcall target="javadoc" />
+  	<antcall target="-createjars" />
+	<antcall target="applet-release" />
+  	
+  	<!-- copy resources to res folder -->
+ 		<copy todir="${lwjgl.temp}/res">
+    	<fileset dir="res"/>
+  	</copy>
+  	
+  	<!-- copy docs -->
+ 		<copy todir="${lwjgl.temp}/doc">
+    	<fileset dir="${lwjgl.docs}">
+    		<patternset refid="lwjgl-docs.fileset" />
+    	</fileset>
+  	</copy>
+		
+		<!-- create distribution from files in libs/ and temp/ -->
+		<antcall target="-distribution_javadoc" />
+		<antcall target="-distribution_source" />
+		<antcall target="-distribute" />
+	</target>
+
+	<target name="all" description="Creates the Java archives and the natives for the current platform" depends="jars, compile_native"/>
+
+	<!-- Create ONLY the jar archives -->
+	<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="-initialize, compile, -createjars">
+		<move todir="libs/">
+			<fileset dir="${lwjgl.temp}/jar">
+				<include name="*.jar"/>
+			</fileset>
+		</move>
+	</target>
+
+	<!-- Packages the java files -->
+	<target name="-createjars">
+		<!-- Create lwjgl.jar -->
+		<jar destfile="${lwjgl.temp}/jar/lwjgl.jar" taskname="lwjgl.jar">
+			<fileset refid="lwjgl.fileset" />
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+			</manifest>
+		</jar>
+		
+		<!-- Create lwjgl_util_applet.jar -->
+		<jar destfile="${lwjgl.temp}/jar/lwjgl_util_applet.jar" taskname="lwjgl_util_applet.jar">
+			<fileset refid="lwjgl_util_applet.fileset" />
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+			</manifest>
+		</jar>
+
+		<!-- Create lwjgl_test.jar -->
+		<jar destfile="${lwjgl.temp}/jar/lwjgl_test.jar" taskname="lwjgl_test.jar">
+			<fileset refid="lwjgl_test.fileset" />
+			<fileset refid="lwjgl_test_extra.fileset" />
+		</jar>
+
+		<!-- Create lwjgl_util.jar -->
+		<jar destfile="${lwjgl.temp}/jar/lwjgl_util.jar" taskname="lwjgl_util.jar">
+			<fileset refid="lwjgl_util.fileset" />
+		</jar>
+		
+		<!-- Create lwjgl_fmod.jar -->
+		<jar destfile="${lwjgl.temp}/jar/lwjgl_fmod3.jar" taskname="lwjgl_fmod3.jar">
+			<fileset refid="lwjgl_fmod3.fileset" />
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+			</manifest>
+		</jar>
+		
+		<!-- Create lwjgl_devil.jar -->
+		<jar destfile="${lwjgl.temp}/jar/lwjgl_devil.jar" taskname="lwjgl_devil.jar">
+			<fileset refid="lwjgl_devil.fileset" />
+			<manifest>
+				<attribute name="Sealed" value="false"/>
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="applettest" depends="applet">
+		<exec executable="appletviewer">
+			<arg value="-J-Djava.security.policy=applet/appletviewer.policy"/>
+			<arg path="applet/applet.html"/>
+		</exec>
+	</target>
+
+	<target name="runtest" depends="all">
+		<fail message="test.mainclass is not set. Use 'ant -Dtest.mainclass=&lt;main-class&gt; runtest'" unless="test.mainclass"/>
+		<condition property="native_path" value="libs/win32">
+			<os family="windows" />
+		</condition>
+
+		<condition property="native_path" value="libs/linux">
+			<os name="Linux" />
+		</condition>
+
+		<condition property="native_path" value="libs/macosx">
+			<os name="Mac OS X" />
+		</condition>
+		<java classname="${test.mainclass}" classpath="res:${lwjgl.lib}/lwjgl.jar:${lwjgl.lib}/lwjgl_util.jar:${lwjgl.lib}/lwjgl_test.jar:${lwjgl.lib}/jinput.jar" fork="true">
+			<jvmarg value="-Dorg.lwjgl.util.Debug=true"/>
+			<jvmarg value="-Djava.library.path=${native_path}"/>
+		</java>
+	</target>
+	
+	<target name="applet" depends="jars">
+		<antcall target="-applet">
+		    <param name="keystore" value="applet/lwjglkeystore"/>
+			<param name="alias" value="lwjgl"/>			
+			<param name="password" value="123456"/>			
+		  </antcall>
+	</target>
+	
+	<target name="applet-release">
+		<input 	message="Please type the password for the keystore" addproperty="sign.pwd"/>
+
+		<antcall target="-applet">
+		    <param name="keystore" value="signing/matzon_java_code_signing.keystore"/>
+			<param name="alias" value="oddlabs_java_code_signing"/>
+			<param name="password" value="${sign.pwd}"/>
+		  </antcall>
+	</target>
+
+	<target name="-applet">
+
+		<!-- Create lwjgl_applet.jar -->
+		<jar destfile="applet/lwjgl_applet.jar" taskname="lwjgl_applet.jar">
+			<fileset refid="lwjgl_applet.fileset" />
+		</jar>
+		
+		<!-- create each of the native jars -->
+		<jar destfile="applet/windows_natives.jar" taskname="windows_natives.jar">
+			<fileset dir="${lwjgl.lib}/win32">
+				<patternset refid="lwjgl-win32.fileset"/>
+				<patternset refid="lwjgl-win32_optional.fileset"/>
+				<include name="fmod.dll"/>
+			</fileset>
+		</jar>
+		<signjar jar="applet/windows_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		
+		<jar destfile="applet/linux_natives.jar" taskname="linux_natives.jar">
+			<fileset dir="${lwjgl.lib}/linux">
+				<patternset refid="lwjgl-linux.fileset"/>
+				<patternset refid="lwjgl-linux_optional.fileset"/>
+				<include name="libfmod.so"/>
+			</fileset>
+		</jar>
+		<signjar jar="applet/linux_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+			
+		<jar destfile="applet/macosx_natives.jar" taskname="macosx_natives.jar">
+			<fileset dir="${lwjgl.lib}/macosx">
+				<patternset refid="lwjgl-macosx.fileset"/>
+				<patternset refid="lwjgl-macosx_optional.fileset"/>
+				<include name="libfmod.dylib"/>
+			</fileset>
+		</jar>
+		<signjar jar="applet/macosx_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		
+		<!-- add it to a natives jar -->
+		<jar destfile="applet/natives.jar" taskname="natives.jar">
+			<fileset dir="applet">
+				<include name="windows_natives.jar"/>
+				<include name="linux_natives.jar"/>
+				<include name="macosx_natives.jar"/>					
+			</fileset>
+		</jar>
+		<delete file="applet/windows_natives.jar"/>
+		<delete file="applet/linux_natives.jar"/>
+		<delete file="applet/macosx_natives.jar"/>
+		
+		<copy file="${lwjgl.lib}/lwjgl.jar" todir="applet"/>
+		<copy file="${lwjgl.lib}/lwjgl_util_applet.jar" todir="applet"/>
+		<copy file="${lwjgl.lib}/lwjgl_util.jar" todir="applet"/>
+		<copy file="${lwjgl.lib}/lwjgl_fmod3.jar" todir="applet"/>
+		<copy file="${lwjgl.lib}/lwjgl_devil.jar" todir="applet"/>
+		<copy file="${lwjgl.lib}/jinput.jar" todir="applet"/>
+		<zip destfile="applet/res.jar">
+		  <zipfileset dir="${lwjgl.res}" includes="Footsteps.wav, ILtest.tga, Missing_you.mod"/>
+		</zip>
+		<signjar jar="applet/lwjgl.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="applet/jinput.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="applet/lwjgl_util_applet.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="applet/lwjgl_fmod3.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="applet/lwjgl_devil.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>		
+	</target>
+
+	<!-- Distributes files  -->
+	<target name="-distribute">
+		<delete>
+			<fileset dir="${lwjgl.temp}/native/" includes="**/*"/>
+		</delete>	
+
+	    <copy file="${lwjgl.lib}/jinput.jar" todir="${lwjgl.temp}/jar"/>
+		<copy todir="${lwjgl.temp}/native/win32">
+			<fileset dir="${lwjgl.lib}/win32">
+				<patternset refid="lwjgl-win32.fileset" />
+				<patternset refid="lwjgl-win32_optional.fileset" />
+			</fileset>
+		</copy>
+		<copy todir="${lwjgl.temp}/native/linux">
+			<fileset dir="${lwjgl.lib}/linux">
+				<patternset refid="lwjgl-linux.fileset" />
+				<patternset refid="lwjgl-linux_optional.fileset" />
+			</fileset>
+		</copy>
+		<copy todir="${lwjgl.temp}/native/macosx">
+			<fileset dir="${lwjgl.lib}/macosx">
+				<patternset refid="lwjgl-macosx.fileset" />
+				<patternset refid="lwjgl-macosx_optional.fileset" />
+			</fileset>
+		</copy>
+		
+		<!-- create base package -->
+		<zip destfile="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip">
+			<zipfileset dir="${lwjgl.temp}" prefix="lwjgl-${lwjgl.version}/">
+				<patternset refid="lwjgl_base"/>
+			</zipfileset>			
+		</zip>
+		
+		<!-- create optional package -->
+		<zip destfile="${lwjgl.dist}/lwjgl_optional-${lwjgl.version}.zip">
+			<zipfileset dir="${lwjgl.temp}" prefix="lwjgl_optional-${lwjgl.version}/">
+				<patternset refid="lwjgl_optional"/>
+			</zipfileset>			
+		</zip>
+
+		<!-- create applet package -->
+		<zip destfile="${lwjgl.dist}/lwjgl_applet-${lwjgl.version}.zip">
+			<zipfileset dir="." prefix="lwjgl_applet-${lwjgl.version}/">
+				<patternset refid="lwjgl_applet"/>
+			</zipfileset>			
+		</zip>
+	</target>
+
+	<!-- Creates a versioned distribution of javadocs -->
+	<target name="-distribution_javadoc">
+		<zip destfile="${lwjgl.dist}/lwjgl-docs-${lwjgl.version}.zip" basedir="${lwjgl.docs}" includes="javadoc/**" />
+	</target>
+	
+	<!-- Creates a versioned distribution of the source code -->
+	<target name="-distribution_source">
+		<zip destfile="${lwjgl.dist}/lwjgl-source-${lwjgl.version}.zip">
+			<fileset refid="lwjgl.source.fileset" />
+		</zip>
+	</target>
+
+	<!-- Compiles the Java source code -->
+	<target name="compile" description="Compiles the java source code" depends="-initialize">
+		<javac debug="yes" destdir="${lwjgl.bin}" includes="org/lwjgl/opengl/**" source="1.4" target="1.4" classpath="${lwjgl.lib}/jinput.jar" taskname="core">
+			<src path="${lwjgl.src}/java/"/>
+			<src path="${lwjgl.src}/generated/"/>
+			<include name="org/lwjgl/*.java"/>
+			<include name="org/lwjgl/input/**"/>
+			<include name="org/lwjgl/opengl/**"/>
+			<include name="org/lwjgl/openal/**"/>
+			<include name="org/lwjgl/util/**"/>
+			<exclude name="org/lwjgl/util/generator/**"/>
+		</javac>
+		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/test/**" source="1.4" target="1.4" taskname="test" />
+		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/examples/**" source="1.4" target="1.4" taskname="examples" />
+		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/fmod3/**" source="1.4" target="1.4" taskname="fmod" />
+		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/devil/**" source="1.4" target="1.4" taskname="devil"/>
+	</target>
+	
+	<!-- Generates the native headers from source files -->
+	<target name="headers" description="invokes javah on java classes" depends="compile">
+		<!-- platform specific classes -->
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/linux" force="yes">
+			<class name="org.lwjgl.opengl.LinuxAWTInput" />
+			<class name="org.lwjgl.opengl.LinuxEvent" />
+			<class name="org.lwjgl.opengl.LinuxMouse" />
+			<class name="org.lwjgl.opengl.LinuxKeyboard" />
+			<class name="org.lwjgl.opengl.LinuxDisplay" />
+			<class name="org.lwjgl.opengl.LinuxPeerInfo" />
+			<class name="org.lwjgl.opengl.LinuxPbufferPeerInfo" />
+			<class name="org.lwjgl.opengl.LinuxDisplayPeerInfo" />
+			<class name="org.lwjgl.opengl.LinuxAWTGLCanvasPeerInfo" />
+			<class name="org.lwjgl.opengl.LinuxContextImplementation" />
+			<class name="org.lwjgl.opengl.LinuxCanvasImplementation" />
+		</javah>
+		
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/windows" force="yes">
+			<class name="org.lwjgl.opengl.WindowsAWTInput" />
+			<class name="org.lwjgl.opengl.WindowsKeyboard" />
+			<class name="org.lwjgl.opengl.WindowsDirectInput8" />
+			<class name="org.lwjgl.opengl.WindowsDirectInputDevice8" />
+			<class name="org.lwjgl.opengl.WindowsDirectInput3" />
+			<class name="org.lwjgl.opengl.WindowsDirectInputDevice3" />			
+			<class name="org.lwjgl.opengl.WindowsPbufferPeerInfo" />
+			<class name="org.lwjgl.opengl.WindowsDisplay" />
+			<class name="org.lwjgl.opengl.WindowsRegistry" />
+			<class name="org.lwjgl.WindowsSysImplementation" />
+			<class name="org.lwjgl.opengl.WindowsAWTGLCanvasPeerInfo" />
+			<class name="org.lwjgl.opengl.WindowsPeerInfo" />
+			<class name="org.lwjgl.opengl.WindowsDisplayPeerInfo" />
+			<class name="org.lwjgl.opengl.WindowsContextImplementation" />
+		</javah>
+		
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/macosx" force="yes">
+			<class name="org.lwjgl.opengl.MacOSXMouseEventQueue" />
+			<class name="org.lwjgl.opengl.MacOSXCanvasPeerInfo" />
+			<class name="org.lwjgl.opengl.MacOSXPeerInfo" />
+			<class name="org.lwjgl.opengl.MacOSXPbufferPeerInfo" />
+			<class name="org.lwjgl.opengl.MacOSXDisplay" />
+			<class name="org.lwjgl.opengl.MacOSXContextImplementation" />
+		</javah>
+		
+		<!-- lwjgl -->
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}" force="yes">
+			<class name="org.lwjgl.opengl.AWTSurfaceLock" />
+			<class name="org.lwjgl.DefaultSysImplementation" />
+			<class name="org.lwjgl.input.Cursor" />
+			<class name="org.lwjgl.input.Keyboard" />
+			<class name="org.lwjgl.input.Mouse" />
+
+			<class name="org.lwjgl.openal.ALC" />
+			<class name="org.lwjgl.openal.AL" />
+
+			<class name="org.lwjgl.opengl.GLContext" />
+			<class name="org.lwjgl.opengl.Pbuffer" />
+		</javah>
+
+		<!-- fmod -->
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}/fmod3" force="yes">
+			<class name="org.lwjgl.fmod3.FMOD" />
+			<class name="org.lwjgl.fmod3.FMusic" />
+			<class name="org.lwjgl.fmod3.FSound" />
+		</javah>
+		
+		<!-- DevIL -->
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}/devil" force="yes">
+			<class name="org.lwjgl.devil.ILNative" />
+		</javah>		
+	</target>	
+	
+	<!-- Creates the Javadoc -->
+	<target name="javadoc" description="Creates javadoc from java source code">
+		<javadoc destdir="${lwjgl.docs}/javadoc" author="true" version="true" use="true" source="1.4" windowtitle="LWJGL API">
+			<fileset refid="lwjgl.javadoc.fileset" />
+			<doctitle><![CDATA[<h1>Lightweight Java Game Toolkit</h1>]]></doctitle>
+			<bottom><![CDATA[<i>Copyright &#169; 2002-2006 lwjgl.org. All Rights Reserved.</i>]]></bottom>
+		</javadoc>
+	</target>
+
+	<!-- Compiles the Java source code -->
+	<target name="generators" description="Compiles the native method generators">
+		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/util/generator/**.java" source="1.5" target="1.5" taskname="generator">
+			<compilerarg value="-Xlint:all"/>
+		</javac>
+	</target>
+
+	<target name="generate-all" depends="generate-openal, generate-opengl, generate-opengl-capabilities, generate-opengl-references" description="Generates java and native source"/>
+
+	<target name="generate-openal" depends="generators" description="Generates java and native source for AL">
+		<!-- Generate OpenAL -->
+		<apply executable="apt" parallel="true">
+			<arg value="-nocompile"/>
+			<arg value="-factory"/>
+			<arg value="org.lwjgl.util.generator.GeneratorProcessorFactory"/>
+			<arg value="-cp"/>
+			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg value="-s"/>
+			<arg path="${lwjgl.src}/generated"/>
+			<arg value="-d"/>
+			<arg path="${lwjgl.src.native}/generated"/>
+			<arg value="-Atypemap=org.lwjgl.util.generator.ALTypeMap"/>
+			<arg value="-Ageneratechecks"/>
+			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/openal/AL10.java"/>
+		</apply>
+	</target>
+
+	<target name="generate-opengl" depends="generators" description="Generates java and native source for GL">
+		<!-- there's no apt task in ant yet, so we'll just invoke it manually for now -->
+		<apply executable="apt" parallel="true">
+			<arg value="-nocompile"/>
+			<arg value="-factory"/>
+			<arg value="org.lwjgl.util.generator.GeneratorProcessorFactory"/>
+			<arg value="-cp"/>
+			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg value="-s"/>
+			<arg path="${lwjgl.src}/generated"/>
+			<arg value="-d"/>
+			<arg path="${lwjgl.src.native}/generated"/>
+			<!--<arg value="-Ageneratechecks"/>-->
+			<arg value="-Acontextspecific"/>
+			<arg value="-Atypemap=org.lwjgl.util.generator.GLTypeMap"/>
+			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>
+		</apply>
+	</target>
+
+	<target name="generate-opengl-references" depends="generators" description="Generates java and native source for GL">
+		<!-- Generate context capabilities -->
+		<apply executable="apt" parallel="true">
+			<arg value="-nocompile"/>
+			<arg value="-factory"/>
+			<arg value="org.lwjgl.util.generator.ReferencesGeneratorProcessorFactory"/>
+			<arg value="-cp"/>
+			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg value="-s"/>
+			<arg path="${lwjgl.src}/generated"/>
+			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>
+		</apply>
+	</target>
+	
+	<target name="generate-opengl-capabilities" depends="generators" description="Generates java and native source for GL">
+		<!-- Generate context capabilities -->
+		<apply executable="apt" parallel="true">
+			<arg value="-nocompile"/>
+			<arg value="-factory"/>
+			<arg value="org.lwjgl.util.generator.ContextGeneratorProcessorFactory"/>
+			<arg value="-cp"/>
+			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg value="-s"/>
+			<arg path="${lwjgl.src}/generated"/>
+			<arg value="-Acontextspecific"/>
+			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>
+		</apply>
+	</target>
+
+	<target name="compile_native_all" depends="compile_native, compile_native_optional" description="Compiles the native files"/>
+
+	<!-- Compiles the native files -->
+	<target name="compile_native" depends="headers" description="Compiles the native files">
+		<!-- check each platform, and run their build target -->
+		<condition property="lwjgl.platform.windows">
+			<os family="windows" />
+		</condition>
+		<antcall target="-compile_native_win32" />
+
+		<condition property="lwjgl.platform.linux">
+			<os name="Linux" />
+		</condition>
+		<antcall target="-compile_native_linux" />
+
+		<condition property="lwjgl.platform.macosx">
+			<os name="Mac OS X" />
+		</condition>
+		<antcall target="-compile_native_macosx" />
+	</target>	
+
+	<target name="compile_native_optional" depends="headers" description="Compiles the native files">
+		<!-- check each platform, and run their build target -->
+		<condition property="lwjgl.platform.windows">
+			<os family="windows" />
+		</condition>
+		<antcall target="-compile_native_win32_optional" />
+
+		<condition property="lwjgl.platform.linux">
+			<os name="Linux" />
+		</condition>
+		<antcall target="-compile_native_linux_optional" />
+		<condition property="lwjgl.platform.macosx">
+			<os name="Mac OS X" />
+		</condition>
+		<antcall target="-compile_native_macosx_optional" />
+	</target>	
+	
+	<!-- Compiles LWJGL on Win32 platforms  -->
+	<target name="-compile_native_win32" if="lwjgl.platform.windows">
+		<ant antfile="platform_build/windows_ant/build.xml" inheritAll="false"/>
+		<copy file="${lwjgl.bin}/lwjgl/lwjgl.dll" todir="${lwjgl.lib}/win32"/>
+	</target>
+
+	<target name="-compile_native_win32_optional" if="lwjgl.platform.windows">
+		<ant antfile="platform_build/windows_ant/build_fmod3.xml" inheritAll="false"/>
+		<copy file="${lwjgl.bin}/fmod3/lwjgl-fmod3.dll" todir="${lwjgl.lib}/win32"/>
+
+		<ant antfile="platform_build/windows_ant/build_devil.xml" inheritAll="false"/>
+		<copy file="${lwjgl.bin}/devil/lwjgl-devil.dll" todir="${lwjgl.lib}/win32"/>
+	</target>	
+
+	<!-- Compiles LWJGL on Linux platforms -->
+	<target name="-compile_native_linux" if="lwjgl.platform.linux">
+		<ant antfile="platform_build/linux_ant/build.xml" inheritAll="false"/>
+		<copy todir="${lwjgl.lib}/linux">
+			<fileset dir="${lwjgl.bin}/lwjgl" includes="liblwjgl*.so"/>
+		</copy>
+	</target>
+
+	<target name="-compile_native_linux_optional" if="lwjgl.platform.linux">
+		<ant antfile="platform_build/linux_ant/build_fmod3.xml" inheritAll="false"/>
+		<copy file="${lwjgl.bin}/fmod3/liblwjgl-fmod3.so" todir="${lwjgl.lib}/linux"/>
+
+		<ant antfile="platform_build/linux_ant/build_devil.xml" inheritAll="false"/>
+		<copy file="${lwjgl.bin}/devil/liblwjgl-devil.so" todir="${lwjgl.lib}/linux"/>
+	</target>
+
+	<target name="-compile_native_macosx" if="lwjgl.platform.macosx">
+		<ant antfile="platform_build/macosx_ant/build.xml" inheritAll="false"/>
+		<copy file="${lwjgl.bin}/lwjgl/liblwjgl.jnilib" todir="${lwjgl.lib}/macosx"/>
+	</target>
+
+	<!-- Compiles LWJGL on Mac OS X platforms  -->
+	<target name="-compile_native_macosx_optional" if="lwjgl.platform.macosx">
+	
+		<!-- check for required properties -->
+		<property environment="env"/>
+		<fail message="Missing FMOD path environment property" unless="env.FMOD"/>
+		<ant antfile="platform_build/macosx_ant/build_fmod3.xml" inheritAll="false"/>
+		<ant antfile="platform_build/macosx_ant/build_devil.xml" inheritAll="false"/>
+		<copy file="${lwjgl.bin}/fmod3/liblwjgl-fmod3.jnilib" todir="${lwjgl.lib}/macosx"/>
+		<copy file="${lwjgl.bin}/devil/liblwjgl-devil.jnilib" todir="${lwjgl.lib}/macosx"/>
+  </target>
+	
+	
+	<target name="webstart_demo" depends="jars">
+		<antcall target="-webstart_demo">
+		    <param name="keystore" value="applet/lwjglkeystore"/>
+			<param name="alias" value="lwjgl"/>			
+			<param name="password" value="123456"/>			
+		  </antcall>
+	</target>
+	
+	<target name="webstart_demo-release" depends="jars">
+		<input 	message="Please type the password for the keystore" addproperty="sign.pwd"/>
+
+		<antcall target="-webstart_demo">
+		    <param name="keystore" value="signing/matzon_java_code_signing.keystore"/>
+			<param name="alias" value="oddlabs_java_code_signing"/>
+			<param name="password" value="${sign.pwd}"/>
+		  </antcall>
+	</target>	
+	
+	<!-- -->
+	<target name="-webstart_demo" description="Using released files, creates the necessary files used for jnlp demos">
+	
+		<!-- delete existing temp -->
+		<delete dir="${lwjgl.temp}"/>		
+		
+		<!-- unzip common files -->
+		<unzip src="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip" dest="${lwjgl.temp}/jnlp/temp" overwrite="true"/>
+		<unzip src="${lwjgl.dist}/lwjgl_optional-${lwjgl.version}.zip" dest="${lwjgl.temp}/jnlp/temp" overwrite="true"/>
+		
+		<!-- move files to unified structure -->
+		<move todir="${lwjgl.temp}/jnlp/temp">
+			<fileset dir="${lwjgl.temp}/jnlp/temp/lwjgl-${lwjgl.version}/">
+				<include name="**"/>
+			</fileset>
+			<fileset dir="${lwjgl.temp}/jnlp/temp/lwjgl_optional-${lwjgl.version}/">
+				<include name="**"/>
+			</fileset>
+		</move>
+		
+		<!-- copy fmod dependent files -->
+		<copy file="${lwjgl.lib}/win32/fmod.dll" tofile="${lwjgl.temp}/jnlp/temp/native/win32/fmod.dll"/>
+		<copy file="${lwjgl.lib}/linux/libfmod.so" tofile="${lwjgl.temp}/jnlp/temp/native/linux/libfmod.so"/>
+		
+		<!-- move relevant files to root -->
+		<move todir="${lwjgl.temp}/jnlp/" flatten="true">
+			<fileset dir="${lwjgl.temp}/jnlp/temp">
+				<include name="**/**.jar"/>
+			</fileset>
+		</move>
+		
+		<!-- create native jars -->
+		<jar destfile="${lwjgl.temp}/jnlp/native_win32.jar" basedir="${lwjgl.temp}/jnlp/temp/native/win32"/>
+		<jar destfile="${lwjgl.temp}/jnlp/native_linux.jar" basedir="${lwjgl.temp}/jnlp/temp/native/linux"/>
+		<jar destfile="${lwjgl.temp}/jnlp/native_macosx.jar" basedir="${lwjgl.temp}/jnlp/temp/native/macosx"/>
+		
+		<!-- create media jar -->
+		<jar destfile="${lwjgl.temp}/jnlp/media.jar" basedir="${lwjgl.res}"/>	
+	
+		<!-- sign 'em -->
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_devil.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_fmod3.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_util.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_linux.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_win32.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/jinput.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+	</target>
+	
+	<target name="changelog">
+		<cvschangelog destfile="changelog.xml"/>
+		<style in="changelog.xml" out="changelog.html" style="${ant.home}/etc/changelog.xsl">
+			<param name="title" expression="LWJGL ChangeLog"/>
+			<param name="module" expression="LWJGL"/>
+			<param name="cvsweb" expression="http://cvs.sourceforge.net/viewcvs.py/java-game-lib/"/>
+		</style>         
+	</target> 	
+</project>
