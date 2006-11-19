@@ -90,10 +90,10 @@ public final class AWTInputAdapter {
 
 	public static synchronized void destroy() {
 		if (awt_input != null) {
-			awt_input.destroy();
-			awt_input = null;
 			Mouse.destroy();
 			Keyboard.destroy();
+			awt_input.destroy();
+			awt_input = null;
 		}
 	}
 }
