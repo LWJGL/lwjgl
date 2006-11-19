@@ -160,7 +160,7 @@ public class ContextCapabilities {
 	public final boolean GL_NV_texture_shader;
 	public final boolean GL_NV_texture_shader2;
 	public final boolean GL_NV_texture_shader3;
-	public final boolean GL_NV_transform_feeback;
+	public final boolean GL_NV_transform_feedback;
 	public final boolean GL_NV_vertex_array_range;
 	public final boolean GL_NV_vertex_array_range2;
 	public final boolean GL_NV_vertex_program;
@@ -1073,17 +1073,17 @@ public class ContextCapabilities {
 	long NV_register_combiners_glGetFinalCombinerInputParameterivNV_pointer;
 	long NV_register_combiners2_glCombinerStageParameterfvNV_pointer;
 	long NV_register_combiners2_glGetCombinerStageParameterfvNV_pointer;
-	long NV_transform_feeback_glBindBufferRangeNV_pointer;
-	long NV_transform_feeback_glBindBufferOffsetNV_pointer;
-	long NV_transform_feeback_glBindBufferBaseNV_pointer;
-	long NV_transform_feeback_glTransformFeedbackAttribsNV_pointer;
-	long NV_transform_feeback_glTransformFeedbackVaryingsNV_pointer;
-	long NV_transform_feeback_glBeginTransformFeedbackNV_pointer;
-	long NV_transform_feeback_glEndTransformFeedbackNV_pointer;
-	long NV_transform_feeback_glGetVaryingLocationNV_pointer;
-	long NV_transform_feeback_glGetActiveVaryingNV_pointer;
-	long NV_transform_feeback_glActiveVaryingNV_pointer;
-	long NV_transform_feeback_glGetTransformFeedbackVaryingNV_pointer;
+	long NV_transform_feedback_glBindBufferRangeNV_pointer;
+	long NV_transform_feedback_glBindBufferOffsetNV_pointer;
+	long NV_transform_feedback_glBindBufferBaseNV_pointer;
+	long NV_transform_feedback_glTransformFeedbackAttribsNV_pointer;
+	long NV_transform_feedback_glTransformFeedbackVaryingsNV_pointer;
+	long NV_transform_feedback_glBeginTransformFeedbackNV_pointer;
+	long NV_transform_feedback_glEndTransformFeedbackNV_pointer;
+	long NV_transform_feedback_glGetVaryingLocationNV_pointer;
+	long NV_transform_feedback_glGetActiveVaryingNV_pointer;
+	long NV_transform_feedback_glActiveVaryingNV_pointer;
+	long NV_transform_feedback_glGetTransformFeedbackVaryingNV_pointer;
 	long NV_vertex_array_range_glVertexArrayRangeNV_pointer;
 	long NV_vertex_array_range_glFlushVertexArrayRangeNV_pointer;
 	long NV_vertex_array_range_glAllocateMemoryNV_pointer;
@@ -2344,19 +2344,19 @@ public class ContextCapabilities {
 			(NV_register_combiners2_glGetCombinerStageParameterfvNV_pointer = GLContext.getFunctionAddress("glGetCombinerStageParameterfvNV")) != 0;
 	}
 
-	private boolean NV_transform_feeback_initNativeFunctionAddresses() {
+	private boolean NV_transform_feedback_initNativeFunctionAddresses() {
 		return 
-			(NV_transform_feeback_glBindBufferRangeNV_pointer = GLContext.getFunctionAddress("glBindBufferRangeNV")) != 0 &&
-			(NV_transform_feeback_glBindBufferOffsetNV_pointer = GLContext.getFunctionAddress("glBindBufferOffsetNV")) != 0 &&
-			(NV_transform_feeback_glBindBufferBaseNV_pointer = GLContext.getFunctionAddress("glBindBufferBaseNV")) != 0 &&
-			(NV_transform_feeback_glTransformFeedbackAttribsNV_pointer = GLContext.getFunctionAddress("glTransformFeedbackAttribsNV")) != 0 &&
-			(NV_transform_feeback_glTransformFeedbackVaryingsNV_pointer = GLContext.getFunctionAddress("glTransformFeedbackVaryingsNV")) != 0 &&
-			(NV_transform_feeback_glBeginTransformFeedbackNV_pointer = GLContext.getFunctionAddress("glBeginTransformFeedbackNV")) != 0 &&
-			(NV_transform_feeback_glEndTransformFeedbackNV_pointer = GLContext.getFunctionAddress("glEndTransformFeedbackNV")) != 0 &&
-			(NV_transform_feeback_glGetVaryingLocationNV_pointer = GLContext.getFunctionAddress("glGetVaryingLocationNV")) != 0 &&
-			(NV_transform_feeback_glGetActiveVaryingNV_pointer = GLContext.getFunctionAddress("glGetActiveVaryingNV")) != 0 &&
-			(NV_transform_feeback_glActiveVaryingNV_pointer = GLContext.getFunctionAddress("glActiveVaryingNV")) != 0 &&
-			(NV_transform_feeback_glGetTransformFeedbackVaryingNV_pointer = GLContext.getFunctionAddress("glGetTransformFeedbackVaryingNV")) != 0;
+			(NV_transform_feedback_glBindBufferRangeNV_pointer = GLContext.getFunctionAddress("glBindBufferRangeNV")) != 0 &&
+			(NV_transform_feedback_glBindBufferOffsetNV_pointer = GLContext.getFunctionAddress("glBindBufferOffsetNV")) != 0 &&
+			(NV_transform_feedback_glBindBufferBaseNV_pointer = GLContext.getFunctionAddress("glBindBufferBaseNV")) != 0 &&
+			(NV_transform_feedback_glTransformFeedbackAttribsNV_pointer = GLContext.getFunctionAddress("glTransformFeedbackAttribsNV")) != 0 &&
+			(NV_transform_feedback_glTransformFeedbackVaryingsNV_pointer = GLContext.getFunctionAddress("glTransformFeedbackVaryingsNV")) != 0 &&
+			(NV_transform_feedback_glBeginTransformFeedbackNV_pointer = GLContext.getFunctionAddress("glBeginTransformFeedbackNV")) != 0 &&
+			(NV_transform_feedback_glEndTransformFeedbackNV_pointer = GLContext.getFunctionAddress("glEndTransformFeedbackNV")) != 0 &&
+			(NV_transform_feedback_glGetVaryingLocationNV_pointer = GLContext.getFunctionAddress("glGetVaryingLocationNV")) != 0 &&
+			(NV_transform_feedback_glGetActiveVaryingNV_pointer = GLContext.getFunctionAddress("glGetActiveVaryingNV")) != 0 &&
+			(NV_transform_feedback_glActiveVaryingNV_pointer = GLContext.getFunctionAddress("glActiveVaryingNV")) != 0 &&
+			(NV_transform_feedback_glGetTransformFeedbackVaryingNV_pointer = GLContext.getFunctionAddress("glGetTransformFeedbackVaryingNV")) != 0;
 	}
 
 	private boolean NV_vertex_array_range_initNativeFunctionAddresses() {
@@ -2586,8 +2586,8 @@ public class ContextCapabilities {
 			supported_extensions.remove("GL_NV_register_combiners");
 		if (supported_extensions.contains("GL_NV_register_combiners2") && !NV_register_combiners2_initNativeFunctionAddresses())
 			supported_extensions.remove("GL_NV_register_combiners2");
-		if (supported_extensions.contains("GL_NV_transform_feeback") && !NV_transform_feeback_initNativeFunctionAddresses())
-			supported_extensions.remove("GL_NV_transform_feeback");
+		if (supported_extensions.contains("GL_NV_transform_feedback") && !NV_transform_feedback_initNativeFunctionAddresses())
+			supported_extensions.remove("GL_NV_transform_feedback");
 		if (supported_extensions.contains("GL_NV_vertex_array_range") && !NV_vertex_array_range_initNativeFunctionAddresses())
 			supported_extensions.remove("GL_NV_vertex_array_range");
 		if (supported_extensions.contains("GL_NV_vertex_program") && !NV_vertex_program_initNativeFunctionAddresses())
@@ -2756,7 +2756,7 @@ public class ContextCapabilities {
 		this.GL_NV_texture_shader = supported_extensions.contains("GL_NV_texture_shader");
 		this.GL_NV_texture_shader2 = supported_extensions.contains("GL_NV_texture_shader2");
 		this.GL_NV_texture_shader3 = supported_extensions.contains("GL_NV_texture_shader3");
-		this.GL_NV_transform_feeback = supported_extensions.contains("GL_NV_transform_feeback");
+		this.GL_NV_transform_feedback = supported_extensions.contains("GL_NV_transform_feedback");
 		this.GL_NV_vertex_array_range = supported_extensions.contains("GL_NV_vertex_array_range");
 		this.GL_NV_vertex_array_range2 = supported_extensions.contains("GL_NV_vertex_array_range2");
 		this.GL_NV_vertex_program = supported_extensions.contains("GL_NV_vertex_program")
