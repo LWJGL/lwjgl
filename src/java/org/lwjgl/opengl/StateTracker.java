@@ -33,7 +33,6 @@ package org.lwjgl.opengl;
 
 final class StateTracker {
 	private final ReferencesStack references_stack;
-	
 	private final StateStack attrib_stack;
 
 	StateTracker() {
@@ -42,25 +41,32 @@ final class StateTracker {
 	}
 
 	static void popAttrib() {
-		if ((getClientAttribStack().popState() & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
-			getReferencesStack().popState();
+		getTracker().doPopAttrib();
+	}
+
+	private void doPopAttrib() {
+		if ((attrib_stack.popState() & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
+			references_stack.popState();
 		}
 	}
 	
 	static void pushAttrib(int mask) {
-		StateStack attrib_stack = getClientAttribStack();
+		getTracker().doPushAttrib(mask);
+	}
+
+	private void doPushAttrib(int mask) {
 		attrib_stack.pushState();
 		attrib_stack.setState(mask);
 		if ((mask & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
-			getReferencesStack().pushState();
+			references_stack.pushState();
 		}
+	}
+
+	private static StateTracker getTracker() {
+		return GLContext.getCapabilities().tracker;
 	}
 
 	static ReferencesStack getReferencesStack() {
 		return GLContext.getCapabilities().tracker.references_stack;
-	}
-	
-	private static StateStack getClientAttribStack() {
-		return GLContext.getCapabilities().tracker.attrib_stack;
 	}
 }
