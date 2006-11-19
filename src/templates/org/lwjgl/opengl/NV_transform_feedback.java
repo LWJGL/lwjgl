@@ -36,7 +36,7 @@ import org.lwjgl.util.generator.*;
 import java.nio.IntBuffer;
 import java.nio.ByteBuffer;
 
-public interface NV_transform_feeback {
+public interface NV_transform_feedback {
 
 	/**
 	 * Accepted by the &lt;target&gt; parameters of BindBuffer, BufferData,
