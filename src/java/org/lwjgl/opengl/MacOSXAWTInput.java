@@ -60,7 +60,4 @@ final class MacOSXAWTInput extends AbstractAWTInput {
 			((MacOSXMouseEventQueue)getMouseEventQueue()).warpCursor();
 		had_focus = has_focus;
 	}
-
-	public void destroy() {
-	}
 }

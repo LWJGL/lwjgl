@@ -84,6 +84,10 @@ abstract class AbstractAWTInput implements AWTCanvasInputImplementation {
 	public synchronized void destroy() {
 		canvas.setInput(null);
 		canvas = null;
+		if (mouse_queue != null)
+			mouse_queue.unregister();
+		if (keyboard_queue != null)
+			keyboard_queue.unregister();
 	}
 
 	public final int getWidth() {
