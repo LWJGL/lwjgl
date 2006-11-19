@@ -657,6 +657,24 @@ public final class Display {
 		create(pixel_format, null);
 	}
 
+	private static void removeShutdownHook() {
+		AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				Runtime.getRuntime().removeShutdownHook(shutdown_hook);
+				return null;
+			}
+		});
+	}
+
+	private static void registerShutdownHook() {
+		AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				Runtime.getRuntime().addShutdownHook(shutdown_hook);
+				return null;
+			}
+		});
+	}
+
 	/**
 	 * Create the OpenGL context with the given minimum parameters. If isFullscreen() is true or if windowed
 	 * context are not supported on the platform, the display mode will be switched to the mode returned by
@@ -675,12 +693,8 @@ public final class Display {
 			throw new IllegalStateException("Only one LWJGL context may be instantiated at any one time.");
 		if (pixel_format == null)
 			throw new NullPointerException("pixel_format cannot be null");
-		AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				Runtime.getRuntime().addShutdownHook(shutdown_hook);
-				return null;
-			}
-		});
+		removeShutdownHook();
+		registerShutdownHook();
 		if (fullscreen)
 			switchDisplayMode();
 		try {
@@ -781,12 +795,7 @@ public final class Display {
 		x = y = -1;
 		cached_icons = null;
 		reset();
-		AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				Runtime.getRuntime().removeShutdownHook(shutdown_hook);
-				return null;
-			}
-		});
+		removeShutdownHook();
 	}
 
 	private static void destroyPeerInfo() {
