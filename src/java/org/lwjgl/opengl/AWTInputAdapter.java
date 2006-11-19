@@ -92,6 +92,8 @@ public final class AWTInputAdapter {
 		if (awt_input != null) {
 			awt_input.destroy();
 			awt_input = null;
+			Mouse.destroy();
+			Keyboard.destroy();
 		}
 	}
 }

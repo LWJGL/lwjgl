@@ -140,17 +140,24 @@ public class AWTInputAdapterTest extends Frame {
 							+ (fps / (timeUsed / 1000f)));
 					fps = 0;
 				}
-				Mouse.poll();
-				while (Mouse.next()) {
-					view_roty += Mouse.getEventDX()*.1;
-					view_rotx -= Mouse.getEventDY()*.1;
+				if (Mouse.isCreated()) {
+					Mouse.poll();
+					while (Mouse.next()) {
+						view_roty += Mouse.getEventDX()*.1;
+						view_rotx -= Mouse.getEventDY()*.1;
+					}
 				}
-				Keyboard.poll();
-				while (Keyboard.next()) {
+				if (Keyboard.isCreated()) {
+					Keyboard.poll();
+				}
+				while (Keyboard.isCreated() && Keyboard.next()) {
 					if (Keyboard.getEventKeyState()) {
 						switch (Keyboard.getEventKey()) {
 							case Keyboard.KEY_ESCAPE:
 								System.exit(0);
+								break;
+							case Keyboard.KEY_H:
+								AWTInputAdapter.destroy();
 								break;
 							case Keyboard.KEY_G:
 								Mouse.setGrabbed(!Mouse.isGrabbed());
@@ -162,14 +169,16 @@ public class AWTInputAdapterTest extends Frame {
 					if (Keyboard.getEventCharacter() != Keyboard.CHAR_NONE)
 						System.out.println("Typed: " + Keyboard.getEventCharacter());
 				}
-				if (Keyboard.isKeyDown(Keyboard.KEY_UP))
-					view_rotx -= .1;
-				else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
-					view_rotx += .1;
-				if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-					view_roty -= .1;
-				else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-					view_roty += .1;
+				if (Keyboard.isCreated()) {
+					if (Keyboard.isKeyDown(Keyboard.KEY_UP))
+						view_rotx -= .1;
+					else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
+						view_rotx += .1;
+					if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+						view_roty -= .1;
+					else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+						view_roty += .1;
+				}
 			}
 		});
 		addWindowListener(new WindowAdapter() {
@@ -225,7 +234,7 @@ public class AWTInputAdapterTest extends Frame {
 
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 
-		System.err.println("Use the arrow keys and the mouse to rotate the gears. Press 'G' to toggle mouse grabbing.");
+		System.err.println("Use the arrow keys and the mouse to rotate the gears. Press 'G' to toggle mouse grabbing. Press 'H' to destroy the AWTInputAdapter.");
 		System.err.println("GL_VENDOR: " + GL11.glGetString(GL11.GL_VENDOR));
 		System.err.println("GL_RENDERER: " + GL11.glGetString(GL11.GL_RENDERER));
 		System.err.println("GL_VERSION: " + GL11.glGetString(GL11.GL_VERSION));
