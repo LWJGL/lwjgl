@@ -3,17 +3,17 @@
 	<!-- ================================================================== -->
 	<!-- Global properties for build 																				-->
 	<!-- ================================================================== -->
-	<property name="lwjgl.src" 			location="src" />
-	<property name="lwjgl.src.native" 	location="${lwjgl.src}/native" />
-	<property name="lwjgl.src.headers" 	location="${lwjgl.src.native}/common" />
+	<property name="lwjgl.src" 				location="src" />
+	<property name="lwjgl.src.native" 		location="${lwjgl.src}/native" />
+	<property name="lwjgl.src.headers" 		location="${lwjgl.src.native}/common" />
 	<property name="lwjgl.src.templates"	location="${lwjgl.src}/templates" />
-	<property name="lwjgl.bin" 			location="bin" />
-	<property name="lwjgl.lib" 			location="libs" />
+	<property name="lwjgl.bin" 				location="bin" />
+	<property name="lwjgl.lib" 				location="libs" />
 	<property name="lwjgl.dist" 			location="dist" />
 	<property name="lwjgl.docs" 			location="doc" />
 	<property name="lwjgl.temp" 			location="temp" />
-	<property name="lwjgl.res" 			location="res" />
-	<property name="lwjgl.version" 		value="1.0beta4" />
+	<property name="lwjgl.res" 				location="res" />
+	<property name="lwjgl.version" 			value="1.0beta4" />
 
 	<property name="opengl-template-pattern" value="org/lwjgl/opengl/GL*.java,org/lwjgl/opengl/ARB*.java,org/lwjgl/opengl/ATI*.java,org/lwjgl/opengl/EXT*.java,org/lwjgl/opengl/NV*.java,org/lwjgl/opengl/HP*.java,org/lwjgl/opengl/IBM*.java,org/lwjgl/opengl/SUN*.java,org/lwjgl/opengl/SGIS*.java"/>
 	<!-- ================================================================== -->
@@ -147,6 +147,13 @@
 		<include name="libILU.dylib" />
 		<include name="libILUT.dylib" />
 	</patternset>
+	
+	<!-- Files to include in source distribution -->
+	<fileset id="lwjgl.source.fileset" dir=".">
+        <include name="build.xml" />
+        <include name="src/**" />
+    	<include name="platform_build/**/*" />
+	</fileset>
 
 	<!-- files in the base package -->
 	<patternset id="lwjgl_base">
@@ -189,6 +196,13 @@
 		<include name="doc/LICENSE" />
 		<include name="doc/README" />
 	</patternset>	
+	
+	<!-- files in the lwjgl_applet package -->
+	<patternset id="lwjgl_applet">
+		<include name="applet/**" />
+		<exclude name="applet/appletviewer.policy" />
+		<exclude name="applet/lwjglkeystore" />
+	</patternset>		
 	
 	<uptodate property="lwjgl.main.built" targetfile="${lwjgl.lib}/win32/lwjgl.dll" >
 	    <srcfiles dir= "${lwjgl.src.native}/common" includes="*.c*"/>
@@ -268,8 +282,9 @@
 
   	<!-- compile and create jars -->
   	<antcall target="compile" />
-	<antcall target="javadoc" />
+ 	<antcall target="javadoc" />
   	<antcall target="-createjars" />
+	<antcall target="applet-release" />
   	
   	<!-- copy resources to res folder -->
  		<copy todir="${lwjgl.temp}/res">
@@ -285,6 +300,7 @@
 		
 		<!-- create distribution from files in libs/ and temp/ -->
 		<antcall target="-distribution_javadoc" />
+		<antcall target="-distribution_source" />
 		<antcall target="-distribute" />
 	</target>
 
@@ -344,7 +360,7 @@
 			</manifest>
 		</jar>
 	</target>
-
+	
 	<target name="applettest" depends="applet">
 		<exec executable="appletviewer">
 			<arg value="-J-Djava.security.policy=applet/appletviewer.policy"/>
@@ -379,7 +395,7 @@
 		  </antcall>
 	</target>
 	
-	<target name="applet-release" depends="jars">
+	<target name="applet-release">
 		<input 	message="Please type the password for the keystore" addproperty="sign.pwd"/>
 
 		<antcall target="-applet">
@@ -457,7 +473,8 @@
 		<delete>
 			<fileset dir="${lwjgl.temp}/native/" includes="**/*"/>
 		</delete>	
-    <copy file="${lwjgl.lib}/jinput.jar" todir="${lwjgl.temp}/jar"/>
+
+	    <copy file="${lwjgl.lib}/jinput.jar" todir="${lwjgl.temp}/jar"/>
 		<copy todir="${lwjgl.temp}/native/win32">
 			<fileset dir="${lwjgl.lib}/win32">
 				<patternset refid="lwjgl-win32.fileset" />
@@ -489,12 +506,26 @@
 			<zipfileset dir="${lwjgl.temp}" prefix="lwjgl_optional-${lwjgl.version}/">
 				<patternset refid="lwjgl_optional"/>
 			</zipfileset>			
-		</zip>		
+		</zip>
+
+		<!-- create applet package -->
+		<zip destfile="${lwjgl.dist}/lwjgl_applet-${lwjgl.version}.zip">
+			<zipfileset dir="." prefix="lwjgl_applet-${lwjgl.version}/">
+				<patternset refid="lwjgl_applet"/>
+			</zipfileset>			
+		</zip>
 	</target>
 
 	<!-- Creates a versioned distribution of javadocs -->
 	<target name="-distribution_javadoc">
 		<zip destfile="${lwjgl.dist}/lwjgl-docs-${lwjgl.version}.zip" basedir="${lwjgl.docs}" includes="javadoc/**" />
+	</target>
+	
+	<!-- Creates a versioned distribution of the source code -->
+	<target name="-distribution_source">
+		<zip destfile="${lwjgl.dist}/lwjgl-source-${lwjgl.version}.zip">
+			<fileset refid="lwjgl.source.fileset" />
+		</zip>
 	</target>
 
 	<!-- Compiles the Java source code -->
@@ -748,16 +779,11 @@
 	
 		<!-- check for required properties -->
 		<property environment="env"/>
-		<fail message="Missing FMOD path environment property" unless="env.FMOD"/>			
-	
-		<exec executable="make" dir="${lwjgl.src.native}/common/devil">
-                        <arg line="-f Makefile.macosx"/>
-                </exec>
-                <exec executable="make" dir="${lwjgl.src.native}/common/fmod3">
-                        <arg line="-f Makefile.macosx"/>
-                </exec>
-		<move file="${lwjgl.src.native}/common/devil/liblwjgl-devil.jnilib" tofile="${lwjgl.lib}/macosx/liblwjgl-devil.jnilib" />
-		<move file="${lwjgl.src.native}/common/fmod3/liblwjgl-fmod3.jnilib" tofile="${lwjgl.lib}/macosx/liblwjgl-fmod3.jnilib" />
+		<fail message="Missing FMOD path environment property" unless="env.FMOD"/>
+		<ant antfile="platform_build/macosx_ant/build_fmod3.xml" inheritAll="false"/>
+		<ant antfile="platform_build/macosx_ant/build_devil.xml" inheritAll="false"/>
+		<copy file="${lwjgl.bin}/fmod3/liblwjgl-fmod3.jnilib" todir="${lwjgl.lib}/macosx"/>
+		<copy file="${lwjgl.bin}/devil/liblwjgl-devil.jnilib" todir="${lwjgl.lib}/macosx"/>
   </target>
 	
 	
@@ -822,9 +848,7 @@
 		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_devil.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_fmod3.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_test.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_util.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/media.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_linux.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_win32.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
