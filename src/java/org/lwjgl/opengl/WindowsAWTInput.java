@@ -64,12 +64,12 @@ final class WindowsAWTInput extends AbstractAWTInput {
 		blank_cursor = AWTUtil.createCursor(w, h, 0, 0, 1, BufferUtils.createIntBuffer(w*h), null);
 	}
 
-	public synchronized void destroy() {
-		super.destroy();
+	public synchronized void destroyMouse() {
 		if (cached_mouse != null) {
 			grab(false);
 			cached_mouse.destroy();
 		}
+		super.destroyMouse();
 	}
 
 	public synchronized void processInput(PeerInfo peer_info) {

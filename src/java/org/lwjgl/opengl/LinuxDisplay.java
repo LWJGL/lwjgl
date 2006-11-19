@@ -348,7 +348,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 
 	private boolean shouldGrab() {
-		return !input_released && grab;
+		return !input_released && grab && mouse != null;
 	}
 
 	private void updatePointerGrab() {
@@ -715,6 +715,7 @@ final class LinuxDisplay implements DisplayImplementation {
 
 	public void destroyMouse() {
 		mouse = null;
+		updateInputGrab();
 	}
 	
 	public void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons) {

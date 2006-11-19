@@ -137,6 +137,11 @@ final class LinuxAWTInput extends AbstractAWTInput {
 			LinuxDisplay.unlockAWT();
 		}
 	}
+	
+	public void destroyMouse() {
+		ungrabInputLocked();
+		super.destroyMouse();
+	}
 
 	private void checkFocus() {
 		if (getCanvas().isFocusOwner()) {
@@ -148,7 +153,7 @@ final class LinuxAWTInput extends AbstractAWTInput {
 	}
 
 	private boolean shouldGrab() {
-		return !input_released && isGrabbed();
+		return !input_released && isGrabbed() && getMouseEventQueue() != null;
 	}
 
 	private void update() {

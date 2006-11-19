@@ -296,7 +296,7 @@ public class Mouse {
 		created = false;
 		buttons = null;
 		coord_buffer = null;
-
+		
 		implementation.destroyMouse();
 	}
 

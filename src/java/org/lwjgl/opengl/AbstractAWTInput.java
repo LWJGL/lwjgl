@@ -84,10 +84,6 @@ abstract class AbstractAWTInput implements AWTCanvasInputImplementation {
 	public synchronized void destroy() {
 		canvas.setInput(null);
 		canvas = null;
-		if (mouse_queue != null)
-			mouse_queue.unregister();
-		if (keyboard_queue != null)
-			keyboard_queue.unregister();
 	}
 
 	public final int getWidth() {
@@ -115,8 +111,11 @@ abstract class AbstractAWTInput implements AWTCanvasInputImplementation {
 		return new MouseEventQueue(getCanvas());
 	}
 
-	public void destroyMouse() {
-		mouse_queue.unregister();
+	public synchronized void destroyMouse() {
+		if (mouse_queue != null) {
+			mouse_queue.unregister();
+			mouse_queue = null;
+		}
 	}
 
 	public int getNativeCursorCapabilities() {
@@ -145,8 +144,10 @@ abstract class AbstractAWTInput implements AWTCanvasInputImplementation {
 	}
 
 	public synchronized void destroyKeyboard() {
-		if (keyboard_queue != null)
+		if (keyboard_queue != null) {
 			keyboard_queue.unregister();
+			keyboard_queue = null;
+		}
 	}
 
 	public Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {

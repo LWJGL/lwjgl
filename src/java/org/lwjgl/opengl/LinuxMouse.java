@@ -194,7 +194,7 @@ final class LinuxMouse {
 	private static native void nWarpCursor(long display, long window, int x, int y);
 
 	private void handlePointerMotion(boolean grab, boolean warp_pointer, long millis, long root_window, int x_root, int y_root, int x, int y) {
-	    doHandlePointerMotion(grab, warp_pointer, root_window, x_root, y_root, x, y, millis*1000000);
+		doHandlePointerMotion(grab, warp_pointer, root_window, x_root, y_root, x, y, millis*1000000);
 	}
 	
 	private void handleButton(boolean grab, int button, byte state, long nanos) {
@@ -256,7 +256,7 @@ final class LinuxMouse {
 		}
 	}
 	
-	private  void resetCursor(int x, int y) {
+	private void resetCursor(int x, int y) {
 		last_x = x;
 		last_y = transformY(y);
 	}
