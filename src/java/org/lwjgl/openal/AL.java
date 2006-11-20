@@ -122,6 +122,7 @@ public final class AL {
 			try {
 				nCreate(oalPaths[i]);
 				created = true;
+				init(deviceArguments, contextFrequency, contextRefresh, contextSynchronized, openDevice);
 				break;
 			} catch (LWJGLException e) {
 				LWJGLUtil.log("Failed to load " + oalPaths[i] + ": " + e.getMessage());
@@ -131,10 +132,13 @@ public final class AL {
 			// Try to load OpenAL from the framework instead
 			nCreateDefault();
 			created = true;
+			init(deviceArguments, contextFrequency, contextRefresh, contextSynchronized, openDevice);
 		}
 		if (!created)
 			throw new LWJGLException("Could not locate OpenAL library.");
+	}
 
+	private static void init(String deviceArguments, int contextFrequency, int contextRefresh, boolean contextSynchronized, boolean openDevice) throws LWJGLException {
 		try {
 			AL10.initNativeStubs();
 			ALC.initNativeStubs();
