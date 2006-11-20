@@ -54,7 +54,7 @@ final class WindowsAWTInput extends AbstractAWTInput {
 
 	private long cached_hwnd;
 	private WindowsMouse cached_mouse;
-	private WindowsKeyboard cached_keyboard;
+//	private WindowsKeyboard cached_keyboard;
 	private boolean has_grabbed;
 
 	public WindowsAWTInput(AWTGLCanvas canvas) throws LWJGLException {
@@ -73,14 +73,14 @@ final class WindowsAWTInput extends AbstractAWTInput {
 		super.destroyMouse();
 	}
 
-	public synchronized void destroyKeyboard() {
+/*	public synchronized void destroyKeyboard() {
 		if (cached_keyboard != null) {
 			cached_keyboard.destroy();
 			cached_keyboard = null;
 		}
 		super.destroyKeyboard();
 	}
-
+*/
 	public synchronized void processInput(PeerInfo peer_info) {
 		WindowsPeerInfo windows_peerinfo = (WindowsPeerInfo)peer_info;
 		long hwnd = windows_peerinfo.getHwnd();
@@ -92,12 +92,12 @@ final class WindowsAWTInput extends AbstractAWTInput {
 				if (cached_mouse != null) {
 					cached_mouse.destroy();
 				}
-				if (cached_keyboard != null) {
+/*				if (cached_keyboard != null) {
 					cached_keyboard.destroy();
-				}
+				}*/
 				WindowsDirectInput dinput = WindowsDisplay.createDirectInput();
 				cached_mouse = new WindowsMouse(dinput, hwnd);
-				cached_keyboard = new WindowsKeyboard(dinput, hwnd);
+//				cached_keyboard = new WindowsKeyboard(dinput, hwnd);
 			}
 			if (isGrabbed() && getCanvas().getCursor() != blank_cursor) {
 				cached_cursor = getCanvas().getCursor();
@@ -128,12 +128,12 @@ final class WindowsAWTInput extends AbstractAWTInput {
 	private void grab(boolean grab) {
 		if (has_grabbed != grab) {
 			cached_mouse.grab(grab);
-			cached_keyboard.grab(grab);
+//			cached_keyboard.grab(grab);
 			has_grabbed = grab;
 			cached_mouse.flush();
-			cached_keyboard.flush();
+//			cached_keyboard.flush();
 			getMouseEventQueue().clearEvents();
-			getKeyboardEventQueue().clearEvents();
+//			getKeyboardEventQueue().clearEvents();
 			if (!grab) {
 				getCanvas().setCursor(cached_cursor);
 			}
@@ -167,7 +167,7 @@ final class WindowsAWTInput extends AbstractAWTInput {
 			super.readMouse(buffer);
 	}
 
-	public synchronized void readKeyboard(ByteBuffer buffer) {
+/*	public synchronized void readKeyboard(ByteBuffer buffer) {
 		if (isGrabbed()) {
 			if (cached_keyboard != null)
 				cached_keyboard.read(buffer);
@@ -181,5 +181,5 @@ final class WindowsAWTInput extends AbstractAWTInput {
 				cached_keyboard.poll(keyDownBuffer);
 		} else
 			super.pollKeyboard(keyDownBuffer);
-	}
+	}*/
 }
