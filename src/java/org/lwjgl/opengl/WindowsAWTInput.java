@@ -68,8 +68,17 @@ final class WindowsAWTInput extends AbstractAWTInput {
 		if (cached_mouse != null) {
 			grab(false);
 			cached_mouse.destroy();
+			cached_mouse = null;
 		}
 		super.destroyMouse();
+	}
+
+	public synchronized void destroyKeyboard() {
+		if (cached_keyboard != null) {
+			cached_keyboard.destroy();
+			cached_keyboard = null;
+		}
+		super.destroyKeyboard();
 	}
 
 	public synchronized void processInput(PeerInfo peer_info) {
@@ -80,8 +89,12 @@ final class WindowsAWTInput extends AbstractAWTInput {
 			if (cached_mouse == null || hwnd != cached_hwnd) {
 				has_grabbed = false;
 				cached_hwnd = hwnd;
-				if (cached_mouse != null)
+				if (cached_mouse != null) {
 					cached_mouse.destroy();
+				}
+				if (cached_keyboard != null) {
+					cached_keyboard.destroy();
+				}
 				WindowsDirectInput dinput = WindowsDisplay.createDirectInput();
 				cached_mouse = new WindowsMouse(dinput, hwnd);
 				cached_keyboard = new WindowsKeyboard(dinput, hwnd);
