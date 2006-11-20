@@ -94,10 +94,25 @@ class ILNative {
 	private static native int getNativeLibraryVersion();  	
 
 	static void createIL() throws LWJGLException {
-		String[] illPaths = LWJGLUtil.getLibraryPaths(new String[]{
-				"DevIL", "DevIL.dll",
-				"IL", "libIL.so",
-				"IL", "libIL.dylib"}, IL.class.getClassLoader());
+		String libname;
+		String platform_libname;
+		switch (LWJGLUtil.getPlatform()) {
+			case LWJGLUtil.PLATFORM_WINDOWS:
+				libname = "DevIL";
+				platform_libname = "DevIL.dll";
+				break;
+			case LWJGLUtil.PLATFORM_LINUX:
+				libname = "IL";
+				platform_libname = "libIL.so";
+				break;
+			case LWJGLUtil.PLATFORM_MACOSX:
+				libname = "IL";
+				platform_libname = "libIL.dylib";
+				break;
+			default:
+				throw new LWJGLException("Unknown platform: " + LWJGLUtil.getPlatform());
+		}
+		String[] illPaths = LWJGLUtil.getLibraryPaths(libname, platform_libname, IL.class.getClassLoader());
 		ILNative.nCreateIL(illPaths);
 		
 		try {
@@ -124,10 +139,22 @@ class ILNative {
 	static native void nDestroyILU();
 	
 	static void createILU() throws LWJGLException {
-		String[] iluPaths = LWJGLUtil.getLibraryPaths(new String[]{
-				"ILU", "ILU.dll",
-				"ILU", "libILU.so",
-				"ILU", "libILU.dylib"}, ILU.class.getClassLoader());
+		String libname;
+		switch (LWJGLUtil.getPlatform()) {
+			case LWJGLUtil.PLATFORM_WINDOWS:
+				libname = "ILU.dll";
+				break;
+			case LWJGLUtil.PLATFORM_LINUX:
+				libname = "libILU.so";
+				break;
+			case LWJGLUtil.PLATFORM_MACOSX:
+				libname = "libILU.dylib";
+				break;
+			default:
+				throw new LWJGLException("Unknown platform: " + LWJGLUtil.getPlatform());
+		}
+
+		String[] iluPaths = LWJGLUtil.getLibraryPaths("ILU", libname, ILU.class.getClassLoader());
 		ILNative.nCreateILU(iluPaths);
 		
 		try {
@@ -153,10 +180,21 @@ class ILNative {
 	static native void nDestroyILUT();
 	
 	static void createILUT() throws LWJGLException {
-		String[] ilutPaths = LWJGLUtil.getLibraryPaths(new String[]{
-				"ILUT", "ILUT.dll",
-				"ILUT", "libILUT.so",
-				"ILUT", "libILUT.dylib"}, ILUT.class.getClassLoader());
+		String libname;
+		switch (LWJGLUtil.getPlatform()) {
+			case LWJGLUtil.PLATFORM_WINDOWS:
+				libname = "ILUT.dll";
+				break;
+			case LWJGLUtil.PLATFORM_LINUX:
+				libname = "libILUT.so";
+				break;
+			case LWJGLUtil.PLATFORM_MACOSX:
+				libname = "libILUT.dylib";
+				break;
+			default:
+				throw new LWJGLException("Unknown platform: " + LWJGLUtil.getPlatform());
+		}
+		String[] ilutPaths = LWJGLUtil.getLibraryPaths("ILUT", libname, ILUT.class.getClassLoader());
 		ILNative.nCreateILUT(ilutPaths);
 		
 		try {

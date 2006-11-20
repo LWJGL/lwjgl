@@ -113,10 +113,25 @@ public final class AL {
 			
 		if (created)
 			throw new IllegalStateException("Only one OpenAL context may be instantiated at any one time.");
-		String[] oalPaths = LWJGLUtil.getLibraryPaths(new String[]{
-                                                  "OpenAL32", "OpenAL32.dll",
-                                                  "openal", "libopenal.so",
-                                                  "openal", "openal.dylib"}, AL.class.getClassLoader());
+		String libname;
+		String[] library_names;
+		switch (LWJGLUtil.getPlatform()) {
+			case LWJGLUtil.PLATFORM_WINDOWS:
+				libname = "OpenAL32";
+				library_names = new String[]{"OpenAL32.dll"};
+				break;
+			case LWJGLUtil.PLATFORM_LINUX:
+				libname = "openal";
+				library_names = new String[]{"libopenal.so", "libopenal.so.0"};
+				break;
+			case LWJGLUtil.PLATFORM_MACOSX:
+				libname = "openal";
+				library_names = new String[]{"openal.dylib"};
+				break;
+			default:
+				throw new LWJGLException("Unknown platform: " + LWJGLUtil.getPlatform());
+		}
+		String[] oalPaths = LWJGLUtil.getLibraryPaths(libname, library_names, AL.class.getClassLoader());
 		LWJGLUtil.log("Found " + oalPaths.length + " OpenAL paths");
 		for (int i = 0; i < oalPaths.length; i++) {
 			try {

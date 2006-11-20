@@ -263,11 +263,21 @@ public class FMOD {
 		}
 
 		try {
-			String[] fmodPaths = LWJGLUtil.getLibraryPaths(new String[]{
-	                "fmod", "fmod.dll",
-	                "fmod", "libfmod.so",
-	                "fmod", "static-ignored"}, 
-	                	FMOD.class.getClassLoader());
+			String libname;
+			switch (LWJGLUtil.getPlatform()) {
+				case LWJGLUtil.PLATFORM_WINDOWS:
+					libname = "fmod.dll";
+					break;
+				case LWJGLUtil.PLATFORM_LINUX:
+					libname = "libfmod.so";
+					break;
+				case LWJGLUtil.PLATFORM_MACOSX:
+					libname = "static-ignored";
+					break;
+				default:
+					throw new FMODException("Unknown platform: " + LWJGLUtil.getPlatform());
+			}
+			String[] fmodPaths = LWJGLUtil.getLibraryPaths("fmod", libname, FMOD.class.getClassLoader());
 			LWJGLUtil.log("Found " + fmodPaths.length + " FMOD paths");
 			nCreate(fmodPaths);
 			created = true;

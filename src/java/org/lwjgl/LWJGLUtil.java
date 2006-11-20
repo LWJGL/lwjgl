@@ -315,33 +315,26 @@ public class LWJGLUtil {
 	/**
 	 * Locates the paths required by a library.
 	 *
-	 * @param libNames List of library names to look for, in the form of Local Library name, Platform library name.
-	 *        At least 6 names must be passed. 2 for each supported platform in the following order: Windows, Linux, MacOSX.
+	 * @param libName Local Library Name to search the classloader with ("openal").
+	 * @param platform_lib_name The native library name ("libopenal.so")
 	 * @param classloader The classloader to ask for library paths
 	 * @return Paths to located libraries, if any
 	 */
-	public static String[] getLibraryPaths(String[] libNames, ClassLoader classloader) throws LWJGLException {
+	public static String[] getLibraryPaths(String libname, String platform_lib_name, ClassLoader classloader) {
+		return getLibraryPaths(libname, new String[]{platform_lib_name}, classloader);
+	}
+
+	/**
+	 * Locates the paths required by a library.
+	 *
+	 * @param libName Local Library Name to search the classloader with ("openal").
+	 * @param platform_lib_names The list of possible library names ("libopenal.so")
+	 * @param classloader The classloader to ask for library paths
+	 * @return Paths to located libraries, if any
+	 */
+	public static String[] getLibraryPaths(String libname, String[] platform_lib_names, ClassLoader classloader) {
 		// need to pass path of possible locations of library to native side
 		List possible_paths = new ArrayList();
-
-		String libname;
-		String platform_lib_name;
-		switch (getPlatform()) {
-			case PLATFORM_WINDOWS:
-				libname = libNames[0];
-				platform_lib_name = libNames[1];
-				break;
-			case PLATFORM_LINUX:
-				libname = libNames[2];
-				platform_lib_name = libNames[3];
-				break;
-			case PLATFORM_MACOSX:
-				libname = libNames[4];
-				platform_lib_name = libNames[5];
-				break;
-			default:
-				throw new LWJGLException("Unknown platform: " + getPlatform());
-		}
 
 		String classloader_path = getPathFromClassLoader(libname, classloader);
 		if (classloader_path != null) {
@@ -349,39 +342,41 @@ public class LWJGLUtil {
 			possible_paths.add(classloader_path);
 		}
 
-		String lwjgl_classloader_path = getPathFromClassLoader("lwjgl", classloader);
-		if (lwjgl_classloader_path != null) {
-			log("getPathFromClassLoader: Path found: " + lwjgl_classloader_path);
-			possible_paths.add(lwjgl_classloader_path.substring(0, lwjgl_classloader_path.lastIndexOf(File.separator))
-					+ File.separator + platform_lib_name);
+		for (int i = 0; i < platform_lib_names.length; i++) {
+			String platform_lib_name = platform_lib_names[i];
+			String lwjgl_classloader_path = getPathFromClassLoader("lwjgl", classloader);
+			if (lwjgl_classloader_path != null) {
+				log("getPathFromClassLoader: Path found: " + lwjgl_classloader_path);
+				possible_paths.add(lwjgl_classloader_path.substring(0, lwjgl_classloader_path.lastIndexOf(File.separator))
+						+ File.separator + platform_lib_name);
+			}
+
+			// add Installer path
+			String alternative_path = getPrivilegedProperty("org.lwjgl.librarypath");
+			if (alternative_path != null) {
+				possible_paths.add(alternative_path + File.separator + platform_lib_name);
+			}		
+
+			// Add all possible paths from java.library.path
+			String java_library_path = getPrivilegedProperty("java.library.path");
+
+			StringTokenizer st = new StringTokenizer(java_library_path, File.pathSeparator);
+			while (st.hasMoreTokens()) {
+				String path = st.nextToken();
+				possible_paths.add(path + File.separator + platform_lib_name);
+			}
+
+			//add current path
+			String current_dir = getPrivilegedProperty("user.dir");
+			possible_paths.add(current_dir + File.separator + platform_lib_name);
+
+			//add pure library (no path, let OS search)
+			possible_paths.add(platform_lib_name);
 		}
-		
-		// add Installer path
-		String alternative_path = getPrivilegedProperty("org.lwjgl.librarypath");
-		if (alternative_path != null) {
-			possible_paths.add(alternative_path + File.separator + platform_lib_name);
-		}		
-
-		// Add all possible paths from java.library.path
-		String java_library_path = getPrivilegedProperty("java.library.path");
-		
-		StringTokenizer st = new StringTokenizer(java_library_path, File.pathSeparator);
-		while (st.hasMoreTokens()) {
-			String path = st.nextToken();
-			possible_paths.add(path + File.separator + platform_lib_name);
-		}
-
-		//add current path
-		String current_dir = getPrivilegedProperty("user.dir");
-		possible_paths.add(current_dir + File.separator + platform_lib_name);
-
-		//add pure library (no path, let OS search)
-		possible_paths.add(platform_lib_name);
 
 		//create needed string array
 		String[] paths = new String[possible_paths.size()];
 		possible_paths.toArray(paths);
-
 		return paths;
 	}
 
