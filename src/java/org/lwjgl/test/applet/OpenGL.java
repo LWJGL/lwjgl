@@ -36,9 +36,15 @@ import org.lwjgl.opengl.AWTGLCanvas;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
+import org.lwjgl.opengl.AWTInputAdapter;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
 public class OpenGL extends AWTGLCanvas implements Test {
 
 	float	angle	= 0;
+	float x;
+	float y;
 
 	public OpenGL() throws LWJGLException {
 	}
@@ -47,15 +53,22 @@ public class OpenGL extends AWTGLCanvas implements Test {
 		GL11.glMatrixMode(GL11.GL_PROJECTION_MATRIX);
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0, 640, 0, 480, 1, -1);
+		x = 320;
+		y = 240;
 		GL11.glMatrixMode(GL11.GL_MODELVIEW_MATRIX);
 		setVSyncEnabled(true);
+		try {
+			AWTInputAdapter.create(this);
+		} catch (LWJGLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void paintGL() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
 		GL11.glPushMatrix();
-		GL11.glTranslatef(320, 240, 0.0f);
+		GL11.glTranslatef(x, y, 0.0f);
 		GL11.glRotatef(angle, 0, 0, 1.0f);
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glVertex2i(-50, -50);
@@ -67,6 +80,47 @@ public class OpenGL extends AWTGLCanvas implements Test {
 
 		angle += 1;
 
+		if (Mouse.isCreated()) {
+			Mouse.poll();
+			while (Mouse.next()) {
+				x += Mouse.getEventDX();
+				y += Mouse.getEventDY();
+			}
+		}
+		if (Keyboard.isCreated()) {
+			Keyboard.poll();
+		}
+		while (Keyboard.isCreated() && Keyboard.next()) {
+			if (Keyboard.getEventKey() != Keyboard.KEY_NONE) {
+				String key_name = Keyboard.getKeyName(Keyboard.getEventKey());
+				if (Keyboard.getEventKeyState()) {
+					switch (Keyboard.getEventKey()) {
+						case Keyboard.KEY_H:
+							AWTInputAdapter.destroy();
+							break;
+						case Keyboard.KEY_G:
+							Mouse.setGrabbed(!Mouse.isGrabbed());
+							break;
+						default:
+							break;
+					}
+					System.out.println("Pressed: " + key_name);
+				} else
+					System.out.println("Released: " + key_name);
+			}
+			if (Keyboard.getEventCharacter() != Keyboard.CHAR_NONE)
+				System.out.println("Typed: " + Keyboard.getEventCharacter());
+		}
+		if (Keyboard.isCreated()) {
+			if (Keyboard.isKeyDown(Keyboard.KEY_UP))
+				y += 5;
+			else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
+				y -= 5;
+			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+				x -= 5;
+			else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+				x += 5;
+		}
 		try {
 			swapBuffers();
 			if (isVisible())
