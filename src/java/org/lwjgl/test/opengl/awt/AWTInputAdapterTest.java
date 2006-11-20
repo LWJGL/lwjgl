@@ -151,20 +151,25 @@ public class AWTInputAdapterTest extends Frame {
 					Keyboard.poll();
 				}
 				while (Keyboard.isCreated() && Keyboard.next()) {
-					if (Keyboard.getEventKeyState()) {
-						switch (Keyboard.getEventKey()) {
-							case Keyboard.KEY_ESCAPE:
-								System.exit(0);
-								break;
-							case Keyboard.KEY_H:
-								AWTInputAdapter.destroy();
-								break;
-							case Keyboard.KEY_G:
-								Mouse.setGrabbed(!Mouse.isGrabbed());
-								break;
-							default:
-								break;
-						}
+					if (Keyboard.getEventKey() != Keyboard.KEY_NONE) {
+						String key_name = Keyboard.getKeyName(Keyboard.getEventKey());
+						if (Keyboard.getEventKeyState()) {
+							switch (Keyboard.getEventKey()) {
+								case Keyboard.KEY_ESCAPE:
+									System.exit(0);
+									break;
+								case Keyboard.KEY_H:
+									AWTInputAdapter.destroy();
+									break;
+								case Keyboard.KEY_G:
+									Mouse.setGrabbed(!Mouse.isGrabbed());
+									break;
+								default:
+									break;
+							}
+							System.out.println("Pressed: " + key_name);
+						} else
+							System.out.println("Released: " + key_name);
 					}
 					if (Keyboard.getEventCharacter() != Keyboard.CHAR_NONE)
 						System.out.println("Typed: " + Keyboard.getEventCharacter());
