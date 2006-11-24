@@ -79,14 +79,14 @@ class MouseEventQueue extends EventQueue implements MouseListener, MouseMotionLi
 		this.component = component;
 	}
 
-	public void register() {
+	public synchronized void register() {
 		resetCursorToCenter();
 		component.addMouseListener(this);
 		component.addMouseMotionListener(this);
 		component.addMouseWheelListener(this);
 	}
 
-	public void unregister() {
+	public synchronized void unregister() {
 		component.removeMouseListener(this);
 		component.removeMouseMotionListener(this);
 		component.removeMouseWheelListener(this);
@@ -143,7 +143,7 @@ class MouseEventQueue extends EventQueue implements MouseListener, MouseMotionLi
 		buttons_buffer.position(old_position);
 	}
 
-	private synchronized void setCursorPos(int x, int y, long nanos) {
+	private void setCursorPos(int x, int y, long nanos) {
 		y = transformY(y);
 		if ( grabbed )
 			return;
@@ -212,16 +212,16 @@ class MouseEventQueue extends EventQueue implements MouseListener, MouseMotionLi
 		setButton(button, state, e.getWhen()*1000000);
 	}
 
-	public void mousePressed(MouseEvent e) {
+	public synchronized void mousePressed(MouseEvent e) {
 		handleButton(e);
 	}
 
-	private synchronized void setButton(byte button, byte state, long nanos) {
+	private void setButton(byte button, byte state, long nanos) {
 		buttons[button] = state;
 		putMouseEvent(button, state, 0, nanos);
 	}
 
-	public void mouseReleased(MouseEvent e) {
+	public synchronized void mouseReleased(MouseEvent e) {
 		handleButton(e);
 	}
 
@@ -233,15 +233,15 @@ class MouseEventQueue extends EventQueue implements MouseListener, MouseMotionLi
 		}
 	}
 
-	public void mouseDragged(MouseEvent e) {
+	public synchronized void mouseDragged(MouseEvent e) {
 		handleMotion(e);
 	}
 
-	public void mouseMoved(MouseEvent e) {
+	public synchronized void mouseMoved(MouseEvent e) {
 		handleMotion(e);
 	}
 
-	private synchronized void handleWheel(int amount, long nanos) {
+	private void handleWheel(int amount, long nanos) {
 		accum_dz += amount;
 		putMouseEvent((byte)-1, (byte)0, amount, nanos);
 	}
@@ -249,7 +249,7 @@ class MouseEventQueue extends EventQueue implements MouseListener, MouseMotionLi
 	protected void updateDeltas(long nanos) {
 	}
 
-	public void mouseWheelMoved(MouseWheelEvent e) {
+	public synchronized void mouseWheelMoved(MouseWheelEvent e) {
 		int wheel_amount = -e.getWheelRotation() * WHEEL_SCALE;
 		handleWheel(wheel_amount, e.getWhen()*1000000);
 	}
