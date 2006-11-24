@@ -150,7 +150,7 @@ public class Mouse {
 	 *
 	 * @return the currently bound native cursor, if any.
 	 */
-	public static Cursor getNativeCursor() {
+	public static synchronized Cursor getNativeCursor() {
 		return currentCursor;
 	}
 
@@ -165,7 +165,7 @@ public class Mouse {
 	 * @return The previous Cursor object set, or null.
 	 * @throws LWJGLException if the cursor could not be set for any reason
 	 */
-	public static Cursor setNativeCursor(Cursor cursor) throws LWJGLException {
+	public static synchronized Cursor setNativeCursor(Cursor cursor) throws LWJGLException {
 		if ((Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) == 0)
 			throw new IllegalStateException("Mouse doesn't support native cursors");
 		Cursor oldCursor = currentCursor;
@@ -190,7 +190,7 @@ public class Mouse {
 	 * @param y The y coordinate of the new cursor position in OpenGL coordinates relative
 	 *			to the window origin.
 	 */
-	public static void setCursorPosition(int new_x, int new_y) {
+	public static synchronized void setCursorPosition(int new_x, int new_y) {
 		if (!isCreated())
 			throw new IllegalStateException("Mouse is not created");
 		x = event_x = new_x;
@@ -275,7 +275,7 @@ public class Mouse {
 	 *
 	 * @throws LWJGLException if the mouse could not be created for any reason
 	 */
-	public static void create() throws LWJGLException {
+	public static synchronized void create() throws LWJGLException {
 		if (!Display.isCreated()) throw new IllegalStateException("Display must be created.");
 
 		create(createImplementation());
@@ -284,14 +284,14 @@ public class Mouse {
 	/**
 	 * @return true if the mouse has been created
 	 */
-	public static boolean isCreated() {
+	public static synchronized boolean isCreated() {
 		return created;
 	}
 
 	/**
 	 * "Destroy" the mouse.
 	 */
-	public static void destroy() {
+	public static synchronized void destroy() {
 		if (!created) return;
 		created = false;
 		buttons = null;
@@ -321,7 +321,7 @@ public class Mouse {
 	 * @see org.lwjgl.input.Mouse#getDY()
 	 * @see org.lwjgl.input.Mouse#getDWheel()
 	 */
-	public static void poll() {
+	public static synchronized void poll() {
 		if (!created) throw new IllegalStateException("Mouse must be created before you can poll it");
 		implementation.pollMouse(coord_buffer, buttons);
 
@@ -360,7 +360,7 @@ public class Mouse {
 	 * @param button The index of the button you wish to test (0..getButtonCount-1)
 	 * @return true if the specified button is down
 	 */
-	public static boolean isButtonDown(int button) {
+	public static synchronized boolean isButtonDown(int button) {
 		if (!created) throw new IllegalStateException("Mouse must be created before you can poll the button state");
 		if (button >= buttonCount || button < 0)
 			return false;
@@ -373,7 +373,7 @@ public class Mouse {
 	 * @param button The button
 	 * @return a String with the button's human readable name in it or null if the button is unnamed
 	 */
-	public static String getButtonName(int button) {
+	public static synchronized String getButtonName(int button) {
 		if (button >= buttonName.length || button < 0)
 			return null;
 		else
@@ -384,7 +384,7 @@ public class Mouse {
 	 * Get's a button's index. If the button is unrecognised then -1 is returned.
 	 * @param buttonName The button name
 	 */
-	public static int getButtonIndex(String buttonName) {
+	public static synchronized int getButtonIndex(String buttonName) {
 		Integer ret = (Integer) buttonMap.get(buttonName);
 		if (ret == null)
 			return -1;
@@ -401,7 +401,7 @@ public class Mouse {
 	 * @see org.lwjgl.input.Mouse#getEventButtonState()
 	 * @return true if a mouse event was read, false otherwise
 	 */
-	public static boolean next() {
+	public static synchronized boolean next() {
 		if (!created) throw new IllegalStateException("Mouse must be created before you can read events");
 		if (readBuffer.hasRemaining()) {
 			eventButton = readBuffer.get();
@@ -431,7 +431,7 @@ public class Mouse {
 	/**
 	 * @return Current events button. Returns -1 if no button state was changed
 	 */
-	public static int getEventButton() {
+	public static synchronized int getEventButton() {
 		return eventButton;
 	}
 
@@ -439,42 +439,42 @@ public class Mouse {
 	 * Get the current events button state.
 	 * @return Current events button state.
 	 */
-	public static boolean getEventButtonState() {
+	public static synchronized boolean getEventButtonState() {
 		return eventState;
 	}
 
 	/**
 	 * @return Current events delta x. Only valid when the mouse is grabbed.
 	 */
-	public static int getEventDX() {
+	public static synchronized int getEventDX() {
 		return event_dx;
 	}
 
 	/**
 	 * @return Current events delta y. Only valid when the mouse is grabbed.
 	 */
-	public static int getEventDY() {
+	public static synchronized int getEventDY() {
 		return event_dy;
 	}
 
 	/**
 	 * @return Current events absolute x. Only valid when the mouse is not grabbed.
 	 */
-	public static int getEventX() {
+	public static synchronized int getEventX() {
 		return event_x;
 	}
 
 	/**
 	 * @return Current events absolute y. Only valid when the mouse is not grabbed.
 	 */
-	public static int getEventY() {
+	public static synchronized int getEventY() {
 		return event_y;
 	}
 
 	/**
 	 * @return Current events delta z
 	 */
-	public static int getEventDWheel() {
+	public static synchronized int getEventDWheel() {
 		return event_dwheel;
 	}
 
@@ -486,7 +486,7 @@ public class Mouse {
 	 *
 	 * @return The time in nanoseconds of the current event
 	 */
-	public static long getEventNanoseconds() {
+	public static synchronized long getEventNanoseconds() {
 		return event_nanos;
 	}
 
@@ -496,7 +496,7 @@ public class Mouse {
 	 *
 	 * @return Absolute x axis position of mouse
 	 */
-	public static int getX() {
+	public static synchronized int getX() {
 		return x;
 	}
 
@@ -506,14 +506,14 @@ public class Mouse {
 	 *
 	 * @return Absolute y axis position of mouse
 	 */
-	public static int getY() {
+	public static synchronized int getY() {
 		return y;
 	}
 
 	/**
 	 * @return Movement on the x axis since last time getDX() was called. Only valid when the mouse is grabbed.
 	 */
-	public static int getDX() {
+	public static synchronized int getDX() {
 		int result = dx;
 		dx = 0;
 		return result;
@@ -522,7 +522,7 @@ public class Mouse {
 	/**
 	 * @return Movement on the y axis since last time getDY() was called. Only valid when the mouse is grabbed.
 	 */
-	public static int getDY() {
+	public static synchronized int getDY() {
 		int result = dy;
 		dy = 0;
 		return result;
@@ -531,7 +531,7 @@ public class Mouse {
 	/**
 	 * @return Movement of the wheel since last time getDWheel() was called
 	 */
-	public static int getDWheel() {
+	public static synchronized int getDWheel() {
 		int result = dwheel;
 		dwheel = 0;
 		return result;
@@ -540,21 +540,21 @@ public class Mouse {
 	/**
 	 * @return Number of buttons on this mouse
 	 */
-	public static int getButtonCount() {
+	public static synchronized int getButtonCount() {
 		return buttonCount;
 	}
 
 	/**
 	 * @return Whether or not this mouse has wheel support
 	 */
-	public static boolean hasWheel() {
+	public static synchronized boolean hasWheel() {
 		return hasWheel;
 	}
 
 	/**
 	 * @return whether or not the mouse has grabbed the cursor
 	 */
-	public static boolean isGrabbed() {
+	public static synchronized boolean isGrabbed() {
 		return isGrabbed;
 	}
 
@@ -566,7 +566,7 @@ public class Mouse {
 	 *
 	 * @param grab whether the mouse should be grabbed
 	 */
-	public static void setGrabbed(boolean grab) {
+	public static synchronized void setGrabbed(boolean grab) {
 		isGrabbed = grab;
 		if (isCreated()) {
 			implementation.grabMouse(isGrabbed);
@@ -579,7 +579,7 @@ public class Mouse {
 	 * This method is called automatically by the window on its update, and
 	 * shouldn't be called otherwise
 	 */
-	public static void updateCursor() {
+	public static synchronized void updateCursor() {
 		if (isWindows && currentCursor != null && currentCursor.hasTimedOut()) {
 			currentCursor.nextCursor();
 			try {

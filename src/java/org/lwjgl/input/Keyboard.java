@@ -306,7 +306,7 @@ public class Keyboard {
 	 *
 	 * @throws LWJGLException if the keyboard could not be created for any reason
 	 */
-	public static void create() throws LWJGLException {
+	public static synchronized void create() throws LWJGLException {
 		if (!Display.isCreated()) throw new IllegalStateException("Display must be created.");
 
 		create(Mouse.createImplementation());
@@ -324,14 +324,14 @@ public class Keyboard {
 	/**
 	 * @return true if the keyboard has been created
 	 */
-	public static boolean isCreated() {
+	public static synchronized boolean isCreated() {
 		return created;
 	}
 
 	/**
 	 * "Destroy" the keyboard
 	 */
-	public static void destroy() {
+	public static synchronized void destroy() {
 		if (!created)
 			return;
 		created = false;
@@ -357,7 +357,7 @@ public class Keyboard {
 	 * @see org.lwjgl.input.Keyboard#getEventKeyState()
 	 * @see org.lwjgl.input.Keyboard#getEventCharacter()
 	 */
-	public static void poll() {
+	public static synchronized void poll() {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can poll the device");
 		implementation.pollKeyboard(keyDownBuffer);
@@ -375,7 +375,7 @@ public class Keyboard {
 	 * @param key Keycode to check
 	 * @return true if the key is down according to the last poll()
 	 */
-	public static boolean isKeyDown(int key) {
+	public static synchronized boolean isKeyDown(int key) {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can query key state");
 		return keyDownBuffer.get(key) != 0;
@@ -398,7 +398,7 @@ public class Keyboard {
 	 * @param key The key
 	 * @return a String with the key's human readable name in it or null if the key is unnamed
 	 */
-	public static String getKeyName(int key) {
+	public static synchronized String getKeyName(int key) {
 		return keyName[key];
 	}
 
@@ -406,7 +406,7 @@ public class Keyboard {
 	 * Get's a key's index. If the key is unrecognised then KEY_NONE is returned.
 	 * @param keyName The key name
 	 */
-	public static int getKeyIndex(String keyName) {
+	public static synchronized int getKeyIndex(String keyName) {
 		Integer ret = (Integer) keyMap.get(keyName);
 		if (ret == null)
 			return KEY_NONE;
@@ -418,7 +418,7 @@ public class Keyboard {
 	 * Gets the number of keyboard events waiting after doing a buffer enabled poll().
 	 * @return the number of keyboard events
 	 */
-	public static int getNumKeyboardEvents() {
+	public static synchronized int getNumKeyboardEvents() {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can read events");
 		return readBuffer.remaining()/EVENT_SIZE;
@@ -435,7 +435,7 @@ public class Keyboard {
 	 * @see org.lwjgl.input.Keyboard#getEventCharacter()
 	 * @return true if a keyboard event was read, false otherwise
 	 */
-	public static boolean next() {
+	public static synchronized boolean next() {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can read events");
 
@@ -453,14 +453,14 @@ public class Keyboard {
 	/**
 	 * @return Number of keys on this keyboard
 	 */
-	public static int getKeyCount() {
+	public static synchronized int getKeyCount() {
 		return keyCount;
 	}
 
 	/**
 	 * @return The character from the current event
 	 */
-	public static char getEventCharacter() {
+	public static synchronized char getEventCharacter() {
 		return (char)eventCharacter;
 	}
 
@@ -471,7 +471,7 @@ public class Keyboard {
    * 
 	 * @return The key from the current event
 	 */
-	public static int getEventKey() {
+	public static synchronized int getEventKey() {
 		return eventKey;
 	}
 
@@ -481,7 +481,7 @@ public class Keyboard {
 	 *
 	 * @return True if key was down, or false if released
 	 */
-	public static boolean getEventKeyState() {
+	public static synchronized boolean getEventKeyState() {
 		return eventState;
 	}
 
@@ -492,7 +492,7 @@ public class Keyboard {
 	 * origin.
 	 * @return The time in nanoseconds of the current event
 	 */
-	public static long getEventNanoseconds() {
+	public static synchronized long getEventNanoseconds() {
 		return eventNanos;
 	}
 }
