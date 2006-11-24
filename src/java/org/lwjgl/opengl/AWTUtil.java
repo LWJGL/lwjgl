@@ -138,8 +138,6 @@ final class AWTUtil {
 			LWJGLUtil.log("Failed to query pointer location: " + e.getCause());
 		} catch (NoSuchMethodException e) {
 			LWJGLUtil.log("Failed to query pointer location: " + e);
-		} catch (IllegalAccessException e) {
-			LWJGLUtil.log("Failed to query pointer location: " + e);
 		} catch (ClassNotFoundException e) {
 			LWJGLUtil.log("Failed to query pointer location: " + e);
 		}
