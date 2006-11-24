@@ -170,10 +170,10 @@ final class LinuxAWTInput extends AbstractAWTInput {
 
 	public synchronized void grabMouse(boolean grab) {
 		if (grab != isGrabbed()) {
-			super.grabMouse(grab);
 			if (cached_mouse != null)
 				cached_mouse.changeGrabbed(grab, shouldGrab());
 			ungrabInputLocked();
+			super.grabMouse(grab);
 		}
 	}
 
