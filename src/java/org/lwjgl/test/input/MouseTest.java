@@ -242,6 +242,8 @@ public class MouseTest {
       if(Mouse.getEventButton() != -1 && Mouse.getEventButtonState()) {
         lastButton = Mouse.getEventButton();
       }
+      if (Mouse.getEventDX() != 0 || Mouse.getEventDY() != 0)
+        System.out.println("Mouse.getEventDX() = " + Mouse.getEventDX() + " | Mouse.getEventDY() = " + Mouse.getEventDY());
     }  
     
     updateState();

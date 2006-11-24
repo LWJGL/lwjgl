@@ -570,6 +570,10 @@ public class Mouse {
 		isGrabbed = grab;
 		if (isCreated()) {
 			implementation.grabMouse(isGrabbed);
+			// Get latest values from native side
+			poll();
+			event_x = x;
+			event_y = y;
 			resetMouse();
 		}
 	}

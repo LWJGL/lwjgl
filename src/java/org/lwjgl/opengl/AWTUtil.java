@@ -37,7 +37,9 @@ package org.lwjgl.opengl;
 
 import java.awt.Cursor;
 import java.awt.Component;
+import java.awt.GraphicsDevice;
 import java.awt.Dimension;
+import java.awt.IllegalComponentStateException;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
@@ -106,12 +108,75 @@ final class AWTUtil {
 		}
 	}
 
+	private static int transformY(Component component, int y) {
+		return component.getHeight() - 1 - y;
+	}
+
+	/**
+	 * Use reflection to access the JDK 1.5 pointer location, if possible and
+	 * only if the given component is on the same screen as the cursor. Return
+	 * null otherwise.
+	 */
+	private static Point getPointerLocation(final Component component) {
+		try {
+			final Class MouseInfo_class = Class.forName("java.awt.MouseInfo");
+			final Method getPointerInfo_method = MouseInfo_class.getMethod("getPointerInfo", null);
+			final Class PointerInfo_class = Class.forName("java.awt.PointerInfo");
+			final Method getDevice_method = PointerInfo_class.getMethod("getDevice", null);
+			final Method getLocation_method = PointerInfo_class.getMethod("getLocation", null);
+			return (Point)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public final Object run() throws Exception {
+					Object pointer_info = getPointerInfo_method.invoke(null, null);
+					GraphicsDevice device = (GraphicsDevice)getDevice_method.invoke(pointer_info, null);
+					if (device == component.getGraphicsConfiguration().getDevice()) {
+						return (Point)getLocation_method.invoke(pointer_info, null);
+					} else
+						return null;
+				}
+			});
+		} catch (PrivilegedActionException e) {
+			LWJGLUtil.log("Failed to query pointer location: " + e.getCause());
+		} catch (NoSuchMethodException e) {
+			LWJGLUtil.log("Failed to query pointer location: " + e);
+		} catch (IllegalAccessException e) {
+			LWJGLUtil.log("Failed to query pointer location: " + e);
+		} catch (ClassNotFoundException e) {
+			LWJGLUtil.log("Failed to query pointer location: " + e);
+		}
+		return null;
+	}
+
+	/**
+	 * Use the 1.5 API to get the cursor position relative to the component. Return null
+	 * if it fails (JDK <= 1.4).
+	 */
+	public static Point getCursorPosition(Component component) {
+		try {
+			Point pointer_location = getPointerLocation(component);
+			if (pointer_location != null) {
+				Point location = component.getLocationOnScreen();
+				pointer_location.translate(-location.x, -location.y);
+				pointer_location.move(pointer_location.x, transformY(component, pointer_location.y));
+				return pointer_location;
+			}
+		} catch (IllegalComponentStateException e) {
+			LWJGLUtil.log("Failed to set cursor position: " + e);
+		} catch (NoClassDefFoundError e) { // Not JDK 1.5
+			LWJGLUtil.log("Failed to query cursor position: " + e);
+		}
+		return null;
+	}
+
 	public static void setCursorPosition(Component component, Robot robot, int x, int y) {
 		if (robot != null) {
-			Point location = component.getLocationOnScreen();
-			int transformed_x = location.x + x;
-			int transformed_y = location.y + component.getHeight() - 1 - y;
-			robot.mouseMove(transformed_x, transformed_y);
+			try {
+				Point location = component.getLocationOnScreen();
+				int transformed_x = location.x + x;
+				int transformed_y = location.y + transformY(component, y);
+				robot.mouseMove(transformed_x, transformed_y);
+			} catch (IllegalComponentStateException e) {
+				LWJGLUtil.log("Failed to set cursor position: " + e);
+			}
 		}
 	}
 

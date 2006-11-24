@@ -173,7 +173,15 @@ final class LinuxMouse {
 	public void changeGrabbed(boolean grab, boolean warp_pointer) {
 		reset();
 		long root_window = nQueryPointer(display, window, query_pointer_buffer);
-		doHandlePointerMotion(grab, warp_pointer, root_window, query_pointer_buffer.get(0), query_pointer_buffer.get(1), query_pointer_buffer.get(2), query_pointer_buffer.get(3), last_event_nanos);
+
+		int root_x = query_pointer_buffer.get(0);
+		int root_y = query_pointer_buffer.get(1);
+		int win_x = query_pointer_buffer.get(2);
+		int win_y = query_pointer_buffer.get(3);
+		// Pretend that the cursor never moved
+		last_x = win_x;
+		last_y = transformY(win_y);
+		doHandlePointerMotion(grab, warp_pointer, root_window, root_x, root_y, win_x, win_y, last_event_nanos);
 	}
 
 	public int getButtonCount() {

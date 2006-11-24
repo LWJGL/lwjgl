@@ -42,6 +42,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.Component;
+import java.awt.Point;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -112,6 +113,11 @@ class MouseEventQueue extends EventQueue implements MouseListener, MouseMotionLi
 	protected void resetCursorToCenter() {
 		clearEvents();
 		accum_dx = accum_dy = 0;
+		Point cursor_location = AWTUtil.getCursorPosition(component);
+		if (cursor_location != null) {
+			last_x = cursor_location.x;
+			last_y = cursor_location.y;
+		}
 	}
 
 	private void putMouseEvent(byte button, byte state, int dz, long nanos) {
