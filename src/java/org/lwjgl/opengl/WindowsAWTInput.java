@@ -142,12 +142,12 @@ final class WindowsAWTInput extends AbstractAWTInput {
 
 	public synchronized void grabMouse(boolean grab) {
 		if (grab != isGrabbed()) {
-			super.grabMouse(grab);
 			/* Only ungrab since grabbing can only occur in processInput
 			 * when the hwnd is guaranteed valid
 			 */
 			if (cached_mouse != null && !grab)
 				grab(grab);
+			super.grabMouse(grab);
 		}
 	}
 
