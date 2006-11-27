@@ -77,14 +77,18 @@ public class NativeTypeTranslator implements TypeVisitor {
 		StringBuilder signature = new StringBuilder();
 		if (declaration.getAnnotation(Const.class) != null)
 			signature.append("const ");
-		if (native_types.size() != 1)
-			throw new RuntimeException("Expected only one native type for declaration " + declaration +
-					", but got " + native_types.size());
 		// Use the name of the native type annotation as the C type name
-		signature.append(native_types.iterator().next().getSimpleName());
+		signature.append(getAnnotationType().getSimpleName());
 		if (is_indirect)
 			signature.append(" *");
 		return signature.toString();
+	}
+
+	public Class getAnnotationType() {
+		if (native_types.size() != 1)
+			throw new RuntimeException("Expected only one native type for declaration " + declaration +
+					", but got " + native_types.size());
+		return native_types.iterator().next();
 	}
 
 	public void visitAnnotationType(AnnotationType t) {

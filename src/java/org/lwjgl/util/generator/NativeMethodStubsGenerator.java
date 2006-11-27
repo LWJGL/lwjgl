@@ -215,7 +215,8 @@ public class NativeMethodStubsGenerator {
 		} else {
 			Class java_type = Utils.getJavaType(param.getType());
 			if (Buffer.class.isAssignableFrom(java_type)) {
-				boolean explicitly_byte_sized = java_type.equals(Buffer.class);
+				boolean explicitly_byte_sized = java_type.equals(Buffer.class) ||
+					translator.getAnnotationType().equals(type_map.getVoidType());
 				if (explicitly_byte_sized)
 					writer.print("(((char *)");
 				if (method.getAnnotation(GenerateAutos.class) != null || (check_annotation != null && check_annotation.canBeNull())) {
