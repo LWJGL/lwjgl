@@ -48,72 +48,51 @@ public interface ARB_texture_compression {
 	int GL_NUM_COMPRESSED_TEXTURE_FORMATS_ARB = 0x86A2;
 	int GL_COMPRESSED_TEXTURE_FORMATS_ARB = 0x86A3;
 
-	void glCompressedTexImage1DARB(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, int border, @GLsizei int imageSize,
+	void glCompressedTexImage1DARB(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, int border, @AutoSize("pData") @GLsizei int imageSize,
 	                               @BufferObject(BufferKind.UnpackPBO)
 	                               @Check
 	                               @Const
-	                               @GLbyte
-	                               @GLshort
-	                               @GLint
-	                               @GLfloat
-	                               @GLdouble Buffer pData);
+	                               @GLvoid
+	                               ByteBuffer pData);
 
-	void glCompressedTexImage2DARB(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, int border, @GLsizei int imageSize,
+	void glCompressedTexImage2DARB(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, int border, @AutoSize("pData") @GLsizei int imageSize,
 	                               @BufferObject(BufferKind.UnpackPBO)
 	                               @Check
 	                               @Const
-	                               @GLbyte
-	                               @GLshort
-	                               @GLint
-	                               @GLfloat
-	                               @GLdouble Buffer pData);
+	                               @GLvoid
+	                               ByteBuffer pData);
 
-	void glCompressedTexImage3DARB(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, @GLsizei int depth, int border, @GLsizei int imageSize,
+	void glCompressedTexImage3DARB(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, @GLsizei int depth, int border, @AutoSize("pData") @GLsizei int imageSize,
 	                               @BufferObject(BufferKind.UnpackPBO)
 	                               @Check
 	                               @Const
-	                               @GLbyte
-	                               @GLshort
-	                               @GLint
-	                               @GLfloat
-	                               @GLdouble Buffer pData);
+	                               @GLvoid
+	                               ByteBuffer pData);
 
-	void glCompressedTexSubImage1DARB(@GLenum int target, int level, int xoffset, @GLsizei int width, @GLenum int format, @GLsizei int imageSize,
+	void glCompressedTexSubImage1DARB(@GLenum int target, int level, int xoffset, @GLsizei int width, @GLenum int format, @AutoSize("pData") @GLsizei int imageSize,
 	                                  @BufferObject(BufferKind.UnpackPBO)
 	                                  @Check
 	                                  @Const
-	                                  @GLbyte
-	                                  @GLshort
-	                                  @GLint
-	                                  @GLfloat
-	                                  @GLdouble Buffer pData);
+	                                  @GLvoid
+	                                  ByteBuffer pData);
 
-	void glCompressedTexSubImage2DARB(@GLenum int target, int level, int xoffset, int yoffset, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLsizei int imageSize,
+	void glCompressedTexSubImage2DARB(@GLenum int target, int level, int xoffset, int yoffset, @GLsizei int width, @GLsizei int height, @GLenum int format, @AutoSize("pData") @GLsizei int imageSize,
 	                                  @BufferObject(BufferKind.UnpackPBO)
 	                                  @Check
 	                                  @Const
-	                                  @GLbyte
-	                                  @GLshort
-	                                  @GLint
-	                                  @GLfloat
-	                                  @GLdouble Buffer pData);
+	                                  @GLvoid
+	                                  ByteBuffer pData);
 
-	void glCompressedTexSubImage3DARB(@GLenum int target, int level, int xoffset, int yoffset, int zoffset, @GLsizei int width, @GLsizei int height, @GLsizei int depth, @GLenum int format, @GLsizei int imageSize,
+	void glCompressedTexSubImage3DARB(@GLenum int target, int level, int xoffset, int yoffset, int zoffset, @GLsizei int width, @GLsizei int height, @GLsizei int depth, @GLenum int format, @AutoSize("pData") @GLsizei int imageSize,
 	                                  @BufferObject(BufferKind.UnpackPBO)
 	                                  @Check
 	                                  @Const
-	                                  @GLbyte
-	                                  @GLshort
-	                                  @GLint
-	                                  @GLfloat
-	                                  @GLdouble Buffer pData);
+	                                  @GLvoid
+	                                  ByteBuffer pData);
 
 	void glGetCompressedTexImageARB(@GLenum int target, int lod,
 	                                @BufferObject(BufferKind.PackPBO)
 	                                @Check
-	                                @GLbyte
-	                                @GLshort
-	                                @GLint
-	                                @GLfloat
-	                                @GLdouble Buffer pImg);
+	                                @GLvoid
+	                                ByteBuffer pImg);
 }
