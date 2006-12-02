@@ -330,7 +330,6 @@ static bool switchDisplayMode(JNIEnv * env, Display *disp, int screen, jint exte
 	int height = (*env)->GetIntField(env, mode, fid_height);
 	int freq = (*env)->GetIntField(env, mode, fid_freq);
 	if (!setMode(env, disp, screen, extension, width, height, freq)) {
-		XCloseDisplay(disp);
 		throwException(env, "Could not switch mode.");
 		return false;
 	}
