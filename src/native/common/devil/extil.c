@@ -5,10 +5,9 @@
 #else
  #include <dlfcn.h>
  #include "extil.h"
- #include <libgen.h>
  static void* devILhandle;
 #endif
-#include "org_lwjgl_devil_ILNative.h";
+#include "org_lwjgl_devil_ILNative.h"
 
  /*
  * Class:     org_lwjgl_devil_ILNative
@@ -68,7 +67,7 @@ bool extil_Open(JNIEnv *env, jobjectArray ilPaths) {
 		printfDebug("Testing '%s'\n", path_str);
 #ifdef _WIN32
 		devILhandle = LoadLibrary(path_str);
-#else
+#elif __APPLE__ && __MACH__
 		char* directoryName = dirname(path_str);
 		char* fileName = basename(path_str);
 		char* currentDirectory = getwd(NULL);
@@ -77,13 +76,18 @@ bool extil_Open(JNIEnv *env, jobjectArray ilPaths) {
 		} 
 		devILhandle = dlopen(fileName, RTLD_LAZY);
 		if(devILhandle == NULL) {
-			printfDebug("dlopen failure: %s\n\n\n", dlerror());
+			printfDebug("dlopen failure: %s\n", dlerror());
 		}
 		chdir(currentDirectory);
 		free(currentDirectory);
+#else
+		devILhandle = dlopen(path_str, RTLD_LAZY);
+		if(devILhandle == NULL) {
+			printfDebug("dlopen failure: %s\n", dlerror());
+		}
 #endif
 		if (devILhandle != NULL) {
-			printfDebug("Found devil at '%s'\n", path_str);
+			printfDebug("Found IL at '%s'\n", path_str);
 		}
 
 		free(path_str);
