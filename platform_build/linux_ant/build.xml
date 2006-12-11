@@ -30,6 +30,8 @@
 			<arg line="${cflags}"/>
 			<arg value="-I${java.home}/include"/>
 			<arg value="-I${java.home}/include/linux"/>
+			<arg value="-I${java.home}/../include"/>
+			<arg value="-I${java.home}/../include/linux"/>
 			<arg value="-I${native}/common"/>
 			<arg value="-I${native}/linux"/>
 			<mapper type="glob" from="*.c" to="*.o"/>
