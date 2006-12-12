@@ -293,6 +293,13 @@ public class IL {
 	public static final int		IL_SEEK_CUR									= 1;
 	public static final int		IL_SEEK_END									= 2;
 	public static final int		IL_EOF											= -1;
+	
+	/**
+	 * Return the version of the core LWJGL libraries as a String.
+	 */
+	public static String getVersion() {
+		return ILNative.VERSION;
+	}	
 
 	public static native boolean ilActiveImage(int Number);
 	public static native boolean ilActiveLayer(int Number);
