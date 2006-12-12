@@ -85,13 +85,6 @@ class ILNative {
 		}		
 	}
 	
-	/**
-	 * Return the version of the DevIL-lwjgl binding as a String.
-	 */
-	public static String getVersion() {
-		return VERSION;
-	}	
-	
 	// IL
 	// ===========================================================
 	static native void initNativeStubsIL(Class clazz) throws LWJGLException;

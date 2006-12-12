@@ -295,7 +295,7 @@ public class IL {
 	public static final int		IL_EOF											= -1;
 	
 	/**
-	 * Return the version of the core LWJGL libraries as a String.
+	 * Return the version of the DevIL-LWJGL binding as a String.
 	 */
 	public static String getVersion() {
 		return ILNative.VERSION;
