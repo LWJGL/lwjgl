@@ -243,7 +243,7 @@ public class FMOD {
 	}
 	
 	/**
-	 * Return the version of the core LWJGL libraries as a String.
+	 * Return the version of the FMOD3-LWJGL binding as a String.
 	 */
 	public static String getVersion() {
 		return VERSION;
