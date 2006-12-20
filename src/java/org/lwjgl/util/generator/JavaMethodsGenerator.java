@@ -123,12 +123,14 @@ public class JavaMethodsGenerator {
 			if (!first_parameter)
 				writer.print(", ");
 			first_parameter = false;
-			writer.print("int " + Utils.RESULT_SIZE_NAME);
-			if (method.getAnnotation(CachedResult.class) != null) {
+			writer.print("long " + Utils.RESULT_SIZE_NAME);
+		}
+		if (method.getAnnotation(CachedResult.class) != null) {
+			if (!first_parameter)
 				writer.print(", ");
-				printResultType(writer, method);
-				writer.print(" " + Utils.CACHED_BUFFER_NAME);
-			}
+			first_parameter = false;
+			printResultType(writer, method);
+			writer.print(" " + Utils.CACHED_BUFFER_NAME);
 		}
 		return first_parameter;
 	}
@@ -382,13 +384,13 @@ public class JavaMethodsGenerator {
 			if (!first_parameter)
 				writer.print(", ");
 			first_parameter = false;
-			ParameterDeclaration auto_result_size_parameter = Utils.getAutoResultSizeParameter(method);
-			String result_size_parameter_name;
-			if (auto_result_size_parameter == null)
-				result_size_parameter_name = Utils.RESULT_SIZE_NAME;
+			AutoResultSize auto_result_size_annotation = method.getAnnotation(AutoResultSize.class);
+			String result_size_expression;
+			if (auto_result_size_annotation == null)
+				result_size_expression = Utils.RESULT_SIZE_NAME;
 			else
-				result_size_parameter_name = auto_result_size_parameter.getSimpleName();
-			Utils.printExtraCallArguments(writer, method, result_size_parameter_name);
+				result_size_expression = auto_result_size_annotation.value();
+			Utils.printExtraCallArguments(writer, method, result_size_expression);
 		}
 		return first_parameter;
 	}

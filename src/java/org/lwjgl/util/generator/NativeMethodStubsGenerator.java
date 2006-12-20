@@ -95,7 +95,7 @@ public class NativeMethodStubsGenerator {
 		writer.print("(JNIEnv *env, jclass clazz");
 		generateParameters(writer, method.getParameters(), mode);
 		if (Utils.getNIOBufferType(result_type) != null) {
-			writer.print(", jint " + Utils.RESULT_SIZE_NAME);
+			writer.print(", jlong " + Utils.RESULT_SIZE_NAME);
 			if (method.getAnnotation(CachedResult.class) != null)
 				writer.print(", jobject " + Utils.CACHED_BUFFER_NAME);
 		}

@@ -33,8 +33,8 @@ package org.lwjgl.util.generator;
 
 /**
  *
- * AutoResultSize specifies that a parameter should determine
- * the size of a Buffer result.
+ * AutoResultSize specifies the size of a returned Buffer
+ * as an expression.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
@@ -44,6 +44,7 @@ package org.lwjgl.util.generator;
 import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 
-@Target(ElementType.PARAMETER)
+@Target(ElementType.METHOD)
 public @interface AutoResultSize {
+	String value(); // The size as a java expression
 }

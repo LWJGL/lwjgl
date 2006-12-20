@@ -144,17 +144,6 @@ public class Utils {
 		}
 	}
 
-	public static ParameterDeclaration getAutoResultSizeParameter(MethodDeclaration method) {
-		ParameterDeclaration result = null;
-		for (ParameterDeclaration param : method.getParameters())
-			if (param.getAnnotation(AutoResultSize.class) != null) {
-				if (result != null)
-					throw new RuntimeException(method + " contains multiple AutoResultSize annotations");
-				result = param;
-			}
-		return result;
-	}
-
 	public static AnnotationMirror getParameterAutoAnnotation(ParameterDeclaration param) {
 		for (AnnotationMirror annotation : param.getAnnotationMirrors())
 			if (NativeTypeTranslator.getAnnotation(annotation, Auto.class) != null)
@@ -210,7 +199,7 @@ public class Utils {
 	}
 
 	public static boolean needResultSize(MethodDeclaration method) {
-		return getNIOBufferType(getMethodReturnType(method)) != null && getAutoResultSizeParameter(method) == null;
+		return getNIOBufferType(getMethodReturnType(method)) != null && method.getAnnotation(AutoResultSize.class) == null;
 	}
 	
 	public static void printExtraCallArguments(PrintWriter writer, MethodDeclaration method, String size_parameter_name) {
