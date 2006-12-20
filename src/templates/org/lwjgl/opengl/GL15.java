@@ -123,6 +123,7 @@ public interface GL15 {
 	 */
 	@CachedResult
 	@GLvoid
+	@AutoResultSize("GLChecks.getBufferObjectSize(caps, target)")
 	ByteBuffer glMapBuffer(@GLenum int target, @GLenum int access);
 
 	boolean glUnmapBuffer(@GLenum int target);
@@ -131,6 +132,7 @@ public interface GL15 {
 	void glGetBufferParameteriv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
 
 	@StripPostfix("pointer")
+	@AutoResultSize("GLChecks.getBufferObjectSize(caps, target)")
 	void glGetBufferPointerv(@GLenum int target, @GLenum int pname, @Result @GLvoid ByteBuffer pointer);
 
 	// -----------------------------------------------------------------

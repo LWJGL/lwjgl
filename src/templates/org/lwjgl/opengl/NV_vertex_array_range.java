@@ -54,7 +54,8 @@ public interface NV_vertex_array_range {
 
 	@PlatformDependent({Platform.WGL, Platform.GLX})
 	@GLvoid
-	ByteBuffer glAllocateMemoryNV(@AutoResultSize int size, float readFrequency, float writeFrequency, float priority);
+	@AutoResultSize("size")
+	ByteBuffer glAllocateMemoryNV(int size, float readFrequency, float writeFrequency, float priority);
 
 	@PlatformDependent({Platform.WGL, Platform.GLX})
 	void glFreeMemoryNV(@Check @GLbyte Buffer pointer);
