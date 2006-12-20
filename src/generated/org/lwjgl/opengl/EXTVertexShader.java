@@ -526,14 +526,14 @@ public final class EXTVertexShader {
 	}
 	private static native void nglGetVariantFloatvEXT(int id, int value, FloatBuffer pbData, int pbData_position, long function_pointer);
 
-	public static java.nio.ByteBuffer glGetVariantPointerEXT(int id, int value, int result_size) {
+	public static java.nio.ByteBuffer glGetVariantPointerEXT(int id, int value, long result_size) {
 		ContextCapabilities caps = GLContext.getCapabilities();
 		long function_pointer = caps.EXT_vertex_shader_glGetVariantPointervEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		java.nio.ByteBuffer __result = nglGetVariantPointervEXT(id, value, result_size, function_pointer);
 		return __result;
 	}
-	private static native java.nio.ByteBuffer nglGetVariantPointervEXT(int id, int value, int result_size, long function_pointer);
+	private static native java.nio.ByteBuffer nglGetVariantPointervEXT(int id, int value, long result_size, long function_pointer);
 
 	public static void glGetInvariantBooleanEXT(int id, int value, ByteBuffer pbData) {
 		ContextCapabilities caps = GLContext.getCapabilities();

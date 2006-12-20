@@ -69,7 +69,7 @@ public final class NVVertexArrayRange {
 		java.nio.ByteBuffer __result = nglAllocateMemoryNV(size, readFrequency, writeFrequency, priority, size, function_pointer);
 		return __result;
 	}
-	private static native java.nio.ByteBuffer nglAllocateMemoryNV(int size, float readFrequency, float writeFrequency, float priority, int result_size, long function_pointer);
+	private static native java.nio.ByteBuffer nglAllocateMemoryNV(int size, float readFrequency, float writeFrequency, float priority, long result_size, long function_pointer);
 
 	public static void glFreeMemoryNV(ByteBuffer pointer) {
 		ContextCapabilities caps = GLContext.getCapabilities();

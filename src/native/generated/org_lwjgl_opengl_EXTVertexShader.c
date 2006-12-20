@@ -249,7 +249,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetVariantFloatv
 	glGetVariantFloatvEXT(id, value, pbData_address);
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetVariantPointervEXT(JNIEnv *env, jclass clazz, jint id, jint value, jint result_size, jlong function_pointer) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetVariantPointervEXT(JNIEnv *env, jclass clazz, jint id, jint value, jlong result_size, jlong function_pointer) {
 	glGetVariantPointervEXTPROC glGetVariantPointervEXT = (glGetVariantPointervEXTPROC)((intptr_t)function_pointer);
 	GLvoid * __result;
 	glGetVariantPointervEXT(id, value, &__result);

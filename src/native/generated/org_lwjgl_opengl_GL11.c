@@ -739,7 +739,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglFinish(JNIEnv *env, jclass 
 	glFinish();
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL11_nglGetPointerv(JNIEnv *env, jclass clazz, jint pname, jint result_size, jlong function_pointer) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL11_nglGetPointerv(JNIEnv *env, jclass clazz, jint pname, jlong result_size, jlong function_pointer) {
 	glGetPointervPROC glGetPointerv = (glGetPointervPROC)((intptr_t)function_pointer);
 	GLvoid * __result;
 	glGetPointerv(pname, &__result);

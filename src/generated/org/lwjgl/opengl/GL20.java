@@ -757,14 +757,14 @@ public final class GL20 {
 	}
 	private static native void nglGetVertexAttribiv(int index, int pname, IntBuffer params, int params_position, long function_pointer);
 
-	public static java.nio.ByteBuffer glGetVertexAttribPointer(int index, int pname, int result_size) {
+	public static java.nio.ByteBuffer glGetVertexAttribPointer(int index, int pname, long result_size) {
 		ContextCapabilities caps = GLContext.getCapabilities();
 		long function_pointer = caps.GL20_glGetVertexAttribPointerv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		java.nio.ByteBuffer __result = nglGetVertexAttribPointerv(index, pname, result_size, function_pointer);
 		return __result;
 	}
-	private static native java.nio.ByteBuffer nglGetVertexAttribPointerv(int index, int pname, int result_size, long function_pointer);
+	private static native java.nio.ByteBuffer nglGetVertexAttribPointerv(int index, int pname, long result_size, long function_pointer);
 
 	public static void glBindAttribLocation(int program, int index, ByteBuffer name) {
 		ContextCapabilities caps = GLContext.getCapabilities();

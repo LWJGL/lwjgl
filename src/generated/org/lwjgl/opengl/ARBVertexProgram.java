@@ -256,12 +256,12 @@ public final class ARBVertexProgram extends ARBProgram {
 	}
 	private static native void nglGetVertexAttribivARB(int index, int pname, IntBuffer params, int params_position, long function_pointer);
 
-	public static java.nio.ByteBuffer glGetVertexAttribPointerARB(int index, int pname, int result_size) {
+	public static java.nio.ByteBuffer glGetVertexAttribPointerARB(int index, int pname, long result_size) {
 		ContextCapabilities caps = GLContext.getCapabilities();
 		long function_pointer = caps.ARB_vertex_program_glGetVertexAttribPointervARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		java.nio.ByteBuffer __result = nglGetVertexAttribPointervARB(index, pname, result_size, function_pointer);
 		return __result;
 	}
-	private static native java.nio.ByteBuffer nglGetVertexAttribPointervARB(int index, int pname, int result_size, long function_pointer);
+	private static native java.nio.ByteBuffer nglGetVertexAttribPointervARB(int index, int pname, long result_size, long function_pointer);
 }

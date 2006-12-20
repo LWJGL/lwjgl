@@ -64,7 +64,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferSubData(JNIEnv *en
 	glGetBufferSubData(target, offset, size, data_address);
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL15_nglMapBuffer(JNIEnv *env, jclass clazz, jint target, jint access, jint result_size, jobject old_buffer, jlong function_pointer) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL15_nglMapBuffer(JNIEnv *env, jclass clazz, jint target, jint access, jlong result_size, jobject old_buffer, jlong function_pointer) {
 	glMapBufferPROC glMapBuffer = (glMapBufferPROC)((intptr_t)function_pointer);
 	GLvoid * __result = glMapBuffer(target, access);
 	return safeNewBufferCached(env, __result, result_size, old_buffer);
@@ -82,7 +82,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferParameteriv(JNIEnv
 	glGetBufferParameteriv(target, pname, params_address);
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferPointerv(JNIEnv *env, jclass clazz, jint target, jint pname, jint result_size, jlong function_pointer) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferPointerv(JNIEnv *env, jclass clazz, jint target, jint pname, jlong result_size, jlong function_pointer) {
 	glGetBufferPointervPROC glGetBufferPointerv = (glGetBufferPointervPROC)((intptr_t)function_pointer);
 	GLvoid * __result;
 	glGetBufferPointerv(target, pname, &__result);

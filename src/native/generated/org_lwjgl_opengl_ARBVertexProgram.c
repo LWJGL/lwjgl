@@ -129,7 +129,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_nglGetVertexAttrib
 	glGetVertexAttribivARB(index, pname, params_address);
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_nglGetVertexAttribPointervARB(JNIEnv *env, jclass clazz, jint index, jint pname, jint result_size, jlong function_pointer) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_nglGetVertexAttribPointervARB(JNIEnv *env, jclass clazz, jint index, jint pname, jlong result_size, jlong function_pointer) {
 	glGetVertexAttribPointervARBPROC glGetVertexAttribPointervARB = (glGetVertexAttribPointervARBPROC)((intptr_t)function_pointer);
 	GLvoid * __result;
 	glGetVertexAttribPointervARB(index, pname, &__result);

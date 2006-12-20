@@ -1396,14 +1396,14 @@ public final class GL11 {
 	}
 	private static native void nglFinish(long function_pointer);
 
-	public static java.nio.ByteBuffer glGetPointer(int pname, int result_size) {
+	public static java.nio.ByteBuffer glGetPointer(int pname, long result_size) {
 		ContextCapabilities caps = GLContext.getCapabilities();
 		long function_pointer = caps.GL11_glGetPointerv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		java.nio.ByteBuffer __result = nglGetPointerv(pname, result_size, function_pointer);
 		return __result;
 	}
-	private static native java.nio.ByteBuffer nglGetPointerv(int pname, int result_size, long function_pointer);
+	private static native java.nio.ByteBuffer nglGetPointerv(int pname, long result_size, long function_pointer);
 
 	public static boolean glIsEnabled(int cap) {
 		ContextCapabilities caps = GLContext.getCapabilities();

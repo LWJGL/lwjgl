@@ -423,7 +423,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_nglGetVertexAttribiv(JNIEnv *e
 	glGetVertexAttribiv(index, pname, params_address);
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL20_nglGetVertexAttribPointerv(JNIEnv *env, jclass clazz, jint index, jint pname, jint result_size, jlong function_pointer) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL20_nglGetVertexAttribPointerv(JNIEnv *env, jclass clazz, jint index, jint pname, jlong result_size, jlong function_pointer) {
 	glGetVertexAttribPointervPROC glGetVertexAttribPointerv = (glGetVertexAttribPointervPROC)((intptr_t)function_pointer);
 	GLvoid * __result;
 	glGetVertexAttribPointerv(index, pname, &__result);

@@ -56,7 +56,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBBufferObject_nglGetBufferSubData
 	glGetBufferSubDataARB(target, offset, size, data_address);
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ARBBufferObject_nglMapBufferARB(JNIEnv *env, jclass clazz, jint target, jint access, jint result_size, jobject old_buffer, jlong function_pointer) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ARBBufferObject_nglMapBufferARB(JNIEnv *env, jclass clazz, jint target, jint access, jlong result_size, jobject old_buffer, jlong function_pointer) {
 	glMapBufferARBPROC glMapBufferARB = (glMapBufferARBPROC)((intptr_t)function_pointer);
 	GLvoid * __result = glMapBufferARB(target, access);
 	return safeNewBufferCached(env, __result, result_size, old_buffer);
@@ -74,7 +74,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBBufferObject_nglGetBufferParamet
 	glGetBufferParameterivARB(target, pname, params_address);
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ARBBufferObject_nglGetBufferPointervARB(JNIEnv *env, jclass clazz, jint target, jint pname, jint result_size, jlong function_pointer) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ARBBufferObject_nglGetBufferPointervARB(JNIEnv *env, jclass clazz, jint target, jint pname, jlong result_size, jlong function_pointer) {
 	glGetBufferPointervARBPROC glGetBufferPointervARB = (glGetBufferPointervARBPROC)((intptr_t)function_pointer);
 	GLvoid * __result;
 	glGetBufferPointervARB(target, pname, &__result);

@@ -214,14 +214,14 @@ public final class NVVertexProgram extends NVProgram {
 	}
 	private static native void nglGetVertexAttribivNV(int index, int parameterName, IntBuffer params, int params_position, long function_pointer);
 
-	public static java.nio.ByteBuffer glGetVertexAttribPointerNV(int index, int parameterName, int result_size) {
+	public static java.nio.ByteBuffer glGetVertexAttribPointerNV(int index, int parameterName, long result_size) {
 		ContextCapabilities caps = GLContext.getCapabilities();
 		long function_pointer = caps.NV_vertex_program_glGetVertexAttribPointervNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		java.nio.ByteBuffer __result = nglGetVertexAttribPointervNV(index, parameterName, result_size, function_pointer);
 		return __result;
 	}
-	private static native java.nio.ByteBuffer nglGetVertexAttribPointervNV(int index, int parameterName, int result_size, long function_pointer);
+	private static native java.nio.ByteBuffer nglGetVertexAttribPointervNV(int index, int parameterName, long result_size, long function_pointer);
 
 	public static void glProgramParameter4fNV(int target, int index, float x, float y, float z, float w) {
 		ContextCapabilities caps = GLContext.getCapabilities();

@@ -19,7 +19,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_nglFlushVertexAr
 	glFlushVertexArrayRangeNV();
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_nglAllocateMemoryNV(JNIEnv *env, jclass clazz, jint size, jfloat readFrequency, jfloat writeFrequency, jfloat priority, jint result_size, jlong function_pointer) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_nglAllocateMemoryNV(JNIEnv *env, jclass clazz, jint size, jfloat readFrequency, jfloat writeFrequency, jfloat priority, jlong result_size, jlong function_pointer) {
 	glAllocateMemoryNVPROC glAllocateMemoryNV = (glAllocateMemoryNVPROC)((intptr_t)function_pointer);
 	GLvoid * __result = glAllocateMemoryNV(size, readFrequency, writeFrequency, priority);
 	return safeNewBuffer(env, __result, result_size);

@@ -18,12 +18,11 @@ public final class ATIMapObjectBuffer {
 	 * oldBuffer is non-null, it will be returned if it points to the same mapped memory, otherwise a
 	 * new ByteBuffer is created.
 	 * @param result_size   The size of the buffer area.
-	 * @param old_buffer    A ByteBuffer. If this argument points to the same address as the new mapping,
-	 *                      it will be returned and no new buffer will be created. In that case, size is
-	 *                      ignored.
+	 * @param old_buffer    A ByteBuffer. If this argument points to the same address and has the same capacity as the new mapping,
+	 *                      it will be returned and no new buffer will be created.
 	 * @return A ByteBuffer representing the mapped object buffer memory.
 	 */
-	public static java.nio.ByteBuffer glMapObjectBufferATI(int buffer, int result_size, java.nio.ByteBuffer old_buffer) {
+	public static java.nio.ByteBuffer glMapObjectBufferATI(int buffer, long result_size, java.nio.ByteBuffer old_buffer) {
 		ContextCapabilities caps = GLContext.getCapabilities();
 		long function_pointer = caps.ATI_map_object_buffer_glMapObjectBufferATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
@@ -32,7 +31,7 @@ public final class ATIMapObjectBuffer {
 		java.nio.ByteBuffer __result = nglMapObjectBufferATI(buffer, result_size, old_buffer, function_pointer);
 		return __result;
 	}
-	private static native java.nio.ByteBuffer nglMapObjectBufferATI(int buffer, int result_size, java.nio.ByteBuffer old_buffer, long function_pointer);
+	private static native java.nio.ByteBuffer nglMapObjectBufferATI(int buffer, long result_size, java.nio.ByteBuffer old_buffer, long function_pointer);
 
 	public static void glUnmapObjectBufferATI(int buffer) {
 		ContextCapabilities caps = GLContext.getCapabilities();

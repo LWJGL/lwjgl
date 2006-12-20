@@ -220,20 +220,20 @@ public final class GL15 {
 	 * ByteBuffer mapped_buffer; mapped_buffer = glMapBuffer(..., ..., ..., null); ... // Another map on the same buffer
 	 * mapped_buffer = glMapBuffer(..., ..., ..., mapped_buffer);
 	 * @param result_size	The size of the buffer area.
-	 * @param old_buffer	A ByteBuffer. If this argument points to the same address as the new mapping, it will be returned and no
-	 *                  new buffer will be created. In that case, size is ignored.
+	 * @param old_buffer	A ByteBuffer. If this argument points to the same address and has the same capacity as the new mapping, it will be returned and no
+	 *                  new buffer will be created.
 	 * @return A ByteBuffer representing the mapped buffer memory.
 	 */
-	public static java.nio.ByteBuffer glMapBuffer(int target, int access, int result_size, java.nio.ByteBuffer old_buffer) {
+	public static java.nio.ByteBuffer glMapBuffer(int target, int access, java.nio.ByteBuffer old_buffer) {
 		ContextCapabilities caps = GLContext.getCapabilities();
 		long function_pointer = caps.GL15_glMapBuffer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		if (old_buffer != null)
 			BufferChecks.checkDirect(old_buffer);
-		java.nio.ByteBuffer __result = nglMapBuffer(target, access, result_size, old_buffer, function_pointer);
+		java.nio.ByteBuffer __result = nglMapBuffer(target, access, GLChecks.getBufferObjectSize(caps, target), old_buffer, function_pointer);
 		return __result;
 	}
-	private static native java.nio.ByteBuffer nglMapBuffer(int target, int access, int result_size, java.nio.ByteBuffer old_buffer, long function_pointer);
+	private static native java.nio.ByteBuffer nglMapBuffer(int target, int access, long result_size, java.nio.ByteBuffer old_buffer, long function_pointer);
 
 	public static boolean glUnmapBuffer(int target) {
 		ContextCapabilities caps = GLContext.getCapabilities();
@@ -253,14 +253,14 @@ public final class GL15 {
 	}
 	private static native void nglGetBufferParameteriv(int target, int pname, IntBuffer params, int params_position, long function_pointer);
 
-	public static java.nio.ByteBuffer glGetBufferPointer(int target, int pname, int result_size) {
+	public static java.nio.ByteBuffer glGetBufferPointer(int target, int pname) {
 		ContextCapabilities caps = GLContext.getCapabilities();
 		long function_pointer = caps.GL15_glGetBufferPointerv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
-		java.nio.ByteBuffer __result = nglGetBufferPointerv(target, pname, result_size, function_pointer);
+		java.nio.ByteBuffer __result = nglGetBufferPointerv(target, pname, GLChecks.getBufferObjectSize(caps, target), function_pointer);
 		return __result;
 	}
-	private static native java.nio.ByteBuffer nglGetBufferPointerv(int target, int pname, int result_size, long function_pointer);
+	private static native java.nio.ByteBuffer nglGetBufferPointerv(int target, int pname, long result_size, long function_pointer);
 
 	public static void glGenQueries(IntBuffer ids) {
 		ContextCapabilities caps = GLContext.getCapabilities();
