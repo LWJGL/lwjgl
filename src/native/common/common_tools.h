@@ -89,7 +89,8 @@ static inline jobject safeNewBuffer(JNIEnv *env, void *p, int size) {
 static inline jobject safeNewBufferCached(JNIEnv *env, void *p, int size, jobject old_buffer) {
 	if (old_buffer != NULL) {
 		void *old_buffer_address = (*env)->GetDirectBufferAddress(env, old_buffer);
-		if (old_buffer_address == p)
+		jlong capacity = (*env)->GetDirectBufferCapacity(env, old_buffer);
+		if (old_buffer_address == p && capacity == size)
 			return old_buffer;
 	}
 	return safeNewBuffer(env, p, size);
