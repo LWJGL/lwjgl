@@ -59,6 +59,18 @@ class GLChecks {
 		return StateTracker.getReferencesStack(caps).getReferences();
 	}
 
+	static int getBufferObjectSize(ContextCapabilities caps, int buffer_enum) {
+		IntBuffer scratch_buffer = caps.scratch_int_buffer;
+		GL15.glGetBufferParameter(buffer_enum, GL15.GL_BUFFER_SIZE, scratch_buffer);
+		return scratch_buffer.get(0);
+	}
+
+	static int getBufferObjectSizeARB(ContextCapabilities caps, int buffer_enum) {
+		IntBuffer scratch_buffer = caps.scratch_int_buffer;
+		ARBBufferObject.glGetBufferParameterARB(buffer_enum, ARBBufferObject.GL_BUFFER_SIZE_ARB, scratch_buffer);
+		return scratch_buffer.get(0);
+	}
+
 	private static boolean checkBufferObject(ContextCapabilities caps, int buffer_enum, boolean state) {
 		IntBuffer scratch_buffer = caps.scratch_int_buffer;
 		GL11.glGetInteger(buffer_enum, scratch_buffer);
