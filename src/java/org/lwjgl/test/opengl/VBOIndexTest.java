@@ -169,7 +169,6 @@ public final class VBOIndexTest {
 
 		ByteBuffer new_mapped_buffer = ARBBufferObject.glMapBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB,
 		                                                              ARBBufferObject.GL_WRITE_ONLY_ARB,
-		                                                              2 * 4 * 4,
 		                                                              mapped_buffer);
 		if ( new_mapped_buffer != mapped_buffer )
 			mapped_float_buffer = new_mapped_buffer.order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -177,7 +176,6 @@ public final class VBOIndexTest {
 
 		new_mapped_buffer = ARBBufferObject.glMapBufferARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB,
 		                                                   ARBBufferObject.GL_WRITE_ONLY_ARB,
-		                                                   4 * 4,
 		                                                   mapped_indices_buffer);
 		if ( new_mapped_buffer != mapped_indices_buffer )
 			mapped_indices_int_buffer = new_mapped_buffer.order(ByteOrder.nativeOrder()).asIntBuffer();

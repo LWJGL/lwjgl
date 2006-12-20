@@ -163,7 +163,6 @@ public final class VBOTest {
 		GL11.glRotatef(angle, 0, 0, 1.0f);
 		ByteBuffer new_mapped_buffer = ARBBufferObject.glMapBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB,
 		                                                              ARBBufferObject.GL_WRITE_ONLY_ARB,
-		                                                              2 * 4 * 4,
 		                                                              mapped_buffer);
 		if ( new_mapped_buffer != mapped_buffer )
 			mapped_float_buffer = new_mapped_buffer.order(ByteOrder.nativeOrder()).asFloatBuffer();
