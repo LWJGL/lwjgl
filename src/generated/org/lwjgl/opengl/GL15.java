@@ -219,7 +219,6 @@ public final class GL15 {
 	 * <p/>
 	 * ByteBuffer mapped_buffer; mapped_buffer = glMapBuffer(..., ..., ..., null); ... // Another map on the same buffer
 	 * mapped_buffer = glMapBuffer(..., ..., ..., mapped_buffer);
-	 * @param result_size	The size of the buffer area.
 	 * @param old_buffer	A ByteBuffer. If this argument points to the same address and has the same capacity as the new mapping, it will be returned and no
 	 *                  new buffer will be created.
 	 * @return A ByteBuffer representing the mapped buffer memory.
