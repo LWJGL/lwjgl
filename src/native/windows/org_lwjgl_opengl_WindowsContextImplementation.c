@@ -43,7 +43,6 @@
 #include "common_tools.h"
 
 typedef struct {
-	WGLExtensions extensions;
 	HGLRC context;
 } WindowsContext;
 
@@ -56,7 +55,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nCr
 	HGLRC shared_context = NULL;
 	HDC saved_hdc;
 	HGLRC saved_context;
-	WGLExtensions extensions;
 	jobject context_handle = newJavaManagedByteBuffer(env, sizeof(WindowsContext));
 	if (context_handle == NULL) {
 		throwException(env, "Could not create handle buffer");
@@ -77,20 +75,8 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nCr
 			return NULL;
 		}
 	}
-	saved_hdc = wglGetCurrentDC();
-	saved_context = wglGetCurrentContext();
-	if (!wglMakeCurrent(peer_info->drawable_hdc, context)) {
-		wglMakeCurrent(saved_hdc, saved_context);
-		wglDeleteContext(context);
-		throwException(env, "Could not make context current");
-		return NULL;
-	}
-	extgl_InitWGL(&extensions);
-	if (!wglMakeCurrent(saved_hdc, saved_context))
-		printfDebugJava(env, "Failed to restore current context");
 	context_info = (WindowsContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	context_info->context = context;
-	context_info->extensions = extensions;
 	return context_handle;
 }
 
@@ -121,9 +107,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nI
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nSetSwapInterval
   (JNIEnv *env, jclass clazz, jobject context_handle, jint value) {
-	WindowsContext *context_info = (WindowsContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	if (context_info->extensions.WGL_EXT_swap_control) {
-		context_info->extensions.wglSwapIntervalEXT(value);
+	WGLExtensions extensions;
+	extgl_InitWGL(&extensions);
+	if (extensions.WGL_EXT_swap_control) {
+		extensions.wglSwapIntervalEXT(value);
 	}
 }
 
