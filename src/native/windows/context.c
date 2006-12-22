@@ -114,7 +114,7 @@ void closeWindow(HWND *hwnd, HDC *hdc)
 void getWindowFlags(DWORD *windowflags_return, DWORD *exstyle_return, bool fullscreen, bool undecorated) {
 	DWORD exstyle, windowflags;
 	if (fullscreen) {
-		exstyle = WS_EX_APPWINDOW | WS_EX_TOPMOST;
+		exstyle = WS_EX_APPWINDOW;
 		windowflags = WS_POPUP;
 	} else if (undecorated) {
 		exstyle = WS_EX_APPWINDOW;
