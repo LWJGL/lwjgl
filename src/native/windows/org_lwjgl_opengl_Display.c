@@ -199,10 +199,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv
 		return;
 	}
 	display_hdc = GetDC(display_hwnd);
-	ShowWindow(display_hwnd, SW_SHOWDEFAULT);
-	UpdateWindow(display_hwnd);
-	SetForegroundWindow(display_hwnd);
-	SetFocus(display_hwnd);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nDestroyWindow(JNIEnv *env, jclass clazz) {

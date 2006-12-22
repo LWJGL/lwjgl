@@ -96,6 +96,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private final static int     WA_ACTIVE        = 1;
 	private final static int     WA_CLICKACTIVE   = 2;
 	private final static int SW_SHOWMINNOACTIVE   = 7;
+	private final static int SW_SHOWDEFAULT       = 10;
 	private final static int SW_RESTORE           = 9;
 
 	private static WindowsDisplay current_display;
@@ -132,6 +133,9 @@ final class WindowsDisplay implements DisplayImplementation {
 		did_maximize = false;
 		nCreateWindow(mode, fullscreen, x, y);
 		peer_info.initDC();
+		showWindow(getHwnd(), SW_SHOWDEFAULT);
+		setForegroundWindow(getHwnd());
+		setFocus(getHwnd());
 	}
 	private native void nCreateWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException;
 
