@@ -276,6 +276,7 @@ public class HWCursorTest {
 			int button = Mouse.getEventButton();
 			if(button >= 0 && button < 3 && Mouse.getEventButtonState()) {
 				mouse_btn = Mouse.getEventButton();
+				switchCursor();
 			}
 		}
 	}
@@ -337,11 +338,7 @@ public class HWCursorTest {
 		}
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_N)) {
-			try {
-				Mouse.setNativeCursor(cursor[mouse_btn]);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			switchCursor();
 		}
 		
 		while(Keyboard.next()) {
@@ -350,7 +347,15 @@ public class HWCursorTest {
 			}    
 		}
 	}
-	
+
+	private void switchCursor() {
+		try {
+			Mouse.setNativeCursor(cursor[mouse_btn]);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 *  Cleans up the test
 	 */
