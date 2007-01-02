@@ -122,7 +122,7 @@ public class HWCursorTest {
 		cursor = new Cursor[3];
 		
 		int cursorImageCount = 1;
-		int cursorWidth = Cursor.getMaxCursorSize();
+		int cursorWidth = Math.min(64, Cursor.getMaxCursorSize());
 		int cursorHeight = cursorWidth;
 		IntBuffer cursorImages;
 		IntBuffer cursorDelays;
@@ -138,7 +138,7 @@ public class HWCursorTest {
 			}
 		}
 		cursorImages.flip();
-		cursor[0] = new Cursor(Cursor.getMaxCursorSize(), Cursor.getMaxCursorSize(), Cursor.getMaxCursorSize()/2, Cursor.getMaxCursorSize()/2, cursorImageCount, cursorImages, cursorDelays);
+		cursor[0] = new Cursor(cursorWidth, cursorHeight, cursorWidth/2, cursorHeight/2, cursorImageCount, cursorImages, cursorDelays);
 		// ----------------------------------
 		
 		// Create 3 piece animation
@@ -149,7 +149,7 @@ public class HWCursorTest {
 		for(int i=0; i<cursorImageCount; i++) {
 			
 			// make a colored square with a chocolate center 
-			int offColor = 0x00000000;        
+			int offColor = 0x00000000;
 			int onColor = 0xffff0000;
 			
 			// change color according to cursor
@@ -179,7 +179,7 @@ public class HWCursorTest {
 		cursorDelays.flip();
 		cursorImages.flip();
 		
-		cursor[1] = new Cursor(Cursor.getMaxCursorSize(), Cursor.getMaxCursorSize(), Cursor.getMaxCursorSize()/2, Cursor.getMaxCursorSize()/2, cursorImageCount, cursorImages, cursorDelays);
+		cursor[1] = new Cursor(cursorWidth, cursorHeight, cursorWidth/2, cursorHeight/2, cursorImageCount, cursorImages, cursorDelays);
 		// ----------------------------------
 		
 		
