@@ -207,7 +207,7 @@ public class HWCursorTest {
 		}
 		cursorImages.flip();
 		cursorDelays.flip();
-		cursor[2] = new Cursor(Cursor.getMaxCursorSize(), Cursor.getMaxCursorSize(), Cursor.getMaxCursorSize()/2, Cursor.getMaxCursorSize()/2, cursorImageCount, cursorImages, cursorDelays);      
+		cursor[2] = new Cursor(cursorWidth, cursorHeight, cursorWidth/2, cursorHeight/2, cursorImageCount, cursorImages, cursorDelays);      
 		// ----------------------------------
 		
 		Mouse.setNativeCursor(cursor[0]);
