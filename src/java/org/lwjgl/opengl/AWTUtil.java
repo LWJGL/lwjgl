@@ -77,7 +77,7 @@ final class AWTUtil {
 		if (LWJGLUtil.getPlatform() != LWJGLUtil.PLATFORM_MACOSX || LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 4)) {
 			int cursor_colors = Toolkit.getDefaultToolkit().getMaximumCursorColors();
 			boolean supported = cursor_colors >= Short.MAX_VALUE && getMaxCursorSize() > 0;
-			int caps = supported ? org.lwjgl.input.Cursor.CURSOR_8_BIT_ALPHA | org.lwjgl.input.Cursor.CURSOR_ONE_BIT_TRANSPARENCY: 0;
+			int caps = supported ? org.lwjgl.input.Cursor.CURSOR_8_BIT_ALPHA | org.lwjgl.input.Cursor.CURSOR_ONE_BIT_TRANSPARENCY: 0 | org.lwjgl.input.Cursor.CURSOR_ANIMATION;
 			return caps;
 		} else {
 			/* Return no capability in Mac OS X 10.3 and earlier , as there are two unsolved bugs (both reported to apple along with
