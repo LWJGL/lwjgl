@@ -324,9 +324,19 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 					peer_info.unlock();
 				}
 			} catch (LWJGLException e) {
-				LWJGLUtil.log("Failed to lock surface, skipping paint(): " + e);
+				exceptionOccurred(e);
 			}
 		}
+	}
+
+	/**
+	 * This method will be called if an unhandled LWJGLException occurs in paint().
+	 * Override this method to be notified of this.
+	 *
+	 * @param exception The exception that occurred.
+	 */
+	protected void exceptionOccurred(LWJGLException exception) {
+		LWJGLUtil.log("Unhandled exception occurred, skipping paint(): " + exception);
 	}
 
 	/**
