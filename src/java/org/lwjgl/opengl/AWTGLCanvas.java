@@ -285,6 +285,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	 * be overridden to do GL operations.
 	 */
 	public final void paint(Graphics g) {
+		LWJGLException exception = null;
 		synchronized (SYNC_LOCK) {
 			if (!isDisplayable())
 				return;
@@ -324,9 +325,11 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 					peer_info.unlock();
 				}
 			} catch (LWJGLException e) {
-				exceptionOccurred(e);
+				exception = e;
 			}
 		}
+		if (exception != null)
+			exceptionOccurred(exception);
 	}
 
 	/**
