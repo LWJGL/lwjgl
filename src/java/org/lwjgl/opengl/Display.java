@@ -734,6 +734,9 @@ public final class Display {
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
 		GL11.glViewport(0, 0, current_mode.getWidth(), current_mode.getHeight());
+		// Clear window to avoid the desktop "showing through"
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		update();
 	}
 
 	static DisplayImplementation getImplementation() {
