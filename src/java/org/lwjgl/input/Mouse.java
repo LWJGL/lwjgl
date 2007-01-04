@@ -136,8 +136,9 @@ public class Mouse {
 
 	private static InputImplementation implementation;
   
-	/** Whether we're running windows - which need to manually update cursor animation */
-	private static final boolean isWindows = LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_WINDOWS;
+	/** Whether we need cursor animation emulation */
+	private static final boolean emulateCursorAnimation = 	LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_WINDOWS || 
+								LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_MACOSX;
 
 	/**
 	 * Mouse cannot be constructed.
@@ -584,7 +585,7 @@ public class Mouse {
 	 * shouldn't be called otherwise
 	 */
 	public static synchronized void updateCursor() {
-		if (isWindows && currentCursor != null && currentCursor.hasTimedOut()) {
+		if (emulateCursorAnimation && currentCursor != null && currentCursor.hasTimedOut()) {
 			currentCursor.nextCursor();
 			try {
 				setNativeCursor(currentCursor);
