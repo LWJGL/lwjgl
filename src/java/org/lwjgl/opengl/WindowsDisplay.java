@@ -136,6 +136,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		showWindow(getHwnd(), SW_SHOWDEFAULT);
 		setForegroundWindow(getHwnd());
 		setFocus(getHwnd());
+		updateWindow(getHwnd());
 	}
 	private native void nCreateWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException;
 
@@ -181,6 +182,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static native void showWindow(long hwnd, int mode);
 	private static native void setForegroundWindow(long hwnd);
 	private static native void setFocus(long hwnd);
+	private static native void updateWindow(long hwnd);
 
 	private void restoreDisplayMode() {
 		try {
