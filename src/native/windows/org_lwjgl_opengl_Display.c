@@ -247,11 +247,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetGammaRamp(JNIEnv
 	setGammaRamp(env, gamma_buffer);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_updateWindow(JNIEnv *env, jclass unused, jlong hwnd_ptr) {
-	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
-	UpdateWindow(hwnd);
-}
-
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_showWindow(JNIEnv *env, jclass unused, jlong hwnd_ptr, jint mode) {
 	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
 	ShowWindow(hwnd, mode);

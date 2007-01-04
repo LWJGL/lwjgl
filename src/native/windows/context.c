@@ -55,6 +55,7 @@ extern HINSTANCE dll_handle;                     // Handle to the LWJGL dll
 bool registerWindow(WNDPROC win_proc, LPCTSTR class_name)
 {
 	WNDCLASS windowClass;
+	memset(&windowClass, 0, sizeof(windowClass));
 	windowClass.style = CS_OWNDC;
 	windowClass.lpfnWndProc = win_proc;
 	windowClass.cbClsExtra = 0;
@@ -62,7 +63,7 @@ bool registerWindow(WNDPROC win_proc, LPCTSTR class_name)
 	windowClass.hInstance = dll_handle;
 	windowClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	windowClass.hbrBackground = NULL;
 	windowClass.lpszMenuName = NULL;
 	windowClass.lpszClassName = class_name;
 
