@@ -28,6 +28,8 @@
 		<property name="linker_flags" value="-Wl,--version-script=${native}/linux/lwjgl.map -shared -O2 -Wall -o ${libname} ${libs}"/>
 		<apply dir="." executable="cc" dest="." skipemptyfilesets="true" failonerror="true">
 			<arg line="${cflags}"/>
+			<arg value="-I${java.home}/../include"/>
+			<arg value="-I${java.home}/../include/linux"/>
 			<arg value="-I${java.home}/include"/>
 			<arg value="-I${java.home}/include/linux"/>
 			<arg value="-I${native}/common"/>
