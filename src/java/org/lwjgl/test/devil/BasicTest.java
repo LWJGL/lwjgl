@@ -52,6 +52,7 @@ public class BasicTest {
 
 	public static void main(String args[]) {
 		try {
+			org.lwjgl.opengl.Display.create();
 			IL.create();
 			ILU.create();
 			ILUT.create();
@@ -118,6 +119,7 @@ public class BasicTest {
 			ILUT.destroy();
 			ILU.destroy();
 			IL.destroy();
+			org.lwjgl.opengl.Display.destroy();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
