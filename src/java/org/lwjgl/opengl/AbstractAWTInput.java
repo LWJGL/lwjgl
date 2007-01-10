@@ -56,7 +56,6 @@ abstract class AbstractAWTInput implements AWTCanvasInputImplementation {
 
 	protected AbstractAWTInput(AWTGLCanvas canvas) {
 		this.canvas = canvas;
-		this.robot = AWTUtil.createRobot(canvas);
 	}
 
 	protected MouseEventQueue getMouseEventQueue() {
@@ -127,6 +126,8 @@ abstract class AbstractAWTInput implements AWTCanvasInputImplementation {
 	}
 
 	public void setCursorPosition(int x, int y) {
+		if (robot == null)
+			robot = AWTUtil.createRobot(canvas);
 		AWTUtil.setCursorPosition(canvas, robot, x, y);
 	}
 
