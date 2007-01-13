@@ -277,7 +277,7 @@ public final class Display {
 			return;
 		}
 		try {
-			if (context.isCurrent()) {
+			if (context != null && context.isCurrent()) {
 				context.releaseDrawable();
 				Context.releaseCurrentContext();
 			}
