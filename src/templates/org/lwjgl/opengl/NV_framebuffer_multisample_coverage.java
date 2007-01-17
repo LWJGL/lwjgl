@@ -40,6 +40,6 @@ public interface NV_framebuffer_multisample_coverage {
 	int GL_RENDERBUFFER_COVERAGE_SAMPLES_NV = 0x8CAB;
 	int GL_RENDERBUFFER_COLOR_SAMPLES_NV = 0x8E10;
 
-	void glRenderbufferStorageMultsampleCoverageNV(@GLenum int target, @GLsizei int coverageSamples, @GLsizei int colorSamples,
+	void glRenderbufferStorageMultisampleCoverageNV(@GLenum int target, @GLsizei int coverageSamples, @GLsizei int colorSamples,
 												   @GLenum int internalformat, @GLsizei int width, @GLsizei int height);
 }
