@@ -135,9 +135,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxEvent_nGetButtonY(JNIEnv *env,
 	return event->xbutton.y;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxEvent_nGetKeyAddress(JNIEnv *env, jclass unused, jobject event_buffer) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxEvent_nGetKeyAddress(JNIEnv *env, jclass unused, jobject event_buffer) {
 	XEvent *event = (XEvent *)(*env)->GetDirectBufferAddress(env, event_buffer);
-	return (jlong)(intptr_t)&(event->xkey);
+	XKeyEvent *key_event = &(event->xkey);
+	return (jlong)(intptr_t)key_event;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxEvent_nGetKeyTime(JNIEnv *env, jclass unused, jobject event_buffer) {

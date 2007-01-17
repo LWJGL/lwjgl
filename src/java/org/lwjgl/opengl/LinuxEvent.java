@@ -149,7 +149,7 @@ final class LinuxEvent {
 	public final long getKeyAddress() {
 		return nGetKeyAddress(event_buffer);
 	}
-	private static native int nGetKeyAddress(ByteBuffer event_buffer);
+	private static native long nGetKeyAddress(ByteBuffer event_buffer);
 
 	public final long getKeyTime() {
 		return nGetKeyTime(event_buffer);
