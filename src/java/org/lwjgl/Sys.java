@@ -111,26 +111,13 @@ public final class Sys {
 		String class_name;
 		switch (LWJGLUtil.getPlatform()) {
 			case LWJGLUtil.PLATFORM_LINUX:
-				class_name = "org.lwjgl.LinuxSysImplementation";
-				break;
+				return new LinuxSysImplementation();
 			case LWJGLUtil.PLATFORM_WINDOWS:
-				class_name = "org.lwjgl.WindowsSysImplementation";
-				break;
+				return new org.lwjgl.WindowsSysImplementation();
 			case LWJGLUtil.PLATFORM_MACOSX:
-				class_name = "org.lwjgl.MacOSXSysImplementation";
-				break;
+				return new org.lwjgl.MacOSXSysImplementation();
 			default:
 				throw new IllegalStateException("Unsupported platform");
-		}
-		try {
-			Class impl_class = Class.forName(class_name);
-			return (SysImplementation)impl_class.newInstance();
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		} catch (InstantiationException e) {
-			throw new RuntimeException(e);
 		}
 	}
 
