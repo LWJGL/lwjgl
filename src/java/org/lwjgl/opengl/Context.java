@@ -73,29 +73,19 @@ final class Context {
 
 	static {
 		Sys.initialize();
-		String class_name;
+		implementation = createImplementation();
+	}
+
+	private static ContextImplementation createImplementation() {
 		switch (LWJGLUtil.getPlatform()) {
 			case LWJGLUtil.PLATFORM_LINUX:
-				class_name = "org.lwjgl.opengl.LinuxContextImplementation";
-				break;
+				return new LinuxContextImplementation();
 			case LWJGLUtil.PLATFORM_WINDOWS:
-				class_name = "org.lwjgl.opengl.WindowsContextImplementation";
-				break;
+				return new WindowsContextImplementation();
 			case LWJGLUtil.PLATFORM_MACOSX:
-				class_name = "org.lwjgl.opengl.MacOSXContextImplementation";
-				break;
+				return new MacOSXContextImplementation();
 			default:
 				throw new IllegalStateException("Unsupported platform");
-		}
-		try {
-			Class impl_class = Class.forName(class_name);
-			implementation = (ContextImplementation)impl_class.newInstance();
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		} catch (InstantiationException e) {
-			throw new RuntimeException(e);
 		}
 	}
 

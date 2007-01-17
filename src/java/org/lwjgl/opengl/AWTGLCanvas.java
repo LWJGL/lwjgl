@@ -86,29 +86,19 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 
 	static {
 		Sys.initialize();
-		String class_name;
+		implementation = createImplementation();
+	}
+
+	private static AWTCanvasImplementation createImplementation() {
 		switch (LWJGLUtil.getPlatform()) {
 			case LWJGLUtil.PLATFORM_LINUX:
-				class_name = "org.lwjgl.opengl.LinuxCanvasImplementation";
-				break;
+				return new LinuxCanvasImplementation();
 			case LWJGLUtil.PLATFORM_WINDOWS:
-				class_name = "org.lwjgl.opengl.WindowsCanvasImplementation";
-				break;
+				return new WindowsCanvasImplementation();
 			case LWJGLUtil.PLATFORM_MACOSX:
-				class_name = "org.lwjgl.opengl.MacOSXCanvasImplementation";
-				break;
+				return new MacOSXCanvasImplementation();
 			default:
 				throw new IllegalStateException("Unsupported platform");
-		}
-		try {
-			Class impl_class = Class.forName(class_name);
-			implementation = (AWTCanvasImplementation)impl_class.newInstance();
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		} catch (InstantiationException e) {
-			throw new RuntimeException(e);
 		}
 	}
 

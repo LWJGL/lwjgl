@@ -108,7 +108,6 @@ public final class Sys {
 	}
 
 	private static SysImplementation createImplementation() {
-		String class_name;
 		switch (LWJGLUtil.getPlatform()) {
 			case LWJGLUtil.PLATFORM_LINUX:
 				return new LinuxSysImplementation();
