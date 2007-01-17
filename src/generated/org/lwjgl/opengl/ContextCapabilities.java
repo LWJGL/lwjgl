@@ -989,7 +989,7 @@ public class ContextCapabilities {
 	long NV_fragment_program_glProgramNamedParameter4dNV_pointer;
 	long NV_fragment_program_glGetProgramNamedParameterfvNV_pointer;
 	long NV_fragment_program_glGetProgramNamedParameterdvNV_pointer;
-	long NV_framebuffer_multisample_coverage_glRenderbufferStorageMultsampleCoverageNV_pointer;
+	long NV_framebuffer_multisample_coverage_glRenderbufferStorageMultisampleCoverageNV_pointer;
 	long NV_geometry_program4_glProgramVertexLimitNV_pointer;
 	long NV_geometry_program4_glFramebufferTextureEXT_pointer;
 	long NV_geometry_program4_glFramebufferTextureLayerEXT_pointer;
@@ -2214,7 +2214,7 @@ public class ContextCapabilities {
 
 	private boolean NV_framebuffer_multisample_coverage_initNativeFunctionAddresses() {
 		return 
-			(NV_framebuffer_multisample_coverage_glRenderbufferStorageMultsampleCoverageNV_pointer = GLContext.getFunctionAddress("glRenderbufferStorageMultsampleCoverageNV")) != 0;
+			(NV_framebuffer_multisample_coverage_glRenderbufferStorageMultisampleCoverageNV_pointer = GLContext.getFunctionAddress("glRenderbufferStorageMultisampleCoverageNV")) != 0;
 	}
 
 	private boolean NV_geometry_program4_initNativeFunctionAddresses() {

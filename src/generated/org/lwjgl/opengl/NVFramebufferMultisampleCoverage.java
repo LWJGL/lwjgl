@@ -17,11 +17,11 @@ public final class NVFramebufferMultisampleCoverage {
 	}
 
 
-	public static void glRenderbufferStorageMultsampleCoverageNV(int target, int coverageSamples, int colorSamples, int internalformat, int width, int height) {
+	public static void glRenderbufferStorageMultisampleCoverageNV(int target, int coverageSamples, int colorSamples, int internalformat, int width, int height) {
 		ContextCapabilities caps = GLContext.getCapabilities();
-		long function_pointer = caps.NV_framebuffer_multisample_coverage_glRenderbufferStorageMultsampleCoverageNV_pointer;
+		long function_pointer = caps.NV_framebuffer_multisample_coverage_glRenderbufferStorageMultisampleCoverageNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
-		nglRenderbufferStorageMultsampleCoverageNV(target, coverageSamples, colorSamples, internalformat, width, height, function_pointer);
+		nglRenderbufferStorageMultisampleCoverageNV(target, coverageSamples, colorSamples, internalformat, width, height, function_pointer);
 	}
-	private static native void nglRenderbufferStorageMultsampleCoverageNV(int target, int coverageSamples, int colorSamples, int internalformat, int width, int height, long function_pointer);
+	private static native void nglRenderbufferStorageMultisampleCoverageNV(int target, int coverageSamples, int colorSamples, int internalformat, int width, int height, long function_pointer);
 }
