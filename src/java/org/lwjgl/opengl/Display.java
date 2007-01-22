@@ -153,8 +153,13 @@ public final class Display {
 
 	/**
 	 * Returns the entire list of possible fullscreen display modes as an array, in no
-	 * particular order. Any given mode is not guaranteed to be available and
-	 * the only certain way to check is to call create() and make sure it works.
+	 * particular order. Although best attempts to filter out invalid modes are done, any
+	 * given mode is not guaranteed to be available nor is it guaranteed to be within the
+	 * current monitor specs (this is especially a problem with the frequency parameter).
+	 * Furthermore, it is not guaranteed that create() will detect an illegal display mode.
+	 *
+	 * The only certain way to check
+	 * is to call create() and make sure it works.
 	 * Only non-palette-indexed modes are returned (ie. bpp will be 16, 24, or 32).
 	 * Only DisplayModes from this call can be used when the Display is in fullscreen
 	 * mode.
