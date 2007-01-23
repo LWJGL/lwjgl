@@ -90,9 +90,8 @@ public class NetTest {
 	public static FloatBuffer	spectrum;
 	
 	/** List of known urls (monkeyradio, di streams) */
-	public static String[]		urls		= new String[] { "http://207.200.96.227:8038/", "http://205.188.234.65:8020",
-			"http://64.236.34.67:80/stream/1006", "http://64.236.34.67:80/stream/1003", "http://205.188.234.65:8026",
-			"http://64.236.34.67:80/stream/2004", "http://64.236.34.67:80/stream/1019", "http://64.236.34.67:80/stream/2005"};
+	public static String[]		urls		= new String[] { "http://www.scenemusic.eu:8002/live.mp3", 
+															 "http://basu.cockos.com:6969/"};
 	
 	/**
 	 * Creates a new NetTest
