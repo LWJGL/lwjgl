@@ -145,8 +145,8 @@ final class WindowsDisplay implements DisplayImplementation {
 			resetCursorClipping();
 	}
 	private static native void nDestroyWindow();
-	private static native void resetCursorClipping();
-	private static native void setupCursorClipping(long hwnd) throws LWJGLException;
+	static native void resetCursorClipping();
+	static native void setupCursorClipping(long hwnd) throws LWJGLException;
 
 	public void switchDisplayMode(DisplayMode mode) throws LWJGLException {
 		nSwitchDisplayMode(mode);

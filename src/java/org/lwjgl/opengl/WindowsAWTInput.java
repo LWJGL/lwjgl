@@ -99,15 +99,24 @@ final class WindowsAWTInput extends AbstractAWTInput {
 				cached_mouse = new WindowsMouse(dinput, hwnd);
 //				cached_keyboard = new WindowsKeyboard(dinput, hwnd);
 			}
-			if (isGrabbed() && getCanvas().getCursor() != blank_cursor) {
-				cached_cursor = getCanvas().getCursor();
+			if (isGrabbed()) {
 				/**
-				 * For some reason, DirectInput won't let us blank the cursor
-				 * with the EXCLUSIVE access mode, so we'll work around it with a
-				 * custom blank cursor
+				 * DirectInput won't always stop the cursor from moving on top of the
+				 * task bar and clicking on it. So we'll use ClipCursor to
+				 * contain it while the cursor is grabbed.
 				 */
-				getCanvas().setCursor(blank_cursor);
-			}
+				WindowsDisplay.setupCursorClipping(hwnd);
+				if (getCanvas().getCursor() != blank_cursor) {
+					cached_cursor = getCanvas().getCursor();
+					/**
+					 * For some reason, DirectInput won't let us blank the cursor
+					 * with the EXCLUSIVE access mode, so we'll work around it with a
+					 * custom blank cursor
+					 */
+					getCanvas().setCursor(blank_cursor);
+				}
+			} else
+				WindowsDisplay.resetCursorClipping();
 			grab(isGrabbed());
 		} catch (LWJGLException e) {
 			LWJGLUtil.log("Failed to create windows mouse: " + e);
