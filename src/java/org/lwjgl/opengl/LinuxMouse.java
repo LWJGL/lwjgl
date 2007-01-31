@@ -83,12 +83,22 @@ final class LinuxMouse {
 		this.window = window;
 		this.input_window = input_window;
 		this.warp_atom = LinuxDisplay.nInternAtom(display, "_LWJGL", false);
-		reset();
+		reset(false, false);
 	}
 
-	private void reset() {
+	private void reset(boolean grab, boolean warp_pointer) {
 		event_queue = new EventQueue(event_buffer.capacity());
 		accum_dx = accum_dy = 0;
+		long root_window = nQueryPointer(display, window, query_pointer_buffer);
+
+		int root_x = query_pointer_buffer.get(0);
+		int root_y = query_pointer_buffer.get(1);
+		int win_x = query_pointer_buffer.get(2);
+		int win_y = query_pointer_buffer.get(3);
+		// Pretend that the cursor never moved
+		last_x = win_x;
+		last_y = transformY(win_y);
+		doHandlePointerMotion(grab, warp_pointer, root_window, root_x, root_y, win_x, win_y, last_event_nanos);
 	}
 
 	public void read(ByteBuffer buffer) {
@@ -171,17 +181,7 @@ final class LinuxMouse {
 	}
 
 	public void changeGrabbed(boolean grab, boolean warp_pointer) {
-		reset();
-		long root_window = nQueryPointer(display, window, query_pointer_buffer);
-
-		int root_x = query_pointer_buffer.get(0);
-		int root_y = query_pointer_buffer.get(1);
-		int win_x = query_pointer_buffer.get(2);
-		int win_y = query_pointer_buffer.get(3);
-		// Pretend that the cursor never moved
-		last_x = win_x;
-		last_y = transformY(win_y);
-		doHandlePointerMotion(grab, warp_pointer, root_window, root_x, root_y, win_x, win_y, last_event_nanos);
+		reset(grab, warp_pointer);
 	}
 
 	public int getButtonCount() {
