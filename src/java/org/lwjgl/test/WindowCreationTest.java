@@ -100,19 +100,19 @@ public class WindowCreationTest {
 	/** Locate fixed modes */
 	private void findFixedModes() {
 		// get 640*480 modes
-		fixed_modes[0] = getDisplayMode(640, 480, 16, 60);
-		fixed_modes[1] = getDisplayMode(640, 480, 24, 75);
-		fixed_modes[2] = getDisplayMode(640, 480, 32, 75);
+		fixed_modes[0] = getDisplayMode(640, 480, 16, -1);
+		fixed_modes[1] = getDisplayMode(640, 480, 24, -1);
+		fixed_modes[2] = getDisplayMode(640, 480, 32, -1);
 
 		// get 800*600*16*60
-		fixed_modes[3] = getDisplayMode(800, 600, 16, 60);
-		fixed_modes[4] = getDisplayMode(800, 600, 24, 75);
-		fixed_modes[5] = getDisplayMode(800, 600, 32, 75);
+		fixed_modes[3] = getDisplayMode(800, 600, 16, -1);
+		fixed_modes[4] = getDisplayMode(800, 600, 24, -1);
+		fixed_modes[5] = getDisplayMode(800, 600, 32, -1);
 
 		// get 1024*768*16*60
-		fixed_modes[6] = getDisplayMode(1024, 768, 16, 60);
-		fixed_modes[7] = getDisplayMode(1024, 768, 24, 75);
-		fixed_modes[8] = getDisplayMode(1024, 768, 32, 75);
+		fixed_modes[6] = getDisplayMode(1024, 768, 16, -1);
+		fixed_modes[7] = getDisplayMode(1024, 768, 24, -1);
+		fixed_modes[8] = getDisplayMode(1024, 768, 32, -1);
 	}
 
 	/**
@@ -294,7 +294,7 @@ public class WindowCreationTest {
 	protected boolean setDefaultDisplayMode() {
 		try {
 			// get modes
-			DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(640, 480, -1, -1, -1, -1, 60, 60);
+			DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(640, 480, -1, -1, -1, -1, -1, -1);
 
 			org.lwjgl.util.Display.setDisplayMode(dm, new String[] { "width=" + 640, "height=" + 480, "freq=" + 60,
 					"bpp=" + org.lwjgl.opengl.Display.getDisplayMode().getBitsPerPixel()});
