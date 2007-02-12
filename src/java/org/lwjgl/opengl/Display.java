@@ -102,6 +102,9 @@ public final class Display {
 	private static PeerInfo peer_info;
 	private static Context context;
 
+	/** The Drawable instance that tracks the current Display context */
+	private final static Drawable drawable;
+
 	private static boolean window_created = false;
 
 	static {
@@ -113,23 +116,22 @@ public final class Display {
 		} catch (LWJGLException e) {
 			throw new RuntimeException(e);
 		}
+		drawable = new Drawable() {
+			public Context getContext() {
+				synchronized (GlobalLock.lock) {
+					return isCreated() ? context : null;
+				}
+			}
+		};
 	}
 
 	/**
 	 * Fetch the Drawable from the Display.
 	 *
-	 * @return the Drawable corresponding to the Display context, or null if display is
-	 *			not created.
+	 * @return the Drawable corresponding to the Display context
 	 */
 	public static Drawable getDrawable() {
-		if (context != null) {
-			return new Drawable() {
-				public Context getContext() {
-					return context;
-				}
-			};
-		} else
-			return null;
+		return drawable;
 	}
 
 	private static DisplayImplementation createDisplayImplementation() {
@@ -167,22 +169,24 @@ public final class Display {
 	 * @return an array of all display modes the system reckons it can handle.
 	 */
 	public static DisplayMode[] getAvailableDisplayModes() throws LWJGLException {
-		DisplayMode[] unfilteredModes = display_impl.getAvailableDisplayModes();
+		synchronized (GlobalLock.lock) {
+			DisplayMode[] unfilteredModes = display_impl.getAvailableDisplayModes();
 
-		if (unfilteredModes == null) {
-			return new DisplayMode[0];
+			if (unfilteredModes == null) {
+				return new DisplayMode[0];
+			}
+
+			// We'll use a HashSet to filter out the duplicated modes
+			HashSet modes = new HashSet(unfilteredModes.length);
+
+			modes.addAll(Arrays.asList(unfilteredModes));
+			DisplayMode[] filteredModes = new DisplayMode[modes.size()];
+			modes.toArray(filteredModes);
+
+			LWJGLUtil.log("Removed " + (unfilteredModes.length - filteredModes.length) + " duplicate displaymodes");
+
+			return filteredModes;
 		}
-
-		// We'll use a HashSet to filter out the duplicated modes
-		HashSet modes = new HashSet(unfilteredModes.length);
-
-		modes.addAll(Arrays.asList(unfilteredModes));
-		DisplayMode[] filteredModes = new DisplayMode[modes.size()];
-		modes.toArray(filteredModes);
-
-		LWJGLUtil.log("Removed " + (unfilteredModes.length - filteredModes.length) + " duplicate displaymodes");
-
-		return filteredModes;
 	}
 
 	/**
@@ -190,7 +194,9 @@ public final class Display {
 	 * @return The current display mode
 	 */
 	public static DisplayMode getDisplayMode() {
-		return current_mode;
+		synchronized (GlobalLock.lock) {
+			return current_mode;
+		}
 	}
 
 	/**
@@ -204,24 +210,26 @@ public final class Display {
 	 * @throws LWJGLException if the display mode could not be set
 	 */
 	public static void setDisplayMode(DisplayMode mode) throws LWJGLException {
-		if (mode == null)
-			throw new NullPointerException("mode must be non-null");
-		current_mode = mode;
-		if (isCreated()) {
-			destroyWindow();
-			// If mode is not fullscreen capable, make sure we are in windowed mode
-			if (!mode.isFullscreen())
-				resetFullscreen();
-			try {
-				if (fullscreen)
-					switchDisplayMode();
-				createWindow();
-				makeCurrent();
-			} catch (LWJGLException e) {
-				destroyContext();
-				destroyPeerInfo();
-				display_impl.resetDisplayMode();
-				throw e;
+		synchronized (GlobalLock.lock) {
+			if (mode == null)
+				throw new NullPointerException("mode must be non-null");
+			current_mode = mode;
+			if (isCreated()) {
+				destroyWindow();
+				// If mode is not fullscreen capable, make sure we are in windowed mode
+				if (!mode.isFullscreen())
+					resetFullscreen();
+				try {
+					if (fullscreen)
+						switchDisplayMode();
+					createWindow();
+					makeCurrent();
+				} catch (LWJGLException e) {
+					destroyContext();
+					destroyPeerInfo();
+					display_impl.resetDisplayMode();
+					throw e;
+				}
 			}
 		}
 	}
@@ -304,35 +312,37 @@ public final class Display {
 	 * @param contrast The contrast, larger than 0.0.
 	 */
 	public static void setDisplayConfiguration(float gamma, float brightness, float contrast) throws LWJGLException {
-		if (!isCreated()) {
-			throw new LWJGLException("Display not yet created.");
+		synchronized (GlobalLock.lock) {
+			if (!isCreated()) {
+				throw new LWJGLException("Display not yet created.");
+			}
+			if (brightness < -1.0f || brightness > 1.0f)
+				throw new IllegalArgumentException("Invalid brightness value");
+			if (contrast < 0.0f)
+				throw new IllegalArgumentException("Invalid contrast value");
+			int rampSize = display_impl.getGammaRampLength();
+			if (rampSize == 0) {
+				throw new LWJGLException("Display configuration not supported");
+			}
+			FloatBuffer gammaRamp = BufferUtils.createFloatBuffer(rampSize);
+			for (int i = 0; i < rampSize; i++) {
+				float intensity = (float)i/(rampSize - 1);
+				// apply gamma
+				float rampEntry = (float)java.lang.Math.pow(intensity, gamma);
+				// apply brightness
+				rampEntry += brightness;
+				// apply contrast
+				rampEntry = (rampEntry - 0.5f)*contrast + 0.5f;
+				// Clamp entry to [0, 1]
+				if (rampEntry > 1.0f)
+					rampEntry = 1.0f;
+				else if (rampEntry < 0.0f)
+					rampEntry = 0.0f;
+				gammaRamp.put(i, rampEntry);
+			}
+			display_impl.setGammaRamp(gammaRamp);
+			LWJGLUtil.log("Gamma set, gamma = " + gamma + ", brightness = " + brightness + ", contrast = " + contrast);
 		}
-		if (brightness < -1.0f || brightness > 1.0f)
-			throw new IllegalArgumentException("Invalid brightness value");
-		if (contrast < 0.0f)
-			throw new IllegalArgumentException("Invalid contrast value");
-		int rampSize = display_impl.getGammaRampLength();
-		if (rampSize == 0) {
-			throw new LWJGLException("Display configuration not supported");
-		}
-		FloatBuffer gammaRamp = BufferUtils.createFloatBuffer(rampSize);
-		for (int i = 0; i < rampSize; i++) {
-			float intensity = (float)i/(rampSize - 1);
-			// apply gamma
-			float rampEntry = (float)java.lang.Math.pow(intensity, gamma);
-			// apply brightness
-			rampEntry += brightness;
-			// apply contrast
-			rampEntry = (rampEntry - 0.5f)*contrast + 0.5f;
-			// Clamp entry to [0, 1]
-			if (rampEntry > 1.0f)
-				rampEntry = 1.0f;
-			else if (rampEntry < 0.0f)
-				rampEntry = 0.0f;
-			gammaRamp.put(i, rampEntry);
-		}
-		display_impl.setGammaRamp(gammaRamp);
-		LWJGLUtil.log("Gamma set, gamma = " + gamma + ", brightness = " + brightness + ", contrast = " + contrast);
 	}
 
 	/**
@@ -342,14 +352,16 @@ public final class Display {
 	 * @param fps The desired frame rate, in frames per second
 	 */
 	public static void sync3(int fps) {
-		float frameTime = 1.0f / (fps > 1 ? fps - 1 : 1);
-		timeNow = Sys.getTime();
-		while (timeNow > timeThen && (float) (timeNow - timeThen) / (float) Sys.getTimerResolution() < frameTime) {
-			// This is a system-friendly way of allowing other stuff to use CPU if it wants to
-			Thread.yield();
+		synchronized (GlobalLock.lock) {
+			float frameTime = 1.0f / (fps > 1 ? fps - 1 : 1);
 			timeNow = Sys.getTime();
+			while (timeNow > timeThen && (float) (timeNow - timeThen) / (float) Sys.getTimerResolution() < frameTime) {
+				// This is a system-friendly way of allowing other stuff to use CPU if it wants to
+				Thread.yield();
+				timeNow = Sys.getTime();
+			}
+			timeThen = timeNow;
 		}
-		timeThen = timeNow;
 	}
 
 	private static long timeLate;
@@ -360,20 +372,22 @@ public final class Display {
 	 * @param fps The desired frame rate, in frames per second
 	 */
 	public static void sync2(int fps) {
-		long gapTo = Sys.getTimerResolution() / fps + timeThen;
-		timeNow = Sys.getTime();
-
-		while (gapTo > timeNow + timeLate) {
-			Thread.yield();
+		synchronized (GlobalLock.lock) {
+			long gapTo = Sys.getTimerResolution() / fps + timeThen;
 			timeNow = Sys.getTime();
+
+			while (gapTo > timeNow + timeLate) {
+				Thread.yield();
+				timeNow = Sys.getTime();
+			}
+
+			if (gapTo < timeNow)
+				timeLate = timeNow - gapTo;
+			else
+				timeLate = 0;
+
+			timeThen = timeNow;
 		}
-
-		if (gapTo < timeNow)
-			timeLate = timeNow - gapTo;
-		else
-			timeLate = 0;
-
-		timeThen = timeNow;
 	}
 
 	/**
@@ -382,23 +396,25 @@ public final class Display {
 	 * @param fps The desired frame rate, in frames per second
 	 */
 	public static void sync(int fps) {
-		long gapTo = Sys.getTimerResolution() / fps + timeThen;
-		timeNow = Sys.getTime();
-
-		while (gapTo > timeNow + timeLate) {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-			}
+		synchronized (GlobalLock.lock) {
+			long gapTo = Sys.getTimerResolution() / fps + timeThen;
 			timeNow = Sys.getTime();
+
+			while (gapTo > timeNow + timeLate) {
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+				}
+				timeNow = Sys.getTime();
+			}
+
+			if (gapTo < timeNow)
+				timeLate = timeNow - gapTo;
+			else
+				timeLate = 0;
+
+			timeThen = timeNow;
 		}
-
-		if (gapTo < timeNow)
-			timeLate = timeNow - gapTo;
-		else
-			timeLate = 0;
-
-		timeThen = timeNow;
 	}
 	
 	/**
@@ -420,13 +436,17 @@ public final class Display {
 	 * @return the title of the window
 	 */
 	public static String getTitle() {
-		return title;
+		synchronized (GlobalLock.lock) {
+			return title;
+		}
 	}
 
 	private static void resetFullscreen() {
-		if (Display.fullscreen) {
-			Display.fullscreen = false;
-			display_impl.resetDisplayMode();
+		synchronized (GlobalLock.lock) {
+			if (Display.fullscreen) {
+				Display.fullscreen = false;
+				display_impl.resetDisplayMode();
+			}
 		}
 	}
 
@@ -442,24 +462,26 @@ public final class Display {
 	 *						  from getAvailableDisplayModes() or if the mode switch fails.
 	 */
 	public static void setFullscreen(boolean fullscreen) throws LWJGLException {
-		if (Display.fullscreen != fullscreen) {
-			Display.fullscreen = fullscreen;
-			if (!isCreated())
-				return;
-			destroyWindow();
-			try {
-				if (fullscreen) {
-					switchDisplayMode();
-				} else {
+		synchronized (GlobalLock.lock) {
+			if (Display.fullscreen != fullscreen) {
+				Display.fullscreen = fullscreen;
+				if (!isCreated())
+					return;
+				destroyWindow();
+				try {
+					if (fullscreen) {
+						switchDisplayMode();
+					} else {
+						display_impl.resetDisplayMode();
+					}
+					createWindow();
+					makeCurrent();
+				} catch (LWJGLException e) {
+					destroyContext();
+					destroyPeerInfo();
 					display_impl.resetDisplayMode();
+					throw e;
 				}
-				createWindow();
-				makeCurrent();
-			} catch (LWJGLException e) {
-				destroyContext();
-				destroyPeerInfo();
-				display_impl.resetDisplayMode();
-				throw e;
 			}
 		}
 	}
@@ -468,7 +490,9 @@ public final class Display {
 	 * @return whether the Display is in fullscreen mode
 	 */
 	public static boolean isFullscreen() {
-		return fullscreen;
+		synchronized (GlobalLock.lock) {
+			return fullscreen;
+		}
 	}
 
 	/**
@@ -476,42 +500,50 @@ public final class Display {
 	 * @param newTitle The new window title
 	 */
 	public static void setTitle(String newTitle) {
-		if (newTitle == null) {
-			newTitle = "";
+		synchronized (GlobalLock.lock) {
+			if (newTitle == null) {
+				newTitle = "";
+			}
+			title = newTitle;
+			if (isCreated())
+				display_impl.setTitle(title);
 		}
-		title = newTitle;
-		if (isCreated())
-			display_impl.setTitle(title);
 	}
 
 	/**
 	 * @return true if the user or operating system has asked the window to close
 	 */
 	public static boolean isCloseRequested() {
-		if (!isCreated())
-			throw new IllegalStateException("Cannot determine close requested state of uncreated window");
-		display_impl.update();
-		return display_impl.isCloseRequested();
+		synchronized (GlobalLock.lock) {
+			if (!isCreated())
+				throw new IllegalStateException("Cannot determine close requested state of uncreated window");
+			display_impl.update();
+			return display_impl.isCloseRequested();
+		}
 	}
 
 	/**
 	 * @return true if the window is visible, false if not
 	 */
 	public static boolean isVisible() {
-		if (!isCreated())
-			throw new IllegalStateException("Cannot determine minimized state of uncreated window");
-		display_impl.update();
-		return display_impl.isVisible();
+		synchronized (GlobalLock.lock) {
+			if (!isCreated())
+				throw new IllegalStateException("Cannot determine minimized state of uncreated window");
+			display_impl.update();
+			return display_impl.isVisible();
+		}
 	}
 
 	/**
 	 * @return true if window is active, that is, the foreground display of the operating system.
 	 */
 	public static boolean isActive() {
-		if (!isCreated())
-			throw new IllegalStateException("Cannot determine focused state of uncreated window");
-		display_impl.update();
-		return display_impl.isActive();
+		synchronized (GlobalLock.lock) {
+			if (!isCreated())
+				throw new IllegalStateException("Cannot determine focused state of uncreated window");
+			display_impl.update();
+			return display_impl.isActive();
+		}
 	}
 
 	/**
@@ -525,10 +557,12 @@ public final class Display {
 	 * and needs to repaint itself
 	 */
 	public static boolean isDirty() {
-		if (!isCreated())
-			throw new IllegalStateException("Cannot determine dirty state of uncreated window");
-		display_impl.update();
-		return display_impl.isDirty();
+		synchronized (GlobalLock.lock) {
+			if (!isCreated())
+				throw new IllegalStateException("Cannot determine dirty state of uncreated window");
+			display_impl.update();
+			return display_impl.isDirty();
+		}
 	}
 
 	/**
@@ -537,10 +571,12 @@ public final class Display {
 	 * the application.
 	 */
 	public static void processMessages() {
-		if (!isCreated())
-			throw new IllegalStateException("Display not created");
+		synchronized (GlobalLock.lock) {
+			if (!isCreated())
+				throw new IllegalStateException("Display not created");
 
-		display_impl.update();
+			display_impl.update();
+		}
 	}
 
 	/**
@@ -549,11 +585,13 @@ public final class Display {
 	 * @throws OpenGLException if an OpenGL error has occured since the last call to GL11.glGetError()
 	 */
 	public static void swapBuffers() throws LWJGLException {
-		if (!isCreated())
-			throw new IllegalStateException("Display not created");
+		synchronized (GlobalLock.lock) {
+			if (!isCreated())
+				throw new IllegalStateException("Display not created");
 
-		Util.checkGLError();
-		Context.swapBuffers();
+			Util.checkGLError();
+			Context.swapBuffers();
+		}
 	}
 
 	/**
@@ -562,20 +600,22 @@ public final class Display {
 	 * @throws OpenGLException if an OpenGL error has occured since the last call to GL11.glGetError()
 	 */
 	public static void update() {
-		if (!isCreated())
-			throw new IllegalStateException("Display not created");
+		synchronized (GlobalLock.lock) {
+			if (!isCreated())
+				throw new IllegalStateException("Display not created");
 
-		// We paint only when the window is visible or dirty
-		if (isVisible() || isDirty()) {
-			try {
-				swapBuffers();
-			} catch (LWJGLException e) {
-				throw new RuntimeException(e);
+			// We paint only when the window is visible or dirty
+			if (isVisible() || isDirty()) {
+				try {
+					swapBuffers();
+				} catch (LWJGLException e) {
+					throw new RuntimeException(e);
+				}
 			}
-		}
 
-		processMessages();
-		pollDevices();
+			processMessages();
+			pollDevices();
+		}
 	}
 
 	static void pollDevices() {
@@ -600,10 +640,12 @@ public final class Display {
 	 * @throws LWJGLException If the context could not be released
 	 */
 	public static void releaseContext() throws LWJGLException {
-		if (!isCreated())
-			throw new IllegalStateException("Display is not created");
-		if (context.isCurrent())
-			Context.releaseCurrentContext();
+		synchronized (GlobalLock.lock) {
+			if (!isCreated())
+				throw new IllegalStateException("Display is not created");
+			if (context.isCurrent())
+				Context.releaseCurrentContext();
+		}
 	}
 	
 	/**
@@ -612,9 +654,11 @@ public final class Display {
 	 * @throws LWJGLException If the context could not be made current
 	 */
 	public static void makeCurrent() throws LWJGLException {
-		if (!isCreated())
-			throw new IllegalStateException("Display is not created");
-		context.makeCurrent();
+		synchronized (GlobalLock.lock) {
+			if (!isCreated())
+				throw new IllegalStateException("Display is not created");
+			context.makeCurrent();
+		}
 	}
 
 	/**
@@ -629,7 +673,9 @@ public final class Display {
 	 * @throws LWJGLException
 	 */
 	public static void create() throws LWJGLException {
-		create(new PixelFormat());
+		synchronized (GlobalLock.lock) {
+			create(new PixelFormat());
+		}
 	}
 
 	/**
@@ -645,7 +691,9 @@ public final class Display {
 	 * @throws LWJGLException
 	 */
 	public static void create(PixelFormat pixel_format) throws LWJGLException {
-		create(pixel_format, null);
+		synchronized (GlobalLock.lock) {
+			create(pixel_format, null);
+		}
 	}
 
 	private static void removeShutdownHook() {
@@ -680,38 +728,40 @@ public final class Display {
 	 * @throws LWJGLException
 	 */
 	public static void create(PixelFormat pixel_format, Drawable shared_drawable) throws LWJGLException {
-		if (isCreated())
-			throw new IllegalStateException("Only one LWJGL context may be instantiated at any one time.");
-		if (pixel_format == null)
-			throw new NullPointerException("pixel_format cannot be null");
-		removeShutdownHook();
-		registerShutdownHook();
-		if (fullscreen)
-			switchDisplayMode();
-		try {
-			peer_info = display_impl.createPeerInfo(pixel_format);
+		synchronized (GlobalLock.lock) {
+			if (isCreated())
+				throw new IllegalStateException("Only one LWJGL context may be instantiated at any one time.");
+			if (pixel_format == null)
+				throw new NullPointerException("pixel_format cannot be null");
+			removeShutdownHook();
+			registerShutdownHook();
+			if (fullscreen)
+				switchDisplayMode();
 			try {
-				createWindow();
+				peer_info = display_impl.createPeerInfo(pixel_format);
 				try {
-					context = new Context(peer_info, shared_drawable != null ? shared_drawable.getContext() : null);
+					createWindow();
 					try {
-						makeCurrent();
-						initContext();
+						context = new Context(peer_info, shared_drawable != null ? shared_drawable.getContext() : null);
+						try {
+							makeCurrent();
+							initContext();
+						} catch (LWJGLException e) {
+							destroyContext();
+							throw e;
+						}
 					} catch (LWJGLException e) {
-						destroyContext();
+						destroyWindow();
 						throw e;
 					}
 				} catch (LWJGLException e) {
-					destroyWindow();
+					destroyPeerInfo();
 					throw e;
 				}
 			} catch (LWJGLException e) {
-				destroyPeerInfo();
+				display_impl.resetDisplayMode();
 				throw e;
 			}
-		} catch (LWJGLException e) {
-			display_impl.resetDisplayMode();
-			throw e;
 		}
 	}
 
@@ -779,17 +829,19 @@ public final class Display {
 	 * regardless of whether the Display was the current rendering context.
 	 */
 	public static void destroy() {
-		if (!isCreated()) {
-			return;
-		}
+		synchronized (GlobalLock.lock) {
+			if (!isCreated()) {
+				return;
+			}
 
-		destroyWindow();
-		destroyContext();
-		destroyPeerInfo();
-		x = y = -1;
-		cached_icons = null;
-		reset();
-		removeShutdownHook();
+			destroyWindow();
+			destroyContext();
+			destroyPeerInfo();
+			x = y = -1;
+			cached_icons = null;
+			reset();
+			removeShutdownHook();
+		}
 	}
 
 	private static void destroyPeerInfo() {
@@ -819,7 +871,7 @@ public final class Display {
 	/**
 	 * @return the unique Display context (or null, if the Display has not been created)
 	 */
-	public static Context getContext() {
+	private static Context getContext() {
 		return context;
 	}
 
@@ -827,7 +879,9 @@ public final class Display {
 	 * @return true if the window's native peer has been created
 	 */
 	public static boolean isCreated() {
-		return window_created;
+		synchronized (GlobalLock.lock) {
+			return window_created;
+		}
 	}
 
 	/**
@@ -840,9 +894,11 @@ public final class Display {
 	 * @param sync true to synchronize; false to ignore synchronization
 	 */
 	public static void setSwapInterval(int value) {
-		swap_interval = value;
-		if (isCreated())
-			Context.setSwapInterval(swap_interval);
+		synchronized (GlobalLock.lock) {
+			swap_interval = value;
+			if (isCreated())
+				Context.setSwapInterval(swap_interval);
+		}
 	}
 	
 	
@@ -852,7 +908,9 @@ public final class Display {
 	 * @param sync true to synchronize; false to ignore synchronization
 	 */
 	public static void setVSyncEnabled(boolean sync) {
-		setSwapInterval(sync ? 1 : 0);
+		synchronized (GlobalLock.lock) {
+			setSwapInterval(sync ? 1 : 0);
+		}
 	}
 
 	/**
@@ -864,19 +922,21 @@ public final class Display {
 	 * @param x The new window location on the x axis
    * @param y The new window location on the y axis
 	 */
-	public static void setLocation(int x, int y) {
-		if (fullscreen) {
-			return;
-		}
+	public static void setLocation(int new_x, int new_y) {
+		synchronized (GlobalLock.lock) {
+			if (fullscreen) {
+				return;
+			}
 
-		// offset if already created
-		if(isCreated()) {
-			display_impl.reshape(x, y, current_mode.getWidth(), current_mode.getHeight());
-		}
+			// cache position
+			x = new_x;
+			y = new_y;
 
-		// cache position
-		Display.x = x;
-		Display.y = y;
+			// offset if already created
+			if(isCreated()) {
+				display_impl.reshape(x, y, current_mode.getWidth(), current_mode.getHeight());
+			}
+		}
 	}
 
 	/**
@@ -885,7 +945,9 @@ public final class Display {
 	 * @return a String
 	 */
 	public static String getAdapter() {
-		return display_impl.getAdapter();
+		synchronized (GlobalLock.lock) {
+			return display_impl.getAdapter();
+		}
 	}
 
 	/**
@@ -894,7 +956,9 @@ public final class Display {
 	 * @return a String
 	 */
 	public static String getVersion() {
-		return display_impl.getVersion();
+		synchronized (GlobalLock.lock) {
+			return display_impl.getVersion();
+		}
 	}
 	
 
@@ -915,22 +979,23 @@ public final class Display {
 	 * @return number of icons used, or 0 if display hasn't been created
 	 */
 	public static int setIcon(ByteBuffer[] icons) {
-		
-		// make deep copy so we dont rely on the supplied buffers later on
-		// don't recache!
-		if(cached_icons != icons) {
-			cached_icons = new ByteBuffer[icons.length];
-			for(int i=0;i<icons.length; i++) {
-				cached_icons[i] = BufferUtils.createByteBuffer(icons[i].capacity());
-				cached_icons[i].put(icons[i]);
-				cached_icons[i].flip();
+		synchronized (GlobalLock.lock) {
+			// make deep copy so we dont rely on the supplied buffers later on
+			// don't recache!
+			if(cached_icons != icons) {
+				cached_icons = new ByteBuffer[icons.length];
+				for(int i=0;i<icons.length; i++) {
+					cached_icons[i] = BufferUtils.createByteBuffer(icons[i].capacity());
+					cached_icons[i].put(icons[i]);
+					cached_icons[i].flip();
+				}
 			}
-		}
-		
-		if(Display.isCreated()) {
-			return display_impl.setIcon(cached_icons);
-		} else {
-			return 0;
+
+			if(Display.isCreated()) {
+				return display_impl.setIcon(cached_icons);
+			} else {
+				return 0;
+			}
 		}
 	}
 }

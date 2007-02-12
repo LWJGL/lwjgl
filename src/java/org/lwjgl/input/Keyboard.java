@@ -307,9 +307,11 @@ public class Keyboard {
 	 * @throws LWJGLException if the keyboard could not be created for any reason
 	 */
 	public static synchronized void create() throws LWJGLException {
-		if (!Display.isCreated()) throw new IllegalStateException("Display must be created.");
+		synchronized (OpenGLPackageAccess.global_lock) {
+			if (!Display.isCreated()) throw new IllegalStateException("Display must be created.");
 
-		create(Mouse.createImplementation());
+			create(OpenGLPackageAccess.createImplementation());
+		}
 	}
 
 	private static void reset() {
@@ -325,18 +327,22 @@ public class Keyboard {
 	 * @return true if the keyboard has been created
 	 */
 	public static synchronized boolean isCreated() {
-		return created;
+		synchronized (OpenGLPackageAccess.global_lock) {
+			return created;
+		}
 	}
 
 	/**
 	 * "Destroy" the keyboard
 	 */
 	public static synchronized void destroy() {
-		if (!created)
-			return;
-		created = false;
-		implementation.destroyKeyboard();
-		reset();
+		synchronized (OpenGLPackageAccess.global_lock) {
+			if (!created)
+				return;
+			created = false;
+			implementation.destroyKeyboard();
+			reset();
+		}
 	}
 
 	/**
@@ -358,10 +364,12 @@ public class Keyboard {
 	 * @see org.lwjgl.input.Keyboard#getEventCharacter()
 	 */
 	public static synchronized void poll() {
-		if (!created)
-			throw new IllegalStateException("Keyboard must be created before you can poll the device");
-		implementation.pollKeyboard(keyDownBuffer);
-		read();
+		synchronized (OpenGLPackageAccess.global_lock) {
+			if (!created)
+				throw new IllegalStateException("Keyboard must be created before you can poll the device");
+			implementation.pollKeyboard(keyDownBuffer);
+			read();
+		}
 	}
 
 	private static void read() {
@@ -376,9 +384,11 @@ public class Keyboard {
 	 * @return true if the key is down according to the last poll()
 	 */
 	public static synchronized boolean isKeyDown(int key) {
-		if (!created)
-			throw new IllegalStateException("Keyboard must be created before you can query key state");
-		return keyDownBuffer.get(key) != 0;
+		synchronized (OpenGLPackageAccess.global_lock) {
+			if (!created)
+				throw new IllegalStateException("Keyboard must be created before you can query key state");
+			return keyDownBuffer.get(key) != 0;
+		}
 	}
 
 	/**
@@ -419,9 +429,11 @@ public class Keyboard {
 	 * @return the number of keyboard events
 	 */
 	public static synchronized int getNumKeyboardEvents() {
-		if (!created)
-			throw new IllegalStateException("Keyboard must be created before you can read events");
-		return readBuffer.remaining()/EVENT_SIZE;
+		synchronized (OpenGLPackageAccess.global_lock) {
+			if (!created)
+				throw new IllegalStateException("Keyboard must be created before you can read events");
+			return readBuffer.remaining()/EVENT_SIZE;
+		}
 	}
 
 	/**
@@ -436,17 +448,19 @@ public class Keyboard {
 	 * @return true if a keyboard event was read, false otherwise
 	 */
 	public static synchronized boolean next() {
-		if (!created)
-			throw new IllegalStateException("Keyboard must be created before you can read events");
+		synchronized (OpenGLPackageAccess.global_lock) {
+			if (!created)
+				throw new IllegalStateException("Keyboard must be created before you can read events");
 
-		if (readBuffer.hasRemaining()) {
-			eventKey = readBuffer.getInt() & 0xFF;
-			eventState = readBuffer.get() != 0;
-			eventCharacter = readBuffer.getInt();
-			eventNanos = readBuffer.getLong();
-			return true;
-		} else {
-			return false;
+			if (readBuffer.hasRemaining()) {
+				eventKey = readBuffer.getInt() & 0xFF;
+				eventState = readBuffer.get() != 0;
+				eventCharacter = readBuffer.getInt();
+				eventNanos = readBuffer.getLong();
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 
@@ -454,14 +468,18 @@ public class Keyboard {
 	 * @return Number of keys on this keyboard
 	 */
 	public static synchronized int getKeyCount() {
-		return keyCount;
+		synchronized (OpenGLPackageAccess.global_lock) {
+			return keyCount;
+		}
 	}
 
 	/**
 	 * @return The character from the current event
 	 */
 	public static synchronized char getEventCharacter() {
-		return (char)eventCharacter;
+		synchronized (OpenGLPackageAccess.global_lock) {
+			return (char)eventCharacter;
+		}
 	}
 
 	/**
@@ -472,7 +490,9 @@ public class Keyboard {
 	 * @return The key from the current event
 	 */
 	public static synchronized int getEventKey() {
-		return eventKey;
+		synchronized (OpenGLPackageAccess.global_lock) {
+			return eventKey;
+		}
 	}
 
 	/**
@@ -482,7 +502,9 @@ public class Keyboard {
 	 * @return True if key was down, or false if released
 	 */
 	public static synchronized boolean getEventKeyState() {
-		return eventState;
+		synchronized (OpenGLPackageAccess.global_lock) {
+			return eventState;
+		}
 	}
 
 	/**
@@ -493,6 +515,8 @@ public class Keyboard {
 	 * @return The time in nanoseconds of the current event
 	 */
 	public static synchronized long getEventNanoseconds() {
-		return eventNanos;
+		synchronized (OpenGLPackageAccess.global_lock) {
+			return eventNanos;
+		}
 	}
 }

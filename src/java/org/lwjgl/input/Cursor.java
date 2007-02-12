@@ -83,27 +83,29 @@ public class Cursor {
 	 * @throws LWJGLException if the cursor could not be created for any reason
 	 */	
 	public Cursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
-		if ((getCapabilities() & CURSOR_ONE_BIT_TRANSPARENCY) == 0)
-			throw new LWJGLException("Native cursors not supported");
-		BufferChecks.checkBuffer(images, width*height*numImages);
-		if (!Mouse.isCreated())
-			throw new IllegalStateException("Mouse must be created before creating cursor objects");
-		if (width*height*numImages > images.remaining())
-			throw new IllegalArgumentException("width*height*numImages > images.remaining()");
-		if (delays != null && numImages > delays.remaining())
-			BufferChecks.checkBuffer(delays, numImages);
-		if (xHotspot >= width || xHotspot < 0)
-			throw new IllegalArgumentException("xHotspot > width || xHotspot < 0");
-		if (yHotspot >= height || yHotspot < 0)
-			throw new IllegalArgumentException("yHotspot > height || yHotspot < 0");
-		
-		Sys.initialize();
-		
-		// Hmm 
-		yHotspot = height - 1 - yHotspot;		
-		
-		// create cursor (or cursors if multiple images supplied)
-		cursors = createCursors(width, height, xHotspot, yHotspot, numImages, images, delays);
+		synchronized (OpenGLPackageAccess.global_lock) {
+			if ((getCapabilities() & CURSOR_ONE_BIT_TRANSPARENCY) == 0)
+				throw new LWJGLException("Native cursors not supported");
+			BufferChecks.checkBuffer(images, width*height*numImages);
+			if (!Mouse.isCreated())
+				throw new IllegalStateException("Mouse must be created before creating cursor objects");
+			if (width*height*numImages > images.remaining())
+				throw new IllegalArgumentException("width*height*numImages > images.remaining()");
+			if (delays != null && numImages > delays.remaining())
+				BufferChecks.checkBuffer(delays, numImages);
+			if (xHotspot >= width || xHotspot < 0)
+				throw new IllegalArgumentException("xHotspot > width || xHotspot < 0");
+			if (yHotspot >= height || yHotspot < 0)
+				throw new IllegalArgumentException("yHotspot > height || yHotspot < 0");
+
+			Sys.initialize();
+
+			// Hmm 
+			yHotspot = height - 1 - yHotspot;		
+
+			// create cursor (or cursors if multiple images supplied)
+			cursors = createCursors(width, height, xHotspot, yHotspot, numImages, images, delays);
+		}
 	}
 
 	/**
@@ -114,9 +116,11 @@ public class Cursor {
 	 * @return the maximum size of a native cursor
 	 */
 	public static int getMinCursorSize() {
-		if (!Mouse.isCreated())
-			throw new IllegalStateException("Mouse must be created.");
-		return Mouse.getImplementation().getMinCursorSize();
+		synchronized (OpenGLPackageAccess.global_lock) {
+			if (!Mouse.isCreated())
+				throw new IllegalStateException("Mouse must be created.");
+			return Mouse.getImplementation().getMinCursorSize();
+		}
 	}
 
 	/**
@@ -127,9 +131,11 @@ public class Cursor {
 	 * @return the maximum size of a native cursor
 	 */
 	public static int getMaxCursorSize() {
-		if (!Mouse.isCreated())
-			throw new IllegalStateException("Mouse must be created.");
-		return Mouse.getImplementation().getMaxCursorSize();
+		synchronized (OpenGLPackageAccess.global_lock) {
+			if (!Mouse.isCreated())
+				throw new IllegalStateException("Mouse must be created.");
+			return Mouse.getImplementation().getMaxCursorSize();
+		}
 	}
 
 	/**
@@ -141,10 +147,12 @@ public class Cursor {
 	 * @return A bit mask with native cursor capabilities.
 	 */
 	public static int getCapabilities() {
-		if (Mouse.getImplementation() != null)
-			return Mouse.getImplementation().getNativeCursorCapabilities();
-		else
-			return Mouse.createImplementation().getNativeCursorCapabilities();
+		synchronized (OpenGLPackageAccess.global_lock) {
+			if (Mouse.getImplementation() != null)
+				return Mouse.getImplementation().getNativeCursorCapabilities();
+			else
+				return OpenGLPackageAccess.createImplementation().getNativeCursorCapabilities();
+		}
 	}
 
 	/**
@@ -247,19 +255,21 @@ public class Cursor {
 	 * OS cursor)
 	 */
 	public void destroy() {
-		if (destroyed)
-			return;
-		if (Mouse.getNativeCursor() == this) {
-			try {
-				Mouse.setNativeCursor(null);
-			} catch (LWJGLException e) {
-				// ignore
+		synchronized (OpenGLPackageAccess.global_lock) {
+			if (destroyed)
+				return;
+			if (Mouse.getNativeCursor() == this) {
+				try {
+					Mouse.setNativeCursor(null);
+				} catch (LWJGLException e) {
+					// ignore
+				}
 			}
+			for(int i=0; i<cursors.length; i++) {
+				Mouse.getImplementation().destroyCursor(cursors[i].cursorHandle);
+			}
+			destroyed = true;
 		}
-		for(int i=0; i<cursors.length; i++) {
-			Mouse.getImplementation().destroyCursor(cursors[i].cursorHandle);
-		}
-		destroyed = true;
 	}
 
 	/**
