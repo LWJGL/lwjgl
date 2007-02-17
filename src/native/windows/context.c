@@ -339,7 +339,7 @@ static int findPixelFormatFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format, in
 		return -1;
 	}
 
-	if ((desc.dwFlags & PFD_GENERIC_FORMAT) != 0 || (desc.dwFlags & PFD_GENERIC_ACCELERATED) != 0) {
+	if ((desc.dwFlags & PFD_GENERIC_FORMAT) != 0) {
 		jboolean allowSoftwareOpenGL = getBooleanProperty(env, "org.lwjgl.opengl.Display.allowSoftwareOpenGL");
 		// secondary check for software override
 		if(!allowSoftwareOpenGL) {
