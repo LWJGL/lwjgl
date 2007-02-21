@@ -140,6 +140,7 @@ public class ContextCapabilities {
 	public final boolean GL_NV_fragment_program_option;
 	public final boolean GL_NV_framebuffer_multisample_coverage;
 	public final boolean GL_NV_geometry_program4;
+	public final boolean GL_NV_geometry_shader4;
 	public final boolean GL_NV_gpu_program4;
 	public final boolean GL_NV_half_float;
 	public final boolean GL_NV_light_max_exponent;
@@ -2736,6 +2737,7 @@ public class ContextCapabilities {
 		this.GL_NV_fragment_program_option = supported_extensions.contains("GL_NV_fragment_program_option");
 		this.GL_NV_framebuffer_multisample_coverage = supported_extensions.contains("GL_NV_framebuffer_multisample_coverage");
 		this.GL_NV_geometry_program4 = supported_extensions.contains("GL_NV_geometry_program4");
+		this.GL_NV_geometry_shader4 = supported_extensions.contains("GL_NV_geometry_shader4");
 		this.GL_NV_gpu_program4 = supported_extensions.contains("GL_NV_gpu_program4");
 		this.GL_NV_half_float = supported_extensions.contains("GL_NV_half_float");
 		this.GL_NV_light_max_exponent = supported_extensions.contains("GL_NV_light_max_exponent");
