@@ -295,7 +295,6 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 	}
 	XMapRaised(disp, win);
 	waitMapped(disp, win);
-	XSetInputFocus(disp, win, RevertToNone, CurrentTime);
 	if (!checkXError(env, disp)) {
 		destroyWindow(env, disp, win);
 		return 0;
