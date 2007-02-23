@@ -258,9 +258,7 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 	cmap = XCreateColormap(disp, root_win, vis_info->visual, AllocNone);
 	attribs.colormap = cmap;
 	attribs.event_mask = ExposureMask | /*FocusChangeMask | */VisibilityChangeMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
-	attribs.background_pixel = 0xFF000000;
-	attribs.win_gravity = NorthWestGravity;
-	attribmask = CWColormap | CWBackPixel | CWEventMask | CWWinGravity;
+	attribmask = CWColormap | CWEventMask;
 	if (isLegacyFullscreen(window_mode)) {
 		attribmask |= CWOverrideRedirect;
 		attribs.override_redirect = True;
@@ -297,7 +295,6 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 	}
 	XMapRaised(disp, win);
 	waitMapped(disp, win);
-	XClearWindow(disp, win);
 	XSetInputFocus(disp, win, RevertToNone, CurrentTime);
 	if (!checkXError(env, disp)) {
 		destroyWindow(env, disp, win);
