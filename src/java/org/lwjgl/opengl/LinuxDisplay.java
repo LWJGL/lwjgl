@@ -110,6 +110,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private boolean minimized;
 	private boolean dirty;
 	private boolean close_requested;
+	private boolean focused_at_least_once;
 	private long current_cursor;
 	private long blank_cursor;
 
@@ -398,6 +399,7 @@ final class LinuxDisplay implements DisplayImplementation {
 					pointer_grabbed = false;
 					keyboard_grabbed = false;
 					close_requested = false;
+					focused_at_least_once = false;
 					grab = false;
 					minimized = false;
 					dirty = true;
@@ -750,8 +752,9 @@ final class LinuxDisplay implements DisplayImplementation {
 	private void checkInput() {
 		focused = nGetInputFocus(getDisplay()) == getWindow();
 		if (focused) {
+			focused_at_least_once = true;
 			acquireInput();
-		} else {
+		} else if (focused_at_least_once) {
 			releaseInput();
 		}
 	}

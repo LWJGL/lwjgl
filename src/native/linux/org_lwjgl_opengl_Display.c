@@ -127,13 +127,6 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nInternAtom(JNIEnv *e
 	return atom;
 }
 
-static void waitMapped(Display *disp, Window win) {
-	XEvent event;
-	do {
-		XMaskEvent(disp, StructureNotifyMask, &event);
-	} while ((event.type != MapNotify) || (event.xmap.event != win));
-}
-
 static void __attribute__ ((destructor)) my_fini(void) { 
 	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
@@ -294,7 +287,6 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 						XInternAtom(disp, "ATOM", False), 32, PropModeReplace, (const unsigned char*)&fullscreen_atom, 1);
 	}
 	XMapRaised(disp, win);
-	waitMapped(disp, win);
 	if (!checkXError(env, disp)) {
 		destroyWindow(env, disp, win);
 		return 0;
