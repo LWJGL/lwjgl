@@ -210,7 +210,11 @@ jstring NewStringNative(JNIEnv *env, const char *str) {
   } 
   
   jcls_str = (*env)->FindClass(env,"java/lang/String"); 
+  if (jcls_str == NULL)
+	  return NULL;
   jmethod_str = (*env)->GetMethodID(env,jcls_str, "<init>", "([B)V"); 
+  if (jmethod_str == NULL)
+	  return NULL;
 
   bytes = 0; 
 
