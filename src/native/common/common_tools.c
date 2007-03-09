@@ -290,8 +290,14 @@ void ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, i
 
 bool getBooleanProperty(JNIEnv *env, const char* propertyName) {
   jstring property = NewStringNative(env, propertyName);
+  if (property == NULL)
+	  return false;
   jclass org_lwjgl_LWJGLUtil_class = (*env)->FindClass(env, "org/lwjgl/LWJGLUtil");
+  if (org_lwjgl_LWJGLUtil_class == NULL)
+	  return false;
   jmethodID getBoolean = (*env)->GetStaticMethodID(env, org_lwjgl_LWJGLUtil_class, "getPrivilegedBoolean", "(Ljava/lang/String;)Z");
+  if (getBoolean == NULL)
+	  return false;
   return (*env)->CallStaticBooleanMethod(env, org_lwjgl_LWJGLUtil_class, getBoolean, property) ? true : false;
 }
 
