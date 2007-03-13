@@ -47,7 +47,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <jni.h>
-#include <jawt.h>
+#include <jawt_md.h>
 #include "common_tools.h"
 #include "extgl.h"
 #include "extgl_glx.h"

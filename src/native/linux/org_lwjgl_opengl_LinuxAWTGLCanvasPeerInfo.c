@@ -38,7 +38,6 @@
  */
 
 #include <jni.h>
-#include <jawt.h>
 #include <jawt_md.h>
 #include <X11/X.h>
 #include <X11/Xlib.h>

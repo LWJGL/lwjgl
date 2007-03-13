@@ -38,7 +38,7 @@
  */
 
 #include <jni.h>
-#include <jawt.h>
+#include <jawt_md.h>
 #include "org_lwjgl_opengl_AWTSurfaceLock.h"
 #include "awt_tools.h"
 #include "common_tools.h"
