@@ -37,12 +37,17 @@ package org.lwjgl.opengl;
  */
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
 
 final class WindowsRegistry {
 	final static int HKEY_CLASSES_ROOT = 1;
 	final static int HKEY_CURRENT_USER = 2;
 	final static int HKEY_LOCAL_MACHINE = 3;
 	final static int HKEY_USERS = 4;
+
+	static {
+		Sys.initialize();
+	}
 	
 	/**
 	 * Query the registry value specified by the root key, subkey, value tuple
