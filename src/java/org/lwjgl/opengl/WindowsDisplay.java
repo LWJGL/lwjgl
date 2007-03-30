@@ -565,7 +565,7 @@ final class WindowsDisplay implements DisplayImplementation {
 				close_requested = true;
 				return true;
 			case WM_SYSCOMMAND:
-				switch ((int)wParam) {
+				switch ((int)(wParam & 0xfff0)) {
 					case SC_KEYMENU:
 					case SC_MOUSEMENU:
 					case SC_SCREENSAVE:
