@@ -255,7 +255,7 @@
 	</target>
 	
 	<!-- Cleans up any files created during the execution of this script -->
-	<target name="clean" description="Cleans the diectories controlled by this ant script">
+	<target name="clean" description="Cleans the diectories controlled by this ant script" depends="clean-generated">
 		<delete dir="${lwjgl.temp}" quiet="true" failonerror="false" taskname="cleaning temp folder" />
 		<delete dir="${lwjgl.docs}/javadoc" quiet="true" failonerror="false" taskname="cleaning javadoc folder" />
 		<delete dir="${lwjgl.bin}" quiet="true" failonerror="false" taskname="cleaning bin folder" />
@@ -307,7 +307,7 @@
 	<target name="all" description="Creates the Java archives and the natives for the current platform" depends="jars, compile_native"/>
 
 	<!-- Create ONLY the jar archives -->
-	<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="-initialize, compile, -createjars">
+	<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="-initialize, generate-all, compile, -createjars">
 		<move todir="libs/">
 			<fileset dir="${lwjgl.temp}/jar">
 				<include name="*.jar"/>
