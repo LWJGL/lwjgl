@@ -491,8 +491,8 @@ public class ContextCapabilities {
 	long EXT_geometry_shader4_glFramebufferTextureEXT_pointer;
 	long EXT_geometry_shader4_glFramebufferTextureLayerEXT_pointer;
 	long EXT_geometry_shader4_glFramebufferTextureFaceEXT_pointer;
-	long EXT_gpu_program_parameters_glProgramEnvParameter4fvEXT_pointer;
-	long EXT_gpu_program_parameters_glProgramLocalParameter4fvEXT_pointer;
+	long EXT_gpu_program_parameters_glProgramEnvParameters4fvEXT_pointer;
+	long EXT_gpu_program_parameters_glProgramLocalParameters4fvEXT_pointer;
 	long EXT_gpu_shader4_glVertexAttribI1iEXT_pointer;
 	long EXT_gpu_shader4_glVertexAttribI2iEXT_pointer;
 	long EXT_gpu_shader4_glVertexAttribI3iEXT_pointer;
@@ -1616,8 +1616,8 @@ public class ContextCapabilities {
 
 	private boolean EXT_gpu_program_parameters_initNativeFunctionAddresses() {
 		return 
-			(EXT_gpu_program_parameters_glProgramEnvParameter4fvEXT_pointer = GLContext.getFunctionAddress("glProgramEnvParameter4fvEXT")) != 0 &&
-			(EXT_gpu_program_parameters_glProgramLocalParameter4fvEXT_pointer = GLContext.getFunctionAddress("glProgramLocalParameter4fvEXT")) != 0;
+			(EXT_gpu_program_parameters_glProgramEnvParameters4fvEXT_pointer = GLContext.getFunctionAddress("glProgramEnvParameters4fvEXT")) != 0 &&
+			(EXT_gpu_program_parameters_glProgramLocalParameters4fvEXT_pointer = GLContext.getFunctionAddress("glProgramLocalParameters4fvEXT")) != 0;
 	}
 
 	private boolean EXT_gpu_shader4_initNativeFunctionAddresses() {
