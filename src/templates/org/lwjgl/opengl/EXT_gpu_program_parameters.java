@@ -38,9 +38,9 @@ import java.nio.*;
 public interface EXT_gpu_program_parameters {
 
 	@StripPostfix("params")
-	void glProgramEnvParameter4fvEXT(@GLenum int target, @GLuint int index, @GLsizei int count, @Check("count << 2") @Const FloatBuffer params);
+	void glProgramEnvParameters4fvEXT(@GLenum int target, @GLuint int index, @GLsizei int count, @Check("count << 2") @Const FloatBuffer params);
 
 	@StripPostfix("params")
-	void glProgramLocalParameter4fvEXT(@GLenum int target, @GLuint int index, @GLsizei int count, @Check("count << 2") @Const FloatBuffer params);
+	void glProgramLocalParameters4fvEXT(@GLenum int target, @GLuint int index, @GLsizei int count, @Check("count << 2") @Const FloatBuffer params);
 
 }
