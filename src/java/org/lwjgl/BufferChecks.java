@@ -124,23 +124,6 @@ public class BufferChecks {
 	/**
 	 * Helper methods to ensure a buffer is direct (and, implicitly, non-null).
 	 */
-	public static void checkDirectBuffer(Buffer buf) {
-		if (buf instanceof FloatBuffer)
-			checkDirect((FloatBuffer)buf);
-		else if (buf instanceof ByteBuffer)
-			checkDirect((ByteBuffer)buf);
-		else if (buf instanceof ShortBuffer)
-			checkDirect((ShortBuffer)buf);
-		else if (buf instanceof IntBuffer)
-			checkDirect((IntBuffer)buf);
-		else if (buf instanceof LongBuffer)
-			checkDirect((LongBuffer)buf);
-		else if (buf instanceof DoubleBuffer)
-			checkDirect((DoubleBuffer)buf);
-		else
-			throw new IllegalStateException("Unsupported buffer type");
-	}
-
 	public static void checkDirect(ByteBuffer buf) {
 		if (!buf.isDirect()) {
 			throw new IllegalArgumentException("ByteBuffer is not direct");
@@ -231,36 +214,41 @@ public class BufferChecks {
 	}
 
 	/**
-	 * Helper methods to ensure a buffer is big enough to receive data from a
-	 * glGet* operation. To avoid unnecessarily complex buffer size checking
-	 * we've just set the bar artificially high and insist that any receiving
-	 * buffer has at least 4 remaining().
-	 *
-	 * @param buf
-	 *            The buffer to check
-	 * @throws IllegalArgumentException
+	 * Helper methods to ensure a buffer is direct, has a minimum size or null.
 	 */
-	public static void checkBuffer(ByteBuffer buf) {
-		checkBuffer(buf, DEFAULT_BUFFER_SIZE);
+	public static void checkBufferOrNull(ByteBuffer buf, int size) {
+		if (buf != null) {
+			checkBuffer(buf, size);
+		}
 	}
 
-	public static void checkBuffer(ShortBuffer buf) {
-		checkBuffer(buf, DEFAULT_BUFFER_SIZE);
+	public static void checkBufferOrNull(ShortBuffer buf, int size) {
+		if (buf != null) {
+			checkBuffer(buf, size);
+		}
 	}
 
-	public static void checkBuffer(IntBuffer buf) {
-		checkBuffer(buf, DEFAULT_BUFFER_SIZE);
+	public static void checkBufferOrNull(IntBuffer buf, int size) {
+		if (buf != null) {
+			checkBuffer(buf, size);
+		}
 	}
 
-	public static void checkBuffer(LongBuffer buf) {
-		checkBuffer(buf, DEFAULT_BUFFER_SIZE);
+	public static void checkBufferOrNull(LongBuffer buf, int size) {
+		if (buf != null) {
+			checkBuffer(buf, size);
+		}
 	}
 
-	public static void checkBuffer(FloatBuffer buf) {
-		checkBuffer(buf, DEFAULT_BUFFER_SIZE);
+	public static void checkBufferOrNull(FloatBuffer buf, int size) {
+		if (buf != null) {
+			checkBuffer(buf, size);
+		}
 	}
 
-	public static void checkBuffer(DoubleBuffer buf) {
-		checkBuffer(buf, DEFAULT_BUFFER_SIZE);
+	public static void checkBufferOrNull(DoubleBuffer buf, int size) {
+		if (buf != null) {
+			checkBuffer(buf, size);
+		}
 	}
 }
