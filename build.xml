@@ -13,7 +13,7 @@
 	<property name="lwjgl.docs" 			location="doc" />
 	<property name="lwjgl.temp" 			location="temp" />
 	<property name="lwjgl.res" 				location="res" />
-	<property name="lwjgl.version" 			value="1.0.1" />
+	<property name="lwjgl.version" 			value="1.1" />
 
 	<property name="opengl-template-pattern" value="org/lwjgl/opengl/GL*.java,org/lwjgl/opengl/ARB*.java,org/lwjgl/opengl/ATI*.java,org/lwjgl/opengl/EXT*.java,org/lwjgl/opengl/NV*.java,org/lwjgl/opengl/HP*.java,org/lwjgl/opengl/IBM*.java,org/lwjgl/opengl/SUN*.java,org/lwjgl/opengl/SGIS*.java"/>
 	<!-- ================================================================== -->
