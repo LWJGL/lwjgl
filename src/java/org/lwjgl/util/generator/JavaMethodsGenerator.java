@@ -425,7 +425,8 @@ public class JavaMethodsGenerator {
 				}
 				boolean null_terminated = param.getAnnotation(NullTerminated.class) != null;
 				if (Buffer.class.isAssignableFrom(java_type)) {
-					printParameterCheck(writer, param.getSimpleName(), check_value, can_be_null, null_terminated);
+					boolean indirect_buffer_allowed = param.getAnnotation(CachedReference.class) == null;
+					printParameterCheck(writer, param.getSimpleName(), check_value, can_be_null, null_terminated, indirect_buffer_allowed);
 				} else if (String.class.equals(java_type)) {
 					if (!can_be_null)
 						writer.println("\t\tBufferChecks.checkNotNull(" + param.getSimpleName() + ");");
@@ -433,11 +434,14 @@ public class JavaMethodsGenerator {
 			}
 		}
 		if (method.getAnnotation(CachedResult.class) != null)
-			printParameterCheck(writer, Utils.CACHED_BUFFER_NAME, null, true, false);
+			printParameterCheck(writer, Utils.CACHED_BUFFER_NAME, null, true, false, false);
 	}
 
-	private static void printParameterCheck(PrintWriter writer, String name, String check_value, boolean can_be_null, boolean null_terminated) {
-		writer.print("\t\tBufferChecks.check");
+	private static void printParameterCheck(PrintWriter writer, String name, String check_value, boolean can_be_null, boolean null_terminated, boolean indirect_buffer_allowed) {
+		if (indirect_buffer_allowed)
+			writer.print("\t\t" + name + " = NondirectBufferWrapper.wrap");
+		else
+			writer.print("\t\tBufferChecks.check");
 		if (check_value != null && !"".equals(check_value) ) {
 			writer.print("Buffer");
 			if (can_be_null)

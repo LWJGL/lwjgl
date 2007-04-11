@@ -43,6 +43,8 @@ import java.nio.LongBuffer;
  * <p>A class to check buffer boundaries in general. If there is unsufficient space
  * in the buffer when the call is made then a buffer overflow would otherwise
  * occur and cause unexpected behaviour, a crash, or worse, a security risk.
+ *
+ * Internal class, don't use.
  * </p>
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @author elias_naur <elias_naur@users.sourceforge.net>
@@ -177,7 +179,7 @@ public class BufferChecks {
 	 * 			  The minimum buffer size
 	 * @throws IllegalArgumentException
 	 */
-	private static void checkBufferSize(Buffer buf, int size) {
+	public static void checkBufferSize(Buffer buf, int size) {
 		if (buf.remaining() < size) {
 			throwBufferSizeException(buf, size);
 		}

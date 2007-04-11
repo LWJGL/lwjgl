@@ -156,18 +156,14 @@ public class Gears {
 		Display.setLocation((Display.getDisplayMode().getWidth() - 300) / 2,
 												(Display.getDisplayMode().getHeight() - 300) / 2);
 		Display.setDisplayMode(new DisplayMode(300, 300));
-    Display.setTitle("Gears");
+		Display.setTitle("Gears");
 		Display.create();
 
 		// setup ogl
-		FloatBuffer pos = BufferUtils.createFloatBuffer(4).put(new float[] { 5.0f, 5.0f, 10.0f, 0.0f});
-		FloatBuffer red = BufferUtils.createFloatBuffer(4).put(new float[] { 0.8f, 0.1f, 0.0f, 1.0f});
-		FloatBuffer green = BufferUtils.createFloatBuffer(4).put(new float[] { 0.0f, 0.8f, 0.2f, 1.0f});
-		FloatBuffer blue = BufferUtils.createFloatBuffer(4).put(new float[] { 0.2f, 0.2f, 1.0f, 1.0f});
-		pos.flip();
-		red.flip();
-		green.flip();
-		blue.flip();
+		FloatBuffer pos = FloatBuffer.wrap(new float[] { 5.0f, 5.0f, 10.0f, 0.0f});
+		FloatBuffer red = FloatBuffer.wrap(new float[] { 0.8f, 0.1f, 0.0f, 1.0f});
+		FloatBuffer green = FloatBuffer.wrap(new float[] { 0.0f, 0.8f, 0.2f, 1.0f});
+		FloatBuffer blue = FloatBuffer.wrap(new float[] { 0.2f, 0.2f, 1.0f, 1.0f});
 
 		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, pos);
 		GL11.glEnable(GL11.GL_CULL_FACE);
