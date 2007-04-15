@@ -438,20 +438,18 @@ public class JavaMethodsGenerator {
 	}
 
 	private static void printParameterCheck(PrintWriter writer, String name, String check_value, boolean can_be_null, boolean null_terminated, boolean indirect_buffer_allowed) {
+		if (can_be_null) {
+			writer.println("\t\tif (" + name + " != null)");
+			writer.print("\t");
+		}
 		if (indirect_buffer_allowed)
 			writer.print("\t\t" + name + " = NondirectBufferWrapper.wrap");
 		else
 			writer.print("\t\tBufferChecks.check");
 		if (check_value != null && !"".equals(check_value) ) {
-			writer.print("Buffer");
-			if (can_be_null)
-				writer.print("OrNull");
-			writer.print("(" + name + ", " + check_value);
+			writer.print("Buffer(" + name + ", " + check_value);
 		} else {
-			writer.print("Direct");
-			if (can_be_null)
-				writer.print("OrNull");
-			writer.print("(" + name);
+			writer.print("Direct(" + name);
 		}
 		writer.println(");");
 		if (null_terminated)

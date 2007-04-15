@@ -67,42 +67,6 @@ public final class NondirectBufferWrapper {
 		return buffers;
 	}
 
-	public static ByteBuffer wrapBufferOrNull(ByteBuffer buf, int size) {
-		if (buf != null)
-			return wrapBuffer(buf, size);
-		return buf;
-	}
-
-	public static ShortBuffer wrapBufferOrNull(ShortBuffer buf, int size) {
-		if (buf != null)
-			return wrapBuffer(buf, size);
-		return buf;
-	}
-
-	public static IntBuffer wrapBufferOrNull(IntBuffer buf, int size) {
-		if (buf != null)
-			return wrapBuffer(buf, size);
-		return buf;
-	}
-
-	public static LongBuffer wrapBufferOrNull(LongBuffer buf, int size) {
-		if (buf != null)
-			return wrapBuffer(buf, size);
-		return buf;
-	}
-
-	public static FloatBuffer wrapBufferOrNull(FloatBuffer buf, int size) {
-		if (buf != null)
-			return wrapBuffer(buf, size);
-		return buf;
-	}
-
-	public static DoubleBuffer wrapBufferOrNull(DoubleBuffer buf, int size) {
-		if (buf != null)
-			return wrapBuffer(buf, size);
-		return buf;
-	}
-
 	public static ByteBuffer wrapBuffer(ByteBuffer buf, int size) {
 		BufferChecks.checkBufferSize(buf, size);
 		return wrapDirect(buf);
@@ -131,42 +95,6 @@ public final class NondirectBufferWrapper {
 	public static DoubleBuffer wrapBuffer(DoubleBuffer buf, int size) {
 		BufferChecks.checkBufferSize(buf, size);
 		return wrapDirect(buf);
-	}
-
-	public static ByteBuffer wrapDirectOrNull(ByteBuffer buffer) {
-		if (buffer != null)
-			return wrapDirect(buffer);
-		return buffer;
-	}
-
-	public static ShortBuffer wrapDirectOrNull(ShortBuffer buffer) {
-		if (buffer != null)
-			return wrapDirect(buffer);
-		return buffer;
-	}
-
-	public static FloatBuffer wrapDirectOrNull(FloatBuffer buffer) {
-		if (buffer != null)
-			return wrapDirect(buffer);
-		return buffer;
-	}
-
-	public static IntBuffer wrapDirectOrNull(IntBuffer buffer) {
-		if (buffer != null)
-			return wrapDirect(buffer);
-		return buffer;
-	}
-
-	public static LongBuffer wrapDirectOrNull(LongBuffer buffer) {
-		if (buffer != null)
-			return wrapDirect(buffer);
-		return buffer;
-	}
-
-	public static DoubleBuffer wrapDirectOrNull(DoubleBuffer buffer) {
-		if (buffer != null)
-			return wrapDirect(buffer);
-		return buffer;
 	}
 
 	public static ByteBuffer wrapDirect(ByteBuffer buffer) {

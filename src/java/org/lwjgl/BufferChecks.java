@@ -85,45 +85,6 @@ public class BufferChecks {
 	}
 
 	/**
-	 * Helper methods to ensure a buffer is direct or null.
-	 */
-	public static void checkDirectOrNull(ByteBuffer buf) {
-		if (buf != null) {
-			checkDirect(buf);
-		}
-	}
-
-	public static void checkDirectOrNull(ShortBuffer buf) {
-		if (buf != null) {
-			checkDirect(buf);
-		}
-	}
-
-	public static void checkDirectOrNull(IntBuffer buf) {
-		if (buf != null) {
-			checkDirect(buf);
-		}
-	}
-
-	public static void checkDirectOrNull(LongBuffer buf) {
-		if (buf != null) {
-			checkDirect(buf);
-		}
-	}
-
-	public static void checkDirectOrNull(FloatBuffer buf) {
-		if (buf != null) {
-			checkDirect(buf);
-		}
-	}
-
-	public static void checkDirectOrNull(DoubleBuffer buf) {
-		if (buf != null) {
-			checkDirect(buf);
-		}
-	}
-
-	/**
 	 * Helper methods to ensure a buffer is direct (and, implicitly, non-null).
 	 */
 	public static void checkDirect(ByteBuffer buf) {
@@ -213,44 +174,5 @@ public class BufferChecks {
 	public static void checkBuffer(DoubleBuffer buf, int size) {
 		checkBufferSize(buf, size);
 		checkDirect(buf);
-	}
-
-	/**
-	 * Helper methods to ensure a buffer is direct, has a minimum size or null.
-	 */
-	public static void checkBufferOrNull(ByteBuffer buf, int size) {
-		if (buf != null) {
-			checkBuffer(buf, size);
-		}
-	}
-
-	public static void checkBufferOrNull(ShortBuffer buf, int size) {
-		if (buf != null) {
-			checkBuffer(buf, size);
-		}
-	}
-
-	public static void checkBufferOrNull(IntBuffer buf, int size) {
-		if (buf != null) {
-			checkBuffer(buf, size);
-		}
-	}
-
-	public static void checkBufferOrNull(LongBuffer buf, int size) {
-		if (buf != null) {
-			checkBuffer(buf, size);
-		}
-	}
-
-	public static void checkBufferOrNull(FloatBuffer buf, int size) {
-		if (buf != null) {
-			checkBuffer(buf, size);
-		}
-	}
-
-	public static void checkBufferOrNull(DoubleBuffer buf, int size) {
-		if (buf != null) {
-			checkBuffer(buf, size);
-		}
 	}
 }
