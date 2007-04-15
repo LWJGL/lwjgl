@@ -1261,7 +1261,7 @@ public interface GL11 {
 
 	void glTexImage1D(@GLenum int target, int level, int internalformat, @GLsizei int width, int border, @GLenum int format, @GLenum int type,
 	                  @BufferObject(BufferKind.UnpackPBO)
-	                  @Check(value = "GLChecks.calculateTexImage1DStorage(pixels, format, type, width, border)", canBeNull = true)
+	                  @Check(value = "GLChecks.calculateTexImage1DStorage(pixels, format, type, width)", canBeNull = true)
 	                  @Const
 	                  @GLbyte
 	                  @GLshort
@@ -1271,7 +1271,7 @@ public interface GL11 {
 
 	void glTexImage2D(@GLenum int target, int level, int internalformat, int width, int height, int border, @GLenum int format, @GLenum int type,
 	                  @BufferObject(BufferKind.UnpackPBO)
-	                  @Check(value = "GLChecks.calculateTexImage2DStorage(pixels, format, type, width, height, border)", canBeNull = true)
+	                  @Check(value = "GLChecks.calculateTexImage2DStorage(pixels, format, type, width, height)", canBeNull = true)
 	                  @Const
 	                  @GLbyte
 	                  @GLshort

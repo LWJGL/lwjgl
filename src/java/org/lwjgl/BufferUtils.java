@@ -133,7 +133,7 @@ public final class BufferUtils {
 		else if (buf instanceof LongBuffer || buf instanceof DoubleBuffer)
 			return 3;
 		else
-			throw new IllegalStateException("Unsupported buffer type");
+			throw new IllegalStateException("Unsupported buffer type: " + buf);
 	}
 
 	/**

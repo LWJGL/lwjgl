@@ -97,7 +97,7 @@ public interface GL12 {
 
 	void glTexImage3D(@GLenum int target, int level, int internalFormat, @GLsizei int width, @GLsizei int height, @GLsizei int depth, int border, @GLenum int format, @GLenum int type,
 	                  @BufferObject(BufferKind.UnpackPBO)
-	                  @Check(value = "GLChecks.calculateTexImage3DStorage(pixels, format, type, width, height, depth, border)", canBeNull = true)
+	                  @Check(value = "GLChecks.calculateTexImage3DStorage(pixels, format, type, width, height, depth)", canBeNull = true)
 	                  @Const
 	                  @GLbyte
 	                  @GLshort
