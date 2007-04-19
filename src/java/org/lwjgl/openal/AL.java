@@ -156,26 +156,28 @@ public final class AL {
 	private static void init(String deviceArguments, int contextFrequency, int contextRefresh, boolean contextSynchronized, boolean openDevice) throws LWJGLException {
 		try {
 			AL10.initNativeStubs();
-			ALC.initNativeStubs();
-
+			ALC10.initNativeStubs();
+			
 			if(openDevice) {
-				device = ALC.alcOpenDevice(deviceArguments);
+				device = ALC10.alcOpenDevice(deviceArguments);
 				if (device == null)
 					throw new LWJGLException("Could not open ALC device");
 	
 				if (contextFrequency == -1) {
-					context = ALC.alcCreateContext(device.device, null);
+					context = ALC10.alcCreateContext(device, null);
 				} else {
-					context = ALC.alcCreateContext(device.device,
+					context = ALC10.alcCreateContext(device,
 							ALCcontext.createAttributeList(contextFrequency, contextRefresh, 
-								contextSynchronized ? ALC.ALC_TRUE : ALC.ALC_FALSE));
+								contextSynchronized ? ALC10.ALC_TRUE : ALC10.ALC_FALSE));
 				}
-				ALC.alcMakeContextCurrent(context.context);
+				ALC10.alcMakeContextCurrent(context);
 			}
 		} catch (LWJGLException e) {
 			destroy();
 			throw e;
 		}
+				
+		ALC11.initialize();				
 	}
 
 	/**
@@ -194,15 +196,16 @@ public final class AL {
 	 */
 	public static void destroy() {
 		if (context != null) {
-			ALC.alcDestroyContext(context.context);
+			ALC10.alcDestroyContext(context);
 			context = null;
 		}
 		if (device != null) {
-			ALC.alcCloseDevice(device.device);
+			boolean result = ALC10.alcCloseDevice(device);
 			device = null;
 		}
 		resetNativeStubs(AL10.class);
-		resetNativeStubs(ALC.class);
+		resetNativeStubs(ALC10.class);
+		resetNativeStubs(ALC11.class);
 
 		if (created)
 			nDestroy();
@@ -212,50 +215,16 @@ public final class AL {
 	private static native void resetNativeStubs(Class clazz);
 	
 	/**
-	 * Gets a handle to the current openAL context. The handle is "opaque" right now
-	 * because, realistically, there is nothing you can actually do with it. If it turns
-	 * out that there are useful things you can do with it then it'll return an instance
-	 * of ALCcontext (which will have to become a public class)
-	 * @return an opaque handle to the AL context.
+	 * @return handle to the default AL context.
 	 */
-	public static Object getContext() {
+	public static ALCcontext getContext() {
 		return context;
 	}
-	
+
 	/**
-	 * 
-	 * @return
+	 * @return handle to the default AL device.
 	 */
-	public static String[] getImplementations() throws LWJGLException, OpenALException {
-		if(AL.isCreated()) {
-			throw new OpenALException("Cannot enumerate devices if AL has already been created");
-		}
-
-		Vector availableDevices 	= new Vector();
-
-		try {
-			// init
-			create(null, 44100, 60, false, false);
-			
-			// check for extension
-			if(!ALC.alcIsExtensionPresent("ALC_ENUMERATION_EXT")) {
-				throw new OpenALException("ALC_ENUMERATION_EXT extension not available");
-			}
-			
-			// get list of published devices
-			String[] publishedDevices = ALC.ngetImplementations();
-
-			// run through them and verify
-			for (int i = 0; i < publishedDevices.length; i++) {
-				availableDevices.add(publishedDevices[i]);
-			}
-		} finally {
-			destroy();
-		}
-		
-		String[] available = new String[availableDevices.size()];
-		availableDevices.copyInto(available);
-		
-		return available;
+	public static ALCdevice getDevice() {
+		return device;
 	}
 }
