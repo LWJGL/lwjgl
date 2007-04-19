@@ -179,11 +179,6 @@ static jlong JNICALL Java_org_lwjgl_openal_ALC10_nalcCreateContext (JNIEnv *env,
 	}
 	context = alcCreateContext((ALCdevice*)((intptr_t)deviceaddress), address); 
 	
-	/* if error - get out */
-	if(context == NULL) {
-		return (jlong) NULL;
-	}
-
 	return (jlong)((intptr_t)context);
 }
 
@@ -196,12 +191,7 @@ static jlong JNICALL Java_org_lwjgl_openal_ALC10_nalcCreateContext (JNIEnv *env,
 static jint JNICALL Java_org_lwjgl_openal_ALC10_nalcMakeContextCurrent (JNIEnv *env, jclass clazz, jlong contextaddress) {
 	ALCcontext* context = (ALCcontext*)((intptr_t)contextaddress);
 	ALCenum result;
-	if(context == NULL) {
-		result = alcMakeContextCurrent(NULL);
-	} else {
-		result = alcMakeContextCurrent(context);
-	}
-	return result;
+	return alcMakeContextCurrent(context);
 }
 
 /**
@@ -222,10 +212,6 @@ static void JNICALL Java_org_lwjgl_openal_ALC10_nalcProcessContext (JNIEnv *env,
  */
 static jlong JNICALL Java_org_lwjgl_openal_ALC10_nalcGetCurrentContext (JNIEnv *env, jclass clazz) {
 	ALCcontext* context = alcGetCurrentContext();
-
-	if(context == NULL) {
-		return (jlong) NULL;
-	}
 	return (jlong)((intptr_t)context);
 }
 
@@ -237,11 +223,6 @@ static jlong JNICALL Java_org_lwjgl_openal_ALC10_nalcGetCurrentContext (JNIEnv *
  */
 static jlong JNICALL Java_org_lwjgl_openal_ALC10_nalcGetContextsDevice (JNIEnv *env, jclass clazz, jlong contextaddress) {
 	ALCdevice* device = alcGetContextsDevice((ALCcontext*)((intptr_t)contextaddress));
-
-	if(device == NULL) {
-		return (jlong) NULL;
-	}
-
 	return (jlong)((intptr_t)device);
 }
 
