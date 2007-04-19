@@ -34,7 +34,8 @@ package org.lwjgl.test.openal;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC10;
 
 /**
  *
@@ -58,29 +59,29 @@ public class ALCTest extends BasicTest {
 	 */
 	protected void execute(String[] args) {
 		//error stuff
-		int lastError = ALC.ALC_NO_ERROR;
+		int lastError = ALC10.ALC_NO_ERROR;
 
 		//create attribute list for context creation
 		IntBuffer buffer = BufferUtils.createIntBuffer(7);
 
-		if ((lastError = ALC.alcGetError()) != ALC.ALC_NO_ERROR) {
-			System.out.println("ALC Error: " + ALC.alcGetString(lastError));
+		if ((lastError = ALC10.alcGetError(AL.getDevice())) != ALC10.ALC_NO_ERROR) {
+			System.out.println("ALC Error: " + ALC10.alcGetString(AL.getDevice(), lastError));
 			System.exit(-1);
 		}
 
 		//query        
 		System.out.println(
 			"DEFAULT_DEVICE_SPECIFIER: "
-				+ ALC.alcGetString(ALC.ALC_DEFAULT_DEVICE_SPECIFIER));
+				+ ALC10.alcGetString(AL.getDevice(), ALC10.ALC_DEFAULT_DEVICE_SPECIFIER));
 		System.out.println(
-			"DEVICE_SPECIFIER: " + ALC.alcGetString(ALC.ALC_DEVICE_SPECIFIER));
-		System.out.println("EXTENSIONS: " + ALC.alcGetString(ALC.ALC_EXTENSIONS));
+			"DEVICE_SPECIFIER: " + ALC10.alcGetString(AL.getDevice(), ALC10.ALC_DEVICE_SPECIFIER));
+		System.out.println("EXTENSIONS: " + ALC10.alcGetString(AL.getDevice(), ALC10.ALC_EXTENSIONS));
 
 		//mo query
 		buffer.rewind();
     buffer.position(0);
-		ALC.alcGetInteger(ALC.ALC_MAJOR_VERSION, buffer);
-		ALC.alcGetInteger(ALC.ALC_MINOR_VERSION, (IntBuffer) buffer.position(1));
+    	ALC10.alcGetInteger(AL.getDevice(), ALC10.ALC_MAJOR_VERSION, buffer);
+    	ALC10.alcGetInteger(AL.getDevice(), ALC10.ALC_MINOR_VERSION, (IntBuffer) buffer.position(1));
 
 		System.out.println("ALC_MAJOR_VERSION: " + buffer.get(0));
 		System.out.println("ALC_MINOR_VERSION: " + buffer.get(1));
@@ -91,7 +92,7 @@ public class ALCTest extends BasicTest {
 		//get an enumerstion value
 		System.out.println(
 			"Value of ALC_MAJOR_VERSION: "
-				+ ALC.alcGetEnumValue("ALC_MAJOR_VERSION"));
+				+ ALC10.alcGetEnumValue(AL.getDevice(), "ALC_MAJOR_VERSION"));
 
 		alExit();
 	}

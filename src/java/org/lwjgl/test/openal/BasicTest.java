@@ -36,6 +36,7 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.ALC10;
 import org.lwjgl.opengl.DisplayMode;
 
 /**
@@ -53,22 +54,20 @@ public abstract class BasicTest {
    */
   public BasicTest() {
     try {
-      String[] imps = AL.getImplementations();
-      if(imps.length > 0) {
-    	  System.out.println("Available devices: ");
-    	  for(int i=0; i<imps.length; i++) {
-	        System.out.println("  " + i + ": " + imps[i]);
-	      }
-      }
+    	AL.create();
+    	
+    	System.out.println("Default device: " + ALC10.alcGetString(null, ALC10.ALC_DEFAULT_DEVICE_SPECIFIER));
+    	
+    	if(ALC10.alcIsExtensionPresent(null, "ALC_ENUMERATION_EXT")) {
+    		String[] devices = ALC10.alcGetString(null, ALC10.ALC_DEVICE_SPECIFIER).split("\0");
+			System.out.println("Available devices: ");
+    		for(int i=0; i<devices.length; i++) {
+    			System.out.println(i +": " + devices[i]);
+    		}
+    	}
     } catch (Exception e) {
-    	System.out.println("Unable to query available devices: " + e.getMessage());
-    }
-	  
-    try {
-      AL.create();
-    } catch (Exception e) {
-      System.out.println("Unable to create OpenAL.\nPlease make sure that OpenAL is available on this system. Exception: " + e);
-      return;
+    	System.out.println("Unable to create OpenAL.\nPlease make sure that OpenAL is available on this system. Exception: " + e);
+    	return;
     }
   }
 
