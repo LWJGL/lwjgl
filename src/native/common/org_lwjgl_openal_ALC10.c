@@ -190,7 +190,6 @@ static jlong JNICALL Java_org_lwjgl_openal_ALC10_nalcCreateContext (JNIEnv *env,
  */
 static jint JNICALL Java_org_lwjgl_openal_ALC10_nalcMakeContextCurrent (JNIEnv *env, jclass clazz, jlong contextaddress) {
 	ALCcontext* context = (ALCcontext*)((intptr_t)contextaddress);
-	ALCenum result;
 	return alcMakeContextCurrent(context);
 }
 

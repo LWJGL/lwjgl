@@ -204,7 +204,6 @@ jstring NewStringNativeWithLength(JNIEnv *env, const char *str, int length) {
   jmethodID jmethod_str;
   jstring result; 
   jbyteArray bytes;
-  int len; 
   if (str==NULL) { 
     return NULL; 
   } 
