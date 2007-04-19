@@ -43,7 +43,7 @@ import org.lwjgl.BufferUtils;
  * @version $Revision$
  * $Id$
  */
-final class ALCcontext {
+public final class ALCcontext {
 
 	/** address of actual context */
 	final long context;
@@ -57,14 +57,31 @@ final class ALCcontext {
 		this.context = context;
 	}
 
+	/*
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object context) {
+		if(context instanceof ALCcontext) {
+			return ((ALCcontext)context).context == this.context;
+		}
+		return super.equals(context);
+	}
+
+	/**
+	 * Creates an attribute list in a ByteBuffer
+	 * @param contextFrequency Frequency to add
+	 * @param contextRefresh Refresh rate to add
+	 * @param contextSynchronized Whether to synchronize the context
+	 * @return
+	 */
 	static IntBuffer createAttributeList(int contextFrequency, int contextRefresh, int contextSynchronized) {
 		IntBuffer attribList = BufferUtils.createIntBuffer(7);
 
-		attribList.put(ALC.ALC_FREQUENCY);
+		attribList.put(ALC10.ALC_FREQUENCY);
 		attribList.put(contextFrequency);
-		attribList.put(ALC.ALC_REFRESH);
+		attribList.put(ALC10.ALC_REFRESH);
 		attribList.put(contextRefresh);
-		attribList.put(ALC.ALC_SYNC);
+		attribList.put(ALC10.ALC_SYNC);
 		attribList.put(contextSynchronized);
 		attribList.put(0); //terminating int
 

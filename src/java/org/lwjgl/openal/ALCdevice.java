@@ -39,7 +39,7 @@ package org.lwjgl.openal;
  * @version $Revision$
  * $Id$
  */
-final class ALCdevice {
+public final class ALCdevice {
     
     /** address of actual device */
     final long device;
@@ -51,5 +51,15 @@ final class ALCdevice {
      */
     ALCdevice(long device) {
         this.device = device;
-    }   
+    }
+    
+    /*
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+	public boolean equals(Object device) {
+		if(device instanceof ALCdevice) {
+			return ((ALCdevice)device).device == this.device;
+		}
+		return super.equals(device);
+	}    
 }
