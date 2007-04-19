@@ -105,7 +105,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_WindowsSysImplementation_getClipboard
 			CloseClipboard();
 			return NULL;
 		}
-		ret = NewStringNative(env, (const char *) clipboard_data);
+		ret = NewStringNativeWithLength(env, (const char *) clipboard_data, strlen(clipboard_data));
 	} else {
 		return NULL;
 	}
