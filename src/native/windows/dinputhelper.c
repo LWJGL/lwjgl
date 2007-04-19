@@ -47,7 +47,7 @@ HRESULT objectCallback(JNIEnv *env, jobject enumerator, jint object_type, const 
 	jmethodID nextObject_method;
 	jboolean should_continue;
 
-	name = NewStringNative(env, tszName);
+	name = NewStringNativeWithLength(env, tszName, strlen(tszName));
 	if (name == NULL)
 		return false;
 	enum_class = (*env)->GetObjectClass(env, enumerator);
