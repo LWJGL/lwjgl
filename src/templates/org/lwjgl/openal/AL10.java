@@ -64,7 +64,7 @@ public interface AL10 {
 	 * Indicate the type of SOURCE.
 	 * Sources can be spatialized
 	 */
-	int AL_SOURCE_TYPE = 0x200;
+	int AL_SOURCE_TYPE = 0x1027;
 
 	/** Indicate source has absolute coordinates */
 	int AL_SOURCE_ABSOLUTE = 0x201;
