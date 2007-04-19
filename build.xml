@@ -206,7 +206,6 @@
 	
 	<uptodate property="lwjgl.main.built" targetfile="${lwjgl.lib}/win32/lwjgl.dll" >
 	    <srcfiles dir= "${lwjgl.src.native}/common" includes="*.c*"/>
-	    <srcfiles dir= "${lwjgl.src.native}/generated" includes="*.c"/>
 	    <srcfiles dir= "${lwjgl.src.native}/windows" includes="*.c"/>
 	</uptodate>	
 	
