@@ -68,10 +68,10 @@ static jlong JNICALL Java_org_lwjgl_openal_ALC11_nalcCaptureOpenDevice(JNIEnv *e
 		dev_name = (ALubyte*) GetStringNativeChars(env, devicename);
 	}
 
-	device = alcCaptureOpenDevice(dev_name, frequency, format, buffersize);
+	device = alcCaptureOpenDevice((const char *)dev_name, (unsigned int) frequency, format, buffersize);
 
 	free(dev_name);
-	return (jlong) device;
+	return (jlong) ((intptr_t)device);
 }
 
 /*
@@ -80,7 +80,7 @@ static jlong JNICALL Java_org_lwjgl_openal_ALC11_nalcCaptureOpenDevice(JNIEnv *e
  * Signature: (J)Z
  */
 static jboolean JNICALL Java_org_lwjgl_openal_ALC11_nalcCaptureCloseDevice(JNIEnv *env, jclass clazz, jlong device) {
-	return (jboolean) alcCaptureCloseDevice((ALCdevice*) device);
+	return (jboolean) alcCaptureCloseDevice((ALCdevice*) ((intptr_t)device));
 }
 
 /*
@@ -89,7 +89,7 @@ static jboolean JNICALL Java_org_lwjgl_openal_ALC11_nalcCaptureCloseDevice(JNIEn
  * Signature: (J)V
  */
 static void JNICALL Java_org_lwjgl_openal_ALC11_nalcCaptureStart(JNIEnv *env, jclass clazz, jlong device) {
-	alcCaptureStart((ALCdevice*) device);
+	alcCaptureStart((ALCdevice*) ((intptr_t)device));
 }
 
 /*
@@ -98,7 +98,7 @@ static void JNICALL Java_org_lwjgl_openal_ALC11_nalcCaptureStart(JNIEnv *env, jc
  * Signature: (J)V
  */
 static void JNICALL Java_org_lwjgl_openal_ALC11_nalcCaptureStop(JNIEnv * env, jclass clazz, jlong device) {
-	alcCaptureStop((ALCdevice*) device);
+	alcCaptureStop((ALCdevice*) ((intptr_t)device));
 }
 
 /*
@@ -108,7 +108,7 @@ static void JNICALL Java_org_lwjgl_openal_ALC11_nalcCaptureStop(JNIEnv * env, jc
  */
 static void JNICALL Java_org_lwjgl_openal_ALC11_nalcCaptureSamples(JNIEnv *env, jclass clazz, jlong device, jobject buffer, jint position, jint samples) {
 	ALuint *buffer_address = ((ALuint *)(*env)->GetDirectBufferAddress(env, buffer)) + position;
-	alcCaptureSamples((ALCdevice*) device, buffer_address, samples);
+	alcCaptureSamples((ALCdevice*) ((intptr_t)device), buffer_address, samples);
 }
 
 /**
