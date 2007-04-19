@@ -83,7 +83,6 @@ public final class ALC11 {
 	public static ALCdevice alcCaptureOpenDevice(String devicename, int frequency, int format, int buffersize) {
 		long device = nalcCaptureOpenDevice(devicename, frequency, format, buffersize);
 		if(device > 0) {
-			System.out.println("new device: " + device + "/" + devicename);
 			return new ALCdevice(device);
 		}
 		return null;
