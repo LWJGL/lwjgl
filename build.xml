@@ -596,7 +596,6 @@
 			<class name="org.lwjgl.input.Keyboard" />
 			<class name="org.lwjgl.input.Mouse" />
 
-			<class name="org.lwjgl.openal.ALC" />
 			<class name="org.lwjgl.openal.AL" />
 
 			<class name="org.lwjgl.opengl.GLContext" />
@@ -648,7 +647,7 @@
 			<arg path="${lwjgl.src.native}/generated"/>
 			<arg value="-Atypemap=org.lwjgl.util.generator.ALTypeMap"/>
 			<arg value="-Ageneratechecks"/>
-			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/openal/AL10.java"/>
+			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/openal/AL10.java, org/lwjgl/openal/AL11.java"/>
 		</apply>
 	</target>
 
