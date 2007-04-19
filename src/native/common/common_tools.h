@@ -138,7 +138,7 @@ extern void printfDebugJava(JNIEnv *env, const char *format, ...);
 extern void printfDebug(const char *format, ...);
 extern bool getBooleanProperty(JNIEnv *env, const char* propertyName);
 extern char * GetStringNativeChars(JNIEnv *env, jstring jstr);
-extern jstring NewStringNative(JNIEnv *env, const char *str);
+extern jstring NewStringNativeWithLength(JNIEnv *env, const char *str, int length);
 extern jstring NewStringNativeUnsigned(JNIEnv *env, const unsigned char *str);
 extern jobject newJavaManagedByteBuffer(JNIEnv *env, const int size);
 extern bool positionBuffer(JNIEnv *env, jobject buffer, jint position);

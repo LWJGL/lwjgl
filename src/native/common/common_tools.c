@@ -195,11 +195,11 @@ char * GetStringNativeChars(JNIEnv *env, jstring jstr) {
  * match GLuchar and ALuchar types
  */
 jstring NewStringNativeUnsigned(JNIEnv *env, const unsigned char *str) {
-	return NewStringNative(env, (const char *)str);
+	return NewStringNativeWithLength(env, (const char *)str, strlen((const char *)str));
 }
 
 // creates locale specific string
-jstring NewStringNative(JNIEnv *env, const char *str) { 
+jstring NewStringNativeWithLength(JNIEnv *env, const char *str, int length) { 
   jclass jcls_str;
   jmethodID jmethod_str;
   jstring result; 
@@ -221,10 +221,10 @@ jstring NewStringNative(JNIEnv *env, const char *str) {
   if ((*env)->EnsureLocalCapacity(env,2) < 0) { 
     return NULL; /* out of memory error */ 
   } 
-  len = strlen(str); 
-  bytes = (*env)->NewByteArray(env,len); 
+
+  bytes = (*env)->NewByteArray(env,length); 
   if (bytes != NULL) { 
-    (*env)->SetByteArrayRegion(env,bytes, 0, len, (jbyte *)str); 
+    (*env)->SetByteArrayRegion(env,bytes, 0, length, (jbyte *)str); 
     result = (jstring)(*env)->NewObject(env,jcls_str, jmethod_str, bytes); 
     (*env)->DeleteLocalRef(env,bytes); 
     return result; 
@@ -289,7 +289,7 @@ void ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, i
 }
 
 bool getBooleanProperty(JNIEnv *env, const char* propertyName) {
-  jstring property = NewStringNative(env, propertyName);
+  jstring property = NewStringNativeWithLength(env, propertyName, strlen(propertyName));
   jclass org_lwjgl_LWJGLUtil_class;
   jmethodID getBoolean;
   if (property == NULL)
