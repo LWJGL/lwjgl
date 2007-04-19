@@ -158,7 +158,7 @@ public final class ALC10 {
 	public static String alcGetString(ALCdevice device, int pname) {
 		String result;
 		result = nalcGetString(getDevice(device), pname);
-		//Util.checkALCError();
+		Util.checkALCError();
 		return result;
 	}
 	private native static String nalcGetString(long device, int pname);
