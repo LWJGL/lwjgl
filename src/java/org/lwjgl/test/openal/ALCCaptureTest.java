@@ -80,16 +80,16 @@ public class ALCCaptureTest extends BasicTest {
 		}
 		
 		// get list of devices
-		String captureDevices = ALC10.alcGetString(null, ALC11.ALC_CAPTURE_DEVICE_SPECIFIER);
-		System.out.println("captureDevices: " + captureDevices);
-
+		String[] captureDevices = ALC10.alcGetString(null, ALC11.ALC_CAPTURE_DEVICE_SPECIFIER).split("\0");
+		System.out.println("Available Capture Devices: ");
+		for(int i=0; i<captureDevices.length; i++) {
+			System.out.println(i + ": " + captureDevices[i]);
+		}
 		
 		String defaultRecorder = ALC10.alcGetString(AL.getDevice(), ALC11.ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER);
 		System.out.println("Default capture device: " + defaultRecorder);
 		
 		ALCdevice device = ALC11.alcCaptureOpenDevice(null, FREQ, FMT, SAMPS);
-		
-		
 
 		if(device != null) {
 			// record some sound
