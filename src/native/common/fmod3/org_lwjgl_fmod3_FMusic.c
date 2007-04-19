@@ -281,7 +281,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FMusic_nFMUSIC_1SetPanSeperation
 JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FMusic_nFMUSIC_1GetName
   (JNIEnv *env, jclass clazz, jlong module) {
     const char * name = fmod_instance->FMUSIC_GetName((FMUSIC_MODULE *) module);
-    return NewStringNative(env, name);
+    return NewStringNativeWithLength(env, name, strlen(name));
   }
 
 /*

@@ -517,7 +517,8 @@ static jobject JNICALL Java_org_lwjgl_devil_IL_ilGetPalette(JNIEnv *env, jclass 
  * Signature: (I)Ljava/lang/String;
  */
 static jstring JNICALL Java_org_lwjgl_devil_IL_ilGetString(JNIEnv *env, jclass clazz, jint stringName) {
-    return NewStringNative(env, ilGetString((ILenum)stringName));
+		char * name = ilGetString((ILenum)stringName);
+    return NewStringNativeWithLength(env, name, strlen(name));
 }
 
 /*

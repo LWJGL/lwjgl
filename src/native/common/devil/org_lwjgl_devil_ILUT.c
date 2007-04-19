@@ -120,7 +120,8 @@ static void JNICALL Java_org_lwjgl_devil_ILUT_ilutGetIntegerv(JNIEnv *env, jclas
  * Signature: (I)Ljava/lang/String;
  */
 static jstring JNICALL Java_org_lwjgl_devil_ILUT_ilutGetString(JNIEnv *env, jclass clazz, jint stringName){
-    return NewStringNative(env, ilutGetString((ILenum)stringName));
+		char * name = ilutGetString((ILenum)stringName);
+    return NewStringNativeWithLength(env, name, strlen(name));
 }
 
 /*

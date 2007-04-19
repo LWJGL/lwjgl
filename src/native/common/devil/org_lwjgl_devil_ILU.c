@@ -245,7 +245,8 @@ static jboolean JNICALL Java_org_lwjgl_devil_ILU_iluEqualize(JNIEnv *env, jclass
  * Signature: (I)Ljava/lang/String;
  */
 static jstring JNICALL Java_org_lwjgl_devil_ILU_iluErrorString(JNIEnv *env, jclass clazz, jint error) {
-    return NewStringNative(env, iluErrorString((ILenum)error));
+		char * errorstring = iluErrorString((ILenum)error);
+    return NewStringNativeWithLength(env, errorstring, strlen(errorstring));
 }
 
 /*
@@ -366,7 +367,8 @@ static void JNICALL Java_org_lwjgl_devil_ILU_niluGetIntegerv(JNIEnv *env, jclass
  * Signature: (I)Ljava/lang/String;
  */
 static jstring JNICALL Java_org_lwjgl_devil_ILU_iluGetString(JNIEnv *env, jclass clazz, jint stringName) {
-    return NewStringNative(env, iluGetString((ILenum)stringName));
+		char * name = iluGetString((ILenum)stringName);
+    return NewStringNativeWithLength(env, name, strlen(name));
 }
 
 /*

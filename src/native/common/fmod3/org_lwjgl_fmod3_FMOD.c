@@ -82,5 +82,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FMOD_nDestroy(JNIEnv *env, jclass cl
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FMOD_FMOD_1ErrorString(JNIEnv *env, jclass clazz, jint errorcode) {
-  return NewStringNative(env, FMOD_ErrorString(errorcode));  
+	char * error = FMOD_ErrorString(errorcode);
+  return NewStringNativeWithLength(env, error, strlen(error));  
 }
