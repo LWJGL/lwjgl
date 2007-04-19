@@ -45,9 +45,9 @@ public final class Util {
 	}
 
 	public static void checkALCError() {
-		int err = ALC.alcGetError();
-		if (err != ALC.ALC_NO_ERROR)
-			throw new OpenALException(ALC.alcGetString(err));
+		int err = ALC10.alcGetError(AL.getDevice());
+		if (err != ALC10.ALC_NO_ERROR)
+			throw new OpenALException(ALC10.alcGetString(AL.getDevice(), err));
 	}
 	
 	public static void checkALError() {
