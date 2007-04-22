@@ -49,14 +49,13 @@ final class StateTracker {
 			references_stack.popState();
 		}
 	}
-	
+
 	static void pushAttrib(ContextCapabilities caps, int mask) {
 		caps.tracker.doPushAttrib(mask);
 	}
 
 	private void doPushAttrib(int mask) {
-		attrib_stack.pushState();
-		attrib_stack.setState(mask);
+		attrib_stack.pushState(mask);
 		if ((mask & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
 			references_stack.pushState();
 		}

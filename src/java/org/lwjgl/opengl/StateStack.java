@@ -39,24 +39,22 @@ class StateStack {
 		return state_stack[stack_pos];
 	}
 
-	public void setState(int new_state) {
-		state_stack[stack_pos] = new_state;
-	}
-
-	public void pushState() {
-		stack_pos++;
-		if (stack_pos == state_stack.length) {
-			int[] new_state_stack = new int[state_stack.length + 1];
-			System.arraycopy(state_stack, 0, new_state_stack, 0, state_stack.length);
-			state_stack = new_state_stack;
+	public void pushState(int new_state) {
+		int pos = ++stack_pos;
+		if (pos == state_stack.length) {
+			growState();
 		}
-		state_stack[stack_pos] = state_stack[stack_pos - 1];
+		state_stack[pos] = new_state;
 	}
 
 	public int popState() {
-		int result = state_stack[stack_pos];
-		stack_pos--;
-		return result;
+		return state_stack[stack_pos--];
+	}
+
+	public void growState() {
+		int[] new_state_stack = new int[state_stack.length + 1];
+		System.arraycopy(state_stack, 0, new_state_stack, 0, state_stack.length);
+		state_stack = new_state_stack;
 	}
 
 	StateStack(int initial_value) {

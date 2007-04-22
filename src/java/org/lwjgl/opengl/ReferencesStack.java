@@ -40,22 +40,25 @@ class ReferencesStack {
 	}
 
 	public void pushState() {
-		stack_pos++;
-		if (stack_pos == references_stack.length) {
-			References[] new_references_stack = new References[references_stack.length + 1];
-			System.arraycopy(references_stack, 0, new_references_stack, 0, references_stack.length);
-			references_stack = new_references_stack;
-			references_stack[references_stack.length - 1] = new References();
+		int pos = ++stack_pos;
+		if (pos == references_stack.length) {
+			growStack();
 		}
-		references_stack[stack_pos].copy(references_stack[stack_pos - 1]);
+		references_stack[pos].copy(references_stack[pos - 1]);
 	}
 
 	public References popState() {
-		References result = references_stack[stack_pos];
-		references_stack[stack_pos].clear();
-		stack_pos--;
+		References result = references_stack[stack_pos--];
+		result.clear();
 		return result;
 	}
+
+	private void growStack() {
+		References[] new_references_stack = new References[references_stack.length + 1];
+		System.arraycopy(references_stack, 0, new_references_stack, 0, references_stack.length);
+		references_stack = new_references_stack;
+		references_stack[references_stack.length - 1] = new References();
+        }
 
 	ReferencesStack() {
 		references_stack = new References[1];
