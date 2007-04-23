@@ -35,6 +35,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferChecks;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.NondirectBufferWrapper;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
@@ -86,13 +87,13 @@ public class Cursor {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			if ((getCapabilities() & CURSOR_ONE_BIT_TRANSPARENCY) == 0)
 				throw new LWJGLException("Native cursors not supported");
-			BufferChecks.checkBuffer(images, width*height*numImages);
+			images = NondirectBufferWrapper.wrapBuffer(images, width*height*numImages);
+			if (delays != null)
+				delays = NondirectBufferWrapper.wrapBuffer(delays, numImages);
 			if (!Mouse.isCreated())
 				throw new IllegalStateException("Mouse must be created before creating cursor objects");
 			if (width*height*numImages > images.remaining())
 				throw new IllegalArgumentException("width*height*numImages > images.remaining()");
-			if (delays != null && numImages > delays.remaining())
-				BufferChecks.checkBuffer(delays, numImages);
 			if (xHotspot >= width || xHotspot < 0)
 				throw new IllegalArgumentException("xHotspot > width || xHotspot < 0");
 			if (yHotspot >= height || yHotspot < 0)
