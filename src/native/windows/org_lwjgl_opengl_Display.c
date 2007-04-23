@@ -217,7 +217,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_resetCursorClipping(
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setupCursorClipping(JNIEnv *env, jclass unused, jlong hwnd_ptr) {
 	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
 	RECT hwnd_client;
-	if (display_hwnd != NULL && GetWindowRect(hwnd, &hwnd_client) != 0) {
+	if (hwnd != NULL && GetWindowRect(hwnd, &hwnd_client) != 0) {
 		if (ClipCursor(&hwnd_client) == 0)
 			throwFormattedException(env, "ClipCursor failed (%d)", GetLastError());
 	}
