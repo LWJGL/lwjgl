@@ -193,22 +193,25 @@ public interface GL20 {
 	                        boolean transpose, FloatBuffer matrices);
 
 	@StripPostfix("params")
-	void glGetShaderiv(@GLuint int shader, @GLenum int pname, @Check IntBuffer params);
+	void glGetShaderiv(@GLuint int shader, @GLenum int pname, @OutParameter @Check IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetProgramiv(@GLuint int program, @GLenum int pname, @Check IntBuffer params);
+	void glGetProgramiv(@GLuint int program, @GLenum int pname, @OutParameter @Check IntBuffer params);
 
 	void glGetShaderInfoLog(@GLuint int shader, @AutoSize("infoLog") @GLsizei int maxLength,
+			                @OutParameter
 	                        @GLsizei
 	                        @Check(value = "1", canBeNull = true) IntBuffer length,
 	                        @GLchar ByteBuffer infoLog);
 
 	void glGetProgramInfoLog(@GLuint int program, @AutoSize("infoLog") @GLsizei int maxLength,
+			                 @OutParameter
 	                         @GLsizei
 	                         @Check(value = "1", canBeNull = true) IntBuffer length,
 	                         @GLchar ByteBuffer infoLog);
 
 	void glGetAttachedShaders(@GLuint int program, @AutoSize("shaders") @GLsizei int maxCount,
+			                  @OutParameter
 	                          @GLsizei
 	                          @Check(value = "1", canBeNull = true) IntBuffer count,
 	                          @GLuint IntBuffer shaders);
@@ -226,20 +229,20 @@ public interface GL20 {
 
 	void glGetActiveUniform(@GLuint int program, @GLuint int index, @AutoSize("name") @GLsizei int maxLength,
 	                        @Check(value = "1", canBeNull = true)
-	                        @GLsizei IntBuffer length,
+	                        @OutParameter @GLsizei IntBuffer length,
 	                        @Check
-	                        @GLsizei IntBuffer size,
+	                        @OutParameter @GLsizei IntBuffer size,
 	                        @Check
-	                        @GLenum IntBuffer type,
-	                        @GLchar ByteBuffer name);
+	                        @OutParameter @GLenum IntBuffer type,
+	                        @OutParameter @GLchar ByteBuffer name);
 
 	@StripPostfix("params")
-	void glGetUniformfv(@GLuint int program, int location, @Check FloatBuffer params);
+	void glGetUniformfv(@GLuint int program, int location, @OutParameter @Check FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetUniformiv(@GLuint int program, int location, @Check IntBuffer params);
+	void glGetUniformiv(@GLuint int program, int location, @OutParameter @Check IntBuffer params);
 
-	void glGetShaderSource(@GLuint int shader, @AutoSize("source") @GLsizei int maxLength,
+	void glGetShaderSource(@GLuint int shader, @OutParameter @AutoSize("source") @GLsizei int maxLength,
 	                       @Check(value = "1", canBeNull = true)
 	                       @GLsizei IntBuffer length,
 	                       @GLchar ByteBuffer source);
@@ -293,13 +296,13 @@ public interface GL20 {
 	void glDisableVertexAttribArray(@GLuint int index);
 
 	@StripPostfix("params")
-	void glGetVertexAttribfv(@GLuint int index, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetVertexAttribfv(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetVertexAttribdv(@GLuint int index, @GLenum int pname, @Check("4") DoubleBuffer params);
+	void glGetVertexAttribdv(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") DoubleBuffer params);
 
 	@StripPostfix("params")
-	void glGetVertexAttribiv(@GLuint int index, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetVertexAttribiv(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("pointer")
 	void glGetVertexAttribPointerv(@GLuint int index, @GLenum int pname, @Result @GLvoid ByteBuffer pointer);
@@ -352,6 +355,7 @@ public interface GL20 {
 	void glBindAttribLocation(@GLuint int program, @GLuint int index, @NullTerminated @Const @GLchar ByteBuffer name);
 
 	void glGetActiveAttrib(@GLuint int program, @GLuint int index, @AutoSize("name") @GLsizei int maxLength,
+			               @OutParameter
 	                       @Check(value = "1", canBeNull = true)
 	                       @GLsizei IntBuffer length,
 	                       @Check("1") IntBuffer size,

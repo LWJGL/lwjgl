@@ -194,6 +194,7 @@ public interface GL13 {
 
 	// TODO: check buffer size valid
 	void glGetCompressedTexImage(@GLenum int target, int lod,
+			                     @OutParameter
 	                             @BufferObject(BufferKind.PackPBO)
 	                             @Check
 	                             @GLbyte

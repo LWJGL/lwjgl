@@ -66,26 +66,26 @@ public interface ATI_vertex_array_object {
 	                             @GLdouble Buffer pPointer, @GLenum int preserve);
 
 	@StripPostfix("params")
-	void glGetObjectBufferfvATI(@GLuint int buffer, @GLenum int pname, @Check FloatBuffer params);
+	void glGetObjectBufferfvATI(@GLuint int buffer, @GLenum int pname, @OutParameter @Check FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetObjectBufferivATI(@GLuint int buffer, @GLenum int pname, @Check IntBuffer params);
+	void glGetObjectBufferivATI(@GLuint int buffer, @GLenum int pname, @OutParameter @Check IntBuffer params);
 
 	void glFreeObjectBufferATI(@GLuint int buffer);
 
 	void glArrayObjectATI(@GLenum int array, int size, @GLenum int type, @GLsizei int stride, @GLuint int buffer, @GLuint int offset);
 
 	@StripPostfix("params")
-	void glGetArrayObjectfvATI(@GLenum int array, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetArrayObjectfvATI(@GLenum int array, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetArrayObjectivATI(@GLenum int array, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetArrayObjectivATI(@GLenum int array, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	void glVariantArrayObjectATI(@GLuint int id, @GLenum int type, @GLsizei int stride, @GLuint int buffer, @GLuint int offset);
 
 	@StripPostfix("params")
-	void glGetVariantArrayObjectfvATI(@GLuint int id, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetVariantArrayObjectfvATI(@GLuint int id, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetVariantArrayObjectivATI(@GLuint int id, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetVariantArrayObjectivATI(@GLuint int id, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 }

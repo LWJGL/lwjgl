@@ -42,5 +42,5 @@ public interface NV_register_combiners2 {
 	void glCombinerStageParameterfvNV(@GLenum int stage, @GLenum int pname, @Const @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetCombinerStageParameterfvNV(@GLenum int stage, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetCombinerStageParameterfvNV(@GLenum int stage, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 }

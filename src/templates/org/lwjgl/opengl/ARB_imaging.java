@@ -150,6 +150,7 @@ public interface ARB_imaging {
 	void glCopyColorTable(@GLenum int target, @GLenum int internalformat, int x, int y, @GLsizei int width);
 
 	void glGetColorTable(@GLenum int target, @GLenum int format, @GLenum int type,
+	                     @OutParameter
 	                     @Check("256")
 	                     @GLbyte
 	                     @GLfloat
@@ -170,6 +171,7 @@ public interface ARB_imaging {
 	void glResetHistogram(@GLenum int target);
 
 	void glGetHistogram(@GLenum int target, boolean reset, @GLenum int format, @GLenum int type,
+	                    @OutParameter
 	                    @BufferObject(BufferKind.PackPBO)
 	                    @Check("256")
 	                    @GLbyte
@@ -179,16 +181,17 @@ public interface ARB_imaging {
 	                    @GLdouble Buffer values);
 
 	@StripPostfix("params")
-	void glGetHistogramParameterfv(@GLenum int target, @GLenum int pname, @Check("256") FloatBuffer params);
+	void glGetHistogramParameterfv(@GLenum int target, @GLenum int pname, @OutParameter @Check("256") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetHistogramParameteriv(@GLenum int target, @GLenum int pname, @Check("256") IntBuffer params);
+	void glGetHistogramParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("256") IntBuffer params);
 
 	void glMinmax(@GLenum int target, @GLenum int internalformat, boolean sink);
 
 	void glResetMinmax(@GLenum int target);
 
 	void glGetMinmax(@GLenum int target, boolean reset, @GLenum int format, @GLenum int types,
+	                 @OutParameter
 	                 @BufferObject(BufferKind.PackPBO)
 	                 @Check("4")
 	                 @GLbyte
@@ -198,10 +201,10 @@ public interface ARB_imaging {
 	                 @GLdouble Buffer values);
 
 	@StripPostfix("params")
-	void glGetMinmaxParameterfv(@GLenum int target, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetMinmaxParameterfv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetMinmaxParameteriv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetMinmaxParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	void glConvolutionFilter1D(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLenum int format, @GLenum int type,
 	                           @BufferObject(BufferKind.UnpackPBO)
@@ -237,6 +240,7 @@ public interface ARB_imaging {
 
 	// TODO: check buffer size valid
 	void glGetConvolutionFilter(@GLenum int target, @GLenum int format, @GLenum int type,
+	                            @OutParameter
 	                            @BufferObject(BufferKind.PackPBO)
 	                            @Check
 	                            @GLbyte
@@ -246,10 +250,10 @@ public interface ARB_imaging {
 	                            @GLdouble Buffer image);
 
 	@StripPostfix("params")
-	void glGetConvolutionParameterfv(@GLenum int target, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetConvolutionParameterfv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetConvolutionParameteriv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetConvolutionParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	// TODO: check buffer size valid
 	void glSeparableFilter2D(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLenum int type,
@@ -272,6 +276,7 @@ public interface ARB_imaging {
 
 	// TODO: check buffer size valid
 	void glGetSeparableFilter(@GLenum int target, @GLenum int format, @GLenum int type,
+	                          @OutParameter
 	                          @BufferObject(BufferKind.PackPBO)
 	                          @Check
 	                          @GLbyte

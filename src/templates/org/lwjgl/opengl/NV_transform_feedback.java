@@ -128,12 +128,12 @@ public interface NV_transform_feedback {
 	int glGetVaryingLocationNV(@GLuint int program, @NullTerminated @Const @GLchar ByteBuffer name);
 
 	void glGetActiveVaryingNV(@GLuint int program, @GLuint int index, @AutoSize("name") @GLsizei int bufSize,
-							  @Check("1") @GLsizei IntBuffer length,
-							  @Check("1") @GLsizei IntBuffer size,
-							  @Check("1") @GLenum IntBuffer type, @GLchar ByteBuffer name);
+							  @OutParameter @Check("1") @GLsizei IntBuffer length,
+							  @OutParameter @Check("1") @GLsizei IntBuffer size,
+							  @OutParameter @Check("1") @GLenum IntBuffer type, @GLchar ByteBuffer name);
 
 	void glActiveVaryingNV(@GLuint int program, @NullTerminated @Const @GLchar ByteBuffer name);
 
-	void glGetTransformFeedbackVaryingNV(@GLuint int program, @GLuint int index, @Check("1") IntBuffer location);
+	void glGetTransformFeedbackVaryingNV(@GLuint int program, @GLuint int index, @OutParameter @Check("1") IntBuffer location);
 
 }

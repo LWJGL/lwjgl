@@ -85,6 +85,7 @@ public interface EXT_paletted_texture {
 	                        @GLdouble Buffer data);
 
 	void glGetColorTableEXT(@GLenum int target, @GLenum int format, @GLenum int type,
+			                @OutParameter
 	                        @Check
 	                        @GLbyte
 	                        @GLshort
@@ -93,8 +94,8 @@ public interface EXT_paletted_texture {
 	                        @GLdouble Buffer data);
 
 	@StripPostfix("params")
-	void glGetColorTableParameterivEXT(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetColorTableParameterivEXT(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetColorTableParameterfvEXT(@GLenum int target, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetColorTableParameterfvEXT(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 }

@@ -39,8 +39,8 @@ public interface ATI_vertex_attrib_array_object {
 	void glVertexAttribArrayObjectATI(@GLuint int index, int size, @GLenum int type, boolean normalized, @GLsizei int stride, @GLuint int buffer, @GLuint int offset);
 
 	@StripPostfix("params")
-	void glGetVertexAttribArrayObjectfvATI(@GLuint int index, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetVertexAttribArrayObjectfvATI(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetVertexAttribArrayObjectivATI(@GLuint int index, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetVertexAttribArrayObjectivATI(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 }

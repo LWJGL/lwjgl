@@ -148,10 +148,10 @@ public interface EXT_gpu_shader4 {
 								   @GLuint Buffer buffer);
 
 	@StripPostfix("params")
-	void glGetVertexAttribIivEXT(@GLuint int index, @GLenum int pname, @Check("4")IntBuffer params);
+	void glGetVertexAttribIivEXT(@GLuint int index, @GLenum int pname, @OutParameter @Check("4")IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetVertexAttribIuivEXT(@GLuint int index, @GLenum int pname, @Check("4") @GLuint IntBuffer params);
+	void glGetVertexAttribIuivEXT(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") @GLuint IntBuffer params);
 
 	void glUniform1uiEXT(int location, @GLuint int v0);
 
@@ -174,7 +174,7 @@ public interface EXT_gpu_shader4 {
 	void glUniform4uivEXT(int location, @AutoSize(value = "value", expression = " >> 2") @GLsizei int count, @Const @GLuint IntBuffer value);
 
 	@StripPostfix("params")
-	void glGetUniformuivEXT(@GLuint int program, int location, @Check @GLuint IntBuffer params);
+	void glGetUniformuivEXT(@GLuint int program, int location, @OutParameter @Check @GLuint IntBuffer params);
 
 	void glBindFragDataLocationEXT(@GLuint int program, @GLuint int colorNumber, @NullTerminated @Const @GLchar ByteBuffer name);
 

@@ -105,20 +105,20 @@ public interface NV_register_combiners {
 	void glFinalCombinerInputNV(@GLenum int variable, @GLenum int input, @GLenum int mapping, @GLenum int componentUsage);
 
 	@StripPostfix("params")
-	void glGetCombinerInputParameterfvNV(@GLenum int stage, @GLenum int portion, @GLenum int variable, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetCombinerInputParameterfvNV(@GLenum int stage, @GLenum int portion, @GLenum int variable, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetCombinerInputParameterivNV(@GLenum int stage, @GLenum int portion, @GLenum int variable, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetCombinerInputParameterivNV(@GLenum int stage, @GLenum int portion, @GLenum int variable, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetCombinerOutputParameterfvNV(@GLenum int stage, @GLenum int portion, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetCombinerOutputParameterfvNV(@GLenum int stage, @GLenum int portion, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetCombinerOutputParameterivNV(@GLenum int stage, @GLenum int portion, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetCombinerOutputParameterivNV(@GLenum int stage, @GLenum int portion, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetFinalCombinerInputParameterfvNV(@GLenum int variable, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetFinalCombinerInputParameterfvNV(@GLenum int variable, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetFinalCombinerInputParameterivNV(@GLenum int variable, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetFinalCombinerInputParameterivNV(@GLenum int variable, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 }

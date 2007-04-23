@@ -70,9 +70,9 @@ public interface NV_program {
 	void glGenProgramsNV(@AutoSize("programs") @GLsizei int n, @GLuint IntBuffer programs);
 
 	@StripPostfix("params")
-	void glGetProgramivNV(@GLuint int programID, @GLenum int parameterName, @Check @GLint IntBuffer params);
+	void glGetProgramivNV(@GLuint int programID, @GLenum int parameterName, @OutParameter @Check @GLint IntBuffer params);
 
-	void glGetProgramStringNV(@GLuint int programID, @GLenum int parameterName, @Check @GLubyte Buffer paramString);
+	void glGetProgramStringNV(@GLuint int programID, @GLenum int parameterName, @OutParameter @Check @GLubyte Buffer paramString);
 
 	boolean glIsProgramNV(@GLuint int programID);
 

@@ -259,32 +259,32 @@ public interface EXT_vertex_shader {
 	boolean glIsVariantEnabledEXT(@GLuint int id, @GLenum int cap);
 
 	@StripPostfix("pbData")
-	void glGetVariantBooleanvEXT(@GLuint int id, @GLenum int value, @Check("4") ByteBuffer pbData);
+	void glGetVariantBooleanvEXT(@GLuint int id, @GLenum int value, @OutParameter @Check("4") ByteBuffer pbData);
 
 	@StripPostfix("pbData")
-	void glGetVariantIntegervEXT(@GLuint int id, @GLenum int value, @Check("4") IntBuffer pbData);
+	void glGetVariantIntegervEXT(@GLuint int id, @GLenum int value, @OutParameter @Check("4") IntBuffer pbData);
 
 	@StripPostfix("pbData")
-	void glGetVariantFloatvEXT(@GLuint int id, @GLenum int value, @Check("4") FloatBuffer pbData);
+	void glGetVariantFloatvEXT(@GLuint int id, @GLenum int value, @OutParameter @Check("4") FloatBuffer pbData);
 
 	@StripPostfix("pbData")
-	void glGetVariantPointervEXT(@GLuint int id, @GLenum int value, @Result @GLvoid ByteBuffer pbData);
+	void glGetVariantPointervEXT(@GLuint int id, @GLenum int value, @OutParameter @Result @GLvoid ByteBuffer pbData);
 
 	@StripPostfix("pbData")
-	void glGetInvariantBooleanvEXT(@GLuint int id, @GLenum int value, @Check("4") ByteBuffer pbData);
+	void glGetInvariantBooleanvEXT(@GLuint int id, @GLenum int value, @OutParameter @Check("4") ByteBuffer pbData);
 
 	@StripPostfix("pbData")
-	void glGetInvariantIntegervEXT(@GLuint int id, @GLenum int value, @Check("4") IntBuffer pbData);
+	void glGetInvariantIntegervEXT(@GLuint int id, @GLenum int value, @OutParameter @Check("4") IntBuffer pbData);
 
 	@StripPostfix("pbData")
-	void glGetInvariantFloatvEXT(@GLuint int id, @GLenum int value, @Check("4") FloatBuffer pbData);
+	void glGetInvariantFloatvEXT(@GLuint int id, @GLenum int value, @OutParameter @Check("4") FloatBuffer pbData);
 
 	@StripPostfix("pbData")
-	void glGetLocalConstantBooleanvEXT(@GLuint int id, @GLenum int value, @Check("4") ByteBuffer pbData);
+	void glGetLocalConstantBooleanvEXT(@GLuint int id, @GLenum int value, @OutParameter @Check("4") ByteBuffer pbData);
 
 	@StripPostfix("pbData")
-	void glGetLocalConstantIntegervEXT(@GLuint int id, @GLenum int value, @Check("4") IntBuffer pbData);
+	void glGetLocalConstantIntegervEXT(@GLuint int id, @GLenum int value, @OutParameter @Check("4") IntBuffer pbData);
 
 	@StripPostfix("pbData")
-	void glGetLocalConstantFloatvEXT(@GLuint int id, @GLenum int value, @Check("4") FloatBuffer pbData);
+	void glGetLocalConstantFloatvEXT(@GLuint int id, @GLenum int value, @OutParameter @Check("4") FloatBuffer pbData);
 }

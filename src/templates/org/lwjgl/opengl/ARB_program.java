@@ -155,21 +155,21 @@ public interface ARB_program {
 	void glProgramLocalParameter4dvARB(@GLenum int target, @GLuint int index, @Check("4") @Const DoubleBuffer params);
 
 	@StripPostfix("params")
-	void glGetProgramEnvParameterfvARB(@GLenum int target, @GLuint int index, @Check("4") FloatBuffer params);
+	void glGetProgramEnvParameterfvARB(@GLenum int target, @GLuint int index, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetProgramEnvParameterdvARB(@GLenum int target, @GLuint int index, @Check("4") DoubleBuffer params);
+	void glGetProgramEnvParameterdvARB(@GLenum int target, @GLuint int index, @OutParameter @Check("4") DoubleBuffer params);
 
 	@StripPostfix("params")
-	void glGetProgramLocalParameterfvARB(@GLenum int target, @GLuint int index, @Check("4") FloatBuffer params);
+	void glGetProgramLocalParameterfvARB(@GLenum int target, @GLuint int index, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetProgramLocalParameterdvARB(@GLenum int target, @GLuint int index, @Check("4") DoubleBuffer params);
+	void glGetProgramLocalParameterdvARB(@GLenum int target, @GLuint int index, @OutParameter @Check("4") DoubleBuffer params);
 
 	@StripPostfix("params")
-	void glGetProgramivARB(@GLenum int target, @GLenum int parameterName, @Check("4") IntBuffer params);
+	void glGetProgramivARB(@GLenum int target, @GLenum int parameterName, @OutParameter @Check("4") IntBuffer params);
 
-	void glGetProgramStringARB(@GLenum int target, @GLenum int parameterName, @Check @GLbyte Buffer paramString);
+	void glGetProgramStringARB(@GLenum int target, @GLenum int parameterName, @OutParameter @Check @GLbyte Buffer paramString);
 
 	boolean glIsProgramARB(@GLuint int program);
 }

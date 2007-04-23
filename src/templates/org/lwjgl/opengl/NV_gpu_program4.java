@@ -92,17 +92,17 @@ public interface NV_gpu_program4 {
 	// ---
 
 	@StripPostfix("params")
-	void glGetProgramLocalParameterIivNV(@GLenum int target, @GLuint int index, @Check("4") IntBuffer params);
+	void glGetProgramLocalParameterIivNV(@GLenum int target, @GLuint int index, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetProgramLocalParameterIuivNV(@GLenum int target, @GLuint int index, @Check("4") @GLuint IntBuffer params);
+	void glGetProgramLocalParameterIuivNV(@GLenum int target, @GLuint int index, @OutParameter @Check("4") @GLuint IntBuffer params);
 
 	// ---
 
 	@StripPostfix("params")
-	void glGetProgramEnvParameterIivNV(@GLenum int target, @GLuint int index, @Check("4")IntBuffer params);
+	void glGetProgramEnvParameterIivNV(@GLenum int target, @GLuint int index, @OutParameter @Check("4")IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetProgramEnvParameterIuivNV(@GLenum int target, @GLuint int index, @Check("4") @GLuint IntBuffer params);
+	void glGetProgramEnvParameterIuivNV(@GLenum int target, @GLuint int index, @OutParameter @Check("4") @GLuint IntBuffer params);
 
 }

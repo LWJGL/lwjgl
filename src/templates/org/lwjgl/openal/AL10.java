@@ -480,7 +480,7 @@ public interface AL10 {
 		*/
 	@StripPostfix("data")
 	@ALvoid
-	void alGetIntegerv(@ALenum int pname, @Check("1") IntBuffer data);
+	void alGetIntegerv(@ALenum int pname, @OutParameter @Check("1") IntBuffer data);
 
 	/**
 	 * Like OpenGL, AL uses a simplified interface for querying global state.
@@ -498,7 +498,7 @@ public interface AL10 {
 		*/
 	@StripPostfix("data")
 	@ALvoid
-	void alGetFloatv(@ALenum int pname, @Check("1") FloatBuffer data);
+	void alGetFloatv(@ALenum int pname, @OutParameter @Check("1") FloatBuffer data);
 	
 	/**
 	 * Like OpenGL, AL uses a simplified interface for querying global state.
@@ -516,7 +516,7 @@ public interface AL10 {
 		*/
 	@StripPostfix("data")
 	@ALvoid
-	void alGetDoublev(@ALenum int pname, @Check("1") DoubleBuffer data);
+	void alGetDoublev(@ALenum int pname, @OutParameter @Check("1") DoubleBuffer data);
 
 	/**
 	 * The application can retrieve state information global to the current AL Context.
@@ -711,7 +711,7 @@ public interface AL10 {
 	// TODO: What's the real minimum number of elements?
 	@StripPostfix("floatdata")
 	@ALvoid
-	void alGetListenerfv(@ALenum int pname, @Check("1") FloatBuffer floatdata);
+	void alGetListenerfv(@ALenum int pname, @OutParameter @Check("1") FloatBuffer floatdata);
 
 	/**
 	 * The application requests a number of Sources using GenSources.
@@ -827,7 +827,7 @@ public interface AL10 {
 	// TODO: What's the correct minimum value?
 	@StripPostfix("floatdata")
 	@ALvoid
-	void alGetSourcefv(@ALuint int source, @ALenum int pname, @Check("1") FloatBuffer floatdata);
+	void alGetSourcefv(@ALuint int source, @ALenum int pname, @OutParameter @Check("1") FloatBuffer floatdata);
 
 	/**
 	 * Play() applied to an AL_INITIAL Source will promote the Source to AL_PLAYING, thus

@@ -91,6 +91,7 @@ public interface ARB_texture_compression {
 	                                  ByteBuffer pData);
 
 	void glGetCompressedTexImageARB(@GLenum int target, int lod,
+			                        @OutParameter
 	                                @BufferObject(BufferKind.PackPBO)
 	                                @Check
 	                                @GLvoid

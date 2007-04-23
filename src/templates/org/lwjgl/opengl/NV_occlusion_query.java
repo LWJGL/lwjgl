@@ -55,8 +55,8 @@ public interface NV_occlusion_query {
 	void glEndOcclusionQueryNV();
 
 	@StripPostfix("params")
-	void glGetOcclusionQueryuivNV(@GLuint int id, @GLenum int pname, @Check("1") @GLuint IntBuffer params);
+	void glGetOcclusionQueryuivNV(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") @GLuint IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetOcclusionQueryivNV(@GLuint int id, @GLenum int pname, @Check("1") IntBuffer params);
+	void glGetOcclusionQueryivNV(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 }

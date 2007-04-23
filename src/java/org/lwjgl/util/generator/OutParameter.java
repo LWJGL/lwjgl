@@ -29,24 +29,20 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.opengl;
+package org.lwjgl.util.generator;
 
-import org.lwjgl.util.generator.*;
+/**
+ * This annotation indicates that a parameter is written,
+ * not read.
+ * 
+ * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @version $Revision: 2286 $
+ * $Id: Check.java 2286 2006-03-23 19:32:21Z matzon $
+ */
 
-import java.nio.*;
+import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
-public interface EXT_timer_query {
-
-	/**
-	 * Accepted by the &lt;target&gt; parameter of BeginQuery, EndQuery, and
-	 * GetQueryiv:
-	 */
-	int GL_TIME_ELAPSED_EXT = 0x88BF;
-
-	@StripPostfix("params")
-	void glGetQueryObjecti64vEXT(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") @GLint64EXT LongBuffer params);
-
-	@StripPostfix("params")
-	void glGetQueryObjectui64vEXT(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") @GLuint64EXT LongBuffer params);
-
+@Target(ElementType.PARAMETER)
+public @interface OutParameter {
 }

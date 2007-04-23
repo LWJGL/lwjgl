@@ -193,22 +193,22 @@ public interface NV_vertex_program extends NV_program {
 	void glExecuteProgramNV(@GLenum int target, @GLuint int id, @Check("4") @Const FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetProgramParameterfvNV(@GLenum int target, @GLuint int index, @GLenum int parameterName, @Check("4") FloatBuffer params);
+	void glGetProgramParameterfvNV(@GLenum int target, @GLuint int index, @GLenum int parameterName, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetProgramParameterdvNV(@GLenum int target, @GLuint int index, @GLenum int parameterName, @Check("4") DoubleBuffer params);
+	void glGetProgramParameterdvNV(@GLenum int target, @GLuint int index, @GLenum int parameterName, @OutParameter @Check("4") DoubleBuffer params);
 
 	@StripPostfix("params")
-	void glGetTrackMatrixivNV(@GLenum int target, @GLuint int address, @GLenum int parameterName, @Check("4") IntBuffer params);
+	void glGetTrackMatrixivNV(@GLenum int target, @GLuint int address, @GLenum int parameterName, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetVertexAttribfvNV(@GLuint int index, @GLenum int parameterName, @Check("4") FloatBuffer params);
+	void glGetVertexAttribfvNV(@GLuint int index, @GLenum int parameterName, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetVertexAttribdvNV(@GLuint int index, @GLenum int parameterName, @Check("4") DoubleBuffer params);
+	void glGetVertexAttribdvNV(@GLuint int index, @GLenum int parameterName, @OutParameter @Check("4") DoubleBuffer params);
 
 	@StripPostfix("params")
-	void glGetVertexAttribivNV(@GLuint int index, @GLenum int parameterName, @Check("4") IntBuffer params);
+	void glGetVertexAttribivNV(@GLuint int index, @GLenum int parameterName, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("pointer")
 	void glGetVertexAttribPointervNV(@GLuint int index, @GLenum int parameterName, @Result @GLvoid ByteBuffer pointer);

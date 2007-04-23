@@ -99,6 +99,7 @@ public interface GL15 {
 	                     @GLdouble Buffer data);
 
 	void glGetBufferSubData(@GLenum int target, @GLintptr long offset, @AutoSize("data") @GLsizeiptr long size,
+			                @OutParameter
 	                        @Check
 	                        @GLbyte
 	                        @GLshort
@@ -128,11 +129,11 @@ public interface GL15 {
 	boolean glUnmapBuffer(@GLenum int target);
 
 	@StripPostfix("params")
-	void glGetBufferParameteriv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetBufferParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("pointer")
 	@AutoResultSize("GLChecks.getBufferObjectSize(caps, target)")
-	void glGetBufferPointerv(@GLenum int target, @GLenum int pname, @Result @GLvoid ByteBuffer pointer);
+	void glGetBufferPointerv(@GLenum int target, @GLenum int pname, @OutParameter @Result @GLvoid ByteBuffer pointer);
 
 	// -----------------------------------------------------------------
 	// ---------------------- ARB_occlusion_query ----------------------
@@ -168,11 +169,11 @@ public interface GL15 {
 	void glEndQuery(@GLenum int target);
 
 	@StripPostfix("params")
-	void glGetQueryiv(@GLenum int target, @GLenum int pname, @Check("1") IntBuffer params);
+	void glGetQueryiv(@GLenum int target, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetQueryObjectiv(@GLenum int id, @GLenum int pname, @Check("1") @GLint IntBuffer params);
+	void glGetQueryObjectiv(@GLenum int id, @GLenum int pname, @OutParameter @Check("1") @GLint IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetQueryObjectuiv(@GLenum int id, @GLenum int pname, @Check("1") @GLuint IntBuffer params);
+	void glGetQueryObjectuiv(@GLenum int id, @GLenum int pname, @OutParameter @Check("1") @GLuint IntBuffer params);
 }

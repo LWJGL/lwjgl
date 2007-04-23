@@ -177,17 +177,19 @@ public interface ARB_shader_objects {
 	void glUniformMatrix4fvARB(int location, @AutoSize(value = "matrices", expression = " >> 4") @GLsizei int count, boolean transpose, FloatBuffer matrices);
 
 	@StripPostfix("params")
-	void glGetObjectParameterfvARB(@GLhandleARB int obj, @GLenum int pname, @Check FloatBuffer params);
+	void glGetObjectParameterfvARB(@GLhandleARB int obj, @GLenum int pname, @OutParameter @Check FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetObjectParameterivARB(@GLhandleARB int obj, @GLenum int pname, @Check IntBuffer params);
+	void glGetObjectParameterivARB(@GLhandleARB int obj, @GLenum int pname, @OutParameter @Check IntBuffer params);
 
 	void glGetInfoLogARB(@GLhandleARB int obj, @AutoSize("infoLog") @GLsizei int maxLength,
+			             @OutParameter
 	                     @Check(value = "1", canBeNull = true)
 	                     @GLsizei IntBuffer length,
 	                     @GLcharARB ByteBuffer infoLog);
 
 	void glGetAttachedObjectsARB(@GLhandleARB int containerObj, @AutoSize("obj") @GLsizei int maxCount,
+			                     @OutParameter
 	                             @Check(value = "1", canBeNull = true)
 	                             @GLsizei IntBuffer count,
 	                             @GLhandleARB IntBuffer obj);
@@ -201,6 +203,7 @@ public interface ARB_shader_objects {
 	int glGetUniformLocationARB(@GLhandleARB int programObj, @NullTerminated @Const @GLcharARB ByteBuffer name);
 
 	void glGetActiveUniformARB(@GLhandleARB int programObj, @GLuint int index, @AutoSize("name") @GLsizei int maxLength,
+			                   @OutParameter
 	                           @Check(value = "1", canBeNull = true)
 	                           @GLsizei IntBuffer length,
 	                           @Check("1") IntBuffer size,
@@ -209,12 +212,13 @@ public interface ARB_shader_objects {
 	                           @GLcharARB ByteBuffer name);
 
 	@StripPostfix("params")
-	void glGetUniformfvARB(@GLhandleARB int programObj, int location, @Check FloatBuffer params);
+	void glGetUniformfvARB(@GLhandleARB int programObj, int location, @OutParameter @Check FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetUniformivARB(@GLhandleARB int programObj, int location, @Check IntBuffer params);
+	void glGetUniformivARB(@GLhandleARB int programObj, int location, @OutParameter @Check IntBuffer params);
 
 	void glGetShaderSourceARB(@GLhandleARB int obj, @AutoSize("source") @GLsizei int maxLength,
+			                  @OutParameter
 	                          @Check(value = "1", canBeNull = true)
 	                          @GLsizei IntBuffer length,
 	                          @GLcharARB ByteBuffer source);

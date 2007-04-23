@@ -144,23 +144,27 @@ public interface ARB_vertex_shader {
 	void glGetActiveAttribARB(@GLhandleARB int programObj, @GLuint int index,
 	                          @AutoSize("name")
 	                          @GLsizei int maxLength,
+							  @OutParameter
 	                          @Check(value = "1", canBeNull = true)
 	                          @GLsizei IntBuffer length,
+							  @OutParameter
 	                          @Check("1") IntBuffer size,
+							  @OutParameter
 	                          @Check("1")
 	                          @GLenum IntBuffer type,
+							  @OutParameter
 	                          @GLcharARB ByteBuffer name);
 
 	int glGetAttribLocationARB(@GLhandleARB int programObj, @NullTerminated @Const @GLcharARB ByteBuffer name);
 
 	@StripPostfix("params")
-	void glGetVertexAttribfvARB(@GLuint int index, @GLenum int pname, @Check FloatBuffer params);
+	void glGetVertexAttribfvARB(@GLuint int index, @GLenum int pname, @OutParameter @Check FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetVertexAttribdvARB(@GLuint int index, @GLenum int pname, @Check DoubleBuffer params);
+	void glGetVertexAttribdvARB(@GLuint int index, @GLenum int pname, @OutParameter @Check DoubleBuffer params);
 
 	@StripPostfix("params")
-	void glGetVertexAttribivARB(@GLuint int index, @GLenum int pname, @Check IntBuffer params);
+	void glGetVertexAttribivARB(@GLuint int index, @GLenum int pname, @OutParameter @Check IntBuffer params);
 
 	@StripPostfix("result")
 	void glGetVertexAttribPointervARB(@GLuint int index, @GLenum int pname, @Result @GLvoid ByteBuffer result);

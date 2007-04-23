@@ -67,11 +67,11 @@ public interface ARB_occlusion_query {
 	void glEndQueryARB(@GLenum int target);
 
 	@StripPostfix("params")
-	void glGetQueryivARB(@GLenum int target, @GLenum int pname, @Check("1") IntBuffer params);
+	void glGetQueryivARB(@GLenum int target, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetQueryObjectivARB(@GLuint int id, @GLenum int pname, @Check("1") IntBuffer params);
+	void glGetQueryObjectivARB(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetQueryObjectuivARB(@GLuint int id, @GLenum int pname, @Check("1") IntBuffer params);
+	void glGetQueryObjectuivARB(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 }

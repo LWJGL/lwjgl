@@ -886,51 +886,51 @@ public interface GL11 {
 	void glFeedbackBuffer(@AutoSize("buffer") @GLsizei int size, @GLenum int type, FloatBuffer buffer);
 
 	@StripPostfix("values")
-	void glGetPixelMapfv(@GLenum int map, @Check("256") @BufferObject(BufferKind.PackPBO) FloatBuffer values);
+	void glGetPixelMapfv(@GLenum int map, @OutParameter @Check("256") @BufferObject(BufferKind.PackPBO) FloatBuffer values);
 
 	@StripPostfix("values")
-	void glGetPixelMapuiv(@GLenum int map, @Check("256") @BufferObject(BufferKind.PackPBO) @GLuint IntBuffer values);
+	void glGetPixelMapuiv(@GLenum int map, @OutParameter @Check("256") @BufferObject(BufferKind.PackPBO) @GLuint IntBuffer values);
 
 	@StripPostfix("values")
-	void glGetPixelMapusv(@GLenum int map, @Check("256") @BufferObject(BufferKind.PackPBO) @GLushort ShortBuffer values);
+	void glGetPixelMapusv(@GLenum int map, @OutParameter @Check("256") @BufferObject(BufferKind.PackPBO) @GLushort ShortBuffer values);
 
 	@StripPostfix("params")
-	void glGetMaterialfv(@GLenum int face, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetMaterialfv(@GLenum int face, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetMaterialiv(@GLenum int face, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetMaterialiv(@GLenum int face, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("v")
-	void glGetMapfv(@GLenum int target, @GLenum int query, @Check("256") FloatBuffer v);
+	void glGetMapfv(@GLenum int target, @GLenum int query, @OutParameter @Check("256") FloatBuffer v);
 
 	@StripPostfix("v")
-	void glGetMapdv(@GLenum int target, @GLenum int query, @Check("256") DoubleBuffer v);
+	void glGetMapdv(@GLenum int target, @GLenum int query, @OutParameter @Check("256") DoubleBuffer v);
 
 	@StripPostfix("v")
-	void glGetMapiv(@GLenum int target, @GLenum int query, @Check("256") IntBuffer v);
+	void glGetMapiv(@GLenum int target, @GLenum int query, @OutParameter @Check("256") IntBuffer v);
 
 	@StripPostfix("params")
-	void glGetLightfv(@GLenum int light, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetLightfv(@GLenum int light, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetLightiv(@GLenum int light, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetLightiv(@GLenum int light, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@NoErrorCheck
 	int glGetError();
 
-	void glGetClipPlane(@GLenum int plane, @Check("4") DoubleBuffer equation);
+	void glGetClipPlane(@GLenum int plane, @OutParameter @Check("4") DoubleBuffer equation);
 
 	@StripPostfix("params")
-	void glGetBooleanv(@GLenum int pname, @Check("16") @GLboolean ByteBuffer params);
+	void glGetBooleanv(@GLenum int pname, @OutParameter @Check("16") @GLboolean ByteBuffer params);
 
 	@StripPostfix("params")
-	void glGetDoublev(@GLenum int pname, @Check("16") DoubleBuffer params);
+	void glGetDoublev(@GLenum int pname, @OutParameter @Check("16") DoubleBuffer params);
 
 	@StripPostfix("params")
-	void glGetFloatv(@GLenum int pname, @Check("16") FloatBuffer params);
+	void glGetFloatv(@GLenum int pname, @OutParameter @Check("16") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetIntegerv(@GLenum int pname, @Check("16") IntBuffer params);
+	void glGetIntegerv(@GLenum int pname, @OutParameter @Check("16") IntBuffer params);
 
 	void glGenTextures(@AutoSize("textures") @GLsizei int n, @GLuint IntBuffer textures);
 
@@ -975,18 +975,19 @@ public interface GL11 {
 	void glHint(@GLenum int target, @GLenum int mode);
 
 	@StripPostfix("params")
-	void glGetTexParameterfv(@GLenum int target, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetTexParameterfv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetTexParameteriv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetTexParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetTexLevelParameterfv(@GLenum int target, int level, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetTexLevelParameterfv(@GLenum int target, int level, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetTexLevelParameteriv(@GLenum int target, int level, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetTexLevelParameteriv(@GLenum int target, int level, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	void glGetTexImage(@GLenum int target, int level, @GLenum int format, @GLenum int type,
+			           @OutParameter
 	                   @BufferObject(BufferKind.PackPBO)
 	                   @Check("GLChecks.calculateImageStorage(pixels, format, type, 1, 1, 1)")
 	                   @GLbyte
@@ -996,24 +997,24 @@ public interface GL11 {
 	                   @GLdouble Buffer pixels);
 
 	@StripPostfix("params")
-	void glGetTexGeniv(@GLenum int coord, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetTexGeniv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetTexGenfv(@GLenum int coord, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetTexGenfv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetTexGendv(@GLenum int coord, @GLenum int pname, @Check("4") DoubleBuffer params);
+	void glGetTexGendv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") DoubleBuffer params);
 
 	@StripPostfix("params")
-	void glGetTexEnviv(@GLenum int coord, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetTexEnviv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetTexEnvfv(@GLenum int coord, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetTexEnvfv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@Const
 	String glGetString(int name);
 
-	void glGetPolygonStipple(@BufferObject(BufferKind.PackPBO) @Check("1024") @GLubyte ByteBuffer mask);
+	void glGetPolygonStipple(@OutParameter @BufferObject(BufferKind.PackPBO) @Check("1024") @GLubyte ByteBuffer mask);
 
 	boolean glIsList(@GLuint int list);
 

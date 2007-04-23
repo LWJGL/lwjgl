@@ -67,6 +67,36 @@ public final class NondirectBufferWrapper {
 		return buffers;
 	}
 
+	public static ByteBuffer wrapNoCopyBuffer(ByteBuffer buf, int size) {
+		BufferChecks.checkBufferSize(buf, size);
+		return wrapNoCopyDirect(buf);
+	}
+
+	public static ShortBuffer wrapNoCopyBuffer(ShortBuffer buf, int size) {
+		BufferChecks.checkBufferSize(buf, size);
+		return wrapNoCopyDirect(buf);
+	}
+
+	public static IntBuffer wrapNoCopyBuffer(IntBuffer buf, int size) {
+		BufferChecks.checkBufferSize(buf, size);
+		return wrapNoCopyDirect(buf);
+	}
+
+	public static LongBuffer wrapNoCopyBuffer(LongBuffer buf, int size) {
+		BufferChecks.checkBufferSize(buf, size);
+		return wrapNoCopyDirect(buf);
+	}
+
+	public static FloatBuffer wrapNoCopyBuffer(FloatBuffer buf, int size) {
+		BufferChecks.checkBufferSize(buf, size);
+		return wrapNoCopyDirect(buf);
+	}
+
+	public static DoubleBuffer wrapNoCopyBuffer(DoubleBuffer buf, int size) {
+		BufferChecks.checkBufferSize(buf, size);
+		return wrapNoCopyDirect(buf);
+	}
+
 	public static ByteBuffer wrapBuffer(ByteBuffer buf, int size) {
 		BufferChecks.checkBufferSize(buf, size);
 		return wrapDirect(buf);
@@ -133,52 +163,198 @@ public final class NondirectBufferWrapper {
 		return buffer;
 	}
 
+	public static ByteBuffer wrapNoCopyDirect(ByteBuffer buffer) {
+		if (!buffer.isDirect())
+			return doNoCopyWrap(buffer);
+		return buffer;
+	}
+
+	public static ShortBuffer wrapNoCopyDirect(ShortBuffer buffer) {
+		if (!buffer.isDirect())
+			return doNoCopyWrap(buffer);
+		return buffer;
+	}
+
+	public static FloatBuffer wrapNoCopyDirect(FloatBuffer buffer) {
+		if (!buffer.isDirect())
+			return doNoCopyWrap(buffer);
+		return buffer;
+	}
+
+	public static IntBuffer wrapNoCopyDirect(IntBuffer buffer) {
+		if (!buffer.isDirect())
+			return doNoCopyWrap(buffer);
+		return buffer;
+	}
+
+	public static LongBuffer wrapNoCopyDirect(LongBuffer buffer) {
+		if (!buffer.isDirect())
+			return doNoCopyWrap(buffer);
+		return buffer;
+	}
+
+	public static DoubleBuffer wrapNoCopyDirect(DoubleBuffer buffer) {
+		if (!buffer.isDirect())
+			return doNoCopyWrap(buffer);
+		return buffer;
+	}
+
+	public static void copy(ByteBuffer src, ByteBuffer dst) {
+		if (dst != null && !dst.isDirect()) {
+			int saved_position = dst.position();
+			dst.put(src);
+			dst.position(saved_position);
+		}
+	}
+
+	public static void copy(ShortBuffer src, ShortBuffer dst) {
+		if (dst != null && !dst.isDirect()) {
+			int saved_position = dst.position();
+			dst.put(src);
+			dst.position(saved_position);
+		}
+	}
+
+	public static void copy(IntBuffer src, IntBuffer dst) {
+		if (dst != null && !dst.isDirect()) {
+			int saved_position = dst.position();
+			dst.put(src);
+			dst.position(saved_position);
+		}
+	}
+
+	public static void copy(FloatBuffer src, FloatBuffer dst) {
+		if (dst != null && !dst.isDirect()) {
+			int saved_position = dst.position();
+			dst.put(src);
+			dst.position(saved_position);
+		}
+	}
+
+	public static void copy(LongBuffer src, LongBuffer dst) {
+		if (dst != null && !dst.isDirect()) {
+			int saved_position = dst.position();
+			dst.put(src);
+			dst.position(saved_position);
+		}
+	}
+
+	public static void copy(DoubleBuffer src, DoubleBuffer dst) {
+		if (dst != null && !dst.isDirect()) {
+			int saved_position = dst.position();
+			dst.put(src);
+			dst.position(saved_position);
+		}
+	}
+
+	private static ByteBuffer doNoCopyWrap(ByteBuffer buffer) {
+		ByteBuffer direct_buffer = lookupBuffer(buffer);
+		direct_buffer.limit(buffer.limit());
+		direct_buffer.position(buffer.position());
+		return direct_buffer;
+	}
+
+	private static ShortBuffer doNoCopyWrap(ShortBuffer buffer) {
+		ShortBuffer direct_buffer = lookupBuffer(buffer);
+		direct_buffer.limit(buffer.limit());
+		direct_buffer.position(buffer.position());
+		return direct_buffer;
+	}
+
+	private static IntBuffer doNoCopyWrap(IntBuffer buffer) {
+		IntBuffer direct_buffer = lookupBuffer(buffer);
+		direct_buffer.limit(buffer.limit());
+		direct_buffer.position(buffer.position());
+		return direct_buffer;
+	}
+
+	private static FloatBuffer doNoCopyWrap(FloatBuffer buffer) {
+		FloatBuffer direct_buffer = lookupBuffer(buffer);
+		direct_buffer.limit(buffer.limit());
+		direct_buffer.position(buffer.position());
+		return direct_buffer;
+	}
+
+	private static LongBuffer doNoCopyWrap(LongBuffer buffer) {
+		LongBuffer direct_buffer = lookupBuffer(buffer);
+		direct_buffer.limit(buffer.limit());
+		direct_buffer.position(buffer.position());
+		return direct_buffer;
+	}
+
+	private static DoubleBuffer doNoCopyWrap(DoubleBuffer buffer) {
+		DoubleBuffer direct_buffer = lookupBuffer(buffer);
+		direct_buffer.limit(buffer.limit());
+		direct_buffer.position(buffer.position());
+		return direct_buffer;
+	}
+
+	private static ByteBuffer lookupBuffer(ByteBuffer buffer) {
+		return getCachedBuffers(buffer.remaining()).byte_buffer;
+	}
+
 	private static ByteBuffer doWrap(ByteBuffer buffer) {
-		ByteBuffer direct_buffer = getCachedBuffers(buffer.remaining()).byte_buffer;
+		ByteBuffer direct_buffer = lookupBuffer(buffer);
 		direct_buffer.clear();
 		int saved_position = buffer.position();
 		direct_buffer.put(buffer);
 		buffer.position(saved_position);
 		direct_buffer.flip();
 		return direct_buffer;
+	}
+
+	private static ShortBuffer lookupBuffer(ShortBuffer buffer) {
+		CachedBuffers buffers = getCachedBuffers(buffer.remaining()*2);
+		return buffer.order() == ByteOrder.LITTLE_ENDIAN ? buffers.short_buffer_little : buffers.short_buffer_big;
 	}
 
 	private static ShortBuffer doWrap(ShortBuffer buffer) {
-		CachedBuffers buffers = getCachedBuffers(buffer.remaining()*2);
-		ShortBuffer direct_buffer = buffer.order() == ByteOrder.LITTLE_ENDIAN ? buffers.short_buffer_little : buffers.short_buffer_big;
+		ShortBuffer direct_buffer = lookupBuffer(buffer);
 		direct_buffer.clear();
 		int saved_position = buffer.position();
 		direct_buffer.put(buffer);
 		buffer.position(saved_position);
 		direct_buffer.flip();
 		return direct_buffer;
+	}
+
+	private static FloatBuffer lookupBuffer(FloatBuffer buffer) {
+		CachedBuffers buffers = getCachedBuffers(buffer.remaining()*4);
+		return buffer.order() == ByteOrder.LITTLE_ENDIAN ? buffers.float_buffer_little : buffers.float_buffer_big;
 	}
 
 	private static FloatBuffer doWrap(FloatBuffer buffer) {
-		CachedBuffers buffers = getCachedBuffers(buffer.remaining()*4);
-		FloatBuffer direct_buffer = buffer.order() == ByteOrder.LITTLE_ENDIAN ? buffers.float_buffer_little : buffers.float_buffer_big;
+		FloatBuffer direct_buffer = lookupBuffer(buffer);
 		direct_buffer.clear();
 		int saved_position = buffer.position();
 		direct_buffer.put(buffer);
 		buffer.position(saved_position);
 		direct_buffer.flip();
 		return direct_buffer;
+	}
+
+	private static IntBuffer lookupBuffer(IntBuffer buffer) {
+		CachedBuffers buffers = getCachedBuffers(buffer.remaining()*4);
+		return buffer.order() == ByteOrder.LITTLE_ENDIAN ? buffers.int_buffer_little : buffers.int_buffer_big;
 	}
 
 	private static IntBuffer doWrap(IntBuffer buffer) {
-		CachedBuffers buffers = getCachedBuffers(buffer.remaining()*4);
-		IntBuffer direct_buffer = buffer.order() == ByteOrder.LITTLE_ENDIAN ? buffers.int_buffer_little : buffers.int_buffer_big;
+		IntBuffer direct_buffer = lookupBuffer(buffer);
 		direct_buffer.clear();
 		int saved_position = buffer.position();
 		direct_buffer.put(buffer);
 		buffer.position(saved_position);
 		direct_buffer.flip();
 		return direct_buffer;
+	}
+
+	private static LongBuffer lookupBuffer(LongBuffer buffer) {
+		CachedBuffers buffers = getCachedBuffers(buffer.remaining()*8);
+		return buffer.order() == ByteOrder.LITTLE_ENDIAN ? buffers.long_buffer_little : buffers.long_buffer_big;
 	}
 
 	private static LongBuffer doWrap(LongBuffer buffer) {
-		CachedBuffers buffers = getCachedBuffers(buffer.remaining()*8);
-		LongBuffer direct_buffer = buffer.order() == ByteOrder.LITTLE_ENDIAN ? buffers.long_buffer_little : buffers.long_buffer_big;
+		LongBuffer direct_buffer = lookupBuffer(buffer);
 		direct_buffer.clear();
 		int saved_position = buffer.position();
 		direct_buffer.put(buffer);
@@ -187,9 +363,13 @@ public final class NondirectBufferWrapper {
 		return direct_buffer;
 	}
 
-	private static DoubleBuffer doWrap(DoubleBuffer buffer) {
+	private static DoubleBuffer lookupBuffer(DoubleBuffer buffer) {
 		CachedBuffers buffers = getCachedBuffers(buffer.remaining()*8);
-		DoubleBuffer direct_buffer = buffer.order() == ByteOrder.LITTLE_ENDIAN ? buffers.double_buffer_little : buffers.double_buffer_big;
+		return buffer.order() == ByteOrder.LITTLE_ENDIAN ? buffers.double_buffer_little : buffers.double_buffer_big;
+	}
+
+	private static DoubleBuffer doWrap(DoubleBuffer buffer) {
+		DoubleBuffer direct_buffer = lookupBuffer(buffer);
 		direct_buffer.clear();
 		int saved_position = buffer.position();
 		direct_buffer.put(buffer);

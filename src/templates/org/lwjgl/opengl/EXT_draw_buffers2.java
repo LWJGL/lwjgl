@@ -41,10 +41,10 @@ public interface EXT_draw_buffers2 {
 	void glColorMaskIndexedEXT(@GLuint int buf, boolean r, boolean g, boolean b, boolean a);
 
 	@StripPostfix("data")
-	void glGetBooleanIndexedvEXT(@GLenum int value, @GLuint int index, @Check("4") @GLboolean ByteBuffer data);
+	void glGetBooleanIndexedvEXT(@GLenum int value, @GLuint int index, @OutParameter @Check("4") @GLboolean ByteBuffer data);
 
 	@StripPostfix("data")
-	void glGetIntegerIndexedvEXT(@GLenum int value, @GLuint int index, @Check("4") IntBuffer data);
+	void glGetIntegerIndexedvEXT(@GLenum int value, @GLuint int index, @OutParameter @Check("4") IntBuffer data);
 
     void glEnableIndexedEXT(@GLenum int target, @GLuint int index);
 

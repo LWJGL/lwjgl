@@ -52,5 +52,5 @@ public interface NV_fence {
 
 	boolean glIsFenceNV(@GLuint int fence);
 
-	void glGetFenceivNV(@GLuint int fence, @GLenum int pname, @Check("4") IntBuffer piParams);
+	void glGetFenceivNV(@GLuint int fence, @GLenum int pname, @OutParameter @Check("4") IntBuffer piParams);
 }

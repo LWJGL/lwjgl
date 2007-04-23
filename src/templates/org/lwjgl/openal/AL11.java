@@ -100,7 +100,7 @@ public interface AL11 {
 	// TODO: What's the real minimum number of elements?
 	@StripPostfix("intdata")
 	@ALvoid
-	void alGetListeneriv(@ALenum int pname, @Check("1") FloatBuffer intdata);
+	void alGetListeneriv(@ALenum int pname, @OutParameter @Check("1") FloatBuffer intdata);
 	
 	/**
 	 * Specifies the position and other properties as taken into account during
@@ -229,7 +229,7 @@ public interface AL11 {
 	// TODO: What's the correct minimum value?
 	@StripPostfix("values")
 	@ALvoid
-	void alGetBufferiv(@ALuint int buffer, @ALenum int pname, @Check("1") IntBuffer values);
+	void alGetBufferiv(@ALuint int buffer, @ALenum int pname, @OutParameter @Check("1") IntBuffer values);
 
 	/**
 	 * This function retrieves a floating point property of a buffer.
@@ -254,7 +254,7 @@ public interface AL11 {
 	// TODO: What's the correct minimum value?
 	@StripPostfix("values")
 	@ALvoid
-	void alGetBufferfv(@ALuint int buffer, @ALenum int pname, @Check("1") FloatBuffer values);
+	void alGetBufferfv(@ALuint int buffer, @ALenum int pname, @OutParameter @Check("1") FloatBuffer values);
 	
 	/**
 	 * <p>

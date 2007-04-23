@@ -35,6 +35,7 @@ import org.lwjgl.util.generator.Check;
 import org.lwjgl.util.generator.GLenum;
 import org.lwjgl.util.generator.GLuint;
 import org.lwjgl.util.generator.StripPostfix;
+import org.lwjgl.util.generator.OutParameter;
 
 import java.nio.IntBuffer;
 
@@ -113,15 +114,15 @@ public interface EXT_texture_integer {
 	void glClearColorIuiEXT(@GLuint int r, @GLuint int g, @GLuint int b, @GLuint int a);
 
 	@StripPostfix("params")
-	void glTexParameterIivEXT(@GLenum int target, @GLenum int pname, @Check("4")IntBuffer params);
+	void glTexParameterIivEXT(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
 	void glTexParameterIuivEXT(@GLenum int target, @GLenum int pname, @Check("4") @GLuint IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetTexParameterIivEXT(@GLenum int target, @GLenum int pname, @Check("4")IntBuffer params);
+	void glGetTexParameterIivEXT(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetTexParameterIuivEXT(@GLenum int target, @GLenum int pname, @Check("4") @GLuint IntBuffer params);
+	void glGetTexParameterIuivEXT(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") @GLuint IntBuffer params);
 
 }

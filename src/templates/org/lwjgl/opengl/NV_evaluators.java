@@ -62,6 +62,7 @@ public interface NV_evaluators {
 	int GL_MAX_RATIONAL_EVAL_ORDER_NV = 0x86D7;
 
 	void glGetMapControlPointsNV(@GLenum int target, @GLuint int index, @GLenum int type, @GLsizei int ustride, @GLsizei int vstride, boolean packed,
+			                     @OutParameter
 	                             @Check
 	                             @Const
 	                             @GLfloat Buffer pPoints);
@@ -75,16 +76,16 @@ public interface NV_evaluators {
 	void glMapParameterivNV(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetMapParameterfvNV(@GLenum int target, @GLenum int pname, @Check("4") @Const FloatBuffer params);
+	void glGetMapParameterfvNV(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") @Const FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetMapParameterivNV(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer params);
+	void glGetMapParameterivNV(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") @Const IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetMapAttribParameterfvNV(@GLenum int target, @GLuint int index, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetMapAttribParameterfvNV(@GLenum int target, @GLuint int index, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetMapAttribParameterivNV(@GLenum int target, @GLuint int index, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetMapAttribParameterivNV(@GLenum int target, @GLuint int index, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	void glEvalMapsNV(@GLenum int target, @GLenum int mode);
 }

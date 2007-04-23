@@ -94,6 +94,7 @@ public interface ARB_buffer_object {
 	                        @GLdouble Buffer data);
 
 	void glGetBufferSubDataARB(@GLenum int target, @GLintptrARB long offset, @AutoSize("data") @GLsizeiptrARB long size,
+	                           @OutParameter
 	                           @Check
 	                           @GLbyte
 	                           @GLshort
@@ -121,7 +122,7 @@ public interface ARB_buffer_object {
 	boolean glUnmapBufferARB(@GLenum int target);
 
 	@StripPostfix("params")
-	void glGetBufferParameterivARB(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetBufferParameterivARB(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("pointer")
 	@AutoResultSize("GLChecks.getBufferObjectSizeARB(caps, target)")
