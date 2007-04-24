@@ -43,40 +43,26 @@ import java.nio.CharBuffer;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Keyboard;
 
 final class WindowsKeyboard {
+	private final static int MAPVK_VK_TO_VSC = 0;
+
 	private final static int BUFFER_SIZE = 50;
 
 	private final long hwnd;
-	private final WindowsDirectInput dinput;
-	private final WindowsDirectInputDevice keyboard;
-	private final IntBuffer temp_data_buffer;
 	private final ByteBuffer keyboard_state;
+	private final byte[] key_down_buffer = new byte[Keyboard.KEYBOARD_SIZE];
+	private final EventQueue event_queue = new EventQueue(Keyboard.EVENT_SIZE);
+	private final ByteBuffer tmp_event = ByteBuffer.allocate(Keyboard.EVENT_SIZE);
 	private final boolean unicode;
 	private final CharBuffer unicode_buffer;
 	private final ByteBuffer ascii_buffer;
 
 	private boolean grabbed;
 
-	public WindowsKeyboard(WindowsDirectInput dinput, long hwnd) throws LWJGLException {
+	public WindowsKeyboard(long hwnd) throws LWJGLException {
 		this.hwnd = hwnd;
-		this.dinput = dinput;
-		try {
-			keyboard = dinput.createDevice(WindowsDirectInput.KEYBOARD_TYPE);
-			try {
-				keyboard.setDataFormat(WindowsDirectInput.KEYBOARD_TYPE);
-				keyboard.setBufferSize(BUFFER_SIZE);
-				acquireNonExclusive();
-			} catch (LWJGLException e) {
-				keyboard.release();
-				throw e;
-			}
-		} catch (LWJGLException e) {
-			dinput.release();
-			throw e;
-		}
-		keyboard.acquire();
-		temp_data_buffer = BufferUtils.createIntBuffer(BUFFER_SIZE*WindowsDirectInputDevice.DATA_SIZE);
 		keyboard_state = BufferUtils.createByteBuffer(256);
 		unicode = isWindowsNT();
 		if (unicode) {
@@ -90,165 +76,136 @@ final class WindowsKeyboard {
 	}
 	private static native boolean isWindowsNT();
 
-	private boolean acquire(int flags) {
-		try {
-			keyboard.setCooperateLevel(hwnd, flags);
-			keyboard.acquire();
-			return true;
-		} catch (LWJGLException e) {
-			LWJGLUtil.log("Failed to acquire keyboard: " + e);
-			return false;
-		}
-	}
-
-	private boolean acquireNonExclusive() {
-		return acquire(WindowsDirectInputDevice.DISCL_NONEXCLUSIVE | WindowsDirectInputDevice.DISCL_FOREGROUND) ||
-			acquire(WindowsDirectInputDevice.DISCL_NONEXCLUSIVE | WindowsDirectInputDevice.DISCL_BACKGROUND);
-	}
-
 	public void destroy() {
-		keyboard.unacquire();
-		keyboard.release();
-		dinput.release();
 	}
 	
 	public void grab(boolean grab) {
 		if(grab) {
 			if (!grabbed) {
-				flush();
 				grabbed = true;
-				keyboard.unacquire();
-				if (!acquire(WindowsDirectInputDevice.DISCL_EXCLUSIVE | WindowsDirectInputDevice.DISCL_FOREGROUND))
-					LWJGLUtil.log("Failed to reset cooperative mode");
 			}
 		} else {
 			if (grabbed) {
 				grabbed = false;
-				keyboard.unacquire();
-				acquireNonExclusive();
 			}	
 		}
 	}
 
 	public void poll(ByteBuffer keyDownBuffer) {
-		int ret = keyboard.acquire();
-		if (ret != WindowsDirectInput.DI_OK && ret != WindowsDirectInput.DI_NOEFFECT)
-			return;
-		keyboard.poll();
-		ret = keyboard.getDeviceState(keyDownBuffer);
-		switch (ret) {
-			case WindowsDirectInput.DI_OK:
-				break;
-			case WindowsDirectInput.DI_BUFFEROVERFLOW:
-				LWJGLUtil.log("Keyboard buffer overflow");
-				break;
-			case WindowsDirectInput.DIERR_INPUTLOST:
-				break;
-			case WindowsDirectInput.DIERR_NOTACQUIRED:
-				break;
-			default:
-				LWJGLUtil.log("Failed to poll keyboard (0x" + Integer.toHexString(ret) + ")");
-				break;
-		}
+		int old_position = keyDownBuffer.position();
+		keyDownBuffer.put(key_down_buffer);
+		keyDownBuffer.position(old_position);
 	}
 	
-	private void translateData(IntBuffer src, ByteBuffer dst) {
-		while (dst.hasRemaining() && src.hasRemaining()) {
-			int dwOfs = src.get();
-			dst.putInt(dwOfs);
-			byte dwData = (byte)src.get();
-			boolean key_down = (dwData & 0x80) != 0;
-			dst.put(key_down ? (byte)1 : (byte)0);
-			long dwTimeStamp = ((long)src.get()) & 0xFFFFFFFF;
-			long nanos = dwTimeStamp*1000000;
-			if (key_down) {
-				int virt_key = MapVirtualKey(dwOfs, 1);
-				if (virt_key != 0 && GetKeyboardState(keyboard_state) != 0) {
-					// Mark key down in the scan code
-					dwOfs = dwOfs & 0x7fff;
-					int num_chars;
-					if (unicode) {
-						unicode_buffer.clear();
-						num_chars = ToUnicode(virt_key, 
-							dwOfs,
+	private void translate(int virt_key, byte state, long nanos) {
+		int keycode = MapVirtualKey(virt_key, MAPVK_VK_TO_VSC); 
+		if (state != 0) {
+			if (virt_key != 0 && GetKeyboardState(keyboard_state) != 0) {
+				// Mark key down in the scan code
+				int key_down_code = keycode & 0x7fff;
+				int num_chars;
+				if (unicode) {
+					unicode_buffer.clear();
+					num_chars = ToUnicode(virt_key, 
+							key_down_code,
 							keyboard_state,
 							unicode_buffer,
 							unicode_buffer.capacity(), 0);
-					} else {
-						ascii_buffer.clear();
-						num_chars = ToAscii(virt_key, 
-							dwOfs,
+				} else {
+					ascii_buffer.clear();
+					num_chars = ToAscii(virt_key, 
+							key_down_code,
 							keyboard_state,
 							ascii_buffer,
 							0);
-					}
-					if (num_chars > 0) {
-						int current_char = 0;
-						do {
-							if (current_char >= 1) {
-								dst.putInt(0);
-								dst.put((byte)0);
-							}
-							int char_int;
-							if (unicode) {
-								char_int = ((int)unicode_buffer.get()) & 0xFFFF;
-							} else {
-								char_int = ((int)ascii_buffer.get()) & 0xFF;
-							}
-							dst.putInt(char_int);
-							dst.putLong(nanos);
-							current_char++;
-						} while (dst.hasRemaining() && current_char < num_chars);
-					} else {
-						dst.putInt(0);
-						dst.putLong(nanos);
-					}
+				}
+				if (num_chars > 0) {
+					int current_char = 0;
+					do {
+						int char_int;
+						if (unicode) {
+							char_int = ((int)unicode_buffer.get()) & 0xFFFF;
+						} else {
+							char_int = ((int)ascii_buffer.get()) & 0xFF;
+						}
+						if (current_char >= 1) {
+							putEvent(0, (byte)0, char_int, nanos);
+						} else {
+							putEvent(virt_key, state, char_int, nanos);
+						}
+						current_char++;
+					} while (current_char < num_chars);
 				} else {
-					dst.putInt(0);
-					dst.putLong(nanos);
+					putEvent(virt_key, state, 0, nanos);
 				}
 			} else {
-				dst.putInt(0);
-				dst.putLong(nanos);
+				putEvent(virt_key, state, 0, nanos);
 			}
+		} else {
+			putEvent(virt_key, state, 0, nanos);
 		}
 	}
 	private static native int MapVirtualKey(int uCode, int uMapType);
 	private static native int ToUnicode(int wVirtKey, int wScanCode, ByteBuffer lpKeyState, CharBuffer pwszBuff, int cchBuff, int flags);
 	private static native int ToAscii(int wVirtKey, int wScanCode, ByteBuffer lpKeyState, ByteBuffer lpChar, int flags);
 	private static native int GetKeyboardState(ByteBuffer lpKeyState);
+	private static native int GetKeyState(int virt_key);
 
-	public void flush() {
-		processEvents();
-		temp_data_buffer.clear();
+	private void putEvent(int virt_key, byte state, int ch, long nanos) {
+		int keycode = WindowsKeycodes.mapVirtualKeyToLWJGLCode(virt_key);
+System.out.println("virt_key = " + Integer.toHexString(virt_key) + " = " + virt_key + " | keycode = " + Keyboard.getKeyName(keycode));
+		if (keycode < key_down_buffer.length)
+			key_down_buffer[keycode] = state;
+		tmp_event.clear();
+		tmp_event.putInt(keycode).put(state).putInt(ch).putLong(nanos);
+		tmp_event.flip();
+		event_queue.putEvent(tmp_event);
 	}
 
-	private void processEvents() {
-		int ret = keyboard.acquire();
-		if (ret != WindowsDirectInput.DI_OK && ret != WindowsDirectInput.DI_NOEFFECT)
-			return;
-		keyboard.poll();
-		temp_data_buffer.clear();
-		ret = keyboard.getDeviceData(temp_data_buffer);
-		switch (ret) {
-			case WindowsDirectInput.DI_OK:
-				break;
-			case WindowsDirectInput.DI_BUFFEROVERFLOW:
-				LWJGLUtil.log("Keyboard buffer overflow");
-				break;
-			case WindowsDirectInput.DIERR_INPUTLOST:
-				break;
-			case WindowsDirectInput.DIERR_NOTACQUIRED:
-				break;
-			default:
-				LWJGLUtil.log("Failed to read keyboard (0x" + Integer.toHexString(ret) + ")");
-				break;
+	private boolean checkShiftKey(int virt_key, byte state) {
+		int key_state = (GetKeyState(virt_key) >>> 15) & 0x1; 
+		int lwjgl_code = WindowsKeycodes.mapVirtualKeyToLWJGLCode(virt_key);
+		return (key_down_buffer[lwjgl_code] == 1 - state) && (key_state == state);
+	}
+
+	private int translateShift(int scan_code, byte state) {
+		int state_mask = state != 0 ? 0x8000 : 0x0000;
+		if (checkShiftKey(WindowsKeycodes.VK_LSHIFT, state)) {
+			return WindowsKeycodes.VK_LSHIFT;
+		} else if (checkShiftKey(WindowsKeycodes.VK_RSHIFT, state)) {
+			return WindowsKeycodes.VK_RSHIFT;
+		} else {
+			if (scan_code== 0x2A)
+				return WindowsKeycodes.VK_LSHIFT;
+			else {
+				if (scan_code == 0x36)
+					return WindowsKeycodes.VK_RSHIFT;
+				else
+					return WindowsKeycodes.VK_LSHIFT;
+			}
 		}
 	}
 
+	private int translateExtended(int virt_key, int scan_code, byte state, boolean extended) {
+		switch (virt_key) {
+			case WindowsKeycodes.VK_SHIFT:
+				return translateShift(scan_code, state);
+			case WindowsKeycodes.VK_CONTROL:
+				return extended ? WindowsKeycodes.VK_RCONTROL : WindowsKeycodes.VK_LCONTROL;
+			case WindowsKeycodes.VK_MENU:
+				return extended ? WindowsKeycodes.VK_RMENU : WindowsKeycodes.VK_LMENU;
+			default:
+				return virt_key;
+		}
+	}
+
+	public void handleKey(int virt_key, int scan_code, boolean extended, byte event_state, long millis) {
+		if (isWindowsNT())
+			virt_key = translateExtended(virt_key, scan_code, event_state, extended);
+		translate(virt_key, event_state, millis*1000000);
+	}
+
 	public void read(ByteBuffer buffer) {
-		processEvents();
-		temp_data_buffer.flip();
-		translateData(temp_data_buffer, buffer);
+		event_queue.copyEvents(buffer);
 	}
 }

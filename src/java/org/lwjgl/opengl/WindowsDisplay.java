@@ -60,6 +60,10 @@ final class WindowsDisplay implements DisplayImplementation {
 	private final static int WM_MBUTTONUP                     = 0x0208;
 	private final static int WM_MBUTTONDBLCLK                 = 0x0209;
 	private final static int WM_MOUSEWHEEL                    = 0x020A;
+	private final static int WM_KEYDOWN						  = 256;
+	private final static int WM_KEYUP						  = 257;
+	private final static int WM_SYSKEYUP						  = 261;
+	private final static int WM_SYSKEYDOWN						  = 260;
 
 	private final static int WM_QUIT						  = 0x0012;
 	private final static int WM_SYSCOMMAND					  = 0x0112;
@@ -172,6 +176,15 @@ final class WindowsDisplay implements DisplayImplementation {
 		getClientRect(hwnd, rect_buffer);
 		rect.copyFromBuffer(rect_buffer);
 		rect.offset(offset_x, offset_y);
+	}
+
+	static WindowsDirectInput createDirectInput() throws LWJGLException {
+		try {
+			return new WindowsDirectInput8(getDllInstance());
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Failed to create DirectInput 8 interface, falling back to DirectInput 3");
+			return new WindowsDirectInput3(getDllInstance());
+		}
 	}
 
 	static void setupCursorClipping(long hwnd) throws LWJGLException {
@@ -453,7 +466,7 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	/* Keyboard */
 	public void createKeyboard() throws LWJGLException {
-		keyboard = new WindowsKeyboard(createDirectInput(), getHwnd());
+		keyboard = new WindowsKeyboard(getHwnd());
 	}
 
 	public void destroyKeyboard() {
@@ -582,6 +595,17 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private static native void getClientRect(long hwnd, IntBuffer rect);
 
+	private void handleKeyButton(long wParam, long lParam, long millis) {
+		byte previous_state = (byte)((lParam >>> 30) & 0x1);
+		byte state = (byte)(1 - ((lParam >>> 31) & 0x1));
+		if (state == previous_state)
+			return; // Auto-repeat message
+		byte extended = (byte)((lParam >>> 24) & 0x1);
+		int scan_code = (int)((lParam >>> 16) & 0xFF);
+		if (keyboard != null)
+			keyboard.handleKey((int)wParam, scan_code, extended != 0, state, millis);
+	}
+
 	private static int transformY(long hwnd, int y) {
 		getClientRect(hwnd, rect_buffer);
 		rect.copyFromBuffer(rect_buffer);
@@ -658,6 +682,12 @@ final class WindowsDisplay implements DisplayImplementation {
 			case WM_MBUTTONUP:
 				handleMouseButton(2, 0, millis);
 				return true;
+			case WM_SYSKEYDOWN: /* Fall through */
+			case WM_SYSKEYUP: /* Fall through */
+			case WM_KEYUP: /* Fall through */
+			case WM_KEYDOWN:
+				handleKeyButton(wParam, lParam, millis);
+				return true;
 			case WM_QUIT:
 				close_requested = true;
 				return true;
@@ -680,15 +710,6 @@ final class WindowsDisplay implements DisplayImplementation {
 				return false;
 			default:
 				return false;
-		}
-	}
-
-	static WindowsDirectInput createDirectInput() throws LWJGLException {
-		try {
-			return new WindowsDirectInput8(getDllInstance());
-		} catch (LWJGLException e) {
-			LWJGLUtil.log("Failed to create DirectInput 8 interface, falling back to DirectInput 3");
-			return new WindowsDirectInput3(getDllInstance());
 		}
 	}
 

@@ -41,6 +41,10 @@
 #include <jni.h>
 #include "org_lwjgl_opengl_WindowsKeyboard.h"
 
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsKeyboard_GetKeyState(JNIEnv *env, jclass unused, jint virt_key) {
+	return GetKeyState(virt_key);
+}
+
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsKeyboard_MapVirtualKey(JNIEnv *env, jclass unused, jint uCode, jint uMapType) {
 	return MapVirtualKey(uCode, uMapType);
 }
