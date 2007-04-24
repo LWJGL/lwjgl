@@ -55,24 +55,18 @@ final class WindowsKeyboard {
 	private final byte[] key_down_buffer = new byte[Keyboard.KEYBOARD_SIZE];
 	private final EventQueue event_queue = new EventQueue(Keyboard.EVENT_SIZE);
 	private final ByteBuffer tmp_event = ByteBuffer.allocate(Keyboard.EVENT_SIZE);
-	private final boolean unicode;
-	private final CharBuffer unicode_buffer;
-	private final ByteBuffer ascii_buffer;
 
 	private boolean grabbed;
+
+	private boolean has_retained_event; // Indicates if we're waiting for a WM_CHAR
+	private int retained_key_code;
+	private byte retained_state;
+	private int retained_char;
+	private long retained_millis;
 
 	public WindowsKeyboard(long hwnd) throws LWJGLException {
 		this.hwnd = hwnd;
 		keyboard_state = BufferUtils.createByteBuffer(256);
-		unicode = isWindowsNT();
-		if (unicode) {
-			unicode_buffer = BufferUtils.createCharBuffer(BUFFER_SIZE);
-			ascii_buffer = null;
-		} else {
-			unicode_buffer = null;
-			// ToAscii returns at most 2 characters
-			ascii_buffer = BufferUtils.createByteBuffer(2);
-		}
 	}
 	private static native boolean isWindowsNT();
 
@@ -97,66 +91,15 @@ final class WindowsKeyboard {
 		keyDownBuffer.position(old_position);
 	}
 	
-	private void translate(int virt_key, byte state, long nanos) {
-		int keycode = MapVirtualKey(virt_key, MAPVK_VK_TO_VSC); 
-		if (state != 0) {
-			if (virt_key != 0 && GetKeyboardState(keyboard_state) != 0) {
-				// Mark key down in the scan code
-				int key_down_code = keycode & 0x7fff;
-				int num_chars;
-				if (unicode) {
-					unicode_buffer.clear();
-					num_chars = ToUnicode(virt_key, 
-							key_down_code,
-							keyboard_state,
-							unicode_buffer,
-							unicode_buffer.capacity(), 0);
-				} else {
-					ascii_buffer.clear();
-					num_chars = ToAscii(virt_key, 
-							key_down_code,
-							keyboard_state,
-							ascii_buffer,
-							0);
-				}
-				if (num_chars > 0) {
-					int current_char = 0;
-					do {
-						int char_int;
-						if (unicode) {
-							char_int = ((int)unicode_buffer.get()) & 0xFFFF;
-						} else {
-							char_int = ((int)ascii_buffer.get()) & 0xFF;
-						}
-						if (current_char >= 1) {
-							putEvent(0, (byte)0, char_int, nanos);
-						} else {
-							putEvent(virt_key, state, char_int, nanos);
-						}
-						current_char++;
-					} while (current_char < num_chars);
-				} else {
-					putEvent(virt_key, state, 0, nanos);
-				}
-			} else {
-				putEvent(virt_key, state, 0, nanos);
-			}
-		} else {
-			putEvent(virt_key, state, 0, nanos);
-		}
-	}
 	private static native int MapVirtualKey(int uCode, int uMapType);
 	private static native int ToUnicode(int wVirtKey, int wScanCode, ByteBuffer lpKeyState, CharBuffer pwszBuff, int cchBuff, int flags);
 	private static native int ToAscii(int wVirtKey, int wScanCode, ByteBuffer lpKeyState, ByteBuffer lpChar, int flags);
 	private static native int GetKeyboardState(ByteBuffer lpKeyState);
 	private static native int GetKeyState(int virt_key);
 
-	private void putEvent(int virt_key, byte state, int ch, long nanos) {
-		int keycode = WindowsKeycodes.mapVirtualKeyToLWJGLCode(virt_key);
-		if (keycode < key_down_buffer.length)
-			key_down_buffer[keycode] = state;
+	private void putEvent(int keycode, byte state, int ch, long millis) {
 		tmp_event.clear();
-		tmp_event.putInt(keycode).put(state).putInt(ch).putLong(nanos);
+		tmp_event.putInt(keycode).put(state).putInt(ch).putLong(millis*1000000);
 		tmp_event.flip();
 		event_queue.putEvent(tmp_event);
 	}
@@ -198,13 +141,36 @@ final class WindowsKeyboard {
 		}
 	}
 
+	private void flushRetained() {
+		if (has_retained_event) {
+			has_retained_event = false;
+			putEvent(retained_key_code, retained_state, retained_char, retained_millis);
+		}
+	}
+
 	public void handleKey(int virt_key, int scan_code, boolean extended, byte event_state, long millis) {
-		if (isWindowsNT())
-			virt_key = translateExtended(virt_key, scan_code, event_state, extended);
-		translate(virt_key, event_state, millis*1000000);
+		virt_key = translateExtended(virt_key, scan_code, event_state, extended);
+		flushRetained();
+		has_retained_event = true;
+		int keycode = WindowsKeycodes.mapVirtualKeyToLWJGLCode(virt_key);
+		if (keycode < key_down_buffer.length)
+			key_down_buffer[keycode] = event_state;
+		retained_key_code = keycode;
+		retained_state = event_state;
+		retained_millis = millis;
+		retained_char = 0;
+//		translate(virt_key, event_state, millis*1000000);
+	}
+
+	public void handleChar(int event_char, long millis) {
+		if (!has_retained_event) {
+			putEvent(0, (byte)0, event_char, millis);
+		} else
+			retained_char = event_char;
 	}
 
 	public void read(ByteBuffer buffer) {
+		flushRetained();
 		event_queue.copyEvents(buffer);
 	}
 }

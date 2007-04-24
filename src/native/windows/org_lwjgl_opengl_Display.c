@@ -148,6 +148,7 @@ static void handleMessages(JNIEnv *env) {
 					))
 		{
 			DispatchMessage(&msg);
+			TranslateMessage(&msg);
 		}
 	}
 }

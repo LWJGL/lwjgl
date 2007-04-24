@@ -62,8 +62,9 @@ final class WindowsDisplay implements DisplayImplementation {
 	private final static int WM_MOUSEWHEEL                    = 0x020A;
 	private final static int WM_KEYDOWN						  = 256;
 	private final static int WM_KEYUP						  = 257;
-	private final static int WM_SYSKEYUP						  = 261;
-	private final static int WM_SYSKEYDOWN						  = 260;
+	private final static int WM_SYSKEYUP					  = 261;
+	private final static int WM_SYSKEYDOWN					  = 260;
+	private final static int WM_CHAR                          = 258;
 
 	private final static int WM_QUIT						  = 0x0012;
 	private final static int WM_SYSCOMMAND					  = 0x0112;
@@ -595,6 +596,15 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private static native void getClientRect(long hwnd, IntBuffer rect);
 
+	private void handleChar(long wParam, long lParam, long millis) {
+		byte previous_state = (byte)((lParam >>> 30) & 0x1);
+		byte state = (byte)(1 - ((lParam >>> 31) & 0x1));
+		if (state == previous_state)
+			return; // Auto-repeat message
+		if (keyboard != null)
+			keyboard.handleChar((int)(wParam & 0xFF), millis);
+	}
+
 	private void handleKeyButton(long wParam, long lParam, long millis) {
 		byte previous_state = (byte)((lParam >>> 30) & 0x1);
 		byte state = (byte)(1 - ((lParam >>> 31) & 0x1));
@@ -681,6 +691,9 @@ final class WindowsDisplay implements DisplayImplementation {
 				return true;
 			case WM_MBUTTONUP:
 				handleMouseButton(2, 0, millis);
+				return true;
+			case WM_CHAR:
+				handleChar(wParam, lParam, millis);
 				return true;
 			case WM_SYSKEYDOWN: /* Fall through */
 			case WM_SYSKEYUP: /* Fall through */
