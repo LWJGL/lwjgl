@@ -687,7 +687,7 @@ final class WindowsDisplay implements DisplayImplementation {
 			case WM_KEYUP: /* Fall through */
 			case WM_KEYDOWN:
 				handleKeyButton(wParam, lParam, millis);
-				return true;
+				return false;
 			case WM_QUIT:
 				close_requested = true;
 				return true;
