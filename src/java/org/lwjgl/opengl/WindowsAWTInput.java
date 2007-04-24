@@ -105,7 +105,7 @@ final class WindowsAWTInput extends AbstractAWTInput {
 				 * task bar and clicking on it. So we'll use ClipCursor to
 				 * contain it while the cursor is grabbed.
 				 */
-				WindowsDisplay.setupCursorClipping(hwnd, true); // Just clip it to a fullscreen window
+				WindowsDisplay.setupCursorClipping(hwnd); // Just clip it to a fullscreen window
 				if (getCanvas().getCursor() != blank_cursor) {
 					cached_cursor = getCanvas().getCursor();
 					/**
