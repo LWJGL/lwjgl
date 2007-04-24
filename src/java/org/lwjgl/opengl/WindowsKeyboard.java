@@ -153,7 +153,6 @@ final class WindowsKeyboard {
 
 	private void putEvent(int virt_key, byte state, int ch, long nanos) {
 		int keycode = WindowsKeycodes.mapVirtualKeyToLWJGLCode(virt_key);
-System.out.println("virt_key = " + Integer.toHexString(virt_key) + " = " + virt_key + " | keycode = " + Keyboard.getKeyName(keycode));
 		if (keycode < key_down_buffer.length)
 			key_down_buffer[keycode] = state;
 		tmp_event.clear();
