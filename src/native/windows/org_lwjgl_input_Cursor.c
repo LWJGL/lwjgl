@@ -45,7 +45,7 @@
 #include "common_tools.h"
 
 JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateCursor
-(JNIEnv *env, jobject self, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset)
+(JNIEnv *env, jclass unused, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset)
 {
 	unsigned char col0, col1, col2, col3, col4, col5, col6, col7;
 	unsigned char mask;
@@ -154,8 +154,8 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateCursor
 	return handle_buffer;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_destroyCursor
-(JNIEnv *env, jobject self, jobject handle_buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_doDestroyCursor
+(JNIEnv *env, jclass unused, jobject handle_buffer)
 {
 	HCURSOR *cursor_handle = (HCURSOR *)(*env)->GetDirectBufferAddress(env, handle_buffer);
 	DestroyCursor(*cursor_handle);

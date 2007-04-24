@@ -141,6 +141,13 @@ void throwFMODException(JNIEnv * env, const char * err) {
 	throwGeneralException(env, "org/lwjgl/fmod3/FMODException", err);
 }
 
+void throwFormattedRuntimeException(JNIEnv * env, const char *format, ...) {
+	va_list ap;
+	va_start(ap, format);
+	throwFormattedGeneralException(env, "java/lang/RuntimeException", format, ap);
+	va_end(ap);
+}
+
 void throwFormattedException(JNIEnv * env, const char *format, ...) {
 	va_list ap;
 	va_start(ap, format);

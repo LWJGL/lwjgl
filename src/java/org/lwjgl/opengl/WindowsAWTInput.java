@@ -53,7 +53,7 @@ final class WindowsAWTInput extends AbstractAWTInput {
 	private Cursor cached_cursor;
 
 	private long cached_hwnd;
-	private WindowsMouse cached_mouse;
+	private WindowsDirectInputMouse cached_mouse;
 //	private WindowsKeyboard cached_keyboard;
 	private boolean has_grabbed;
 
@@ -96,7 +96,7 @@ final class WindowsAWTInput extends AbstractAWTInput {
 					cached_keyboard.destroy();
 				}*/
 				WindowsDirectInput dinput = WindowsDisplay.createDirectInput();
-				cached_mouse = new WindowsMouse(dinput, hwnd);
+				cached_mouse = new WindowsDirectInputMouse(dinput, hwnd); 
 //				cached_keyboard = new WindowsKeyboard(dinput, hwnd);
 			}
 			if (isGrabbed()) {
@@ -105,7 +105,7 @@ final class WindowsAWTInput extends AbstractAWTInput {
 				 * task bar and clicking on it. So we'll use ClipCursor to
 				 * contain it while the cursor is grabbed.
 				 */
-				WindowsDisplay.setupCursorClipping(hwnd);
+				WindowsDisplay.setupCursorClipping(hwnd, true); // Just clip it to a fullscreen window
 				if (getCanvas().getCursor() != blank_cursor) {
 					cached_cursor = getCanvas().getCursor();
 					/**

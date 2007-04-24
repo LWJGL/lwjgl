@@ -130,6 +130,7 @@ extern void putAttrib(attrib_list_t *list, int attrib);
 extern bool isDebugEnabled(void);
 extern jstring getVersionString(JNIEnv *env);
 extern void throwGeneralException(JNIEnv * env, const char *exception_name, const char * err);
+extern void throwFormattedRuntimeException(JNIEnv * env, const char *format, ...);
 extern void throwException(JNIEnv *env, const char *msg);
 extern void throwFormattedException(JNIEnv * env, const char *format, ...);
 extern void throwFMODException(JNIEnv * env, const char * err);

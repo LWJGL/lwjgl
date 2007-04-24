@@ -44,6 +44,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Cursor;
 
 final class WindowsDisplay implements DisplayImplementation {
@@ -85,7 +86,10 @@ final class WindowsDisplay implements DisplayImplementation {
 	private final static int SC_CONTEXTHELP   = 0xF180;
 	private final static int SC_SEPARATOR     = 0xF00F;
 
-	private final static int SM_CXCURSOR      = 13;
+	final static int SM_CXCURSOR      = 13;
+	final static int SM_CYCURSOR      = 14;
+	final static int SM_CMOUSEBUTTONS      = 43;
+	final static int SM_MOUSEWHEELPRESENT = 75;
 
 	private final static int SIZE_RESTORED        = 0;
 	private final static int SIZE_MINIMIZED       = 1;
@@ -99,9 +103,14 @@ final class WindowsDisplay implements DisplayImplementation {
 	private final static int SW_SHOWDEFAULT       = 10;
 	private final static int SW_RESTORE           = 9;
 
+	private final static IntBuffer rect_buffer = BufferUtils.createIntBuffer(4);
+	private final static Rect rect = new Rect();
+	private final static Rect rect2 = new Rect();
 	private static WindowsDisplay current_display;
 
+	private static boolean cursor_clipped;
 	private WindowsDisplayPeerInfo peer_info;
+	private Object current_cursor;
 
 	private WindowsKeyboard keyboard;
 	private WindowsMouse mouse;
@@ -141,12 +150,37 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	public void destroyWindow() {
 		nDestroyWindow();
-		if (isFullscreen)
-			resetCursorClipping();
+		resetCursorClipping();
 	}
 	private static native void nDestroyWindow();
-	static native void resetCursorClipping();
-	static native void setupCursorClipping(long hwnd) throws LWJGLException;
+	static void resetCursorClipping() {
+		if (cursor_clipped) {
+			try {
+				clipCursor(0, null);
+			} catch (LWJGLException e) {
+				LWJGLUtil.log("Failed to reset cursor clipping: " + e);
+			}
+			cursor_clipped = false;
+		}
+	}
+
+	private static void getGlobalClientRect(long hwnd, Rect rect) {
+		rect_buffer.put(0, 0).put(1, 0);
+		clientToScreen(hwnd, rect_buffer);
+		int offset_x = rect_buffer.get(0);
+		int offset_y = rect_buffer.get(1);
+		getClientRect(hwnd, rect_buffer);
+		rect.copyFromBuffer(rect_buffer);
+		rect.offset(offset_x, offset_y);
+	}
+
+	static void setupCursorClipping(long hwnd) throws LWJGLException {
+		cursor_clipped = true;
+		getGlobalClientRect(hwnd, rect);
+		rect.copyToBuffer(rect_buffer);
+		clipCursor(hwnd, rect_buffer);
+	}
+	private static native void clipCursor(long hwnd, IntBuffer rect) throws LWJGLException;
 
 	public void switchDisplayMode(DisplayMode mode) throws LWJGLException {
 		nSwitchDisplayMode(mode);
@@ -330,11 +364,12 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public void createMouse() throws LWJGLException {
-		mouse = new WindowsMouse(createDirectInput(), getHwnd());
+		mouse = new WindowsMouse(getHwnd());
 	}
 
 	public void destroyMouse() {
-		mouse.destroy();
+		if (mouse != null)
+			mouse.destroy();
 		mouse = null;
 	}
 
@@ -349,7 +384,12 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 		
 	public void grabMouse(boolean grab) {
-		mouse.grab(grab);
+		mouse.grab(grab, shouldGrab());
+		try {
+			updateCursor();
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Failed to update cursor: " + e);
+		}
 	}
 
 	public int getNativeCursorCapabilities() {
@@ -357,11 +397,26 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public void setCursorPosition(int x, int y) {
-		nSetCursorPosition(x, y, isFullscreen);
+		getGlobalClientRect(getHwnd(), rect);
+		int transformed_x = rect.left + x;
+		int transformed_y = rect.bottom - 1 - y;
+		nSetCursorPosition(transformed_x, transformed_y);
+		setMousePosition(x, y);
 	}
-	private static native void nSetCursorPosition(int x, int y, boolean fullscreen);
+	private static native void nSetCursorPosition(int x, int y);
 
-	public native void setNativeCursor(Object handle) throws LWJGLException;
+	public void setNativeCursor(Object handle) throws LWJGLException {
+		current_cursor = handle;
+		updateCursor();
+	}
+
+	private void updateCursor() throws LWJGLException {
+		if (mouse != null && mouse.isGrabbed())
+			nSetNativeCursor(getHwnd(), mouse.getBlankCursor());
+		else
+			nSetNativeCursor(getHwnd(), current_cursor);
+	}
+	static native void nSetNativeCursor(long hwnd, Object handle) throws LWJGLException;
 
 	public int getMinCursorSize() {
 		return getSystemMetrics(SM_CXCURSOR);
@@ -371,10 +426,30 @@ final class WindowsDisplay implements DisplayImplementation {
 		return getSystemMetrics(SM_CXCURSOR);
 	}
 
-	public native int getSystemMetrics(int index);
+	static native int getSystemMetrics(int index);
 
 	private static native long getDllInstance();
 	private static native long getHwnd();
+	private static native long getDesktopWindow();
+	static void centerCursor(long hwnd) {
+		getGlobalClientRect(getHwnd(), rect);
+		int local_offset_x = rect.left;
+		int local_offset_y = rect.top;
+		getGlobalClientRect(getDesktopWindow(), rect2);
+		Rect.intersect(rect, rect2, rect);
+		int center_x = (rect.left + rect.right)/2;
+		int center_y = (rect.top + rect.bottom)/2;
+		nSetCursorPosition(center_x, center_y);
+		int local_x = center_x - local_offset_x;
+		int local_y = center_y - local_offset_y;
+		if (current_display != null)
+			current_display.setMousePosition(local_x, transformY(getHwnd(), local_y));
+	}
+
+	private void setMousePosition(int x, int y) {
+		if (mouse != null)
+			mouse.setPosition(x, y);
+	}
 
 	/* Keyboard */
 	public void createKeyboard() throws LWJGLException {
@@ -398,13 +473,21 @@ final class WindowsDisplay implements DisplayImplementation {
 
 //	public native int isStateKeySet(int key);
 
-	public native ByteBuffer nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
+	public static native ByteBuffer nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
 
 	public Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
+		return doCreateCursor(width, height, xHotspot, yHotspot, numImages, images, delays);
+	}
+
+	static Object doCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
 		return nCreateCursor(width, height, xHotspot, yHotspot, numImages, images, images.position(), delays, delays != null ? delays.position() : -1);
 	}
 
-	public native void destroyCursor(Object cursorHandle);
+	public void destroyCursor(Object cursorHandle) {
+		doDestroyCursor(cursorHandle);
+	}
+	static native void doDestroyCursor(Object cursorHandle);
+
 	public int getPbufferCapabilities() {
 		try {
 		// Return the capabilities of a minimum pixel format
@@ -483,9 +566,13 @@ final class WindowsDisplay implements DisplayImplementation {
 			mouse.handleMouseButton((byte)button, (byte)state, millis);
 	}
 
+	private boolean shouldGrab() {
+		return !isMinimized && isFocused;
+	}
+
 	private void handleMouseMoved(int x, int y, long millis) {
 		if (mouse != null)
-			mouse.handleMouseMoved(x, y, millis);
+			mouse.handleMouseMoved(x, y, millis, shouldGrab());
 	}
 
 	private void handleMouseScrolled(int amount, long millis) {
@@ -493,7 +580,15 @@ final class WindowsDisplay implements DisplayImplementation {
 			mouse.handleMouseScrolled(amount, millis);
 	}
 
-	private static native int transformY(long hwnd, int y);
+	private static native void getClientRect(long hwnd, IntBuffer rect);
+
+	private static int transformY(long hwnd, int y) {
+		getClientRect(hwnd, rect_buffer);
+		rect.copyFromBuffer(rect_buffer);
+		return (rect.bottom - rect.top) - 1 - y;
+	}
+
+	private static native void clientToScreen(long hwnd, IntBuffer point);
 
 	private static boolean handleMessage(long hwnd, int msg, long wParam, long lParam, long millis) {
 		if (current_display != null)
@@ -503,12 +598,14 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	private boolean doHandleMessage(long hwnd, int msg, long wParam, long lParam, long millis) {
-		if (isFullscreen && !isMinimized && isFocused) {
+		if ((isFullscreen || (mouse != null && mouse.isGrabbed())) && !isMinimized && isFocused) {
 			try {
 				setupCursorClipping(getHwnd());
 			} catch (LWJGLException e) {
 				LWJGLUtil.log("setupCursorClipping failed: " + e.getMessage());
 			}
+		} else {
+			resetCursorClipping();
 		}
 		switch (msg) {
 			// disable screen saver and monitor power down messages which wreak havoc
@@ -601,5 +698,41 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	public int getHeight() {
 		return Display.getDisplayMode().getHeight();
+	}
+
+	private static final class Rect {
+		public int top;
+		public int bottom;
+		public int left;
+		public int right;
+
+		public void copyToBuffer(IntBuffer buffer) {
+			buffer.put(0, top).put(1, bottom).put(2, left).put(3, right);
+		}
+
+		public void copyFromBuffer(IntBuffer buffer) {
+			top = buffer.get(0);
+			bottom = buffer.get(1);
+			left  = buffer.get(2);
+			right = buffer.get(3);
+		}
+
+		public void offset(int offset_x, int offset_y) {
+			left += offset_x;
+			right += offset_x;
+			top += offset_y;
+			bottom += offset_y;
+		}
+
+		public static void intersect(Rect r1, Rect r2, Rect dst) {
+			dst.top = Math.max(r1.top, r2.top);
+			dst.bottom = Math.min(r1.bottom, r2.bottom);
+			dst.left = Math.max(r1.left, r2.left);
+			dst.right = Math.min(r1.right, r2.right);
+		}
+
+		public String toString() {
+			return "Rect: top = " + top + " bottom = " + bottom + " left = " + left + " right = " + right;
+		}
 	}
 }

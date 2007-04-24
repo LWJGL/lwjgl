@@ -210,17 +210,63 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nDestroyWindow(JNIEn
 	freeSmallIcon();
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_resetCursorClipping(JNIEnv *env, jclass unused) {
-	ClipCursor(NULL);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_clientToScreen(JNIEnv *env, jclass unused, jlong hwnd_int, jobject buffer_handle) {
+	HWND hwnd = (HWND)(INT_PTR)hwnd_int;
+	POINT point;
+	jint *buffer = (jint *)(*env)->GetDirectBufferAddress(env, buffer_handle);
+	jlong size = (*env)->GetDirectBufferCapacity(env, buffer_handle);
+	if (size < 2) {
+		throwFormattedRuntimeException(env, "Buffer size < 2", size);
+		return;
+	}
+	point.x = buffer[0];
+	point.y = buffer[1];
+	ClientToScreen(hwnd, &point);
+	buffer[0] = point.x;
+	buffer[1] = point.y;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setupCursorClipping(JNIEnv *env, jclass unused, jlong hwnd_ptr) {
-	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
-	RECT hwnd_client;
-	if (hwnd != NULL && GetWindowRect(hwnd, &hwnd_client) != 0) {
-		if (ClipCursor(&hwnd_client) == 0)
-			throwFormattedException(env, "ClipCursor failed (%d)", GetLastError());
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getDesktopWindow(JNIEnv *env, jclass unused) {
+	return (INT_PTR)GetDesktopWindow();
+}
+
+static void copyBufferToRect(JNIEnv *env, jobject buffer_handle, RECT *rect) {
+	jint *buffer = (jint *)(*env)->GetDirectBufferAddress(env, buffer_handle);
+	jlong size = (*env)->GetDirectBufferCapacity(env, buffer_handle);
+	if (size < 4) {
+		throwFormattedRuntimeException(env, "Buffer size < 4", size);
+		return;
 	}
+	rect->top = buffer[0];
+	rect->bottom = buffer[1];
+	rect->left = buffer[2];
+	rect->right = buffer[3];
+}
+
+static void copyRectToBuffer(JNIEnv *env, RECT *rect, jobject buffer_handle) {
+	jint *buffer = (jint *)(*env)->GetDirectBufferAddress(env, buffer_handle);
+	jlong size = (*env)->GetDirectBufferCapacity(env, buffer_handle);
+	if (size < 4) {
+		throwFormattedRuntimeException(env, "Buffer size < 4", size);
+		return;
+	}
+	buffer[0] = rect->top;
+	buffer[1] = rect->bottom;
+	buffer[2] = rect->left;
+	buffer[3] = rect->right;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_clipCursor(JNIEnv *env, jclass unused, jlong hwnd_ptr, jobject handle_buffer) {
+	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
+	RECT clip_rect;
+	LPRECT clip_rect_ptr;
+	if (handle_buffer != NULL) {
+		copyBufferToRect(env, handle_buffer, &clip_rect);
+		clip_rect_ptr = &clip_rect;
+	} else
+		clip_rect_ptr = NULL;
+	if (ClipCursor(clip_rect_ptr) == 0)
+		throwFormattedException(env, "ClipCursor failed (%d)", GetLastError());
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSwitchDisplayMode(JNIEnv *env, jobject self, jobject mode) {
@@ -452,62 +498,34 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetWindowIcon32
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetCursorPosition
-(JNIEnv * env, jclass unused, jint x, jint y, jboolean fullscreen) {
-	DWORD windowflags, exstyle;
-	int transformed_x, transformed_y;
-	RECT window_rect;
-	RECT client_rect;
-	RECT adjusted_client_rect;
-
-	int left_border_width;
-	int bottom_border_width;
-
-	getWindowFlags(&windowflags, &exstyle, fullscreen, getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated"));
-	if (!GetClientRect(getCurrentHWND(), &client_rect)) {
-		printfDebugJava(env, "GetClientRect failed");
-		return;
-	}
-
-	adjusted_client_rect = client_rect;
-	if (!AdjustWindowRectEx(&adjusted_client_rect, windowflags, FALSE, exstyle)) {
-		printfDebugJava(env, "AdjustWindowRectEx failed");
-		return;
-	}
-	
-	if (!GetWindowRect(getCurrentHWND(), &window_rect)) {
-		printfDebugJava(env, "GetWindowRect failed");
-		return;
-	}
-	left_border_width = -adjusted_client_rect.left;
-	bottom_border_width = adjusted_client_rect.bottom - client_rect.bottom;
-	
-	transformed_x = window_rect.left + left_border_width + x;
-	transformed_y = window_rect.bottom - bottom_border_width - 1 - y;
-	if (!SetCursorPos(transformed_x, transformed_y))
+(JNIEnv * env, jclass unused, jint x, jint y) {
+	if (!SetCursorPos(x, y))
 		printfDebugJava(env, "SetCursorPos failed");
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setNativeCursor
-	(JNIEnv *env, jobject self, jobject handle_buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getClientRect
+	(JNIEnv *env, jclass unused, jlong hwnd_int, jobject rect_buffer) {
+	HWND hwnd = (HWND)(INT_PTR)hwnd_int;
+	RECT clientRect;
+	GetClientRect(hwnd, &clientRect);
+	copyRectToBuffer(env, &clientRect, rect_buffer);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetNativeCursor
+	(JNIEnv *env, jclass unused, jlong hwnd_int, jobject handle_buffer)
 {
+	HWND hwnd = (HWND)(INT_PTR)hwnd_int;
 	HCURSOR *cursor_handle;
 	HCURSOR cursor;
 	if (handle_buffer != NULL) {
 		cursor_handle = (HCURSOR *)(*env)->GetDirectBufferAddress(env, handle_buffer);
 		cursor = *cursor_handle;
-		SetClassLongPtr(getCurrentHWND(), GCL_HCURSOR, (LONG_PTR)cursor);
+		SetClassLongPtr(hwnd, GCL_HCURSOR, (LONG_PTR)cursor);
 		SetCursor(cursor);
 	} else {
-		SetClassLongPtr(getCurrentHWND(), GCL_HCURSOR, (LONG_PTR)NULL);
+		SetClassLongPtr(hwnd, GCL_HCURSOR, (LONG_PTR)NULL);
 		SetCursor(LoadCursor(NULL, IDC_ARROW));
 	}
-}
-
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_transformY(JNIEnv *env, jclass unused, jlong hwnd_int, jint y) {
-	HWND hwnd = (HWND)(INT_PTR)hwnd_int;
-	RECT clientRect;
-	GetClientRect(hwnd, &clientRect);
-	return (clientRect.bottom - clientRect.top) - 1 - y;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getSystemMetrics(JNIEnv *env, jclass unused, jint index) {

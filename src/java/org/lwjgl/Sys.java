@@ -57,7 +57,7 @@ public final class Sys {
 	private static final String VERSION = "1.1";
 
 	/** Current version of the JNI library */
-	static final int JNI_VERSION = 8;
+	static final int JNI_VERSION = 9;
 
 	/** The implementation instance to delegate platform specific behavior to */
 	private final static SysImplementation implementation;
