@@ -139,17 +139,9 @@ static jlong JNICALL Java_org_lwjgl_openal_ALC10_nalcOpenDevice (JNIEnv *env, jc
 	/* get device */
 	device = alcOpenDevice((ALubyte *) tokenstring);
 
-	/* if error - cleanup and get out */
-	if(device == NULL) {
-		if(tokenstring != NULL) {
-			free(tokenstring);
-		}
-		return (jlong) NULL;
-	}
-
-	/* clean up */
-	if (tokenstring != NULL)
+	if(tokenstring != NULL) {
 		free(tokenstring);
+	}
 
 	return (jlong)((intptr_t)device);
 }

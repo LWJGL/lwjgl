@@ -306,7 +306,7 @@
 	<target name="all" description="Creates the Java archives and the natives for the current platform" depends="jars, compile_native"/>
 
 	<!-- Create ONLY the jar archives -->
-	<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="-initialize, generate-all, compile, -createjars">
+	<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="-initialize, compile, -createjars">
 		<move todir="libs/">
 			<fileset dir="${lwjgl.temp}/jar">
 				<include name="*.jar"/>
