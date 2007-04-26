@@ -147,8 +147,10 @@ public class KeyboardTest {
 
       int count = Keyboard.getNumKeyboardEvents();
       while (Keyboard.next()) {
+		  int character_code = ((int)Keyboard.getEventCharacter()) & 0xffff;
         System.out.println("Checking key:" + Keyboard.getKeyName(Keyboard.getEventKey()));
         System.out.println("Pressed:" + Keyboard.getEventKeyState());
+        System.out.println("Key character code: " + character_code);
         System.out.println("Key character: " + Keyboard.getEventCharacter());
         
         if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
