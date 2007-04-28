@@ -223,7 +223,7 @@ public final class Display {
 					if (fullscreen)
 						switchDisplayMode();
 					createWindow();
-					makeCurrent();
+					makeCurrentAndSetSwapInterval();
 				} catch (LWJGLException e) {
 					destroyContext();
 					destroyPeerInfo();
@@ -475,7 +475,7 @@ public final class Display {
 						display_impl.resetDisplayMode();
 					}
 					createWindow();
-					makeCurrent();
+					makeCurrentAndSetSwapInterval();
 				} catch (LWJGLException e) {
 					destroyContext();
 					destroyPeerInfo();
@@ -744,7 +744,7 @@ public final class Display {
 					try {
 						context = new Context(peer_info, shared_drawable != null ? shared_drawable.getContext() : null);
 						try {
-							makeCurrent();
+							makeCurrentAndSetSwapInterval();
 							initContext();
 						} catch (LWJGLException e) {
 							destroyContext();
@@ -765,8 +765,12 @@ public final class Display {
 		}
 	}
 
-	private static void initContext() {
+	private static void makeCurrentAndSetSwapInterval() throws LWJGLException {
+		makeCurrent();
 		setSwapInterval(swap_interval);
+	}
+
+	private static void initContext() {
 		// Put the window into orthographic projection mode with 1:1 pixel ratio.
 		// We haven't used GLU here to do this to avoid an unnecessary dependency.
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
