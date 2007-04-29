@@ -43,9 +43,6 @@ import org.lwjgl.BufferUtils;
  */
 
 public final class Util {
-
-	private static final IntBuffer int_buffer = BufferUtils.createIntBuffer(16);
-
 	/** No c'tor */
 	private Util() {
 	}
@@ -55,17 +52,5 @@ public final class Util {
 		if ( err != GL11.GL_NO_ERROR ) {
 			throw new OpenGLException(err);
 		}
-	}
-
-	/**
-	 * Obtain a GL integer value from the driver
-	 *
-	 * @param gl_enum The GL value you want
-	 *
-	 * @return the integer value
-	 */
-	public static int glGetInteger(int gl_enum) {
-		GL11.glGetInteger(gl_enum, int_buffer);
-		return int_buffer.get(0);
 	}
 }

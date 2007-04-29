@@ -51,6 +51,7 @@ import org.lwjgl.opengl.Util;
 
 abstract class Shader {
 
+	private static final IntBuffer int_buffer = BufferUtils.createIntBuffer(16);
 	protected static IntBuffer programBuffer = BufferUtils.createIntBuffer(1);
 	protected static ByteBuffer fileBuffer = BufferUtils.createByteBuffer(1024 * 10);
 
@@ -60,6 +61,18 @@ abstract class Shader {
 	abstract void render();
 
 	abstract void cleanup();
+
+	/**
+	 * Obtain a GL integer value from the driver
+	 *
+	 * @param gl_enum The GL value you want
+	 *
+	 * @return the integer value
+	 */
+	public static int glGetInteger(int gl_enum) {
+		GL11.glGetInteger(gl_enum, int_buffer);
+		return int_buffer.get(0);
+	}
 
 	protected static ByteBuffer getShaderText(String file) {
 		ByteBuffer shader = null;
@@ -99,7 +112,7 @@ abstract class Shader {
 			final byte[] bytes = new byte[programSource.capacity()];
 			programSource.get(bytes);
 
-			final int errorPos = Util.glGetInteger(ARBProgram.GL_PROGRAM_ERROR_POSITION_ARB);
+			final int errorPos = glGetInteger(ARBProgram.GL_PROGRAM_ERROR_POSITION_ARB);
 			int lineStart = 0;
 			int lineEnd = -1;
 			for ( int i = 0; i < bytes.length; i++ ) {
