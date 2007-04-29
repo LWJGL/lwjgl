@@ -72,6 +72,7 @@ public interface GL15 {
 	int GL_BUFFER_MAPPED = 0x88BC;
 	int GL_BUFFER_MAP_POINTER = 0x88BD;
 
+	@Code("		StateTracker.bindBuffer(caps, target, buffer);")
 	void glBindBuffer(@GLenum int target, @GLuint int buffer);
 
 	void glDeleteBuffers(@AutoSize("buffers") @GLsizei int n, @Const @GLuint IntBuffer buffers);

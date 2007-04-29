@@ -31,49 +31,18 @@
  */
 package org.lwjgl.opengl;
 
-final class StateTracker {
-	private final ReferencesStack references_stack;
-	private final StateStack attrib_stack;
+class BaseReferences {
 
-	StateTracker() {
-		references_stack = new ReferencesStack();
-		attrib_stack = new StateStack(0);
-	}
+    int elementArrayBuffer;
+    int arrayBuffer;
 
-	static void popAttrib(ContextCapabilities caps) {
-		caps.tracker.doPopAttrib();
-	}
+    void clear() {
+        this.elementArrayBuffer = 0;
+        this.arrayBuffer = 0;
+    }
 
-	private void doPopAttrib() {
-		if ((attrib_stack.popState() & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
-			references_stack.popState();
-		}
-	}
-
-	static void pushAttrib(ContextCapabilities caps, int mask) {
-		caps.tracker.doPushAttrib(mask);
-	}
-
-	private void doPushAttrib(int mask) {
-		attrib_stack.pushState(mask);
-		if ((mask & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
-			references_stack.pushState();
-		}
-	}
-
-	static ReferencesStack getReferencesStack(ContextCapabilities caps) {
-		return caps.tracker.references_stack;
-	}
-
-        static void bindBuffer(ContextCapabilities caps, int target, int buffer) {
-            ReferencesStack references_stack = getReferencesStack(caps);
-            switch(target) {
-                case GL15.GL_ELEMENT_ARRAY_BUFFER:
-                    references_stack.getReferences().elementArrayBuffer = buffer;
-                    break;
-                case GL15.GL_ARRAY_BUFFER:
-                    references_stack.getReferences().arrayBuffer = buffer;
-                    break;
-            }
-        }
+    void copy(BaseReferences references) {
+        this.elementArrayBuffer = references.elementArrayBuffer;
+        this.arrayBuffer = references.arrayBuffer;
+    }
 }

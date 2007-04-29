@@ -80,25 +80,25 @@ class GLChecks {
 	
 	/** Helper method to ensure that array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOdisabled(ContextCapabilities caps) {
-		if ((caps.OpenGL15 || caps.GL_ARB_vertex_buffer_object) && !checkBufferObject(caps, GL15.GL_ARRAY_BUFFER_BINDING, false))
+		if(StateTracker.getReferencesStack(caps).getReferences().arrayBuffer != 0)
 			throw new OpenGLException("Cannot use Buffers when Array Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOenabled(ContextCapabilities caps) {
-		if ((caps.OpenGL15 || caps.GL_ARB_vertex_buffer_object) && !checkBufferObject(caps, GL15.GL_ARRAY_BUFFER_BINDING, true))
+		if(StateTracker.getReferencesStack(caps).getReferences().arrayBuffer == 0)
 			throw new OpenGLException("Cannot use offsets when Array Buffer Object is disabled");
 	}
 
 	/** Helper method to ensure that element array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureElementVBOdisabled(ContextCapabilities caps) {
-		if ((caps.OpenGL15 || caps.GL_ARB_vertex_buffer_object) && !checkBufferObject(caps, GL15.GL_ELEMENT_ARRAY_BUFFER_BINDING, false))
+		if(StateTracker.getReferencesStack(caps).getReferences().elementArrayBuffer != 0)
 			throw new OpenGLException("Cannot use Buffers when Element Array Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that element array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureElementVBOenabled(ContextCapabilities caps) {
-		if ((caps.OpenGL15 || caps.GL_ARB_vertex_buffer_object) && !checkBufferObject(caps, GL15.GL_ELEMENT_ARRAY_BUFFER_BINDING, true))
+		if(StateTracker.getReferencesStack(caps).getReferences().elementArrayBuffer == 0)
 			throw new OpenGLException("Cannot use offsets when Element Array Buffer Object is disabled");
 	}
 

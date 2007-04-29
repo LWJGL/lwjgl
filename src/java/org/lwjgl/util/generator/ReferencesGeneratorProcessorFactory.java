@@ -166,7 +166,7 @@ public class ReferencesGeneratorProcessorFactory implements AnnotationProcessorF
 			writer.println();
 			writer.println("package org.lwjgl.opengl;");
 			writer.println();
-			writer.println("class " + REFERENCES_CLASS_NAME + " {");
+			writer.println("class " + REFERENCES_CLASS_NAME + " extends BaseReferences {");
 			DeclarationFilter filter = DeclarationFilter.getFilter(InterfaceDeclaration.class);
 			Collection<TypeDeclaration> interface_decls = filter.filter(env.getSpecifiedTypeDeclarations());
 			for (TypeDeclaration typedecl : interface_decls) {
@@ -175,12 +175,14 @@ public class ReferencesGeneratorProcessorFactory implements AnnotationProcessorF
 			}
 			writer.println();
 			writer.println("\tvoid copy(" + REFERENCES_CLASS_NAME + " " + REFERENCES_PARAMETER_NAME + ") {");
+			writer.println("\t\tsuper.copy(" + REFERENCES_PARAMETER_NAME + ");");
 			for (TypeDeclaration typedecl : interface_decls) {
 				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
 				generateCopiesFromMethods(writer, interface_decl);
 			}
 			writer.println("\t}");
 			writer.println("\tvoid clear() {");
+			writer.println("\t\tsuper.clear();");
 			for (TypeDeclaration typedecl : interface_decls) {
 				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
 				generateClearsFromMethods(writer, interface_decl);
