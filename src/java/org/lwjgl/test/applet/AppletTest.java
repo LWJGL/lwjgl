@@ -36,6 +36,7 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 
 import org.lwjgl.util.applet.LWJGLInstaller;
+import org.lwjgl.opengl.AWTInputAdapter;
 
 public class AppletTest extends Applet {
 	
@@ -44,6 +45,7 @@ public class AppletTest extends Applet {
 	public void destroy() {
 		super.destroy();
 		System.out.println("*** destroy ***");
+		AWTInputAdapter.destroy();
 	}
 
 	public void start() {
