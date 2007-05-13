@@ -404,7 +404,6 @@ final class LinuxDisplay implements DisplayImplementation {
 					minimized = false;
 					dirty = true;
 					updateInputGrab();
-					nSetRepeatMode(getDisplay(), AutoRepeatModeOff);
 				} finally {
 					peer_info.unlock();
 				}
@@ -435,7 +434,6 @@ final class LinuxDisplay implements DisplayImplementation {
 			blank_cursor = None;
 			ungrabKeyboard();
 			nDestroyWindow(getDisplay(), getWindow());
-			nSetRepeatMode(getDisplay(), AutoRepeatModeDefault);
 			decDisplay();
 		} finally {
 			unlockAWT();
@@ -764,7 +762,6 @@ final class LinuxDisplay implements DisplayImplementation {
 		if (isLegacyFullscreen() || input_released)
 			return;
 		input_released = true;
-		nSetRepeatMode(getDisplay(), AutoRepeatModeDefault);
 		updateInputGrab();
 		if (current_window_mode == FULLSCREEN_NETWM) {
 			nIconifyWindow(getDisplay(), getWindow(), getDefaultScreen());
@@ -782,7 +779,6 @@ final class LinuxDisplay implements DisplayImplementation {
 		if (isLegacyFullscreen() || !input_released)
 			return;
 		input_released = false;
-		nSetRepeatMode(getDisplay(), AutoRepeatModeOff);
 		updateInputGrab();
 		if (current_window_mode == FULLSCREEN_NETWM) {
 			try {

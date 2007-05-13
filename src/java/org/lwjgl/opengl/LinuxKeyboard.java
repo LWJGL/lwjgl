@@ -47,8 +47,6 @@ import java.nio.charset.Charset;
 
 final class LinuxKeyboard {
 	private static final int LockMapIndex                      = 1;
-	private static final int KeyPress = 2;
-	private static final int KeyRelease = 3;
 	private static final long NoSymbol = 0;
 	private static final long ShiftMask = 1 << 0;
 	private static final long LockMask = 1 << 1;
@@ -75,6 +73,13 @@ final class LinuxKeyboard {
 	private final ByteBuffer native_translation_buffer = BufferUtils.createByteBuffer(KEYBOARD_BUFFER_SIZE);
 	private final CharsetDecoder utf8_decoder = Charset.forName("UTF-8").newDecoder();
 	private final CharBuffer char_buffer = CharBuffer.allocate(KEYBOARD_BUFFER_SIZE);
+
+	// Deferred key released event, to detect key repeat
+	private boolean has_deferred_event = true;
+	private int deferred_keycode;
+	private int deferred_event_keycode;
+	private long deferred_nanos;
+	private byte deferred_key_state;
 
 	public LinuxKeyboard(long display, long window) {
 		long modifier_map = getModifierMapping(display);
@@ -153,10 +158,12 @@ final class LinuxKeyboard {
 	private static native void closeIM(long xim);
 
 	public void read(ByteBuffer buffer) {
+		flushDeferredEvent();
 		event_queue.copyEvents(buffer);
 	}
 
 	public void poll(ByteBuffer keyDownBuffer) {
+		flushDeferredEvent();
 		int old_position = keyDownBuffer.position();
 		keyDownBuffer.put(key_down_buffer);
 		keyDownBuffer.position(old_position);
@@ -204,14 +211,10 @@ final class LinuxKeyboard {
 			return lookupStringISO88591(event_ptr, translation_buffer);
 	}
 
-	private void translateEvent(long event_ptr, int event_type, int keycode, byte key_state, long nanos) {
+	private void translateEvent(long event_ptr, int keycode, byte key_state, long nanos) {
 		int num_chars, i;
 		int ch;
 
-		if (event_type == KeyRelease) {
-			putKeyboardEvent(keycode, key_state, 0, nanos);
-			return;
-		}
 		num_chars = lookupString(event_ptr, temp_translation_buffer);
 		if (num_chars > 0) {
 			ch = temp_translation_buffer[0];
@@ -287,9 +290,9 @@ final class LinuxKeyboard {
 
 	private byte getKeyState(int event_type) {
 		switch (event_type) {
-			case KeyPress:
+			case LinuxEvent.KeyPress:
 				return 1;
-			case KeyRelease:
+			case LinuxEvent.KeyRelease:
 				return 0;
 			default:
 				throw new IllegalArgumentException("Unknown event_type: " + event_type);
@@ -300,7 +303,31 @@ final class LinuxKeyboard {
 		int keycode = getKeycode(event_ptr, event_state);
 		byte key_state = getKeyState(event_type);
 		key_down_buffer[keycode] = key_state;
-		translateEvent(event_ptr, event_type, keycode, key_state, millis*1000000);
+		long nanos = millis*1000000;
+		if (event_type == LinuxEvent.KeyPress) {
+			if (has_deferred_event) {
+				if (nanos == deferred_nanos && event_keycode == deferred_event_keycode) {
+					has_deferred_event = false;
+					return; // Repeated event, ignore it
+				}
+				flushDeferredEvent();
+			}
+			translateEvent(event_ptr, keycode, key_state, nanos);
+		} else {
+			flushDeferredEvent();
+			has_deferred_event = true;
+			deferred_keycode = keycode;
+			deferred_event_keycode = event_keycode;
+			deferred_nanos = nanos;
+			deferred_key_state = key_state;
+		}
+	}
+
+	private void flushDeferredEvent() {
+		if (has_deferred_event) {
+			putKeyboardEvent(deferred_keycode, deferred_key_state, 0, deferred_nanos);
+			has_deferred_event = false;
+		}
 	}
 
 	public boolean filterEvent(LinuxEvent event) {
