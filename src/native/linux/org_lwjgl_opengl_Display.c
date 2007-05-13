@@ -469,13 +469,6 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetInputFocus(JNIEnv
 	return win;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetRepeatMode(JNIEnv *env, jclass unused, jlong display_ptr, jint mode) {
-	Display *disp = (Display *)(intptr_t)display_ptr;
-	XKeyboardControl repeat_mode;
-	repeat_mode.auto_repeat_mode = mode;
-	XChangeKeyboardControl(disp, KBAutoRepeatMode, &repeat_mode);
-}
-
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIconifyWindow(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr, jint screen) {
 	Display *disp = (Display *)(intptr_t)display_ptr;
 	Window win = (Window)window_ptr;

@@ -92,7 +92,6 @@ final class LinuxAWTInput extends AbstractAWTInput {
 		if (input_grabbed) {
 //			LinuxDisplay.nUngrabKeyboard(display);
 			LinuxDisplay.nUngrabPointer(display);
-			LinuxDisplay.nSetRepeatMode(display, LinuxDisplay.AutoRepeatModeDefault);
 			input_grabbed = false;
 		}
 	}
@@ -100,7 +99,6 @@ final class LinuxAWTInput extends AbstractAWTInput {
 	private void grabInput(long window) {
 		if (!input_grabbed) {
 //			int res1 = LinuxDisplay.nGrabKeyboard(display, window);
-			LinuxDisplay.nSetRepeatMode(display, LinuxDisplay.AutoRepeatModeOff);
 			int res2 = LinuxDisplay.nGrabPointer(display, window, blank_cursor);
 			if (/*res1 == LinuxDisplay.GrabSuccess && */res2 == LinuxDisplay.GrabSuccess)
 				input_grabbed = true;

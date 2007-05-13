@@ -789,7 +789,6 @@ final class LinuxDisplay implements DisplayImplementation {
 			}
 		}
 	}
-	static native void nSetRepeatMode(long display, int mode);
 
 	public void grabMouse(boolean new_grab) {
 		lockAWT();
