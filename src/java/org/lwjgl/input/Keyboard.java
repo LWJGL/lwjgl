@@ -57,7 +57,7 @@ import org.lwjgl.opengl.InputImplementation;
  */
 public class Keyboard {
 	/** Internal use - event size in bytes */
-	public static final int EVENT_SIZE = 4 + 1 + 4 + 8;
+	public static final int EVENT_SIZE = 4 + 1 + 4 + 8 + 1;
 
 	/**
 	 * The special character meaning that no
@@ -239,6 +239,9 @@ public class Keyboard {
 	/** Has the keyboard been created? */
 	private static boolean created;
 
+	/** Are repeat events enabled? */
+	private static boolean repeat_enabled;
+
 	/** The keys status from the last poll */
 	private static final ByteBuffer keyDownBuffer = BufferUtils.createByteBuffer(KEYBOARD_SIZE);
 
@@ -249,17 +252,11 @@ public class Keyboard {
 	 */
 	private static ByteBuffer readBuffer;
 
-	/** The current keyboard character being examined */
-	private static int eventCharacter;
+	/** current event */
+	private static KeyEvent current_event = new KeyEvent();
 
-	/** The current keyboard event key being examined */
-	private static int eventKey;
-
-	/** The current state of the key being examined in the event queue */
-	private static boolean eventState;
-	
-	/** The current event time */
-	private static long eventNanos;
+	/** scratch event */
+	private static KeyEvent tmp_event = new KeyEvent();
 
 	/** One time initialization */
 	private static boolean initialized;
@@ -318,9 +315,7 @@ public class Keyboard {
 		readBuffer.limit(0);
 		for (int i = 0; i < keyDownBuffer.remaining(); i++)
 			keyDownBuffer.put(i, (byte)0);
-		eventCharacter = 0;
-		eventKey = 0;
-		eventState = false;
+		current_event.reset();
 	}
 
 	/**
@@ -432,7 +427,12 @@ public class Keyboard {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			if (!created)
 				throw new IllegalStateException("Keyboard must be created before you can read events");
-			return readBuffer.remaining()/EVENT_SIZE;
+			int old_position = readBuffer.position();
+			int num_events = 0;
+			while (readNext(tmp_event) && (!tmp_event.repeat || repeat_enabled))
+				num_events++;
+			readBuffer.position(old_position);
+			return num_events;
 		}
 	}
 
@@ -452,16 +452,45 @@ public class Keyboard {
 			if (!created)
 				throw new IllegalStateException("Keyboard must be created before you can read events");
 
-			if (readBuffer.hasRemaining()) {
-				eventKey = readBuffer.getInt() & 0xFF;
-				eventState = readBuffer.get() != 0;
-				eventCharacter = readBuffer.getInt();
-				eventNanos = readBuffer.getLong();
-				return true;
-			} else {
-				return false;
-			}
+			boolean result;
+			while ((result = readNext(current_event)) && current_event.repeat && !repeat_enabled)
+				;
+			return result;
 		}
+	}
+
+	/**
+     * Controls whether repeat events are reported or not. If repeat events
+	 * are enabled, key down events are reported when a key is pressed and held for
+	 * a OS dependent amount of time. To distinguish a repeat event from a normal event,
+	 * use isRepeatEvent().
+	 *
+	 * @see org.lwjgl.input.Keyboard#getEventKey()
+	 */
+	public static synchronized void enableRepeatEvents(boolean enable) {
+		repeat_enabled = enable;
+	}
+
+	/**
+     * Check whether repeat events are currently reported or not.
+	 *
+	 * @return true is repeat events are reported, false if not.
+	 * @see org.lwjgl.input.Keyboard#getEventKey()
+	 */
+	public static synchronized boolean areRepeatEventsEnabled() {
+		return repeat_enabled;
+	}
+
+	private static boolean readNext(KeyEvent event) {
+		if (readBuffer.hasRemaining()) {
+			event.key = readBuffer.getInt() & 0xFF;
+			event.state = readBuffer.get() != 0;
+			event.character = readBuffer.getInt();
+			event.nanos = readBuffer.getLong();
+			event.repeat = readBuffer.get() == 1;
+			return true;
+		} else
+			return false;
 	}
 
 	/**
@@ -478,7 +507,7 @@ public class Keyboard {
 	 */
 	public static synchronized char getEventCharacter() {
 		synchronized (OpenGLPackageAccess.global_lock) {
-			return (char)eventCharacter;
+			return (char)current_event.character;
 		}
 	}
 
@@ -491,7 +520,7 @@ public class Keyboard {
 	 */
 	public static synchronized int getEventKey() {
 		synchronized (OpenGLPackageAccess.global_lock) {
-			return eventKey;
+			return current_event.key;
 		}
 	}
 
@@ -503,7 +532,7 @@ public class Keyboard {
 	 */
 	public static synchronized boolean getEventKeyState() {
 		synchronized (OpenGLPackageAccess.global_lock) {
-			return eventState;
+			return current_event.state;
 		}
 	}
 
@@ -516,7 +545,42 @@ public class Keyboard {
 	 */
 	public static synchronized long getEventNanoseconds() {
 		synchronized (OpenGLPackageAccess.global_lock) {
-			return eventNanos;
+			return current_event.nanos;
+		}
+	}
+
+	/**
+	 * @see org.lwjgl.input.Keyboard#enableRepeatEvents()
+	 * @return true if the current event is a repeat event, false if
+	 * the current event is not a repeat even or if repeat events are disabled.
+	 */
+	public static synchronized boolean isRepeatEvent() {
+		synchronized (OpenGLPackageAccess.global_lock) {
+			return current_event.repeat;
+		}
+	}
+
+	private final static class KeyEvent {
+		/** The current keyboard character being examined */
+		private int character;
+
+		/** The current keyboard event key being examined */
+		private int key;
+
+		/** The current state of the key being examined in the event queue */
+		private boolean state;
+
+		/** The current event time */
+		private long nanos;
+
+		/** Is the current event a repeated event? */
+		private boolean repeat;
+
+		private void reset() {
+			character = 0;
+			key = 0;
+			state = false;
+			repeat = false;
 		}
 	}
 }

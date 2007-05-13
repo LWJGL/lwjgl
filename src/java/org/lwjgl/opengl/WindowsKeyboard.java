@@ -63,6 +63,7 @@ final class WindowsKeyboard {
 	private byte retained_state;
 	private int retained_char;
 	private long retained_millis;
+	private boolean retained_repeat;
 
 	public WindowsKeyboard(long hwnd) throws LWJGLException {
 		this.hwnd = hwnd;
@@ -97,9 +98,9 @@ final class WindowsKeyboard {
 	private static native int GetKeyboardState(ByteBuffer lpKeyState);
 	private static native int GetKeyState(int virt_key);
 
-	private void putEvent(int keycode, byte state, int ch, long millis) {
+	private void putEvent(int keycode, byte state, int ch, long millis, boolean repeat) {
 		tmp_event.clear();
-		tmp_event.putInt(keycode).put(state).putInt(ch).putLong(millis*1000000);
+		tmp_event.putInt(keycode).put(state).putInt(ch).putLong(millis*1000000).put(repeat ? (byte)1 : (byte)0);
 		tmp_event.flip();
 		event_queue.putEvent(tmp_event);
 	}
@@ -144,11 +145,11 @@ final class WindowsKeyboard {
 	private void flushRetained() {
 		if (has_retained_event) {
 			has_retained_event = false;
-			putEvent(retained_key_code, retained_state, retained_char, retained_millis);
+			putEvent(retained_key_code, retained_state, retained_char, retained_millis, retained_repeat);
 		}
 	}
 
-	public void handleKey(int virt_key, int scan_code, boolean extended, byte event_state, long millis) {
+	public void handleKey(int virt_key, int scan_code, boolean extended, byte event_state, long millis, boolean repeat) {
 		virt_key = translateExtended(virt_key, scan_code, event_state, extended);
 		flushRetained();
 		has_retained_event = true;
@@ -159,12 +160,13 @@ final class WindowsKeyboard {
 		retained_state = event_state;
 		retained_millis = millis;
 		retained_char = 0;
+		retained_repeat = repeat;
 //		translate(virt_key, event_state, millis*1000000);
 	}
 
 	public void handleChar(int event_char, long millis) {
 		if (!has_retained_event) {
-			putEvent(0, (byte)0, event_char, millis);
+			putEvent(0, (byte)0, event_char, millis, false);
 		} else
 			retained_char = event_char;
 	}

@@ -608,12 +608,11 @@ final class WindowsDisplay implements DisplayImplementation {
 	private void handleKeyButton(long wParam, long lParam, long millis) {
 		byte previous_state = (byte)((lParam >>> 30) & 0x1);
 		byte state = (byte)(1 - ((lParam >>> 31) & 0x1));
-		if (state == previous_state)
-			return; // Auto-repeat message
+		boolean repeat = state == previous_state; // Repeat message
 		byte extended = (byte)((lParam >>> 24) & 0x1);
 		int scan_code = (int)((lParam >>> 16) & 0xFF);
 		if (keyboard != null)
-			keyboard.handleKey((int)wParam, scan_code, extended != 0, state, millis);
+			keyboard.handleKey((int)wParam, scan_code, extended != 0, state, millis, repeat);
 	}
 
 	private static int transformY(long hwnd, int y) {

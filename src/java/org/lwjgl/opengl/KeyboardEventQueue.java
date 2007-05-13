@@ -264,9 +264,9 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 		//component.removeKeyListener(this);
 	}
 
-	private void putKeyboardEvent(int key_code, byte state, int character, long nanos) {
+	private void putKeyboardEvent(int key_code, byte state, int character, long nanos, boolean repeat) {
 		event.clear();
-		event.putInt(key_code).put(state).putInt(character).putLong(nanos);
+		event.putInt(key_code).put(state).putInt(character).putLong(nanos).put(repeat ? (byte)1 : (byte)0);
 		event.flip();
 		putEvent(event);
 	}
@@ -287,15 +287,16 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 		if (character == KeyEvent.CHAR_UNDEFINED)
 			character = Keyboard.CHAR_NONE;
 		if (state == 1) {
+			boolean repeat = false;
 			if (has_deferred_event) {
 				if ((nanos == deferred_nanos && deferred_key_code == key_code &&
 						deferred_key_location == key_location)) {
 					has_deferred_event = false;
-					return; // Ignore repeated key down, key up event pair
-				}
-				flushDeferredEvent();
+					repeat = true; // Repeat event
+				} else
+					flushDeferredEvent();
 			}
-			putKeyEvent(key_code, key_location, state, character, nanos);
+			putKeyEvent(key_code, key_location, state, character, nanos, repeat);
 		} else {
 			flushDeferredEvent();
 			has_deferred_event = true;
@@ -309,19 +310,19 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 
 	private void flushDeferredEvent() {
 		if (has_deferred_event) {
-			putKeyEvent(deferred_key_code, deferred_key_location, deferred_key_state, deferred_character, deferred_nanos);
+			putKeyEvent(deferred_key_code, deferred_key_location, deferred_key_state, deferred_character, deferred_nanos, false);
 			has_deferred_event = false;
 		}
 	}
 
-	private void putKeyEvent(int key_code, int key_location, byte state, int character, long nanos) {
+	private void putKeyEvent(int key_code, int key_location, byte state, int character, long nanos, boolean repeat) {
 		int key_code_mapped = getMappedKeyCode(key_code, key_location);
 		/* Ignore repeating presses */
 		if ( key_states[key_code_mapped] == state )
-			return;
+			repeat = true;
 		key_states[key_code_mapped] = state;
 		int key_int_char = character & 0xffff;
-		putKeyboardEvent(key_code_mapped, state, key_int_char, nanos);
+		putKeyboardEvent(key_code_mapped, state, key_int_char, nanos, repeat);
 	}
 
 	private int getMappedKeyCode(int key_code, int position) {

@@ -152,7 +152,11 @@ public class KeyboardTest {
         System.out.println("Pressed:" + Keyboard.getEventKeyState());
         System.out.println("Key character code: " + character_code);
         System.out.println("Key character: " + Keyboard.getEventCharacter());
+        System.out.println("Repeat event: " + Keyboard.isRepeatEvent());
         
+        if (Keyboard.getEventKey() == Keyboard.KEY_R && Keyboard.getEventKeyState()) {
+          Keyboard.enableRepeatEvents(!Keyboard.areRepeatEventsEnabled());
+        }
         if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
           return;
         }
