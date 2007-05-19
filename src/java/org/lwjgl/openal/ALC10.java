@@ -221,8 +221,8 @@ public final class ALC10 {
 	 */
 	public static boolean alcCloseDevice(ALCdevice device) {
 		boolean result = nalcCloseDevice(getDevice(device));
-		device.setInvalid();
 		synchronized (devices) {
+			device.setInvalid();
 			devices.remove(new Long(device.device));
 		}
 		return result;
@@ -253,8 +253,8 @@ public final class ALC10 {
 			ALCcontext context = new ALCcontext(context_address);
 			synchronized (ALC10.contexts) {
 				contexts.put(new Long(context_address), context);
+				device.addContext(context);
 			}
-			device.addContext(context);
 			return context;
 		}
 		return null;
@@ -356,8 +356,10 @@ public final class ALC10 {
 	 * @param context address of context to Destroy
 	 */
 	public static void alcDestroyContext(ALCcontext context) {
-		nalcDestroyContext(getContext(context));
-		context.setInvalid();
+		synchronized(ALC10.contexts) {
+			nalcDestroyContext(getContext(context));
+			context.setInvalid();
+		}
 	}
 	native static void nalcDestroyContext(long context);
 

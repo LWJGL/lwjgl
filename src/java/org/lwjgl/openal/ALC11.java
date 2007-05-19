@@ -109,8 +109,8 @@ public final class ALC11 {
 	 */
 	public static boolean alcCaptureCloseDevice(ALCdevice device) {
 		boolean result = nalcCaptureCloseDevice(ALC10.getDevice(device));
-		device.setInvalid();
 		synchronized (ALC10.devices) {
+			device.setInvalid();
 			ALC10.devices.remove(new Long(device.device));
 		}
 		return result;
