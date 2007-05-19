@@ -72,7 +72,7 @@ public final class ALCcontext {
 	 */
 	public boolean equals(Object context) {
 		if(context instanceof ALCcontext) {
-			return ((ALCcontext)context).context == this.context && ((ALCcontext)context).valid == this.valid;
+			return ((ALCcontext)context).context == this.context;
 		}
 		return super.equals(context);
 	}

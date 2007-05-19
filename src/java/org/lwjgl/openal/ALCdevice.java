@@ -74,7 +74,7 @@ public final class ALCdevice {
      */
 	public boolean equals(Object device) {
 		if(device instanceof ALCdevice) {
-			return ((ALCdevice)device).device == this.device && ((ALCdevice)device).valid == this.valid;
+			return ((ALCdevice)device).device == this.device;
 		}
 		return super.equals(device);
 	}
