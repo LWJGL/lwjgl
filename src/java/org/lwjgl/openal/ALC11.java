@@ -40,8 +40,13 @@ import org.lwjgl.LWJGLUtil;
 
 
 /**
+ * <p>
+ * The ALC11 class implements features in OpenAL 1.1, specifically 
+ * ALC methods and properties.
+ * </p>
  * 
  * @author Brian Matzon <brian@matzon.dk>
+ * @see ALC10
  * @version $Revision: 2286 $
  * $Id: ALC.java 2286 2006-03-23 19:32:21 +0000 (to, 23 mar 2006) matzon $
  */
@@ -81,9 +86,13 @@ public final class ALC11 {
 	 * @return ALCdevice if it was possible to open a device
 	 */
 	public static ALCdevice alcCaptureOpenDevice(String devicename, int frequency, int format, int buffersize) {
-		long device = nalcCaptureOpenDevice(devicename, frequency, format, buffersize);
-		if(device > 0) {
-			return new ALCdevice(device);
+		long device_address = nalcCaptureOpenDevice(devicename, frequency, format, buffersize);
+		if(device_address != 0) {
+			ALCdevice device = new ALCdevice(device_address);
+			synchronized (ALC10.devices) {
+				ALC10.devices.put(new Long(device_address), device);
+			}
+			return device;
 		}
 		return null;
 	}
@@ -99,7 +108,12 @@ public final class ALC11 {
 	 * @return true if device was successfully closed
 	 */
 	public static boolean alcCaptureCloseDevice(ALCdevice device) {
-		return nalcCaptureCloseDevice(ALC10.getDevice(device));
+		boolean result = nalcCaptureCloseDevice(ALC10.getDevice(device));
+		device.setInvalid();
+		synchronized (ALC10.devices) {
+			ALC10.devices.remove(new Long(device.device));
+		}
+		return result;
 	}
 	static native boolean nalcCaptureCloseDevice(long device);
 

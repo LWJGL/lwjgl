@@ -36,8 +36,14 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 
 /**
- * <br>
- * Wrapper class, to make ALC contexts behave like the orginal api.
+ * The ALCcontext class represents a context opened in OpenAL space.
+ * 
+ * All operations of the AL core API affect a current AL context. Within the scope of AL,
+ * the ALC is implied - it is not visible as a handle or function parameter. Only one AL
+ * Context per process can be current at a time. Applications maintaining multiple AL
+ * Contexts, whether threaded or not, have to set the current context accordingly.
+ * Applications can have multiple threads that share one more or contexts. In other words,
+ * AL and ALC are threadsafe.
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
@@ -45,9 +51,12 @@ import org.lwjgl.BufferUtils;
  */
 public final class ALCcontext {
 
-	/** address of actual context */
+	/** Address of actual context */
 	final long context;
-
+	
+	/** Whether this context is valid */
+	private boolean valid = false;
+	
 	/** 
 	 * Creates a new instance of ALCcontext 
 	 * 
@@ -55,6 +64,7 @@ public final class ALCcontext {
 	 */
 	ALCcontext(long context) {
 		this.context = context;
+		this.valid = true;
 	}
 
 	/*
@@ -62,7 +72,7 @@ public final class ALCcontext {
 	 */
 	public boolean equals(Object context) {
 		if(context instanceof ALCcontext) {
-			return ((ALCcontext)context).context == this.context;
+			return ((ALCcontext)context).context == this.context && ((ALCcontext)context).valid == this.valid;
 		}
 		return super.equals(context);
 	}
@@ -87,4 +97,19 @@ public final class ALCcontext {
 
 		return attribList;
 	}
+	
+	/**
+	 * Marks this context as invalid
+	 *
+	 */
+	void setInvalid() {
+		valid = false;
+	}    
+	
+	/**
+	 * @return true if this context is still valid
+	 */
+	public boolean isValid() {
+		return valid;
+	}	
 }

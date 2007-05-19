@@ -31,15 +31,15 @@
  */
 package org.lwjgl.openal;
 
-import java.util.Vector;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 
 /**
- * <br>
- * This is the OpenAL class. It extends the latest core.
+ * <p>
+ * The AL class implements the actual creation code for linking to the native library
+ * OpenAL.
+ * </p>
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
@@ -108,7 +108,7 @@ public final class AL {
 	 * @param openDevice Whether to automatically open the device
 	 * @see #create(String, int, int, boolean)
 	 */
-	static void create(String deviceArguments, int contextFrequency, int contextRefresh, boolean contextSynchronized, boolean openDevice)
+	public static void create(String deviceArguments, int contextFrequency, int contextRefresh, boolean contextSynchronized, boolean openDevice)
 		throws LWJGLException {
 			
 		if (created)
@@ -196,6 +196,7 @@ public final class AL {
 	 */
 	public static void destroy() {
 		if (context != null) {
+			ALC10.alcMakeContextCurrent(null);
 			ALC10.alcDestroyContext(context);
 			context = null;
 		}

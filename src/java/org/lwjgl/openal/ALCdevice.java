@@ -31,9 +31,18 @@
  */
 package org.lwjgl.openal;
 
+import java.util.HashMap;
+import java.util.Iterator;
+
 /**
- * <br>
- * Wrapper class, to make ALC devices behave like the orginal api.
+ * The ALCdevice class represents a device opened in OpenAL space.
+ * 
+ * ALC introduces the notion of a Device. A Device can be, depending on the
+ * implementation, a hardware device, or a daemon/OS service/actual server. This
+ * mechanism also permits different drivers (and hardware) to coexist within the same
+ * system, as well as allowing several applications to share system resources for audio,
+ * including a single hardware output device. The details are left to the implementation,
+ * which has to map the available backends to unique device specifiers.
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
@@ -41,8 +50,14 @@ package org.lwjgl.openal;
  */
 public final class ALCdevice {
     
-    /** address of actual device */
+    /** Address of actual device */
     final long device;
+    
+    /** Whether this device is valid */
+    private boolean valid = false;
+    
+	/** List of contexts belonging to the device */
+	private HashMap contexts = new HashMap();
     
     /** 
      * Creates a new instance of ALCdevice 
@@ -51,6 +66,7 @@ public final class ALCdevice {
      */
     ALCdevice(long device) {
         this.device = device;
+        this.valid = true;
     }
     
     /*
@@ -58,8 +74,40 @@ public final class ALCdevice {
      */
 	public boolean equals(Object device) {
 		if(device instanceof ALCdevice) {
-			return ((ALCdevice)device).device == this.device;
+			return ((ALCdevice)device).device == this.device && ((ALCdevice)device).valid == this.valid;
 		}
 		return super.equals(device);
+	}
+	
+	/**
+	 * Adds a context to the device
+	 * 
+	 * @param context context to add to the list of contexts for this device
+	 */
+	void addContext(ALCcontext context) {
+		synchronized (contexts) {
+			contexts.put(new Long(context.context), context);
+		}
+	}
+
+	/**
+	 * Marks this device and all of its contexts invalid
+	 */
+	void setInvalid() {
+		valid = false;
+		synchronized (contexts) {
+			for(Iterator i = contexts.values().iterator(); i.hasNext();) {
+				ALCcontext context = (ALCcontext) i.next();
+				context.setInvalid();
+			}
+		}
+		contexts.clear();
 	}    
+	
+	/**
+	 * @return true if this device is still valid
+	 */
+	public boolean isValid() {
+		return valid;
+	}
 }
