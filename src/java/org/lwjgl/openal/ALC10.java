@@ -359,6 +359,8 @@ public final class ALC10 {
 		synchronized(ALC10.contexts) {
 			nalcDestroyContext(getContext(context));
 			context.setInvalid();
+			ALCdevice device = alcGetContextsDevice(context);
+			device.removeContext(context);
 		}
 	}
 	native static void nalcDestroyContext(long context);

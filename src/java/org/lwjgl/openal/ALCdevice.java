@@ -89,6 +89,17 @@ public final class ALCdevice {
 			contexts.put(new Long(context.context), context);
 		}
 	}
+	
+	/**
+	 * Remove context associated with device
+	 * 
+	 * @param context Context to disassociate with device
+	 */
+	void removeContext(ALCcontext context) {
+		synchronized (contexts) {
+			contexts.remove(new Long(context.context));
+		}		
+	}	
 
 	/**
 	 * Marks this device and all of its contexts invalid
