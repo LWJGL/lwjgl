@@ -107,7 +107,7 @@ static void JNICALL Java_org_lwjgl_openal_ALC11_nalcCaptureStop(JNIEnv * env, jc
  * Signature: (JLjava/nio/ByteBuffer;I)V
  */
 static void JNICALL Java_org_lwjgl_openal_ALC11_nalcCaptureSamples(JNIEnv *env, jclass clazz, jlong device, jobject buffer, jint position, jint samples) {
-	ALvoid *buffer_address = ((ALbyte *)(*env)->GetDirectBufferAddress(env, buffer)) + position;
+	ALvoid *buffer_address = ((ALbyte *)(((char*)(*env)->GetDirectBufferAddress(env, buffer)) + position));
 	alcCaptureSamples((ALCdevice*) ((intptr_t)device), buffer_address, samples);
 }
 
