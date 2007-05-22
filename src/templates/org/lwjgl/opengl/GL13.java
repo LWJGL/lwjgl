@@ -148,6 +148,7 @@ public interface GL13 {
 
 	void glActiveTexture(@GLenum int texture);
 
+        @Code("\t\tGLChecks.getReferences(caps).glClientActiveTexture = texture - GL_TEXTURE0;")
 	void glClientActiveTexture(@GLenum int texture);
 
 	void glCompressedTexImage1D(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, int border, @AutoSize("data") @GLsizei int imageSize,

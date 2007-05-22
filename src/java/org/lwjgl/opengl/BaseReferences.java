@@ -31,18 +31,41 @@
  */
 package org.lwjgl.opengl;
 
+import java.nio.Buffer;
+import java.nio.IntBuffer;
+import java.util.Arrays;
+
 class BaseReferences {
 
     int elementArrayBuffer;
     int arrayBuffer;
+    Buffer[] glVertexAttribPointer_buffer;
+    Buffer[] glTexCoordPointer_buffer;
+    int glClientActiveTexture;
+
+    BaseReferences(ContextCapabilities caps) {
+        IntBuffer temp = caps.scratch_int_buffer;
+
+        GL11.glGetInteger(ARBVertexShader.GL_MAX_VERTEX_ATTRIBS_ARB, temp);
+        glVertexAttribPointer_buffer = new Buffer[temp.get(0)];
+
+        GL11.glGetInteger(GL13.GL_MAX_TEXTURE_UNITS, temp);
+        glTexCoordPointer_buffer = new Buffer[temp.get(0)];
+    }
 
     void clear() {
         this.elementArrayBuffer = 0;
         this.arrayBuffer = 0;
+        this.glClientActiveTexture = 0;
+        Arrays.fill(glVertexAttribPointer_buffer, null);
+        Arrays.fill(glTexCoordPointer_buffer, null);
     }
 
     void copy(BaseReferences references) {
         this.elementArrayBuffer = references.elementArrayBuffer;
         this.arrayBuffer = references.arrayBuffer;
+        this.glClientActiveTexture = references.glClientActiveTexture;
+        System.arraycopy(references.glVertexAttribPointer_buffer, 0, glVertexAttribPointer_buffer, 0, glVertexAttribPointer_buffer.length);
+        System.arraycopy(references.glTexCoordPointer_buffer, 0, glTexCoordPointer_buffer, 0, glTexCoordPointer_buffer.length);
     }
 }

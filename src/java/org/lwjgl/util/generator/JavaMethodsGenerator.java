@@ -401,13 +401,21 @@ public class JavaMethodsGenerator {
 	private static void printParameterCaching(PrintWriter writer, InterfaceDeclaration  interface_decl, MethodDeclaration method, Mode mode) {
 		for (ParameterDeclaration param : method.getParameters()) {
 			Class java_type = Utils.getJavaType(param.getType());
+                        CachedReference cachedReference = param.getAnnotation(CachedReference.class);
 			if (Buffer.class.isAssignableFrom(java_type) &&
-				param.getAnnotation(CachedReference.class) != null &&
+                                        cachedReference != null &&
 					(mode != Mode.BUFFEROBJECT || param.getAnnotation(BufferObject.class) == null) &&
 					param.getAnnotation(Result.class) == null) {
 				writer.print("\t\t" + Utils.CHECKS_CLASS_NAME + ".getReferences(caps).");
-				writer.print(Utils.getReferenceName(interface_decl, method, param) + " = ");
-				writer.println(param.getSimpleName() + ";");
+                                if(cachedReference.name().length() > 0) {
+                                    writer.print(cachedReference.name());
+                                } else {
+                                    writer.print(Utils.getReferenceName(interface_decl, method, param));
+                                }
+                                if(cachedReference.index().length() > 0) {
+                                    writer.print("[" + cachedReference.index() + "]");
+                                }
+				writer.println(" = " + param.getSimpleName() + ";");
 			}
 		}
 	}

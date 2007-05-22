@@ -1336,7 +1336,7 @@ public interface GL11 {
 	void glTexEnviv(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
 	void glTexCoordPointer(int size, @AutoType("pointer") @GLenum int type, @GLsizei int stride,
-	                       @CachedReference
+	                       @CachedReference(index="GLChecks.getReferences(caps).glClientActiveTexture", name="glTexCoordPointer_buffer")
 	                       @BufferObject(BufferKind.ArrayVBO)
 	                       @Check
 	                       @Const

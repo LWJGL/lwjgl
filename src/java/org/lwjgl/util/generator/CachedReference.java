@@ -46,4 +46,9 @@ import java.lang.annotation.ElementType;
 
 @Target(ElementType.PARAMETER)
 public @interface CachedReference {
+    /** If set then this will be used as array index for accessing the stored reference. */
+    String index() default "";
+
+    /** If set then this name will be used for the reference and the reference field will not be auto generated in References. */
+    String name() default "";
 }

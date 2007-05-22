@@ -108,7 +108,7 @@ public class ReferencesGeneratorProcessorFactory implements AnnotationProcessorF
 		private static void generateClearsFromParameters(PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method) {
 			for (ParameterDeclaration param : method.getParameters()) {
 				CachedReference cached_reference_annotation = param.getAnnotation(CachedReference.class);
-				if (cached_reference_annotation != null) {
+				if (cached_reference_annotation != null && cached_reference_annotation.name().length() == 0) {
 					Class nio_type = Utils.getNIOBufferType(param.getType());
 					String reference_name = Utils.getReferenceName(interface_decl, method, param);
 					writer.println("\t\tthis." + reference_name + " = null;");
@@ -119,7 +119,7 @@ public class ReferencesGeneratorProcessorFactory implements AnnotationProcessorF
 		private static void generateCopiesFromParameters(PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method) {
 			for (ParameterDeclaration param : method.getParameters()) {
 				CachedReference cached_reference_annotation = param.getAnnotation(CachedReference.class);
-				if (cached_reference_annotation != null) {
+				if (cached_reference_annotation != null && cached_reference_annotation.name().length() == 0) {
 					Class nio_type = Utils.getNIOBufferType(param.getType());
 					String reference_name = Utils.getReferenceName(interface_decl, method, param);
 					writer.print("\t\tthis." + reference_name + " = ");
@@ -143,7 +143,7 @@ public class ReferencesGeneratorProcessorFactory implements AnnotationProcessorF
 		private static void generateReferencesFromParameters(PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method) {
 			for (ParameterDeclaration param : method.getParameters()) {
 				CachedReference cached_reference_annotation = param.getAnnotation(CachedReference.class);
-				if (cached_reference_annotation != null) {
+				if (cached_reference_annotation != null && cached_reference_annotation.name().length() == 0) {
 					Class nio_type = Utils.getNIOBufferType(param.getType());
 					if (nio_type == null)
 						throw new RuntimeException(param + " in method " + method + " in " + interface_decl + " is annotated with "
@@ -167,6 +167,9 @@ public class ReferencesGeneratorProcessorFactory implements AnnotationProcessorF
 			writer.println("package org.lwjgl.opengl;");
 			writer.println();
 			writer.println("class " + REFERENCES_CLASS_NAME + " extends BaseReferences {");
+                        writer.println("\t" + REFERENCES_CLASS_NAME + "(ContextCapabilities caps) {");
+                        writer.println("\t\tsuper(caps);");
+                        writer.println("\t}");
 			DeclarationFilter filter = DeclarationFilter.getFilter(InterfaceDeclaration.class);
 			Collection<TypeDeclaration> interface_decls = filter.filter(env.getSpecifiedTypeDeclarations());
 			for (TypeDeclaration typedecl : interface_decls) {
