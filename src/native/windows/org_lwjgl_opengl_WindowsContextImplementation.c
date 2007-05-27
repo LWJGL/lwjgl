@@ -105,8 +105,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nI
 	return wglGetCurrentContext() == context_info->context;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nSetSwapInterval
-  (JNIEnv *env, jclass clazz, jobject context_handle, jint value) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nSetSwapInterval
+  (JNIEnv *env, jclass clazz, jint value) {
 	WGLExtensions extensions;
 	extgl_InitWGL(&extensions);
 	if (extensions.WGL_EXT_swap_control) {

@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 
 /**
  *
@@ -96,14 +97,12 @@ final class WindowsContextImplementation implements ContextImplementation {
 	private static native boolean nIsCurrent(ByteBuffer context_handle) throws LWJGLException;
 
 	public void setSwapInterval(int value) {
-		Context current_context = Context.getCurrentContext();
-		if (current_context == null)
-			throw new IllegalStateException("No context is current");
-		synchronized (current_context) {
-			nSetSwapInterval(current_context.getHandle(), value);
-		}
+		boolean success = nSetSwapInterval(value) == GL11.GL_TRUE ? true : false;
+		if (!success)
+			LWJGLUtil.log("Failed to set swap interval");
+		Util.checkGLError();
 	}
-	private static native void nSetSwapInterval(ByteBuffer context_handle, int value);
+	private static native int nSetSwapInterval(int value);
 
 	public void destroy(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException {
 		nDestroy(handle);
