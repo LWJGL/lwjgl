@@ -767,6 +767,7 @@ public final class Display {
 
 	private static void makeCurrentAndSetSwapInterval() throws LWJGLException {
 		makeCurrent();
+		Util.checkGLerror();
 		setSwapInterval(swap_interval);
 	}
 
