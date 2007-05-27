@@ -373,7 +373,6 @@ final class LinuxDisplay implements DisplayImplementation {
 					grab = false;
 					minimized = false;
 					dirty = true;
-					updateInputGrab();
 				} finally {
 					peer_info.unlock();
 				}
@@ -615,6 +614,7 @@ final class LinuxDisplay implements DisplayImplementation {
 				case LinuxEvent.MapNotify:
 					dirty = true;
 					minimized = false;
+					updateInputGrab();
 					break;
 				case LinuxEvent.UnmapNotify:
 					dirty = true;
