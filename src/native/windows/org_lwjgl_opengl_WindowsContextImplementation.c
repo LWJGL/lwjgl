@@ -105,13 +105,14 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nI
 	return wglGetCurrentContext() == context_info->context;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nSetSwapInterval
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nSetSwapInterval
   (JNIEnv *env, jclass clazz, jint value) {
 	WGLExtensions extensions;
 	extgl_InitWGL(&extensions);
 	if (extensions.WGL_EXT_swap_control) {
-		extensions.wglSwapIntervalEXT(value);
-	}
+		return extensions.wglSwapIntervalEXT(value) ? JNI_TRUE : JNI_FALSE;
+	} else
+		return JNI_FALSE;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nDestroy

@@ -97,12 +97,12 @@ final class WindowsContextImplementation implements ContextImplementation {
 	private static native boolean nIsCurrent(ByteBuffer context_handle) throws LWJGLException;
 
 	public void setSwapInterval(int value) {
-		boolean success = nSetSwapInterval(value) == GL11.GL_TRUE ? true : false;
+		boolean success = nSetSwapInterval(value);
 		if (!success)
 			LWJGLUtil.log("Failed to set swap interval");
 		Util.checkGLError();
 	}
-	private static native int nSetSwapInterval(int value);
+	private static native boolean nSetSwapInterval(int value);
 
 	public void destroy(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException {
 		nDestroy(handle);
