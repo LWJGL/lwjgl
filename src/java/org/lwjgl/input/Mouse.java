@@ -146,7 +146,7 @@ public class Mouse {
 	 *
 	 * @return the currently bound native cursor, if any.
 	 */
-	public static synchronized Cursor getNativeCursor() {
+	public static Cursor getNativeCursor() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			return currentCursor;
 		}
@@ -163,7 +163,7 @@ public class Mouse {
 	 * @return The previous Cursor object set, or null.
 	 * @throws LWJGLException if the cursor could not be set for any reason
 	 */
-	public static synchronized Cursor setNativeCursor(Cursor cursor) throws LWJGLException {
+	public static Cursor setNativeCursor(Cursor cursor) throws LWJGLException {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			if ((Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) == 0)
 				throw new IllegalStateException("Mouse doesn't support native cursors");
@@ -190,7 +190,7 @@ public class Mouse {
 	 * @param y The y coordinate of the new cursor position in OpenGL coordinates relative
 	 *			to the window origin.
 	 */
-	public static synchronized void setCursorPosition(int new_x, int new_y) {
+	public static void setCursorPosition(int new_x, int new_y) {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			if (!isCreated())
 				throw new IllegalStateException("Mouse is not created");
@@ -260,7 +260,7 @@ public class Mouse {
 	 *
 	 * @throws LWJGLException if the mouse could not be created for any reason
 	 */
-	public static synchronized void create() throws LWJGLException {
+	public static void create() throws LWJGLException {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			if (!Display.isCreated()) throw new IllegalStateException("Display must be created.");
 
@@ -271,7 +271,7 @@ public class Mouse {
 	/**
 	 * @return true if the mouse has been created
 	 */
-	public static synchronized boolean isCreated() {
+	public static boolean isCreated() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			return created;
 		}
@@ -280,7 +280,7 @@ public class Mouse {
 	/**
 	 * "Destroy" the mouse.
 	 */
-	public static synchronized void destroy() {
+	public static void destroy() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			if (!created) return;
 			created = false;
@@ -312,7 +312,7 @@ public class Mouse {
 	 * @see org.lwjgl.input.Mouse#getDY()
 	 * @see org.lwjgl.input.Mouse#getDWheel()
 	 */
-	public static synchronized void poll() {
+	public static void poll() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			if (!created) throw new IllegalStateException("Mouse must be created before you can poll it");
 			implementation.pollMouse(coord_buffer, buttons);
@@ -353,7 +353,7 @@ public class Mouse {
 	 * @param button The index of the button you wish to test (0..getButtonCount-1)
 	 * @return true if the specified button is down
 	 */
-	public static synchronized boolean isButtonDown(int button) {
+	public static boolean isButtonDown(int button) {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			if (!created) throw new IllegalStateException("Mouse must be created before you can poll the button state");
 			if (button >= buttonCount || button < 0)
@@ -368,7 +368,7 @@ public class Mouse {
 	 * @param button The button
 	 * @return a String with the button's human readable name in it or null if the button is unnamed
 	 */
-	public static synchronized String getButtonName(int button) {
+	public static String getButtonName(int button) {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			if (button >= buttonName.length || button < 0)
 				return null;
@@ -381,7 +381,7 @@ public class Mouse {
 	 * Get's a button's index. If the button is unrecognised then -1 is returned.
 	 * @param buttonName The button name
 	 */
-	public static synchronized int getButtonIndex(String buttonName) {
+	public static int getButtonIndex(String buttonName) {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			Integer ret = (Integer) buttonMap.get(buttonName);
 			if (ret == null)
@@ -400,7 +400,7 @@ public class Mouse {
 	 * @see org.lwjgl.input.Mouse#getEventButtonState()
 	 * @return true if a mouse event was read, false otherwise
 	 */
-	public static synchronized boolean next() {
+	public static boolean next() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			if (!created) throw new IllegalStateException("Mouse must be created before you can read events");
 			if (readBuffer.hasRemaining()) {
@@ -432,7 +432,7 @@ public class Mouse {
 	/**
 	 * @return Current events button. Returns -1 if no button state was changed
 	 */
-	public static synchronized int getEventButton() {
+	public static int getEventButton() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			return eventButton;
 		}
@@ -442,7 +442,7 @@ public class Mouse {
 	 * Get the current events button state.
 	 * @return Current events button state.
 	 */
-	public static synchronized boolean getEventButtonState() {
+	public static boolean getEventButtonState() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			return eventState;
 		}
@@ -451,7 +451,7 @@ public class Mouse {
 	/**
 	 * @return Current events delta x. Only valid when the mouse is grabbed.
 	 */
-	public static synchronized int getEventDX() {
+	public static int getEventDX() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			return event_dx;
 		}
@@ -460,7 +460,7 @@ public class Mouse {
 	/**
 	 * @return Current events delta y. Only valid when the mouse is grabbed.
 	 */
-	public static synchronized int getEventDY() {
+	public static int getEventDY() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			return event_dy;
 		}
@@ -469,7 +469,7 @@ public class Mouse {
 	/**
 	 * @return Current events absolute x. Only valid when the mouse is not grabbed.
 	 */
-	public static synchronized int getEventX() {
+	public static int getEventX() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			return event_x;
 		}
@@ -478,7 +478,7 @@ public class Mouse {
 	/**
 	 * @return Current events absolute y. Only valid when the mouse is not grabbed.
 	 */
-	public static synchronized int getEventY() {
+	public static int getEventY() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			return event_y;
 		}
@@ -487,7 +487,7 @@ public class Mouse {
 	/**
 	 * @return Current events delta z
 	 */
-	public static synchronized int getEventDWheel() {
+	public static int getEventDWheel() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			return event_dwheel;
 		}
@@ -501,7 +501,7 @@ public class Mouse {
 	 *
 	 * @return The time in nanoseconds of the current event
 	 */
-	public static synchronized long getEventNanoseconds() {
+	public static long getEventNanoseconds() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			return event_nanos;
 		}
@@ -513,7 +513,7 @@ public class Mouse {
 	 *
 	 * @return Absolute x axis position of mouse
 	 */
-	public static synchronized int getX() {
+	public static int getX() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			return x;
 		}
@@ -525,7 +525,7 @@ public class Mouse {
 	 *
 	 * @return Absolute y axis position of mouse
 	 */
-	public static synchronized int getY() {
+	public static int getY() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			return y;
 		}
@@ -534,7 +534,7 @@ public class Mouse {
 	/**
 	 * @return Movement on the x axis since last time getDX() was called. Only valid when the mouse is grabbed.
 	 */
-	public static synchronized int getDX() {
+	public static int getDX() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			int result = dx;
 			dx = 0;
@@ -545,7 +545,7 @@ public class Mouse {
 	/**
 	 * @return Movement on the y axis since last time getDY() was called. Only valid when the mouse is grabbed.
 	 */
-	public static synchronized int getDY() {
+	public static int getDY() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			int result = dy;
 			dy = 0;
@@ -556,7 +556,7 @@ public class Mouse {
 	/**
 	 * @return Movement of the wheel since last time getDWheel() was called
 	 */
-	public static synchronized int getDWheel() {
+	public static int getDWheel() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			int result = dwheel;
 			dwheel = 0;
@@ -567,7 +567,7 @@ public class Mouse {
 	/**
 	 * @return Number of buttons on this mouse
 	 */
-	public static synchronized int getButtonCount() {
+	public static int getButtonCount() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			return buttonCount;
 		}
@@ -576,7 +576,7 @@ public class Mouse {
 	/**
 	 * @return Whether or not this mouse has wheel support
 	 */
-	public static synchronized boolean hasWheel() {
+	public static boolean hasWheel() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			return hasWheel;
 		}
@@ -585,7 +585,7 @@ public class Mouse {
 	/**
 	 * @return whether or not the mouse has grabbed the cursor
 	 */
-	public static synchronized boolean isGrabbed() {
+	public static boolean isGrabbed() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			return isGrabbed;
 		}
@@ -599,7 +599,7 @@ public class Mouse {
 	 *
 	 * @param grab whether the mouse should be grabbed
 	 */
-	public static synchronized void setGrabbed(boolean grab) {
+	public static void setGrabbed(boolean grab) {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			isGrabbed = grab;
 			if (isCreated()) {
@@ -618,7 +618,7 @@ public class Mouse {
 	 * This method is called automatically by the window on its update, and
 	 * shouldn't be called otherwise
 	 */
-	public static synchronized void updateCursor() {
+	public static void updateCursor() {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			if (emulateCursorAnimation && currentCursor != null && currentCursor.hasTimedOut()) {
 				currentCursor.nextCursor();
