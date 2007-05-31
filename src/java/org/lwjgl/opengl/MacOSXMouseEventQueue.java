@@ -53,6 +53,8 @@ import org.lwjgl.input.Mouse;
 final class MacOSXMouseEventQueue extends MouseEventQueue {
 	private final IntBuffer delta_buffer = BufferUtils.createIntBuffer(2);
 
+	private static boolean is_grabbed;
+	
 	MacOSXMouseEventQueue(Component component) {
 		super(component);
 	}
@@ -60,7 +62,10 @@ final class MacOSXMouseEventQueue extends MouseEventQueue {
 	public void setGrabbed(boolean grab) {
 		super.setGrabbed(grab);
 		warpCursor();
-		nGrabMouse(grab);
+		if (is_grabbed != grab) {
+			is_grabbed = grab;
+			nGrabMouse(grab);
+		}
 	}
 	
 	protected void resetCursorToCenter() {
