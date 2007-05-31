@@ -44,18 +44,12 @@
 #include "org_lwjgl_opengl_MacOSXMouseEventQueue.h"
 #include "common_tools.h"
 
-static bool is_grabbed;
-
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXMouseEventQueue_nGrabMouse(JNIEnv *env, jclass unused, jboolean grab) {
-	bool new_grabbed = grab == JNI_TRUE;
-	if (is_grabbed != new_grabbed) {
-		is_grabbed = new_grabbed;
-		CGAssociateMouseAndMouseCursorPosition(is_grabbed ? FALSE : TRUE);
-		if (is_grabbed)
-			CGDisplayHideCursor(kCGDirectMainDisplay);
-		else
-			CGDisplayShowCursor(kCGDirectMainDisplay);
-	}
+	CGAssociateMouseAndMouseCursorPosition(grab == JNI_TRUE ? FALSE : TRUE);
+	if (grab)
+		CGDisplayHideCursor(kCGDirectMainDisplay);
+	else
+		CGDisplayShowCursor(kCGDirectMainDisplay);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXMouseEventQueue_nWarpCursor(JNIEnv *env, jclass unused, jint x, jint y) {
