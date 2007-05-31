@@ -161,12 +161,13 @@ final class WindowsKeyboard {
 		retained_millis = millis;
 		retained_char = 0;
 		retained_repeat = repeat;
-//		translate(virt_key, event_state, millis*1000000);
 	}
 
-	public void handleChar(int event_char, long millis) {
+	public void handleChar(int event_char, long millis, boolean repeat) {
+		if (has_retained_event && retained_char != 0)
+			flushRetained();
 		if (!has_retained_event) {
-			putEvent(0, (byte)0, event_char, millis, false);
+			putEvent(0, (byte)0, event_char, millis, repeat);
 		} else
 			retained_char = event_char;
 	}

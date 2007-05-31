@@ -599,10 +599,9 @@ final class WindowsDisplay implements DisplayImplementation {
 	private void handleChar(long wParam, long lParam, long millis) {
 		byte previous_state = (byte)((lParam >>> 30) & 0x1);
 		byte state = (byte)(1 - ((lParam >>> 31) & 0x1));
-		if (state == previous_state)
-			return; // Auto-repeat message
+		boolean repeat = state == previous_state;
 		if (keyboard != null)
-			keyboard.handleChar((int)(wParam & 0xFF), millis);
+			keyboard.handleChar((int)(wParam & 0xFF), millis, repeat);
 	}
 
 	private void handleKeyButton(long wParam, long lParam, long millis) {
