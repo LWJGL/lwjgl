@@ -53,6 +53,7 @@ import org.lwjgl.input.Mouse;
 final class MacOSXMouseEventQueue extends MouseEventQueue {
 	private final IntBuffer delta_buffer = BufferUtils.createIntBuffer(2);
 
+	private boolean skip_event;
 	private static boolean is_grabbed;
 	
 	MacOSXMouseEventQueue(Component component) {
@@ -84,6 +85,10 @@ final class MacOSXMouseEventQueue extends MouseEventQueue {
 			getMouseDeltas(delta_buffer);
 			int dx = delta_buffer.get(0);
 			int dy = -delta_buffer.get(1);
+			if (skip_event) {
+				skip_event = false;
+				return;
+			}
 			if ( dx != 0 || dy != 0 ) {
 				putMouseEventWithCoords((byte)-1, (byte)0, dx, dy, 0, nanos);
 				addDelta(dx, dy);
@@ -92,6 +97,10 @@ final class MacOSXMouseEventQueue extends MouseEventQueue {
 	}
 
 	void warpCursor() {
+		synchronized (this) {
+			// If we're going to warp the cursor position, we'll skip the next event to avoid bogus delta values
+			skip_event = isGrabbed();
+		}
 		if (isGrabbed()) {
 			Rectangle bounds = getComponent().getBounds();
 			Point location_on_screen = getComponent().getLocationOnScreen();
