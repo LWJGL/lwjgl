@@ -874,13 +874,6 @@ public final class Display {
 	}
 
 	/**
-	 * @return the unique Display context (or null, if the Display has not been created)
-	 */
-	private static Context getContext() {
-		return context;
-	}
-
-	/**
 	 * @return true if the window's native peer has been created
 	 */
 	public static boolean isCreated() {
