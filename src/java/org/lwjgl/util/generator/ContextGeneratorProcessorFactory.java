@@ -168,6 +168,7 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 				if (Utils.isFinal(interface_decl))
 					ContextCapabilitiesGenerator.generateInitializer(writer, interface_decl);
 			}
+			writer.println("\t\ttracker = new StateTracker();");
 			writer.println("\t}");
 			writer.println("}");
 			writer.close();
