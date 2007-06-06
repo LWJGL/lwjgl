@@ -47,7 +47,7 @@ class BaseReferences {
         IntBuffer temp = caps.scratch_int_buffer;
 
 		int max_vertex_attribs;
-		if (caps.GL_ARB_vertex_shader) {
+		if (caps.OpenGL20 || caps.GL_ARB_vertex_shader) {
 	        GL11.glGetInteger(ARBVertexShader.GL_MAX_VERTEX_ATTRIBS_ARB, temp);
 			max_vertex_attribs = temp.get(0);
 		} else
@@ -55,7 +55,7 @@ class BaseReferences {
         glVertexAttribPointer_buffer = new Buffer[max_vertex_attribs];
 
 		int max_texture_units;
-		if (caps.OpenGL13) {
+		if (caps.OpenGL13 || caps.GL_ARB_multitexture) {
         	GL11.glGetInteger(GL13.GL_MAX_TEXTURE_UNITS, temp);
 			max_texture_units = temp.get(0);
 		} else
