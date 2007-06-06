@@ -112,7 +112,6 @@ final class WindowsKeyboard {
 	}
 
 	private int translateShift(int scan_code, byte state) {
-		int state_mask = state != 0 ? 0x8000 : 0x0000;
 		if (checkShiftKey(WindowsKeycodes.VK_LSHIFT, state)) {
 			return WindowsKeycodes.VK_LSHIFT;
 		} else if (checkShiftKey(WindowsKeycodes.VK_RSHIFT, state)) {
