@@ -1,0 +1,57 @@
+<html><head><title>AppletLoader</title>
+
+<APPLET code="org.lwjgl.util.applet.AppletLoader" archive="lwjgl_util_applet.jar" codebase="." width="640" height="480">
+
+<!-- The following tags are mandatory -->
+
+<!-- Name of Applet, will be used as name of directory it is saved in, and will uniquely identify it in cache -->
+<param name="al_title" value="appletloadertest">
+
+<!-- Main Applet Class -->
+<param name="al_main" value="org.lwjgl.test.applet.AppletLoaderTest">
+
+<!-- logo to paint while loading, will be centered -->
+<param name="al_logo" value="appletlogo.png">
+
+<!-- progressbar to paint while loading. Will be painted on top of logo, width clipped to percentage done -->
+<param name="al_progressbar" value="appletprogress.gif">
+
+<!-- List of Jars to add to classpath -->
+<param name="al_jars" value="lwjgl_applet.jar, lwjgl.jar, jinput.jar, lwjgl_devil.jar, lwjgl_fmod3.jar, lwjgl_util.jar, res.jar">
+
+<!-- signed windows natives jar in a jar --> 
+<param name="al_windows" value="windows_natives.jar">
+
+<!-- signed linux natives jar in a jar --> 
+<param name="al_linux" value="linux_natives.jar">
+
+<!-- signed mac osx natives jar in a jar --> 
+<param name="al_mac" value="macosx_natives.jar">
+
+<!-- Tags under here are optional -->
+
+<!-- Version of Applet, important otherwise applet won't be cached, version change will update applet, must be int or float -->
+<!-- <param name="al_version" value="0.1"> -->
+
+<!-- background color to paint with, defaults to white -->
+<!-- <param name="al_bgcolor" value="000000"> -->
+
+<!-- foreground color to paint with, defaults to black -->
+<!-- <param name="al_fgcolor" value="ffffff"> -->
+
+<!-- error color to paint with, defaults to red -->
+<!-- <param name="al_errorcolor" value="ff0000"> -->
+
+<!-- whether to run in debug mode -->
+<!-- <param name="al_debug" value="false"> -->
+
+<!-- main applet specific params -->
+<param name="test" value="org.lwjgl.test.opengl.awt.AWTGearsCanvas">
+
+</APPLET>
+
+<p>
+	if <code>al_debug</code> is true the applet will load and extract resources with a delay, to be able to see the loader process.
+</p>
+
+</body></html>
