@@ -78,67 +78,7 @@ public class AWTGears extends Frame {
 		setTitle("Gears");
 		setSize(300, 300);
 		setBackground(Color.BLACK);
-		add(canvas0 = new AWTGLCanvas() {
-			long startTime = 0;
-			long fps = 0;
-			int current_width;
-			int current_height;
-			public void paintGL() {
-				
-				if(startTime == 0) {
-					setup();
-					startTime = System.currentTimeMillis() + 5000;
-				}
-				
-				try {
-					angle += 2.0f;
-					if (getWidth() != current_width || getHeight() != current_height) {
-						current_width = getWidth();
-						current_height = getHeight();
-						GL11.glViewport(0, 0, current_width, current_height);
-					}
-					GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-
-					GL11.glPushMatrix();
-					GL11.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
-					GL11.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
-					GL11.glRotatef(view_rotz, 0.0f, 0.0f, 1.0f);
-
-					GL11.glPushMatrix();
-					GL11.glTranslatef(-3.0f, -2.0f, 0.0f);
-					GL11.glRotatef(angle, 0.0f, 0.0f, 1.0f);
-					GL11.glCallList(gear1);
-					GL11.glPopMatrix();
-
-					GL11.glPushMatrix();
-					GL11.glTranslatef(3.1f, -2.0f, 0.0f);
-					GL11.glRotatef(-2.0f * angle - 9.0f, 0.0f, 0.0f, 1.0f);
-					GL11.glCallList(gear2);
-					GL11.glPopMatrix();
-
-					GL11.glPushMatrix();
-					GL11.glTranslatef(-3.1f, 4.2f, 0.0f);
-					GL11.glRotatef(-2.0f * angle - 25.0f, 0.0f, 0.0f, 1.0f);
-					GL11.glCallList(gear3);
-					GL11.glPopMatrix();
-
-					GL11.glPopMatrix();					
-					swapBuffers();
-					repaint();
-				} catch (LWJGLException e) {
-					throw new RuntimeException(e);
-				}
-				if (startTime > System.currentTimeMillis()) {
-					fps++;
-				} else {
-					long timeUsed = 5000 + (startTime - System.currentTimeMillis());
-					startTime = System.currentTimeMillis() + 5000;
-					System.out.println(fps + " frames in " + (float) (timeUsed / 1000f) + " seconds = "
-							+ (fps / (timeUsed / 1000f)));
-					fps = 0;
-				}				
-			}
-		});
+		add(new AWTGearsCanvas());
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				dispose();
