@@ -77,6 +77,7 @@
 	<fileset id="lwjgl_applet.fileset" dir="${lwjgl.bin}">
 		<exclude name="**.*"/>
 		<include name="org/lwjgl/test/applet/**"/>
+		<include name="org/lwjgl/test/opengl/awt/AWTGearsCanvas.class"/>
 	</fileset>
 	
 	<!-- Files to make Javadoc from -->
@@ -447,11 +448,12 @@
 				<include name="macosx_natives.jar"/>					
 			</fileset>
 		</jar>
-		<delete file="applet/windows_natives.jar"/>
-		<delete file="applet/linux_natives.jar"/>
-		<delete file="applet/macosx_natives.jar"/>
 		
-		<copy file="${lwjgl.lib}/lwjgl.jar" todir="applet"/>
+	  	<jar destfile="${lwjgl.lib}/lwjgl_util_applet.jar" update="true">
+	  		<fileset dir="${lwjgl.res}" includes="applet*"/>
+	  	</jar>
+
+	  	<copy file="${lwjgl.lib}/lwjgl.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/lwjgl_util_applet.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/lwjgl_util.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/lwjgl_fmod3.jar" todir="applet"/>
