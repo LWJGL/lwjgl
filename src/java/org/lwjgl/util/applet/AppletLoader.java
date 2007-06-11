@@ -47,7 +47,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
@@ -165,9 +164,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/** urls of the jars to download */
 	protected URL[]		urlList;
 	
-	/** list of jars to download */
-	protected String 	jarList;
-	
 	/** actual thread that does the loading */
 	protected Thread	loaderThread;
 	
@@ -197,6 +193,14 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 												"Plese contact support to resolve this issue.",
 												"<placeholder for error message>"};
 	
+	/** whether a certificate refused error occured */
+	protected boolean	certificateRefused;
+	
+	/** error message to display if user refuses to accept certicate*/
+	protected String[] 	certificateRefusedMessage = { "Permissions for Applet Refused.",
+												      "Please accept the permissions dialog to allow",
+												      "the applet to continue the loading process."};
+	
 	/*
 	 * @see java.applet.Applet#init()
 	 */
@@ -223,17 +227,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		logo 			= getImage("/" + getParameter("al_logo"));
 		progressbar 	= getImage("/" + getParameter("al_progressbar"));
 		
-		// jars to load
-		jarList 		= getParameter("al_jars");
-		
 		//sanity check
 		if(logo == null || progressbar == null) {
 			fatalErrorOccured("Unable to load logo and progressbar images");
-			return;
 		}
-
-		// parse the urls for the jars into the url list
-		loadJarURLs();
 	}
 
 	/*
@@ -247,7 +244,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			
 			animationThread = new Thread() {
 				public void run() {
-					while(state != STATE_DONE) {
+					while(loaderThread != null) {
 						repaint();
 						AppletLoader.this.sleep(100);
 					}
@@ -307,7 +304,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/*
 	 * @see java.awt.Container#paint(java.awt.Graphics)
 	 */
-	public final synchronized void paint(Graphics g) {
+	public synchronized void paint(Graphics g) {
 		
 		// paint applet if available
 		if(lwjglApplet != null && state == STATE_DONE) {
@@ -337,49 +334,18 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		}
 
 		og.setColor(fgColor);
-		String message = null;
+		String message = getDescriptionForState();
 
-		switch (state) {
-			case STATE_INIT:
-				message = "Initializing loader";
-				break;
-			case STATE_DETERMINING_PACKAGES:
-				message = "Determining packages to load";
-				break;
-			case STATE_CHECKING_CACHE:
-				message = "Checking cache for existing files";
-				break;
-			case STATE_DOWNLOADING:
-				message = "Downloading packages";
-				break;
-			case STATE_EXTRACTING_PACKAGES:
-				message = "Extracting downloaded packages";
-				break;
-			case STATE_UPDATING_CLASSPATH:
-				message = "Updating classpath";
-				break;
-			case STATE_SWITCHING_APPLET:
-				message = "Switching applet";
-				break;
-			case STATE_INITIALIZE_REAL_APPLET:
-				message = "Initializing real applet";
-				break;
-			case STATE_START_REAL_APPLET:
-				message = "Starting real applet";
-				break;
-			case STATE_DONE:
-				message = "Done loading";
-				break;
-		}
-
+		// if we had a failure of some sort, notify the user
 		if (fatalError) {
-			genericErrorMessage[genericErrorMessage.length-1] = fatalErrorDescription;
-			for(int i=0; i<genericErrorMessage.length; i++) {
-				int messageX = (getWidth() - fm.stringWidth(genericErrorMessage[i])) / 2;
-				int messageY = (getHeight() - (fm.getHeight() * genericErrorMessage.length)) / 2;
+			String[] errorMessage = (certificateRefused) ? certificateRefusedMessage : genericErrorMessage;
+			
+			for(int i=0; i<errorMessage.length; i++) {
+				int messageX = (getWidth() - fm.stringWidth(errorMessage[i])) / 2;
+				int messageY = (getHeight() - (fm.getHeight() * errorMessage.length)) / 2;
 				
 				og.setColor(errorColor);
-				og.drawString(genericErrorMessage[i], messageX, messageY + i*fm.getHeight());
+				og.drawString(errorMessage[i], messageX, messageY + i*fm.getHeight());
 			}
 		} else {
 			og.setColor(fgColor);
@@ -411,49 +377,77 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}	
 
 	/**
+	 * @return string describing the state of the loader
+	 */
+	protected String getDescriptionForState() {
+		switch (state) {
+			case STATE_INIT:
+				return "Initializing loader";
+			case STATE_DETERMINING_PACKAGES:
+				return "Determining packages to load";
+			case STATE_CHECKING_CACHE:
+				return "Checking cache for existing files";
+			case STATE_DOWNLOADING:
+				return "Downloading packages";
+			case STATE_EXTRACTING_PACKAGES:
+				return "Extracting downloaded packages";
+			case STATE_UPDATING_CLASSPATH:
+				return "Updating classpath";
+			case STATE_SWITCHING_APPLET:
+				return "Switching applet";
+			case STATE_INITIALIZE_REAL_APPLET:
+				return "Initializing real applet";
+			case STATE_START_REAL_APPLET:
+				return "Starting real applet";
+			case STATE_DONE:
+				return "Done loading";
+			default:
+				return "unknown state";
+		}
+	}
+
+	/**
 	 * Reads list of jars to download and adds the urls to urlList
 	 * also finds out which OS you are on and adds appropriate native
 	 * jar to the urlList
 	 */
-	protected void loadJarURLs() {
+	protected void loadJarURLs() throws Exception {
 		state = STATE_DETERMINING_PACKAGES;
-
+		
+		// jars to load
+		String jarList = getParameter("al_jars");
+		
 		StringTokenizer jar = new StringTokenizer(jarList, ", ");
 
 		int jarCount = jar.countTokens() + 1;
 		
 		urlList = new URL[jarCount];
 
-		try {
-			URL path = getCodeBase();
+		URL path = getCodeBase();
 
-			// set jars urls
-			for (int i = 0; i < jarCount - 1; i++) {
-				urlList[i] = new URL(path, jar.nextToken());
-			}
+		// set jars urls
+		for (int i = 0; i < jarCount - 1; i++) {
+			urlList[i] = new URL(path, jar.nextToken());
+		}
 
-			// native jar url
-			String osName 		= System.getProperty("os.name");
-			String nativeJar 	= null;
+		// native jar url
+		String osName 		= System.getProperty("os.name");
+		String nativeJar 	= null;
+		
+		if (osName.startsWith("Win")) {
+			nativeJar = getParameter("al_windows");
+		} else if (osName.startsWith("Linux") || osName.startsWith("FreeBSD") || osName.startsWith("SunOS")) {
+			nativeJar = getParameter("al_linux");
+		} else if (osName.startsWith("Mac")) {
+			nativeJar = getParameter("al_mac");
+		} else {
+			fatalErrorOccured("OS (" + osName + ") not supported");
+		}
 
-			if (osName.startsWith("Win")) {
-				nativeJar = getParameter("al_windows");
-			} else if (osName.startsWith("Linux") || osName.startsWith("FreeBSD") || osName.startsWith("SunOS")) {
-				nativeJar = getParameter("al_linux");
-			} else if (osName.startsWith("Mac")) {
-				nativeJar = getParameter("al_mac");
-			} else {
-				fatalErrorOccured("OS (" + osName + ") not supported");
-			}
-
-			if (nativeJar == null) {
-				fatalErrorOccured("no lwjgl natives files found");
-			} else {
-				urlList[jarCount - 1] = new URL(path, nativeJar);
-			}
-
-		} catch (MalformedURLException e) {
-			fatalErrorOccured(e.getMessage());
+		if (nativeJar == null) {
+			fatalErrorOccured("no lwjgl natives files found");
+		} else {
+			urlList[jarCount - 1] = new URL(path, nativeJar);
 		}
 	}
 
@@ -478,6 +472,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				sleep(2000);
 			}
 
+			// parse the urls for the jars into the url list
+			loadJarURLs();
+			
 			// get path where applet will be stored
 			String path = (String) AccessController.doPrivileged(new PrivilegedExceptionAction() {
 				public Object run() throws Exception {
@@ -542,10 +539,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			state = STATE_DONE;		
 		} catch (AccessControlException ace) {
 			fatalErrorOccured(ace.getMessage());
+			certificateRefused = true;
 		} catch (Exception e) {
 			fatalErrorOccured(e.getMessage());
 		} finally {
 			loaderThread = null;
+			repaint();
 		}
 	}
 
@@ -797,6 +796,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		subtaskMessage = "";
 
 		jarFile.close();
+		
+		// delete native jar as it is no longer needed
+		File f = new File(path + nativeJar);
+		f.delete();
 	}
 
 	/**
