@@ -589,8 +589,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
 		percentage = 95;
 
-		Class[] parameters = new Class[] { URL.class};
-
+		Class[] parameters = new Class[] {URL.class};
+		
 		// modify class path by adding downloaded jars to it
 		for (int i = 0; i < urlList.length; i++) {
 			// get location of jar as a url
@@ -599,7 +599,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			// add to class path
 			Method method = URLClassLoader.class.getDeclaredMethod("addURL", parameters);
 			method.setAccessible(true);
-			method.invoke((URLClassLoader) ClassLoader.getSystemClassLoader(), new Object[] { u});
+			method.invoke(getClass().getClassLoader(), new Object[] {u});
 		}
 		
 		if(debugMode) {
@@ -611,10 +611,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		// Make sure jinput knows about the new path too
 		System.setProperty("net.java.games.input.librarypath", path + "natives");
-
-		// replace security system to avoid bug where vm fails to
-		// recognise downloaded jars as signed, when they are
-		System.setSecurityManager(null);
 	}
 
 	/**
