@@ -421,11 +421,11 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 
 	private void switchDisplayModeOnTmpDisplay(DisplayMode mode) throws LWJGLException {
-		long tmp_display = openDisplay();
+		incDisplay();
 		try {
-			nSwitchDisplayMode(tmp_display, nGetDefaultScreen(tmp_display), current_displaymode_extension, mode);
+			nSwitchDisplayMode(getDisplay(), getDefaultScreen(), current_displaymode_extension, mode);
 		} finally {
-			closeDisplay(tmp_display);
+			decDisplay();
 		}
 	}
 	private static native void nSwitchDisplayMode(long display, int screen, int extension, DisplayMode mode) throws LWJGLException;
@@ -495,11 +495,11 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 
 	private void setGammaRampOnTmpDisplay(ByteBuffer native_gamma) throws LWJGLException {
-		long tmp_display = openDisplay();
+		incDisplay();
 		try {
-			nSetGammaRamp(tmp_display, nGetDefaultScreen(tmp_display), native_gamma);
+			nSetGammaRamp(getDisplay(), getDefaultScreen(), native_gamma);
 		} finally {
-			closeDisplay(tmp_display);
+			decDisplay();
 		}
 	}
 	private static native void nSetGammaRamp(long display, int screen, ByteBuffer gammaRamp) throws LWJGLException;
