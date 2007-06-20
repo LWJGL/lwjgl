@@ -34,6 +34,7 @@ package org.lwjgl;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
+import java.awt.Toolkit;
 
 /**
  *
@@ -42,6 +43,11 @@ import java.security.PrivilegedExceptionAction;
  * $Id$
  */
 class MacOSXSysImplementation extends J2SESysImplementation {
+	static {
+		// Make sure AWT is properly initialized. This avoids hangs on Mac OS X 10.3
+		Toolkit.getDefaultToolkit();
+	}
+
 	public boolean openURL(String url) {
 		try {
 			Method openURL_method = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
