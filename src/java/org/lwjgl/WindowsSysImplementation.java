@@ -32,8 +32,6 @@
 package org.lwjgl;
 
 import java.security.AccessController;
-import java.security.PrivilegedExceptionAction;
-import java.security.PrivilegedActionException;
 
 /**
  * <p>
@@ -56,15 +54,10 @@ class WindowsSysImplementation extends DefaultSysImplementation {
 
 	public boolean openURL(final String url) {
 		try {
-			AccessController.doPrivileged(new PrivilegedExceptionAction() {
-				public Object run() throws Exception {
-					Runtime.getRuntime().exec(new String[]{"rundll32", "url.dll,FileProtocolHandler", url});
-					return null;
-				}
-			});
+			LWJGLUtil.execPrivileged(new String[]{"rundll32", "url.dll,FileProtocolHandler", url});
 			return true;
-		} catch (PrivilegedActionException e) {
-			LWJGLUtil.log("Failed to open url (" + url + "): " + e.getCause().getMessage());
+		} catch (Exception e) {
+			LWJGLUtil.log("Failed to open url (" + url + "): " + e.getMessage());
 			return false;
 		}
 	}

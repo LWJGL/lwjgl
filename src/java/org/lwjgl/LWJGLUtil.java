@@ -380,6 +380,22 @@ public class LWJGLUtil {
 		return paths;
 	}
 
+	static void execPrivileged(final String[] cmd_array) throws Exception {
+		try {
+			Process process = (Process)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws Exception {
+					return Runtime.getRuntime().exec(cmd_array);
+				}
+			});
+			// Close unused streams to make sure the child process won't hang
+			process.getInputStream().close();
+			process.getOutputStream().close();
+			process.getErrorStream().close();
+		} catch (PrivilegedActionException e) {
+			throw (Exception)e.getCause();
+		}
+	}
+
 	private static String getPrivilegedProperty(final String property_name) {
 		return (String)AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
