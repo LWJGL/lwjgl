@@ -479,7 +479,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	 * @return number of icons used.
 	 */
 	public int setIcon(ByteBuffer[] icons) {
-		int size = 0;
+/*		int size = 0;
 		int biggest = -1;
 		
 		for (int i=0;i<icons.length;i++) {
@@ -505,7 +505,9 @@ final class MacOSXDisplay implements DisplayImplementation {
 		img.setRGB(0, 0, width, height, imageData, 0, width);
 		frame.setIconImage(img);
 		
-		return 1;
+		return 1;*/
+		// Don't use any icon, since Mac OS X windows don't have window icons
+		return 0;
 	}
 
 	public int getWidth() {
