@@ -220,6 +220,8 @@ final class WindowsDisplay implements DisplayImplementation {
 			setForegroundWindow(getHwnd());
 			setFocus(getHwnd());
 			did_maximize = true;
+			if (isFullscreen)
+				checkCursorClip();
 		} else if (isFullscreen) {
 			showWindow(getHwnd(), SW_SHOWMINNOACTIVE);
 			resetDisplayMode();
@@ -629,7 +631,7 @@ final class WindowsDisplay implements DisplayImplementation {
 			return false;
 	}
 
-	private boolean doHandleMessage(long hwnd, int msg, long wParam, long lParam, long millis) {
+	private void checkCursorClip() {
 		if ((isFullscreen || (mouse != null && mouse.isGrabbed())) && !isMinimized && isFocused) {
 			try {
 				setupCursorClipping(getHwnd());
@@ -639,6 +641,14 @@ final class WindowsDisplay implements DisplayImplementation {
 		} else {
 			resetCursorClipping();
 		}
+	}
+
+	private void setMinimized(boolean m) {
+		isMinimized = m;
+		checkCursorClip();
+	}
+
+	private boolean doHandleMessage(long hwnd, int msg, long wParam, long lParam, long millis) {
 		switch (msg) {
 			// disable screen saver and monitor power down messages which wreak havoc
 			case WM_ACTIVATE:
@@ -656,10 +666,10 @@ final class WindowsDisplay implements DisplayImplementation {
 				switch ((int)wParam) {
 					case SIZE_RESTORED:
 					case SIZE_MAXIMIZED:
-						isMinimized = false;
+						setMinimized(false);
 						break;
 					case SIZE_MINIMIZED:
-						isMinimized = true;
+						setMinimized(true);
 						break;
 				}
 				return false;
@@ -667,6 +677,7 @@ final class WindowsDisplay implements DisplayImplementation {
 				int xPos = (int)(short)(lParam & 0xFFFF);
 				int yPos = transformY(getHwnd(), (int)(short)((lParam >> 16) & 0xFFFF));
 				handleMouseMoved(xPos, yPos, millis);
+				checkCursorClip();
 				return true;
 			case WM_MOUSEWHEEL:
 				int dwheel = (int)(short)((wParam >> 16) & 0xFFFF);
