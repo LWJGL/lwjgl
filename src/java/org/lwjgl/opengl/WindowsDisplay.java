@@ -161,7 +161,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	static void resetCursorClipping() {
 		if (cursor_clipped) {
 			try {
-				clipCursor(0, null);
+				clipCursor(null);
 			} catch (LWJGLException e) {
 				LWJGLUtil.log("Failed to reset cursor clipping: " + e);
 			}
@@ -192,9 +192,9 @@ final class WindowsDisplay implements DisplayImplementation {
 		cursor_clipped = true;
 		getGlobalClientRect(hwnd, rect);
 		rect.copyToBuffer(rect_buffer);
-		clipCursor(hwnd, rect_buffer);
+		clipCursor(rect_buffer);
 	}
-	private static native void clipCursor(long hwnd, IntBuffer rect) throws LWJGLException;
+	private static native void clipCursor(IntBuffer rect) throws LWJGLException;
 
 	public void switchDisplayMode(DisplayMode mode) throws LWJGLException {
 		nSwitchDisplayMode(mode);

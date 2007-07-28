@@ -257,8 +257,7 @@ static void copyRectToBuffer(JNIEnv *env, RECT *rect, jobject buffer_handle) {
 	buffer[3] = rect->right;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_clipCursor(JNIEnv *env, jclass unused, jlong hwnd_ptr, jobject handle_buffer) {
-	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_clipCursor(JNIEnv *env, jclass unused, jobject handle_buffer) {
 	RECT clip_rect;
 	LPRECT clip_rect_ptr;
 	if (handle_buffer != NULL) {
