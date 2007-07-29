@@ -534,7 +534,7 @@ final class WindowsKeycodes {
 				return Keyboard.KEY_NUMPADCOMMA;
 			case VK_DIVIDE:
 				return Keyboard.KEY_DIVIDE;
-			case VK_PRINT:
+			case VK_SNAPSHOT:
 				return Keyboard.KEY_SYSRQ;
 			case VK_RMENU:
 				return Keyboard.KEY_RMENU;

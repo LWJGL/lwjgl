@@ -706,7 +706,17 @@ final class WindowsDisplay implements DisplayImplementation {
 				return true;
 			case WM_SYSKEYDOWN: /* Fall through */
 			case WM_SYSKEYUP: /* Fall through */
-			case WM_KEYUP: /* Fall through */
+			case WM_KEYUP:
+				// SysRq apparently only generates WM_KEYUP, so we'll fake a WM_KEYDOWN
+				if (wParam == WindowsKeycodes.VK_SNAPSHOT && keyboard != null &&
+						!keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_SYSRQ)) {
+					// Set key state to pressed
+					long fake_lparam = lParam & ~(1 << 31);
+					// Set key previous state to released
+					fake_lparam = fake_lparam & ~(1 << 30);
+					handleKeyButton(wParam, fake_lparam, millis);
+				}
+				/* Fall through */
 			case WM_KEYDOWN:
 				handleKeyButton(wParam, lParam, millis);
 				return false;

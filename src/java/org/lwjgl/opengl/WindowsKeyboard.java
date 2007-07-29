@@ -74,6 +74,10 @@ final class WindowsKeyboard {
 	public void destroy() {
 	}
 	
+	boolean isKeyDown(int lwjgl_keycode) {
+		return key_down_buffer[lwjgl_keycode] == 1;
+	}
+
 	public void grab(boolean grab) {
 		if(grab) {
 			if (!grabbed) {
