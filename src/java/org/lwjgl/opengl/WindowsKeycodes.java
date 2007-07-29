@@ -405,6 +405,7 @@ final class WindowsKeycodes {
 			case VK_OEM_7:
 				return Keyboard.KEY_APOSTROPHE;
 			case VK_OEM_3:
+			case VK_OEM_8:
 				return Keyboard.KEY_GRAVE;
 			case VK_LSHIFT:
 				return Keyboard.KEY_LSHIFT;
