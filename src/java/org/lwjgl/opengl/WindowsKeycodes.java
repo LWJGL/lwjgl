@@ -348,8 +348,8 @@ final class WindowsKeycodes {
 				return Keyboard.KEY_0;
 			case VK_OEM_MINUS:
 				return Keyboard.KEY_MINUS;
-/*			case VK_EQUALS:
-				return Keyboard.KEY_EQUALS;*/
+			case VK_OEM_PLUS:
+				return Keyboard.KEY_EQUALS;
 			case VK_BACK:
 				return Keyboard.KEY_BACK;
 			case VK_TAB:
