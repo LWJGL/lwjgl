@@ -193,7 +193,7 @@ public class FMOD {
 	private static String JNI_LIBRARY_NAME = "lwjgl-fmod3";
 
 	/** Version of FMOD */
-	private static final String VERSION = "1.1";
+	private static final String VERSION = "1.1.1";
 	
 	/** Current version of the JNI library */
 	static final int JNI_VERSION = 1;	
