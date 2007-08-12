@@ -225,7 +225,8 @@ final class WindowsDisplay implements DisplayImplementation {
 		} else if (isFullscreen) {
 			showWindow(getHwnd(), SW_SHOWMINNOACTIVE);
 			resetDisplayMode();
-		}
+		} else
+			checkCursorClip();
 		inAppActivate = false;
 	}
 	private static native void showWindow(long hwnd, int mode);
