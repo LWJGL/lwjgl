@@ -64,6 +64,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private final static int WM_KEYUP						  = 257;
 	private final static int WM_SYSKEYUP					  = 261;
 	private final static int WM_SYSKEYDOWN					  = 260;
+	private final static int WM_SYSCHAR                          = 262;
 	private final static int WM_CHAR                          = 258;
 
 	private final static int WM_QUIT						  = 0x0012;
@@ -708,6 +709,7 @@ final class WindowsDisplay implements DisplayImplementation {
 			case WM_MBUTTONUP:
 				handleMouseButton(2, 0, millis);
 				return true;
+			case WM_SYSCHAR:
 			case WM_CHAR:
 				handleChar(wParam, lParam, millis);
 				return true;
