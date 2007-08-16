@@ -82,9 +82,6 @@ public final class Display {
 	
 	/** Cached window icons, for when Display is recreated */
 	private static ByteBuffer[] cached_icons;
-	
-	/** Display mode used prior to entering fullscreen */
-	private static DisplayMode windowed_display_mode;
 
 	/**
 	 * Y coordinate of the window. Y in window coordinates is from the top of the display down,
@@ -301,7 +298,6 @@ public final class Display {
 	private static void switchDisplayMode() throws LWJGLException {
 		if (!current_mode.isFullscreen()) {
 			LWJGLUtil.log("Switching to "+initial_mode);
-			windowed_display_mode = current_mode;
 			setDisplayMode(initial_mode);
 		}
 		display_impl.switchDisplayMode(current_mode);
@@ -477,7 +473,6 @@ public final class Display {
 						switchDisplayMode();
 					} else {
 						display_impl.resetDisplayMode();
-						current_mode = windowed_display_mode;
 					}
 					createWindow();
 					makeCurrentAndSetSwapInterval();
@@ -849,7 +844,6 @@ public final class Display {
 			destroyPeerInfo();
 			x = y = -1;
 			cached_icons = null;
-			windowed_display_mode = null;
 			reset();
 			removeShutdownHook();
 		}
