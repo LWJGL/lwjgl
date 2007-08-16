@@ -221,12 +221,13 @@ final class WindowsDisplay implements DisplayImplementation {
 			setFocus(getHwnd());
 			did_maximize = true;
 			if (isFullscreen)
-				checkCursorClip();
+				updateClipping();
 		} else if (isFullscreen) {
 			showWindow(getHwnd(), SW_SHOWMINNOACTIVE);
 			resetDisplayMode();
 		} else
-			checkCursorClip();
+			updateClipping();
+		updateCursor();
 		inAppActivate = false;
 	}
 	private static native void showWindow(long hwnd, int mode);
@@ -402,11 +403,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		
 	public void grabMouse(boolean grab) {
 		mouse.grab(grab, shouldGrab());
-		try {
-			updateCursor();
-		} catch (LWJGLException e) {
-			LWJGLUtil.log("Failed to update cursor: " + e);
-		}
+		updateCursor();
 	}
 
 	public int getNativeCursorCapabilities() {
@@ -427,11 +424,15 @@ final class WindowsDisplay implements DisplayImplementation {
 		updateCursor();
 	}
 
-	private void updateCursor() throws LWJGLException {
-		if (mouse != null && mouse.isGrabbed())
-			nSetNativeCursor(getHwnd(), mouse.getBlankCursor());
-		else
-			nSetNativeCursor(getHwnd(), current_cursor);
+	private void updateCursor() {
+		try {
+			if (mouse != null && shouldGrab())
+				nSetNativeCursor(getHwnd(), mouse.getBlankCursor());
+			else
+				nSetNativeCursor(getHwnd(), current_cursor);
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Failed to update cursor: " + e);
+		}
 	}
 	static native void nSetNativeCursor(long hwnd, Object handle) throws LWJGLException;
 
@@ -584,7 +585,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	private boolean shouldGrab() {
-		return !isMinimized && isFocused;
+		return !isMinimized && isFocused && mouse != null && mouse.isGrabbed();
 	}
 
 	private void handleMouseMoved(int x, int y, long millis) {
@@ -632,7 +633,12 @@ final class WindowsDisplay implements DisplayImplementation {
 			return false;
 	}
 
-	private void checkCursorClip() {
+	private void checkCursorState() {
+		updateCursor();
+		updateClipping();
+	}
+
+	private void updateClipping() {
 		if ((isFullscreen || (mouse != null && mouse.isGrabbed())) && !isMinimized && isFocused) {
 			try {
 				setupCursorClipping(getHwnd());
@@ -646,7 +652,7 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private void setMinimized(boolean m) {
 		isMinimized = m;
-		checkCursorClip();
+		checkCursorState();
 	}
 
 	private boolean doHandleMessage(long hwnd, int msg, long wParam, long lParam, long millis) {
@@ -678,7 +684,7 @@ final class WindowsDisplay implements DisplayImplementation {
 				int xPos = (int)(short)(lParam & 0xFFFF);
 				int yPos = transformY(getHwnd(), (int)(short)((lParam >> 16) & 0xFFFF));
 				handleMouseMoved(xPos, yPos, millis);
-				checkCursorClip();
+				checkCursorState();
 				return true;
 			case WM_MOUSEWHEEL:
 				int dwheel = (int)(short)((wParam >> 16) & 0xFFFF);
