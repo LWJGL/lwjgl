@@ -297,8 +297,7 @@ public final class Display {
 
 	private static void switchDisplayMode() throws LWJGLException {
 		if (!current_mode.isFullscreen()) {
-			LWJGLUtil.log("Switching to "+initial_mode);
-			setDisplayMode(initial_mode);
+			throw new IllegalStateException("Only modes acquired from getAvailableDisplayModes() can be used for fullscreen display");
 		}
 		display_impl.switchDisplayMode(current_mode);
 	}
