@@ -715,6 +715,10 @@ final class WindowsDisplay implements DisplayImplementation {
 				return true;
 			case WM_SYSKEYDOWN: /* Fall through */
 			case WM_SYSKEYUP: /* Fall through */
+				// handle alt+space (activates the system window menu, just gobble it up)
+				if(wParam == WindowsKeycodes.VK_SPACE) {
+					return true;
+				}
 			case WM_KEYUP:
 				// SysRq apparently only generates WM_KEYUP, so we'll fake a WM_KEYDOWN
 				if (wParam == WindowsKeycodes.VK_SNAPSHOT && keyboard != null &&
