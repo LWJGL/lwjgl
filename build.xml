@@ -566,6 +566,7 @@
 		</javah>
 		
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/windows" force="yes">
+			<!-- OpenGL -->
 			<class name="org.lwjgl.opengl.WindowsAWTInput" />
 			<class name="org.lwjgl.opengl.WindowsKeyboard" />
 			<class name="org.lwjgl.opengl.WindowsDirectInput8" />
@@ -580,6 +581,29 @@
 			<class name="org.lwjgl.opengl.WindowsPeerInfo" />
 			<class name="org.lwjgl.opengl.WindowsDisplayPeerInfo" />
 			<class name="org.lwjgl.opengl.WindowsContextImplementation" />
+			<!-- Direct 3D -->
+			<class name="org.lwjgl.d3d.D3DUtil" />
+			<class name="org.lwjgl.d3d.IDirect3D9" />
+			<class name="org.lwjgl.d3d.IDirect3D9Ex" />
+			<class name="org.lwjgl.d3d.IDirect3DBaseTexture9" />
+			<class name="org.lwjgl.d3d.IDirect3DCubeTexture9" />
+			<class name="org.lwjgl.d3d.IDirect3DDevice9" />
+			<class name="org.lwjgl.d3d.IDirect3DDevice9Ex" />
+			<class name="org.lwjgl.d3d.IDirect3DIndexBuffer9" />
+			<class name="org.lwjgl.d3d.IDirect3DPixelShader9" />
+			<class name="org.lwjgl.d3d.IDirect3DQuery9" />
+			<class name="org.lwjgl.d3d.IDirect3DResource9" />
+			<class name="org.lwjgl.d3d.IDirect3DStateBlock9" />
+			<class name="org.lwjgl.d3d.IDirect3DSurface9" />
+			<class name="org.lwjgl.d3d.IDirect3DSwapChain9" />
+			<class name="org.lwjgl.d3d.IDirect3DSwapChain9Ex" />
+			<class name="org.lwjgl.d3d.IDirect3DTexture9" />
+			<class name="org.lwjgl.d3d.IDirect3DVertexBuffer9" />
+			<class name="org.lwjgl.d3d.IDirect3DVertexDeclaration9" />
+			<class name="org.lwjgl.d3d.IDirect3DVertexShader9" />
+			<class name="org.lwjgl.d3d.IDirect3DVolume9" />
+			<class name="org.lwjgl.d3d.IDirect3DVolumeTexture9" />
+			<class name="org.lwjgl.d3d.WindowsDisplay" />
 		</javah>
 		
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/macosx" force="yes">
