@@ -36,7 +36,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.input.InputImplementation;
 
 interface DisplayImplementation extends InputImplementation {
 

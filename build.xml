@@ -309,6 +309,7 @@
 
 	<!-- Create ONLY the jar archives -->
 	<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="-initialize, generate-all, compile, -createjars">
+		<!--<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="-initialize, compile, -createjars">-->
 		<move todir="libs/">
 			<fileset dir="${lwjgl.temp}/jar">
 				<include name="*.jar"/>
@@ -532,11 +533,12 @@
 
 	<!-- Compiles the Java source code -->
 	<target name="compile" description="Compiles the java source code" depends="-initialize">
-		<javac debug="yes" destdir="${lwjgl.bin}" includes="org/lwjgl/opengl/**" source="1.4" target="1.4" classpath="${lwjgl.lib}/jinput.jar" taskname="core">
+		<javac debug="yes" destdir="${lwjgl.bin}" source="1.4" target="1.4" classpath="${lwjgl.lib}/jinput.jar" taskname="core">
 			<src path="${lwjgl.src}/java/"/>
 			<src path="${lwjgl.src}/generated/"/>
 			<include name="org/lwjgl/*.java"/>
 			<include name="org/lwjgl/input/**"/>
+			<include name="org/lwjgl/d3d/**"/>
 			<include name="org/lwjgl/opengl/**"/>
 			<include name="org/lwjgl/openal/**"/>
 			<include name="org/lwjgl/util/**"/>
