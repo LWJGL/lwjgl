@@ -233,14 +233,19 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	
 	static void decDisplay() {
-		display_connection_usage_count--;
+		/*
+		 * Some drivers (at least some versions of the radeon dri driver)
+		 * don't like it when the display is closed and later re-opened,
+		 * so we'll just let the singleton display connection leak.
+		 */
+/*		display_connection_usage_count--;
 		if (display_connection_usage_count < 0)
 			throw new InternalError("display_connection_usage_count < 0: " + display_connection_usage_count);
 		if (display_connection_usage_count == 0) {
 			closeDisplay(display);
 			display = 0;
 			GLContext.unloadOpenGLLibrary();	
-		}
+		}*/
 	}
 
 	static native long openDisplay() throws LWJGLException;
