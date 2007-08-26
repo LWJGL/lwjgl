@@ -389,7 +389,7 @@
 		</java>
 	</target>
 	
-	<target name="applet" depends="jars">
+	<target name="applet" depends="all">
 		<antcall target="-applet">
 		    <param name="keystore" value="applet/lwjglkeystore"/>
 			<param name="alias" value="lwjgl"/>			
