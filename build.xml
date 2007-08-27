@@ -606,6 +606,15 @@
 			<class name="org.lwjgl.d3d.IDirect3DVolume9" />
 			<class name="org.lwjgl.d3d.IDirect3DVolumeTexture9" />
 			<class name="org.lwjgl.d3d.WindowsDisplay" />
+			<class name="org.lwjgl.d3d.WindowsContextImplementation" />
+			<class name="org.lwjgl.d3d.WindowsDirectInput3" />
+			<class name="org.lwjgl.d3d.WindowsDirectInputDevice3" />
+			<class name="org.lwjgl.d3d.WindowsDirectInput8" />
+			<class name="org.lwjgl.d3d.WindowsDirectInputDevice8" />
+			<class name="org.lwjgl.d3d.WindowsPeerInfo" />
+			<class name="org.lwjgl.d3d.WindowsDisplayPeerInfo" />
+			<class name="org.lwjgl.d3d.WindowsRegistry" />
+			<class name="org.lwjgl.d3d.WindowsKeyboard" />			
 		</javah>
 		
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/macosx" force="yes">
