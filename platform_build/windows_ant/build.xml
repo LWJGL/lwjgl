@@ -53,7 +53,7 @@
 	</target>
 	
 	<target name="compile">
-		<property name="libs" value="Kernel32.lib ole32.lib dinput.lib dxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib jawt.lib delayimp.lib winmm.lib"/>
+		<property name="libs" value="Kernel32.lib ole32.lib dinput.lib dxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib jawt.lib delayimp.lib winmm.lib d3dx9.lib d3d9.lib"/>
 		<antcall target="compile_dir"/>
 		<antcall target="link"/>
     </target>
