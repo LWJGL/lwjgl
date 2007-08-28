@@ -189,8 +189,20 @@ public class Keyboard {
 	public static final int KEY_NEXT            = 0xD1; /* PgDn on arrow keypad */
 	public static final int KEY_INSERT          = 0xD2; /* Insert on arrow keypad */
 	public static final int KEY_DELETE          = 0xD3; /* Delete on arrow keypad */
-	public static final int KEY_LWIN            = 0xDB; /* Left Windows key */
-	public static final int KEY_RWIN            = 0xDC; /* Right Windows key */
+	public static final int KEY_LMETA            = 0xDB; /* Left Windows/Option key */
+	/**
+	 * The left windows key, mapped to KEY_LMETA
+	 *
+	 * @Deprecated Use KEY_LMETA instead
+	 */
+	public static final int KEY_LWIN            = KEY_LMETA; /* Left Windows key */
+	public static final int KEY_RMETA            = 0xDC; /* Right Windows/Option key */
+	/**
+	 * The right windows key, mapped to KEY_RMETA
+	 *
+	 * @Deprecated Use KEY_RMETA instead
+	 */
+	public static final int KEY_RWIN            = KEY_RMETA; /* Right Windows key */
 	public static final int KEY_APPS            = 0xDD; /* AppMenu key */
 	public static final int KEY_POWER           = 0xDE;
 	public static final int KEY_SLEEP           = 0xDF;
