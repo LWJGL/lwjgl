@@ -329,11 +329,15 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 		// manually map positioned keys
 		switch (key_code) {
 			case KeyEvent.VK_ALT: // fall through
-			case KeyEvent.VK_META:
 				if (position == KeyEvent.KEY_LOCATION_RIGHT)
 					return Keyboard.KEY_RMENU;
 				else
 					return Keyboard.KEY_LMENU;
+			case KeyEvent.VK_META:
+				if (position == KeyEvent.KEY_LOCATION_RIGHT)
+					return Keyboard.KEY_RWIN;
+				else
+					return Keyboard.KEY_LWIN;
 			case KeyEvent.VK_SHIFT:
 				if (position == KeyEvent.KEY_LOCATION_RIGHT)
 					return Keyboard.KEY_RSHIFT;
