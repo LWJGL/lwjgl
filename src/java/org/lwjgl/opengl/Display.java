@@ -277,8 +277,8 @@ public final class Display {
 		}
 		try {
 			if (context != null && context.isCurrent()) {
-				context.releaseDrawable();
 				Context.releaseCurrentContext();
+				context.releaseDrawable();
 			}
 		} catch (LWJGLException e) {
 			LWJGLUtil.log("Exception occurred while trying to release context: " + e);
