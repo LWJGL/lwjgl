@@ -351,15 +351,18 @@ public final class Display {
 	 * @param fps The desired frame rate, in frames per second
 	 */
 	public static void sync3(int fps) {
+		long savedTimeThen;
+		long timeNow;
 		synchronized (GlobalLock.lock) {
-			float frameTime = 1.0f / (fps > 1 ? fps - 1 : 1);
-			long timeNow = Sys.getTime();
-			while (timeNow > timeThen && (float) (timeNow - timeThen) / (float) Sys.getTimerResolution() < frameTime) {
-				// This is a system-friendly way of allowing other stuff to use CPU if it wants to
-				Thread.yield();
-				timeNow = Sys.getTime();
-			}
+			timeNow = Sys.getTime();
+			savedTimeThen = timeThen;
 			timeThen = timeNow;
+		}
+		float frameTime = 1.0f / (fps > 1 ? fps - 1 : 1);
+		while (timeNow > savedTimeThen && (float) (timeNow - savedTimeThen) / (float) Sys.getTimerResolution() < frameTime) {
+			// This is a system-friendly way of allowing other stuff to use CPU if it wants to
+			Thread.yield();
+			timeNow = Sys.getTime();
 		}
 	}
 
@@ -371,15 +374,21 @@ public final class Display {
 	 * @param fps The desired frame rate, in frames per second
 	 */
 	public static void sync2(int fps) {
+		long timeNow;
+		long gapTo;
+		long savedTimeLate;
 		synchronized (GlobalLock.lock) {
-			long gapTo = Sys.getTimerResolution() / fps + timeThen;
-			long timeNow = Sys.getTime();
+			gapTo = Sys.getTimerResolution() / fps + timeThen;
+			timeNow = Sys.getTime();
+			savedTimeLate = timeLate;
+		}
 
-			while (gapTo > timeNow + timeLate) {
-				Thread.yield();
-				timeNow = Sys.getTime();
-			}
+		while (gapTo > timeNow + savedTimeLate) {
+			Thread.yield();
+			timeNow = Sys.getTime();
+		}
 
+		synchronized (GlobalLock.lock) {
 			if (gapTo < timeNow)
 				timeLate = timeNow - gapTo;
 			else
@@ -395,18 +404,24 @@ public final class Display {
 	 * @param fps The desired frame rate, in frames per second
 	 */
 	public static void sync(int fps) {
+		long timeNow;
+		long gapTo;
+		long savedTimeLate;
 		synchronized (GlobalLock.lock) {
-			long gapTo = Sys.getTimerResolution() / fps + timeThen;
-			long timeNow = Sys.getTime();
+			gapTo = Sys.getTimerResolution() / fps + timeThen;
+			timeNow = Sys.getTime();
+			savedTimeLate = timeLate;
+		}
 
-			while (gapTo > timeNow + timeLate) {
-				try {
-					Thread.sleep(1);
-				} catch (InterruptedException e) {
-				}
-				timeNow = Sys.getTime();
+		while (gapTo > timeNow + savedTimeLate) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
 			}
+			timeNow = Sys.getTime();
+		}
 
+		synchronized (GlobalLock.lock) {
 			if (gapTo < timeNow)
 				timeLate = timeNow - gapTo;
 			else
@@ -415,7 +430,7 @@ public final class Display {
 			timeThen = timeNow;
 		}
 	}
-	
+
 	/**
 	 * @return the X coordinate of the window (always 0 for fullscreen)
 	 */
