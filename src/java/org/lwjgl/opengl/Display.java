@@ -75,7 +75,7 @@ public final class Display {
 	private static DisplayMode current_mode;
 
 	/** Timer for sync() */
-	private static long timeNow, timeThen;
+	private static long timeThen;
 
 	/** X coordinate of the window */
 	private static int x = -1;
@@ -353,7 +353,7 @@ public final class Display {
 	public static void sync3(int fps) {
 		synchronized (GlobalLock.lock) {
 			float frameTime = 1.0f / (fps > 1 ? fps - 1 : 1);
-			timeNow = Sys.getTime();
+			long timeNow = Sys.getTime();
 			while (timeNow > timeThen && (float) (timeNow - timeThen) / (float) Sys.getTimerResolution() < frameTime) {
 				// This is a system-friendly way of allowing other stuff to use CPU if it wants to
 				Thread.yield();
@@ -373,7 +373,7 @@ public final class Display {
 	public static void sync2(int fps) {
 		synchronized (GlobalLock.lock) {
 			long gapTo = Sys.getTimerResolution() / fps + timeThen;
-			timeNow = Sys.getTime();
+			long timeNow = Sys.getTime();
 
 			while (gapTo > timeNow + timeLate) {
 				Thread.yield();
@@ -397,7 +397,7 @@ public final class Display {
 	public static void sync(int fps) {
 		synchronized (GlobalLock.lock) {
 			long gapTo = Sys.getTimerResolution() / fps + timeThen;
-			timeNow = Sys.getTime();
+			long timeNow = Sys.getTime();
 
 			while (gapTo > timeNow + timeLate) {
 				try {
