@@ -31,21 +31,29 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.GLenum;
+import org.lwjgl.util.generator.GLsizei;
 
 public interface EXT_framebuffer_multisample {
 
-	/**
-	 Accepted by the &lt;pname&gt; parameter of GetRenderbufferParameterivEXT.
-	 */
+	/** Accepted by the &lt;pname&gt; parameter of GetRenderbufferParameterivEXT. */
 	int GL_RENDERBUFFER_SAMPLES_EXT = 0x8CAB;
 
+	/** Returned by CheckFramebufferStatusEXT. */
+	int GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT = 0x8D56;
+
 	/**
-	 Establishes the data storage, format, dimensions, and number of
-	 samples of a renderbuffer object's image.
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 * GetFloatv, and GetDoublev.
+	 */
+	int GL_MAX_SAMPLES_EXT = 0x8D57;
+
+	/**
+	 * Establishes the data storage, format, dimensions, and number of
+	 * samples of a renderbuffer object's image.
 	 */
 	void glRenderbufferStorageMultisampleEXT(
 			@GLenum int target, @GLsizei int samples,
-	        @GLenum int internalformat,
-	        @GLsizei int width, @GLsizei int height);
+			@GLenum int internalformat,
+			@GLsizei int width, @GLsizei int height);
 }

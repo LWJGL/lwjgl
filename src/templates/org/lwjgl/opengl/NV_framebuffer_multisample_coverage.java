@@ -36,10 +36,14 @@ import org.lwjgl.util.generator.GLsizei;
 
 public interface NV_framebuffer_multisample_coverage {
 
-	/** Accepted by the &lt;pname&gt; parameter of GetRenderbufferParameterivEXT: */
+	/** Accepted by the &lt;pname&gt; parameter of GetRenderbufferParameterivEXT. */
 	int GL_RENDERBUFFER_COVERAGE_SAMPLES_NV = 0x8CAB;
 	int GL_RENDERBUFFER_COLOR_SAMPLES_NV = 0x8E10;
 
+	/** Accepted by the &lt;pname&gt; parameter of GetIntegerv. */
+	int GL_MAX_MULTISAMPLE_COVERAGE_MODES_NV = 0x8E11;
+	int GL_MULITSAMPLE_COVERAGE_MODES_NV = 0x8E12;
+
 	void glRenderbufferStorageMultisampleCoverageNV(@GLenum int target, @GLsizei int coverageSamples, @GLsizei int colorSamples,
-												   @GLenum int internalformat, @GLsizei int width, @GLsizei int height);
+	                                                @GLenum int internalformat, @GLsizei int width, @GLsizei int height);
 }

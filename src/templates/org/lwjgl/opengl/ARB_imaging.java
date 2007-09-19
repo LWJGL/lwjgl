@@ -122,6 +122,7 @@ public interface ARB_imaging {
 	int GL_MINMAX = 0x802E;
 	int GL_MINMAX_FORMAT = 0x802F;
 	int GL_MINMAX_SINK = 0x8030;
+	int GL_TABLE_TOO_LARGE = 0x8031;
 
 	void glColorTable(@GLenum int target, @GLenum int internalFormat, @GLsizei int width, @GLenum int format, @GLenum int type,
 	                  @BufferObject(BufferKind.UnpackPBO)

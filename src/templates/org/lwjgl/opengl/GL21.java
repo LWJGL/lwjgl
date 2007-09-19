@@ -31,9 +31,11 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.AutoSize;
+import org.lwjgl.util.generator.GLsizei;
+import org.lwjgl.util.generator.StripPostfix;
 
-import java.nio.*;
+import java.nio.FloatBuffer;
 
 public interface GL21 {
 
@@ -41,29 +43,37 @@ public interface GL21 {
 	// --------------------------[ GLSL 1.20 ]---------------------------
 	// ------------------------------------------------------------------
 
+	/** Returned by the &lt;type&gt; parameter of GetActiveAttribARB. */
+	int GL_FLOAT_MAT2x3 = 0x8B65;
+	int GL_FLOAT_MAT2x4 = 0x8B66;
+	int GL_FLOAT_MAT3x2 = 0x8B67;
+	int GL_FLOAT_MAT3x4 = 0x8B68;
+	int GL_FLOAT_MAT4x2 = 0x8B69;
+	int GL_FLOAT_MAT4x3 = 0x8B6A;
+
 	@StripPostfix("matrices")
 	void glUniformMatrix2x3fv(int location, @AutoSize(value = "matrices", expression = " / (2 * 3)") @GLsizei int count,
-							  boolean transpose, FloatBuffer matrices);
+	                          boolean transpose, FloatBuffer matrices);
 
 	@StripPostfix("matrices")
 	void glUniformMatrix3x2fv(int location, @AutoSize(value = "matrices", expression = " / (3 * 2)") @GLsizei int count,
-							  boolean transpose, FloatBuffer matrices);
+	                          boolean transpose, FloatBuffer matrices);
 
 	@StripPostfix("matrices")
 	void glUniformMatrix2x4fv(int location, @AutoSize(value = "matrices", expression = " >> 3") @GLsizei int count,
-							  boolean transpose, FloatBuffer matrices);
+	                          boolean transpose, FloatBuffer matrices);
 
 	@StripPostfix("matrices")
 	void glUniformMatrix4x2fv(int location, @AutoSize(value = "matrices", expression = " >> 3") @GLsizei int count,
-							  boolean transpose, FloatBuffer matrices);
+	                          boolean transpose, FloatBuffer matrices);
 
 	@StripPostfix("matrices")
 	void glUniformMatrix3x4fv(int location, @AutoSize(value = "matrices", expression = " / (3 * 4)") @GLsizei int count,
-							  boolean transpose, FloatBuffer matrices);
+	                          boolean transpose, FloatBuffer matrices);
 
 	@StripPostfix("matrices")
 	void glUniformMatrix4x3fv(int location, @AutoSize(value = "matrices", expression = " / (4 * 3)") @GLsizei int count,
-							  boolean transpose, FloatBuffer matrices);
+	                          boolean transpose, FloatBuffer matrices);
 
 	// ------------------------------------------------------------------
 	// -------------------[ ARB_pixel_buffer_object ]--------------------
@@ -72,14 +82,14 @@ public interface GL21 {
 	/**
 	 * Accepted by the &lt;target&gt; parameters of BindBuffer, BufferData,
 	 * BufferSubData, MapBuffer, UnmapBuffer, GetBufferSubData,
-	 * GetBufferParameteriv, and GetBufferPointerv:
+	 * GetBufferParameteriv, and GetBufferPointerv.
 	 */
 	int GL_PIXEL_PACK_BUFFER = 0x88EB;
 	int GL_PIXEL_UNPACK_BUFFER = 0x88EC;
 
 	/**
 	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
-	 * GetFloatv, and GetDoublev:
+	 * GetFloatv, and GetDoublev.
 	 */
 	int GL_PIXEL_PACK_BUFFER_BINDING = 0x88ED;
 	int GL_PIXEL_UNPACK_BUFFER_BINDING = 0x88EF;
@@ -109,9 +119,7 @@ public interface GL21 {
 	// -----------------------[ Misc additions ]-------------------------
 	// ------------------------------------------------------------------
 
-	/**
-	 * Accepted by the &lt;pname&gt; parameter of GetIntegerv and GetFloatv.
-	 */
+	/** Accepted by the &lt;pname&gt; parameter of GetIntegerv and GetFloatv. */
 	int GL_CURRENT_RASTER_SECONDARY_COLOR = 0x845F;
 
 }

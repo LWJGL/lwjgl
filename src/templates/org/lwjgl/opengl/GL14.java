@@ -82,7 +82,7 @@ public interface GL14 {
 	int GL_TEXTURE_FILTER_CONTROL = 0x8500;
 	int GL_TEXTURE_LOD_BIAS = 0x8501;
 	int GL_MAX_TEXTURE_LOD_BIAS = 0x84FD;
-	int GL_GL_MIRRORED_REPEAT = 0x8370;
+	int GL_MIRRORED_REPEAT = 0x8370;
 
 	void glBlendEquation(@GLenum int mode);
 

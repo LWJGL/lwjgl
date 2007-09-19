@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
 
-import java.nio.*;
+import java.nio.Buffer;
 
 /**
  * <p/>
@@ -41,14 +41,12 @@ import java.nio.*;
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
- * $Id$
+ *          $Id$
  */
 
 public interface GL12 {
-	/* Error codes */
-	int GL_TABLE_TOO_LARGE = 0x8031;
 
-	/* Enums */
+	int GL_TEXTURE_BINDING_3D = 0x806A;
 	int GL_PACK_SKIP_IMAGES = 0x806B;
 	int GL_PACK_IMAGE_HEIGHT = 0x806C;
 	int GL_UNPACK_SKIP_IMAGES = 0x806D;
@@ -86,6 +84,11 @@ public interface GL12 {
 	int GL_ALIASED_POINT_SIZE_RANGE = 0x846D;
 	int GL_ALIASED_LINE_WIDTH_RANGE = 0x846E;
 
+	int GL_SMOOTH_POINT_SIZE_RANGE = 0x0B12;
+	int GL_SMOOTH_POINT_SIZE_GRANULARITY = 0x0B13;
+	int GL_SMOOTH_LINE_WIDTH_RANGE = 0x0B22;
+	int GL_SMOOTH_LINE_WIDTH_GRANULARITY = 0x0B23;
+
 	void glDrawRangeElements(@GLenum int mode, @GLuint int start, @GLuint int end, @AutoSize("indices") @GLsizei int count,
 	                         @AutoType("indices")
 	                         @GLenum int type,
@@ -117,4 +120,3 @@ public interface GL12 {
 
 	void glCopyTexSubImage3D(@GLenum int target, int level, int xoffset, int yoffset, int zoffset, int x, int y, @GLsizei int width, @GLsizei int height);
 }
-
