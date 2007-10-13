@@ -340,6 +340,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		if (fatalError) {
 			String[] errorMessage = (certificateRefused) ? certificateRefusedMessage : genericErrorMessage;
 			
+			if (!certificateRefused) {
+				errorMessage[errorMessage.length-1] = fatalErrorDescription;
+			}			
+			
 			for(int i=0; i<errorMessage.length; i++) {
 				int messageX = (getWidth() - fm.stringWidth(errorMessage[i])) / 2;
 				int messageY = (getHeight() - (fm.getHeight() * errorMessage.length)) / 2;
