@@ -35,6 +35,7 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+import org.lwjgl.opengl.ARBImaging;
 import org.lwjgl.opengl.EXTFramebufferObject;
 
 /**
@@ -425,7 +426,7 @@ public class GLU {
 				return "Stack underflow";
 			case GL11.GL_OUT_OF_MEMORY:
 				return "Out of memory";
-			case GL12.GL_TABLE_TOO_LARGE:
+			case ARBImaging.GL_TABLE_TOO_LARGE:
 				return "Table too large";
 			case EXTFramebufferObject.GL_INVALID_FRAMEBUFFER_OPERATION_EXT:
 				return "Invalid framebuffer operation";
