@@ -179,6 +179,17 @@ public class Cursor {
 				// create our cursor elements
 				cursors = new CursorElement[numImages];
 				for(int i=0; i<numImages; i++) {
+					
+					// iterate through the images, and make sure that the pixels are either 0xffxxxxxx or 0x00000000
+					int size = width * height;
+					for(int j=0; j<size; j++) {
+						int index = j + (i*size);
+						int alpha = images_copy.get(index) >> 24 & 0xff;
+						if(alpha != 0xff) {
+							images_copy.put(index, 0);
+						}
+					}
+					
 					Object handle = Mouse.getImplementation().createCursor(width, height, xHotspot, yHotspot, 1, images_copy, null);
 					long delay = (delays != null) ? delays.get(i) : 0;
 					long timeout = System.currentTimeMillis();
