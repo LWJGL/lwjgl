@@ -539,7 +539,6 @@
 			<src path="${lwjgl.src}/generated/"/>
 			<include name="org/lwjgl/*.java"/>
 			<include name="org/lwjgl/input/**"/>
-			<include name="org/lwjgl/d3d/**"/>
 			<include name="org/lwjgl/opengl/**"/>
 			<include name="org/lwjgl/openal/**"/>
 			<include name="org/lwjgl/util/**"/>
@@ -584,38 +583,6 @@
 			<class name="org.lwjgl.opengl.WindowsPeerInfo" />
 			<class name="org.lwjgl.opengl.WindowsDisplayPeerInfo" />
 			<class name="org.lwjgl.opengl.WindowsContextImplementation" />
-			<!-- Direct 3D -->
-			<class name="org.lwjgl.d3d.D3DUtil" />
-			<class name="org.lwjgl.d3d.IDirect3D9" />
-			<class name="org.lwjgl.d3d.IDirect3D9Ex" />
-			<class name="org.lwjgl.d3d.IDirect3DBaseTexture9" />
-			<class name="org.lwjgl.d3d.IDirect3DCubeTexture9" />
-			<class name="org.lwjgl.d3d.IDirect3DDevice9" />
-			<class name="org.lwjgl.d3d.IDirect3DDevice9Ex" />
-			<class name="org.lwjgl.d3d.IDirect3DIndexBuffer9" />
-			<class name="org.lwjgl.d3d.IDirect3DPixelShader9" />
-			<class name="org.lwjgl.d3d.IDirect3DQuery9" />
-			<class name="org.lwjgl.d3d.IDirect3DResource9" />
-			<class name="org.lwjgl.d3d.IDirect3DStateBlock9" />
-			<class name="org.lwjgl.d3d.IDirect3DSurface9" />
-			<class name="org.lwjgl.d3d.IDirect3DSwapChain9" />
-			<class name="org.lwjgl.d3d.IDirect3DSwapChain9Ex" />
-			<class name="org.lwjgl.d3d.IDirect3DTexture9" />
-			<class name="org.lwjgl.d3d.IDirect3DVertexBuffer9" />
-			<class name="org.lwjgl.d3d.IDirect3DVertexDeclaration9" />
-			<class name="org.lwjgl.d3d.IDirect3DVertexShader9" />
-			<class name="org.lwjgl.d3d.IDirect3DVolume9" />
-			<class name="org.lwjgl.d3d.IDirect3DVolumeTexture9" />
-			<class name="org.lwjgl.d3d.WindowsDisplay" />
-			<class name="org.lwjgl.d3d.WindowsContextImplementation" />
-			<class name="org.lwjgl.d3d.WindowsDirectInput3" />
-			<class name="org.lwjgl.d3d.WindowsDirectInputDevice3" />
-			<class name="org.lwjgl.d3d.WindowsDirectInput8" />
-			<class name="org.lwjgl.d3d.WindowsDirectInputDevice8" />
-			<class name="org.lwjgl.d3d.WindowsPeerInfo" />
-			<class name="org.lwjgl.d3d.WindowsDisplayPeerInfo" />
-			<class name="org.lwjgl.d3d.WindowsRegistry" />
-			<class name="org.lwjgl.d3d.WindowsKeyboard" />			
 		</javah>
 		
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/macosx" force="yes">
