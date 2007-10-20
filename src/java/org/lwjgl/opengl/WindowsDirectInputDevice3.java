@@ -38,7 +38,6 @@ package org.lwjgl.opengl;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import org.lwjgl.LWJGLException;
 
 final class WindowsDirectInputDevice3 extends WindowsDirectInputDevice {
 	/** Re-declare to get the constants into the native headers */

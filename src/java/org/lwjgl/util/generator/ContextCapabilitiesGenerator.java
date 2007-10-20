@@ -32,19 +32,15 @@
 
 package org.lwjgl.util.generator;
 
-import com.sun.mirror.apt.*;
-import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
-
-import java.util.*;
-
 import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.File;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.Iterator;
 
-import java.nio.*;
-import java.lang.annotation.Annotation;
+import com.sun.mirror.declaration.InterfaceDeclaration;
+import com.sun.mirror.declaration.MethodDeclaration;
+import com.sun.mirror.type.InterfaceType;
 
 /**
  *

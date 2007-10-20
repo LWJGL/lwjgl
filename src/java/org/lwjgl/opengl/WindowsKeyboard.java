@@ -37,12 +37,10 @@ package org.lwjgl.opengl;
  */
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.nio.CharBuffer;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.LWJGLUtil;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 
 final class WindowsKeyboard {

@@ -31,15 +31,13 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.IntBuffer;
+import java.awt.Cursor;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
-import org.lwjgl.BufferUtils;
-
-import java.awt.Cursor;
-import java.awt.Point;
 
 /**
  *

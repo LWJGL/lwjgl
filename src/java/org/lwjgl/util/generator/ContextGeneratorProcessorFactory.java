@@ -32,24 +32,27 @@
 
 package org.lwjgl.util.generator;
 
-import com.sun.mirror.apt.*;
-import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
+import static java.util.Collections.unmodifiableCollection;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Arrays;
-
-import java.io.PrintWriter;
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
-import static java.util.Collections.*;
-import static com.sun.mirror.util.DeclarationVisitors.*;
+import com.sun.mirror.apt.AnnotationProcessor;
+import com.sun.mirror.apt.AnnotationProcessorEnvironment;
+import com.sun.mirror.apt.AnnotationProcessorFactory;
+import com.sun.mirror.apt.AnnotationProcessors;
+import com.sun.mirror.apt.Filer;
+import com.sun.mirror.apt.RoundCompleteEvent;
+import com.sun.mirror.apt.RoundCompleteListener;
+import com.sun.mirror.declaration.AnnotationTypeDeclaration;
+import com.sun.mirror.declaration.InterfaceDeclaration;
+import com.sun.mirror.declaration.TypeDeclaration;
+import com.sun.mirror.util.DeclarationFilter;
 
 /**
  *

@@ -37,7 +37,6 @@ package org.lwjgl.opengl;
  */
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 
 class EventQueue {
 	private static final int QUEUE_SIZE = 200;

@@ -36,14 +36,12 @@ package org.lwjgl.opengl;
  */
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
-
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.Charset;
 
 final class LinuxKeyboard {
 	private static final int LockMapIndex                      = 1;

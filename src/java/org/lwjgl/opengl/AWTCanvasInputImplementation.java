@@ -31,7 +31,6 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
 
 /**
  *

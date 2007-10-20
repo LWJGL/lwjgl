@@ -47,7 +47,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.ARBProgram;
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.Util;
 
 abstract class Shader {
 

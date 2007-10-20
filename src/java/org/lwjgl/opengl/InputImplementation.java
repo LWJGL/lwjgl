@@ -39,7 +39,6 @@ package org.lwjgl.opengl;
  */
 
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;

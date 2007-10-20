@@ -38,13 +38,11 @@ package org.lwjgl.opengl;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.nio.CharBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.input.Cursor;
 
 final class WindowsMouse {
 	private final long hwnd;

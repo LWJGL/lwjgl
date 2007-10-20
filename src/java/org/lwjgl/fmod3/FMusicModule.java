@@ -32,7 +32,6 @@
 package org.lwjgl.fmod3;
 
 import java.nio.Buffer;
-import java.nio.ByteBuffer;
 
 /**
  * This class is a representation of a Module in FMod.

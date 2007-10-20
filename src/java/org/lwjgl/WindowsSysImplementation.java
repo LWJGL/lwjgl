@@ -31,7 +31,6 @@
  */
 package org.lwjgl;
 
-import java.security.AccessController;
 
 /**
  * <p>

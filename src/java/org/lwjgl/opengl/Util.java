@@ -31,9 +31,6 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.IntBuffer;
-
-import org.lwjgl.BufferUtils;
 
 /**
  * Simple utility class.

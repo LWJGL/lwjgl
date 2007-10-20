@@ -36,17 +36,16 @@ package org.lwjgl.opengl;
  * @author elias_naur
  */
 
+import java.awt.Component;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.Component;
-import java.awt.Point;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
 
 class MouseEventQueue extends EventQueue implements MouseListener, MouseMotionListener, MouseWheelListener {

@@ -31,14 +31,12 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.IntBuffer;
-import java.nio.ByteBuffer;
-
-import org.lwjgl.LWJGLException;
-import org.lwjgl.LWJGLUtil;
-
 import java.awt.Cursor;
 import java.awt.Robot;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
+import org.lwjgl.LWJGLException;
 
 /**
  *

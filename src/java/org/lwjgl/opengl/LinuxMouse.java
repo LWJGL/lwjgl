@@ -37,14 +37,10 @@ package org.lwjgl.opengl;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.nio.CharBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
-
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.Charset;
 
 final class LinuxMouse {
 	private static final int NUM_BUTTONS = 3;

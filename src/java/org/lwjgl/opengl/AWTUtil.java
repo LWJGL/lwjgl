@@ -35,34 +35,23 @@ package org.lwjgl.opengl;
  * @author elias_naur
  */
 
-import java.awt.Cursor;
 import java.awt.Component;
-import java.awt.GraphicsDevice;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.GraphicsDevice;
 import java.awt.IllegalComponentStateException;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
-import org.lwjgl.input.Keyboard;
 
 final class AWTUtil {
 	public static boolean hasWheel() {

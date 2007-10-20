@@ -32,13 +32,11 @@
 package org.lwjgl.test.applet;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.AWTGLCanvas;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-
-import org.lwjgl.opengl.AWTInputAdapter;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.AWTGLCanvas;
+import org.lwjgl.opengl.AWTInputAdapter;
+import org.lwjgl.opengl.GL11;
 
 public class OpenGL extends AWTGLCanvas implements Test {
 

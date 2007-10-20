@@ -39,13 +39,7 @@ package org.lwjgl.opengl;
  */
 
 import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Robot;
-import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -54,7 +48,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +55,6 @@ import java.util.List;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
-import org.lwjgl.input.Keyboard;
 
 final class MacOSXDisplay implements DisplayImplementation {
 	private static final int PBUFFER_HANDLE_SIZE = 24;

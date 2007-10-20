@@ -33,11 +33,10 @@ package org.lwjgl.input;
 
 import java.nio.IntBuffer;
 
-import org.lwjgl.BufferChecks;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.NondirectBufferWrapper;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.NondirectBufferWrapper;
 import org.lwjgl.Sys;
 
 /**

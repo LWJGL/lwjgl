@@ -36,19 +36,12 @@ package org.lwjgl.opengl;
  * @author elias_naur
  */
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.Component;
-import java.awt.Rectangle;
 import java.awt.Point;
-import java.nio.ByteBuffer;
+import java.awt.Rectangle;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.input.Mouse;
 
 final class MacOSXMouseEventQueue extends MouseEventQueue {
 	private final IntBuffer delta_buffer = BufferUtils.createIntBuffer(2);
