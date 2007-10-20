@@ -34,6 +34,7 @@ package org.lwjgl.util.applet;
 import java.applet.Applet;
 import java.applet.AppletStub;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.GridLayout;
@@ -287,11 +288,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		return lwjglApplet;
 	}
 	
-	/*
-	 * @see java.applet.AppletStub#appletResize(int, int)
+	/**
+	 * Transfers the call of AppletResize from the stub to the lwjglApplet.	 
 	 */
 	public void appletResize(int width, int height) {
-		/* uhm? */
+		resize(width, height);
 	}	
 
 	/*
@@ -306,9 +307,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	public synchronized void paint(Graphics g) {
 		
-		// paint applet if available
-		if(lwjglApplet != null && state == STATE_DONE) {
-			lwjglApplet.paint(g);
+		// don't paint loader if applet loaded
+		if(state == STATE_DONE) {
 			return;
 		}
 
@@ -634,16 +634,17 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		lwjglApplet = (Applet) appletClass.newInstance();
 
 		lwjglApplet.setStub(this);
+		lwjglApplet.setSize(getWidth(), getHeight());
 
-		setLayout(new GridLayout(1, 1));
+		setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
 		add(lwjglApplet);
-		validate();
 
 		state = STATE_INITIALIZE_REAL_APPLET;
 		lwjglApplet.init();
 
 		state = STATE_START_REAL_APPLET;
 		lwjglApplet.start();
+		validate();
 	}
 
 	/**
