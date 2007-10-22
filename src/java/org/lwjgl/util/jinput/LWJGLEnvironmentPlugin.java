@@ -40,4 +40,9 @@ public class LWJGLEnvironmentPlugin extends ControllerEnvironment implements Plu
     public Controller[] getControllers() {
         return controllers;
     }
+
+	@Override
+	public boolean isSupported() {
+		return true;
+	}
 }
