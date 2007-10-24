@@ -44,6 +44,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -468,7 +469,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
 		state = STATE_CHECKING_CACHE;
 		
-		percentage = 5;
+ 		percentage = 5;
 
 		try {
 			if(debugMode) {
@@ -677,7 +678,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			urlconnection = urlList[i].openConnection();
 
 			String currentFile = getFileName(urlList[i]);
-			InputStream inputstream = urlconnection.getInputStream();
+			InputStream inputstream = getJarInputStream(currentFile, urlconnection);
 			FileOutputStream fos = new FileOutputStream(path + currentFile);
 			
 
@@ -691,8 +692,59 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				percentage = initialPercentage + ((currentSizeDownload * 55) / totalSizeDownload);
 				subtaskMessage = "Retrieving: " + currentFile + " " + ((currentSizeDownload * 100) / totalSizeDownload) + "%";
 			}
+			
+			inputstream.close();
+			fos.close();
 		}
 		subtaskMessage = "";
+	}
+
+	/**
+	 * Retrieves a jar files input stream. This method exists primarily to fix an Opera hang in getInputStream
+	 * @param urlconnection connection to get input stream from
+	 * @return InputStream or null if not possible
+	 */
+	private InputStream getJarInputStream(final String currentFile, final URLConnection urlconnection) throws Exception {
+		final InputStream[] is = new InputStream[1];
+		
+		// try to get the input stream 3 times. 
+		// Wait at most 5 seconds before interrupting the thread
+		for (int j = 0; j < 3 && is[0] == null; j++) {
+			Thread t = new Thread() {
+				public void run() {
+					try {
+						is[0] = urlconnection.getInputStream();
+					} catch (IOException e) {
+						/* ignored */
+					}
+				}
+			};
+			t.setName("JarInputStreamThread");
+			t.start();
+			
+			int iterationCount = 0;
+			while(is == null && iterationCount++ < 5) {
+				try {
+					t.join(1000);
+				} catch (InterruptedException inte) {
+					/* ignored */
+				}
+			}
+			
+			try {
+				t.interrupt();
+				t.join();
+			} catch (InterruptedException inte) {
+				/* ignored */
+			}				
+		}
+		
+		if(is[0] == null) {
+			throw new Exception("Unable to get input stream for " + currentFile);
+		}
+
+		
+		return is[0];
 	}
 
 	/**
