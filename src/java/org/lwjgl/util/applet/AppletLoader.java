@@ -33,8 +33,8 @@ package org.lwjgl.util.applet;
 
 import java.applet.Applet;
 import java.applet.AppletStub;
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -207,6 +207,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	public void init() {
 		
+		state = STATE_INIT;
+		
 		// sanity check
 		String[] requiredArgs = {"al_main", "al_logo", "al_progressbar", "al_jars"};
 		for(int i=0; i<requiredArgs.length; i++) {
@@ -221,6 +223,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
 		// get colors of applet
 		bgColor 		= getColor("al_bgcolor", Color.white);
+		setBackground(bgColor);
+
 		fgColor 		= getColor("al_fgcolor", Color.black);
 		errorColor 		= getColor("al_errorcolor", Color.red);		
 
@@ -621,7 +625,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * replace the current applet with the lwjgl applet
 	 * using AppletStub and initialise and start it
 	 */
-	protected void switchApplet() throws Exception {
+	protected synchronized void switchApplet() throws Exception {
 		
 		state = STATE_SWITCHING_APPLET;
 		percentage = 100;
@@ -636,7 +640,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		lwjglApplet.setStub(this);
 		lwjglApplet.setSize(getWidth(), getHeight());
 
-		setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
+		setLayout(new BorderLayout());
 		add(lwjglApplet);
 
 		state = STATE_INITIALIZE_REAL_APPLET;
@@ -644,7 +648,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		state = STATE_START_REAL_APPLET;
 		lwjglApplet.start();
+
+		
+		// fix for issue with applet not showing up in firefox
+		setVisible(false);
 		validate();
+		setVisible(true);
 	}
 
 	/**
