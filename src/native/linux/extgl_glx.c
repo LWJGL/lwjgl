@@ -151,8 +151,6 @@ static void extgl_InitGLXSupportedExtensions(Display *disp, int screen, GLXExten
 }
 
 bool extgl_Open(JNIEnv *env) {
-#define BUFFER_SIZE 2000
-	char buffer[BUFFER_SIZE];
 	if (lib_gl_handle != NULL)
 		return true;
 	/*
@@ -166,9 +164,7 @@ bool extgl_Open(JNIEnv *env) {
 	 */
 	lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
 	if (lib_gl_handle == NULL) {
-		snprintf(buffer, BUFFER_SIZE, "Error loading libGL.so.1: %s", dlerror());
-		buffer[BUFFER_SIZE - 1] = '\0';
-		throwException(env, buffer);
+		throwFormattedException(env, "Error loading libGL.so.1: %s", dlerror());
 		return false;
 	}
 	lwjgl_glXGetProcAddressARB = (glXGetProcAddressARBPROC)dlsym(lib_gl_handle, "glXGetProcAddressARB");
