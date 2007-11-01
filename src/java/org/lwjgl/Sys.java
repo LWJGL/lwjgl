@@ -88,7 +88,7 @@ public final class Sys {
 					doLoadLibrary(lib_name + POSTFIX64BIT);
 					return;
 				} catch (UnsatisfiedLinkError e2) {
-					LWJGLUtil.log("Failed to load 64 bit library:" + e2.getMessage());
+					LWJGLUtil.log("Failed to load 64 bit library: " + e2.getMessage());
 				}
 			}
 			// Throw original error
