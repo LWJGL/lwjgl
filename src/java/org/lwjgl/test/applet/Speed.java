@@ -66,8 +66,10 @@ public class Speed extends AWTGLCanvas implements Test {
 
 		try {
 			swapBuffers();
-			if (isVisible())
+			if (isVisible()) {
+				Thread.yield(); // Helps input responsiveness on linux
 				repaint();
+			}
 		} catch (Exception e) {/*OK*/
 		}
 		if (startTime > System.currentTimeMillis()) {
