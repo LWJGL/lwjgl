@@ -180,7 +180,7 @@ public final class ALC11 {
 			if(major >= 1) {
 				
 				// checking for version 1.1+
-				if(minor >= 1) {
+				if(major > 1 || minor >= 1) {
 					initNativeStubs();
 				}		
 			}
