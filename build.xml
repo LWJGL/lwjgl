@@ -384,9 +384,10 @@
 		<condition property="native_path" value="libs/macosx">
 			<os name="Mac OS X" />
 		</condition>
+		<property name="native_path_expanded" location="${native_path}"/>
 		<java classname="${test.mainclass}" classpath="res:${lwjgl.lib}/lwjgl.jar:${lwjgl.lib}/lwjgl_util.jar:${lwjgl.lib}/lwjgl_test.jar:${lwjgl.lib}/jinput.jar" fork="true">
-			<jvmarg value="-Dorg.lwjgl.util.Debug=true"/>
-			<jvmarg value="-Djava.library.path=${native_path}"/>
+			<sysproperty key="org.lwjgl.util.Debug" value="true"/>
+			<sysproperty key="java.library.path" value="${native_path_expanded}"/>
 		</java>
 	</target>
 	
