@@ -58,7 +58,7 @@ void tryLoadLibrary(JNIEnv *env, jstring path) {
 	if (handleOAL != NULL) {
 		printfDebugJava(env, "Found OpenAL at '%s'", path_str);
 	} else {
-		throwException(env, "Could not load OpenAL library (%d)", GetLastError());
+		throwFormattedException(env, "Could not load OpenAL library (%d)", GetLastError());
 	}
 	free(path_str);
 }
