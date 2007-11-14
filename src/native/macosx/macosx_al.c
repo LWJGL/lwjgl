@@ -93,12 +93,12 @@ void tryLoadLibrary(JNIEnv *env, jstring path) {
 	const char *path_str = (*env)->GetStringUTFChars(env, path, NULL);
 	printfDebugJava(env, "Testing '%s'", path_str);
 	handleOAL = NSAddImage(path_str, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
-	(*env)->ReleaseStringUTFChars(env, path, path_str);
 	if (handleOAL != NULL) {
 		printfDebugJava(env, "Found OpenAL at '%s'", path_str);
 	} else {
 		throwException(env, "Could not load OpenAL library");
 	}
+	(*env)->ReleaseStringUTFChars(env, path, path_str);
 }
 
 /**

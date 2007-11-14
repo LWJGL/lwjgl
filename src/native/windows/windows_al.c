@@ -55,12 +55,12 @@ void tryLoadLibrary(JNIEnv *env, jstring path) {
 	char *path_str = GetStringNativeChars(env, path);
 	printfDebugJava(env, "Testing '%s'", path_str);
 	handleOAL = LoadLibrary(path_str);
-	free(path_str);
 	if (handleOAL != NULL) {
 		printfDebugJava(env, "Found OpenAL at '%s'", path_str);
 	} else {
 		throwException(env, "Could not load OpenAL library (%d)", GetLastError());
 	}
+	free(path_str);
 }
 
 /**
