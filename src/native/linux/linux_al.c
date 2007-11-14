@@ -45,15 +45,16 @@ void *NativeGetFunctionPointer(const char *function) {
 	return dlsym(handleOAL, function);
 }
 
-bool tryLoadLibrary(JNIEnv *env, jstring path) {
+void tryLoadLibrary(JNIEnv *env, jstring path) {
 	char *path_str = GetStringNativeChars(env, path);
 	printfDebugJava(env, "Testing '%s'", path_str);
+	free(path_str);
 	handleOAL = dlopen(path_str, RTLD_LAZY);
 	if (handleOAL != NULL) {
 		printfDebugJava(env, "Found OpenAL at '%s'", path_str);
+	} else {
+		throwException(env, "Could not load OpenAL library");
 	}
-	free(path_str);
-	return handleOAL != NULL;
 }
 
 void UnLoadOpenAL() {

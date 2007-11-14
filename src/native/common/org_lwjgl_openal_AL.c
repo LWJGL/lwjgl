@@ -35,9 +35,7 @@
 #include "extal.h"
 
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL_nCreate(JNIEnv *env, jclass clazz, jstring oalPath) {
-	if (!tryLoadLibrary(env, oalPath)) {
-		throwException(env, "Could not load OpenAL library");
-	}
+	tryLoadLibrary(env, oalPath);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL_nDestroy(JNIEnv *env, jclass clazz) {

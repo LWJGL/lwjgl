@@ -162,7 +162,7 @@ void extal_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMet
 
 /* Platform dependent functions */
 void *NativeGetFunctionPointer(const char *function);
-bool tryLoadLibrary(JNIEnv *env, jstring path);
+void tryLoadLibrary(JNIEnv *env, jstring path);
 void UnLoadOpenAL();
 
 #ifdef __cplusplus
