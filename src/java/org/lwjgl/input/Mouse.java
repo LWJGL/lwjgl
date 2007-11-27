@@ -153,8 +153,9 @@ public class Mouse {
 	}
 
 	/**
-	 * Binds a native cursor. If the cursor argument is null, the
-	 * native cursor is disabled, as if native cursors were not supported.
+	 * Binds a native cursor. If the cursor argument is null, any
+	 * currently bound native cursor is disabled, and the cursor reverts
+	 * to the default operating system supplied cursor.
 	 *
 	 * NOTE: The native cursor is not constrained to the window, but
 	 * relative events will not be generated if the cursor is outside.
