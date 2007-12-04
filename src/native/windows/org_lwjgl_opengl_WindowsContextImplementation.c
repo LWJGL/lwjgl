@@ -53,8 +53,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nCr
 	WindowsContext *context_info;
 	HGLRC context;
 	HGLRC shared_context = NULL;
-	HDC saved_hdc;
-	HGLRC saved_context;
 	jobject context_handle = newJavaManagedByteBuffer(env, sizeof(WindowsContext));
 	if (context_handle == NULL) {
 		throwException(env, "Could not create handle buffer");
