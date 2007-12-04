@@ -34,7 +34,6 @@
 			<arg line="-shared -o ${dllname}"/>
 			<srcfile/>
 			<arg value="-L${java.home}/../lib"/>
-			<arg value="-L${dxhome}/lib/x86"/>
 			<arg value="-L${alhome}/libs"/>
 			<arg line="${libs}"/>
 			<fileset dir="." includes="*.o"/>
