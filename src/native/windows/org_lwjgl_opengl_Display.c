@@ -117,15 +117,16 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 		}
 		if (display_class_global != NULL) {
 			message_time = GetMessageTime();
-			handleMessage_method = (*env)->GetStaticMethodID(env, display_class_global, "handleMessage", "(JIJJJ)Z");
+			handleMessage_method = (*env)->GetStaticMethodID(env, display_class_global, "handleMessage", "(JIJJJ)I");
 			if (handleMessage_method != NULL)
-				if ((*env)->CallStaticBooleanMethod(env, display_class_global, handleMessage_method, (jlong)(intptr_t)hWnd, (jint)msg, (jlong)wParam, (jlong)lParam, (jlong)message_time))
-					return 0;
+				return (*env)->CallStaticIntMethod(env, display_class_global, handleMessage_method, (jlong)(intptr_t)hWnd, (jint)msg, (jlong)wParam, (jlong)lParam, (jlong)message_time);
 		}
 	}
+	return DefWindowProc(hWnd, msg, wParam, lParam);
+}
 
-	// default action
-    return DefWindowProc(hWnd, msg, wParam, lParam);
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_defWindowProc(JNIEnv *env, jclass unused, jlong hWnd, jint msg, jlong wParam, jlong lParam) {
+    return DefWindowProc((HWND)(INT_PTR)hWnd, msg, wParam, lParam);
 }
 
 /*

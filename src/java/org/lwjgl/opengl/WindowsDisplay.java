@@ -627,12 +627,14 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private static native void clientToScreen(long hwnd, IntBuffer point);
 
-	private static boolean handleMessage(long hwnd, int msg, long wParam, long lParam, long millis) {
+	private static int handleMessage(long hwnd, int msg, long wParam, long lParam, long millis) {
 		if (current_display != null)
 			return current_display.doHandleMessage(hwnd, msg, wParam, lParam, millis);
 		else
-			return false;
+			return defWindowProc(hwnd, msg, wParam, lParam);
 	}
+	
+	private static native int defWindowProc(long hwnd, int msg, long wParam, long lParam);
 
 	private void checkCursorState() {
 		updateCursor();
@@ -656,7 +658,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		checkCursorState();
 	}
 
-	private boolean doHandleMessage(long hwnd, int msg, long wParam, long lParam, long millis) {
+	private int doHandleMessage(long hwnd, int msg, long wParam, long lParam, long millis) {
 		switch (msg) {
 			// disable screen saver and monitor power down messages which wreak havoc
 			case WM_ACTIVATE:
@@ -669,7 +671,7 @@ final class WindowsDisplay implements DisplayImplementation {
 						appActivate(false);
 						break;
 				}
-				return true;
+				return 0;
 			case WM_SIZE:
 				switch ((int)wParam) {
 					case SIZE_RESTORED:
@@ -680,39 +682,39 @@ final class WindowsDisplay implements DisplayImplementation {
 						setMinimized(true);
 						break;
 				}
-				return false;
+				return defWindowProc(hwnd, msg, wParam, lParam);
 			case WM_MOUSEMOVE:
 				int xPos = (int)(short)(lParam & 0xFFFF);
 				int yPos = transformY(getHwnd(), (int)(short)((lParam >> 16) & 0xFFFF));
 				handleMouseMoved(xPos, yPos, millis);
 				checkCursorState();
-				return true;
+				return 0;
 			case WM_MOUSEWHEEL:
 				int dwheel = (int)(short)((wParam >> 16) & 0xFFFF);
 				handleMouseScrolled(dwheel, millis);
-				return true;
+				return 0;
 			case WM_LBUTTONDOWN:
 				handleMouseButton(0, 1, millis);
-				return true;
+				return 0;
 			case WM_LBUTTONUP:
 				handleMouseButton(0, 0, millis);
-				return true;
+				return 0;
 			case WM_RBUTTONDOWN:
 				handleMouseButton(1, 1, millis);
-				return true;
+				return 0;
 			case WM_RBUTTONUP:
 				handleMouseButton(1, 0, millis);
-				return true;
+				return 0;
 			case WM_MBUTTONDOWN:
 				handleMouseButton(2, 1, millis);
-				return true;
+				return 0;
 			case WM_MBUTTONUP:
 				handleMouseButton(2, 0, millis);
-				return true;
+				return 0;
 			case WM_SYSCHAR:
 			case WM_CHAR:
 				handleChar(wParam, lParam, millis);
-				return true;
+				return 0;
 			case WM_SYSKEYUP:
 				/* Fall through */
 			case WM_KEYUP:
@@ -730,29 +732,29 @@ final class WindowsDisplay implements DisplayImplementation {
 				/* Fall through */
 			case WM_KEYDOWN:
 				handleKeyButton(wParam, lParam, millis);
-				return false;
+				return defWindowProc(hwnd, msg, wParam, lParam);
 			case WM_QUIT:
 				close_requested = true;
-				return true;
+				return 0;
 			case WM_SYSCOMMAND:
 				switch ((int)(wParam & 0xfff0)) {
 					case SC_KEYMENU:
 					case SC_MOUSEMENU:
 					case SC_SCREENSAVE:
 					case SC_MONITORPOWER:
-						return true;
+						return 0;
 					case SC_CLOSE:
 						close_requested = true;
-						return true;
+						return 0;
 					default:
 						break;
 				}
-				return false;
+				return defWindowProc(hwnd, msg, wParam, lParam);
 			case WM_PAINT:
 				is_dirty = true;
-				return false;
+				return defWindowProc(hwnd, msg, wParam, lParam);
 			default:
-				return false;
+				return defWindowProc(hwnd, msg, wParam, lParam);
 		}
 	}
 
