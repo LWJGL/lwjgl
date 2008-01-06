@@ -138,7 +138,7 @@ public interface EXT_framebuffer_object {
 
 	void glDeleteRenderbuffersEXT(@AutoSize("renderbuffers") int n, @Const @GLuint IntBuffer renderbuffers);
 
-	void glGenRenderbuffersEXT(@AutoSize("renderbuffers") int n, @GLuint IntBuffer renderbuffers);
+	void glGenRenderbuffersEXT(@AutoSize("renderbuffers") int n, @OutParameter @GLuint IntBuffer renderbuffers);
 
 	void glRenderbufferStorageEXT(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLsizei int height);
 
@@ -151,7 +151,7 @@ public interface EXT_framebuffer_object {
 
 	void glDeleteFramebuffersEXT(@AutoSize("framebuffers") int n, @Const @GLuint IntBuffer framebuffers);
 
-	void glGenFramebuffersEXT(@AutoSize("framebuffers") int n, @Const @GLuint IntBuffer framebuffers);
+	void glGenFramebuffersEXT(@AutoSize("framebuffers") int n, @OutParameter @GLuint IntBuffer framebuffers);
 
 	@GLenum
 	int glCheckFramebufferStatusEXT(@GLenum int target);

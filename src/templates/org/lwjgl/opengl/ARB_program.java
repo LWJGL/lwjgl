@@ -132,7 +132,7 @@ public interface ARB_program {
 
 	void glDeleteProgramsARB(@AutoSize("programs") @GLsizei int n, @Const @GLuint IntBuffer programs);
 
-	void glGenProgramsARB(@AutoSize("programs") @GLsizei int n, @GLuint IntBuffer programs);
+	void glGenProgramsARB(@AutoSize("programs") @GLsizei int n, @OutParameter @GLuint IntBuffer programs);
 
 	void glProgramEnvParameter4fARB(int target, int index, float x, float y, float z, float w);
 

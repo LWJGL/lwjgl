@@ -72,7 +72,7 @@ public interface ARB_buffer_object {
 
 	void glDeleteBuffersARB(@AutoSize("buffers") @GLsizei int n, @Const @GLuint IntBuffer buffers);
 
-	void glGenBuffersARB(@AutoSize("buffers") int n, @GLuint IntBuffer buffers);
+	void glGenBuffersARB(@AutoSize("buffers") int n, @OutParameter @GLuint IntBuffer buffers);
 
 	boolean glIsBufferARB(@GLuint int buffer);
 

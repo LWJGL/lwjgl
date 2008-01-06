@@ -92,7 +92,7 @@ public interface GL15 {
 
 	void glDeleteBuffers(@AutoSize("buffers") @GLsizei int n, @Const @GLuint IntBuffer buffers);
 
-	void glGenBuffers(@AutoSize("buffers") @GLsizei int n, @GLuint IntBuffer buffers);
+	void glGenBuffers(@AutoSize("buffers") @GLsizei int n, @OutParameter @GLuint IntBuffer buffers);
 
 	boolean glIsBuffer(@GLuint int buffer);
 
@@ -174,7 +174,7 @@ public interface GL15 {
 	int GL_QUERY_RESULT = 0x8866;
 	int GL_QUERY_RESULT_AVAILABLE = 0x8867;
 
-	void glGenQueries(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
+	void glGenQueries(@AutoSize("ids") @GLsizei int n, @OutParameter @GLuint IntBuffer ids);
 
 	void glDeleteQueries(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
 

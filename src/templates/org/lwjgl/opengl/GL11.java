@@ -932,7 +932,7 @@ public interface GL11 {
 	@StripPostfix("params")
 	void glGetIntegerv(@GLenum int pname, @OutParameter @Check("16") IntBuffer params);
 
-	void glGenTextures(@AutoSize("textures") @GLsizei int n, @GLuint IntBuffer textures);
+	void glGenTextures(@AutoSize("textures") @GLsizei int n, @OutParameter @GLuint IntBuffer textures);
 
 	@GLuint
 	int glGenLists(@GLsizei int range);

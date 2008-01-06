@@ -67,7 +67,7 @@ public interface NV_program {
 
 	void glDeleteProgramsNV(@AutoSize("programs") @GLsizei int n, @Const @GLuint IntBuffer programs);
 
-	void glGenProgramsNV(@AutoSize("programs") @GLsizei int n, @GLuint IntBuffer programs);
+	void glGenProgramsNV(@AutoSize("programs") @GLsizei int n, @OutParameter @GLuint IntBuffer programs);
 
 	@StripPostfix("params")
 	void glGetProgramivNV(@GLuint int programID, @GLenum int parameterName, @OutParameter @Check @GLint IntBuffer params);

@@ -44,7 +44,7 @@ public interface NV_occlusion_query {
 	int GL_PIXEL_COUNT_NV = 0x8866;
 	int GL_PIXEL_COUNT_AVAILABLE_NV = 0x8867;
 
-	void glGenOcclusionQueriesNV(@AutoSize("piIDs") @GLsizei int n, @GLuint IntBuffer piIDs);
+	void glGenOcclusionQueriesNV(@AutoSize("piIDs") @GLsizei int n, @OutParameter @GLuint IntBuffer piIDs);
 
 	void glDeleteOcclusionQueriesNV(@AutoSize("piIDs") @GLsizei int n, @Const @GLuint IntBuffer piIDs);
 

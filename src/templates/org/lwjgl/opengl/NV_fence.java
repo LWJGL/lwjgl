@@ -40,7 +40,7 @@ public interface NV_fence {
 	int GL_FENCE_STATUS_NV = 0x84F3;
 	int GL_FENCE_CONDITION_NV = 0x84F4;
 
-	void glGenFencesNV(@AutoSize("piFences") @GLsizei int n, @GLuint IntBuffer piFences);
+	void glGenFencesNV(@AutoSize("piFences") @GLsizei int n, @OutParameter @GLuint IntBuffer piFences);
 
 	void glDeleteFencesNV(@AutoSize("piFences") @GLsizei int n, @Const @GLuint IntBuffer piFences);
 

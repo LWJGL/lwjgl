@@ -719,7 +719,7 @@ public interface AL10 {
 	 * @param sources array holding sources
 	 */
 	@ALvoid
-	void alGenSources(@AutoSize("sources") @ALsizei int n, @ALuint IntBuffer sources);
+	void alGenSources(@AutoSize("sources") @ALsizei int n, @OutParameter @ALuint IntBuffer sources);
 
 	/**
 	 * The application requests deletion of a number of Sources by DeleteSources.
@@ -943,7 +943,7 @@ public interface AL10 {
 	 * @param buffers holding buffers
 	 */
 	@ALvoid
-	void alGenBuffers(@AutoSize("buffers") @ALsizei int n, @ALuint IntBuffer buffers);
+	void alGenBuffers(@AutoSize("buffers") @ALsizei int n, @OutParameter @ALuint IntBuffer buffers);
 
 	/**
 	 * <p>

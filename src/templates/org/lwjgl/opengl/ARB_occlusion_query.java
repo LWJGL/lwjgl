@@ -56,7 +56,7 @@ public interface ARB_occlusion_query {
 	int GL_QUERY_RESULT_ARB = 0x8866;
 	int GL_QUERY_RESULT_AVAILABLE_ARB = 0x8867;
 
-	void glGenQueriesARB(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
+	void glGenQueriesARB(@AutoSize("ids") @GLsizei int n, @OutParameter @GLuint IntBuffer ids);
 
 	void glDeleteQueriesARB(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
 
