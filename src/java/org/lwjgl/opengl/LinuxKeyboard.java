@@ -41,6 +41,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.input.Keyboard;
 
 final class LinuxKeyboard {
@@ -122,13 +123,14 @@ final class LinuxKeyboard {
 		modeswitch_mask = tmp_modeswitch_mask;
 		caps_lock_mask = tmp_caps_lock_mask;
 		shift_lock_mask = tmp_shift_lock_mask;
+		setDetectableKeyRepeat(display, true);
 		xim = openIM(display);
 		if (xim != 0) {
 			xic = createIC(xim, window);
 			if (xic != 0) {
 				setupIMEventMask(display, window, xic);
 			} else {
-				destroy();
+				destroy(display);
 			}
 		} else {
 			xic = 0;
@@ -146,11 +148,19 @@ final class LinuxKeyboard {
 	private static native void setupIMEventMask(long display, long window, long xic);
 	private static native ByteBuffer allocateComposeStatus();
 
-	public void destroy() {
+	private static void setDetectableKeyRepeat(long display, boolean enabled) {
+		boolean success = nSetDetectableKeyRepeat(display, enabled);
+		if (!success)
+			LWJGLUtil.log("Failed to set detectable key repeat");
+	}
+	private static native boolean nSetDetectableKeyRepeat(long display, boolean enabled);
+
+	public void destroy(long display) {
 		if (xic != 0)
 			destroyIC(xic);
 		if (xim != 0)
 			closeIM(xim);
+		setDetectableKeyRepeat(display, false);
 	}
 	private static native void destroyIC(long xic);
 	private static native void closeIM(long xim);
@@ -300,10 +310,10 @@ final class LinuxKeyboard {
 	private void handleKeyEvent(long event_ptr, long millis, int event_type, int event_keycode, int event_state) {
 		int keycode = getKeycode(event_ptr, event_state);
 		byte key_state = getKeyState(event_type);
+		boolean repeat = key_state == key_down_buffer[keycode];
 		key_down_buffer[keycode] = key_state;
 		long nanos = millis*1000000;
 		if (event_type == LinuxEvent.KeyPress) {
-			boolean repeat = false;
 			if (has_deferred_event) {
 				if (nanos == deferred_nanos && event_keycode == deferred_event_keycode) {
 					has_deferred_event = false;

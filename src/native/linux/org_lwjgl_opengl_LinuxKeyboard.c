@@ -41,6 +41,7 @@
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
+#include <X11/XKBlib.h>
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
 #include "common_tools.h"
@@ -50,6 +51,14 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxKeyboard_getModifierMapping(J
 	Display *disp = (Display *)(intptr_t)display_ptr;
 	XModifierKeymap *modifier_map = XGetModifierMapping(disp);
 	return (intptr_t)modifier_map;
+}
+
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxKeyboard_nSetDetectableKeyRepeat(JNIEnv *env, jclass unused, jlong display_ptr, jboolean set_enabled) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	Bool result;
+	Bool enabled = set_enabled == JNI_TRUE ? True : False;
+	Bool success = XkbSetDetectableAutoRepeat(disp, enabled, &result);
+	return success && enabled == result ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxKeyboard_freeModifierMapping(JNIEnv *env, jclass unused, jlong mapping_ptr) {

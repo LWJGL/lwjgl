@@ -857,7 +857,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void destroyKeyboard() {
 		lockAWT();
 		try {
-			keyboard.destroy();
+			keyboard.destroy(getDisplay());
 			keyboard = null;
 		} finally {
 			unlockAWT();
