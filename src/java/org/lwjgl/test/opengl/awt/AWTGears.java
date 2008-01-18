@@ -76,9 +76,10 @@ public class AWTGears extends Frame {
 	 */
 	public AWTGears() throws LWJGLException {
 		setTitle("Gears");
-		setSize(300, 300);
 		setBackground(Color.BLACK);
-		add(new AWTGearsCanvas());
+		AWTGearsCanvas canvas = new AWTGearsCanvas();
+		canvas.setSize(300, 300);
+		add(canvas);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				dispose();
@@ -86,6 +87,7 @@ public class AWTGears extends Frame {
 			}
 		});
 		setResizable(true);
+		pack();
 		setVisible(true);
 	}
 	
