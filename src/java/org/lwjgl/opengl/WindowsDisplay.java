@@ -354,7 +354,7 @@ final class WindowsDisplay implements DisplayImplementation {
 			/**
 			 * WORKAROUND:
 			 * Making the context current (redundantly) when the window
-			 * is maximized helps some gfx recover from fullscreen
+			 * is maximized helps some gfx cards recover from fullscreen
 			 */
 			try {
 				if (Display.getDrawable().getContext() != null && Display.getDrawable().getContext().isCurrent())
@@ -393,12 +393,10 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons) {
-		update();
 		mouse.poll(coord_buffer, buttons);
 	}
 	
 	public void readMouse(ByteBuffer buffer) {
-		update();
 		mouse.read(buffer);
 	}
 		
@@ -481,12 +479,10 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 	
 	public void pollKeyboard(ByteBuffer keyDownBuffer) {
-		update();
 		keyboard.poll(keyDownBuffer);
 	}
 	
 	public void readKeyboard(ByteBuffer buffer) {
-		update();
 		keyboard.read(buffer);
 	}
 

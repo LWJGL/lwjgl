@@ -693,7 +693,6 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	
 	public void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons) {
-		update();
 		lockAWT();
 		try {
 			mouse.poll(grab, coord_buffer, buttons);
@@ -703,7 +702,6 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	
 	public void readMouse(ByteBuffer buffer) {
-		update();
 		lockAWT();
 		try {
 			mouse.read(buffer);
@@ -865,7 +863,6 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	
 	public void pollKeyboard(ByteBuffer keyDownBuffer) {
-		update();
 		lockAWT();
 		try {
 			keyboard.poll(keyDownBuffer);
@@ -875,7 +872,6 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 
 	public void readKeyboard(ByteBuffer buffer) {
-		update();
 		lockAWT();
 		try {
 			keyboard.read(buffer);
