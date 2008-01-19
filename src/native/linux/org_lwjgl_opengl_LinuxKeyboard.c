@@ -55,10 +55,9 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxKeyboard_getModifierMapping(J
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxKeyboard_nSetDetectableKeyRepeat(JNIEnv *env, jclass unused, jlong display_ptr, jboolean set_enabled) {
 	Display *disp = (Display *)(intptr_t)display_ptr;
-	Bool result;
 	Bool enabled = set_enabled == JNI_TRUE ? True : False;
-	Bool success = XkbSetDetectableAutoRepeat(disp, enabled, &result);
-	return success && enabled == result ? JNI_TRUE : JNI_FALSE;
+	Bool result = XkbSetDetectableAutoRepeat(disp, enabled, NULL);
+	return result == enabled ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxKeyboard_freeModifierMapping(JNIEnv *env, jclass unused, jlong mapping_ptr) {

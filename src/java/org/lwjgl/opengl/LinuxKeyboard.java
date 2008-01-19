@@ -151,7 +151,7 @@ final class LinuxKeyboard {
 	private static void setDetectableKeyRepeat(long display, boolean enabled) {
 		boolean success = nSetDetectableKeyRepeat(display, enabled);
 		if (!success)
-			LWJGLUtil.log("Failed to set detectable key repeat");
+			LWJGLUtil.log("Failed to set detectable key repeat to " + enabled);
 	}
 	private static native boolean nSetDetectableKeyRepeat(long display, boolean enabled);
 
