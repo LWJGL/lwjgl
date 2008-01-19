@@ -618,8 +618,9 @@ public final class Display {
 			if (!isCreated())
 				throw new IllegalStateException("Display not created");
 
+			processMessages();
 			// We paint only when the window is visible or dirty
-			if (isVisible() || isDirty()) {
+			if (display_impl.isVisible() || display_impl.isDirty()) {
 				try {
 					swapBuffers();
 				} catch (LWJGLException e) {
@@ -627,7 +628,6 @@ public final class Display {
 				}
 			}
 
-			processMessages();
 			pollDevices();
 		}
 	}
