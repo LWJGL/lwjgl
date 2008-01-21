@@ -36,6 +36,7 @@ import java.nio.ByteBuffer;
 import org.lwjgl.opengl.ARBImaging;
 import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.Util;
 
 /**
  * GLU.java
@@ -411,24 +412,6 @@ public class GLU {
 
 	public static String gluErrorString(int error_code) {
 		switch (error_code) {
-			case GL11.GL_NO_ERROR:
-				return "No error";
-			case GL11.GL_INVALID_ENUM:
-				return "Invalid enum";
-			case GL11.GL_INVALID_VALUE:
-				return "Invalid value";
-			case GL11.GL_INVALID_OPERATION:
-				return "Invalid operation";
-			case GL11.GL_STACK_OVERFLOW:
-				return "Stack overflow";
-			case GL11.GL_STACK_UNDERFLOW:
-				return "Stack underflow";
-			case GL11.GL_OUT_OF_MEMORY:
-				return "Out of memory";
-			case ARBImaging.GL_TABLE_TOO_LARGE:
-				return "Table too large";
-			case EXTFramebufferObject.GL_INVALID_FRAMEBUFFER_OPERATION_EXT:
-				return "Invalid framebuffer operation";
 			case GLU.GLU_INVALID_ENUM:
 				return "Invalid enum (glu)";
 			case GLU.GLU_INVALID_VALUE:
@@ -436,7 +419,7 @@ public class GLU {
 			case GLU.GLU_OUT_OF_MEMORY:
 				return "Out of memory (glu)";
 			default:
-				return null;
+				return Util.translateGLErrorString(error_code);
 		}
 	}
 }
