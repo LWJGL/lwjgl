@@ -11,7 +11,7 @@
 
 	<target name="compile_dir">
 		<apply dir="." failonerror="true" executable="cl" dest="." skipemptyfilesets="true">
-			<arg line="/Ox /Wp64 /W2 /nologo /Ox /Ob2 /Oi /Ot /Oy /FD /EHsc /MT /Gy /W2 /nologo /c"/>
+			<arg line="/Ox /W2 /nologo /Ox /Ob2 /Oi /Ot /Oy /FD /EHsc /MT /Gy /W2 /nologo /c"/>
 			<arg value="/I${sdkhome}\include"/>
 			<arg value="/I${dxhome}\include"/>
 			<arg value="/I${alhome}\include"/>
