@@ -531,7 +531,6 @@ public final class Display {
 		synchronized (GlobalLock.lock) {
 			if (!isCreated())
 				throw new IllegalStateException("Cannot determine close requested state of uncreated window");
-			display_impl.update();
 			return display_impl.isCloseRequested();
 		}
 	}
@@ -543,7 +542,6 @@ public final class Display {
 		synchronized (GlobalLock.lock) {
 			if (!isCreated())
 				throw new IllegalStateException("Cannot determine minimized state of uncreated window");
-			display_impl.update();
 			return display_impl.isVisible();
 		}
 	}
@@ -555,7 +553,6 @@ public final class Display {
 		synchronized (GlobalLock.lock) {
 			if (!isCreated())
 				throw new IllegalStateException("Cannot determine focused state of uncreated window");
-			display_impl.update();
 			return display_impl.isActive();
 		}
 	}
@@ -574,7 +571,6 @@ public final class Display {
 		synchronized (GlobalLock.lock) {
 			if (!isCreated())
 				throw new IllegalStateException("Cannot determine dirty state of uncreated window");
-			display_impl.update();
 			return display_impl.isDirty();
 		}
 	}
