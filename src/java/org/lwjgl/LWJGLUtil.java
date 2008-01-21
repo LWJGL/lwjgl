@@ -315,7 +315,7 @@ public class LWJGLUtil {
 	/**
 	 * Locates the paths required by a library.
 	 *
-	 * @param libName Local Library Name to search the classloader with ("openal").
+	 * @param libname Local Library Name to search the classloader with ("openal").
 	 * @param platform_lib_name The native library name ("libopenal.so")
 	 * @param classloader The classloader to ask for library paths
 	 * @return Paths to located libraries, if any
@@ -327,7 +327,7 @@ public class LWJGLUtil {
 	/**
 	 * Locates the paths required by a library.
 	 *
-	 * @param libName Local Library Name to search the classloader with ("openal").
+	 * @param libname Local Library Name to search the classloader with ("openal").
 	 * @param platform_lib_names The list of possible library names ("libopenal.so")
 	 * @param classloader The classloader to ask for library paths
 	 * @return Paths to located libraries, if any

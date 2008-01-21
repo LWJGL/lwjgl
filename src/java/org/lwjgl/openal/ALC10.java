@@ -318,7 +318,6 @@ public final class ALC10 {
 	 * The application can query for, and obtain an handle to, the device of a given context.
 	 *
 	 * @param context address of context to get device for
-	 * @param ALCdevice associated with context
 	 */
 	public static ALCdevice alcGetContextsDevice(ALCcontext context) {
 		ALCdevice device = null;
