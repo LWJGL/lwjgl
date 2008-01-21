@@ -50,8 +50,8 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.PixelFormat;
-import org.lwjgl.opengl.glu.GLU;
-import org.lwjgl.opengl.glu.Sphere;
+import org.lwjgl.util.glu.GLU;
+import org.lwjgl.util.glu.Sphere;
 
 public final class ShadersTest {
 

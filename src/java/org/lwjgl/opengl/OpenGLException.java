@@ -31,8 +31,6 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.opengl.glu.GLU;
-
 /**
  * <p/>
  * Thrown by the debug build library of the LWJGL if any OpenGL operation causes an error.
@@ -51,7 +49,7 @@ public class OpenGLException extends RuntimeException {
 	}
 
 	private static String createErrorMessage(int gl_error_code) {
-		String error_string = GLU.gluErrorString(gl_error_code);
+		String error_string = Util.translateGLErrorString(gl_error_code);
 		return error_string + " (" + gl_error_code + ")";
 	}
 
