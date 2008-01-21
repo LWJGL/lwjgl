@@ -287,8 +287,6 @@ public class Project extends Util {
 	 * @param projMatrix
 	 * @param viewport
 	 * @param win_pos
-	 * 
-	 * @return
 	 */
 	public static boolean gluProject(
 		float objx,
@@ -338,8 +336,6 @@ public class Project extends Util {
 	 * @param projMatrix
 	 * @param viewport
 	 * @param obj_pos
-	 * 
-	 * @return
 	 */
 	public static boolean gluUnProject(
 		float winx,

@@ -67,8 +67,6 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	/**
 	 * C'tor
 	 * 
-	 * @param x,
-	 *            y, z, w
 	 */
 	public Quaternion(float x, float y, float z, float w) {
 		set(x, y, z, w);
@@ -438,7 +436,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 * Sets the value of this quaternion using the rotational component of the
 	 * passed matrix.
 	 * 
-	 * @param m1
+	 * @param m
 	 *            The matrix
 	 * @return this
 	 */
@@ -454,7 +452,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 *            The source matrix
 	 * @param q
 	 *            The destination quaternion, or null if a new quaternion is to be created
-	 * @return 
+	 * @return q
 	 */
 	public final static Quaternion setFromMatrix(Matrix4f m, Quaternion q) {
 		return q.setFromMat(m.m00, m.m01, m.m02, m.m10, m.m11, m.m12, m.m20,
@@ -480,7 +478,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 *            The source matrix
 	 * @param q
 	 *            The destination quaternion, or null if a new quaternion is to be created
-	 * @return 
+	 * @return q
 	 */
 	public static final Quaternion setFromMatrix(Matrix3f m, Quaternion q) {
 		return q.setFromMat(m.m00, m.m01, m.m02, m.m10, m.m11, m.m12, m.m20,

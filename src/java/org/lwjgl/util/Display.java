@@ -127,7 +127,7 @@ public final class Display {
 	 * @return the chosen display mode
 	 * @throws NoSuchFieldException if one of the params is not a field in DisplayMode
 	 * @throws Exception if no display mode could be set
-	 * @see org.lwjgl.DisplayMode
+	 * @see org.lwjgl.opengl.DisplayMode
 	 */
 	public static DisplayMode setDisplayMode(DisplayMode[] dm, final String[] param) throws Exception {
 		

@@ -294,7 +294,6 @@ public class GLU {
 	 * @param projMatrix
 	 * @param viewport
 	 * @param win_pos
-	 * @return
 	 */
 	public static boolean gluProject(float objx, float objy, float objz,
 			FloatBuffer modelMatrix,
@@ -314,7 +313,6 @@ public class GLU {
 	 * @param projMatrix
 	 * @param viewport
 	 * @param obj_pos
-	 * @return
 	 */
 	public static boolean gluUnProject(float winx, float winy, float winz,
 			FloatBuffer modelMatrix,

@@ -136,8 +136,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	/**
 	 * Create an AWTGLCanvas with the requested PixelFormat on the default GraphicsDevice.
 	 *
-	 * @param pixelFormat The desired pixel format. May not be null
-	 * @param device the device to create the canvas on.
+	 * @param pixel_format The desired pixel format. May not be null
 	 */
 	public AWTGLCanvas(PixelFormat pixel_format) throws LWJGLException {
 		this(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice(), pixel_format);
@@ -146,8 +145,8 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	/**
 	 * Create an AWTGLCanvas with the requested PixelFormat on the default GraphicsDevice.
 	 *
-	 * @param pixelFormat The desired pixel format. May not be null
 	 * @param device the device to create the canvas on.
+	 * @param pixel_format The desired pixel format. May not be null
 	 */
 	public AWTGLCanvas(GraphicsDevice device, PixelFormat pixel_format) throws LWJGLException {
 		this(device, pixel_format, null);
@@ -157,8 +156,8 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	 * Create an AWTGLCanvas with the requested PixelFormat on the specified GraphicsDevice.
 	 *
 	 * @param device the device to create the canvas on.
-	 * @param pixelFormat The desired pixel format. May not be null
-	 * @param shared_drawable The Drawable to share context with
+	 * @param pixel_format The desired pixel format. May not be null
+	 * @param drawable The Drawable to share context with
 	 */
 	public AWTGLCanvas(GraphicsDevice device, PixelFormat pixel_format, Drawable drawable) throws LWJGLException {
 		super(implementation.findConfiguration(device, pixel_format));

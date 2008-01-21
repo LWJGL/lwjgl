@@ -868,7 +868,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * 
 	 * @param ownCerts Chain of certificates to check against
 	 * @param native_certs Chain of certificates to check
-	 * @return true if the chains match
 	 */
 	protected static void validateCertificateChain(Certificate[] ownCerts, Certificate[] native_certs) throws Exception {
 		if (native_certs == null)
@@ -948,7 +947,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * Sets the state of the loaded and prints some debug information
 	 * 
 	 * @param error Error message to print
-	 * @param state State to enter
 	 */
 	protected void fatalErrorOccured(String error) {
 		fatalError = true;
