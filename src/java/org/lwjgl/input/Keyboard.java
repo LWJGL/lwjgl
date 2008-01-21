@@ -192,14 +192,14 @@ public class Keyboard {
 	/**
 	 * The left windows key, mapped to KEY_LMETA
 	 *
-	 * @Deprecated Use KEY_LMETA instead
+	 * @deprecated Use KEY_LMETA instead
 	 */
 	public static final int KEY_LWIN            = KEY_LMETA; /* Left Windows key */
 	public static final int KEY_RMETA            = 0xDC; /* Right Windows/Option key */
 	/**
 	 * The right windows key, mapped to KEY_RMETA
 	 *
-	 * @Deprecated Use KEY_RMETA instead
+	 * @deprecated Use KEY_RMETA instead
 	 */
 	public static final int KEY_RWIN            = KEY_RMETA; /* Right Windows key */
 	public static final int KEY_APPS            = 0xDD; /* AppMenu key */
@@ -563,7 +563,7 @@ public class Keyboard {
 	}
 
 	/**
-	 * @see org.lwjgl.input.Keyboard#enableRepeatEvents()
+	 * @see org.lwjgl.input.Keyboard#enableRepeatEvents(boolean)
 	 * @return true if the current event is a repeat event, false if
 	 * the current event is not a repeat even or if repeat events are disabled.
 	 */

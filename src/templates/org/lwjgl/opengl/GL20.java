@@ -223,7 +223,6 @@ public interface GL20 {
 	 * @param program
 	 * @param name
 	 *
-	 * @return
 	 */
 	int glGetUniformLocation(@GLuint int program, @NullTerminated @Check("1") @Const @GLchar ByteBuffer name);
 

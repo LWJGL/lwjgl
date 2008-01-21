@@ -899,7 +899,7 @@ public final class Display {
 	 *
 	 * A video frame period is the time required to display a full frame of video data.
 	 *
-	 * @param sync true to synchronize; false to ignore synchronization
+	 * @param value The swap interval in frames, 0 to disable
 	 */
 	public static void setSwapInterval(int value) {
 		synchronized (GlobalLock.lock) {
@@ -926,9 +926,9 @@ public final class Display {
 	 * The window is clamped to remain entirely on the screen. If you attempt
 	 * to position the window such that it would extend off the screen, the window
 	 * is simply placed as close to the edge as possible.
-   * <br><b>note</b>If no location has been specified (or x == y == -1) the window will be centered
-	 * @param x The new window location on the x axis
-   * @param y The new window location on the y axis
+	 * <br><b>note</b>If no location has been specified (or x == y == -1) the window will be centered
+	 * @param new_x The new window location on the x axis
+	 * @param new_y The new window location on the y axis
 	 */
 	public static void setLocation(int new_x, int new_y) {
 		synchronized (GlobalLock.lock) {

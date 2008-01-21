@@ -68,7 +68,7 @@ public interface AL11 {
 	/** Type of source: when it has the NULL buffer attached */
 	public static final int AL_UNDETERMINED							= 0x1030;
 
-	/** @see AL10.AL_INVALID_OPERATION */
+	/** @see AL10#AL_INVALID_OPERATION */
 	public static final int AL_ILLEGAL_COMMAND						= 0xA004;
 	
 	/** Speed of Sound in units per second */

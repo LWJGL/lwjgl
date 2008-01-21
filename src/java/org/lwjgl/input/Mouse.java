@@ -186,9 +186,9 @@ public class Mouse {
 	 * Set the position of the cursor. If the cursor is not grabbed,
 	 * the native cursor is moved to the new position.
 	 *
-	 * @param x The x coordinate of the new cursor position in OpenGL coordinates relative
+	 * @param new_x The x coordinate of the new cursor position in OpenGL coordinates relative
 	 *			to the window origin.
-	 * @param y The y coordinate of the new cursor position in OpenGL coordinates relative
+	 * @param new_y The y coordinate of the new cursor position in OpenGL coordinates relative
 	 *			to the window origin.
 	 */
 	public static void setCursorPosition(int new_x, int new_y) {
