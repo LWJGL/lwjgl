@@ -32,6 +32,8 @@
 package org.lwjgl.util.glu;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
 
 import org.lwjgl.opengl.ARBImaging;
 import org.lwjgl.opengl.EXTFramebufferObject;
@@ -295,10 +297,10 @@ public class GLU {
 	 * @return
 	 */
 	public static boolean gluProject(float objx, float objy, float objz,
-			float[][] modelMatrix,
-			float[][] projMatrix,
-			int[] viewport,
-			float[] win_pos)
+			FloatBuffer modelMatrix,
+			FloatBuffer projMatrix,
+			IntBuffer viewport,
+			FloatBuffer win_pos)
 	{
 		return Project.gluProject(objx, objy, objz, modelMatrix, projMatrix, viewport, win_pos);
 	}
@@ -315,10 +317,10 @@ public class GLU {
 	 * @return
 	 */
 	public static boolean gluUnProject(float winx, float winy, float winz,
-			float[][] modelMatrix,
-			float[][] projMatrix,
-			int[] viewport,
-			float[] obj_pos)
+			FloatBuffer modelMatrix,
+			FloatBuffer projMatrix,
+			IntBuffer viewport,
+			FloatBuffer obj_pos)
 	{
 		return Project.gluUnProject(winx, winy, winz, modelMatrix, projMatrix, viewport, obj_pos);
 	}
@@ -336,7 +338,7 @@ public class GLU {
 			float y,
 			float width,
 			float height,
-			int[] viewport) {
+			IntBuffer viewport) {
 
 		Project.gluPickMatrix(x, y, width, height, viewport);
 	}

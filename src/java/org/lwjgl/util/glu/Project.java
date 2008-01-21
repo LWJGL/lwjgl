@@ -32,6 +32,7 @@
 package org.lwjgl.util.glu;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -54,9 +55,9 @@ public class Project extends Util {
 			0.0f, 0.0f, 0.0f, 1.0f };
 
 	private static final FloatBuffer matrix = BufferUtils.createFloatBuffer(16);
-	private static final float[][] finalMatrix = new float[4][4];
+	private static final FloatBuffer finalMatrix = BufferUtils.createFloatBuffer(16);
 
-	private static final float[][] tempMatrix = new float[4][4];
+	private static final FloatBuffer tempMatrix = BufferUtils.createFloatBuffer(16);
 	private static final float[] in = new float[4];
 	private static final float[] out = new float[4];
 
@@ -73,12 +74,6 @@ public class Project extends Util {
 		m.position(oldPos);
 	}
 
-	private static void __gluMakeIdentityf(float[][] m) {
-		for (int i = 0; i < 16; i++) {
-			m[i>>2][i%4] = IDENTITY_MATRIX[i];
-		}
-	}
-	
 	/**
 	 * Method __gluMultMatrixVecf
 	 * 
@@ -86,13 +81,13 @@ public class Project extends Util {
 	 * @param in
 	 * @param out
 	 */
-	private static void __gluMultMatrixVecf(float[][] finalMatrix, float[] in, float[] out) {
+	private static void __gluMultMatrixVecf(FloatBuffer m, float[] in, float[] out) {
 		for (int i = 0; i < 4; i++) {
 			out[i] =
-				in[0] * finalMatrix[0][i]
-					+ in[1] * finalMatrix[1][i]
-					+ in[2] * finalMatrix[2][i]
-					+ in[3] * finalMatrix[3][i];
+				in[0] * m.get(m.position() + 0*4 + i)
+					+ in[1] * m.get(m.position() + 1*4 + i)
+					+ in[2] * m.get(m.position() + 2*4 + i)
+					+ in[3] * m.get(m.position() + 3*4 + i);
 
 		}
 	}
@@ -103,15 +98,14 @@ public class Project extends Util {
 	 * 
 	 * @return
 	 */
-	private static boolean __gluInvertMatrixf(float[][] src, float[][] inverse) {
+	private static boolean __gluInvertMatrixf(FloatBuffer src, FloatBuffer inverse) {
 		int i, j, k, swap;
 		float t;
-		float[][] temp = Project.tempMatrix;
+		FloatBuffer temp = Project.tempMatrix;
 
-		for (i = 0; i < 4; i++) {
-			for (j = 0; j < 4; j++) {
-				temp[i][j] = src[i][j];
-			}
+
+		for (i = 0; i < 16; i++) {
+			temp.put(i, src.get(i + src.position()));
 		}
 		__gluMakeIdentityf(inverse);
 
@@ -124,7 +118,7 @@ public class Project extends Util {
 				/*
 				 * if (fabs(temp[j][i]) > fabs(temp[i][i])) { swap = j;
 				 */
-				if (Math.abs(temp[j][i]) > Math.abs(temp[i][i])) {
+				if (Math.abs(temp.get(j*4 + i)) > Math.abs(temp.get(i* 4 + i))) {
 					swap = j;
 				}
 			}
@@ -134,19 +128,19 @@ public class Project extends Util {
 				 * * Swap rows.
 				 */
 				for (k = 0; k < 4; k++) {
-					t = temp[i][k];
-					temp[i][k] = temp[swap][k];
-					temp[swap][k] = t;
+					t = temp.get(i*4 + k);
+					temp.put(i*4 + k, temp.get(swap*4 + k));
+					temp.put(swap*4 + k, t);
 
-					t = inverse[i][k];
-					inverse[i][k] = inverse[swap][k];
+					t = inverse.get(i*4 + k);
+					inverse.put(i*4 + k, inverse.get(swap*4 + k));
 					//inverse.put((i << 2) + k, inverse.get((swap << 2) + k));
-					inverse[swap][k] = t;
+					inverse.put(swap*4 + k, t);
 					//inverse.put((swap << 2) + k, t);
 				}
 			}
 
-			if (temp[i][i] == 0) {
+			if (temp.get(i*4 + i) == 0) {
 				/*
 				 * * No non-zero pivot. The matrix is singular, which shouldn't *
 				 * happen. This means the user gave us a bad matrix.
@@ -154,17 +148,17 @@ public class Project extends Util {
 				return false;
 			}
 
-			t = temp[i][i];
+			t = temp.get(i*4 + i);
 			for (k = 0; k < 4; k++) {
-				temp[i][k] /= t;
-				inverse[i][k] = inverse[i][k] / t;
+				temp.put(i*4 + k, temp.get(i*4 + k)/t);
+				inverse.put(i*4 + k, inverse.get(i*4 + k)/t);
 			}
 			for (j = 0; j < 4; j++) {
 				if (j != i) {
-					t = temp[j][i];
+					t = temp.get(j*4 + i);
 					for (k = 0; k < 4; k++) {
-						temp[j][k] -= temp[i][k] * t;
-						inverse[j][k] = inverse[j][k] - inverse[i][k] * t;
+						temp.put(j*4 + k, temp.get(j*4 + k) - temp.get(i*4 + k) * t);
+						inverse.put(j*4 + k, inverse.get(j*4 + k) - inverse.get(i*4 + k) * t);
 						/*inverse.put(
 							(j << 2) + k,
 							inverse.get((j << 2) + k) - inverse.get((i << 2) + k) * t);*/
@@ -180,11 +174,11 @@ public class Project extends Util {
 	 * @param b
 	 * @param r
 	 */
-	private static void __gluMultMatricesf(float[][] a, float[][] b, float[][] r) {
+	private static void __gluMultMatricesf(FloatBuffer a, FloatBuffer b, FloatBuffer r) {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				r[i][j] =
-					a[i][0] * b[0][j] + a[i][1] * b[1][j] + a[i][2] * b[2][j] + a[i][3] * b[3][j];
+				r.put(r.position() + i*4 + j,
+					a.get(a.position() + i*4 + 0) * b.get(b.position() + 0*4 + j) + a.get(a.position() + i*4 + 1) * b.get(b.position() + 1*4 + j) + a.get(a.position() + i*4 + 2) * b.get(b.position() + 2*4 + j) + a.get(a.position() + i*4 + 3) * b.get(b.position() + 3*4 + j));
 			}
 		}
 	}
@@ -300,10 +294,10 @@ public class Project extends Util {
 		float objx,
 		float objy,
 		float objz,
-		float[][] modelMatrix,
-		float[][] projMatrix,
-		int[] viewport,
-		float[] win_pos) {
+		FloatBuffer modelMatrix,
+		FloatBuffer projMatrix,
+		IntBuffer viewport,
+		FloatBuffer win_pos) {
 
 		float[] in = Project.in;
 		float[] out = Project.out;
@@ -327,9 +321,9 @@ public class Project extends Util {
 		in[2] = in[2] * in[3] + 0.5f;
 
 		// Map x,y to viewport
-		win_pos[0] = in[0] * viewport[2] + viewport[0];
-		win_pos[1] = in[1] * viewport[3] + viewport[1];
-		win_pos[2] = in[2];
+		win_pos.put(0, in[0] * viewport.get(viewport.position() + 2) + viewport.get(viewport.position() + 0));
+		win_pos.put(1, in[1] * viewport.get(viewport.position() + 3) + viewport.get(viewport.position() + 1));
+		win_pos.put(2, in[2]);
 
 		return true;
 	}
@@ -351,10 +345,10 @@ public class Project extends Util {
 		float winx,
 		float winy,
 		float winz,
-		float[][] modelMatrix,
-		float[][] projMatrix,
-		int[] viewport,
-		float[] obj_pos) {
+		FloatBuffer modelMatrix,
+		FloatBuffer projMatrix,
+		IntBuffer viewport,
+		FloatBuffer obj_pos) {
 		float[] in = Project.in;
 		float[] out = Project.out;
 
@@ -369,8 +363,8 @@ public class Project extends Util {
 		in[3] = 1.0f;
 
 		// Map x and y from window coordinates
-		in[0] = (in[0] - viewport[0]) / viewport[2];
-		in[1] = (in[1] - viewport[1]) / viewport[3];
+		in[0] = (in[0] - viewport.get(viewport.position() + 0)) / viewport.get(viewport.position() + 2);
+		in[1] = (in[1] - viewport.get(viewport.position() + 1)) / viewport.get(viewport.position() + 3);
 
 		// Map to range -1 to 1
 		in[0] = in[0] * 2 - 1;
@@ -384,9 +378,9 @@ public class Project extends Util {
 
 		out[3] = 1.0f / out[3];
 
-		obj_pos[0] = out[0] * out[3];
-		obj_pos[1] = out[1] * out[3];
-		obj_pos[2] = out[2] * out[3];
+		obj_pos.put(obj_pos.position() + 0, out[0] * out[3]);
+		obj_pos.put(obj_pos.position() + 1, out[1] * out[3]);
+		obj_pos.put(obj_pos.position() + 2, out[2] * out[3]);
 
 		return true;
 	}
@@ -405,16 +399,16 @@ public class Project extends Util {
 		float y,
 		float deltaX,
 		float deltaY,
-		int[] viewport) {
+		IntBuffer viewport) {
 		if (deltaX <= 0 || deltaY <= 0) {
 			return;
 		}
 
 		/* Translate and scale the picked region to the entire window */
 		GL11.glTranslatef(
-			(viewport[2] - 2 * (x - viewport[0])) / deltaX,
-			(viewport[3] - 2 * (y - viewport[1])) / deltaY,
+			(viewport.get(viewport.position() + 2) - 2 * (x - viewport.get(viewport.position() + 0))) / deltaX,
+			(viewport.get(viewport.position() + 3) - 2 * (y - viewport.get(viewport.position() + 1))) / deltaY,
 			0);
-		GL11.glScalef(viewport[2] / deltaX, viewport[3] / deltaY, 1.0f);
+		GL11.glScalef(viewport.get(viewport.position() + 2) / deltaX, viewport.get(viewport.position() + 3) / deltaY, 1.0f);
 	}
 }
