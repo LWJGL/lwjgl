@@ -500,7 +500,7 @@
 	
 	<!-- Creates the Javadoc -->
 	<target name="javadoc" description="Creates javadoc from java source code">
-		<javadoc destdir="${lwjgl.docs}/javadoc" author="true" version="true" use="true" source="1.4" windowtitle="LWJGL API">
+		<javadoc destdir="${lwjgl.docs}/javadoc" classpath="${lwjgl.lib}/jinput.jar" author="true" version="true" use="true" source="1.4" windowtitle="LWJGL API">
 			<fileset refid="lwjgl.javadoc.fileset" />
 			<doctitle><![CDATA[<h1>Lightweight Java Game Toolkit</h1>]]></doctitle>
 			<bottom><![CDATA[<i>Copyright &#169; 2002-2008 lwjgl.org. All Rights Reserved.</i>]]></bottom>
