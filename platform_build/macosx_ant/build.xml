@@ -41,9 +41,9 @@
 	
 	<target name="nativelibrary" depends="init">
 		<property name="universal_sdkroot" location="/Developer/SDKs/MacOSX10.4u.sdk"/>
-		<property name="legacy_sdkroot" location="/Developer/SDKs/MacOSX10.3.9.sdk"/>
+		<property name="legacy_sdkroot" location="/Developer/SDKs/MacOSX10.4u.sdk"/>
 		<property name="universal_flags" value="-isysroot ${universal_sdkroot} -arch i386"/>
-		<property name="legacy_flags" value="-arch ppc"/>
+		<property name="legacy_flags" value="-F${legacy_sdkroot}/System/Library/Frameworks -arch ppc"/>
 		<antcall target="compile">
 			<param name="dstdir" location="intel"/>
 			<param name="compiler" value="gcc-4.0"/>
