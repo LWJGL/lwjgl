@@ -546,7 +546,7 @@
 			<arg path="${lwjgl.src}/generated"/>
 			<arg value="-d"/>
 			<arg path="${lwjgl.src.native}/generated"/>
-			<arg value="-Ageneratechecks"/>
+			<!--			<arg value="-Ageneratechecks"/>-->
 			<arg value="-Acontextspecific"/>
 			<arg value="-Atypemap=org.lwjgl.util.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>
