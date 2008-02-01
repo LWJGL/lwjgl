@@ -58,7 +58,7 @@ public final class AWTInputAdapter {
 	 * @param canvas The canvas to receive input from.
 	 */
 	public static synchronized void create(AWTGLCanvas canvas) throws LWJGLException {
-		if (awt_input != null)
+		if (isCreated())
 			throw new IllegalStateException("You need to destroy() the adapter.");
 		awt_input = AWTGLCanvas.getImplementation().createInput(canvas);
 		// Invoke Mouse.create(awt_input) and Keyboard.create(awt_input)
@@ -86,8 +86,12 @@ public final class AWTInputAdapter {
 		awt_input.init();
 	}
 
+	public static synchronized boolean isCreated() {
+		return awt_input != null;
+	}
+
 	public static synchronized void destroy() {
-		if (awt_input != null) {
+		if (isCreated()) {
 			Mouse.destroy();
 			Keyboard.destroy();
 			awt_input.destroy();
