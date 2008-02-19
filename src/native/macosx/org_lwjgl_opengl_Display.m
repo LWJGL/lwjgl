@@ -46,6 +46,7 @@
 #import <unistd.h>
 //#import "display.h"
 #import "common_tools.h"
+#import "org_lwjgl_opengl_MacOSXDisplay.h"
 
 #define WAIT_DELAY 100
 
