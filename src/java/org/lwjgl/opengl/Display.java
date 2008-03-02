@@ -576,9 +576,9 @@ public final class Display {
 	}
 
 	/**
-	 * Process operating system events. Call this to update the Display's state and make sure the
-	 * input devices receive events. This method is called from update(), and should normally not be called by
-	 * the application.
+	 * Process operating system events. Call this to update the Display's state and to receive new
+	 * input device events. This method is called from update(), so it is not necessary to call
+	 * this method if update() is called periodically.
 	 */
 	public static void processMessages() {
 		synchronized (GlobalLock.lock) {

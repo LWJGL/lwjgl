@@ -303,6 +303,9 @@ public class Mouse {
 	 * <code>getEventButton</code>. To get the state of that button, for that event, use
 	 * <code>getEventButtonState</code>.
 	 *
+	 * NOTE: This method does not query the operating system for new events. To do that,
+	 * Display.processMessages() (or Display.update()) must be called first.
+	 *
 	 * @see org.lwjgl.input.Mouse#next()
 	 * @see org.lwjgl.input.Mouse#getEventButton()
 	 * @see org.lwjgl.input.Mouse#getEventButtonState()

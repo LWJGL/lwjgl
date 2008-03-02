@@ -363,6 +363,9 @@ public class Keyboard {
 	 * <code>getEventKeyState</code> - finally use <code>getEventCharacter</code> to get the
 	 * character for that event.
 	 *
+	 * NOTE: This method does not query the operating system for new events. To do that,
+	 * Display.processMessages() (or Display.update()) must be called first.
+	 *
 	 * @see org.lwjgl.input.Keyboard#isKeyDown(int key)
 	 * @see org.lwjgl.input.Keyboard#next()
 	 * @see org.lwjgl.input.Keyboard#getEventKey()
