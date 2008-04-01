@@ -962,8 +962,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		throw new UnsupportedOperationException();
 	}
 	
-	private static ByteBuffer convertIcon(ByteBuffer icon, int width, int height) {
-		ByteBuffer icon_copy = BufferUtils.createByteBuffer(icon.capacity());
+	private static void convertIcon(ByteBuffer icon, int width, int height, ByteBuffer icon_rgb, ByteBuffer icon_mask) {
 		int x = 0;
 		int y = 5;
 		byte r,g,b,a;
@@ -977,13 +976,14 @@ final class LinuxDisplay implements DisplayImplementation {
 				b = icon.get((x*4)+(y*width*4)+2);
 				a = icon.get((x*4)+(y*width*4)+3);
 
-				icon_copy.put((x*depth)+(y*width*depth), b); // blue
-				icon_copy.put((x*depth)+(y*width*depth)+1, g); // green
-				icon_copy.put((x*depth)+(y*width*depth)+2, r);
-				icon_copy.put((x*depth)+(y*width*depth)+3, a);
+				icon_rgb.put((x*depth)+(y*width*depth), b); // blue
+				icon_rgb.put((x*depth)+(y*width*depth)+1, g); // green
+				icon_rgb.put((x*depth)+(y*width*depth)+2, r);
+				icon_mask.put((x*depth)+(y*width*depth), a);
+				icon_mask.put((x*depth)+(y*width*depth)+1, a);
+				icon_mask.put((x*depth)+(y*width*depth)+2, a);
 			}
 		}
-		return icon_copy;
 	}
 
 	/**
@@ -1006,8 +1006,11 @@ final class LinuxDisplay implements DisplayImplementation {
 				for (int i=0;i<icons.length;i++) {
 					int size = icons[i].limit() / 4;
 					int dimension = (int)Math.sqrt(size);
-					ByteBuffer icon = convertIcon(icons[i], dimension, dimension);
-					nSetWindowIcon(getDisplay(), getWindow(), icon, icon.capacity(), dimension, dimension);
+					int cap = icons[i].capacity();
+					ByteBuffer icon_rgb = BufferUtils.createByteBuffer(cap);
+					ByteBuffer icon_mask = BufferUtils.createByteBuffer(cap);
+					convertIcon(icons[i], dimension, dimension, icon_rgb, icon_mask);
+					nSetWindowIcon(getDisplay(), getWindow(), icon_rgb, icon_mask, cap, dimension, dimension);
 					return 1;
 				}
 				return 0;
@@ -1022,7 +1025,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 	
-	private static native void nSetWindowIcon(long display, long window, ByteBuffer icon, int icons_size, int width, int height);
+	private static native void nSetWindowIcon(long display, long window, ByteBuffer icon_rgb, ByteBuffer icon_mask, int icon_size, int width, int height);
 
 	public int getWidth() {
 		return Display.getDisplayMode().getWidth();

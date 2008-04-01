@@ -72,6 +72,7 @@ static GLXWindow glx_window = None;
 static Colormap cmap;
 static int current_depth;
 static Pixmap current_icon_pixmap;	
+static Pixmap current_icon_mask_pixmap;	
 
 static Visual *current_visual;
 
@@ -185,6 +186,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetTitle(JNIEnv * env
 }
 
 static void freeIconPixmap(Display *disp) {
+	if (current_icon_mask_pixmap != 0) {
+		XFreePixmap(disp, current_icon_mask_pixmap);
+		current_icon_mask_pixmap = 0;
+	}
 	if (current_icon_pixmap != 0) {
 		XFreePixmap(disp, current_icon_pixmap);
 		current_icon_pixmap = 0;
@@ -349,33 +354,46 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUnlockAWT(JNIEnv *env
 	jawt.Unlock(env);
 }
 
-static void setIcon(JNIEnv *env, Display *disp, Window window, char *data, int icon_size, int width,int height) {
-	XWMHints* win_hints;
-	freeIconPixmap(disp);
-	current_icon_pixmap = XCreatePixmap(disp, window, width, height, current_depth);
+static Pixmap createPixmapFromBuffer(JNIEnv *env, Display *disp, Window window, char *data, int data_size, int width, int height) {
+	Pixmap pixmap = XCreatePixmap(disp, window, width, height, current_depth);
 	/* We need to copy the image data since XDestroyImage will also free its data buffer, which can't be allowed
 	 * since the data buffer is managed by the jvm (it's the storage for the direct ByteBuffer)
 	 */
-	char *icon_copy = (char *)malloc(sizeof(*icon_copy)*icon_size);
+	char *icon_copy = (char *)malloc(sizeof(*icon_copy)*data_size);
 
 	if (icon_copy == NULL) {
+		XFreePixmap(disp, pixmap);
 		throwException(env, "malloc failed");
-		return;
+		return 0;
 	}
-	memcpy(icon_copy, data, icon_size);
+	memcpy(icon_copy, data, data_size);
 	XImage *image = XCreateImage(disp, current_visual, current_depth, ZPixmap, 0, icon_copy, width, height, 32, 0);
 	if (image == NULL) {
-		freeIconPixmap(disp);
+		XFreePixmap(disp, pixmap);
 		free(icon_copy);
 		throwException(env, "XCreateImage failed");
-		return;
+		return 0;
 	}
 	
-	GC gc = XCreateGC(disp, current_icon_pixmap, 0, NULL);
-	XPutImage(disp, current_icon_pixmap, gc, image, 0, 0, 0, 0, width, height);
+	GC gc = XCreateGC(disp, pixmap, 0, NULL);
+	XPutImage(disp, pixmap, gc, image, 0, 0, 0, 0, width, height);
 	XFreeGC(disp, gc);
 	XDestroyImage(image);
 	// We won't free icon_copy because it is freed by XDestroyImage
+	return pixmap;
+}
+
+static void setIcon(JNIEnv *env, Display *disp, Window window, char *rgb_data, char *mask_data, int icon_size, int width, int height) {
+	XWMHints* win_hints;
+	freeIconPixmap(disp);
+	current_icon_pixmap = createPixmapFromBuffer(env, disp, window, rgb_data, icon_size, width, height);
+	if ((*env)->ExceptionCheck(env))
+		return;
+	current_icon_mask_pixmap = createPixmapFromBuffer(env, disp, window, mask_data, icon_size, width, height);
+	if ((*env)->ExceptionCheck(env)) {
+		freeIconPixmap(disp);
+		return;
+	}
 	
 	win_hints = XAllocWMHints();
 	if (win_hints == NULL) {
@@ -383,8 +401,9 @@ static void setIcon(JNIEnv *env, Display *disp, Window window, char *data, int i
 		return;
 	}
 	
-	win_hints->flags = IconPixmapHint;               
+	win_hints->flags = IconPixmapHint | IconMaskHint;
 	win_hints->icon_pixmap = current_icon_pixmap;
+	win_hints->icon_mask = current_icon_mask_pixmap;
 	
 	XSetWMHints(disp, window, win_hints);
 	XFree(win_hints);
@@ -392,13 +411,14 @@ static void setIcon(JNIEnv *env, Display *disp, Window window, char *data, int i
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetWindowIcon
-  (JNIEnv *env, jclass clazz, jlong display, jlong window_ptr, jobject iconBuffer, jint icon_size, jint width, jint height)
+  (JNIEnv *env, jclass clazz, jlong display, jlong window_ptr, jobject icon_rgb_buffer, jobject icon_mask_buffer, jint icon_size, jint width, jint height)
 {
 	Display *disp = (Display *)(intptr_t)display;
 	Window window = (Window)window_ptr;
-	char *imgData = (char *)(*env)->GetDirectBufferAddress(env, iconBuffer);
+	char *rgb_data= (char *)(*env)->GetDirectBufferAddress(env, icon_rgb_buffer);
+	char *mask_data= (char *)(*env)->GetDirectBufferAddress(env, icon_mask_buffer);
 
-	setIcon(env, disp, window, imgData, icon_size, width, height);
+	setIcon(env, disp, window, rgb_data, mask_data, icon_size, width, height);
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUngrabKeyboard(JNIEnv *env, jclass unused, jlong display_ptr) {
