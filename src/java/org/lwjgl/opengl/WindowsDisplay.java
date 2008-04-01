@@ -550,31 +550,33 @@ final class WindowsDisplay implements DisplayImplementation {
 	 * @return number of icons used.
 	 */
 	public int setIcon(ByteBuffer[] icons) {
-		boolean done16 = false;
-		boolean done32 = false;
+		boolean done_small = false;
+		boolean done_large = false;
 		int used = 0;
 		
+		int small_icon_size = 16;
+		int large_icon_size = 32;
 		for (int i=0;i<icons.length;i++) {
 			int size = icons[i].limit() / 4;
 			
-			if ((((int) Math.sqrt(size)) == 16) && (!done16)) {
-				nSetWindowIcon16(icons[i].asIntBuffer());
+			if ((((int) Math.sqrt(size)) == small_icon_size) && (!done_small)) {
+				nSetWindowIconSmall(small_icon_size, small_icon_size, icons[i].asIntBuffer());
 				used++;
-				done16 = true;
+				done_small = true;
 			}
-			if ((((int) Math.sqrt(size)) == 32) && (!done32)) {
-				nSetWindowIcon32(icons[i].asIntBuffer());
+			if ((((int) Math.sqrt(size)) == large_icon_size) && (!done_large)) {
+				nSetWindowIconLarge(large_icon_size, large_icon_size, icons[i].asIntBuffer());
 				used++;
-				done32 = true;
+				done_large = true;
 			}
 		}
 		
 		return used;
 	}
 
-	private static native int nSetWindowIcon16(IntBuffer icon);
+	private static native int nSetWindowIconSmall(int width, int height, IntBuffer icon);
 	
-	private static native int nSetWindowIcon32(IntBuffer icon);
+	private static native int nSetWindowIconLarge(int width, int height, IntBuffer icon);
 
 	private void handleMouseButton(int button, int state, long millis) {
 		if (mouse != null)
