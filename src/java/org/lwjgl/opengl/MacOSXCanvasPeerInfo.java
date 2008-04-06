@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import java.awt.Component;
+import java.awt.Canvas;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
@@ -49,7 +49,7 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 		super(pixel_format, true, true, support_pbuffer, true);
 	}
 
-	protected void initHandle(Component component) throws LWJGLException {
+	protected void initHandle(Canvas component) throws LWJGLException {
 		nInitHandle(awt_surface.lockAndGetHandle(component), getHandle());
 	}
 	private static native void nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle) throws LWJGLException;

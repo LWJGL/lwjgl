@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
-import java.awt.Component;
+import java.awt.Canvas;
 
 import org.lwjgl.LWJGLException;
 
@@ -44,7 +44,7 @@ import org.lwjgl.LWJGLException;
  * $Id$
  */
 final class MacOSXCanvasImplementation implements AWTCanvasImplementation {
-	public PeerInfo createPeerInfo(Component component, PixelFormat pixel_format) throws LWJGLException {
+	public PeerInfo createPeerInfo(Canvas component, PixelFormat pixel_format) throws LWJGLException {
 		try {
 			return new MacOSXAWTGLCanvasPeerInfo(component, pixel_format, true);
 		} catch (LWJGLException e) {

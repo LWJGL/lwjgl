@@ -242,18 +242,44 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReshape(JNIEnv *env, 
 	XMoveWindow(disp, window, x, y);
 }
 
-static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_mode, X11PeerInfo *peer_info, int x, int y, int width, int height) {
-	bool undecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
-	Window root_win;
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getRootWindow(JNIEnv *env, jclass clazz, jlong display, jint screen) {
+	Display *disp = (Display *)(intptr_t)display;
+	return RootWindow(disp, screen);
+}
+
+static void updateWindowHints(JNIEnv *env, Display *disp, Window window) {
+	XWMHints* win_hints = XAllocWMHints();
+	if (win_hints == NULL) {
+		throwException(env, "XAllocWMHints failed");
+		return;
+	}
+	
+	win_hints->flags = InputHint;
+	win_hints->input = True;
+	if (current_icon_pixmap != 0) {
+		win_hints->flags |= IconPixmapHint;
+		win_hints->icon_pixmap = current_icon_pixmap;
+	}
+	if (current_icon_mask_pixmap != 0) {
+		win_hints->flags |= IconMaskHint;
+		win_hints->icon_mask = current_icon_mask_pixmap;
+	}
+
+	XSetWMHints(disp, window, win_hints);
+	XFree(win_hints);
+	XFlush(disp);
+}
+
+static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_mode, X11PeerInfo *peer_info, int x, int y, int width, int height, jboolean undecorated, long parent_handle) {
+	Window parent = (Window)parent_handle;
 	Window win;
 	XSetWindowAttributes attribs;
 	int attribmask;
 
-	root_win = RootWindow(disp, screen);
 	XVisualInfo *vis_info = getVisualInfoFromPeerInfo(env, peer_info);
 	if (vis_info == NULL)
 		return false;
-	cmap = XCreateColormap(disp, root_win, vis_info->visual, AllocNone);
+	cmap = XCreateColormap(disp, parent, vis_info->visual, AllocNone);
 	attribs.colormap = cmap;
 	attribs.event_mask = ExposureMask | /*FocusChangeMask | */VisibilityChangeMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
 	attribmask = CWColormap | CWEventMask;
@@ -261,7 +287,7 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 		attribmask |= CWOverrideRedirect;
 		attribs.override_redirect = True;
 	}
-	win = XCreateWindow(disp, root_win, x, y, width, height, 0, vis_info->depth, InputOutput, vis_info->visual, attribmask, &attribs);
+	win = XCreateWindow(disp, parent, x, y, width, height, 0, vis_info->depth, InputOutput, vis_info->visual, attribmask, &attribs);
 	
 	current_depth = vis_info->depth;
 	current_visual = vis_info->visual;
@@ -271,8 +297,8 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 		XFreeColormap(disp, cmap);
 		return false;
 	}
-	printfDebugJava(env, "Created window");
-	if (window_mode != org_lwjgl_opengl_LinuxDisplay_WINDOWED || undecorated) {
+//	printfDebugJava(env, "Created window");
+	if (undecorated) {
 		// Use Motif decoration hint property and hope the window manager respects them
 		setDecorations(disp, win, 0);
 	}
@@ -283,9 +309,11 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 	size_hints->min_height = height;
 	size_hints->max_height = height;
 	XSetWMNormalHints(disp, win, size_hints);
+	updateWindowHints(env, disp, win);
 	XFree(size_hints);
-	Atom delete_atom = XInternAtom(disp, "WM_DELETE_WINDOW", False);
-	XSetWMProtocols(disp, win, &delete_atom, 1);
+#define NUM_ATOMS 1
+	Atom protocol_atoms[NUM_ATOMS] = {XInternAtom(disp, "WM_DELETE_WINDOW", False)/*, XInternAtom(disp, "WM_TAKE_FOCUS", False)*/};
+	XSetWMProtocols(disp, win, protocol_atoms, NUM_ATOMS);
 	if (window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_NETWM) {
 		Atom fullscreen_atom = XInternAtom(disp, "_NET_WM_STATE_FULLSCREEN", False);
 		XChangeProperty(disp, win, XInternAtom(disp, "_NET_WM_STATE", False),
@@ -299,7 +327,17 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 	return win;
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jclass clazz, jlong display, jint screen, jobject peer_info_handle, jobject mode, jint window_mode, jint x, jint y) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setInputFocus(JNIEnv *env, jclass clazz, jlong display, jlong window_ptr) {
+	Display *disp = (Display *)(intptr_t)display;
+	Window window = (Window)window_ptr;
+	// Normally, a real time stamp from an event should be passed instead of CurrentTime, but we don't get timestamps
+	// from awt. Instead we grab the server before and ungrab it after the request
+	XGrabServer(disp);
+	XSetInputFocus(disp, window, RevertToParent, CurrentTime);
+	XUngrabServer(disp);
+}
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jclass clazz, jlong display, jint screen, jobject peer_info_handle, jobject mode, jint window_mode, jint x, jint y, jboolean undecorated, jlong parent_handle) {
 	Display *disp = (Display *)(intptr_t)display;
 	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, peer_info_handle);
 	GLXFBConfig *fb_config = NULL;
@@ -313,7 +351,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv 
 	jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
 	int width = (*env)->GetIntField(env, mode, fid_width);
 	int height = (*env)->GetIntField(env, mode, fid_height);
-	Window win = createWindow(env, disp, screen, window_mode, peer_info, x, y, width, height);
+	Window win = createWindow(env, disp, screen, window_mode, peer_info, x, y, width, height, undecorated, parent_handle);
 	if ((*env)->ExceptionOccurred(env)) {
 		return 0;
 	}
@@ -384,7 +422,6 @@ static Pixmap createPixmapFromBuffer(JNIEnv *env, Display *disp, Window window, 
 }
 
 static void setIcon(JNIEnv *env, Display *disp, Window window, char *rgb_data, char *mask_data, int icon_size, int width, int height) {
-	XWMHints* win_hints;
 	freeIconPixmap(disp);
 	current_icon_pixmap = createPixmapFromBuffer(env, disp, window, rgb_data, icon_size, width, height);
 	if ((*env)->ExceptionCheck(env))
@@ -395,19 +432,7 @@ static void setIcon(JNIEnv *env, Display *disp, Window window, char *rgb_data, c
 		return;
 	}
 	
-	win_hints = XAllocWMHints();
-	if (win_hints == NULL) {
-		throwException(env, "XAllocWMHints failed");
-		return;
-	}
-	
-	win_hints->flags = IconPixmapHint | IconMaskHint;
-	win_hints->icon_pixmap = current_icon_pixmap;
-	win_hints->icon_mask = current_icon_mask_pixmap;
-	
-	XSetWMHints(disp, window, win_hints);
-	XFree(win_hints);
-	XFlush(disp);
+	updateWindowHints(env, disp, window);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetWindowIcon

@@ -34,7 +34,7 @@ package org.lwjgl.opengl;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.Toolkit;
-import java.awt.Component;
+import java.awt.Canvas;
 import java.security.PrivilegedAction;
 import java.security.AccessController;
 
@@ -70,7 +70,7 @@ final class WindowsCanvasImplementation implements AWTCanvasImplementation {
 		return new WindowsAWTInput(canvas);
 	}
 
-	public PeerInfo createPeerInfo(Component component, PixelFormat pixel_format) throws LWJGLException {
+	public PeerInfo createPeerInfo(Canvas component, PixelFormat pixel_format) throws LWJGLException {
 		return new WindowsAWTGLCanvasPeerInfo(component, pixel_format);
 	}
 

@@ -35,7 +35,7 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
 
-import java.awt.Component;
+import java.awt.Canvas;
 
 /**
  *
@@ -44,12 +44,12 @@ import java.awt.Component;
  * $Id$
  */
 final class WindowsAWTGLCanvasPeerInfo extends WindowsPeerInfo {
-	private final Component component;
+	private final Canvas component;
 	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
 	private final PixelFormat pixel_format;
 	private boolean has_pixel_format= false;
 
-	public WindowsAWTGLCanvasPeerInfo(Component component, PixelFormat pixel_format) {
+	public WindowsAWTGLCanvasPeerInfo(Canvas component, PixelFormat pixel_format) {
 		this.component = component;
 		this.pixel_format = pixel_format;
 	}

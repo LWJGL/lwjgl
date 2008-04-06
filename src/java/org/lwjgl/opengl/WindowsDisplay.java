@@ -41,6 +41,7 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.awt.Canvas;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
@@ -139,7 +140,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		current_display = this;
 	}
 
-	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
+	public void createWindow(DisplayMode mode, boolean fullscreen, Canvas container, int x, int y) throws LWJGLException {
 		close_requested = false;
 		is_dirty = false;
 		isFullscreen = fullscreen;

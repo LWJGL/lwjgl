@@ -42,6 +42,8 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import java.awt.Canvas;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
@@ -103,6 +105,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private boolean focused_at_least_once;
 	private long current_cursor;
 	private long blank_cursor;
+	private Canvas parent;
 
 	private LinuxKeyboard keyboard;
 	private LinuxMouse mouse;
@@ -357,7 +360,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			ungrabKeyboard();
 	}
 
-	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
+	public void createWindow(DisplayMode mode, boolean fullscreen, Canvas parent, int x, int y) throws LWJGLException {
 		lockAWT();
 		try {
 			incDisplay();
@@ -365,7 +368,10 @@ final class LinuxDisplay implements DisplayImplementation {
 				ByteBuffer handle = peer_info.lockAndGetHandle();
 				try {
 					current_window_mode = getWindowMode(fullscreen);
-					current_window = nCreateWindow(getDisplay(), getDefaultScreen(), handle, mode, current_window_mode, x, y);
+					boolean undecorated = Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated") || current_window_mode != WINDOWED;
+					this.parent = parent;
+					long parent_window = parent != null ? getHandle(parent) : getRootWindow(getDisplay(), getDefaultScreen());
+					current_window = nCreateWindow(getDisplay(), getDefaultScreen(), handle, mode, current_window_mode, x, y, undecorated, parent_window);
 					blank_cursor = createBlankCursor();
 					current_cursor = None;
 					focused = true;
@@ -388,7 +394,19 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	private static native long nCreateWindow(long display, int screen, ByteBuffer peer_info_handle, DisplayMode mode, int window_mode, int x, int y) throws LWJGLException;
+	private static native long nCreateWindow(long display, int screen, ByteBuffer peer_info_handle, DisplayMode mode, int window_mode, int x, int y, boolean undecorated, long parent_handle) throws LWJGLException;
+	private static native long getRootWindow(long display, int screen);
+
+	private static long getHandle(Canvas parent) throws LWJGLException {
+		AWTCanvasImplementation awt_impl = AWTGLCanvas.createImplementation();
+		LinuxPeerInfo parent_peer_info = (LinuxPeerInfo)awt_impl.createPeerInfo(parent, null);
+		ByteBuffer parent_peer_info_handle = parent_peer_info.lockAndGetHandle();
+		try {
+			return parent_peer_info.getDrawable();
+		} finally { 
+			parent_peer_info.unlock();
+		}
+	}
 
 	private void updateInputGrab() {
 		updatePointerGrab();
@@ -602,7 +620,11 @@ final class LinuxDisplay implements DisplayImplementation {
 		return peer_info;
 	}
 	
+	private native static void setInputFocus(long display, long window);
+
 	private void processEvents() {
+		if (!focused && parent != null && parent.isFocusOwner())
+			setInputFocus(getDisplay(), getWindow());
 		while (LinuxEvent.getPending(getDisplay()) > 0) {
 			event_buffer.nextEvent(getDisplay());
 			long event_window = event_buffer.getWindow();

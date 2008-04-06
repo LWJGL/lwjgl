@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.LWJGLException;
 
-import java.awt.Component;
+import java.awt.Canvas;
 
 /**
  *
@@ -42,9 +42,9 @@ import java.awt.Component;
  * $Id$
  */
 final class MacOSXAWTGLCanvasPeerInfo extends MacOSXCanvasPeerInfo {
-	private final Component component;
+	private final Canvas component;
 
-	public MacOSXAWTGLCanvasPeerInfo(Component component, PixelFormat pixel_format, boolean support_pbuffer) throws LWJGLException {
+	public MacOSXAWTGLCanvasPeerInfo(Canvas component, PixelFormat pixel_format, boolean support_pbuffer) throws LWJGLException {
 		super(pixel_format, support_pbuffer);
 		this.component = component;
 	}

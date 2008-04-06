@@ -41,12 +41,13 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.awt.Canvas;
 
 import org.lwjgl.LWJGLException;
 
 interface DisplayImplementation extends InputImplementation {
 
-	void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException;
+	void createWindow(DisplayMode mode, boolean fullscreen, Canvas parent, int x, int y) throws LWJGLException;
 
 	void destroyWindow();
 

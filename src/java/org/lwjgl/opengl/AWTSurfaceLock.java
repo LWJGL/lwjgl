@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import java.awt.Component;
+import java.awt.Canvas;
 import java.nio.ByteBuffer;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
@@ -60,7 +60,7 @@ final class AWTSurfaceLock {
 
 	private static native ByteBuffer createHandle();
 
-	public ByteBuffer lockAndGetHandle(Component component) throws LWJGLException {
+	public ByteBuffer lockAndGetHandle(Canvas component) throws LWJGLException {
 		while (!privilegedLockAndInitHandle(component)) {
 			LWJGLUtil.log("Could not get drawing surface info, retrying...");
 			try {
@@ -73,12 +73,12 @@ final class AWTSurfaceLock {
 		return lock_buffer;
 	}
 
-	private boolean privilegedLockAndInitHandle(final Component component) throws LWJGLException {
+	private boolean privilegedLockAndInitHandle(final Canvas component) throws LWJGLException {
 		// Workaround for Sun JDK bug 4796548 which still exists in java for OS X
 		// We need to elevate privileges because of an AWT bug. Please see
 		// http://192.18.37.44/forums/index.php?topic=10572 for a discussion.
 		// It is only needed on first call, so we avoid it on all subsequent calls
-		// due to performance.		
+		// due to performance.
 		if (firstLockSucceeded)
 			return lockAndInitHandle(lock_buffer, component);
 		else
@@ -96,7 +96,7 @@ final class AWTSurfaceLock {
 			}
 	}
 
-	private static native boolean lockAndInitHandle(ByteBuffer lock_buffer, Component component) throws LWJGLException;
+	private static native boolean lockAndInitHandle(ByteBuffer lock_buffer, Canvas component) throws LWJGLException;
 
 	protected void unlock() throws LWJGLException {
 		nUnlock(lock_buffer);

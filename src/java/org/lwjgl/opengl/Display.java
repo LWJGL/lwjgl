@@ -49,6 +49,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.awt.Canvas;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -70,6 +71,9 @@ public final class Display {
 
 	/** The initial display mode */
 	private static final DisplayMode initial_mode;
+
+	/** The parent, if any */
+	private static Canvas parent;
 
 	/** The current display mode, if created */
 	private static DisplayMode current_mode;
@@ -244,7 +248,7 @@ public final class Display {
 		}
 		int window_x;
 		int window_y;
-		if (!fullscreen) {
+		if (!fullscreen && parent == null) {
 			// if no display location set, center window
 			if (x == -1 && y == -1) {
 				window_x = Math.max(0, (initial_mode.getWidth() - current_mode.getWidth()) / 2);
@@ -257,7 +261,10 @@ public final class Display {
 			window_x = 0;
 			window_y = 0;
 		}
-		display_impl.createWindow(current_mode, fullscreen, window_x, window_y);
+		Canvas tmp_parent = fullscreen ? null : parent;
+		if (tmp_parent != null && !tmp_parent.isDisplayable()) // Only a best effort check, since the parent can turn undisplayable hereafter
+			throw new LWJGLException("Parent.isDisplayable() must be true");
+		display_impl.createWindow(current_mode, fullscreen, tmp_parent, window_x, window_y);
 		window_created = true;
 		
 		setTitle(title);
@@ -460,6 +467,50 @@ public final class Display {
 			if (Display.fullscreen) {
 				Display.fullscreen = false;
 				display_impl.resetDisplayMode();
+			}
+		}
+	}
+
+	/**
+	 * Return the last parent set with setParent().
+	 */
+	public static Canvas getParent() {
+		synchronized (GlobalLock.lock) {
+			return parent;
+		}
+	}
+
+	/**
+	 * Set the parent of the Display. If parent is null, the Display will appear as a top level window.
+	 * If parent is not null, the Display is made a child of the parent. A parent's isDisplayable() must be true when
+	 * setParent() is called and remain true until setParent() is called again with
+	 * null or a different parent. This generally means that the parent component must remain added to it's parent container.<p>
+	 * It is not advisable to call this method from an AWT thread, since the context will be made current on the thread
+	 * and it is difficult to predict which AWT thread will process any given AWT event.<p>
+	 * If the Display is in fullscreen mode, the current parent will be ignored.
+	 *
+	 */
+	public static void setParent(Canvas parent) throws LWJGLException {
+		synchronized (GlobalLock.lock) {
+			if (Display.parent != parent) {
+				Display.parent = parent;
+				if (!isCreated())
+					return;
+				destroyWindow();
+				try {
+					if (fullscreen) {
+						switchDisplayMode();
+					} else {
+						display_impl.resetDisplayMode();
+					}
+					createWindow();
+					makeCurrentAndSetSwapInterval();
+				} catch (LWJGLException e) {
+					destroyContext();
+					destroyPeerInfo();
+					display_impl.resetDisplayMode();
+					throw e;
+				}
 			}
 		}
 	}
@@ -914,7 +965,7 @@ public final class Display {
 	}
 
 	/**
-	 * Set the window's location. This is a no-op on fullscreen windows.
+	 * Set the window's location. This is a no-op on fullscreen windows or when getParent() != null.
 	 * The window is clamped to remain entirely on the screen. If you attempt
 	 * to position the window such that it would extend off the screen, the window
 	 * is simply placed as close to the edge as possible.

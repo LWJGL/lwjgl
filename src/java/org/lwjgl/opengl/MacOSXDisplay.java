@@ -39,6 +39,7 @@ package org.lwjgl.opengl;
  */
 
 import java.awt.Cursor;
+import java.awt.Canvas;
 import java.awt.Robot;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -73,7 +74,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		new MacOSXApplicationListener();
 	}
 
-	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
+	public void createWindow(DisplayMode mode, boolean fullscreen, Canvas parent, int x, int y) throws LWJGLException {
 		hideUI(fullscreen);
 		close_requested = false;
 		try {
