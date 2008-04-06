@@ -732,7 +732,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			t.start();
 			
 			int iterationCount = 0;
-			while(is == null && iterationCount++ < 5) {
+			while(is[0] == null && iterationCount++ < 5) {
 				try {
 					t.join(1000);
 				} catch (InterruptedException inte) {
@@ -740,12 +740,14 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				}
 			}
 			
-			try {
-				t.interrupt();
-				t.join();
-			} catch (InterruptedException inte) {
-				/* ignored */
-			}				
+			if(is[0] == null) {
+				try {
+					t.interrupt();
+					t.join();
+				} catch (InterruptedException inte) {
+					/* ignored */
+				}
+			}
 		}
 		
 		if(is[0] == null) {
