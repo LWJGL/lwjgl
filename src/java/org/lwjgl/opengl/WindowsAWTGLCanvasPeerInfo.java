@@ -35,6 +35,8 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
 
+import java.awt.Component;
+
 /**
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
@@ -42,21 +44,21 @@ import org.lwjgl.LWJGLException;
  * $Id$
  */
 final class WindowsAWTGLCanvasPeerInfo extends WindowsPeerInfo {
-	private final AWTGLCanvas canvas;
+	private final Component component;
 	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
 	private final PixelFormat pixel_format;
 	private boolean has_pixel_format= false;
 
-	public WindowsAWTGLCanvasPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) {
-		this.canvas = canvas;
+	public WindowsAWTGLCanvasPeerInfo(Component component, PixelFormat pixel_format) {
+		this.component = component;
 		this.pixel_format = pixel_format;
 	}
 
 	protected void doLockAndInitHandle() throws LWJGLException {
-		nInitHandle(awt_surface.lockAndGetHandle(canvas), getHandle());
-		if (!has_pixel_format) {
+		nInitHandle(awt_surface.lockAndGetHandle(component), getHandle());
+		if (!has_pixel_format && pixel_format != null) {
 			// If we haven't applied a pixel format yet, do it now
-			choosePixelFormat(canvas.getX(), canvas.getY(), pixel_format, null, true, true, false, true);
+			choosePixelFormat(component.getX(), component.getY(), pixel_format, null, true, true, false, true);
 			has_pixel_format = true;
 		}
 	}

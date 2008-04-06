@@ -89,7 +89,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 		implementation = createImplementation();
 	}
 
-	private static AWTCanvasImplementation createImplementation() {
+	static AWTCanvasImplementation createImplementation() {
 		switch (LWJGLUtil.getPlatform()) {
 			case LWJGLUtil.PLATFORM_LINUX:
 				return new LinuxCanvasImplementation();

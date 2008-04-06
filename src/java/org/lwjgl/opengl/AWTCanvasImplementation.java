@@ -33,6 +33,7 @@ package org.lwjgl.opengl;
 
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
+import java.awt.Component;
 
 import org.lwjgl.LWJGLException;
 
@@ -46,7 +47,7 @@ interface AWTCanvasImplementation {
 	/**
 	 * Return an opaque handle to the canvas peer information required to create a context from it.
 	 */
-	PeerInfo createPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) throws LWJGLException;
+	PeerInfo createPeerInfo(Component component, PixelFormat pixel_format) throws LWJGLException;
 
 	/**
 	 * Find a proper GraphicsConfiguration from the given GraphicsDevice and PixelFormat.

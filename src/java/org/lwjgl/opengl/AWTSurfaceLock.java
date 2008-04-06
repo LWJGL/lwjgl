@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import java.awt.Canvas;
+import java.awt.Component;
 import java.nio.ByteBuffer;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
@@ -60,8 +60,8 @@ final class AWTSurfaceLock {
 
 	private static native ByteBuffer createHandle();
 
-	public ByteBuffer lockAndGetHandle(Canvas canvas) throws LWJGLException {
-		while (!privilegedLockAndInitHandle(canvas)) {
+	public ByteBuffer lockAndGetHandle(Component component) throws LWJGLException {
+		while (!privilegedLockAndInitHandle(component)) {
 			LWJGLUtil.log("Could not get drawing surface info, retrying...");
 			try {
 				Thread.sleep(WAIT_DELAY_MILLIS);
@@ -73,20 +73,20 @@ final class AWTSurfaceLock {
 		return lock_buffer;
 	}
 
-	private boolean privilegedLockAndInitHandle(final Canvas canvas) throws LWJGLException {
+	private boolean privilegedLockAndInitHandle(final Component component) throws LWJGLException {
 		// Workaround for Sun JDK bug 4796548 which still exists in java for OS X
 		// We need to elevate privileges because of an AWT bug. Please see
 		// http://192.18.37.44/forums/index.php?topic=10572 for a discussion.
 		// It is only needed on first call, so we avoid it on all subsequent calls
 		// due to performance.		
 		if (firstLockSucceeded)
-			return lockAndInitHandle(lock_buffer, canvas);
+			return lockAndInitHandle(lock_buffer, component);
 		else
 			try {
 				final Object result = AccessController.doPrivileged(new PrivilegedExceptionAction() {
 
 					public Object run() throws LWJGLException {
-						return Boolean.valueOf(lockAndInitHandle(lock_buffer, canvas));
+						return Boolean.valueOf(lockAndInitHandle(lock_buffer, component));
 					}
 				});
 				firstLockSucceeded = ((Boolean) result).booleanValue();
@@ -96,7 +96,7 @@ final class AWTSurfaceLock {
 			}
 	}
 
-	private static native boolean lockAndInitHandle(ByteBuffer lock_buffer, Canvas canvas) throws LWJGLException;
+	private static native boolean lockAndInitHandle(ByteBuffer lock_buffer, Component component) throws LWJGLException;
 
 	protected void unlock() throws LWJGLException {
 		nUnlock(lock_buffer);

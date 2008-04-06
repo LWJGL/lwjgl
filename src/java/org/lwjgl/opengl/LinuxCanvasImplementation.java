@@ -33,6 +33,7 @@ package org.lwjgl.opengl;
 
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
+import java.awt.Component;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
@@ -75,8 +76,8 @@ final class LinuxCanvasImplementation implements AWTCanvasImplementation {
 		}
 	}
 
-	public PeerInfo createPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) throws LWJGLException {
-		return new LinuxAWTGLCanvasPeerInfo(canvas);
+	public PeerInfo createPeerInfo(Component component, PixelFormat pixel_format) throws LWJGLException {
+		return new LinuxAWTGLCanvasPeerInfo(component);
 	}
 
 	/**

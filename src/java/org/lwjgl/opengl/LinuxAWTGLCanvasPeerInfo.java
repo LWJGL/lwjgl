@@ -35,6 +35,7 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
+import java.awt.Component;
 
 /**
  *
@@ -43,16 +44,16 @@ import org.lwjgl.LWJGLUtil;
  * $Id$
  */
 final class LinuxAWTGLCanvasPeerInfo extends LinuxPeerInfo {
-	private final AWTGLCanvas canvas;
+	private final Component component;
 	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
 	private int screen = -1;
 
-	public LinuxAWTGLCanvasPeerInfo(AWTGLCanvas canvas) {
-		this.canvas = canvas;
+	public LinuxAWTGLCanvasPeerInfo(Component component) {
+		this.component = component;
 	}
 	
 	protected void doLockAndInitHandle() throws LWJGLException {
-		ByteBuffer surface_handle = awt_surface.lockAndGetHandle(canvas);
+		ByteBuffer surface_handle = awt_surface.lockAndGetHandle(component);
 		if (screen == -1) {
 			try {
 				screen = getScreenFromSurfaceInfo(surface_handle);
