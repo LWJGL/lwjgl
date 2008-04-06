@@ -327,14 +327,20 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 	return win;
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_grabServer(JNIEnv *env, jclass unused, jlong display) {
+	Display *disp = (Display *)(intptr_t)display;
+	XGrabServer(disp);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_ungrabServer(JNIEnv *env, jclass unused, jlong display) {
+	Display *disp = (Display *)(intptr_t)display;
+	XUngrabServer(disp);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setInputFocus(JNIEnv *env, jclass clazz, jlong display, jlong window_ptr) {
 	Display *disp = (Display *)(intptr_t)display;
 	Window window = (Window)window_ptr;
-	// Normally, a real time stamp from an event should be passed instead of CurrentTime, but we don't get timestamps
-	// from awt. Instead we grab the server before and ungrab it after the request
-	XGrabServer(disp);
 	XSetInputFocus(disp, window, RevertToParent, CurrentTime);
-	XUngrabServer(disp);
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jclass clazz, jlong display, jint screen, jobject peer_info_handle, jobject mode, jint window_mode, jint x, jint y, jboolean undecorated, jlong parent_handle) {

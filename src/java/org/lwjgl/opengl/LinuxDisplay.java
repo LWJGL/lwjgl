@@ -623,8 +623,6 @@ final class LinuxDisplay implements DisplayImplementation {
 	private native static void setInputFocus(long display, long window);
 
 	private void processEvents() {
-		if (!focused && parent != null && parent.isFocusOwner())
-			setInputFocus(getDisplay(), getWindow());
 		while (LinuxEvent.getPending(getDisplay()) > 0) {
 			event_buffer.nextEvent(getDisplay());
 			long event_window = event_buffer.getWindow();
@@ -742,15 +740,30 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	
 	private void checkInput() {
-		focused = nGetInputFocus(getDisplay()) == getWindow();
+		long current_focus = nGetInputFocus(getDisplay());
+		focused = current_focus == getWindow();
 		if (focused) {
 			focused_at_least_once = true;
 			acquireInput();
-		} else if (focused_at_least_once) {
-			releaseInput();
+		} else {
+			if (focused_at_least_once)
+				releaseInput();
+			if (parent != null && parent.isFocusOwner()) {
+				// Normally, a real time stamp from an event should be passed to XSetInputFocus instead of CurrentTime, but we don't get timestamps
+				// from awt. Instead we grab the server and check if the focus changed to avoid a race where our window is made unviewable while focusing it.
+				grabServer(getDisplay());
+				try {
+					if (nGetInputFocus(getDisplay()) == current_focus)
+						setInputFocus(getDisplay(), getWindow());
+				} finally {
+					ungrabServer(getDisplay());
+				}
+			}
 		}
 	}
 	static native long nGetInputFocus(long display);
+	private static native void grabServer(long display);
+	private static native void ungrabServer(long display);
 
 	private void releaseInput() {
 		if (isLegacyFullscreen() || input_released)
