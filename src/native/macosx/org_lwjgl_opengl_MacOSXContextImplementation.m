@@ -142,7 +142,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSetSwa
   (JNIEnv *env, jclass clazz, jobject context_handle, jint int_value) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	long value = int_value;
+	GLint value = int_value;
 	[context_info->context setValues:&value forParameter:NSOpenGLCPSwapInterval];
 	[pool release];
 }
