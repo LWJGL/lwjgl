@@ -63,6 +63,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	private MacOSXCanvasListener canvas_listener;
 	private MacOSXFrame frame;
+	private Canvas canvas;
 	private Robot robot;
 	private MacOSXMouseEventQueue mouse_queue;
 	private KeyboardEventQueue keyboard_queue;
@@ -79,10 +80,16 @@ final class MacOSXDisplay implements DisplayImplementation {
 		hideUI(fullscreen);
 		close_requested = false;
 		try {
-			frame = new MacOSXFrame(mode, requested_mode, fullscreen, x, y);
-			canvas_listener = new MacOSXCanvasListener(frame.getCanvas());
+			if (parent == null) {
+				frame = new MacOSXFrame(mode, requested_mode, fullscreen, x, y);
+				canvas = frame.getCanvas();
+			} else {
+				frame = null;
+				canvas = parent;
+			}
+			canvas_listener = new MacOSXCanvasListener(canvas);
 			canvas_listener.enableListeners();
-			robot = AWTUtil.createRobot(frame);
+			robot = AWTUtil.createRobot(canvas);
 		} catch (LWJGLException e) {
 			destroyWindow();
 			throw e;
@@ -185,7 +192,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void setTitle(String title) {
-		frame.setTitle(title);
+		if (frame != null) 
+			frame.setTitle(title);
 	}
 
 	public boolean isCloseRequested() {
@@ -198,19 +206,19 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public boolean isVisible() {
-		return frame.syncIsVisible();
+		return frame == null || frame.syncIsVisible();
 	}
 
 	public boolean isActive() {
-		return frame.syncIsActive();
+		return canvas.isFocusOwner();
 	}
 
-	public MacOSXFrame getFrame() {
-		return frame;
+	public Canvas getCanvas() {
+		return canvas;
 	}
 
 	public boolean isDirty() {
-		return frame.getCanvas().syncIsDirty();
+		return frame != null && frame.getCanvas().syncIsDirty();
 	}
 
 	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
@@ -245,7 +253,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		 *
 		 * - elias
 		 */
-		if (Display.isFullscreen() && (frame.getCanvas().syncCanvasPainted() || should_update)) {
+		if (Display.isFullscreen() && (frame != null && frame.getCanvas().syncCanvasPainted() || should_update)) {
 			try {
 				MacOSXContextImplementation.resetView(Display.getDrawable().getContext().getPeerInfo(), Display.getDrawable().getContext());
 			} catch (LWJGLException e) {
@@ -258,7 +266,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 			GL11.glGetInteger(GL11.GL_VIEWPORT, current_viewport);
 			GL11.glViewport(current_viewport.get(0), current_viewport.get(1), current_viewport.get(2), current_viewport.get(3));
 		}
-		if (frame.syncShouldWarpCursor() && mouse_queue != null) {
+		if (frame != null && frame.syncShouldWarpCursor() && mouse_queue != null) {
 			mouse_queue.warpCursor();
 		}
 	}
@@ -280,7 +288,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private native void nHideUI(boolean hide);
 
 	public void reshape(int x, int y, int width, int height) {
-		frame.resize(x, y, width, height);
+		if (frame != null)
+			frame.resize(x, y, width, height);
 	}
 
 	/* Mouse */
@@ -293,7 +302,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void createMouse() throws LWJGLException {
-		MacOSXGLCanvas canvas = frame.getCanvas();
 		this.mouse_queue = new MacOSXMouseEventQueue(canvas);
 		mouse_queue.register();
 	}
@@ -323,12 +331,13 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void setCursorPosition(int x, int y) {
-		AWTUtil.setCursorPosition(frame.getCanvas(), robot, x, y);
+		AWTUtil.setCursorPosition(canvas, robot, x, y);
 	}
 
 	public void setNativeCursor(Object handle) throws LWJGLException {
 		Cursor awt_cursor = (Cursor)handle;
-		frame.setCursor(awt_cursor);
+		if (frame != null)
+			frame.setCursor(awt_cursor);
 	}
 
 	public int getMinCursorSize() {
@@ -341,7 +350,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	/* Keyboard */
 	public void createKeyboard() throws LWJGLException {
-		MacOSXGLCanvas canvas = frame.getCanvas();
 		this.keyboard_queue = new KeyboardEventQueue(canvas);
 		keyboard_queue.register();
 	}

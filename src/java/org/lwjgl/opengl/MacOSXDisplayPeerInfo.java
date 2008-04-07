@@ -51,10 +51,9 @@ final class MacOSXDisplayPeerInfo extends MacOSXCanvasPeerInfo {
 	protected void doLockAndInitHandle() throws LWJGLException {
 		if (locked)
 			throw new RuntimeException("Already locked");
-		MacOSXFrame frame = ((MacOSXDisplay)Display.getImplementation()).getFrame();
-		if (frame != null) {
-			Canvas gl_canvas = frame.getCanvas();
-			initHandle(gl_canvas);
+		Canvas canvas = ((MacOSXDisplay)Display.getImplementation()).getCanvas();
+		if (canvas != null) {
+			initHandle(canvas);
 			locked = true;
 		}
 	}

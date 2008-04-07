@@ -63,13 +63,6 @@ final class MacOSXGLCanvas extends Canvas {
 		}
 	}
 
-	/**
-	  * This initializes the canvas and binds the context to it.
-	  */
-	public void initializeCanvas() {
-		setFocusTraversalKeysEnabled(false);
-	}
-
 	public boolean syncCanvasPainted() {
 		boolean result;
 		synchronized (this) {

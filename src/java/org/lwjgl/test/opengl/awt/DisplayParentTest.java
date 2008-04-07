@@ -64,6 +64,7 @@ public class DisplayParentTest extends Frame {
 		setLayout(new GridLayout(1, 2));
 		final Canvas display_parent = new Canvas();
 		display_parent.setFocusable(true);
+		display_parent.setIgnoreRepaint(true);
 		add(display_parent);
 /*		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -74,6 +75,7 @@ public class DisplayParentTest extends Frame {
 		setResizable(true);
 		setVisible(true);
 		Display.setParent(display_parent);
+		Display.setVSyncEnabled(true);
 		Display.create();
 		float angle = 0f;
 
