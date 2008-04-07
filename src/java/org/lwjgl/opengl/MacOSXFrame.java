@@ -101,7 +101,6 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 		setVisible(true);
 		requestFocus();
 		canvas.requestFocus();
-		canvas.initializeCanvas();
 		updateBounds();
 	}
 

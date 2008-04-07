@@ -45,46 +45,72 @@ import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 
-final class MacOSXGLCanvas extends Canvas {
+final class MacOSXCanvasListener implements ComponentListener, HierarchyListener {
+	private final Canvas canvas;
+	private int width;
+	private int height;
+	private boolean context_update;
 
-	private static final long serialVersionUID = 6916664741667434870L;
-	
-	private boolean canvas_painted;
-	private boolean dirty;
-
-	public void update(Graphics g) {
-		paint(g);
+	public MacOSXCanvasListener(Canvas canvas) {
+		this.canvas = canvas;
+//		((MacOSXDisplay)Display.getImplementation()).setView(this);
 	}
 
-	public void paint(Graphics g) {
+	public void enableListeners() {
+		canvas.addComponentListener(this);
+		canvas.addHierarchyListener(this);
+		setUpdate();
+	}
+
+	public void disableListeners() {
+		canvas.removeComponentListener(this);
+		canvas.removeHierarchyListener(this);
+	}
+
+	public boolean syncShouldUpdateContext() {
+		boolean should_update;
 		synchronized ( this ) {
-			dirty = true;
-			canvas_painted = true;
+			should_update = context_update;
+			context_update = false;
 		}
+		return should_update;
 	}
 
-	/**
-	  * This initializes the canvas and binds the context to it.
-	  */
-	public void initializeCanvas() {
-		setFocusTraversalKeysEnabled(false);
-	}
-
-	public boolean syncCanvasPainted() {
-		boolean result;
-		synchronized (this) {
-			result = canvas_painted;
-			canvas_painted = false;
-		}
-		return result;
-	}
-
-	public boolean syncIsDirty() {
-		boolean result;
+	private synchronized void setUpdate() {
 		synchronized ( this ) {
-			result = dirty;
-			dirty = false;
+			width = canvas.getWidth();
+			height = canvas.getHeight();
+			context_update = true;
 		}
-		return result;
+	}
+
+	public int syncGetWidth() {
+		synchronized ( this ) {
+			return width;
+		}
+	}
+
+	public int syncGetHeight() {
+		synchronized ( this ) {
+			return height;
+		}
+	}
+
+	public void componentShown(ComponentEvent e) {
+	}
+
+	public void componentHidden(ComponentEvent e) {
+	}
+
+	public void componentResized(ComponentEvent e) {
+		setUpdate();
+	}
+
+	public void componentMoved(ComponentEvent e) {
+		setUpdate();
+	}
+
+	public void hierarchyChanged(HierarchyEvent e) {
+		setUpdate();
 	}
 }

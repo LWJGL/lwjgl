@@ -61,6 +61,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private static final int PBUFFER_HANDLE_SIZE = 24;
 	private static final int GAMMA_LENGTH = 256;
 
+	private MacOSXCanvasListener canvas_listener;
 	private MacOSXFrame frame;
 	private Robot robot;
 	private MacOSXMouseEventQueue mouse_queue;
@@ -79,6 +80,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 		close_requested = false;
 		try {
 			frame = new MacOSXFrame(mode, requested_mode, fullscreen, x, y);
+			canvas_listener = new MacOSXCanvasListener(frame.getCanvas());
+			canvas_listener.enableListeners();
 			robot = AWTUtil.createRobot(frame);
 		} catch (LWJGLException e) {
 			destroyWindow();
@@ -93,6 +96,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void destroyWindow() {
+		if (canvas_listener != null) {
+			canvas_listener.disableListeners();
+			canvas_listener = null;
+		}
 		if (frame != null) {
 			AccessController.doPrivileged(new PrivilegedAction() {
 				public Object run() {
@@ -216,7 +223,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	private final static IntBuffer current_viewport = BufferUtils.createIntBuffer(16);
 	public void update() {
-		boolean should_update = frame.getCanvas().syncShouldUpdateContext();
+		boolean should_update = canvas_listener.syncShouldUpdateContext();
 		/*
 		 * Workaround for the "white screen in fullscreen mode" problem
 		 *
