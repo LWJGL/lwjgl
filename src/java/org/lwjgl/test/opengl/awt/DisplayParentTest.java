@@ -79,19 +79,26 @@ public class DisplayParentTest extends Frame {
 		Display.create();
 		float angle = 0f;
 
-		int current_height = 0;
-		int current_width = 0;
 		while (isVisible()) {
 			angle += 1.0f;
-			GL11.glViewport(0, 0, display_parent.getWidth(), display_parent.getHeight());
+			int width;
+			int height;
+			if (!Display.isFullscreen()) {
+				width = display_parent.getWidth();
+				height = display_parent.getHeight();
+			} else {
+				width = Display.getDisplayMode().getWidth();
+				height = Display.getDisplayMode().getHeight();
+			}
+			GL11.glViewport(0, 0, width, height);
 			GL11.glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 			GL11.glMatrixMode(GL11.GL_PROJECTION);
 			GL11.glLoadIdentity();
-			GLU.gluOrtho2D(0.0f, (float) getWidth(), 0.0f, (float) getHeight());
+			GLU.gluOrtho2D(0.0f, (float) width, 0.0f, (float) height);
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
 			GL11.glPushMatrix();
-			GL11.glTranslatef(getWidth() / 2.0f, getHeight() / 2.0f, 0.0f);
+			GL11.glTranslatef(width / 2.0f, height / 2.0f, 0.0f);
 			GL11.glRotatef(2*angle, 0f, 0f, -1.0f);
 			GL11.glRectf(-50.0f, -50.0f, 50.0f, 50.0f);
 			GL11.glPopMatrix();
@@ -106,6 +113,9 @@ public class DisplayParentTest extends Frame {
 
 				if(Keyboard.getEventKey() == Keyboard.KEY_SPACE && Keyboard.getEventKeyState()) {
 					Mouse.setGrabbed(!Mouse.isGrabbed());
+				}
+				if(Keyboard.getEventKey() == Keyboard.KEY_F && Keyboard.getEventKeyState()) {
+					Display.setFullscreen(!Display.isFullscreen());
 				}
 			}
 /*			while (Mouse.next()) {
