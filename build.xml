@@ -13,7 +13,7 @@
 	<property name="lwjgl.docs" 			location="doc" />
 	<property name="lwjgl.temp" 			location="temp" />
 	<property name="lwjgl.res" 				location="res" />
-	<property name="lwjgl.version" 			value="2.0a2" />
+	<property name="lwjgl.version" 			value="2.0a3" />
 
 	<property name="opengl-template-pattern" value="org/lwjgl/opengl/GL*.java,org/lwjgl/opengl/ARB*.java,org/lwjgl/opengl/ATI*.java,org/lwjgl/opengl/EXT*.java,org/lwjgl/opengl/NV*.java,org/lwjgl/opengl/HP*.java,org/lwjgl/opengl/IBM*.java,org/lwjgl/opengl/SUN*.java,org/lwjgl/opengl/SGIS*.java"/>
 	<!-- ================================================================== -->
@@ -347,16 +347,7 @@
 			</fileset>
 		</jar>
 		<signjar jar="applet/macosx_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
-		
-		<!-- add it to a natives jar -->
-		<jar destfile="applet/natives.jar" taskname="natives.jar">
-			<fileset dir="applet">
-				<include name="windows_natives.jar"/>
-				<include name="linux_natives.jar"/>
-				<include name="macosx_natives.jar"/>					
-			</fileset>
-		</jar>
-		
+			
 	  	<jar destfile="${lwjgl.lib}/lwjgl_util_applet.jar" update="true">
 	  		<fileset dir="${lwjgl.res}" includes="applet*"/>
 	  	</jar>
