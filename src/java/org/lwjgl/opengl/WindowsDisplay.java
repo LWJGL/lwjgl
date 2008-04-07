@@ -236,13 +236,16 @@ final class WindowsDisplay implements DisplayImplementation {
 			return;
 		}
 		inAppActivate = true;
+		isFocused = active;
 		if (active) {
 			if (isFullscreen) {
 				restoreDisplayMode();
 			}
-			showWindow(getHwnd(), SW_RESTORE);
-			setForegroundWindow(getHwnd());
-			setFocus(getHwnd());
+			if (parent == null) {
+				showWindow(getHwnd(), SW_RESTORE);
+				setForegroundWindow(getHwnd());
+				setFocus(getHwnd());
+			}
 			did_maximize = true;
 			if (isFullscreen)
 				updateClipping();
@@ -708,10 +711,10 @@ final class WindowsDisplay implements DisplayImplementation {
 				}
 				return defWindowProc(hwnd, msg, wParam, lParam);
 			case WM_KILLFOCUS:
-				isFocused = false;
+				appActivate(false);
 				return 0;
 			case WM_SETFOCUS:
-				isFocused = true;
+				appActivate(true);
 				return 0;
 			case WM_MOUSEMOVE:
 				int xPos = (int)(short)(lParam & 0xFFFF);
