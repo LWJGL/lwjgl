@@ -99,6 +99,7 @@
 		<include name="liblwjgl*.so" />
 		<include name="libopenal.so" />    
 		<include name="libjinput-linux.so" />
+		<include name="libjinput-linux64.so" />
 	</patternset>
 	
 	<!-- Files to include in mac os x package -->
