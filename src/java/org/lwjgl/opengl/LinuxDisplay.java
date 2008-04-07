@@ -997,10 +997,11 @@ final class LinuxDisplay implements DisplayImplementation {
 		throw new UnsupportedOperationException();
 	}
 	
-	private static void convertIcon(ByteBuffer icon, int width, int height, ByteBuffer icon_rgb, ByteBuffer icon_mask) {
-		int x = 0;
-		int y = 5;
-		byte r,g,b,a;
+	private static ByteBuffer convertIcon(ByteBuffer icon, int width, int height) {
+		ByteBuffer icon_rgb = BufferUtils.createByteBuffer(icon.capacity());
+		int x;
+		int y;
+		byte r,g,b;
 
 		int depth = 4;
 
@@ -1009,16 +1010,36 @@ final class LinuxDisplay implements DisplayImplementation {
 				r = icon.get((x*4)+(y*width*4));
 				g = icon.get((x*4)+(y*width*4)+1);
 				b = icon.get((x*4)+(y*width*4)+2);
-				a = icon.get((x*4)+(y*width*4)+3);
 
 				icon_rgb.put((x*depth)+(y*width*depth), b); // blue
 				icon_rgb.put((x*depth)+(y*width*depth)+1, g); // green
 				icon_rgb.put((x*depth)+(y*width*depth)+2, r);
-				icon_mask.put((x*depth)+(y*width*depth), a);
-				icon_mask.put((x*depth)+(y*width*depth)+1, a);
-				icon_mask.put((x*depth)+(y*width*depth)+2, a);
 			}
 		}
+		return icon_rgb;
+	}
+
+	private static ByteBuffer convertIconMask(ByteBuffer icon, int width, int height) {
+		ByteBuffer icon_mask = BufferUtils.createByteBuffer((icon.capacity()/4)/8);
+		int x;
+		int y;
+		byte a;
+
+		int depth = 4;
+
+		for (y = 0; y < height; y++) {
+			for (x = 0; x < width; x++) {
+				a = icon.get((x*4)+(y*width*4)+3);
+
+				int mask_index = x + y*width;
+				int mask_byte_index = mask_index/8;
+				int mask_bit_index = mask_index%8;
+				byte bit = (((int)a) & 0xff) >= 127 ? (byte)1 : (byte)0;
+				byte new_byte = (byte)((icon_mask.get(mask_byte_index) | (bit<<mask_bit_index)) & 0xff);
+				icon_mask.put(mask_byte_index, new_byte);
+			}
+		}
+		return icon_mask;
 	}
 
 	/**
@@ -1041,11 +1062,9 @@ final class LinuxDisplay implements DisplayImplementation {
 				for (int i=0;i<icons.length;i++) {
 					int size = icons[i].limit() / 4;
 					int dimension = (int)Math.sqrt(size);
-					int cap = icons[i].capacity();
-					ByteBuffer icon_rgb = BufferUtils.createByteBuffer(cap);
-					ByteBuffer icon_mask = BufferUtils.createByteBuffer(cap);
-					convertIcon(icons[i], dimension, dimension, icon_rgb, icon_mask);
-					nSetWindowIcon(getDisplay(), getWindow(), icon_rgb, icon_mask, cap, dimension, dimension);
+					ByteBuffer icon_rgb = convertIcon(icons[i], dimension, dimension);
+					ByteBuffer icon_mask = convertIconMask(icons[i], dimension, dimension);
+					nSetWindowIcon(getDisplay(), getWindow(), icon_rgb, icon_rgb.capacity(), icon_mask, icon_mask.capacity(), dimension, dimension);
 					return 1;
 				}
 				return 0;
@@ -1060,7 +1079,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 	
-	private static native void nSetWindowIcon(long display, long window, ByteBuffer icon_rgb, ByteBuffer icon_mask, int icon_size, int width, int height);
+	private static native void nSetWindowIcon(long display, long window, ByteBuffer icon_rgb, int icon_rgb_size, ByteBuffer icon_mask, int icon_mask_size, int width, int height);
 
 	public int getWidth() {
 		return Display.getDisplayMode().getWidth();
