@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002-2004 LWJGL Project
+ * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
