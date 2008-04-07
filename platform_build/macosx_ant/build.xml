@@ -4,12 +4,14 @@
 
 	<target name="init">
 		<mkdir dir="ppc"/>
-		<mkdir dir="intel"/>
+		<mkdir dir="i386"/>
+		<mkdir dir="x86_64"/>
 	</target>
 	
 	<target name="clean">
 		<delete failonerror="false">
-			<fileset dir="intel"/>
+			<fileset dir="i386"/>
+			<fileset dir="x86_64"/>
 			<fileset dir="ppc"/>
 			<fileset dir="." includes="liblwjgl.jnilib"/>
 			<fileset dir="." includes="lwjgl.symbols"/>
@@ -41,14 +43,21 @@
 	
 	<target name="nativelibrary" depends="init">
 		<property name="universal_sdkroot" location="/Developer/SDKs/MacOSX10.4u.sdk"/>
+		<property name="x86_64_sdkroot" location="/Developer/SDKs/MacOSX10.5.sdk"/>
 		<property name="legacy_sdkroot" location="/Developer/SDKs/MacOSX10.4u.sdk"/>
-		<property name="universal_flags" value="-isysroot ${universal_sdkroot} -arch i386 -mmacosx-version-min=10.4"/>
+		<property name="universal_flags" value="-isysroot ${universal_sdkroot}"/>
 		<property name="legacy_flags" value="-F${legacy_sdkroot}/System/Library/Frameworks -arch ppc"/>
 		<antcall target="compile">
-			<param name="dstdir" location="intel"/>
+			<param name="dstdir" location="i386"/>
 			<param name="compiler" value="gcc-4.0"/>
 			<param name="sdkroot" location="${universal_sdkroot}"/>
-			<param name="cflags" value="${universal_flags}"/>
+			<param name="cflags" value="${universal_flags} -arch i386 -mmacosx-version-min=10.4"/>
+		</antcall>
+		<antcall target="compile">
+			<param name="dstdir" location="x86_64"/>
+			<param name="compiler" value="gcc-4.0"/>
+			<param name="sdkroot" location="${universal_sdkroot}"/>
+			<param name="cflags" value="-isysroot ${x86_64_sdkroot} -arch x86_64 -mmacosx-version-min=10.5"/>
 		</antcall>
 		<antcall target="compile">
 			<param name="dstdir" location="ppc"/>
@@ -58,13 +67,19 @@
 		</antcall>
 		<exec vmlauncher="true" executable="sh" output="lwjgl.symbols" failonerror="true">
 			<arg path="../../platform_build/macosx_ant/build-symbol-list"/>
-			<arg path="intel"/>
+			<arg path="i386"/>
 		</exec>
 		<antcall target="link">
-			<param name="objdir" location="intel"/>
-			<param name="libname" value="liblwjgl-intel.jnilib"/>
+			<param name="objdir" location="i386"/>
+			<param name="libname" value="liblwjgl-i386.jnilib"/>
 			<param name="linker" value="gcc-4.0"/>
-			<param name="linkerflags" value="${universal_flags}"/>
+			<param name="linkerflags" value="${universal_flags} -arch i386 -mmacosx-version-min=10.4"/>
+		</antcall>
+		<antcall target="link">
+			<param name="objdir" location="x86_64"/>
+			<param name="libname" value="liblwjgl-i86_64.jnilib"/>
+			<param name="linker" value="gcc-4.0"/>
+			<param name="linkerflags" value="-isysroot ${x86_64_sdkroot} -arch x86_64 -mmacosx-version-min=10.5"/>
 		</antcall>
 		<antcall target="link">
 			<param name="objdir" location="ppc"/>
@@ -78,7 +93,8 @@
 			<arg value="-output"/>
 			<arg path="liblwjgl.jnilib"/>
 			<fileset file="ppc/liblwjgl-ppc.jnilib"/>
-			<fileset file="intel/liblwjgl-intel.jnilib"/>
+			<fileset file="i386/liblwjgl-i386.jnilib"/>
+			<fileset file="x86_64/liblwjgl-i86_64.jnilib"/>
 		</apply>
 	</target>
 </project>
