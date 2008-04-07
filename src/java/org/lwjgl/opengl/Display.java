@@ -522,7 +522,8 @@ public final class Display {
 	 * null or a different parent. This generally means that the parent component must remain added to it's parent container.<p>
 	 * It is not advisable to call this method from an AWT thread, since the context will be made current on the thread
 	 * and it is difficult to predict which AWT thread will process any given AWT event.<p>
-	 * If the Display is in fullscreen mode, the current parent will be ignored.
+	 * While the Display is in fullscreen mode, the current parent will be ignored. Additionally, when a non null parent is specified,
+	 * the Dispaly will inherit the size of the parent, disregarding the currently set display mode.<p>
 	 *
 	 */
 	public static void setParent(Canvas parent) throws LWJGLException {
