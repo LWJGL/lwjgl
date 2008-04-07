@@ -122,7 +122,6 @@ typedef struct {
 extern "C" {
 #endif
 
-extern JavaVM *getJVM();
 extern JNIEnv *getThreadEnv();
 extern void initAttribList(attrib_list_t *list);
 extern void putAttrib(attrib_list_t *list, int attrib);

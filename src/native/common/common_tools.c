@@ -309,10 +309,6 @@ bool getBooleanProperty(JNIEnv *env, const char* propertyName) {
   return (*env)->CallStaticBooleanMethod(env, org_lwjgl_LWJGLUtil_class, getBoolean, property) ? true : false;
 }
 
-JavaVM *getJVM() {
-	return jvm;
-}
-
 JNIEnv *getThreadEnv() {
 	JNIEnv *env;
 	(*jvm)->GetEnv(jvm, (void *)&env, JNI_VERSION_1_4);
