@@ -80,7 +80,7 @@ extern HWND createDummyWindow(int x, int y);
 /**
  * Return appropriate window and extended style flags from the given fullscreen and undecorated property
  */
-extern void getWindowFlags(DWORD *windowflags_return, DWORD *exstyle_return, bool fullscreen, bool undecorated);
+extern void getWindowFlags(DWORD *windowflags_return, DWORD *exstyle_return, bool fullscreen, bool undecorated, bool child_window);
 
 /*
  * Create a window with the specified position, size, and
@@ -89,7 +89,7 @@ extern void getWindowFlags(DWORD *windowflags_return, DWORD *exstyle_return, boo
  * 
  * Returns true for success, or false for failure
  */
-extern HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height, bool fullscreen, bool undecorated);
+extern HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height, bool fullscreen, bool undecorated, HWND parent);
 
 extern int findPixelFormatOnDC(JNIEnv *env, HDC hdc, int origin_x, int origin_y, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer, bool floating_point);
 

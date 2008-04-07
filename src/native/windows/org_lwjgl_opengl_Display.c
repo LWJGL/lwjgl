@@ -178,13 +178,12 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getAvailable
 	return getAvailableDisplayModes(env);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv *env, jobject self, jobject mode, jboolean fullscreen, jint x, jint y) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv *env, jobject self, jobject mode, jboolean fullscreen, jint x, jint y, jboolean undecorated, jlong parent_hwnd) {
 	jclass cls_displayMode = (*env)->GetObjectClass(env, mode);
 	jfieldID fid_width = (*env)->GetFieldID(env, cls_displayMode, "width", "I");
 	jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
 	int width = (*env)->GetIntField(env, mode, fid_width);
 	int height = (*env)->GetIntField(env, mode, fid_height);
-	bool isUndecorated;          // Whether we're undecorated or not
 	static bool oneShotInitialised = false;
 	if (!oneShotInitialised) {
 		if (!registerWindow(lwjglWindowProc, WINDOWCLASSNAME)) {
@@ -194,8 +193,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv
 		oneShotInitialised = true;
 	}
 
-	isUndecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
-	display_hwnd = createWindow(WINDOWCLASSNAME, x, y, width, height, fullscreen, isUndecorated);
+	display_hwnd = createWindow(WINDOWCLASSNAME, x, y, width, height, fullscreen, undecorated, (HWND)parent_hwnd);
 	if (display_hwnd == NULL) {
 		throwException(env, "Failed to create the window.");
 		return;
@@ -320,12 +318,12 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nGetVersion(JNIEn
 	return result;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nReshape(JNIEnv *env, jclass unused, jlong hwnd_ptr, jint x, jint y, jint width, jint height) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nReshape(JNIEnv *env, jclass unused, jlong hwnd_ptr, jint x, jint y, jint width, jint height, jboolean undecorated, jboolean child) {
 	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
 	DWORD exstyle, windowflags;
 	RECT clientSize;
 
-	getWindowFlags(&windowflags, &exstyle, false, getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated"));
+	getWindowFlags(&windowflags, &exstyle, false, undecorated, child);
 	
 	// If we're not a fullscreen window, adjust the height to account for the
 	// height of the title bar:

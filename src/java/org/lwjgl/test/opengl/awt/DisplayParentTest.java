@@ -65,11 +65,12 @@ public class DisplayParentTest extends Frame {
 		final Canvas display_parent = new Canvas();
 		display_parent.setFocusable(true);
 		add(display_parent);
-		addWindowListener(new WindowAdapter() {
+/*		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
+				Display.destroy();
 				dispose();
 			}
-		});
+		});*/
 		setResizable(true);
 		setVisible(true);
 		Display.setParent(display_parent);
@@ -102,7 +103,9 @@ public class DisplayParentTest extends Frame {
 			while(Keyboard.next()) {
 				// closing on ESCAPE
 				if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE && Keyboard.getEventKeyState()) {
+					Display.destroy();
 					dispose();
+					break;
 				}
 
 				if(Keyboard.getEventKey() == Keyboard.KEY_SPACE && Keyboard.getEventKeyState()) {

@@ -71,6 +71,8 @@ final class WindowsDisplay implements DisplayImplementation {
 	private final static int WM_QUIT						  = 0x0012;
 	private final static int WM_SYSCOMMAND					  = 0x0112;
 	private final static int WM_PAINT 						  = 0x000F;
+	private final static int WM_KILLFOCUS                     = 8;
+	private final static int WM_SETFOCUS                      = 7;
 
 	private final static int SC_SIZE          = 0xF000;
 	private final static int SC_MOVE          = 0xF010;
@@ -118,6 +120,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static boolean cursor_clipped;
 	private WindowsDisplayPeerInfo peer_info;
 	private Object current_cursor;
+	private Canvas parent;
 
 	private WindowsKeyboard keyboard;
 	private WindowsMouse mouse;
@@ -140,20 +143,40 @@ final class WindowsDisplay implements DisplayImplementation {
 		current_display = this;
 	}
 
-	public void createWindow(DisplayMode mode, boolean fullscreen, Canvas container, int x, int y) throws LWJGLException {
+	public void createWindow(DisplayMode mode, boolean fullscreen, Canvas parent, int x, int y) throws LWJGLException {
 		close_requested = false;
 		is_dirty = false;
 		isFullscreen = fullscreen;
 		isMinimized = false;
 		isFocused = false;
 		did_maximize = false;
-		nCreateWindow(mode, fullscreen, x, y);
+		this.parent = parent;
+		long parent_hwnd = parent != null ? getHwnd(parent) : 0;
+		boolean isUndecorated = isUndecorated();
+		nCreateWindow(mode, fullscreen, x, y, isUndecorated, parent_hwnd);
 		peer_info.initDC();
 		showWindow(getHwnd(), SW_SHOWDEFAULT);
-		setForegroundWindow(getHwnd());
-		setFocus(getHwnd());
+		if (parent == null) {
+			setForegroundWindow(getHwnd());
+			setFocus(getHwnd());
+		}
 	}
-	private native void nCreateWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException;
+	private native void nCreateWindow(DisplayMode mode, boolean fullscreen, int x, int y, boolean undecorated, long parent_hwnd) throws LWJGLException;
+
+	private static boolean isUndecorated() {
+		return Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated"); 
+	}
+
+	private static long getHwnd(Canvas parent) throws LWJGLException {
+		AWTCanvasImplementation awt_impl = AWTGLCanvas.createImplementation();
+		WindowsPeerInfo parent_peer_info = (WindowsPeerInfo)awt_impl.createPeerInfo(parent, null);
+		ByteBuffer parent_peer_info_handle = parent_peer_info.lockAndGetHandle();
+		try {
+			return parent_peer_info.getHwnd();
+		} finally { 
+			parent_peer_info.unlock();
+		}
+	}
 
 	public void destroyWindow() {
 		nDestroyWindow();
@@ -213,7 +236,6 @@ final class WindowsDisplay implements DisplayImplementation {
 			return;
 		}
 		inAppActivate = true;
-		isFocused = active;
 		if (active) {
 			if (isFullscreen) {
 				restoreDisplayMode();
@@ -350,6 +372,9 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	public void update() {
 		nUpdate();
+		if (parent != null && parent.isFocusOwner()) {
+			setFocus(getHwnd());
+		}
 		if (did_maximize) {
 			did_maximize = false;
 			/**
@@ -369,9 +394,9 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	public void reshape(int x, int y, int width, int height) {
 		if (!isFullscreen)
-			nReshape(getHwnd(), x, y, width, height);
+			nReshape(getHwnd(), x, y, width, height, isUndecorated(), parent != null);
 	}
-	private static native void nReshape(long hwnd, int x, int y, int width, int height);
+	private static native void nReshape(long hwnd, int x, int y, int width, int height, boolean undecorated, boolean child);
 	public native DisplayMode[] getAvailableDisplayModes() throws LWJGLException;
 
 	/* Mouse */
@@ -682,6 +707,12 @@ final class WindowsDisplay implements DisplayImplementation {
 						break;
 				}
 				return defWindowProc(hwnd, msg, wParam, lParam);
+			case WM_KILLFOCUS:
+				isFocused = false;
+				return 0;
+			case WM_SETFOCUS:
+				isFocused = true;
+				return 0;
 			case WM_MOUSEMOVE:
 				int xPos = (int)(short)(lParam & 0xFFFF);
 				int yPos = transformY(getHwnd(), (int)(short)((lParam >> 16) & 0xFFFF));

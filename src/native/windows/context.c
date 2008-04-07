@@ -112,7 +112,7 @@ void closeWindow(HWND *hwnd, HDC *hdc)
 	}
 }
 
-void getWindowFlags(DWORD *windowflags_return, DWORD *exstyle_return, bool fullscreen, bool undecorated) {
+void getWindowFlags(DWORD *windowflags_return, DWORD *exstyle_return, bool fullscreen, bool undecorated, bool child_window) {
 	DWORD exstyle, windowflags;
 	if (fullscreen) {
 		exstyle = WS_EX_APPWINDOW;
@@ -120,6 +120,9 @@ void getWindowFlags(DWORD *windowflags_return, DWORD *exstyle_return, bool fulls
 	} else if (undecorated) {
 		exstyle = WS_EX_APPWINDOW;
 		windowflags = WS_POPUP;
+	} else if (child_window) {
+		exstyle = 0;
+		windowflags = WS_CHILDWINDOW;
 	} else {
 		exstyle = WS_EX_APPWINDOW;
 		windowflags = WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
@@ -136,13 +139,13 @@ void getWindowFlags(DWORD *windowflags_return, DWORD *exstyle_return, bool fulls
  * 
  * Returns true for success, or false for failure
  */
-HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height, bool fullscreen, bool undecorated)
+HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height, bool fullscreen, bool undecorated, HWND parent)
 {
 	RECT clientSize;
 	DWORD exstyle, windowflags;
 	HWND new_hwnd;
 	
-	getWindowFlags(&windowflags, &exstyle, fullscreen, undecorated);
+	getWindowFlags(&windowflags, &exstyle, fullscreen, undecorated, parent != NULL);
 
 	// If we're not a fullscreen window, adjust the height to account for the
 	// height of the title bar (unless undecorated)
@@ -164,7 +167,7 @@ HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height
 			"",
 			windowflags,
 			x, y, clientSize.right - clientSize.left, clientSize.bottom - clientSize.top,
-			NULL,
+			parent,
 			NULL,
 			dll_handle,
 			NULL);
@@ -462,5 +465,5 @@ static bool registerDummyWindow() {
 HWND createDummyWindow(int origin_x, int origin_y) {
 	if (!registerDummyWindow())
 		return NULL;
-	return createWindow(_CONTEXT_PRIVATE_CLASS_NAME, origin_x, origin_y, 1, 1, false, false);
+	return createWindow(_CONTEXT_PRIVATE_CLASS_NAME, origin_x, origin_y, 1, 1, false, false, NULL);
 }
