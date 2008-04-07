@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+
 <project name="OS X Native code" basedir="../../bin/lwjgl" default="nativelibrary">
 	<property name="native" location="../../src/native"/>
 
@@ -30,7 +30,7 @@
 	
 	<target name="link">
 		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
-			<arg line="${linkerflags} -exported_symbols_list ../lwjgl.symbols -dynamiclib -o ${libname} -framework Foundation -framework AppKit -framework JavaVM -framework Carbon"/>
+			<arg line="${linkerflags} -mmacosx-version-min=10.4 -exported_symbols_list ../lwjgl.symbols -dynamiclib -o ${libname} -framework Foundation -framework AppKit -framework JavaVM -framework Carbon"/>
 			<fileset dir="${objdir}" includes="*.o"/>
 		</apply>
 		<apply dir="${objdir}" executable="strip" os="Mac OS X" failonerror="true">
@@ -42,7 +42,7 @@
 	<target name="nativelibrary" depends="init">
 		<property name="universal_sdkroot" location="/Developer/SDKs/MacOSX10.4u.sdk"/>
 		<property name="legacy_sdkroot" location="/Developer/SDKs/MacOSX10.4u.sdk"/>
-		<property name="universal_flags" value="-isysroot ${universal_sdkroot} -arch i386"/>
+		<property name="universal_flags" value="-isysroot ${universal_sdkroot} -arch i386 -mmacosx-version-min=10.4"/>
 		<property name="legacy_flags" value="-F${legacy_sdkroot}/System/Library/Frameworks -arch ppc"/>
 		<antcall target="compile">
 			<param name="dstdir" location="intel"/>
@@ -56,7 +56,8 @@
 			<param name="sdkroot" location="${legacy_sdkroot}"/>
 			<param name="cflags" value="${legacy_flags}"/>
 		</antcall>
-		<exec vmlauncher="false" executable="../../platform_build/macosx_ant/build-symbol-list" output="lwjgl.symbols" failonerror="true">
+		<exec vmlauncher="true" executable="sh" output="lwjgl.symbols" failonerror="true">
+			<arg path="../../platform_build/macosx_ant/build-symbol-list"/>
 			<arg path="intel"/>
 		</exec>
 		<antcall target="link">
@@ -69,7 +70,7 @@
 			<param name="objdir" location="ppc"/>
 			<param name="libname" value="liblwjgl-ppc.jnilib"/>
 			<param name="linker" value="gcc-3.3"/>
-			<param name="linkerflags" value="${legacy_flags}"/>
+			<param name="linkerflags" value="${legacy_flags} -Wl,-syslibroot -Wl,${legacy_sdkroot}"/>
 		</antcall>
 		<apply dir="." parallel="true" executable="lipo" os="Mac OS X" failonerror="true" skipemptyfilesets="true" >
 			<arg value="-create"/>
