@@ -240,6 +240,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReshape(JNIEnv *env, 
 	Display *disp = (Display *)(intptr_t)display;
 	Window window = (Window)window_ptr;
 	XMoveWindow(disp, window, x, y);
+	XResizeWindow(disp, window, width, height);
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getRootWindow(JNIEnv *env, jclass clazz, jlong display, jint screen) {

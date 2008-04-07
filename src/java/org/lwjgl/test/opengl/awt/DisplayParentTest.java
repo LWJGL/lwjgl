@@ -83,13 +83,7 @@ public class DisplayParentTest extends Frame {
 		int current_width = 0;
 		while (isVisible()) {
 			angle += 1.0f;
-			if (getWidth() != current_width || getHeight() != current_height) {
-				current_width = getWidth();
-				current_height = getHeight();
-				Display.setDisplayMode(new DisplayMode(getWidth(), getHeight()));
-				GL11.glViewport(0, 0, current_width, current_height);
-			}
-			GL11.glViewport(0, 0, getWidth(), getHeight());
+			GL11.glViewport(0, 0, display_parent.getWidth(), display_parent.getHeight());
 			GL11.glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 			GL11.glMatrixMode(GL11.GL_PROJECTION);

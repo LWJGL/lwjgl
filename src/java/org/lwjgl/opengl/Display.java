@@ -50,6 +50,9 @@ import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.awt.Canvas;
+import java.awt.event.ComponentListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -110,6 +113,16 @@ public final class Display {
 	private final static Drawable drawable;
 
 	private static boolean window_created = false;
+
+	private static boolean parent_resized;
+
+	private static ComponentListener component_listener = new ComponentAdapter() {
+		public final void componentResized(ComponentEvent e) {
+			synchronized (GlobalLock.lock) {
+				parent_resized = true;
+			}
+		}
+	};
 
 	static {
 		Sys.initialize();
@@ -238,6 +251,36 @@ public final class Display {
 		}
 	}
 
+	private static DisplayMode getEffectiveMode() {
+		return !fullscreen && parent != null ? new DisplayMode(parent.getWidth(), parent.getHeight()) : current_mode;
+	}
+
+	private static int getWindowX() {
+		if (!fullscreen && parent == null) {
+			// if no display location set, center window
+			if (x == -1) {
+				return Math.max(0, (initial_mode.getWidth() - current_mode.getWidth()) / 2);
+			} else {
+				return x;
+			}
+		} else {
+			return 0;
+		}
+	}
+
+	private static int getWindowY() {
+		if (!fullscreen && parent == null) {
+			// if no display location set, center window
+			if (y == -1) {
+				return Math.max(0, (initial_mode.getHeight() - current_mode.getHeight()) / 2);
+			} else {
+				return y;
+			}
+		} else {
+			return 0;
+		}
+	}
+
 	/**
 	 * Create the native window peer from the given mode and fullscreen flag.
 	 * A native context must exist, and it will be attached to the window.
@@ -246,25 +289,14 @@ public final class Display {
 		if (window_created) {
 			return;
 		}
-		int window_x;
-		int window_y;
-		if (!fullscreen && parent == null) {
-			// if no display location set, center window
-			if (x == -1 && y == -1) {
-				window_x = Math.max(0, (initial_mode.getWidth() - current_mode.getWidth()) / 2);
-				window_y = Math.max(0, (initial_mode.getHeight() - current_mode.getHeight()) / 2);
-			} else {
-				window_x = x;
-				window_y = y;
-			}
-		} else {
-			window_x = 0;
-			window_y = 0;
-		}
 		Canvas tmp_parent = fullscreen ? null : parent;
 		if (tmp_parent != null && !tmp_parent.isDisplayable()) // Only a best effort check, since the parent can turn undisplayable hereafter
 			throw new LWJGLException("Parent.isDisplayable() must be true");
-		display_impl.createWindow(current_mode, fullscreen, tmp_parent, window_x, window_y);
+		if (tmp_parent != null) {
+			tmp_parent.addComponentListener(component_listener);
+		}
+		DisplayMode mode = getEffectiveMode();
+		display_impl.createWindow(mode, fullscreen, tmp_parent, getWindowX(), getWindowY());
 		window_created = true;
 		
 		setTitle(title);
@@ -281,6 +313,9 @@ public final class Display {
 	private static void destroyWindow() {
 		if (!window_created) {
 			return;
+		}
+		if (parent != null) {
+			parent.removeComponentListener(component_listener);
 		}
 		try {
 			if (context != null && context.isCurrent()) {
@@ -676,6 +711,10 @@ public final class Display {
 			}
 
 			pollDevices();
+			if (parent_resized) {
+				reshape();
+				parent_resized = false;
+			}
 		}
 	}
 
@@ -985,9 +1024,14 @@ public final class Display {
 
 			// offset if already created
 			if(isCreated()) {
-				display_impl.reshape(x, y, current_mode.getWidth(), current_mode.getHeight());
+				reshape();
 			}
 		}
+	}
+
+	private static void reshape() {
+		DisplayMode mode = getEffectiveMode();
+		display_impl.reshape(getWindowX(), getWindowY(), mode.getWidth(), mode.getHeight());
 	}
 
 	/**
