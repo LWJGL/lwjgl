@@ -136,13 +136,14 @@ final class WindowsMouse {
 		if (grab) {
 			if (!mouse_grabbed) {
 				mouse_grabbed = true;
-				try {
-					WindowsDisplay.setupCursorClipping(hwnd);
-				} catch (LWJGLException e) {
-					LWJGLUtil.log("Failed to setup cursor clipping: " + e);
-				}
-				if (should_center)
+				if (should_center) {
+					try {
+						WindowsDisplay.setupCursorClipping(hwnd);
+					} catch (LWJGLException e) {
+						LWJGLUtil.log("Failed to setup cursor clipping: " + e);
+					}
 					centerCursor();
+				}
 			}
 		} else {
 			if (mouse_grabbed) {
