@@ -47,6 +47,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Cursor;
+import org.lwjgl.input.Mouse;
 
 final class WindowsDisplay implements DisplayImplementation {
 	private final static int GAMMA_LENGTH = 256;
@@ -613,7 +614,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	private boolean shouldGrab() {
-		return !isMinimized && isFocused && mouse != null && mouse.isGrabbed();
+		return !isMinimized && isFocused && Mouse.isGrabbed();
 	}
 
 	private void handleMouseMoved(int x, int y, long millis) {
