@@ -611,6 +611,8 @@ final class WindowsDisplay implements DisplayImplementation {
 	private void handleMouseButton(int button, int state, long millis) {
 		if (mouse != null)
 			mouse.handleMouseButton((byte)button, (byte)state, millis);
+		if (parent != null && !isFocused)
+			setFocus(getHwnd());
 	}
 
 	private boolean shouldGrab() {
