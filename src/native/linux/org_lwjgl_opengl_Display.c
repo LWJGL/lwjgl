@@ -338,10 +338,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_ungrabServer(JNIEnv *e
 	XUngrabServer(disp);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setInputFocus(JNIEnv *env, jclass clazz, jlong display, jlong window_ptr) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setInputFocus(JNIEnv *env, jclass clazz, jlong display, jlong window_ptr, jlong time) {
 	Display *disp = (Display *)(intptr_t)display;
 	Window window = (Window)window_ptr;
-	XSetInputFocus(disp, window, RevertToParent, CurrentTime);
+	XSetInputFocus(disp, window, RevertToParent, time);
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jclass clazz, jlong display, jint screen, jobject peer_info_handle, jobject mode, jint window_mode, jint x, jint y, jboolean undecorated, jlong parent_handle) {

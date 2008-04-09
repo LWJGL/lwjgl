@@ -50,6 +50,7 @@ import org.lwjgl.LWJGLUtil;
 
 final class LinuxDisplay implements DisplayImplementation {
 	/* X11 constants */
+	public final static int CurrentTime = 0;
 	public final static int GrabSuccess = 0;
 	public final static int AutoRepeatModeOff  = 0;
 	public final static int AutoRepeatModeOn = 1;
@@ -620,7 +621,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		return peer_info;
 	}
 	
-	private native static void setInputFocus(long display, long window);
+	static native void setInputFocus(long display, long window, long time);
 
 	private void processEvents() {
 		while (LinuxEvent.getPending(getDisplay()) > 0) {
@@ -754,7 +755,7 @@ final class LinuxDisplay implements DisplayImplementation {
 				grabServer(getDisplay());
 				try {
 					if (nGetInputFocus(getDisplay()) == current_focus)
-						setInputFocus(getDisplay(), getWindow());
+						setInputFocus(getDisplay(), getWindow(), CurrentTime);
 				} finally {
 					ungrabServer(getDisplay());
 				}
