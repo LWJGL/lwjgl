@@ -280,8 +280,6 @@ final class LinuxMouse {
 			case LinuxEvent.ButtonPress: /* Fall through */
 			case LinuxEvent.ButtonRelease:
 				handleButtonEvent(grab, event.getButtonTime(), event.getButtonType(), (byte)event.getButtonButton());
-				if (Display.getParent() != null)
-					LinuxDisplay.setInputFocus(display, window, event.getButtonTime());
 				return true;
 			case LinuxEvent.MotionNotify:
 				handlePointerMotion(grab, warp_pointer, event.getButtonTime(), event.getButtonRoot(), event.getButtonXRoot(), event.getButtonYRoot(), event.getButtonX(), event.getButtonY());

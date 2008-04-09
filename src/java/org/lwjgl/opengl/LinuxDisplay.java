@@ -627,6 +627,8 @@ final class LinuxDisplay implements DisplayImplementation {
 		while (LinuxEvent.getPending(getDisplay()) > 0) {
 			event_buffer.nextEvent(getDisplay());
 			long event_window = event_buffer.getWindow();
+			if (event_buffer.getType() == LinuxEvent.ButtonPress && parent != null)
+				setInputFocus(getDisplay(), getWindow(), event_buffer.getButtonTime());
 			if (event_window != getWindow() || event_buffer.filterEvent(event_window) ||
 					(mouse != null && mouse.filterEvent(grab, shouldWarpPointer(), event_buffer)) ||
 					 (keyboard != null && keyboard.filterEvent(event_buffer)))
