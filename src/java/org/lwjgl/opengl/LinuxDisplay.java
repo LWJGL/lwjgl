@@ -752,21 +752,24 @@ final class LinuxDisplay implements DisplayImplementation {
 			if (focused_at_least_once)
 				releaseInput();
 			if (parent != null && parent.isFocusOwner()) {
-				// Normally, a real time stamp from an event should be passed to XSetInputFocus instead of CurrentTime, but we don't get timestamps
-				// from awt. Instead we grab the server and check if the focus changed to avoid a race where our window is made unviewable while focusing it.
-				grabServer(getDisplay());
-				try {
-					if (nGetInputFocus(getDisplay()) == current_focus)
-						setInputFocus(getDisplay(), getWindow(), CurrentTime);
-				} finally {
-					ungrabServer(getDisplay());
-				}
+				setInputFocusUnsafe();
 			}
 		}
 	}
 	static native long nGetInputFocus(long display);
 	private static native void grabServer(long display);
 	private static native void ungrabServer(long display);
+
+	private static void setInputFocusUnsafe() {
+		setInputFocus(getDisplay(), getWindow(), CurrentTime);
+		try {
+			checkXError(getDisplay());
+		} catch (LWJGLException e) {
+			// Since we don't have any event timings for XSetInputFocus, a race condition might give a BadMatch, which we'll catch ang ignore
+			LWJGLUtil.log("Got exception while trying to focus: " + e);
+		}
+	}
+	private static native void checkXError(long display) throws LWJGLException;
 
 	private void releaseInput() {
 		if (isLegacyFullscreen() || input_released)

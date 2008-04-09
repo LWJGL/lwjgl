@@ -79,7 +79,7 @@ static Visual *current_visual;
 static bool async_x_error;
 static char error_message[ERR_MSG_SIZE];
 
-bool checkXError(JNIEnv *env, Display *disp) {
+static bool checkXError(JNIEnv *env, Display *disp) {
 	XSync(disp, False);
 	if (async_x_error) {
 		async_x_error = false;
@@ -111,6 +111,12 @@ static jlong openDisplay(JNIEnv *env) {
 		return (intptr_t)NULL;
 	}
 	return (intptr_t)display_connection;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_checkXError(JNIEnv *env, jclass unused, jlong display_ptr) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	XSync(disp, False);
+	checkXError(env, disp);
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetDefaultScreen(JNIEnv *env, jclass unused, jlong display_ptr) {
