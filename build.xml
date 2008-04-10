@@ -435,7 +435,6 @@
 	<target name="headers" description="invokes javah on java classes" depends="compile">
 		<!-- platform specific classes -->
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/linux" force="yes">
-			<class name="org.lwjgl.opengl.LinuxAWTInput" />
 			<class name="org.lwjgl.opengl.LinuxEvent" />
 			<class name="org.lwjgl.opengl.LinuxMouse" />
 			<class name="org.lwjgl.opengl.LinuxKeyboard" />
@@ -450,12 +449,7 @@
 		
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/windows" force="yes">
 			<!-- OpenGL -->
-			<class name="org.lwjgl.opengl.WindowsAWTInput" />
 			<class name="org.lwjgl.opengl.WindowsKeyboard" />
-			<class name="org.lwjgl.opengl.WindowsDirectInput8" />
-			<class name="org.lwjgl.opengl.WindowsDirectInputDevice8" />
-			<class name="org.lwjgl.opengl.WindowsDirectInput3" />
-			<class name="org.lwjgl.opengl.WindowsDirectInputDevice3" />			
 			<class name="org.lwjgl.opengl.WindowsPbufferPeerInfo" />
 			<class name="org.lwjgl.opengl.WindowsDisplay" />
 			<class name="org.lwjgl.opengl.WindowsRegistry" />

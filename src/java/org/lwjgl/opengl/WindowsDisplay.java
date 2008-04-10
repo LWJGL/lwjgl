@@ -205,15 +205,6 @@ final class WindowsDisplay implements DisplayImplementation {
 		rect.offset(offset_x, offset_y);
 	}
 
-	static WindowsDirectInput createDirectInput() throws LWJGLException {
-		try {
-			return new WindowsDirectInput8(getDllInstance());
-		} catch (LWJGLException e) {
-			LWJGLUtil.log("Failed to create DirectInput 8 interface, falling back to DirectInput 3");
-			return new WindowsDirectInput3(getDllInstance());
-		}
-	}
-
 	static void setupCursorClipping(long hwnd) throws LWJGLException {
 		cursor_clipped = true;
 		getGlobalClientRect(hwnd, rect);

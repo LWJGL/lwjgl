@@ -4,7 +4,7 @@
 	<property name="native" location="../../src/native"/>
 	<property environment="env"/>
 	<property name="dxhome" location="${env.DXSDK_DIR}"/>
-	<property name="sdkhome" location="${env.MSSdk}"/>
+	<property name="sdkhome" location="${env.MSSDK}"/>
 	<property name="program_files" location="${env.ProgramFiles}"/>
 	<property name="alhome" location="${program_files}\OpenAL 1.1 with EFX SDK"/>
 	<property name="dllname" value="lwjgl.dll"/>
@@ -53,6 +53,9 @@
 	</target>
 	
 	<target name="compile">
+		<echo message="${dxhome}"/>
+		<echo message="${sdkhome}"/>
+		<echo message="${program_files}"/>
 		<property name="libs" value="Kernel32.lib ole32.lib dinput.lib dxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib jawt.lib delayimp.lib winmm.lib"/>
 		<antcall target="compile_dir"/>
 		<antcall target="link"/>
