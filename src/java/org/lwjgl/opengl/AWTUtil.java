@@ -39,6 +39,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
+import java.awt.GraphicsConfiguration;
 import java.awt.IllegalComponentStateException;
 import java.awt.Point;
 import java.awt.Robot;
@@ -115,12 +116,15 @@ final class AWTUtil {
 			final Method getLocation_method = PointerInfo_class.getMethod("getLocation", null);
 			return (Point)AccessController.doPrivileged(new PrivilegedExceptionAction() {
 				public final Object run() throws Exception {
-					Object pointer_info = getPointerInfo_method.invoke(null, null);
-					GraphicsDevice device = (GraphicsDevice)getDevice_method.invoke(pointer_info, null);
-					if (device == component.getGraphicsConfiguration().getDevice()) {
-						return (Point)getLocation_method.invoke(pointer_info, null);
-					} else
-						return null;
+					GraphicsConfiguration config = component.getGraphicsConfiguration();
+					if (config != null) {
+						Object pointer_info = getPointerInfo_method.invoke(null, null);
+						GraphicsDevice device = (GraphicsDevice)getDevice_method.invoke(pointer_info, null);
+						if (device == config.getDevice()) {
+							return (Point)getLocation_method.invoke(pointer_info, null);
+						}
+					}
+					return null;
 				}
 			});
 		} catch (PrivilegedActionException e) {
