@@ -183,6 +183,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/** whether we're running in debug mode */
 	protected boolean 	debugMode;
 	
+	/** whether to prepend host to cache path */
+	protected boolean 	prependHost;
+	
 	/** String to display as a subtask */
 	protected String	subtaskMessage = "";
 
@@ -220,6 +223,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		// whether to run in debug mode
 		debugMode 		= getBooleanParameter("al_debug", false);
+		
+		// whether to prepend host to cache path
+		prependHost 	= getBooleanParameter("al_prepend_host", true);
 		
 		// get colors of applet
 		bgColor 		= getColor("al_bgcolor", Color.white);
@@ -486,7 +492,17 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			// get path where applet will be stored
 			String path = (String) AccessController.doPrivileged(new PrivilegedExceptionAction() {
 				public Object run() throws Exception {
-					return System.getProperty("java.io.tmpdir") + File.separator + getParameter("al_title") + File.separator;
+					
+					// we append the code base to avoid naming collisions with al_title
+					String codebase = "";
+					if(prependHost) {
+						codebase = getCodeBase().getHost();
+						if(codebase == null || codebase.length() == 0) {
+							codebase = "localhost";
+						}
+						codebase += File.separator;
+					}
+					return System.getProperty("java.io.tmpdir") + File.separator + codebase + getParameter("al_title") + File.separator;
 				}
 			});
 			
@@ -494,7 +510,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 			// create directory
 			if (!dir.exists()) {
-				dir.mkdir();
+				dir.mkdirs();
 			}
 			dir = new File(dir, "version");
 
