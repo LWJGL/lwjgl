@@ -56,12 +56,4 @@ interface AWTCanvasImplementation {
 	 * @throws LWJGLException if no suitable configuration could be found.
 	 */
 	GraphicsConfiguration findConfiguration(GraphicsDevice device, PixelFormat pixel_format) throws LWJGLException;
-
-	/**
-	 * Create an AWTCanvasInputImplementation for a specified AWTGLCanvas.
-	 *
-	 * @return A platform specific AWTCanvasInputImplementation.
-	 * @param canvas An AWTGLCanvas
-	 */
-	AWTCanvasInputImplementation createInput(AWTGLCanvas canvas) throws LWJGLException;
 }

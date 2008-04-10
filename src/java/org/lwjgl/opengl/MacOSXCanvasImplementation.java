@@ -63,8 +63,4 @@ final class MacOSXCanvasImplementation implements AWTCanvasImplementation {
 		 */
 		return null;
 	}
-
-	public AWTCanvasInputImplementation createInput(AWTGLCanvas canvas) throws LWJGLException {
-		return new MacOSXAWTInput(canvas);
-	}
 }

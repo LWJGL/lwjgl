@@ -35,7 +35,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.AWTGLCanvas;
-import org.lwjgl.opengl.AWTInputAdapter;
 import org.lwjgl.opengl.GL11;
 
 public class OpenGL extends AWTGLCanvas implements Test {
@@ -55,11 +54,6 @@ public class OpenGL extends AWTGLCanvas implements Test {
 		y = 240;
 		GL11.glMatrixMode(GL11.GL_MODELVIEW_MATRIX);
 		setVSyncEnabled(true);
-		try {
-			AWTInputAdapter.create(this);
-		} catch (LWJGLException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void paintGL() {
@@ -93,9 +87,6 @@ public class OpenGL extends AWTGLCanvas implements Test {
 				String key_name = Keyboard.getKeyName(Keyboard.getEventKey());
 				if (Keyboard.getEventKeyState()) {
 					switch (Keyboard.getEventKey()) {
-						case Keyboard.KEY_H:
-							AWTInputAdapter.destroy();
-							break;
 						case Keyboard.KEY_G:
 							Mouse.setGrabbed(!Mouse.isGrabbed());
 							break;

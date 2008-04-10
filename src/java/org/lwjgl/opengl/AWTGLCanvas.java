@@ -81,9 +81,6 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	/** Tracks whether initGL() needs to be called */
 	private boolean first_run;
 
-	/** Track the input adapter, if any */
-	private volatile AWTCanvasInputImplementation awt_input;
-
 	static {
 		Sys.initialize();
 		implementation = createImplementation();
@@ -100,17 +97,6 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 			default:
 				throw new IllegalStateException("Unsupported platform");
 		}
-	}
-
-	/**
-	 * Used from AWTInputAdapter
-	 */
-	static AWTCanvasImplementation getImplementation() {
-		return implementation;
-	}
-
-	void setInput(AWTCanvasInputImplementation awt_input) {
-		this.awt_input = awt_input;
 	}
 
 	private void setUpdate() {
@@ -297,9 +283,6 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 							context.update();
 							update_context = false;
 						}
-						AWTCanvasInputImplementation current_input = awt_input;
-						if (current_input != null)
-							current_input.processInput(peer_info);
 						if (first_run) {
 							first_run = false;
 							initGL();
