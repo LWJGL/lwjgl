@@ -54,7 +54,7 @@ public final class Sys {
 	private static final String JNI_LIBRARY_NAME = "lwjgl";
 
 	/** Current version of library */
-	private static final String VERSION = "2.0a3";
+	private static final String VERSION = "2.0a4";
 
 	/** Current version of the JNI library */
 	static final int JNI_VERSION = 15;
