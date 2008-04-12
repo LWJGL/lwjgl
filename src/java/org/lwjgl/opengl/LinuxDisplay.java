@@ -68,6 +68,9 @@ final class LinuxDisplay implements DisplayImplementation {
 	private final static int NotifyPointerRoot = 6;
 	private final static int NotifyDetailNone = 7;
 
+	private final static int SetModeInsert = 0;
+	private final static int SaveSetRoot = 1;
+	private final static int SaveSetUnmap = 1;
 
 	/** Window mode enum */
 	private static final int FULLSCREEN_LEGACY = 1;
@@ -382,13 +385,21 @@ final class LinuxDisplay implements DisplayImplementation {
 		try {
 			incDisplay();
 			try {
+				if (parent != null && !hasXFixes(getDisplay(), 1))
+					throw new LWJGLException("No XFixes extension available");
 				ByteBuffer handle = peer_info.lockAndGetHandle();
 				try {
 					current_window_mode = getWindowMode(fullscreen);
 					boolean undecorated = Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated") || current_window_mode != WINDOWED;
 					this.parent = parent;
-					parent_window = parent != null ? getHandle(parent) : getRootWindow(getDisplay(), getDefaultScreen());
-					current_window = nCreateWindow(getDisplay(), getDefaultScreen(), handle, mode, current_window_mode, x, y, undecorated, parent_window);
+					long root_window = getRootWindow(getDisplay(), getDefaultScreen());
+					current_window = nCreateWindow(getDisplay(), getDefaultScreen(), handle, mode, current_window_mode, x, y, undecorated, root_window);
+					if (parent != null) {
+						parent_window = getHandle(parent);
+						changeSaveSet(getDisplay(), current_window, SetModeInsert, SaveSetRoot, SaveSetUnmap);
+						reparentWindow(getDisplay(), current_window, parent_window, x, y);
+					}
+					mapRaised(getDisplay(), current_window);
 					xembedded = parent != null && isAncestorXEmbedded(parent_window);
 					blank_cursor = createBlankCursor();
 					parent_focus_window_valid = false;
@@ -416,6 +427,10 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native long getRootWindow(long display, int screen);
 	private static native boolean hasProperty(long display, long window, long property);
 	private static native long getParentWindow(long display, long window) throws LWJGLException;
+	private static native void mapRaised(long display, long window);
+	private static native boolean hasXFixes(long display, int major);
+	private static native void reparentWindow(long display, long window, long parent, int x, int y);
+	private static native void changeSaveSet(long display, long window, int mode, int target, int map);
 
 	private boolean isAncestorXEmbedded(long window) throws LWJGLException {
 		long xembed_atom = internAtom("_XEMBED_INFO", true);

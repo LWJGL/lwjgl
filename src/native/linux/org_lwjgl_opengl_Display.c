@@ -43,6 +43,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/xf86vmode.h>
+#include <X11/extensions/Xfixes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -326,12 +327,41 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 		XChangeProperty(disp, win, XInternAtom(disp, "_NET_WM_STATE", False),
 						XInternAtom(disp, "ATOM", False), 32, PropModeReplace, (const unsigned char*)&fullscreen_atom, 1);
 	}
-	XMapRaised(disp, win);
 	if (!checkXError(env, disp)) {
 		destroyWindow(env, disp, win);
 		return 0;
 	}
 	return win;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_reparentWindow(JNIEnv *env, jclass unused, jlong display, jlong window_ptr, jlong parent_ptr, jint x, jint y) {
+	Display *disp = (Display *)(intptr_t)display;
+	Window window = (Window)window_ptr;
+	Window parent = (Window)parent_ptr;
+	XReparentWindow(disp, window, parent, x, y);
+}
+
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_hasXFixes(JNIEnv *env, jclass unused, jlong display, jint major_requested) {
+	Display *disp = (Display *)(intptr_t)display;
+	int event, error;
+	if (!XFixesQueryExtension(disp, &event, &error))
+		return JNI_FALSE;
+	int major, minor;
+	if (!XFixesQueryVersion(disp, &major, &minor))
+		return JNI_FALSE;
+	return major >= major_requested ? JNI_TRUE : JNI_FALSE;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_mapRaised(JNIEnv *env, jclass unused, jlong display, jlong window_ptr) {
+	Display *disp = (Display *)(intptr_t)display;
+	Window window = (Window)window_ptr;
+	XMapRaised(disp, window);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_changeSaveSet(JNIEnv *env, jclass unused, jlong display, jlong window_ptr, jint mode, jint target, jint map) {
+	Display *disp = (Display *)(intptr_t)display;
+	Window window = (Window)window_ptr;
+	XFixesChangeSaveSet(disp, window, mode, target, map);
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getParentWindow(JNIEnv *env, jclass unused, jlong display, jlong window_ptr) {
