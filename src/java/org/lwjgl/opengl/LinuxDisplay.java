@@ -57,6 +57,18 @@ final class LinuxDisplay implements DisplayImplementation {
 	public final static int AutoRepeatModeDefault = 2;
 	public final static int None = 0;
 
+	private final static int KeyPressMask = 1 << 0;
+	private final static int KeyReleaseMask = 1 << 1;
+	private final static int ButtonPressMask = 1 << 2;
+	private final static int ButtonReleaseMask = 1 << 3;
+
+	private final static int NotifyAncestor = 0;
+	private final static int NotifyNonlinear = 3;
+	private final static int NotifyPointer = 5;
+	private final static int NotifyPointerRoot = 6;
+	private final static int NotifyDetailNone = 7;
+
+
 	/** Window mode enum */
 	private static final int FULLSCREEN_LEGACY = 1;
 	private static final int FULLSCREEN_NETWM = 2;
@@ -78,6 +90,7 @@ final class LinuxDisplay implements DisplayImplementation {
 
 	/** Event buffer */
 	private final LinuxEvent event_buffer = new LinuxEvent();
+	private final LinuxEvent tmp_event_buffer = new LinuxEvent();
 
 	/** Current mode swithcing API */
 	private int current_displaymode_extension = NONE;
@@ -103,10 +116,13 @@ final class LinuxDisplay implements DisplayImplementation {
 	private boolean minimized;
 	private boolean dirty;
 	private boolean close_requested;
-	private boolean focused_at_least_once;
 	private long current_cursor;
 	private long blank_cursor;
 	private Canvas parent;
+	private long parent_focus_window;
+	private boolean parent_focus_window_valid;
+	private long parent_window;
+	private boolean xembedded;
 
 	private LinuxKeyboard keyboard;
 	private LinuxMouse mouse;
@@ -371,16 +387,17 @@ final class LinuxDisplay implements DisplayImplementation {
 					current_window_mode = getWindowMode(fullscreen);
 					boolean undecorated = Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated") || current_window_mode != WINDOWED;
 					this.parent = parent;
-					long parent_window = parent != null ? getHandle(parent) : getRootWindow(getDisplay(), getDefaultScreen());
+					parent_window = parent != null ? getHandle(parent) : getRootWindow(getDisplay(), getDefaultScreen());
 					current_window = nCreateWindow(getDisplay(), getDefaultScreen(), handle, mode, current_window_mode, x, y, undecorated, parent_window);
+					xembedded = parent != null && isAncestorXEmbedded(parent_window);
 					blank_cursor = createBlankCursor();
+					parent_focus_window_valid = false;
 					current_cursor = None;
-					focused = true;
+					focused = false;
 					input_released = false;
 					pointer_grabbed = false;
 					keyboard_grabbed = false;
 					close_requested = false;
-					focused_at_least_once = false;
 					grab = false;
 					minimized = false;
 					dirty = true;
@@ -397,6 +414,21 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native long nCreateWindow(long display, int screen, ByteBuffer peer_info_handle, DisplayMode mode, int window_mode, int x, int y, boolean undecorated, long parent_handle) throws LWJGLException;
 	private static native long getRootWindow(long display, int screen);
+	private static native boolean hasProperty(long display, long window, long property);
+	private static native long getParentWindow(long display, long window) throws LWJGLException;
+
+	private boolean isAncestorXEmbedded(long window) throws LWJGLException {
+		long xembed_atom = internAtom("_XEMBED_INFO", true);
+		if (xembed_atom != None) {
+			long w = parent_window;
+			while (w != None) {
+				if (hasProperty(getDisplay(), w, xembed_atom))
+					return true;
+				w = getParentWindow(getDisplay(), w);
+			}
+		}
+		return false;
+	}
 
 	private static long getHandle(Canvas parent) throws LWJGLException {
 		AWTCanvasImplementation awt_impl = AWTGLCanvas.createImplementation();
@@ -623,17 +655,49 @@ final class LinuxDisplay implements DisplayImplementation {
 	
 	static native void setInputFocus(long display, long window, long time);
 
+	private void relayEventToParent(LinuxEvent event_buffer, int event_mask) {
+		tmp_event_buffer.copyFrom(event_buffer);
+		tmp_event_buffer.setWindow(parent_window);
+		tmp_event_buffer.sendEvent(getDisplay(), parent_window, true, event_mask);
+	}
+
+	private void relayEventToParent(LinuxEvent event_buffer) {
+		if (parent == null)
+			return;
+		switch (event_buffer.getType()) {
+			case LinuxEvent.KeyPress:
+				relayEventToParent(event_buffer, KeyPressMask);
+				break;
+			case LinuxEvent.KeyRelease:
+				relayEventToParent(event_buffer, KeyPressMask);
+				break;
+			case LinuxEvent.ButtonPress:
+				relayEventToParent(event_buffer, KeyPressMask);
+				break;
+			case LinuxEvent.ButtonRelease:
+				relayEventToParent(event_buffer, KeyPressMask);
+				break;
+			default:
+				break;
+		}
+	}
+
 	private void processEvents() {
 		while (LinuxEvent.getPending(getDisplay()) > 0) {
 			event_buffer.nextEvent(getDisplay());
 			long event_window = event_buffer.getWindow();
-			if (event_buffer.getType() == LinuxEvent.ButtonPress && parent != null)
-				setInputFocus(getDisplay(), getWindow(), event_buffer.getButtonTime());
+			relayEventToParent(event_buffer);
 			if (event_window != getWindow() || event_buffer.filterEvent(event_window) ||
 					(mouse != null && mouse.filterEvent(grab, shouldWarpPointer(), event_buffer)) ||
 					 (keyboard != null && keyboard.filterEvent(event_buffer)))
 				continue;
 			switch (event_buffer.getType()) {
+				case LinuxEvent.FocusIn:
+					setFocused(true, event_buffer.getFocusDetail());
+					break;
+				case LinuxEvent.FocusOut:
+					setFocused(false, event_buffer.getFocusDetail());
+					break;
 				case LinuxEvent.ClientMessage:
 					if ((event_buffer.getClientFormat() == 32) && (event_buffer.getClientData(0) == delete_atom))
 						close_requested = true;
@@ -641,7 +705,6 @@ final class LinuxDisplay implements DisplayImplementation {
 				case LinuxEvent.MapNotify:
 					dirty = true;
 					minimized = false;
-					updateInputGrab();
 					break;
 				case LinuxEvent.UnmapNotify:
 					dirty = true;
@@ -743,29 +806,41 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	
 	private void checkInput() {
-		long current_focus = nGetInputFocus(getDisplay());
-		focused = current_focus == getWindow();
+		if (parent == null)
+			return;
 		if (focused) {
-			focused_at_least_once = true;
-			acquireInput();
+			if (xembedded && !parent.isFocusOwner() && parent_focus_window_valid) {
+				setInputFocusUnsafe(parent_focus_window);
+			}
 		} else {
-			if (focused_at_least_once)
-				releaseInput();
-			if (parent != null && parent.isFocusOwner()) {
-				setInputFocusUnsafe();
+			if (parent.isFocusOwner()) {
+				if (xembedded) {
+					parent_focus_window = nGetInputFocus(getDisplay());
+					parent_focus_window_valid = true;
+				}
+				setInputFocusUnsafe(getWindow());
 			}
 		}
 	}
-	static native long nGetInputFocus(long display);
-	private static native void grabServer(long display);
-	private static native void ungrabServer(long display);
 
-	private static void setInputFocusUnsafe() {
-		setInputFocus(getDisplay(), getWindow(), CurrentTime);
+	private void setFocused(boolean got_focus, int focus_detail) {
+		if (focused == got_focus || focus_detail == NotifyDetailNone || focus_detail == NotifyPointer || focus_detail == NotifyPointerRoot)
+			return;
+		focused = got_focus;
+		if (focused) {
+			acquireInput();
+		} else {
+			releaseInput();
+		}
+	}
+	static native long nGetInputFocus(long display);
+
+	private void setInputFocusUnsafe(long window) {
+		setInputFocus(getDisplay(), window, CurrentTime);
 		try {
 			checkXError(getDisplay());
 		} catch (LWJGLException e) {
-			// Since we don't have any event timings for XSetInputFocus, a race condition might give a BadMatch, which we'll catch ang ignore
+			// Since we don't have any event timings for XSetInputFocus, a race condition might give a BadMatch, which we'll catch and ignore
 			LWJGLUtil.log("Got exception while trying to focus: " + e);
 		}
 	}
@@ -921,10 +996,6 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 	
-/*	public int isStateKeySet(int key) {
-		return Keyboard.STATE_UNKNOWN;
-	}
-*/
 	private static native long nCreateCursor(long display, int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
 
 	private static long createBlankCursor() {

@@ -288,7 +288,7 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 		return false;
 	cmap = XCreateColormap(disp, parent, vis_info->visual, AllocNone);
 	attribs.colormap = cmap;
-	attribs.event_mask = ExposureMask | /*FocusChangeMask | */VisibilityChangeMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
+	attribs.event_mask = ExposureMask | FocusChangeMask | VisibilityChangeMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
 	attribmask = CWColormap | CWEventMask;
 	if (isLegacyFullscreen(window_mode)) {
 		attribmask |= CWOverrideRedirect;
@@ -334,14 +334,38 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 	return win;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_grabServer(JNIEnv *env, jclass unused, jlong display) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getParentWindow(JNIEnv *env, jclass unused, jlong display, jlong window_ptr) {
 	Display *disp = (Display *)(intptr_t)display;
-	XGrabServer(disp);
+	Window window = (Window)window_ptr;
+	Window root, parent;
+	Window *children;
+	unsigned int nchildren;
+	if (XQueryTree(disp, window, &root, &parent, &children, &nchildren) == 0) {
+		throwException(env, "XQueryTree failed");
+		return None;
+	}
+	if (children != NULL)
+		XFree(children);
+	return parent;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_ungrabServer(JNIEnv *env, jclass unused, jlong display) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_hasProperty(JNIEnv *env, jclass unusued, jlong display, jlong window_ptr, jlong property_ptr) {
 	Display *disp = (Display *)(intptr_t)display;
-	XUngrabServer(disp);
+	Window window = (Window)window_ptr;
+	Atom property = (Atom)property_ptr;
+	int num_props;
+	Atom *properties = XListProperties(disp, window, &num_props);
+	if (properties == NULL)
+		return JNI_FALSE;
+	jboolean result = JNI_FALSE;
+	for (int i = 0; i < num_props; i++) {
+		if (properties[i] == property) {
+			result = JNI_TRUE;
+			break;
+		}
+	}
+	XFree(properties);
+	return result;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setInputFocus(JNIEnv *env, jclass clazz, jlong display, jlong window_ptr, jlong time) {

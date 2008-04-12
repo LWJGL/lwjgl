@@ -41,6 +41,8 @@ import java.nio.ByteBuffer;
  * $Id: LinuxPeerInfo.java 2286 2006-03-23 19:32:21Z matzon $
  */
 final class LinuxEvent {
+	public final static int FocusIn         = 9;
+	public final static int FocusOut        = 10;
 	public final static int KeyPress        = 2;
 	public final static int KeyRelease      = 3;
 	public final static int ButtonPress     = 4;
@@ -58,7 +60,20 @@ final class LinuxEvent {
 	}
 	private static native ByteBuffer createEventBuffer();
 
+	public final void copyFrom(LinuxEvent event) {
+		int pos = event_buffer.position();
+		int event_pos = event.event_buffer.position();
+		event_buffer.put(event.event_buffer);
+		event_buffer.position(pos);
+		event.event_buffer.position(event_pos);
+	}
+
 	public final static native int getPending(long display);
+
+	public final void sendEvent(long display, long window, boolean propagate, long event_mask) {
+		nSendEvent(event_buffer, display, window, propagate, event_mask);
+	}
+	private static native void nSendEvent(ByteBuffer event_buffer, long display, long window, boolean propagate, long event_mask);
 
 	public final boolean filterEvent(long window) {
 		return nFilterEvent(event_buffer, window);
@@ -79,6 +94,23 @@ final class LinuxEvent {
 		return nGetWindow(event_buffer);
 	}
 	private static native long nGetWindow(ByteBuffer event_buffer);
+
+	public final void setWindow(long window) {
+		nSetWindow(event_buffer, window);
+	}
+	private static native void nSetWindow(ByteBuffer event_buffer, long window);
+
+	/* Focus methods */
+
+	public final int getFocusMode() {
+		return nGetFocusMode(event_buffer);
+	}
+	private static native int nGetFocusMode(ByteBuffer event_buffer);
+
+	public final int getFocusDetail() {
+		return nGetFocusDetail(event_buffer);
+	}
+	private static native int nGetFocusDetail(ByteBuffer event_buffer);
 
 	/* ClientMessage methods */
 
