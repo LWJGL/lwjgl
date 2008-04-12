@@ -135,17 +135,6 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nInternAtom(JNIEnv *e
 	return atom;
 }
 
-static void __attribute__ ((destructor)) my_fini(void) { 
-	Display *disp = XOpenDisplay(NULL);
-	if (disp == NULL) {
-		return;
-	}
-	XKeyboardControl repeat_mode;
-	repeat_mode.auto_repeat_mode = AutoRepeatModeDefault;
-	XChangeKeyboardControl(disp, KBAutoRepeatMode, &repeat_mode);
-	XCloseDisplay(disp);
-} 
-
 static void setDecorations(Display *disp, Window window, int dec) {
 	Atom motif_hints_atom = XInternAtom(disp, "_MOTIF_WM_HINTS", False);
 	MotifWmHints motif_hints;
