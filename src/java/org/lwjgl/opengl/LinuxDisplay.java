@@ -43,6 +43,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import java.awt.Canvas;
+import java.awt.event.FocusListener;
+import java.awt.event.FocusEvent;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -126,9 +128,26 @@ final class LinuxDisplay implements DisplayImplementation {
 	private boolean parent_focus_window_valid;
 	private long parent_window;
 	private boolean xembedded;
+	private boolean parent_focused;
+	private boolean parent_focus_changed;
 
 	private LinuxKeyboard keyboard;
 	private LinuxMouse mouse;
+
+	private final FocusListener focus_listener = new FocusListener() {
+		public final void focusGained(FocusEvent e) {
+			synchronized (GlobalLock.lock) {
+				parent_focused = true;
+				parent_focus_changed = true;
+			}
+		}
+		public final void focusLost(FocusEvent e) {
+			synchronized (GlobalLock.lock) {
+				parent_focused = false;
+				parent_focus_changed = true;
+			}
+		}
+	};
 
 	private static ByteBuffer getCurrentGammaRamp() throws LWJGLException {
 		lockAWT();
@@ -395,6 +414,9 @@ final class LinuxDisplay implements DisplayImplementation {
 					long root_window = getRootWindow(getDisplay(), getDefaultScreen());
 					current_window = nCreateWindow(getDisplay(), getDefaultScreen(), handle, mode, current_window_mode, x, y, undecorated, root_window);
 					if (parent != null) {
+						parent.addFocusListener(focus_listener);
+						parent_focused = parent.isFocusOwner();
+						parent_focus_changed = true;
 						parent_window = getHandle(parent);
 						changeSaveSet(getDisplay(), current_window, SetModeInsert, SaveSetRoot, SaveSetUnmap);
 						reparentWindow(getDisplay(), current_window, parent_window, x, y);
@@ -464,6 +486,8 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void destroyWindow() {
 		lockAWT();
 		try {
+			if (parent != null)
+				parent.removeFocusListener(focus_listener);
 			try {
 				setNativeCursor(null);
 			} catch (LWJGLException e) {
@@ -819,21 +843,23 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	
+
 	private void checkInput() {
-		if (parent == null)
+		if (parent == null || !parent_focus_changed)
 			return;
 		if (focused) {
-			if (xembedded && !parent.isFocusOwner() && parent_focus_window_valid) {
+			if (xembedded && !parent_focused && parent_focus_window_valid) {
 				setInputFocusUnsafe(parent_focus_window);
+				parent_focus_changed = false;
 			}
 		} else {
-			if (parent.isFocusOwner()) {
+			if (parent_focused) {
 				if (xembedded) {
 					parent_focus_window = nGetInputFocus(getDisplay());
 					parent_focus_window_valid = true;
 				}
 				setInputFocusUnsafe(getWindow());
+				parent_focus_changed = false;
 			}
 		}
 	}
