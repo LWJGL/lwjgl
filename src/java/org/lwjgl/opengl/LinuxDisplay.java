@@ -468,7 +468,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private boolean isAncestorXEmbedded(long window) throws LWJGLException {
 		long xembed_atom = internAtom("_XEMBED_INFO", true);
 		if (xembed_atom != None) {
-			long w = parent_window;
+			long w = window;
 			while (w != None) {
 				if (hasProperty(getDisplay(), w, xembed_atom))
 					return true;

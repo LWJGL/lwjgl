@@ -85,8 +85,11 @@ static int global_error_handler(Display *disp, XErrorEvent *error) {
 	JNIEnv *env = getThreadEnv();
 	if (env != NULL) {
 		jclass org_lwjgl_LinuxDisplay_class = (*env)->FindClass(env, "org/lwjgl/opengl/LinuxDisplay");
-		if (org_lwjgl_LinuxDisplay_class == NULL)
+		if (org_lwjgl_LinuxDisplay_class == NULL) {
+			// Don't propagate error
+			(*env)->ExceptionClear(env);
 			return 0;
+		}
 		jmethodID handler_method = (*env)->GetStaticMethodID(env, org_lwjgl_LinuxDisplay_class, "globalErrorHandler", "(JJJJJJJ)I");
 		if (handler_method == NULL)
 			return 0;
