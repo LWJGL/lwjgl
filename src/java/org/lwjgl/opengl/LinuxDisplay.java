@@ -285,7 +285,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			String error_msg = getErrorText(display, error_code);
 			throw new LWJGLException("X Error - disp: 0x" + Long.toHexString(error_display) + " serial: " + serial + " error: " + error_msg + " request_code: " + request_code + " minor_code: " + minor_code);
 		} else if (saved_error_handler != 0)
-			callErrorHandler(saved_error_handler, display, event_ptr);
+			return callErrorHandler(saved_error_handler, display, event_ptr);
 		return 0;
 	}
 	private static native String getErrorText(long display, long error_code);
