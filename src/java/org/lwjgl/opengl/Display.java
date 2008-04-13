@@ -310,13 +310,7 @@ public final class Display {
 		}
 	}
 
-	private static void destroyWindow() {
-		if (!window_created) {
-			return;
-		}
-		if (parent != null) {
-			parent.removeComponentListener(component_listener);
-		}
+	private static void releaseDrawable() {
 		try {
 			if (context != null && context.isCurrent()) {
 				Context.releaseCurrentContext();
@@ -325,6 +319,16 @@ public final class Display {
 		} catch (LWJGLException e) {
 			LWJGLUtil.log("Exception occurred while trying to release context: " + e);
 		}
+	}
+
+	private static void destroyWindow() {
+		if (!window_created) {
+			return;
+		}
+		if (parent != null) {
+			parent.removeComponentListener(component_listener);
+		}
+		releaseDrawable();
 
 		// Automatically destroy keyboard & mouse
 		if (Mouse.isCreated()) {
@@ -932,8 +936,9 @@ public final class Display {
 				return;
 			}
 
-			destroyWindow();
+			releaseDrawable();
 			destroyContext();
+			destroyWindow();
 			destroyPeerInfo();
 			x = y = -1;
 			cached_icons = null;
