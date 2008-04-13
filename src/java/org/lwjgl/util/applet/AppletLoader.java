@@ -616,7 +616,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		Class[] parameters = new Class[] {URL.class};
 		
 		// modify class path by adding downloaded jars to it
-		for (int i = 0; i < urlList.length; i++) {
+		for (int i = 0; i < urlList.length-1; i++) {
 			// get location of jar as a url
 			URL u = new URL("file:" + path + getFileName(urlList[i]));
 		
