@@ -1092,7 +1092,7 @@ public final class Display {
 				}
 			}
 
-			if(Display.isCreated()) {
+			if (Display.isCreated() && parent == null) {
 				return display_impl.setIcon(cached_icons);
 			} else {
 				return 0;
