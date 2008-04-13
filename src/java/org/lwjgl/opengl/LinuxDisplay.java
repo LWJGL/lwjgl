@@ -291,15 +291,15 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native String getErrorText(long display, long error_code);
 
 	static void decDisplay() {
-		display_connection_usage_count--;
-		if (display_connection_usage_count < 0)
-			throw new InternalError("display_connection_usage_count < 0: " + display_connection_usage_count);
 		/*
 		 * Some drivers (at least some versions of the radeon dri driver)
 		 * don't like it when the display is closed and later re-opened,
 		 * so we'll just let the singleton display connection leak.
 		 */
-/*		if (display_connection_usage_count == 0) {
+/*		display_connection_usage_count--;
+		if (display_connection_usage_count < 0)
+			throw new InternalError("display_connection_usage_count < 0: " + display_connection_usage_count);
+		if (display_connection_usage_count == 0) {
 			closeDisplay(display);
 			resetErrorHandler(saved_error_handler);
 			display = 0;
