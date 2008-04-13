@@ -219,7 +219,7 @@ public class FullScreenWindowedTest {
 	 * Cleans up the test
 	 */
 	private void cleanup() {
-//		Display.destroy();
+		Display.destroy();
 	}
 
 	/**
