@@ -427,7 +427,7 @@ final class LinuxDisplay implements DisplayImplementation {
 					current_window_mode = getWindowMode(fullscreen);
 					boolean undecorated = Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated") || current_window_mode != WINDOWED;
 					this.parent = parent;
-					long parent_window = parent != null ? getHandle(parent) : getRootWindow(getDisplay(), getDefaultScreen());
+					parent_window = parent != null ? getHandle(parent) : getRootWindow(getDisplay(), getDefaultScreen());
 					current_window = nCreateWindow(getDisplay(), getDefaultScreen(), handle, mode, current_window_mode, x, y, undecorated, parent_window);
 					mapRaised(getDisplay(), current_window);
 					xembedded = parent != null && isAncestorXEmbedded(parent_window);
