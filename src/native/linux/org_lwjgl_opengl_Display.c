@@ -76,35 +76,27 @@ static Pixmap current_icon_mask_pixmap;
 
 static Visual *current_visual;
 
-static bool async_x_error;
-static char error_message[ERR_MSG_SIZE];
-
 static bool checkXError(JNIEnv *env, Display *disp) {
 	XSync(disp, False);
-	if (async_x_error) {
-		async_x_error = false;
-		if (env != NULL)
-			throwException(env, error_message);
-		else
-			printfDebug(error_message);
-		return false;
-	} else
-		return true;
+	return (*env)->ExceptionCheck(env) == JNI_FALSE;
 }
 
-static int errorHandler(Display *disp, XErrorEvent *error) {
-	char err_msg_buffer[ERR_MSG_SIZE];
-	XGetErrorText(disp, error->error_code, err_msg_buffer, ERR_MSG_SIZE);
-	err_msg_buffer[ERR_MSG_SIZE - 1] = '\0';
-	snprintf(error_message, ERR_MSG_SIZE, "X Error - serial: %d, error_code: %s, request_code: %d, minor_code: %d", (int)error->serial, err_msg_buffer, (int)error->request_code, (int)error->minor_code);
-	error_message[ERR_MSG_SIZE - 1] = '\0';
-	async_x_error = true;
-	return 0;
+static int global_error_handler(Display *disp, XErrorEvent *error) {
+	JNIEnv *env = getThreadEnv();
+	if (env != NULL) {
+		jclass org_lwjgl_LinuxDisplay_class = (*env)->FindClass(env, "org/lwjgl/opengl/LinuxDisplay");
+		if (org_lwjgl_LinuxDisplay_class == NULL)
+			return 0;
+		jmethodID handler_method = (*env)->GetStaticMethodID(env, org_lwjgl_LinuxDisplay_class, "globalErrorHandler", "(JJJJJJJ)I");
+		if (handler_method == NULL)
+			return 0;
+		return (*env)->CallStaticIntMethod(env, org_lwjgl_LinuxDisplay_class, handler_method, (jlong)(intptr_t)disp, (jlong)(intptr_t)error, 
+				(jlong)(intptr_t)error->display, (jlong)error->serial, (jlong)error->error_code, (jlong)error->request_code, (jlong)error->minor_code);
+	} else
+		return 0;
 }
 
 static jlong openDisplay(JNIEnv *env) {
-	async_x_error = false;
-	XSetErrorHandler(errorHandler);
 	Display *display_connection = XOpenDisplay(NULL);
 	if (display_connection == NULL) {
 		throwException(env, "Could not open X display connection");
@@ -113,10 +105,33 @@ static jlong openDisplay(JNIEnv *env) {
 	return (intptr_t)display_connection;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_checkXError(JNIEnv *env, jclass unused, jlong display_ptr) {
+JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getErrorText(JNIEnv *env, jclass unused, jlong display_ptr, jlong error_code) {
 	Display *disp = (Display *)(intptr_t)display_ptr;
-	XSync(disp, False);
-	checkXError(env, disp);
+	char err_msg_buffer[ERR_MSG_SIZE];
+	XGetErrorText(disp, error_code, err_msg_buffer, ERR_MSG_SIZE);
+	err_msg_buffer[ERR_MSG_SIZE - 1] = '\0';
+	return NewStringNativeWithLength(env, err_msg_buffer, strlen(err_msg_buffer));
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_callErrorHandler(JNIEnv *env, jclass unused, jlong handler_ptr, jlong display_ptr, jlong event_ptr) {
+	XErrorHandler handler = (XErrorHandler)(intptr_t)handler_ptr;
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	XErrorEvent *event = (XErrorEvent *)(intptr_t)event_ptr;
+	return (jint)handler(disp, event);
+}
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setErrorHandler(JNIEnv *env, jclass unused) {
+	return (intptr_t)XSetErrorHandler(global_error_handler);
+}
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_resetErrorHandler(JNIEnv *env, jclass unused, jlong handler_ptr) {
+	XErrorHandler handler = (XErrorHandler)(intptr_t)handler_ptr;
+	return (intptr_t)XSetErrorHandler(handler);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_sync(JNIEnv *env, jclass unused, jlong display_ptr, jboolean throw_away_events) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	XSync(disp, throw_away_events ? True : False);
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetDefaultScreen(JNIEnv *env, jclass unused, jlong display_ptr) {
@@ -236,6 +251,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReshape(JNIEnv *env, 
 	Window window = (Window)window_ptr;
 	XMoveWindow(disp, window, x, y);
 	XResizeWindow(disp, window, width, height);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_synchronize(JNIEnv *env, jclass clazz, jlong display, jboolean synchronize) {
+	Display *disp = (Display *)(intptr_t)display;
+	XSynchronize(disp, synchronize ? True : False);
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getRootWindow(JNIEnv *env, jclass clazz, jlong display, jint screen) {

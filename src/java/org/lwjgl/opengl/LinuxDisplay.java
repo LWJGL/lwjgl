@@ -90,6 +90,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	/** Current X11 Display pointer */
 	private static long display;
 	private static long current_window;
+	private static long saved_error_handler;
 	
 	private static int display_connection_usage_count = 0;
 
@@ -268,22 +269,39 @@ final class LinuxDisplay implements DisplayImplementation {
 	static void incDisplay() throws LWJGLException {
 		if (display_connection_usage_count == 0) {
 			GLContext.loadOpenGLLibrary();
+			saved_error_handler = setErrorHandler();
 			display = openDisplay();
+//			synchronize(display, true);
 		}
 		display_connection_usage_count++;
 	}
-	
+	private static native int callErrorHandler(long handler, long display, long error_ptr);
+	private static native long setErrorHandler();
+	private static native long resetErrorHandler(long handler);
+	private static native void synchronize(long display, boolean synchronize);
+
+	private static int globalErrorHandler(long display, long event_ptr, long error_display, long serial, long error_code, long request_code, long minor_code) throws LWJGLException {
+		if (display == getDisplay()) {
+			String error_msg = getErrorText(display, error_code);
+			throw new LWJGLException("X Error - disp: 0x" + Long.toHexString(error_display) + " serial: " + serial + " error: " + error_msg + " request_code: " + request_code + " minor_code: " + minor_code);
+		} else if (saved_error_handler != 0)
+			callErrorHandler(saved_error_handler, display, event_ptr);
+		return 0;
+	}
+	private static native String getErrorText(long display, long error_code);
+
 	static void decDisplay() {
+		display_connection_usage_count--;
+		if (display_connection_usage_count < 0)
+			throw new InternalError("display_connection_usage_count < 0: " + display_connection_usage_count);
 		/*
 		 * Some drivers (at least some versions of the radeon dri driver)
 		 * don't like it when the display is closed and later re-opened,
 		 * so we'll just let the singleton display connection leak.
 		 */
-/*		display_connection_usage_count--;
-		if (display_connection_usage_count < 0)
-			throw new InternalError("display_connection_usage_count < 0: " + display_connection_usage_count);
-		if (display_connection_usage_count == 0) {
+/*		if (display_connection_usage_count == 0) {
 			closeDisplay(display);
+			resetErrorHandler(saved_error_handler);
 			display = 0;
 			GLContext.unloadOpenGLLibrary();	
 		}*/
@@ -870,15 +888,15 @@ final class LinuxDisplay implements DisplayImplementation {
 	static native long nGetInputFocus(long display);
 
 	private void setInputFocusUnsafe(long window) {
-		setInputFocus(getDisplay(), window, CurrentTime);
 		try {
-			checkXError(getDisplay());
+			setInputFocus(getDisplay(), window, CurrentTime);
+			sync(getDisplay(), false);
 		} catch (LWJGLException e) {
 			// Since we don't have any event timings for XSetInputFocus, a race condition might give a BadMatch, which we'll catch and ignore
 			LWJGLUtil.log("Got exception while trying to focus: " + e);
 		}
 	}
-	private static native void checkXError(long display) throws LWJGLException;
+	private static native void sync(long display, boolean throw_away_events) throws LWJGLException;
 
 	private void releaseInput() {
 		if (isLegacyFullscreen() || input_released)

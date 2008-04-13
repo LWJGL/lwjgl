@@ -1,4 +1,7 @@
 {
-	global: Java_*;
+	global:
+		Java_*;
+		JNI_OnLoad;
+		JNI_OnUnload;
 	local: *;
 };
