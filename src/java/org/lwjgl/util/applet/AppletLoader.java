@@ -47,6 +47,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -59,6 +60,8 @@ import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Pack200;
 
 /**
  * <p>
@@ -99,6 +102,7 @@ import java.util.jar.JarFile;
  * $Id$
  */
 public class AppletLoader extends Applet implements Runnable, AppletStub {
+	
 	/** initializing */
 	public static final int STATE_INIT 						= 1;
 	
@@ -192,6 +196,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/** state of applet loader */
 	protected int		state = STATE_INIT;
 	
+	/** whether lzma is supported */
+	protected boolean 	lzmaSupported = false;
+	
+	/** whether pack200 is supported */
+	protected boolean 	pack200Supported = false;
+	
 	/** generic error message to display on error */
 	protected String[] 	genericErrorMessage = {	"An error occured while loading the applet.",
 												"Plese contact support to resolve this issue.",
@@ -209,7 +219,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * @see java.applet.Applet#init()
 	 */
 	public void init() {
-		
 		state = STATE_INIT;
 		
 		// sanity check
@@ -242,6 +251,22 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		if(logo == null || progressbar == null) {
 			fatalErrorOccured("Unable to load logo and progressbar images");
 		}
+		
+		// check for lzma support
+		try {
+			Class.forName("LZMA.LzmaInputStream");
+			lzmaSupported = true;
+		} catch (Throwable e) {
+			/* no lzma support */
+		}
+		
+		// check pack200 support
+		try {
+			java.util.jar.Pack200.class.getSimpleName();
+			pack200Supported = true;
+		} catch (Throwable e) {
+			/* no pack200 support */
+		}		
 	}
 
 	/*
@@ -419,6 +444,22 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				return "unknown state";
 		}
 	}
+	
+	/**
+	 * Trims the passed file string based on the available capabilities
+	 * @param file string of files to be trimmed
+	 * @return trimmed string based on capabilities of client
+	 */
+	protected String trimExtensionByCapabilities(String file) {
+		if (!pack200Supported) {
+			file = file.replaceAll(".pack", "");
+		}
+		
+		if (!lzmaSupported) {
+			file = file.replaceAll(".lzma", "");
+		}	
+		return file;
+	}
 
 	/**
 	 * Reads list of jars to download and adds the urls to urlList
@@ -430,6 +471,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
 		// jars to load
 		String jarList = getParameter("al_jars");
+		
+		jarList = trimExtensionByCapabilities(jarList);
 		
 		StringTokenizer jar = new StringTokenizer(jarList, ", ");
 
@@ -461,6 +504,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		if (nativeJar == null) {
 			fatalErrorOccured("no lwjgl natives files found");
 		} else {
+			nativeJar = trimExtensionByCapabilities(nativeJar);
 			urlList[jarCount - 1] = new URL(path, nativeJar);
 		}
 	}
@@ -476,7 +520,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * 
 	 */
 	public void run() {
-		
 		state = STATE_CHECKING_CACHE;
 		
  		percentage = 5;
@@ -542,7 +585,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			// if jars not available or need updating download them
 			if (!cacheAvailable) {
 				// downloads jars from the server
-				downloadJars(path);		// 10-65%
+				downloadJars(path);		// 10-55%
+				
+				// Extract Pack and LZMA files
+				extractJars(path);		// 55-65%
 
 				// Extracts Native Files
 				extractNatives(path);	// 65-85%
@@ -699,7 +745,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			if(debugMode) {
 				sleep(2000);
 			}
-			
+
 			urlconnection = urlList[i].openConnection();
 
 			String currentFile = getFileName(urlList[i]);
@@ -714,7 +760,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				}
 				fos.write(buffer, 0, bufferSize);
 				currentSizeDownload += bufferSize;
-				percentage = initialPercentage + ((currentSizeDownload * 55) / totalSizeDownload);
+				percentage = initialPercentage + ((currentSizeDownload * 45) / totalSizeDownload);
 				subtaskMessage = "Retrieving: " + currentFile + " " + ((currentSizeDownload * 100) / totalSizeDownload) + "%";
 			}
 			
@@ -729,7 +775,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * @param urlconnection connection to get input stream from
 	 * @return InputStream or null if not possible
 	 */
-	private InputStream getJarInputStream(final String currentFile, final URLConnection urlconnection) throws Exception {
+	protected InputStream getJarInputStream(final String currentFile, final URLConnection urlconnection) throws Exception {
 		final InputStream[] is = new InputStream[1];
 		
 		// try to get the input stream 3 times. 
@@ -773,6 +819,108 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
 		return is[0];
 	}
+	
+	/**
+	 *  Extract LZMA File
+	 *  @param in Input path to pack file
+	 *  @param out output path to resulting file
+	 *  @throws exception if any errors occur
+	 */
+	protected void extractLZMA(String in, String out) throws Exception {
+		
+		File f = new File(in);
+		FileInputStream fileInputHandle = new FileInputStream(f);
+
+		// use reflection to avoid hard dependency
+		Class clazz = Class.forName( "LZMA.LzmaInputStream" );
+		Constructor constructor = clazz.getDeclaredConstructor( new Class[] {InputStream.class} );
+		InputStream inputHandle = (InputStream) constructor.newInstance( new Object[] {fileInputHandle} );
+
+		OutputStream outputHandle;
+		outputHandle = new FileOutputStream(out);
+		
+		byte [] buffer = new byte [1<<14];
+		
+		int ret = inputHandle.read(buffer);
+		while (ret >= 1) {
+			outputHandle.write(buffer,0,ret);
+			ret = inputHandle.read(buffer);
+		}
+
+		inputHandle.close();
+		outputHandle.close();
+
+		outputHandle = null;
+		inputHandle = null;
+		
+		// delete LZMA file, as it is no longer needed
+		f.delete();
+		
+		if(debugMode) {
+			sleep(1000);
+		}
+	}
+	
+	/**
+	 *  Extract Pack File
+	 *  @param in Input path to pack file
+	 *  @param out output path to resulting file
+	 *  @throws exception if any errors occur
+	 */
+	protected void extractPack(String in, String out) throws Exception {		
+		File f = new File(in);
+	    FileOutputStream fostream = new FileOutputStream(out);
+	    JarOutputStream jostream = new JarOutputStream(fostream);
+	    
+	    Pack200.Unpacker unpacker = Pack200.newUnpacker();
+	    unpacker.unpack(f, jostream);
+	    jostream.close();
+	    
+	    // delete pack file as its no longer needed
+	    f.delete();
+	    
+	    if(debugMode) {
+			sleep(1000);
+		}
+	}
+	
+	/**
+	 *  Extract all jars from any lzma/pack files
+	 * 
+	 *  @param path output path
+	 *  @throws exception if any errors occur
+	 */
+	protected void extractJars(String path) throws Exception {
+		state = STATE_EXTRACTING_PACKAGES;
+		
+		float increment = (float) 10.0 / urlList.length;
+		// extract all lzma and pack.lzma files
+		for (int i = 0; i < urlList.length; i++) {
+			percentage += (int) (increment * (i+1));
+			String filename = getFileName(urlList[i]);
+			
+			if(debugMode) {
+				sleep(1000);
+			}
+			
+			if (filename.endsWith(".pack.lzma")) {
+				extractLZMA(path + filename, path + filename.replaceAll(".lzma", ""));
+				extractPack(path + filename.replaceAll(".lzma", ""), path + filename.replaceAll(".pack.lzma", ""));
+				// update list to contain .jar file
+				urlList[i] = new URL("file://" + path + filename.replaceAll(".pack.lzma", ""));
+			} 
+			else if (filename.endsWith(".pack")) {
+				extractPack(path + filename, path + filename.replace(".pack", ""));
+				// update list to contain .jar file
+				urlList[i] = new URL("file://" + path + filename.replaceAll(".pack", ""));
+			}
+			else if (filename.endsWith(".lzma")) {
+				extractLZMA(path + filename, path + filename.replace(".lzma", ""));
+				// update list to contain .jar file
+				urlList[i] = new URL("file://" + path + filename.replaceAll(".lzma", ""));
+			}
+		}
+	}	
 
 	/**
 	 * This method will extract all file from the native jar and extract them
@@ -783,7 +931,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * @throws Exception if it fails to extract files
 	 */
 	protected void extractNatives(String path) throws Exception {
-		
+
 		state = STATE_EXTRACTING_PACKAGES;
 		
 		int initialPercentage = percentage;
