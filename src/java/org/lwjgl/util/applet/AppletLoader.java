@@ -658,6 +658,21 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		state = STATE_UPDATING_CLASSPATH;
 		
 		percentage = 95;
+		
+		// update filenames to match extracted files
+		for (int i = 0; i < urlList.length; i++) {
+			String filename = getFileName(urlList[i]);
+			
+			if (filename.endsWith(".pack.lzma")) {
+				urlList[i] = new URL("file://" + path + filename.replaceAll(".pack.lzma", ""));
+			} 
+			else if (filename.endsWith(".pack")) {
+				urlList[i] = new URL("file://" + path + filename.replaceAll(".pack", ""));
+			}
+			else if (filename.endsWith(".lzma")) {
+				urlList[i] = new URL("file://" + path + filename.replaceAll(".lzma", ""));
+			}
+		}		
 
 		Class[] parameters = new Class[] {URL.class};
 		
@@ -906,18 +921,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			if (filename.endsWith(".pack.lzma")) {
 				extractLZMA(path + filename, path + filename.replaceAll(".lzma", ""));
 				extractPack(path + filename.replaceAll(".lzma", ""), path + filename.replaceAll(".pack.lzma", ""));
-				// update list to contain .jar file
-				urlList[i] = new URL("file://" + path + filename.replaceAll(".pack.lzma", ""));
 			} 
 			else if (filename.endsWith(".pack")) {
 				extractPack(path + filename, path + filename.replace(".pack", ""));
-				// update list to contain .jar file
-				urlList[i] = new URL("file://" + path + filename.replaceAll(".pack", ""));
 			}
 			else if (filename.endsWith(".lzma")) {
 				extractLZMA(path + filename, path + filename.replace(".lzma", ""));
-				// update list to contain .jar file
-				urlList[i] = new URL("file://" + path + filename.replaceAll(".lzma", ""));
 			}
 		}
 	}	
