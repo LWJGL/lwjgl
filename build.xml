@@ -293,7 +293,34 @@
     	<arg value="${input}"/>
     	<arg value="${output}"/>
    	</java>
-	</target>	
+	</target>
+	
+	<target name="compress-sign-class">
+		<antcall target="repack200">
+			<param name="input" value="${dir}${jarfile}.jar"/>
+			<param name="output" value="${dir}${jarfile}-repack.jar"/>
+		</antcall>
+		<signjar jar="${dir}${jarfile}-repack.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<antcall target="pack200">
+			<param name="input" value="${dir}${jarfile}-repack.jar"/>
+			<param name="output" value="${dir}${jarfile}.jar.pack"/>
+		</antcall>
+		<antcall target="lzma">
+			<param name="input" value="${dir}${jarfile}.jar.pack"/>
+			<param name="output" value="${dir}${jarfile}.jar.pack.lzma"/>
+		</antcall>
+		<delete file="${dir}${jarfile}-repack.jar"/>
+		<delete file="${dir}${jarfile}.jar.pack"/>
+		<delete file="${dir}${jarfile}.jar"/>
+	</target>
+	
+	<target name="compress-resource">
+		<antcall target="lzma">
+			<param name="input" value="${input}"/>
+			<param name="output" value="${output}"/>
+		</antcall>
+		<delete file="${input}"/>
+	</target>
 	
 	<target name="applettest" depends="applet">
 		<exec executable="appletviewer">

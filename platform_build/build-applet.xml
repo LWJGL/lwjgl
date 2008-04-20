@@ -50,9 +50,9 @@
 		</jar>
 		<signjar jar="applet/macosx_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 			
-	  	<jar destfile="${lwjgl.lib}/lwjgl_util_applet.jar" update="true">
-	  		<fileset dir="${lwjgl.res}" includes="applet*"/>
-	  	</jar>
+  	<jar destfile="${lwjgl.lib}/lwjgl_util_applet.jar" update="true">
+  		<fileset dir="${lwjgl.res}" includes="applet*"/>
+  	</jar>
 
 	  <copy file="${lwjgl.lib}/lwjgl.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/lwjgl_util_applet.jar" todir="applet"/>
@@ -62,33 +62,39 @@
 		<zip destfile="applet/res.jar">
 		  <zipfileset dir="${lwjgl.res}" includes="Footsteps.wav, ILtest.tga, Missing_you.mod"/>
 		</zip>
+		<signjar jar="applet/lwjgl_util_applet.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		
-		<!--<antcall target="applet-compress">
+		<antcall target="compress-sign-class">
 			<param name="dir" value="applet/"/>
 			<param name="jarfile" value="lwjgl"/>
 		</antcall>
-		<fail/>-->
-	</target>
-	
-	<target name="applet-compress">
-		<antcall target="repack">
-			<param name="input" value="${dir}${jarfile}.jar"/>
-			<param name="output" value="${dir}${jarfile}-repack.jar"/>
+		<antcall target="compress-sign-class">
+			<param name="dir" value="applet/"/>
+			<param name="jarfile" value="lwjgl_util"/>
 		</antcall>
-		<signjar jar="${dir}${jarfile}.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
-		<signjar jar="${dir}${jarfile}-repack.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
-		<antcall target="pack">
-			<param name="input" value="${dir}${jarfile}-repack.jar"/>
-			<param name="output" value="${dir}${jarfile}.jar.pack"/>
+		<antcall target="compress-sign-class">
+			<param name="dir" value="applet/"/>
+			<param name="jarfile" value="jinput"/>
 		</antcall>
-		<antcall target="lzma">
-			<param name="input" value="${dir}${jarfile}.jar.pack"/>
-			<param name="output" value="${dir}${jarfile}.jar.pack.lzma"/>
+		<antcall target="compress-sign-class">
+			<param name="dir" value="applet/"/>
+			<param name="jarfile" value="lwjgl_applet"/>
 		</antcall>
-		<antcall target="lzma">
-			<param name="input" value="${dir}${jarfile}.jar"/>
-			<param name="output" value="${dir}${jarfile}.jar.lzma"/>
+		<antcall target="compress-resource">
+			<param name="input" value="applet/windows_natives.jar"/>
+			<param name="output" value="applet/windows_natives.jar.lzma"/>
 		</antcall>
-		<delete file="${dir}${jarfile}-repack.jar"/>
+		<antcall target="compress-resource">
+			<param name="input" value="applet/macosx_natives.jar"/>
+			<param name="output" value="applet/macosx_natives.jar.lzma"/>
+		</antcall>
+		<antcall target="compress-resource">
+			<param name="input" value="applet/linux_natives.jar"/>
+			<param name="output" value="applet/linux_natives.jar.lzma"/>
+		</antcall>
+		<antcall target="compress-resource">
+			<param name="input" value="applet/res.jar"/>
+			<param name="output" value="applet/res.jar.lzma"/>
+		</antcall>
 	</target>
 </project>
