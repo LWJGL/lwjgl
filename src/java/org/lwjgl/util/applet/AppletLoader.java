@@ -659,27 +659,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
 		percentage = 95;
 		
-		// update filenames to match extracted files
-		for (int i = 0; i < urlList.length; i++) {
-			String filename = getFileName(urlList[i]);
-			
-			if (filename.endsWith(".pack.lzma")) {
-				urlList[i] = new URL("file://" + path + filename.replaceAll(".pack.lzma", ""));
-			} 
-			else if (filename.endsWith(".pack")) {
-				urlList[i] = new URL("file://" + path + filename.replaceAll(".pack", ""));
-			}
-			else if (filename.endsWith(".lzma")) {
-				urlList[i] = new URL("file://" + path + filename.replaceAll(".lzma", ""));
-			}
-		}		
-
 		Class[] parameters = new Class[] {URL.class};
 		
 		// modify class path by adding downloaded jars to it
 		for (int i = 0; i < urlList.length-1; i++) {
 			// get location of jar as a url
-			URL u = new URL("file:" + path + getFileName(urlList[i]));
+			URL u = new URL("file:" + path + getJarName(urlList[i]));
 		
 			// add to class path
 			Method method = URLClassLoader.class.getDeclaredMethod("addURL", parameters);
@@ -946,7 +931,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		int initialPercentage = percentage;
 
 		// get name of jar file with natives from urlList, it will be the last url
-		String nativeJar = getFileName(urlList[urlList.length - 1]);
+		String nativeJar = getJarName(urlList[urlList.length - 1]);
 
 		// get the current certificate to compare against native files 
 		Certificate[] certificate = AppletLoader.class.getProtectionDomain().getCodeSource().getCertificates();
@@ -1076,7 +1061,27 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		}
 		return null;
 	}
-		
+
+	
+	/**
+	 * Get jar name from URL.
+	 * 
+	 * @param url Get jar file name from this url
+	 * @return file name as string
+	 */
+	protected String getJarName(URL url) {
+		String fileName = url.getFile();
+
+		if (fileName.endsWith(".pack.lzma")) {
+			fileName = fileName.replaceAll(".pack.lzma", "");
+		} else if (fileName.endsWith(".pack")) {
+			fileName = fileName.replaceAll(".pack", "");
+		} else if (fileName.endsWith(".lzma")) {
+			fileName = fileName.replaceAll(".lzma", "");
+		}
+
+		return fileName.substring(fileName.lastIndexOf('/') + 1);
+	}	
 	
 	/**
 	 * Get file name portion of URL.
