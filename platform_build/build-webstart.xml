@@ -1,0 +1,59 @@
+<project name="webstart">
+	<target name="webstart_demo" depends="jars">
+		<antcall target="-webstart_demo">
+		    <param name="keystore" value="applet/lwjglkeystore"/>
+			<param name="alias" value="lwjgl"/>			
+			<param name="password" value="123456"/>			
+		  </antcall>
+	</target>
+	
+	<target name="webstart_demo-release" depends="jars">
+		<input 	message="Please type the password for the keystore" addproperty="sign.pwd"/>
+
+		<antcall target="-webstart_demo">
+		    <param name="keystore" value="signing/matzon_java_code_signing.keystore"/>
+			<param name="alias" value="oddlabs_java_code_signing"/>
+			<param name="password" value="${sign.pwd}"/>
+		  </antcall>
+	</target>	
+	
+	<!-- -->
+	<target name="-webstart_demo" description="Using released files, creates the necessary files used for jnlp demos">
+	
+		<!-- delete existing temp -->
+		<delete dir="${lwjgl.temp}"/>		
+		
+		<!-- unzip common files -->
+		<unzip src="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip" dest="${lwjgl.temp}/jnlp/temp" overwrite="true"/>
+		
+		<!-- move files to unified structure -->
+		<move todir="${lwjgl.temp}/jnlp/temp">
+			<fileset dir="${lwjgl.temp}/jnlp/temp/lwjgl-${lwjgl.version}/">
+				<include name="**"/>
+			</fileset>
+		</move>
+		
+		<!-- move relevant files to root -->
+		<move todir="${lwjgl.temp}/jnlp/" flatten="true">
+			<fileset dir="${lwjgl.temp}/jnlp/temp">
+				<include name="**/**.jar"/>
+			</fileset>
+		</move>
+		
+		<!-- create native jars -->
+		<jar destfile="${lwjgl.temp}/jnlp/native_win32.jar" basedir="${lwjgl.temp}/jnlp/temp/native/win32"/>
+		<jar destfile="${lwjgl.temp}/jnlp/native_linux.jar" basedir="${lwjgl.temp}/jnlp/temp/native/linux"/>
+		<jar destfile="${lwjgl.temp}/jnlp/native_macosx.jar" basedir="${lwjgl.temp}/jnlp/temp/native/macosx"/>
+		
+		<!-- create media jar -->
+		<jar destfile="${lwjgl.temp}/jnlp/media.jar" basedir="${lwjgl.res}"/>	
+	
+		<!-- sign 'em -->
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_util.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_linux.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_win32.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/jinput.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+	</target>
+</project>
