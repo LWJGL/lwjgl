@@ -346,7 +346,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		if(state == STATE_DONE) {
 			return;
 		}
-
+		
 		// create offscreen if missing
 		if (offscreen == null) {
 			offscreen = createImage(getWidth(), getHeight());
@@ -524,10 +524,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
  		percentage = 5;
 
-		try {
-			if(debugMode) {
-				sleep(2000);
-			}
+ 		try {
+			debug_sleep(2000);
 
 			// parse the urls for the jars into the url list
 			loadJarURLs();
@@ -575,9 +573,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 					if (latestVersion <= readVersionFile(dir)) {
 						cacheAvailable = true;
 						percentage = 90;
-						if(debugMode) {
-							sleep(2000);
-						}
+						debug_sleep(2000);
 					}
 				}
 			}
@@ -672,9 +668,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			method.invoke(getClass().getClassLoader(), new Object[] {u});
 		}
 		
-		if(debugMode) {
-			sleep(2000);
-		}
+		debug_sleep(2000);
 
 		// add natives files path to native class path
 		System.setProperty("org.lwjgl.librarypath", path + "natives");
@@ -692,9 +686,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		state = STATE_SWITCHING_APPLET;
 		percentage = 100;
 		
-		if(debugMode) {
-			sleep(2000);
-		}
+		debug_sleep(2000);
 
 		Class appletClass = Class.forName(getParameter("al_main"));
 		lwjglApplet = (Applet) appletClass.newInstance();
@@ -742,9 +734,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		// download each jar
 		byte buffer[] = new byte[65536];
 		for (int i = 0; i < urlList.length; i++) {
-			if(debugMode) {
-				sleep(2000);
-			}
+			debug_sleep(2000);
 
 			urlconnection = urlList[i].openConnection();
 
@@ -755,9 +745,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 			int bufferSize;
 			while ((bufferSize = inputstream.read(buffer, 0, buffer.length)) != -1) {
-				if(debugMode) {
-					sleep(10);
-				}
+				debug_sleep(10);
 				fos.write(buffer, 0, bufferSize);
 				currentSizeDownload += bufferSize;
 				percentage = initialPercentage + ((currentSizeDownload * 45) / totalSizeDownload);
@@ -855,10 +843,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
 		// delete LZMA file, as it is no longer needed
 		f.delete();
-		
-		if(debugMode) {
-			sleep(1000);
-		}
 	}
 	
 	/**
@@ -878,10 +862,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	    
 	    // delete pack file as its no longer needed
 	    f.delete();
-	    
-	    if(debugMode) {
-			sleep(1000);
-		}
 	}
 	
 	/**
@@ -896,21 +876,26 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		float increment = (float) 10.0 / urlList.length;
 		// extract all lzma and pack.lzma files
 		for (int i = 0; i < urlList.length; i++) {
-			percentage += (int) (increment * (i+1));
+			percentage = 55 + (int) (increment * (i+1));
 			String filename = getFileName(urlList[i]);
 			
-			if(debugMode) {
-				sleep(1000);
-			}
-			
 			if (filename.endsWith(".pack.lzma")) {
+				subtaskMessage = "Extracting: " + filename + " to " + filename.replaceAll(".lzma", "");
+				debug_sleep(1000);
 				extractLZMA(path + filename, path + filename.replaceAll(".lzma", ""));
+				
+				subtaskMessage = "Extracting: " + filename.replaceAll(".lzma", "") + " to " + filename.replaceAll(".pack.lzma", "");
+				debug_sleep(1000);
 				extractPack(path + filename.replaceAll(".lzma", ""), path + filename.replaceAll(".pack.lzma", ""));
 			} 
 			else if (filename.endsWith(".pack")) {
+				subtaskMessage = "Extracting: " + filename + " to " + filename.replace(".pack", "");
+				debug_sleep(1000);
 				extractPack(path + filename, path + filename.replace(".pack", ""));
 			}
 			else if (filename.endsWith(".lzma")) {
+				subtaskMessage = "Extracting: " + filename + " to " + filename.replace(".lzma", "");
+				debug_sleep(1000);
 				extractLZMA(path + filename, path + filename.replace(".lzma", ""));
 			}
 		}
@@ -986,9 +971,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				}
 			}
 			
-			if(debugMode) {
-				sleep(1000);
-			}
+			debug_sleep(1000);
 
 			InputStream in = jarFile.getInputStream(jarFile.getEntry(entry.getName()));
 			OutputStream out = new FileOutputStream(path + "natives" + File.separator + entry.getName());
@@ -997,9 +980,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			byte buffer[] = new byte[65536];
 
 			while ((bufferSize = in.read(buffer, 0, buffer.length)) != -1) {
-				if(debugMode) {
-					sleep(10);
-				}
+				debug_sleep(10);
 				out.write(buffer, 0, bufferSize);
 				currentSizeExtract += bufferSize;
 
@@ -1137,6 +1118,17 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	
 	/**
 	 * Utility method for sleeping
+	 * Will only really sleep if debug has been enabled
+	 * @param ms milliseconds to sleep
+	 */
+	protected void debug_sleep(long ms) {
+		if(debugMode) {
+			sleep(ms);
+		}
+	}
+	
+	/**
+	 * Utility method for sleeping
 	 * @param ms milliseconds to sleep
 	 */
 	protected void sleep(long ms) {
@@ -1145,5 +1137,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		} catch (Exception e) {
 			/* ignored */
 		}
-	}
+	}	
+	
+
 }
