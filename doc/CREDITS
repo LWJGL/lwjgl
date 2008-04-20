@@ -25,6 +25,7 @@ The LWJGL project includes files from or depends on the following projects:
  - OpenGL, SGI - http://opengl.org/
  - OpenAL, Creative Labs - http://openal.org/
  - jinput, Sun - https://jinput.dev.java.net/
+ - lzma, p7zip - http://p7zip.sourceforge.net/
 
 Please see the /doc/3rdparty/ directory for licenses.
 
