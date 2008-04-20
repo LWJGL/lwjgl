@@ -5,7 +5,7 @@
   </head>
   <body>
 
-  <applet code="org.lwjgl.util.applet.AppletLoader" archive="lwjgl_util_applet.jar" codebase="." width="640" height="480">
+  <applet code="org.lwjgl.util.applet.AppletLoader" archive="lwjgl_util_applet.jar, lzma.jar" codebase="." width="640" height="480">
   
     <!-- The following tags are mandatory -->
     
@@ -22,16 +22,16 @@
     <param name="al_progressbar" value="appletprogress.gif">
     
     <!-- List of Jars to add to classpath -->
-    <param name="al_jars" value="lwjgl_applet.jar, lwjgl.jar, jinput.jar, lwjgl_util.jar, res.jar">
+    <param name="al_jars" value="lwjgl_applet.jar.pack.lzma, lwjgl.jar.pack.lzma, jinput.jar.pack.lzma, lwjgl_util.jar.pack.lzma, res.jar.lzma">
     
     <!-- signed windows natives jar in a jar --> 
-    <param name="al_windows" value="windows_natives.jar">
+    <param name="al_windows" value="windows_natives.jar.lzma">
     
     <!-- signed linux natives jar in a jar --> 
-    <param name="al_linux" value="linux_natives.jar">
+    <param name="al_linux" value="linux_natives.jar.lzma">
     
     <!-- signed mac osx natives jar in a jar --> 
-    <param name="al_mac" value="macosx_natives.jar">
+    <param name="al_mac" value="jinput.jar.pack.lzma">
     
     <!-- Tags under here are optional -->
     
@@ -48,7 +48,7 @@
     <!-- <param name="al_errorcolor" value="ff0000"> -->
     
     <!-- whether to run in debug mode -->
-    <!-- <param name="al_debug" value="false"> -->
+    <!-- <param name="al_debug" value="true"> -->
     
     <!-- whether to prepend host to cache path - defaults to true -->
     <param name="al_prepend_host" value="false">
