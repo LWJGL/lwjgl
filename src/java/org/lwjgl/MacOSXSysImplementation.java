@@ -36,6 +36,8 @@ import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 import java.awt.Toolkit;
 
+import com.apple.eio.FileManager;
+
 /**
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
@@ -50,18 +52,7 @@ class MacOSXSysImplementation extends J2SESysImplementation {
 
 	public boolean openURL(String url) {
 		try {
-			Method openURL_method = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
-				public Object run() throws Exception {
-					try {
-						Class com_apple_eio_FileManager = Class.forName("com.apple.eio.FileManager");
-						return com_apple_eio_FileManager.getMethod("openURL", new Class[]{String.class});
-					} catch (Exception e) {
-						LWJGLUtil.log("Exception occurred while trying to invoke browser: " + e);
-						return null;
-					}
-				}
-			});
-			openURL_method.invoke(null, new Object[]{url});
+			FileManager.openURL(url);
 			return true;
 		} catch (Exception e) {
 			LWJGLUtil.log("Exception occurred while trying to invoke browser: " + e);
