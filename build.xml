@@ -224,7 +224,7 @@
 	
 	<!-- Compiles the Java source code -->
 	<target name="compile" description="Compiles the java source code" depends="-initialize">
-		<javac debug="yes" destdir="${lwjgl.bin}" source="1.4" target="1.4" classpath="${lwjgl.lib}/jinput.jar" taskname="core">
+		<javac debug="yes" destdir="${lwjgl.bin}" source="1.4" target="1.4" classpath="${lwjgl.lib}/jinput.jar:${lwjgl.lib}/AppleJavaExtensions.jar" taskname="core">
 			<src path="${lwjgl.src}/java/"/>
 			<src path="${lwjgl.src}/generated/"/>
 			<include name="org/lwjgl/*.java"/>

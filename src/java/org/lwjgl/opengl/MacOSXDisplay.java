@@ -57,6 +57,8 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 
+import com.apple.eawt.*;
+
 final class MacOSXDisplay implements DisplayImplementation {
 	private static final int PBUFFER_HANDLE_SIZE = 24;
 	private static final int GAMMA_LENGTH = 256;
@@ -73,7 +75,24 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private boolean close_requested;
 
 	MacOSXDisplay() {
-		new MacOSXApplicationListener();
+		try {
+			AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws Exception {
+					Application.getApplication().addApplicationListener(new ApplicationAdapter() {
+						public final void handleQuit(ApplicationEvent event) {
+							doHandleQuit();
+						}
+					});
+					return null;
+				}
+			});
+		} catch (Throwable e) {
+			/**
+			 * In an applet environment, referencing com.apple.eawt.Application can fail with
+			 * a native exception. So log any exceptions instead of re-throwing.
+			 */
+			LWJGLUtil.log("Failed to register quit handler: " + e.getMessage());
+		}
 	}
 
 	public void createWindow(DisplayMode mode, boolean fullscreen, Canvas parent, int x, int y) throws LWJGLException {
@@ -96,7 +115,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		}
 	}
 
-	private void handleQuit() {
+	private void doHandleQuit() {
 		synchronized (this) {
 			close_requested = true;
 		}
@@ -405,51 +424,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 			return Pbuffer.PBUFFER_SUPPORTED;
 		else
 			return 0;
-	}
-
-	/**
-	 * This class captures com.apple.eawt.ApplicationEvents through reflection
-	 * to enable compilation on other platforms than Mac OS X
-	 */
-	private class MacOSXApplicationListener implements InvocationHandler {
-		private final Method handleQuit;
-
-		public MacOSXApplicationListener() {
-			Method m = null;
-			try {
-				m = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
-					public Object run() throws Exception {
-						/* Get the com.apple.eawt.Application class */
-						Class com_apple_eawt_Application = Class.forName("com.apple.eawt.Application");
-						/* Call the static Application.getApplication() method */
-						Object application = com_apple_eawt_Application.getMethod("getApplication", null).invoke(null, null);
-						/* Create a proxy implementing com.apple.eawt.ApplicationListener */
-						Class com_apple_eawt_ApplicationListener = Class.forName("com.apple.eawt.ApplicationListener");
-						Object listener_proxy = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] {com_apple_eawt_ApplicationListener}, MacOSXApplicationListener.this);
-						/* Invoke the method application.addApplicationListener(proxy) */
-						Method addApplicationListener = com_apple_eawt_Application.getMethod("addApplicationListener", new Class[]{com_apple_eawt_ApplicationListener});
-						addApplicationListener.invoke(application, new Object[]{listener_proxy});
-						/* Finally, get the handleQuit method we want to react to */
-						Class com_apple_eawt_ApplicationEvent = Class.forName("com.apple.eawt.ApplicationEvent");
-						return com_apple_eawt_ApplicationListener.getMethod("handleQuit", new Class[]{com_apple_eawt_ApplicationEvent});
-					}
-				});
-			} catch (Throwable e) {
-				/**
-				 * In an applet environment, referencing com.apple.eawt.Application can fail with
-				 * a native exception. So log any exceptions instead of re-throwing.
-				 */
-				LWJGLUtil.log("Failed to register quit handler: " + e.getMessage());
-//				throw new RuntimeException(e);
-			}
-			handleQuit = m;
-		}
-
-		public Object invoke(Object proxy, Method method, Object[] args) {
-			if (method.equals(handleQuit))
-				handleQuit();
-			return null;
-		}
 	}
 
 	public boolean isBufferLost(PeerInfo handle) {
