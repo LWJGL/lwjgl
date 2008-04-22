@@ -36,6 +36,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.glu.GLU;
 
 /**
  * <br>
@@ -104,7 +105,13 @@ public class KeyboardTest {
   }
 
   private void initializeOpenGL() {
-    GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	  GL11.glMatrixMode(GL11.GL_PROJECTION);
+	  GL11.glLoadIdentity();
+	  GLU.gluOrtho2D(0, Display.getDisplayMode().getWidth(), 0, Display.getDisplayMode().getHeight());
+	  GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	  GL11.glLoadIdentity();
+	  GL11.glViewport(0, 0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
+	  GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
   }
 
   public void executeTest() {
