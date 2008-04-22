@@ -110,6 +110,7 @@ public interface NV_transform_feedback {
 	int GL_VERTEX_ID_NV = 0x8C7B;
 	int GL_PRIMITIVE_ID_NV = 0x8C7C;
 	int GL_GENERIC_ATTRIB_NV = 0x8C7D;
+	int GL_LAYER_NV = 0x8DAA;
 
 	void glBindBufferRangeNV(@GLenum int target, @GLuint int index, @GLuint int buffer, @GLintptr long offset, @GLsizeiptr long size);
 
