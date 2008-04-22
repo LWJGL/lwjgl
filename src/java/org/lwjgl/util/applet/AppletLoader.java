@@ -273,22 +273,27 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * @see java.applet.Applet#start()
 	 */
 	public void start() {
-		if(loaderThread == null && !fatalError) {
-			loaderThread = new Thread(this);
-			loaderThread.setName("AppletLoader.loaderThread");
-			loaderThread.start();
-			
-			animationThread = new Thread() {
-				public void run() {
-					while(loaderThread != null) {
-						repaint();
-						AppletLoader.this.sleep(100);
+		if (lwjglApplet != null) {
+			lwjglApplet.start();
+		}
+		else {
+			if(loaderThread == null && !fatalError) {
+				loaderThread = new Thread(this);
+				loaderThread.setName("AppletLoader.loaderThread");
+				loaderThread.start();
+				
+				animationThread = new Thread() {
+					public void run() {
+						while(loaderThread != null) {
+							repaint();
+							AppletLoader.this.sleep(100);
+						}
+						animationThread = null;
 					}
-					animationThread = null;
-				}
-			};
-			animationThread.setName("AppletLoader.animationthread");
-			animationThread.start();
+				};
+				animationThread.setName("AppletLoader.animationthread");
+				animationThread.start();
+			}
 		}
 	}
 	
