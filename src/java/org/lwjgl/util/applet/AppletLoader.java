@@ -701,18 +701,13 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		setLayout(new BorderLayout());
 		add(lwjglApplet);
+		validate();
 
 		state = STATE_INITIALIZE_REAL_APPLET;
 		lwjglApplet.init();
 
 		state = STATE_START_REAL_APPLET;
 		lwjglApplet.start();
-
-		
-		// fix for issue with applet not showing up in firefox
-		setVisible(false);
-		validate();
-		setVisible(true);
 	}
 
 	/**
