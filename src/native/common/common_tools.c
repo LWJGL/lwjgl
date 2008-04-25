@@ -201,8 +201,11 @@ char * GetStringNativeChars(JNIEnv *env, jstring jstr) {
 /* creates locale specific string, unsigned argument to
  * match GLuchar and ALuchar types
  */
-jstring NewStringNativeUnsigned(JNIEnv *env, const unsigned char *str) {
-	return NewStringNativeWithLength(env, (const char *)str, strlen((const char *)str));
+jstring NewStringNativeUnsigned(JNIEnv *env, const unsigned char *ustr) {
+	const char *str = (const char *)ustr;
+	if (str == NULL)
+		return NULL;
+	return NewStringNativeWithLength(env, str, strlen(str));
 }
 
 // creates locale specific string
