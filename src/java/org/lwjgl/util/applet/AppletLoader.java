@@ -737,6 +737,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			debug_sleep(2000);
 
 			urlconnection = urlList[i].openConnection();
+			urlconnection.setUseCaches(false);
 
 			String currentFile = getFileName(urlList[i]);
 			InputStream inputstream = getJarInputStream(currentFile, urlconnection);
