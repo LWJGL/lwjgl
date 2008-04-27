@@ -726,6 +726,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		// calculate total size of jars to download
 		for (int i = 0; i < urlList.length; i++) {
 			urlconnection = urlList[i].openConnection();
+			urlconnection.setDefaultUseCaches(false);
 			totalSizeDownload += urlconnection.getContentLength();
 		}
 		
@@ -737,8 +738,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			debug_sleep(2000);
 
 			urlconnection = urlList[i].openConnection();
-			urlconnection.setUseCaches(false);
-
+			
 			String currentFile = getFileName(urlList[i]);
 			InputStream inputstream = getJarInputStream(currentFile, urlconnection);
 			FileOutputStream fos = new FileOutputStream(path + currentFile);
