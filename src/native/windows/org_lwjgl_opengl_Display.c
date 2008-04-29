@@ -178,6 +178,15 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getAvailable
 	return getAvailableDisplayModes(env);
 }
 
+static void destroyWindow() {
+	jclass display_class_global = (jclass)(LONG_PTR)GetWindowLongPtr(display_hwnd, GWLP_USERDATA);
+	closeWindow(&display_hwnd, &display_hdc);
+	if (display_class_global != NULL)
+		(*env)->DeleteGlobalRef(env, display_class_global);
+	freeLargeIcon();
+	freeSmallIcon();
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv *env, jobject self, jobject mode, jboolean fullscreen, jint x, jint y, jboolean undecorated, jlong parent_hwnd) {
 	jclass cls_displayMode = (*env)->GetObjectClass(env, mode);
 	jfieldID fid_width = (*env)->GetFieldID(env, cls_displayMode, "width", "I");
@@ -199,15 +208,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv
 		return;
 	}
 	display_hdc = GetDC(display_hwnd);
+	if (display_hdc == NULL) {
+		destroyWindow();
+		throwException(env, "Failed to get the window DC.");
+		return;
+	}
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nDestroyWindow(JNIEnv *env, jclass clazz) {
-	jclass display_class_global = (jclass)(LONG_PTR)GetWindowLongPtr(display_hwnd, GWLP_USERDATA);
-	closeWindow(&display_hwnd, &display_hdc);
-	if (display_class_global != NULL)
-		(*env)->DeleteGlobalRef(env, display_class_global);
-	freeLargeIcon();
-	freeSmallIcon();
+	destroyWindow();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_clientToScreen(JNIEnv *env, jclass unused, jlong hwnd_int, jobject buffer_handle) {
