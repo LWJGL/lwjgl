@@ -252,6 +252,7 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extens
 	result = extensions->wglChoosePixelFormatARB(hdc, attrib_list.attribs, NULL, 1, &iPixelFormat, &num_formats_returned);
 
 	if (result == FALSE || num_formats_returned < 1) {
+		throwFormattedException(env, "Failed to find ARB pixel format %d %d\n", result, num_formats_returned);
 		return -1;
 	}
 	return iPixelFormat;
@@ -260,13 +261,16 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extens
 static int findPixelFormatARB(JNIEnv *env, HDC hdc, WGLExtensions *extensions, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer, bool floating_point) {
 	int bpp;
 	int iPixelFormat;
+	int fallback_bpp = 16;
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
 	if (use_hdc_bpp) {
 		bpp = GetDeviceCaps(hdc, BITSPIXEL);
 		iPixelFormat = findPixelFormatARBFromBPP(env, hdc, extensions, pixel_format, pixelFormatCaps, bpp, window, pbuffer, double_buffer, floating_point);
-		if (iPixelFormat == -1)
-			bpp = 16;
-		else
+		if ((*env)->ExceptionOccurred(env)) {
+			(*env)->ExceptionClear(env);
+			printfDebugJava(env, "Failed to find ARB pixel format with HDC depth %d, falling back to %d\n", bpp, fallback_bpp);
+			bpp = fallback_bpp;
+		} else
 			return iPixelFormat;
 	} else
 		bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "bpp", "I"));
@@ -313,32 +317,32 @@ static int findPixelFormatFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format, in
 	// get the best available match of pixel format for the device context  
 	iPixelFormat = ChoosePixelFormat(hdc, &pfd);
 	if (iPixelFormat == 0) {
-		printfDebugJava(env, "Failed to choose pixel format");
+		throwException(env, "Failed to choose pixel format");
 		return -1;
 	}
 
 	if (DescribePixelFormat(hdc, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &desc) == 0) {
-		printfDebugJava(env, "Could not describe pixel format");
+		throwException(env, "Could not describe pixel format");
 		return -1;
 	}
 
 	if (desc.cColorBits < bpp) {
-		printfDebugJava(env, "Insufficient color precision");
+		throwException(env, "Insufficient color precision");
 		return -1;
 	}
 
 	if (desc.cAlphaBits < alpha) {
-		printfDebugJava(env, "Insufficient alpha precision");
+		throwException(env, "Insufficient alpha precision");
 		return -1;
 	}
 
 	if (desc.cStencilBits < stencil) {
-		printfDebugJava(env, "Insufficient stencil precision");
+		throwException(env, "Insufficient stencil precision");
 		return -1;
 	}
 
 	if (desc.cDepthBits < depth) {
-		printfDebugJava(env, "Insufficient depth buffer precision");
+		throwException(env, "Insufficient depth buffer precision");
 		return -1;
 	}
 
@@ -346,13 +350,13 @@ static int findPixelFormatFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format, in
 		jboolean allowSoftwareOpenGL = getBooleanProperty(env, "org.lwjgl.opengl.Display.allowSoftwareOpenGL");
 		// secondary check for software override
 		if(!allowSoftwareOpenGL) {
-			printfDebugJava(env, "Pixel format not accelerated");
+			throwException(env, "Pixel format not accelerated");
 			return -1;
 		}
 	}
 
 	if ((desc.dwFlags & flags) != flags) {
-		printfDebugJava(env, "Capabilities not supported");
+		throwException(env, "Capabilities not supported");
 		return -1;
 	}
 	return iPixelFormat;
@@ -361,13 +365,16 @@ static int findPixelFormatFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format, in
 static int findPixelFormatDefault(JNIEnv *env, HDC hdc, jobject pixel_format, bool use_hdc_bpp, bool double_buffer) {
 	int bpp;
 	int iPixelFormat;
+	int fallback_bpp = 16;
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
 	if (use_hdc_bpp) {
 		bpp = GetDeviceCaps(hdc, BITSPIXEL);
 		iPixelFormat = findPixelFormatFromBPP(env, hdc, pixel_format, bpp, double_buffer);
-		if (iPixelFormat == -1)
-			bpp = 16;
-		else
+		if ((*env)->ExceptionOccurred(env)) {
+			(*env)->ExceptionClear(env);
+			printfDebugJava(env, "Failed to find pixel format with HDC depth %d, falling back to %d\n", bpp, fallback_bpp);
+			bpp = fallback_bpp;
+		} else
 			return iPixelFormat;
 	} else
 		bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "bpp", "I"));
@@ -417,7 +424,7 @@ int findPixelFormatOnDC(JNIEnv *env, HDC hdc, int origin_x, int origin_y, jobjec
 	int samples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "samples", "I"));
 	bool use_arb_selection = samples > 0 || floating_point || pbuffer || pixelFormatCaps != NULL;
 	pixel_format_id = findPixelFormatDefault(env, hdc, pixel_format, use_hdc_bpp, double_buffer);
-	if (pixel_format_id != -1 && use_arb_selection) {
+	if (!(*env)->ExceptionOccurred(env) && use_arb_selection) {
 		dummy_hwnd = createDummyWindow(origin_x, origin_y);
 		if (dummy_hwnd == NULL) {
 			throwException(env, "Could not create dummy window");
@@ -439,14 +446,10 @@ int findPixelFormatOnDC(JNIEnv *env, HDC hdc, int origin_x, int origin_y, jobjec
 		saved_current_hglrc = wglGetCurrentContext();
 		if (validateAndGetExtensions(env, &extensions, dummy_hdc, dummy_hglrc, samples, floating_point, pixelFormatCaps)) {
 			pixel_format_id = findPixelFormatARB(env, hdc, &extensions, pixel_format, pixelFormatCaps, use_hdc_bpp, window, pbuffer, double_buffer, floating_point);
-		} else
-			pixel_format_id = -1;
+		}
 		wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
 		wglDeleteContext(dummy_hglrc);
 		closeWindow(&dummy_hwnd, &dummy_hdc);
-	}
-	if (pixel_format_id == -1) {
-		throwException(env, "Could not find a valid pixel format");
 	}
 	return pixel_format_id;
 }
