@@ -52,19 +52,8 @@
 
 static HICON small_icon = NULL;
 static HICON large_icon = NULL;
-static HWND       display_hwnd = NULL;            // Handle to the window
-static HDC        display_hdc = NULL;             // Device context
-										// has recovered from minimized
 
 #define WINDOWCLASSNAME "LWJGL"
-
-HDC getCurrentHDC() {
-	return display_hdc;
-}
-
-HWND getCurrentHWND() {
-	return display_hwnd;
-}
 
 static void freeLargeIcon() {
 	if (large_icon != NULL) {
@@ -140,33 +129,29 @@ static void handleMessages(JNIEnv *env) {
 	 * work properly
 	 */
 	MSG msg;
-	if (display_hwnd != NULL) {
-		while (!(*env)->ExceptionOccurred(env) && PeekMessage(
-					&msg,         // message information
-					NULL,           // handle to window
-					0,  // first message
-					0,  // last message
-					PM_REMOVE      // removal options
-					))
-		{
-			DispatchMessage(&msg);
-			TranslateMessage(&msg);
-		}
+	while (!(*env)->ExceptionOccurred(env) && PeekMessage(
+				&msg,         // message information
+				NULL,           // handle to window
+				0,  // first message
+				0,  // last message
+				PM_REMOVE      // removal options
+				))
+	{
+		DispatchMessage(&msg);
+		TranslateMessage(&msg);
 	}
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getHdc(JNIEnv *env, jclass unused) {
-	return (INT_PTR)display_hdc;
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getDC(JNIEnv *env, jclass unused, jlong hwnd_ptr) {
+	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
+	return (INT_PTR)GetDC(hwnd);
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getHwnd(JNIEnv *env, jclass unused) {
-	return (INT_PTR)display_hwnd;
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setTitle
-  (JNIEnv * env, jobject self, jstring title_obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetTitle
+  (JNIEnv * env, jclass unused, jlong hwnd_ptr, jstring title_obj) {
+    HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
 	char * title = GetStringNativeChars(env, title_obj);
-	SetWindowText(display_hwnd, title);
+	SetWindowText(hwnd, title);
 	free(title);
 }
 
@@ -183,45 +168,39 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getJNIVersion
 	return org_lwjgl_WindowsSysImplementation_JNI_VERSION;
 }
 
-static void destroyWindow(JNIEnv *env) {
-	jclass display_class_global = (jclass)(LONG_PTR)GetWindowLongPtr(display_hwnd, GWLP_USERDATA);
-	closeWindow(&display_hwnd, &display_hdc);
+static void destroyWindow(JNIEnv *env, HWND *hwnd, HDC *hdc) {
+	jclass display_class_global = (jclass)(LONG_PTR)GetWindowLongPtr(*hwnd, GWLP_USERDATA);
+	closeWindow(hwnd, hdc);
 	if (display_class_global != NULL)
 		(*env)->DeleteGlobalRef(env, display_class_global);
 	freeLargeIcon();
 	freeSmallIcon();
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv *env, jobject self, jobject mode, jboolean fullscreen, jint x, jint y, jboolean undecorated, jboolean child_window, jlong parent_hwnd) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv *env, jobject self, jobject mode, jboolean fullscreen, jint x, jint y, jboolean undecorated, jboolean child_window, jlong parent_hwnd) {
 	jclass cls_displayMode = (*env)->GetObjectClass(env, mode);
 	jfieldID fid_width = (*env)->GetFieldID(env, cls_displayMode, "width", "I");
 	jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
 	int width = (*env)->GetIntField(env, mode, fid_width);
 	int height = (*env)->GetIntField(env, mode, fid_height);
+	HWND hwnd;
 	static bool oneShotInitialised = false;
 	if (!oneShotInitialised) {
 		if (!registerWindow(lwjglWindowProc, WINDOWCLASSNAME)) {
 			throwException(env, "Could not register window class");
-			return;
+			return 0;
 		}
 		oneShotInitialised = true;
 	}
 
-	display_hwnd = createWindow(WINDOWCLASSNAME, x, y, width, height, fullscreen, undecorated, child_window, (HWND)parent_hwnd);
-	if (display_hwnd == NULL) {
-		throwException(env, "Failed to create the window.");
-		return;
-	}
-	display_hdc = GetDC(display_hwnd);
-	if (display_hdc == NULL) {
-		destroyWindow(env);
-		throwException(env, "Failed to get the window DC.");
-		return;
-	}
+	hwnd = createWindow(WINDOWCLASSNAME, x, y, width, height, fullscreen, undecorated, child_window, (HWND)parent_hwnd);
+	return (INT_PTR)hwnd;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nDestroyWindow(JNIEnv *env, jclass clazz) {
-	destroyWindow(env);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nDestroyWindow(JNIEnv *env, jclass clazz, jlong hwnd_ptr, jlong hdc_ptr) {
+	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
+	HDC hdc = (HDC)(INT_PTR)hdc_ptr;
+	destroyWindow(env, &hwnd, &hdc);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_clientToScreen(JNIEnv *env, jclass unused, jlong hwnd_int, jobject buffer_handle) {
@@ -475,15 +454,16 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetWindowIconSmall
-  (JNIEnv *env, jclass clazz, jint width, jint height, jobject iconBuffer)
+  (JNIEnv *env, jclass clazz, jlong hwnd_ptr, jint width, jint height, jobject iconBuffer)
 {
+	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
 	jint *imgData = (jint *)(*env)->GetDirectBufferAddress(env, iconBuffer);
 	
 	freeSmallIcon();
 	small_icon = createWindowIcon(env, imgData, width, height);
 	if (small_icon != NULL) {
-		if (display_hwnd != NULL) {
-			SendMessage(display_hwnd, WM_SETICON, ICON_SMALL,  (LPARAM) (small_icon));
+		if (hwnd != NULL) {
+			SendMessage(hwnd, WM_SETICON, ICON_SMALL,  (LPARAM) (small_icon));
 			
 			return 0;
 		}
@@ -493,15 +473,16 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetWindowIconSmall
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetWindowIconLarge
-  (JNIEnv *env, jclass clazz, jint width, jint height, jobject iconBuffer)
+  (JNIEnv *env, jclass clazz, jlong hwnd_ptr, jint width, jint height, jobject iconBuffer)
 {
+	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
 	jint *imgData = (jint *)(*env)->GetDirectBufferAddress(env, iconBuffer);
 	
 	freeLargeIcon();
 	large_icon = createWindowIcon(env, imgData, width, height);
 	if (large_icon != NULL) {
-		if (display_hwnd != NULL) {
-			SendMessage(display_hwnd, WM_SETICON, ICON_BIG,  (LPARAM) (large_icon));
+		if (hwnd != NULL) {
+			SendMessage(hwnd, WM_SETICON, ICON_BIG,  (LPARAM) (large_icon));
 			
 			return 0;
 		}

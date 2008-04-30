@@ -45,7 +45,7 @@
 #include "common_tools.h"
 #include <malloc.h>
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_WindowsSysImplementation_getTime(JNIEnv * env, jobject ignored) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_WindowsSysImplementation_nGetTime(JNIEnv * env, jclass unused) {
 	DWORD time;
 
 	timeBeginPeriod(1);
@@ -55,10 +55,11 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_WindowsSysImplementation_getTime(JNIEnv *
 	return time;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_WindowsSysImplementation_alert(JNIEnv * env, jobject ignored, jstring title, jstring message) {
+JNIEXPORT void JNICALL Java_org_lwjgl_WindowsSysImplementation_nAlert(JNIEnv * env, jclass unused, jlong hwnd_ptr, jstring title, jstring message) {
+	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
 	char * eMessageText = GetStringNativeChars(env, message);
 	char * cTitleBarText = GetStringNativeChars(env, title);
-	MessageBox(getCurrentHWND(), eMessageText, cTitleBarText, MB_OK | MB_TOPMOST);
+	MessageBox(hwnd, eMessageText, cTitleBarText, MB_OK | MB_TOPMOST);
 
 	printfDebugJava(env, "*** Alert ***%s\n%s\n", cTitleBarText, eMessageText);
 	
@@ -66,8 +67,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_WindowsSysImplementation_alert(JNIEnv * en
 	free(cTitleBarText);
 }
 
-JNIEXPORT jstring JNICALL Java_org_lwjgl_WindowsSysImplementation_getClipboard
-  (JNIEnv * env, jobject ignored)
+JNIEXPORT jstring JNICALL Java_org_lwjgl_WindowsSysImplementation_nGetClipboard
+  (JNIEnv * env, jclass unused)
 {
 	// Check to see if there's text available in the clipboard
 	BOOL textAvailable = IsClipboardFormatAvailable(CF_TEXT);

@@ -140,6 +140,9 @@ final class WindowsDisplay implements DisplayImplementation {
 	private boolean did_maximize;
 	private boolean inAppActivate;
 
+	private long hwnd;
+	private long hdc;
+
 	public WindowsDisplay() {
 		current_display = this;
 	}
@@ -154,7 +157,15 @@ final class WindowsDisplay implements DisplayImplementation {
 		this.parent = parent;
 		long parent_hwnd = parent != null ? getHwnd(parent) : 0;
 		boolean isUndecorated = isUndecorated();
-		nCreateWindow(mode, fullscreen, x, y, isUndecorated, parent != null, parent_hwnd);
+		this.hwnd = nCreateWindow(mode, fullscreen, x, y, isUndecorated, parent != null, parent_hwnd);
+		if (hwnd == 0) {
+			throw new LWJGLException("Failed to create window");
+		}
+		this.hdc = getDC(hwnd);
+		if (hdc == 0) {
+			nDestroyWindow(hwnd, hdc);
+			throw new LWJGLException("Failed to get dc");
+		}
 		peer_info.initDC(getHwnd(), getHdc());
 		showWindow(getHwnd(), SW_SHOWDEFAULT);
 		if (parent == null) {
@@ -162,7 +173,7 @@ final class WindowsDisplay implements DisplayImplementation {
 			setFocus(getHwnd());
 		}
 	}
-	private native void nCreateWindow(DisplayMode mode, boolean fullscreen, int x, int y, boolean undecorated, boolean child_window, long parent_hwnd) throws LWJGLException;
+	private native long nCreateWindow(DisplayMode mode, boolean fullscreen, int x, int y, boolean undecorated, boolean child_window, long parent_hwnd) throws LWJGLException;
 
 	private static boolean isUndecorated() {
 		return Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated"); 
@@ -180,10 +191,10 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public void destroyWindow() {
-		nDestroyWindow();
+		nDestroyWindow(hwnd, hdc);
 		resetCursorClipping();
 	}
-	private static native void nDestroyWindow();
+	private static native void nDestroyWindow(long hwnd, long hdc);
 	static void resetCursorClipping() {
 		if (cursor_clipped) {
 			try {
@@ -338,7 +349,10 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 	private static native DisplayMode getCurrentDisplayMode() throws LWJGLException;
 
-	public native void setTitle(String title);
+	public void setTitle(String title) {
+		nSetTitle(hwnd, title);
+	}
+	private static native void nSetTitle(long hwnd, String title);
 
 	public boolean isCloseRequested() {
 		boolean saved = close_requested;
@@ -467,11 +481,19 @@ final class WindowsDisplay implements DisplayImplementation {
 	static native int getSystemMetrics(int index);
 
 	private static native long getDllInstance();
-	private static native long getHwnd();
-	private static native long getHdc();
+
+	private long getHwnd() {
+		return hwnd;
+	}
+
+	private long getHdc() {
+		return hdc;
+	}
+
+	private static native long getDC(long hwnd);
 	private static native long getDesktopWindow();
 	static void centerCursor(long hwnd) {
-		getGlobalClientRect(getHwnd(), rect);
+		getGlobalClientRect(hwnd, rect);
 		int local_offset_x = rect.left;
 		int local_offset_y = rect.top;
 		getGlobalClientRect(getDesktopWindow(), rect2);
@@ -482,7 +504,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		int local_x = center_x - local_offset_x;
 		int local_y = center_y - local_offset_y;
 		if (current_display != null)
-			current_display.setMousePosition(local_x, transformY(getHwnd(), local_y));
+			current_display.setMousePosition(local_x, transformY(hwnd, local_y));
 	}
 
 	private void setMousePosition(int x, int y) {
@@ -582,12 +604,12 @@ final class WindowsDisplay implements DisplayImplementation {
 			int size = icons[i].limit() / 4;
 			
 			if ((((int) Math.sqrt(size)) == small_icon_size) && (!done_small)) {
-				nSetWindowIconSmall(small_icon_size, small_icon_size, icons[i].asIntBuffer());
+				nSetWindowIconSmall(hwnd, small_icon_size, small_icon_size, icons[i].asIntBuffer());
 				used++;
 				done_small = true;
 			}
 			if ((((int) Math.sqrt(size)) == large_icon_size) && (!done_large)) {
-				nSetWindowIconLarge(large_icon_size, large_icon_size, icons[i].asIntBuffer());
+				nSetWindowIconLarge(hwnd, large_icon_size, large_icon_size, icons[i].asIntBuffer());
 				used++;
 				done_large = true;
 			}
@@ -596,9 +618,9 @@ final class WindowsDisplay implements DisplayImplementation {
 		return used;
 	}
 
-	private static native int nSetWindowIconSmall(int width, int height, IntBuffer icon);
+	private static native int nSetWindowIconSmall(long hwnd, int width, int height, IntBuffer icon);
 	
-	private static native int nSetWindowIconLarge(int width, int height, IntBuffer icon);
+	private static native int nSetWindowIconLarge(long hwnd, int width, int height, IntBuffer icon);
 
 	private void handleMouseButton(int button, int state, long millis) {
 		if (mouse != null)

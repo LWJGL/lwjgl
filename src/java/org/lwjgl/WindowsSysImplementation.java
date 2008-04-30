@@ -31,6 +31,12 @@
  */
 package org.lwjgl;
 
+import java.security.PrivilegedExceptionAction;
+import java.security.PrivilegedActionException;
+import java.security.AccessController;
+import java.lang.reflect.Method;
+
+import org.lwjgl.opengl.Display;
 
 /**
  * <p>
@@ -39,7 +45,7 @@ package org.lwjgl;
  * $Id$
  */
 final class WindowsSysImplementation extends DefaultSysImplementation {
-	private final static int JNI_VERSION = 16;
+	private final static int JNI_VERSION = 17;
 
 	static {
 		Sys.initialize();
@@ -53,9 +59,40 @@ final class WindowsSysImplementation extends DefaultSysImplementation {
 		return 1000;
 	}
 
-	public native long getTime();
+	public long getTime() {
+		return nGetTime();
+	}
+	private static native long nGetTime();
 
-	public native void alert(String title, String message);
+	private static long getHwnd() {
+		/* Use reflection since we can't make Display.getImplementation
+		 * public
+		 */
+		try {
+			Long hwnd_obj = (Long)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws Exception {
+					Method getImplementation_method = Display.class.getDeclaredMethod("getImplementation", null);
+					getImplementation_method.setAccessible(true);
+					Object display_impl = getImplementation_method.invoke(null, null);
+					if (display_impl == null)
+						return null;
+					Class WindowsDisplay_class = Class.forName("org.lwjgl.opengl.WindowsDisplay");
+					Method getHwnd_method = WindowsDisplay_class.getDeclaredMethod("getHwnd", null);
+					getHwnd_method.setAccessible(true);
+					Long hwnd = (Long)getHwnd_method.invoke(display_impl, null);
+					return hwnd;
+				}
+			});
+			return hwnd_obj.longValue();
+		} catch (PrivilegedActionException e) {
+			throw new Error(e);
+		}
+	}
+
+	public void alert(String title, String message) {
+		nAlert(getHwnd(), title, message);
+	}
+	private static native void nAlert(long parent_hwnd, String title, String message);
 
 	public boolean openURL(final String url) {
 		try {
@@ -67,5 +104,8 @@ final class WindowsSysImplementation extends DefaultSysImplementation {
 		}
 	}
 
-	public native String getClipboard();
+	public String getClipboard() {
+		return nGetClipboard();
+	}
+	private static native String nGetClipboard();
 }
