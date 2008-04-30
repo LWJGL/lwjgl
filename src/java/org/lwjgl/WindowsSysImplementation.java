@@ -38,11 +38,15 @@ package org.lwjgl;
  * @version $Revision$
  * $Id$
  */
-class WindowsSysImplementation extends DefaultSysImplementation {
+final class WindowsSysImplementation extends DefaultSysImplementation {
 	static {
 		Sys.initialize();
 	}
 	
+	public int getRequiredJNIVersion() {
+		return 16;
+	}
+
 	public long getTimerResolution() {
 		return 1000;
 	}

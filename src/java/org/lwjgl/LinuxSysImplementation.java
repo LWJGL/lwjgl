@@ -38,9 +38,13 @@ package org.lwjgl;
  * @version $Revision$
  * $Id$
  */
-class LinuxSysImplementation extends J2SESysImplementation {
+final class LinuxSysImplementation extends J2SESysImplementation {
 	static {
 		java.awt.Toolkit.getDefaultToolkit(); // This will make sure libjawt.so is loaded
+	}
+
+	public int getRequiredJNIVersion() {
+		return 16;
 	}
 
 	public boolean openURL(final String url) {

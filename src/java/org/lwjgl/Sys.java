@@ -56,9 +56,6 @@ public final class Sys {
 	/** Current version of library */
 	private static final String VERSION = "2.0b1";
 
-	/** Current version of the JNI library */
-	static final int JNI_VERSION = 16;
-
 	/** The implementation instance to delegate platform specific behavior to */
 	private final static SysImplementation implementation;
 
@@ -101,8 +98,9 @@ public final class Sys {
 		loadLibrary(JNI_LIBRARY_NAME);
 		
 		int native_jni_version = implementation.getJNIVersion();
-		if (native_jni_version != JNI_VERSION)
-			throw new LinkageError("Version mismatch: jar version is '" + JNI_VERSION +
+		int required_version = implementation.getRequiredJNIVersion();
+		if (native_jni_version != required_version)
+			throw new LinkageError("Version mismatch: jar version is '" + required_version +
                              "', native libary version is '" + native_jni_version + "'");
 		implementation.setDebug(LWJGLUtil.DEBUG);
 	}
@@ -112,9 +110,9 @@ public final class Sys {
 			case LWJGLUtil.PLATFORM_LINUX:
 				return new LinuxSysImplementation();
 			case LWJGLUtil.PLATFORM_WINDOWS:
-				return new org.lwjgl.WindowsSysImplementation();
+				return new WindowsSysImplementation();
 			case LWJGLUtil.PLATFORM_MACOSX:
-				return new org.lwjgl.MacOSXSysImplementation();
+				return new MacOSXSysImplementation();
 			default:
 				throw new IllegalStateException("Unsupported platform");
 		}

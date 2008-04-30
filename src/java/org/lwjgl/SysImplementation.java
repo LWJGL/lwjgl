@@ -42,6 +42,11 @@ package org.lwjgl;
  */
 interface SysImplementation {
 	/**
+	 * Return the required version of the native library
+	 */
+	int getRequiredJNIVersion();
+
+	/**
 	 * Return the version of the native library
 	 */
 	int getJNIVersion();
