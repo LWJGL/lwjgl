@@ -107,7 +107,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 				canvas = parent;
 			}
 			canvas_listener = new MacOSXCanvasListener(canvas);
-			canvas_listener.enableListeners();
 			robot = AWTUtil.createRobot(canvas);
 		} catch (LWJGLException e) {
 			destroyWindow();

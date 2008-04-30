@@ -53,18 +53,19 @@ final class MacOSXCanvasListener implements ComponentListener, HierarchyListener
 
 	public MacOSXCanvasListener(Canvas canvas) {
 		this.canvas = canvas;
-//		((MacOSXDisplay)Display.getImplementation()).setView(this);
-	}
-
-	public void enableListeners() {
 		canvas.addComponentListener(this);
 		canvas.addHierarchyListener(this);
 		setUpdate();
 	}
 
 	public void disableListeners() {
-		canvas.removeComponentListener(this);
-		canvas.removeHierarchyListener(this);
+		// Mac OS X applets will hang in Display.destroy() when parented when removing the listeners directly
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public final void run() {
+				canvas.removeComponentListener(MacOSXCanvasListener.this);
+				canvas.removeHierarchyListener(MacOSXCanvasListener.this);
+			}
+		});
 	}
 
 	public boolean syncShouldUpdateContext() {
