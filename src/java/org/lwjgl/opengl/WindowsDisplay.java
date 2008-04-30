@@ -154,7 +154,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		this.parent = parent;
 		long parent_hwnd = parent != null ? getHwnd(parent) : 0;
 		boolean isUndecorated = isUndecorated();
-		nCreateWindow(mode, fullscreen, x, y, isUndecorated, parent_hwnd);
+		nCreateWindow(mode, fullscreen, x, y, isUndecorated, parent != null, parent_hwnd);
 		peer_info.initDC();
 		showWindow(getHwnd(), SW_SHOWDEFAULT);
 		if (parent == null) {
@@ -162,7 +162,7 @@ final class WindowsDisplay implements DisplayImplementation {
 			setFocus(getHwnd());
 		}
 	}
-	private native void nCreateWindow(DisplayMode mode, boolean fullscreen, int x, int y, boolean undecorated, long parent_hwnd) throws LWJGLException;
+	private native void nCreateWindow(DisplayMode mode, boolean fullscreen, int x, int y, boolean undecorated, boolean child_window, long parent_hwnd) throws LWJGLException;
 
 	private static boolean isUndecorated() {
 		return Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated"); 

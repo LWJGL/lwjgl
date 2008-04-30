@@ -193,7 +193,7 @@ static void destroyWindow(JNIEnv *env) {
 	freeSmallIcon();
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv *env, jobject self, jobject mode, jboolean fullscreen, jint x, jint y, jboolean undecorated, jlong parent_hwnd) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv *env, jobject self, jobject mode, jboolean fullscreen, jint x, jint y, jboolean undecorated, jboolean child_window, jlong parent_hwnd) {
 	jclass cls_displayMode = (*env)->GetObjectClass(env, mode);
 	jfieldID fid_width = (*env)->GetFieldID(env, cls_displayMode, "width", "I");
 	jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
@@ -208,7 +208,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv
 		oneShotInitialised = true;
 	}
 
-	display_hwnd = createWindow(WINDOWCLASSNAME, x, y, width, height, fullscreen, undecorated, (HWND)parent_hwnd);
+	display_hwnd = createWindow(WINDOWCLASSNAME, x, y, width, height, fullscreen, undecorated, child_window, (HWND)parent_hwnd);
 	if (display_hwnd == NULL) {
 		throwException(env, "Failed to create the window.");
 		return;
