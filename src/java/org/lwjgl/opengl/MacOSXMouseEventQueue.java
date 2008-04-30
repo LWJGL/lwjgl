@@ -107,5 +107,5 @@ final class MacOSXMouseEventQueue extends MouseEventQueue {
 
 	private static native void nWarpCursor(int x, int y);
 
-	private static native void nGrabMouse(boolean grab);
+	static native void nGrabMouse(boolean grab);
 }

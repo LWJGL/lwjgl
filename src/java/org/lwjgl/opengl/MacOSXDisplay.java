@@ -327,7 +327,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public void destroyMouse() {
 		if (mouse_queue != null) {
-			mouse_queue.setGrabbed(false);
+			MacOSXMouseEventQueue.nGrabMouse(false);
 			mouse_queue.unregister();
 		}
 		this.mouse_queue = null;
