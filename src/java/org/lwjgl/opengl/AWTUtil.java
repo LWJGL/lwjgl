@@ -42,6 +42,8 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsConfiguration;
 import java.awt.IllegalComponentStateException;
 import java.awt.Point;
+import java.awt.MouseInfo;
+import java.awt.PointerInfo;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
@@ -109,30 +111,21 @@ final class AWTUtil {
 	 */
 	private static Point getPointerLocation(final Component component) {
 		try {
-			final Class MouseInfo_class = Class.forName("java.awt.MouseInfo");
-			final Method getPointerInfo_method = MouseInfo_class.getMethod("getPointerInfo", null);
-			final Class PointerInfo_class = Class.forName("java.awt.PointerInfo");
-			final Method getDevice_method = PointerInfo_class.getMethod("getDevice", null);
-			final Method getLocation_method = PointerInfo_class.getMethod("getLocation", null);
-			return (Point)AccessController.doPrivileged(new PrivilegedExceptionAction() {
-				public final Object run() throws Exception {
-					GraphicsConfiguration config = component.getGraphicsConfiguration();
-					if (config != null) {
-						Object pointer_info = getPointerInfo_method.invoke(null, null);
-						GraphicsDevice device = (GraphicsDevice)getDevice_method.invoke(pointer_info, null);
-						if (device == config.getDevice()) {
-							return (Point)getLocation_method.invoke(pointer_info, null);
-						}
+			final GraphicsConfiguration config = component.getGraphicsConfiguration();
+			if (config != null) {
+				PointerInfo pointer_info = (PointerInfo)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+					public final Object run() throws Exception {
+						return MouseInfo.getPointerInfo();
 					}
-					return null;
+				});
+				GraphicsDevice device = pointer_info.getDevice();
+				if (device == config.getDevice()) {
+					return pointer_info.getLocation();
 				}
-			});
+				return null;
+			}
 		} catch (PrivilegedActionException e) {
 			LWJGLUtil.log("Failed to query pointer location: " + e.getCause());
-		} catch (NoSuchMethodException e) {
-			LWJGLUtil.log("Failed to query pointer location: " + e);
-		} catch (ClassNotFoundException e) {
-			LWJGLUtil.log("Failed to query pointer location: " + e);
 		}
 		return null;
 	}
