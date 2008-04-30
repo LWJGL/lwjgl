@@ -44,8 +44,10 @@
 #include "common_tools.h"
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplayPeerInfo_nInitDC
-  (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
+  (JNIEnv *env, jclass clazz, jobject peer_info_handle, jlong hwnd_ptr, jlong hdc_ptr) {
+	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
+	HDC hdc = (HDC)(INT_PTR)hdc_ptr;
 	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	peer_info->drawable_hdc = getCurrentHDC();
-	peer_info->u.hwnd = getCurrentHWND();
+	peer_info->drawable_hdc = hdc;
+	peer_info->u.hwnd = hwnd;
 }

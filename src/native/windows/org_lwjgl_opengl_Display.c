@@ -155,15 +155,14 @@ static void handleMessages(JNIEnv *env) {
 	}
 }
 
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getHdc(JNIEnv *env, jclass unused) {
+	return (INT_PTR)display_hdc;
+}
+
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getHwnd(JNIEnv *env, jclass unused) {
 	return (INT_PTR)display_hwnd;
 }
 
-/*
- * Class:     org_lwjgl_Window
- * Method:    nSetTitle
- * Signature: ()V
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setTitle
   (JNIEnv * env, jobject self, jstring title_obj) {
 	char * title = GetStringNativeChars(env, title_obj);

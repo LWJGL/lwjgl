@@ -155,7 +155,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		long parent_hwnd = parent != null ? getHwnd(parent) : 0;
 		boolean isUndecorated = isUndecorated();
 		nCreateWindow(mode, fullscreen, x, y, isUndecorated, parent != null, parent_hwnd);
-		peer_info.initDC();
+		peer_info.initDC(getHwnd(), getHdc());
 		showWindow(getHwnd(), SW_SHOWDEFAULT);
 		if (parent == null) {
 			setForegroundWindow(getHwnd());
@@ -468,6 +468,7 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private static native long getDllInstance();
 	private static native long getHwnd();
+	private static native long getHdc();
 	private static native long getDesktopWindow();
 	static void centerCursor(long hwnd) {
 		getGlobalClientRect(getHwnd(), rect);
