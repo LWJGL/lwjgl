@@ -54,6 +54,7 @@
 #include "context.h"
 #include "org_lwjgl_opengl_LinuxDisplay.h"
 #include "org_lwjgl_opengl_LinuxDisplayPeerInfo.h"
+#include "org_lwjgl_LinuxSysImplementation.h"
 
 #define ERR_MSG_SIZE 1024
 
@@ -106,6 +107,11 @@ static jlong openDisplay(JNIEnv *env) {
 		return (intptr_t)NULL;
 	}
 	return (intptr_t)display_connection;
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getJNIVersion
+  (JNIEnv *env, jobject ignored) {
+	return org_lwjgl_LinuxSysImplementation_JNI_VERSION;
 }
 
 JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getErrorText(JNIEnv *env, jclass unused, jlong display_ptr, jlong error_code) {

@@ -58,11 +58,6 @@ void putAttrib(attrib_list_t *list, int attrib) {
 	list->current_index++;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getJNIVersion
-  (JNIEnv *env, jobject ignored) {
-	return org_lwjgl_DefaultSysImplementation_JNI_VERSION;
-}
-
 JNIEXPORT void JNICALL Java_org_lwjgl_DefaultSysImplementation_setDebug
   (JNIEnv *env, jobject ignored, jboolean enable) {
 	  debug = enable == JNI_TRUE ? true : false;

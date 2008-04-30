@@ -47,8 +47,14 @@
 //#import "display.h"
 #import "common_tools.h"
 #import "org_lwjgl_opengl_MacOSXDisplay.h"
+#import "org_lwjgl_MacOSXSysImplementation.h"
 
 #define WAIT_DELAY 100
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getJNIVersion
+  (JNIEnv *env, jobject ignored) {
+	return org_lwjgl_MacOSXSysImplementation_JNI_VERSION;
+}
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_restoreGamma(JNIEnv *env, jobject this) {
 	CGDisplayRestoreColorSyncSettings();

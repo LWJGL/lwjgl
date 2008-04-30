@@ -45,13 +45,15 @@ import com.apple.eio.FileManager;
  * $Id$
  */
 final class MacOSXSysImplementation extends J2SESysImplementation {
+	private final static int JNI_VERSION = 16;
+
 	static {
 		// Make sure AWT is properly initialized. This avoids hangs on Mac OS X 10.3
 		Toolkit.getDefaultToolkit();
 	}
 
 	public int getRequiredJNIVersion() {
-		return 16;
+		return JNI_VERSION;
 	}
 
 	public boolean openURL(String url) {

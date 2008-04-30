@@ -177,6 +177,7 @@
 	<!-- Generates the native headers from source files -->
 	<target name="headers" description="invokes javah on java classes" depends="compile">
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/linux" force="yes">
+			<class name="org.lwjgl.LinuxSysImplementation" />
 			<class name="org.lwjgl.opengl.LinuxEvent" />
 			<class name="org.lwjgl.opengl.LinuxMouse" />
 			<class name="org.lwjgl.opengl.LinuxKeyboard" />
@@ -202,6 +203,7 @@
 		</javah>
 		
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/macosx" force="yes">
+			<class name="org.lwjgl.MacOSXSysImplementation" />
 			<class name="org.lwjgl.opengl.MacOSXMouseEventQueue" />
 			<class name="org.lwjgl.opengl.MacOSXCanvasPeerInfo" />
 			<class name="org.lwjgl.opengl.MacOSXPeerInfo" />

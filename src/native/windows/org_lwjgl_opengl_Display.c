@@ -47,6 +47,7 @@
 #include "common_tools.h"
 #include "display.h"
 #include "org_lwjgl_opengl_WindowsDisplay.h"
+#include "org_lwjgl_WindowsSysImplementation.h"
 #include "context.h"
 
 static HICON small_icon = NULL;
@@ -176,6 +177,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nUpdate(JNIEnv * env
 
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getAvailableDisplayModes(JNIEnv *env, jobject self) {
 	return getAvailableDisplayModes(env);
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getJNIVersion
+  (JNIEnv *env, jobject ignored) {
+	return org_lwjgl_WindowsSysImplementation_JNI_VERSION;
 }
 
 static void destroyWindow(JNIEnv *env) {
