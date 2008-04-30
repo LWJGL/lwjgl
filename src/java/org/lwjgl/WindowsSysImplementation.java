@@ -65,6 +65,8 @@ final class WindowsSysImplementation extends DefaultSysImplementation {
 	private static native long nGetTime();
 
 	private static long getHwnd() {
+		if (!Display.isCreated())
+			return 0;
 		/* Use reflection since we can't make Display.getImplementation
 		 * public
 		 */
@@ -74,8 +76,6 @@ final class WindowsSysImplementation extends DefaultSysImplementation {
 					Method getImplementation_method = Display.class.getDeclaredMethod("getImplementation", null);
 					getImplementation_method.setAccessible(true);
 					Object display_impl = getImplementation_method.invoke(null, null);
-					if (display_impl == null)
-						return null;
 					Class WindowsDisplay_class = Class.forName("org.lwjgl.opengl.WindowsDisplay");
 					Method getHwnd_method = WindowsDisplay_class.getDeclaredMethod("getHwnd", null);
 					getHwnd_method.setAccessible(true);
