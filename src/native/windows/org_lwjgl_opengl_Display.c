@@ -50,24 +50,7 @@
 #include "org_lwjgl_WindowsSysImplementation.h"
 #include "context.h"
 
-static HICON small_icon = NULL;
-static HICON large_icon = NULL;
-
 #define WINDOWCLASSNAME "LWJGL"
-
-static void freeLargeIcon() {
-	if (large_icon != NULL) {
-		DestroyIcon(large_icon);
-		large_icon = NULL;
-	}
-}
-
-static void freeSmallIcon() {
-	if (small_icon != NULL) {
-		DestroyIcon(small_icon);
-		small_icon = NULL;
-	}
-}
 
 /*
  *	WindowProc for the GL window.
@@ -173,8 +156,6 @@ static void destroyWindow(JNIEnv *env, HWND *hwnd, HDC *hdc) {
 	closeWindow(hwnd, hdc);
 	if (display_class_global != NULL)
 		(*env)->DeleteGlobalRef(env, display_class_global);
-	freeLargeIcon();
-	freeSmallIcon();
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv *env, jobject self, jobject mode, jboolean fullscreen, jint x, jint y, jboolean undecorated, jboolean child_window, jlong parent_hwnd) {
@@ -453,42 +434,22 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 	return icon;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetWindowIconSmall
-  (JNIEnv *env, jclass clazz, jlong hwnd_ptr, jint width, jint height, jobject iconBuffer)
-{
-	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
-	jint *imgData = (jint *)(*env)->GetDirectBufferAddress(env, iconBuffer);
-	
-	freeSmallIcon();
-	small_icon = createWindowIcon(env, imgData, width, height);
-	if (small_icon != NULL) {
-		if (hwnd != NULL) {
-			SendMessage(hwnd, WM_SETICON, ICON_SMALL,  (LPARAM) (small_icon));
-			
-			return 0;
-		}
-	}
-	
-	return -1;
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_destroyIcon
+  (JNIEnv *env, jclass clazz, jlong handle) {
+	  HICON icon = (HICON)(INT_PTR)handle;
+	  DestroyIcon(icon);
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetWindowIconLarge
-  (JNIEnv *env, jclass clazz, jlong hwnd_ptr, jint width, jint height, jobject iconBuffer)
-{
-	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_createIcon
+  (JNIEnv *env, jclass clazz, jint width, jint height, jobject iconBuffer) {
 	jint *imgData = (jint *)(*env)->GetDirectBufferAddress(env, iconBuffer);
-	
-	freeLargeIcon();
-	large_icon = createWindowIcon(env, imgData, width, height);
-	if (large_icon != NULL) {
-		if (hwnd != NULL) {
-			SendMessage(hwnd, WM_SETICON, ICON_BIG,  (LPARAM) (large_icon));
-			
-			return 0;
-		}
-	}
-	
-	return -1;
+	return (INT_PTR)createWindowIcon(env, imgData, width, height);
+}
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_sendMessage
+  (JNIEnv *env, jclass clazz, jlong hwnd_ptr, jlong msg, jlong wparam, jlong lparam) {
+	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
+	return SendMessage(hwnd, (UINT)msg, (WPARAM)wparam, (LPARAM)lparam);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetCursorPosition

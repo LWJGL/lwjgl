@@ -68,6 +68,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private final static int WM_SYSKEYDOWN					  = 260;
 	private final static int WM_SYSCHAR                          = 262;
 	private final static int WM_CHAR                          = 258;
+	private final static int WM_SETICON						  = 0x0080;
 
 	private final static int WM_QUIT						  = 0x0012;
 	private final static int WM_SYSCOMMAND					  = 0x0112;
@@ -113,6 +114,9 @@ final class WindowsDisplay implements DisplayImplementation {
 	private final static int SW_SHOWDEFAULT       = 10;
 	private final static int SW_RESTORE           = 9;
 
+	private final static int ICON_SMALL           = 0;
+	private final static int ICON_BIG           = 1;
+
 	private final static IntBuffer rect_buffer = BufferUtils.createIntBuffer(4);
 	private final static Rect rect = new Rect();
 	private final static Rect rect2 = new Rect();
@@ -142,6 +146,9 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private long hwnd;
 	private long hdc;
+
+	private long small_icon;
+	private long large_icon;
 
 	public WindowsDisplay() {
 		current_display = this;
@@ -192,6 +199,8 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	public void destroyWindow() {
 		nDestroyWindow(hwnd, hdc);
+		freeLargeIcon();
+		freeSmallIcon();
 		resetCursorClipping();
 	}
 	private static native void nDestroyWindow(long hwnd, long hdc);
@@ -580,6 +589,19 @@ final class WindowsDisplay implements DisplayImplementation {
 		((WindowsPbufferPeerInfo)handle).releaseTexImageFromPbuffer(buffer);
 	}
 	
+	private void freeSmallIcon() {
+		if (small_icon != 0) {
+			destroyIcon(small_icon);
+			small_icon = 0;
+		}
+	}
+
+	private void freeLargeIcon() {
+		if (large_icon != 0) {
+			destroyIcon(large_icon);
+			large_icon = 0;
+		}
+	}
 
 	/**
 	 * Sets one or more icons for the Display.
@@ -604,12 +626,16 @@ final class WindowsDisplay implements DisplayImplementation {
 			int size = icons[i].limit() / 4;
 			
 			if ((((int) Math.sqrt(size)) == small_icon_size) && (!done_small)) {
-				nSetWindowIconSmall(hwnd, small_icon_size, small_icon_size, icons[i].asIntBuffer());
+				freeSmallIcon();
+				small_icon = createIcon(small_icon_size, small_icon_size, icons[i].asIntBuffer());
+				sendMessage(hwnd, WM_SETICON, ICON_SMALL, small_icon);
 				used++;
 				done_small = true;
 			}
 			if ((((int) Math.sqrt(size)) == large_icon_size) && (!done_large)) {
-				nSetWindowIconLarge(hwnd, large_icon_size, large_icon_size, icons[i].asIntBuffer());
+				freeLargeIcon();
+				large_icon = createIcon(large_icon_size, large_icon_size, icons[i].asIntBuffer());
+				sendMessage(hwnd, WM_SETICON, ICON_BIG, large_icon);
 				used++;
 				done_large = true;
 			}
@@ -617,10 +643,9 @@ final class WindowsDisplay implements DisplayImplementation {
 		
 		return used;
 	}
-
-	private static native int nSetWindowIconSmall(long hwnd, int width, int height, IntBuffer icon);
-	
-	private static native int nSetWindowIconLarge(long hwnd, int width, int height, IntBuffer icon);
+	private static native long createIcon(int width, int height, IntBuffer icon);
+	private static native void destroyIcon(long handle);
+	private static native long sendMessage(long hwnd, long msg, long wparam, long lparam);
 
 	private void handleMouseButton(int button, int state, long millis) {
 		if (mouse != null)
