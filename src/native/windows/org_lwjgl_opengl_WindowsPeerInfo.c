@@ -47,16 +47,23 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsPeerInfo_createHandle
 	return newJavaManagedByteBuffer(env, sizeof(WindowsPeerInfo));
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsPeerInfo_nChoosePixelFormat
-  (JNIEnv *env, jclass clazz, jobject peer_info_handle, jint origin_x, jint origin_y, jobject pixel_format, jobject pixel_format_caps, jboolean use_hdc_bpp, jboolean window, jboolean pbuffer, jboolean double_buffer) {
-	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsPeerInfo_nChoosePixelFormat
+  (JNIEnv *env, jclass clazz, jlong hdc_ptr, jint origin_x, jint origin_y, jobject pixel_format, jobject pixel_format_caps, jboolean use_hdc_bpp, jboolean window, jboolean pbuffer, jboolean double_buffer) {
+	HDC hdc = (HDC)(INT_PTR)hdc_ptr;
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
 	bool floating_point = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
-	int pixel_format_id = findPixelFormatOnDC(env, peer_info->drawable_hdc, origin_x, origin_y, pixel_format, pixel_format_caps, use_hdc_bpp, window, pbuffer, double_buffer, floating_point);
-	if (pixel_format_id == -1)
-		return;
-	// Let it throw
-	applyPixelFormat(env, peer_info->drawable_hdc, pixel_format_id);
+	return findPixelFormatOnDC(env, hdc, origin_x, origin_y, pixel_format, pixel_format_caps, use_hdc_bpp, window, pbuffer, double_buffer, floating_point);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsPeerInfo_setPixelFormat
+  (JNIEnv *env, jclass clazz, jlong hdc_ptr, jint pixel_format) {
+	HDC hdc = (HDC)(INT_PTR)hdc_ptr;
+	applyPixelFormat(env, hdc, pixel_format);
+}
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsPeerInfo_nGetHdc(JNIEnv *env, jclass unused, jobject peer_info_handle) {
+	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	return (intptr_t)peer_info->drawable_hdc;
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsPeerInfo_nGetHwnd(JNIEnv *env, jclass unused, jobject peer_info_handle) {
