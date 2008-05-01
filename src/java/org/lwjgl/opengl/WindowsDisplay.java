@@ -174,6 +174,8 @@ final class WindowsDisplay implements DisplayImplementation {
 			throw new LWJGLException("Failed to get dc");
 		}
 		peer_info.initDC(getHwnd(), getHdc());
+		int format = WindowsPeerInfo.choosePixelFormat(getHdc(), 0, 0, peer_info.getPixelFormat(), null, true, true, false, true);
+		WindowsPeerInfo.setPixelFormat(getHdc(), format);
 		showWindow(getHwnd(), SW_SHOWDEFAULT);
 		if (parent == null) {
 			setForegroundWindow(getHwnd());

@@ -49,10 +49,12 @@ final class WindowsDisplayPeerInfo extends WindowsPeerInfo {
 		GLContext.loadOpenGLLibrary();
 	}
 
+	final PixelFormat getPixelFormat() {
+		return pixel_format;
+	}
+
 	void initDC(long hwnd, long hdc) throws LWJGLException {
 		nInitDC(getHandle(), hwnd, hdc);
-		int format = choosePixelFormat(hdc, 0, 0, pixel_format, null, true, true, false, true);
-		setPixelFormat(hdc, format);
 	}
 	private static native void nInitDC(ByteBuffer peer_info_handle, long hwnd, long hdc);
 
