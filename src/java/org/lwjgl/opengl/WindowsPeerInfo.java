@@ -48,12 +48,11 @@ abstract class WindowsPeerInfo extends PeerInfo {
 	}
 	private static native ByteBuffer createHandle();
 
-	protected void choosePixelFormat(int origin_x, int origin_y, PixelFormat pixel_format, IntBuffer pixel_format_caps, boolean use_hdc_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException {
-		int pixel_format_id = nChoosePixelFormat(getHdc(), origin_x, origin_y, pixel_format, pixel_format_caps, use_hdc_bpp, support_window, support_pbuffer, double_buffered);
-		setPixelFormat(getHdc(), pixel_format_id);
+	protected static int choosePixelFormat(long hdc, int origin_x, int origin_y, PixelFormat pixel_format, IntBuffer pixel_format_caps, boolean use_hdc_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException {
+		return nChoosePixelFormat(hdc, origin_x, origin_y, pixel_format, pixel_format_caps, use_hdc_bpp, support_window, support_pbuffer, double_buffered);
 	}
 	private static native int nChoosePixelFormat(long hdc, int origin_x, int origin_y, PixelFormat pixel_format, IntBuffer pixel_format_caps, boolean use_hdc_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException;
-	private static native void setPixelFormat(long hdc, int pixel_format) throws LWJGLException;
+	protected static native void setPixelFormat(long hdc, int pixel_format) throws LWJGLException;
 
 	public final long getHdc() {
 		return nGetHdc(getHandle());

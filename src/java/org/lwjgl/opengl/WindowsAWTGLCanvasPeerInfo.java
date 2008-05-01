@@ -58,7 +58,8 @@ final class WindowsAWTGLCanvasPeerInfo extends WindowsPeerInfo {
 		nInitHandle(awt_surface.lockAndGetHandle(component), getHandle());
 		if (!has_pixel_format && pixel_format != null) {
 			// If we haven't applied a pixel format yet, do it now
-			choosePixelFormat(component.getX(), component.getY(), pixel_format, null, true, true, false, true);
+			int format = choosePixelFormat(getHdc(), component.getX(), component.getY(), pixel_format, null, true, true, false, true);
+			setPixelFormat(getHdc(), format);
 			has_pixel_format = true;
 		}
 	}

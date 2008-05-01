@@ -51,7 +51,8 @@ final class WindowsDisplayPeerInfo extends WindowsPeerInfo {
 
 	void initDC(long hwnd, long hdc) throws LWJGLException {
 		nInitDC(getHandle(), hwnd, hdc);
-		choosePixelFormat(0, 0, pixel_format, null, true, true, false, true);
+		int format = choosePixelFormat(hdc, 0, 0, pixel_format, null, true, true, false, true);
+		setPixelFormat(hdc, format);
 	}
 	private static native void nInitDC(ByteBuffer peer_info_handle, long hwnd, long hdc);
 
