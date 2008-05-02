@@ -173,13 +173,18 @@ final class WindowsDisplay implements DisplayImplementation {
 			nDestroyWindow(hwnd, hdc);
 			throw new LWJGLException("Failed to get dc");
 		}
-		peer_info.initDC(getHwnd(), getHdc());
-		int format = WindowsPeerInfo.choosePixelFormat(getHdc(), 0, 0, peer_info.getPixelFormat(), null, true, true, false, true);
-		WindowsPeerInfo.setPixelFormat(getHdc(), format);
-		showWindow(getHwnd(), SW_SHOWDEFAULT);
-		if (parent == null) {
-			setForegroundWindow(getHwnd());
-			setFocus(getHwnd());
+		try {
+			int format = WindowsPeerInfo.choosePixelFormat(getHdc(), 0, 0, peer_info.getPixelFormat(), null, true, true, false, true);
+			WindowsPeerInfo.setPixelFormat(getHdc(), format);
+			peer_info.initDC(getHwnd(), getHdc());
+			showWindow(getHwnd(), SW_SHOWDEFAULT);
+			if (parent == null) {
+				setForegroundWindow(getHwnd());
+				setFocus(getHwnd());
+			}
+		} catch (LWJGLException e) {
+			nDestroyWindow(hwnd, hdc);
+			throw e;
 		}
 	}
 	private native long nCreateWindow(DisplayMode mode, boolean fullscreen, int x, int y, boolean undecorated, boolean child_window, long parent_hwnd) throws LWJGLException;
