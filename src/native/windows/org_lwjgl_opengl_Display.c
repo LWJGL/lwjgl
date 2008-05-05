@@ -151,13 +151,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getJNIVersion
 	return org_lwjgl_WindowsSysImplementation_JNI_VERSION;
 }
 
-static void destroyWindow(JNIEnv *env, HWND *hwnd, HDC *hdc) {
-	jclass display_class_global = (jclass)(LONG_PTR)GetWindowLongPtr(*hwnd, GWLP_USERDATA);
-	closeWindow(hwnd, hdc);
-	if (display_class_global != NULL)
-		(*env)->DeleteGlobalRef(env, display_class_global);
-}
-
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv *env, jobject self, jboolean fullscreen, jint x, jint y, jint width, jint height, jboolean undecorated, jboolean child_window, jlong parent_hwnd) {
 	HWND hwnd;
 	static bool oneShotInitialised = false;
@@ -173,10 +166,20 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEn
 	return (INT_PTR)hwnd;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nDestroyWindow(JNIEnv *env, jclass clazz, jlong hwnd_ptr, jlong hdc_ptr) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nReleaseDC(JNIEnv *env, jclass clazz, jlong hwnd_ptr, jlong hdc_ptr) {
 	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
 	HDC hdc = (HDC)(INT_PTR)hdc_ptr;
-	destroyWindow(env, &hwnd, &hdc);
+	ReleaseDC(hwnd, hdc);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nDestroyWindow(JNIEnv *env, jclass clazz, jlong hwnd_ptr) {
+	jclass display_class_global;
+	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
+	display_class_global = (jclass)(LONG_PTR)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+	ShowWindow(hwnd, SW_HIDE);
+	DestroyWindow(hwnd);
+	if (display_class_global != NULL)
+		(*env)->DeleteGlobalRef(env, display_class_global);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_clientToScreen(JNIEnv *env, jclass unused, jlong hwnd_int, jobject buffer_handle) {

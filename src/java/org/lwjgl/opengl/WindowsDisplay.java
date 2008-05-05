@@ -170,7 +170,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		}
 		this.hdc = getDC(hwnd);
 		if (hdc == 0) {
-			nDestroyWindow(hwnd, hdc);
+			nDestroyWindow(hwnd);
 			throw new LWJGLException("Failed to get dc");
 		}
 		try {
@@ -183,7 +183,8 @@ final class WindowsDisplay implements DisplayImplementation {
 				setFocus(getHwnd());
 			}
 		} catch (LWJGLException e) {
-			nDestroyWindow(hwnd, hdc);
+			nReleaseDC(hwnd, hdc);
+			nDestroyWindow(hwnd);
 			throw e;
 		}
 	}
@@ -205,12 +206,14 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public void destroyWindow() {
-		nDestroyWindow(hwnd, hdc);
+		nReleaseDC(hwnd, hdc);
+		nDestroyWindow(hwnd);
 		freeLargeIcon();
 		freeSmallIcon();
 		resetCursorClipping();
 	}
-	private static native void nDestroyWindow(long hwnd, long hdc);
+	private static native void nReleaseDC(long hwnd, long hdc);
+	private static native void nDestroyWindow(long hwnd);
 	static void resetCursorClipping() {
 		if (cursor_clipped) {
 			try {
