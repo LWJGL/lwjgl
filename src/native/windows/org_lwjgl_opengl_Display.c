@@ -158,12 +158,7 @@ static void destroyWindow(JNIEnv *env, HWND *hwnd, HDC *hdc) {
 		(*env)->DeleteGlobalRef(env, display_class_global);
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv *env, jobject self, jobject mode, jboolean fullscreen, jint x, jint y, jboolean undecorated, jboolean child_window, jlong parent_hwnd) {
-	jclass cls_displayMode = (*env)->GetObjectClass(env, mode);
-	jfieldID fid_width = (*env)->GetFieldID(env, cls_displayMode, "width", "I");
-	jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
-	int width = (*env)->GetIntField(env, mode, fid_width);
-	int height = (*env)->GetIntField(env, mode, fid_height);
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv *env, jobject self, jboolean fullscreen, jint x, jint y, jint width, jint height, jboolean undecorated, jboolean child_window, jlong parent_hwnd) {
 	HWND hwnd;
 	static bool oneShotInitialised = false;
 	if (!oneShotInitialised) {
