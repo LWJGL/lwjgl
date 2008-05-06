@@ -345,7 +345,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/*
 	 * @see java.awt.Container#paint(java.awt.Graphics)
 	 */
-	public synchronized void paint(Graphics g) {
+	public void paint(Graphics g) {
 		
 		// don't paint loader if applet loaded
 		if(state == STATE_DONE) {
@@ -686,7 +686,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * replace the current applet with the lwjgl applet
 	 * using AppletStub and initialise and start it
 	 */
-	protected synchronized void switchApplet() throws Exception {
+	protected void switchApplet() throws Exception {
 		
 		state = STATE_SWITCHING_APPLET;
 		percentage = 100;
