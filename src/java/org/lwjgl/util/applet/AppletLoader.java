@@ -322,7 +322,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 	
 	/**
-	 * Retrieves the applet that has been loaded. Usefull for liveconnect.
+	 * Retrieves the applet that has been loaded. Useful for liveconnect.
 	 */
 	public Applet getApplet() {
 		return lwjglApplet;
@@ -615,7 +615,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			fatalErrorOccured(e.getMessage());
 		} finally {
 			loaderThread = null;
-			repaint();
 		}
 	}
 
