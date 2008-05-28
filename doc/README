@@ -1,6 +1,6 @@
 This is the official readme file for lwjgl.
 
-Unless otherwise stated, all files distributed or in CVS are covered by 
+Unless otherwise stated, all files distributed or in SVN are covered by 
 the license as stated in the LICENSE file. If you have not received this
 file, please download it from the cvs server.
 
@@ -8,14 +8,14 @@ To run some of the included tests:
  Extract the archive, and cd into directory
  (please substitute ; and \ according to platform)
 
-  java -cp .;res;jar\lwjgl.jar;jar\lwjgl_test.jar;jar\lwjgl_util.jar;jar\lwjgl_fmod3.jar;jar\lwjgl_devil.jar;jar\jinput.jar; -Djava.library.path=native\<win32|linux|macosx> TEST 
+  java -cp .;res;jar\lwjgl.jar;jar\lwjgl_test.jar;jar\lwjgl_util.jar;jar\jinput.jar; -Djava.library.path=native\<win32|linux|macosx> TEST 
   (this specifies that the jvm should locate the lwjgl native libs in 'native' directory)
   
  where TEST is one of the following: 
  
- 	org.lwjgl.test.WindowCreationTest
- 	org.lwjgl.test.SysTest
- 	org.lwjgl.test.DisplayTest
+  org.lwjgl.test.WindowCreationTest
+  org.lwjgl.test.SysTest
+  org.lwjgl.test.DisplayTest
  
   org.lwjgl.test.input.MouseCreationTest
   org.lwjgl.test.input.MouseTest
@@ -47,4 +47,4 @@ You may also run the Space invaders demo by executing:
   
 Project Webpage: www.lwjgl.org
 Project Forum: forum.lwjgl.org
-Project CVS: cvs.lwjgl.org
+Project SVN: https://java-game-lib.svn.sourceforge.net/svnroot/java-game-lib
