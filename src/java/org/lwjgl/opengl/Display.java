@@ -390,60 +390,8 @@ public final class Display {
 		}
 	}
 
-	/**
-	 * Synchronize the display to a capped frame rate. Note that we are being "smart" about the
-	 * desired results in our implementation; we automatically subtract 1 from the desired framerate
-	 * to prevent just missing the frame time if vsync is set.
-	 * @param fps The desired frame rate, in frames per second
-	 */
-/*	public static void sync3(int fps) {
-		long savedTimeThen;
-		long timeNow;
-		synchronized (GlobalLock.lock) {
-			timeNow = Sys.getTime();
-			savedTimeThen = timeThen;
-			timeThen = timeNow;
-		}
-		float frameTime = 1.0f / (fps > 1 ? fps - 1 : 1);
-		while (timeNow > savedTimeThen && (float) (timeNow - savedTimeThen) / (float) Sys.getTimerResolution() < frameTime) {
-			// This is a system-friendly way of allowing other stuff to use CPU if it wants to
-			Thread.yield();
-			timeNow = Sys.getTime();
-		}
-	}
-*/
 	private static long timeLate;
 
-	/**
-	 * Alternative sync method which works better on triple-buffered GL displays.
-	 *
-	 * @param fps The desired frame rate, in frames per second
-	 */
-/*	public static void sync2(int fps) {
-		long timeNow;
-		long gapTo;
-		long savedTimeLate;
-		synchronized (GlobalLock.lock) {
-			gapTo = Sys.getTimerResolution() / fps + timeThen;
-			timeNow = Sys.getTime();
-			savedTimeLate = timeLate;
-		}
-
-		while (gapTo > timeNow + savedTimeLate) {
-			Thread.yield();
-			timeNow = Sys.getTime();
-		}
-
-		synchronized (GlobalLock.lock) {
-			if (gapTo < timeNow)
-				timeLate = timeNow - gapTo;
-			else
-				timeLate = 0;
-
-			timeThen = timeNow;
-		}
-	}
-*/
 	/**
 	 * Best sync method that works reliably.
 	 *
@@ -476,21 +424,6 @@ public final class Display {
 			timeThen = timeNow;
 		}
 	}
-
-	/**
-	 * @return the X coordinate of the window (always 0 for fullscreen)
-	 */
-	/*public static int getX() {
-		return (fullscreen) ? 0 :  x;
-	}*/
-
-	/**
-	 * @return the Y coordinate of the window (always 0 for fullscreen)
-	 */
-	/*public static int getY() {
-		return (fullscreen) ? 0 :  y;
-	}*/
-
 
 	/**
 	 * @return the title of the window
