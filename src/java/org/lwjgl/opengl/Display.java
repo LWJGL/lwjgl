@@ -396,7 +396,7 @@ public final class Display {
 	 * to prevent just missing the frame time if vsync is set.
 	 * @param fps The desired frame rate, in frames per second
 	 */
-	public static void sync3(int fps) {
+/*	public static void sync3(int fps) {
 		long savedTimeThen;
 		long timeNow;
 		synchronized (GlobalLock.lock) {
@@ -411,7 +411,7 @@ public final class Display {
 			timeNow = Sys.getTime();
 		}
 	}
-
+*/
 	private static long timeLate;
 
 	/**
@@ -419,7 +419,7 @@ public final class Display {
 	 *
 	 * @param fps The desired frame rate, in frames per second
 	 */
-	public static void sync2(int fps) {
+/*	public static void sync2(int fps) {
 		long timeNow;
 		long gapTo;
 		long savedTimeLate;
@@ -443,7 +443,7 @@ public final class Display {
 			timeThen = timeNow;
 		}
 	}
-
+*/
 	/**
 	 * Best sync method that works reliably.
 	 *
