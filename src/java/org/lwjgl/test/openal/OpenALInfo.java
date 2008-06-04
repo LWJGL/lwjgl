@@ -92,15 +92,15 @@ public class OpenALInfo {
 		device = ALC10.alcGetContextsDevice(ALC10.alcGetCurrentContext());
 		checkForErrors();
 		
-	    System.out.println(String.format("Default device: %s", ALC10.alcGetString(device, ALC10.ALC_DEFAULT_DEVICE_SPECIFIER)));
+	    System.out.println("Default device: " + ALC10.alcGetString(device, ALC10.ALC_DEFAULT_DEVICE_SPECIFIER));
 
-	    System.out.println(String.format("Default capture device: %s", ALC10.alcGetString(device, ALC11.ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER)));
+	    System.out.println("Default capture device: " + ALC10.alcGetString(device, ALC11.ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER));
 
     	ALC10.alcGetInteger(AL.getDevice(), ALC10.ALC_MAJOR_VERSION, version);
     	ALC10.alcGetInteger(AL.getDevice(), ALC10.ALC_MINOR_VERSION, (IntBuffer) version.position(1));
 	    checkForErrors();
 
-	    System.out.println(String.format("ALC version: %d.%d", (int)version.get(0), (int)version.get(1)));
+	    System.out.println("ALC version: " + (int)version.get(0) + "." + (int)version.get(1));
 
 	    System.out.println("ALC extensions:");
 	    String[] extensions = ALC10.alcGetString(device, ALC10.ALC_EXTENSIONS).split(" ");
@@ -114,9 +114,9 @@ public class OpenALInfo {
 	}
 	
 	private void printALInfo() {
-	    System.out.println(String.format("OpenAL vendor string: %s", AL10.alGetString(AL10.AL_VENDOR)));
-	    System.out.println(String.format("OpenAL renderer string: %s", AL10.alGetString(AL10.AL_RENDERER)));
-	    System.out.println(String.format("OpenAL version string: %s", AL10.alGetString(AL10.AL_VERSION)));
+	    System.out.println("OpenAL vendor string: " + AL10.alGetString(AL10.AL_VENDOR));
+	    System.out.println("OpenAL renderer string: " + AL10.alGetString(AL10.AL_RENDERER));
+	    System.out.println("OpenAL version string: " + AL10.alGetString(AL10.AL_VERSION));
 	    System.out.println("AL extensions:");
 	    String[] extensions = AL10.alGetString(AL10.AL_EXTENSIONS).split(" ");
 		for(int i=0; i<extensions.length; i++) {
@@ -132,14 +132,14 @@ public class OpenALInfo {
 		String[] devices = ALC10.alcGetString(null, which).split("\0");
 		checkForErrors();
 		
-		System.out.println(String.format("Available %s devices: ", kind));
+		System.out.println("Available " + kind + " devices: ");
 		for(int i=0; i<devices.length; i++) {
 			System.out.println("    " + devices[i]);
 		}
 	}
 
 	private void die(String kind, String description) {
-		System.out.println(String.format("%s error %s occured", kind, description));
+		System.out.println(kind + " error " + description + " occured");
 	}
 	
 	private void checkForErrors() {
