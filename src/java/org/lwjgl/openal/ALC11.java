@@ -52,9 +52,12 @@ import org.lwjgl.LWJGLUtil;
  */
 public final class ALC11 {
 	
-	public static int ALC_CAPTURE_DEVICE_SPECIFIER				= 0x310;
-	public static int ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER		= 0x311;
-	public static int ALC_CAPTURE_SAMPLES						= 0x312;
+	public static final int ALC_DEFAULT_ALL_DEVICES_SPECIFIER			= 0x1012;
+	public static final int ALC_ALL_DEVICES_SPECIFIER					= 0x1013;
+	
+	public static final int ALC_CAPTURE_DEVICE_SPECIFIER				= 0x310;
+	public static final int ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER		= 0x311;
+	public static final int ALC_CAPTURE_SAMPLES							= 0x312;
 	
 	/**
 	 * The alcCaptureOpenDevice function allows the application to connect to a capture
