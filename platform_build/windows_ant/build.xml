@@ -3,7 +3,6 @@
 <project name="lwjgl native code, native code" basedir="../../bin/lwjgl" default="compile">
 	<property name="native" location="../../src/native"/>
 	<property environment="env"/>
-	<property name="dxhome" location="${env.DXSDK_DIR}"/>
 	<property name="sdkhome" location="${env.MSSDK}"/>
 	<property name="program_files" location="${env.ProgramFiles}"/>
 	<property name="alhome" location="${program_files}\OpenAL 1.1 with EFX SDK"/>
@@ -13,7 +12,6 @@
 		<apply dir="." failonerror="true" executable="cl" dest="." skipemptyfilesets="true">
 			<arg line="/Ox /W2 /nologo /Ox /Ob2 /Oi /Ot /Oy /FD /EHsc /MT /Gy /W2 /nologo /c"/>
 			<arg value="/I${sdkhome}\include"/>
-			<arg value="/I${dxhome}\include"/>
 			<arg value="/I${alhome}\include"/>
 			<arg value="/I${java.home}\..\include"/>
 			<arg value="/I${java.home}\..\include\win32"/>
@@ -33,7 +31,6 @@
 			<srcfile/>
 			<arg line="/Fe${dllname} /link"/>
 			<arg value="/LIBPATH:${java.home}\..\lib"/>
-			<arg value="/LIBPATH:${dxhome}\lib\x86"/>
 			<arg value="/LIBPATH:${sdkhome}\lib"/>
 			<arg value="/LIBPATH:${alhome}\libs"/>
 			<arg value="/OPT:REF"/>
@@ -53,10 +50,9 @@
 	</target>
 	
 	<target name="compile">
-		<echo message="${dxhome}"/>
 		<echo message="${sdkhome}"/>
 		<echo message="${program_files}"/>
-		<property name="libs" value="Kernel32.lib ole32.lib dinput.lib dxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib jawt.lib delayimp.lib winmm.lib"/>
+		<property name="libs" value="Kernel32.lib ole32.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib jawt.lib delayimp.lib winmm.lib"/>
 		<antcall target="compile_dir"/>
 		<antcall target="link"/>
     </target>
