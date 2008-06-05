@@ -38,12 +38,9 @@ package org.lwjgl.opengl;
  * @author elias_naur
  */
 
-import java.awt.Cursor;
 import java.awt.Canvas;
+import java.awt.Cursor;
 import java.awt.Robot;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -57,7 +54,9 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 
-import com.apple.eawt.*;
+import com.apple.eawt.Application;
+import com.apple.eawt.ApplicationAdapter;
+import com.apple.eawt.ApplicationEvent;
 
 final class MacOSXDisplay implements DisplayImplementation {
 	private static final int PBUFFER_HANDLE_SIZE = 24;

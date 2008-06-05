@@ -37,13 +37,7 @@ package org.lwjgl.opengl;
  */
 
 import java.awt.Canvas;
-import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
 
 final class MacOSXGLCanvas extends Canvas {
 

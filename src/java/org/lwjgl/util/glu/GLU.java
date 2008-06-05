@@ -32,11 +32,9 @@
 package org.lwjgl.util.glu;
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
-import org.lwjgl.opengl.ARBImaging;
-import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Util;
 

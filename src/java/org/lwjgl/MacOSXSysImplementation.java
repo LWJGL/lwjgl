@@ -31,9 +31,6 @@
  */
 package org.lwjgl;
 
-import java.lang.reflect.Method;
-import java.security.AccessController;
-import java.security.PrivilegedExceptionAction;
 import java.awt.Toolkit;
 
 import com.apple.eio.FileManager;
