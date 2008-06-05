@@ -95,6 +95,7 @@ static jstring JNICALL Java_org_lwjgl_openal_ALC10_nalcGetString (JNIEnv *env, j
 	switch(token) {
 		case 0x1005:	// ALC_DEVICE_SPECIFIER
 		case 0x310:		// ALC_CAPTURE_DEVICE_SPECIFIER
+		case 0x1013:	// ALC_ALL_DEVICES_SPECIFIER
 			while (alcString[i - 1] != '\0' || alcString[i] != '\0') { 
 				i++; 
 			}
