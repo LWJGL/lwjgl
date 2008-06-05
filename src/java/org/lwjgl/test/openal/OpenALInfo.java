@@ -72,6 +72,8 @@ public class OpenALInfo {
 		printALInfo();
 		
 		checkForErrors();
+		
+		AL.destroy();
 	}
 	
 	private void printALCInfo() {
