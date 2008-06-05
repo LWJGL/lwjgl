@@ -276,9 +276,9 @@ final class KeyMap {
 				return Component.Identifier.Key.INSERT;
 			case Keyboard.KEY_DELETE:
 				return Component.Identifier.Key.DELETE;
-			case Keyboard.KEY_LWIN:
+			case Keyboard.KEY_LMETA:
 				return Component.Identifier.Key.LWIN;
-			case Keyboard.KEY_RWIN:
+			case Keyboard.KEY_RMETA:
 				return Component.Identifier.Key.RWIN;
 			case Keyboard.KEY_APPS:
 				return Component.Identifier.Key.APPS;

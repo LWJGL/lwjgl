@@ -562,9 +562,9 @@ final class WindowsKeycodes {
 			case VK_DELETE:
 				return Keyboard.KEY_DELETE;
 			case VK_LWIN:
-				return Keyboard.KEY_LWIN;
+				return Keyboard.KEY_LMETA;
 			case VK_RWIN:
-				return Keyboard.KEY_RWIN;
+				return Keyboard.KEY_RMETA;
 			case VK_APPS:
 				return Keyboard.KEY_APPS;
 /*			case VK_POWER:

@@ -335,9 +335,9 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 					return Keyboard.KEY_LMENU;
 			case KeyEvent.VK_META:
 				if (position == KeyEvent.KEY_LOCATION_RIGHT)
-					return Keyboard.KEY_RWIN;
+					return Keyboard.KEY_RMETA;
 				else
-					return Keyboard.KEY_LWIN;
+					return Keyboard.KEY_LMETA;
 			case KeyEvent.VK_SHIFT:
 				if (position == KeyEvent.KEY_LOCATION_RIGHT)
 					return Keyboard.KEY_RSHIFT;
