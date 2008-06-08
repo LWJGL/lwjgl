@@ -34,6 +34,8 @@ package org.lwjgl.test.opengl.awt;
 import java.awt.Canvas;
 import java.awt.Frame;
 import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -51,6 +53,7 @@ import org.lwjgl.util.glu.GLU;
  * $Id$
  */
 public class DisplayParentTest extends Frame {
+	boolean killswitch = false;
 	public DisplayParentTest() throws LWJGLException {
 		setTitle("LWJGL Display Parent Test");
 		setSize(640, 320);
@@ -59,12 +62,11 @@ public class DisplayParentTest extends Frame {
 		display_parent.setFocusable(true);
 		display_parent.setIgnoreRepaint(true);
 		add(display_parent);
-/*		addWindowListener(new WindowAdapter() {
+		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				Display.destroy();
-				dispose();
+				killswitch = true;
 			}
-		});*/
+		});
 		setResizable(true);
 		setVisible(true);
 		Display.setParent(display_parent);
@@ -72,7 +74,7 @@ public class DisplayParentTest extends Frame {
 		Display.create();
 		float angle = 0f;
 
-		while (isVisible()) {
+		while (isVisible() && !killswitch) {
 			angle += 1.0f;
 			int width;
 			int height;
@@ -83,6 +85,11 @@ public class DisplayParentTest extends Frame {
 				width = Display.getDisplayMode().getWidth();
 				height = Display.getDisplayMode().getHeight();
 			}
+			
+			if(width < 1 || height < 1) {
+				continue;
+			}
+			
 			GL11.glViewport(0, 0, width, height);
 			GL11.glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
@@ -115,7 +122,8 @@ public class DisplayParentTest extends Frame {
 System.out.println("				Mouse.getEventX() = " + 				Mouse.getEventX() + " | Mouse.getEventY() = " + Mouse.getEventY());
 			}*/
 		}
-		System.exit(0);
+		Display.destroy();
+		dispose();
 	}
 
 	public static void main(String[] args) throws LWJGLException {
