@@ -1020,7 +1020,9 @@ public final class Display {
 				cached_icons = new ByteBuffer[icons.length];
 				for(int i=0;i<icons.length; i++) {
 					cached_icons[i] = BufferUtils.createByteBuffer(icons[i].capacity());
+					int old_position = icons[i].position();
 					cached_icons[i].put(icons[i]);
+					icons[i].position(old_position);
 					cached_icons[i].flip();
 				}
 			}
