@@ -1193,10 +1193,12 @@ final class LinuxDisplay implements DisplayImplementation {
 				for (int i=0;i<icons.length;i++) {
 					int size = icons[i].limit() / 4;
 					int dimension = (int)Math.sqrt(size);
-					ByteBuffer icon_rgb = convertIcon(icons[i], dimension, dimension);
-					ByteBuffer icon_mask = convertIconMask(icons[i], dimension, dimension);
-					nSetWindowIcon(getDisplay(), getWindow(), icon_rgb, icon_rgb.capacity(), icon_mask, icon_mask.capacity(), dimension, dimension);
-					return 1;
+					if (dimension > 0) {
+						ByteBuffer icon_rgb = convertIcon(icons[i], dimension, dimension);
+						ByteBuffer icon_mask = convertIconMask(icons[i], dimension, dimension);
+						nSetWindowIcon(getDisplay(), getWindow(), icon_rgb, icon_rgb.capacity(), icon_mask, icon_mask.capacity(), dimension, dimension);
+						return 1;
+					}
 				}
 				return 0;
 			} finally {
