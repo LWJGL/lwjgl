@@ -1061,7 +1061,7 @@ public interface AL10 {
 	 * Source).
 	 * </p>
 	 * <p>
-	 * The Unqueue command removes a number of buffers entries that have nished
+	 * The Unqueue command removes a number of buffers entries that have finished
 	 * processing, in the order of appearance, from the queue. The operation will fail if
 	 * more buffers are requested than available, leaving the destination arguments
 	 * unchanged. An AL_INVALID_VALUE error will be thrown. If no error, the destination
