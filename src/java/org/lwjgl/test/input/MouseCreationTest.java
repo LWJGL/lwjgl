@@ -92,6 +92,14 @@ public class MouseCreationTest {
   
 	private void initializeOpenGL() {
     GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	// Put the window into orthographic projection mode with 1:1 pixel ratio.
+	// We haven't used GLU here to do this to avoid an unnecessary dependency.
+	GL11.glMatrixMode(GL11.GL_PROJECTION);
+	GL11.glLoadIdentity();
+	GL11.glOrtho(0.0, Display.getDisplayMode().getWidth(), 0.0, Display.getDisplayMode().getHeight(), -1.0, 1.0);
+	GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	GL11.glLoadIdentity();
+	GL11.glViewport(0, 0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());    
 	}
 
 	public void executeTest() {
