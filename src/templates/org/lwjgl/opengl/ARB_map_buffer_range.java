@@ -31,44 +31,25 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.GLenum;
+import org.lwjgl.util.generator.*;
 
-public interface ARB_color_buffer_float {
+import java.nio.ByteBuffer;
 
-	/**
-	 * Accepted by the &lt;pname&gt; parameters of GetBooleanv, GetIntegerv,
-	 * GetFloatv, and GetDoublev:
-	 */
-	int GL_RGBA_FLOAT_MODE_ARB = 0x8820;
+public interface ARB_map_buffer_range {
 
-	/**
-	 * Accepted by the &lt;target&gt; parameter of ClampColorARB and the &lt;pname&gt;
-	 * parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev.
-	 */
-	int GL_CLAMP_VERTEX_COLOR_ARB = 0x891A;
-	int GL_CLAMP_FRAGMENT_COLOR_ARB = 0x891B;
-	int GL_CLAMP_READ_COLOR_ARB = 0x891C;
+	/** Accepted by the &lt;access&gt; parameter of MapBufferRange: */
+	int GL_MAP_READ_BIT = 0x0001;
+	int GL_MAP_WRITE_BIT = 0x0002;
+	int GL_MAP_INVALIDATE_RANGE_BIT = 0x0004;
+	int GL_MAP_INVALIDATE_BUFFER_BIT = 0x0008;
+	int GL_MAP_FLUSH_EXPLICIT_BIT = 0x0010;
+	int GL_MAP_UNSYNCHRONIZED_BIT = 0x0020;
 
-	/** Accepted by the &lt;clamp&gt; parameter of ClampColorARB. */
-	int GL_FIXED_ONLY_ARB = 0x891D;
+	@CachedResult
+	@GLvoid
+	ByteBuffer
+	glMapBufferRange(@GLenum int target, @GLintptr long offset, @GLsizeiptr long length, @GLbitfield int access);
 
-	/**
-	 * Accepted as a value in the &lt;piAttribIList&gt; and &lt;pfAttribFList&gt;
-	 * parameter arrays of wglChoosePixelFormatARB, and returned in the
-	 * &lt;piValues&gt; parameter array of wglGetPixelFormatAttribivARB, and the
-	 * &lt;pfValues&gt; parameter array of wglGetPixelFormatAttribfvARB:
-	 */
-	int WGL_TYPE_RGBA_FLOAT_ARB = 0x21A0;
-
-	/**
-	 * Accepted as values of the &lt;render_type&gt; arguments in the
-	 * glXCreateNewContext and glXCreateContext functions
-	 */
-	int GLX_RGBA_FLOAT_TYPE = 0x20B9;
-
-	/** Accepted as a bit set in the GLX_RENDER_TYPE variable */
-	int GLX_RGBA_FLOAT_BIT = 0x00000004;
-
-	void glClampColorARB(@GLenum int target, @GLenum int clamp);
+	void glFlushMappedBufferRange(@GLenum int target, @GLintptr long offset, @GLsizeiptr long length);
 
 }

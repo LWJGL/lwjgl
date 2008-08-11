@@ -31,44 +31,19 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.GLenum;
+import org.lwjgl.util.generator.Extension;
 
-public interface ARB_color_buffer_float {
-
-	/**
-	 * Accepted by the &lt;pname&gt; parameters of GetBooleanv, GetIntegerv,
-	 * GetFloatv, and GetDoublev:
-	 */
-	int GL_RGBA_FLOAT_MODE_ARB = 0x8820;
+@Extension(postfix = "ARB", className = "ARBTextureCompressionRGTC")
+public interface ARB_texture_compression_rgtc {
 
 	/**
-	 * Accepted by the &lt;target&gt; parameter of ClampColorARB and the &lt;pname&gt;
-	 * parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev.
+	 * Accepted by the &lt;internalformat&gt; parameter of TexImage2D,
+	 * CopyTexImage2D, and CompressedTexImage2D and the &lt;format&gt; parameter
+	 * of CompressedTexSubImage2D:
 	 */
-	int GL_CLAMP_VERTEX_COLOR_ARB = 0x891A;
-	int GL_CLAMP_FRAGMENT_COLOR_ARB = 0x891B;
-	int GL_CLAMP_READ_COLOR_ARB = 0x891C;
-
-	/** Accepted by the &lt;clamp&gt; parameter of ClampColorARB. */
-	int GL_FIXED_ONLY_ARB = 0x891D;
-
-	/**
-	 * Accepted as a value in the &lt;piAttribIList&gt; and &lt;pfAttribFList&gt;
-	 * parameter arrays of wglChoosePixelFormatARB, and returned in the
-	 * &lt;piValues&gt; parameter array of wglGetPixelFormatAttribivARB, and the
-	 * &lt;pfValues&gt; parameter array of wglGetPixelFormatAttribfvARB:
-	 */
-	int WGL_TYPE_RGBA_FLOAT_ARB = 0x21A0;
-
-	/**
-	 * Accepted as values of the &lt;render_type&gt; arguments in the
-	 * glXCreateNewContext and glXCreateContext functions
-	 */
-	int GLX_RGBA_FLOAT_TYPE = 0x20B9;
-
-	/** Accepted as a bit set in the GLX_RENDER_TYPE variable */
-	int GLX_RGBA_FLOAT_BIT = 0x00000004;
-
-	void glClampColorARB(@GLenum int target, @GLenum int clamp);
+	int GL_COMPRESSED_RED_RGTC1 = 0x8DBB;
+	int GL_COMPRESSED_SIGNED_RED_RGTC1 = 0x8DBC;
+	int GL_COMPRESSED_RED_GREEN_RGTC2 = 0x8DBD;
+	int GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2 = 0x8DBE;
 
 }
