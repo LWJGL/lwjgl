@@ -30,7 +30,7 @@
 		</condition>
 
 		<property name="linker_flags" value="-Wl,--version-script=${native}/linux/lwjgl.map -shared -O2 -Wall -o ${libname} ${libs}"/>
-		<apply dir="." executable="cc" dest="." skipemptyfilesets="true" failonerror="true">
+		<apply dir="." executable="gcc" dest="." skipemptyfilesets="true" failonerror="true">
 			<arg line="${cflags} ${cflags_pthread}"/>
 			<arg value="-I${java.home}/include"/>
 			<arg value="-I${java.home}/include/linux"/>
@@ -44,7 +44,7 @@
 			<fileset dir="${native}/generated" includes="*.c"/>
 			<fileset dir="${native}/common" includes="*.c"/>
 		</apply>
-		<apply dir="." parallel="true" executable="cc" failonerror="true">
+		<apply dir="." parallel="true" executable="gcc" failonerror="true">
 			<srcfile/>
 			<arg line="${linker_flags}"/>
 			<fileset dir="." includes="*.o"/>
