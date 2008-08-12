@@ -247,7 +247,10 @@
 		<antcall target="-compile_native_win32" />
 
 		<condition property="lwjgl.platform.linux">
-			<os name="Linux" />
+			<or>
+				<os name="Linux" />
+				<os name="SunOS" />
+			</or>
 		</condition>
 		<antcall target="-compile_native_linux" />
 

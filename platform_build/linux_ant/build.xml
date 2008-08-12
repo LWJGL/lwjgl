@@ -6,7 +6,7 @@
 	<property name="libname64" value="liblwjgl64.so"/>
 	<property name="libs32" value="-L/usr/X11R6/lib -L/usr/X11/lib -lm -lX11 -lXext -lXcursor -lXrandr -lpthread -L${java.home}/lib/i386 -ljawt -Wl,-static,-lXxf86vm,-call_shared"/>
 	<property name="libs64" value="-L/usr/X11R6/lib64 -L/usr/X11/lib64 -lm -lX11 -lXext -lXcursor -lXrandr -lXxf86vm -lpthread -L${java.home}/lib/amd64 -ljawt"/>
-	<property name="cflags" value="-O2 -Wall -c -fPIC -std=c99 -pthread -Wunused"/>
+	<property name="cflags" value="-O2 -Wall -c -fPIC -std=c99 -Wunused"/>
 	
 	<target name="clean">
 		<delete>
@@ -25,13 +25,18 @@
 		<condition property="libname" value="${libname64}" else="${libname32}">
 			<equals arg1="${hwplatform}" arg2="x86_64"/>
 		</condition>
+		<condition property="cflags_pthread" value="-pthreads" else="-pthread">
+			<os name="SunOS" />
+		</condition>
+
 		<property name="linker_flags" value="-Wl,--version-script=${native}/linux/lwjgl.map -shared -O2 -Wall -o ${libname} ${libs}"/>
 		<apply dir="." executable="cc" dest="." skipemptyfilesets="true" failonerror="true">
-			<arg line="${cflags}"/>
+			<arg line="${cflags} ${cflags_pthread}"/>
 			<arg value="-I${java.home}/include"/>
 			<arg value="-I${java.home}/include/linux"/>
 			<arg value="-I${java.home}/../include"/>
 			<arg value="-I${java.home}/../include/linux"/>
+			<arg value="-I${java.home}/../include/solaris"/>
 			<arg value="-I${native}/common"/>
 			<arg value="-I${native}/linux"/>
 			<mapper type="glob" from="*.c" to="*.o"/>
