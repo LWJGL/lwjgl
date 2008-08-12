@@ -4,7 +4,7 @@
 	<property name="native" location="../../src/native"/>
 	<property name="libname32" value="liblwjgl.so"/>
 	<property name="libname64" value="liblwjgl64.so"/>
-	<property name="libs32" value="-L/usr/X11R6/lib -L/usr/X11/lib -lm -lX11 -lXext -lXcursor -lXrandr -lpthread -L${java.home}/lib/i386 -ljawt -Wl,-static,-lXxf86vm,-call_shared"/>
+	<property name="libs32" value="-L/usr/X11R6/lib -L/usr/X11/lib -lm -lX11 -lXext -lXcursor -lXrandr -lpthread -L${java.home}/lib/i386 -ljawt"/>
 	<property name="libs64" value="-L/usr/X11R6/lib64 -L/usr/X11/lib64 -lm -lX11 -lXext -lXcursor -lXrandr -lXxf86vm -lpthread -L${java.home}/lib/amd64 -ljawt"/>
 	<property name="cflags" value="-O2 -Wall -c -fPIC -std=c99 -Wunused"/>
 	
@@ -19,7 +19,10 @@
 		<exec executable="uname" outputproperty="hwplatform">
 			<arg value="-m"/>
 		</exec>
-		<condition property="libs" value="${libs64}" else="${libs32}">
+		<condition property="xf86vm_lib" value="-lXxf86vm" else="-Wl,-static,-lXxf86vm,-call_shared">
+			<os name="SunOS" />
+		</condition>
+		<condition property="libs" value="${libs64}" else="${libs32} ${xf86vm_lib}">
 			<equals arg1="${hwplatform}" arg2="x86_64"/>
 		</condition>
 		<condition property="libname" value="${libname64}" else="${libname32}">
@@ -28,8 +31,11 @@
 		<condition property="cflags_pthread" value="-pthreads" else="-pthread">
 			<os name="SunOS" />
 		</condition>
+		<condition property="version_script_flags" value="" else="-Wl,--version-script=${native}/linux/lwjgl.map">
+			<os name="SunOS" />
+		</condition>
 
-		<property name="linker_flags" value="-Wl,--version-script=${native}/linux/lwjgl.map -shared -O2 -Wall -o ${libname} ${libs}"/>
+		<property name="linker_flags" value="${version_script_flags} -shared -O2 -Wall -o ${libname} ${libs}"/>
 		<apply dir="." executable="gcc" dest="." skipemptyfilesets="true" failonerror="true">
 			<arg line="${cflags} ${cflags_pthread}"/>
 			<arg value="-I${java.home}/include"/>
