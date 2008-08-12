@@ -548,7 +548,8 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void resetDisplayMode() {
 		lockAWT();
 		try {
-			switchDisplayMode(saved_mode);
+			if(current_mode != saved_mode)
+				switchDisplayMode(saved_mode);
 			if (isXF86VidModeSupported())
 				doSetGamma(saved_gamma);
 		} catch (LWJGLException e) {
@@ -645,7 +646,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			current_mode = saved_mode;
 			saved_gamma = getCurrentGammaRamp();
 			current_gamma = saved_gamma;
-			return saved_mode;
+			return current_mode;
 		} finally {
 			unlockAWT();
 		}
