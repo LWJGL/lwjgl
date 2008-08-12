@@ -341,7 +341,10 @@
 		</condition>
 
 		<condition property="native_path" value="libs/linux">
-			<os name="Linux" />
+			<or>
+				<os name="Linux" />
+				<os name="SunOS" />
+			</or>
 		</condition>
 
 		<condition property="native_path" value="libs/macosx">
