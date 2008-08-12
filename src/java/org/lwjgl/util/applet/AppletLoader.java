@@ -83,6 +83,7 @@ import java.util.jar.Pack200;
  * <li>al_windows - [String] Jar containing native files for windows.</li>
  * <li>al_linux - [String] Jar containing native files for linux.</li>
  * <li>al_mac - [String] Jar containing native files for mac.</li>
+ * <li>al_solaris - [String] Jar containing native files for solaris.</li>
  * </ul>
  * </p>
  * <p>
@@ -498,10 +499,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
 		if (osName.startsWith("Win")) {
 			nativeJar = getParameter("al_windows");
-		} else if (osName.startsWith("Linux") || osName.startsWith("FreeBSD") || osName.startsWith("SunOS")) {
+		} else if (osName.startsWith("Linux") || osName.startsWith("FreeBSD")) {
 			nativeJar = getParameter("al_linux");
 		} else if (osName.startsWith("Mac")) {
 			nativeJar = getParameter("al_mac");
+		} else if (osName.startsWith("Solaris") || osName.startsWith("SunOS")) {
+			nativeJar = getParameter("al_solaris");
 		} else {
 			fatalErrorOccured("OS (" + osName + ") not supported");
 		}
