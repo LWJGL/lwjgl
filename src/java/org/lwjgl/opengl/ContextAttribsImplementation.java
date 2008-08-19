@@ -29,50 +29,22 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package org.lwjgl.opengl;
 
-/**
- * An implementation of ContextAttribs using GLX_create_context.
- * <p/><p/>
- * ---- WIP - GLX_create_context has not been defined yet ----
- *
- * @author spasi <spasi@users.sourceforge.net>
- */
-final class LinuxContextAttribs implements ContextAttribsImplementation {
+/** @author spasi <spasi@users.sourceforge.net> */
+interface ContextAttribsImplementation {
 
-	private static final int GLX_CONTEXT_MAJOR_VERSION_ARB = 0x2091;
-	private static final int GLX_CONTEXT_MINOR_VERSION_ARB = 0x2092;
-	private static final int GLX_CONTEXT_LAYER_PLANE_ARB = 0x2093;
-	private static final int GLX_CONTEXT_FLAGS_ARB = 0x2094;
+	int getMajorVersionAttrib();
 
-	private static final int GLX_CONTEXT_DEBUG_BIT_ARB = 0x0001;
-	private static final int GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB = 0x0002;
+	int getMinorVersionAttrib();
 
-	LinuxContextAttribs() {
-	}
+	int getLayerPlaneAttrib();
 
-	public int getMajorVersionAttrib() {
-		return GLX_CONTEXT_MAJOR_VERSION_ARB;
-	}
+	int getFlagsAttrib();
 
-	public int getMinorVersionAttrib() {
-		return GLX_CONTEXT_MINOR_VERSION_ARB;
-	}
+	int getDebugBit();
 
-	public int getLayerPlaneAttrib() {
-		return GLX_CONTEXT_LAYER_PLANE_ARB;
-	}
-
-	public int getFlagsAttrib() {
-		return GLX_CONTEXT_FLAGS_ARB;
-	}
-
-	public int getDebugBit() {
-		return GLX_CONTEXT_DEBUG_BIT_ARB;
-	}
-
-	public int getForwardCompatibleBit() {
-		return GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB;
-	}
+	int getForwardCompatibleBit();
 
 }

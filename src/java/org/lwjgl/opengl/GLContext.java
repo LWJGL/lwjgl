@@ -291,16 +291,16 @@ public final class GLContext {
 	 * of caps and function pointers will be used. <p>The reference to the context is held in a weak reference; therefore if no
 	 * strong reference exists to the GL context it will automatically be forgotten by the VM at an indeterminate point in the
 	 * future, freeing up a little RAM.
-	 * <p>If forwardCombatible is true, function pointers of deprecated GL11-GL21 functionality will not be loaded. Calling a deprecated
+	 * <p>If forwardCompatible is true, function pointers of deprecated GL11-GL21 functionality will not be loaded. Calling a deprecated
 	 * function using the specified context will result in an <code>IllegalStateException</code>.
 	 *
 	 * @param context           The context object, which uniquely identifies a GL context. If context is null, the native stubs are
 	 *                          unloaded.
-	 * @param forwardCombatible If the context is a forward combatible context (does not expose deprecated functionality, see XGL_ARB_create_context)
+	 * @param forwardCompatible If the context is a forward compatible context (does not expose deprecated functionality, see XGL_ARB_create_context)
 	 *
 	 * @throws LWJGLException if context non-null, and the gl library can't be loaded or the basic GL11 functions can't be loaded
 	 */
-	public static synchronized void useContext(Object context, boolean forwardCombatible) throws LWJGLException {
+	public static synchronized void useContext(Object context, boolean forwardCompatible) throws LWJGLException {
 		if ( context == null ) {
 			ContextCapabilities.unloadAllStubs();
 			setCapabilities(null);
@@ -321,7 +321,7 @@ public final class GLContext {
 				 * as part of its capability discovery, but GL functions cannot be called before
 				 * a capabilities object has been set.
 				 */
-				new ContextCapabilities(forwardCombatible);
+				new ContextCapabilities(forwardCompatible);
 				capability_cache.put(context, getCapabilities());
 			} else
 				setCapabilities(capabilities);

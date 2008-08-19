@@ -33,7 +33,7 @@ package org.lwjgl.util.generator;
 
 /**
  * Use this annotation on extensions with deprecated functionality.
- * Functions in such extensions marked with this annotation will not be loaded in a forward combatible context.
+ * Functions in such extensions marked with this annotation will not be loaded in a forward compatible context.
  *
  * @author spasi <spasi@users.sourceforge.net>
  */

@@ -68,7 +68,7 @@ static bool getExtensions(JNIEnv *env, WGLExtensions *extensions, jobject pixel_
 		return false;
 	}
 	dummy_hdc = GetDC(dummy_hwnd);
-	pixel_format_id = findPixelFormatOnDC(env, dummy_hdc, origin_x, origin_y, pixel_format, pixelFormatCaps, false, true, false, false, false);
+	pixel_format_id = findPixelFormatOnDC(env, dummy_hdc, origin_x, origin_y, pixel_format, pixelFormatCaps, false, true, false, false);
 	if (pixel_format_id == -1) {
 		closeWindow(&dummy_hwnd, &dummy_hdc);
 		return false;
@@ -137,7 +137,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsPbufferPeerInfo_nCreate
 	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	int pixel_format_id;
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
-	bool floating_point = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
 	
 	if ( pBufferAttribs != NULL ) {
 		pBufferAttribs_ptr = (const int *)(*env)->GetDirectBufferAddress(env, pBufferAttribs);
@@ -152,7 +151,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsPbufferPeerInfo_nCreate
 		return;
 	}
 	dummy_hdc = GetDC(dummy_hwnd);
-	pixel_format_id = findPixelFormatOnDC(env, dummy_hdc, origin_x, origin_y, pixel_format, pixelFormatCaps, false, false, true, false, floating_point);
+	pixel_format_id = findPixelFormatOnDC(env, dummy_hdc, origin_x, origin_y, pixel_format, pixelFormatCaps, false, false, true, false);
 	if (pixel_format_id == -1) {
 		closeWindow(&dummy_hwnd, &dummy_hdc);
 		return;

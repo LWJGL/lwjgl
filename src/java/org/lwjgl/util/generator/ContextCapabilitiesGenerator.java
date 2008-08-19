@@ -70,8 +70,8 @@ public class ContextCapabilitiesGenerator {
 	}
 
 	public static void generateInitializerPrologue(PrintWriter writer) {
-		writer.println("\t" + Utils.CONTEXT_CAPS_CLASS_NAME + "(boolean forwardCombatible) throws LWJGLException {");
-		writer.println("\t\tSet " + CACHED_EXTS_VAR_NAME + " = " + ALL_INIT_METHOD_NAME + "(forwardCombatible);");
+		writer.println("\t" + Utils.CONTEXT_CAPS_CLASS_NAME + "(boolean forwardCompatible) throws LWJGLException {");
+		writer.println("\t\tSet " + CACHED_EXTS_VAR_NAME + " = " + ALL_INIT_METHOD_NAME + "(forwardCompatible);");
 	}
 
 	private static String translateFieldName(String interface_name) {
@@ -116,13 +116,13 @@ public class ContextCapabilitiesGenerator {
 	}
 
 	public static void generateInitStubsPrologue(PrintWriter writer, boolean context_specific) {
-		writer.println("\tprivate Set " + ALL_INIT_METHOD_NAME + "(boolean forwardCombatible) throws LWJGLException {");
+		writer.println("\tprivate Set " + ALL_INIT_METHOD_NAME + "(boolean forwardCompatible) throws LWJGLException {");
 		if ( !context_specific ) {
 			writer.println("\t\tif (" + STUBS_LOADED_NAME + ")");
 			writer.println("\t\t\treturn GLContext.getSupportedExtensions();");
 			writer.println("\t\torg.lwjgl.opengl.GL11." + Utils.STUB_INITIALIZER_NAME + "();");
 		} else {
-			writer.println("\t\tif (!" + getAddressesInitializerName("GL11") + "(forwardCombatible))");
+			writer.println("\t\tif (!" + getAddressesInitializerName("GL11") + "(forwardCompatible))");
 			writer.println("\t\t\tthrow new LWJGLException(\"GL11 not supported\");");
 		}
 		// Try to initialize GL30.glGetStringi here, in case we have created an OpenGL 3.0 context
@@ -154,7 +154,7 @@ public class ContextCapabilitiesGenerator {
 				writer.print(translateFieldName(d.getSimpleName()) + "\")");
 				writer.print(" && !" + getAddressesInitializerName(d.getSimpleName()) + "(");
 				if ( d.getAnnotation(DeprecatedGL.class) != null )
-					writer.print("forwardCombatible");
+					writer.print("forwardCompatible");
 				if ( d.getAnnotation(Dependent.class) != null ) {
 					if ( d.getAnnotation(DeprecatedGL.class) != null )
 						writer.print(",");
@@ -186,7 +186,7 @@ public class ContextCapabilitiesGenerator {
 		DeprecatedGL deprecated = d.getAnnotation(DeprecatedGL.class);
 		Dependent dependent = d.getAnnotation(Dependent.class);
 		if ( deprecated != null )
-			writer.print("boolean forwardCombatible");
+			writer.print("boolean forwardCompatible");
 		if ( dependent != null ) {
 			if ( deprecated != null )
 				writer.print(",");
@@ -202,7 +202,7 @@ public class ContextCapabilitiesGenerator {
 
 			writer.print("\t\t\t(");
 			if ( deprecated != null )
-				writer.print("forwardCombatible || ");
+				writer.print("forwardCompatible || ");
 			if ( dependent != null )
 				writer.print("!supported_extensions.contains(\"" + dependent.value() + "\") || ");
 			if ( deprecated != null || dependent != null )

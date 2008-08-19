@@ -45,16 +45,16 @@ import java.nio.IntBuffer;
  * Use of this class is optional. If an OpenGL context is created without passing an instance of this class
  * (or XGL_create_context is not supported), the old context creation code will be used. Use of ContextAttribs is required
  * to create an OpenGL 3.0 or newer context. Support for debug and forward compatible mobes is not guaranteed by the OpenGL
- * implementation. Developers may encounter debug contexts being the same as non-debug contexts or forward combatible
+ * implementation. Developers may encounter debug contexts being the same as non-debug contexts or forward compatible
  * contexts having support for deprecated functionality.
  * <p/>
- * Warning: This functionality is currently available on the Windows platform only. However, if the forwardCombatible
+ * Warning: This functionality is currently available on the Windows platform only. However, if the forwardCompatible
  * attribute is used, LWJGL will not load the deprecated functionality (as defined in the OpenGL 3.0 specification). This
  * means that developers can start working on cleaning up their applications without an OpenGL 3.0 complaint driver.
  *
  * @author spasi <spasi@users.sourceforge.net>
  */
-public abstract class ContextAttribs {
+public final class ContextAttribs {
 
 	private int majorVersion;
 	private int minorVersion;
@@ -62,9 +62,13 @@ public abstract class ContextAttribs {
 	private int layerPlane;
 
 	private boolean debug;
-	private boolean forwardCombatible;
+	private boolean forwardCompatible;
 
-	protected ContextAttribs(final int majorVersion, final int minorVersion) {
+	public ContextAttribs() {
+		this(1, 0);
+	}
+
+	public ContextAttribs(final int majorVersion, final int minorVersion) {
 		if ( majorVersion < 0 ||
 		     3 < majorVersion ||
 		     minorVersion < 0 ||
@@ -79,103 +83,76 @@ public abstract class ContextAttribs {
 		this.layerPlane = 0;
 
 		this.debug = false;
-		this.forwardCombatible = false;
+		this.forwardCompatible = false;
 	}
 
-	protected ContextAttribs(final ContextAttribs attribs) {
+	private ContextAttribs(final ContextAttribs attribs) {
 		this.majorVersion = attribs.majorVersion;
 		this.minorVersion = attribs.minorVersion;
 
 		this.layerPlane = attribs.layerPlane;
 
 		this.debug = attribs.debug;
-		this.forwardCombatible = attribs.forwardCombatible;
+		this.forwardCompatible = attribs.forwardCompatible;
 	}
 
-	public static ContextAttribs create() {
-		return create(1, 0);
-	}
-
-	public static ContextAttribs create(final int majorVersion, final int minorVersion) {
-		switch ( LWJGLUtil.getPlatform() ) {
-			case LWJGLUtil.PLATFORM_LINUX:
-				return new LinuxContextAttribs(majorVersion, minorVersion);
-			case LWJGLUtil.PLATFORM_WINDOWS:
-				return new WindowsContextAttribs(majorVersion, minorVersion);
-			case LWJGLUtil.PLATFORM_MACOSX:
-				return new MacOSXContextAttribs(majorVersion, minorVersion);
-			default:
-				throw new IllegalStateException("Unsupported platform");
-		}
-	}
-
-	private static ContextAttribs create(final ContextAttribs attribs) {
-		switch ( LWJGLUtil.getPlatform() ) {
-			case LWJGLUtil.PLATFORM_LINUX:
-				return new LinuxContextAttribs(attribs);
-			case LWJGLUtil.PLATFORM_WINDOWS:
-				return new WindowsContextAttribs(attribs);
-			case LWJGLUtil.PLATFORM_MACOSX:
-				return new MacOSXContextAttribs(attribs);
-			default:
-				throw new IllegalStateException("Unsupported platform");
-		}
-	}
-
-	public final int getMajorVersion() {
+	public int getMajorVersion() {
 		return majorVersion;
 	}
 
-	public final int getMinorVersion() {
+	public int getMinorVersion() {
 		return minorVersion;
 	}
 
-	public final int getLayerPlane() {
+	public int getLayerPlane() {
 		return layerPlane;
 	}
 
-	public final boolean isDebug() {
+	public boolean isDebug() {
 		return debug;
 	}
 
-	public final boolean isForwardCombatible() {
-		return forwardCombatible;
+	public boolean isForwardCompatible() {
+		return forwardCompatible;
 	}
 
-	public final ContextAttribs withLayer(final int layerPlane) {
+	public ContextAttribs withLayer(final int layerPlane) {
 		if ( layerPlane < 0 )
 			throw new IllegalArgumentException("Invalid layer plane specified: " + layerPlane);
 
-		final ContextAttribs attribs = create(this);
+		final ContextAttribs attribs = new ContextAttribs(this);
 		attribs.layerPlane = layerPlane;
 		return attribs;
 	}
 
-	public final ContextAttribs withDebug(final boolean debug) {
-		final ContextAttribs attribs = create(this);
+	public ContextAttribs withDebug(final boolean debug) {
+		final ContextAttribs attribs = new ContextAttribs(this);
 		attribs.debug = debug;
 		return attribs;
 	}
 
-	public final ContextAttribs withForwardCombatible(final boolean forwardCombatible) {
-		final ContextAttribs attribs = create(this);
-		attribs.forwardCombatible = forwardCombatible;
+	public ContextAttribs withForwardCompatible(final boolean forwardCompatible) {
+		final ContextAttribs attribs = new ContextAttribs(this);
+		attribs.forwardCompatible = forwardCompatible;
 		return attribs;
 	}
 
-	protected abstract int getMajorVersionAttrib();
+	private static ContextAttribsImplementation getImplementation() {
+		switch ( LWJGLUtil.getPlatform() ) {
+			case LWJGLUtil.PLATFORM_LINUX:
+				return new LinuxContextAttribs();
+			case LWJGLUtil.PLATFORM_WINDOWS:
+				return new WindowsContextAttribs();
+			case LWJGLUtil.PLATFORM_MACOSX:
+				return new MacOSXContextAttribs();
+			default:
+				throw new IllegalStateException("Unsupported platform");
+		}
+	}
 
-	protected abstract int getMinorVersionAttrib();
+	IntBuffer getAttribList() {
+		ContextAttribsImplementation implementation = getImplementation();
 
-	protected abstract int getLayerPlaneAttrib();
-
-	protected abstract int getFlagsAttrib();
-
-	protected abstract int getDebugBit();
-
-	protected abstract int getForwardCombatibleBit();
-
-	final IntBuffer getAttribList() {
 		int attribCount = 0;
 
 		if ( !(majorVersion == 1 && minorVersion == 0) )
@@ -185,9 +162,9 @@ public abstract class ContextAttribs {
 
 		int flags = 0;
 		if ( debug )
-			flags |= getDebugBit();
-		if ( forwardCombatible )
-			flags |= getForwardCombatibleBit();
+			flags |= implementation.getDebugBit();
+		if ( forwardCompatible )
+			flags |= implementation.getForwardCompatibleBit();
 		if ( 0 < flags )
 			attribCount++;
 
@@ -197,13 +174,13 @@ public abstract class ContextAttribs {
 		final IntBuffer attribs = BufferUtils.createIntBuffer((attribCount * 2) + 1);
 
 		if ( !(majorVersion == 1 && minorVersion == 0) ) {
-			attribs.put(getMajorVersionAttrib()).put(majorVersion);
-			attribs.put(getMinorVersionAttrib()).put(minorVersion);
+			attribs.put(implementation.getMajorVersionAttrib()).put(majorVersion);
+			attribs.put(implementation.getMinorVersionAttrib()).put(minorVersion);
 		}
 		if ( 0 < layerPlane )
-			attribs.put(getLayerPlaneAttrib()).put(layerPlane);
+			attribs.put(implementation.getLayerPlaneAttrib()).put(layerPlane);
 		if ( 0 < flags )
-			attribs.put(getFlagsAttrib()).put(flags);
+			attribs.put(implementation.getFlagsAttrib()).put(flags);
 
 		attribs.put(0);
 		attribs.rewind();

@@ -62,7 +62,7 @@ final class Context {
 	private final PeerInfo peer_info;
 
 	private final IntBuffer attribList;
-	private final boolean forwardCombatible;
+	private final boolean forwardCompatible;
 
 	/** Whether the context has been destroyed */
 	private boolean destroyed;
@@ -111,10 +111,10 @@ final class Context {
 				this.peer_info = peer_info;
 				if ( attribs != null ) {
 					attribList = attribs.getAttribList();
-					forwardCombatible = attribs.isForwardCombatible();
+					forwardCompatible = attribs.isForwardCompatible();
 				} else {
 					attribList = null;
-					forwardCombatible = false;
+					forwardCompatible = false;
 				}
 
 				this.handle = implementation.create(peer_info, attribList, shared_context != null ? shared_context.handle : null);
@@ -180,7 +180,7 @@ final class Context {
 		thread = Thread.currentThread();
 		current_context_local.set(this);
 		implementation.makeCurrent(peer_info, handle);
-		GLContext.useContext(this, forwardCombatible);
+		GLContext.useContext(this, forwardCompatible);
 	}
 
 	ByteBuffer getHandle() {

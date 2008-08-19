@@ -36,7 +36,7 @@ package org.lwjgl.opengl;
  *
  * @author spasi <spasi@users.sourceforge.net>
  */
-final class WindowsContextAttribs extends ContextAttribs {
+final class WindowsContextAttribs implements ContextAttribsImplementation {
 
 	private static final int WGL_CONTEXT_MAJOR_VERSION_ARB = 0x2091;
 	private static final int WGL_CONTEXT_MINOR_VERSION_ARB = 0x2092;
@@ -46,35 +46,30 @@ final class WindowsContextAttribs extends ContextAttribs {
 	private static final int WGL_CONTEXT_DEBUG_BIT_ARB = 0x0001;
 	private static final int WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB = 0x0002;
 
-	WindowsContextAttribs(final int majorVersion, final int minorVersion) {
-		super(majorVersion, minorVersion);
+	WindowsContextAttribs() {
 	}
 
-	WindowsContextAttribs(final ContextAttribs attribs) {
-		super(attribs);
-	}
-
-	protected int getMajorVersionAttrib() {
+	public int getMajorVersionAttrib() {
 		return WGL_CONTEXT_MAJOR_VERSION_ARB;
 	}
 
-	protected int getMinorVersionAttrib() {
+	public int getMinorVersionAttrib() {
 		return WGL_CONTEXT_MINOR_VERSION_ARB;
 	}
 
-	protected int getLayerPlaneAttrib() {
+	public int getLayerPlaneAttrib() {
 		return WGL_CONTEXT_LAYER_PLANE_ARB;
 	}
 
-	protected int getFlagsAttrib() {
+	public int getFlagsAttrib() {
 		return WGL_CONTEXT_FLAGS_ARB;
 	}
 
-	protected int getDebugBit() {
+	public int getDebugBit() {
 		return WGL_CONTEXT_DEBUG_BIT_ARB;
 	}
 
-	protected int getForwardCombatibleBit() {
+	public int getForwardCompatibleBit() {
 		return WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB;
 	}
 
