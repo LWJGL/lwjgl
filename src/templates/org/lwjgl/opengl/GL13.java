@@ -43,6 +43,7 @@ import java.nio.*;
  * @version $Revision$
  * $Id$
  */
+@DeprecatedGL
 public interface GL13 {
 	int GL_TEXTURE0 = 0x84C0;
 	int GL_TEXTURE1 = 0x84C1;
@@ -148,7 +149,8 @@ public interface GL13 {
 
 	void glActiveTexture(@GLenum int texture);
 
-        @Code("\t\tGLChecks.getReferences(caps).glClientActiveTexture = texture - GL_TEXTURE0;")
+    @Code("\t\tGLChecks.getReferences(caps).glClientActiveTexture = texture - GL_TEXTURE0;")
+    @DeprecatedGL
 	void glClientActiveTexture(@GLenum int texture);
 
 	void glCompressedTexImage1D(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, int border, @AutoSize("data") @GLsizei int imageSize,
@@ -203,39 +205,51 @@ public interface GL13 {
 	                             @GLint Buffer img);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glMultiTexCoord1f(@GLenum int target, float s);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glMultiTexCoord1d(@GLenum int target, double s);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glMultiTexCoord2f(@GLenum int target, float s, float t);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glMultiTexCoord2d(@GLenum int target, double s, double t);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glMultiTexCoord3f(@GLenum int target, float s, float t, float r);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glMultiTexCoord3d(@GLenum int target, double s, double t, double r);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glMultiTexCoord4f(@GLenum int target, float s, float t, float r, float q);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glMultiTexCoord4d(@GLenum int target, double s, double t, double r, double q);
 
 	@StripPostfix("m")
+	@DeprecatedGL
 	void glLoadTransposeMatrixf(@Check("16") @Const FloatBuffer m);
 
 	@StripPostfix("m")
+	@DeprecatedGL
 	void glLoadTransposeMatrixd(@Check("16") @Const DoubleBuffer m);
 
 	@StripPostfix("m")
+	@DeprecatedGL
 	void glMultTransposeMatrixf(@Check("16") @Const FloatBuffer m);
 
 	@StripPostfix("m")
+	@DeprecatedGL
 	void glMultTransposeMatrixd(@Check("16") @Const DoubleBuffer m);
 
 	void glSampleCoverage(@GLclampf float value, boolean invert);

@@ -42,7 +42,7 @@ import org.lwjgl.LWJGLException;
  * $Id$
  */
 final class LinuxPbufferPeerInfo extends LinuxPeerInfo {
-	public LinuxPbufferPeerInfo(int width, int height, PixelFormat pixel_format) throws LWJGLException {
+	LinuxPbufferPeerInfo(int width, int height, PixelFormat pixel_format) throws LWJGLException {
 		LinuxDisplay.lockAWT();
 		try {
 			GLContext.loadOpenGLLibrary();

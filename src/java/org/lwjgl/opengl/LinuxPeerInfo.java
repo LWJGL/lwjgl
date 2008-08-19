@@ -40,7 +40,7 @@ import java.nio.ByteBuffer;
  * $Id$
  */
 abstract class LinuxPeerInfo extends PeerInfo {
-	public LinuxPeerInfo() {
+	LinuxPeerInfo() {
 		super(createHandle());
 	}
 	private static native ByteBuffer createHandle();

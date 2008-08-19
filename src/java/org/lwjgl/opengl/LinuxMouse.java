@@ -54,7 +54,7 @@ final class LinuxMouse {
 	private final static int Button3 = 3;
 	private final static int Button4 = 4;
 	private final static int Button5 = 5;
-	
+
 	private final static int ButtonPress = 4;
 	private final static int ButtonRelease = 5;
 
@@ -74,7 +74,7 @@ final class LinuxMouse {
 	private EventQueue event_queue;
 	private long last_event_nanos;
 
-	public LinuxMouse(long display, long window, long input_window) throws LWJGLException {
+	LinuxMouse(long display, long window, long input_window) throws LWJGLException {
 		this.display = display;
 		this.window = window;
 		this.input_window = input_window;
@@ -191,7 +191,7 @@ final class LinuxMouse {
 	private static native int nGetWindowWidth(long display, long window);
 
 	private static native long nQueryPointer(long display, long window, IntBuffer result);
-	
+
 	public void setCursorPosition(int x, int y) {
 		nWarpCursor(display, window, x, transformY(y));
 	}
@@ -200,7 +200,7 @@ final class LinuxMouse {
 	private void handlePointerMotion(boolean grab, boolean warp_pointer, long millis, long root_window, int x_root, int y_root, int x, int y) {
 		doHandlePointerMotion(grab, warp_pointer, root_window, x_root, y_root, x, y, millis*1000000);
 	}
-	
+
 	private void handleButton(boolean grab, int button, byte state, long nanos) {
 		byte button_num;
 		switch (button) {
@@ -259,7 +259,7 @@ final class LinuxMouse {
 				break;
 		}
 	}
-	
+
 	private void resetCursor(int x, int y) {
 		last_x = x;
 		last_y = transformY(y);

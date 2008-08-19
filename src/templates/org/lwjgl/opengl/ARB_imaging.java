@@ -45,6 +45,7 @@ import java.nio.*;
  */
 
 @Extension(postfix = "")
+@DeprecatedGL
 public interface ARB_imaging {
 
 	int GL_CONSTANT_COLOR = 0x8001;
@@ -124,6 +125,7 @@ public interface ARB_imaging {
 	int GL_MINMAX_SINK = 0x8030;
 	int GL_TABLE_TOO_LARGE = 0x8031;
 
+	@DeprecatedGL
 	void glColorTable(@GLenum int target, @GLenum int internalFormat, @GLsizei int width, @GLenum int format, @GLenum int type,
 	                  @BufferObject(BufferKind.UnpackPBO)
 	                  @Check("256")
@@ -132,6 +134,7 @@ public interface ARB_imaging {
 	                  @GLfloat
 	                  @GLdouble Buffer data);
 
+	@DeprecatedGL
 	void glColorSubTable(@GLenum int target, @GLsizei int start, @GLsizei int count, @GLenum int format, @GLenum int type,
 	                     @BufferObject(BufferKind.UnpackPBO)
 	                     @Check("256")
@@ -141,15 +144,20 @@ public interface ARB_imaging {
 	                     @GLdouble Buffer data);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glColorTableParameteriv(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glColorTableParameterfv(@GLenum int target, @GLenum int pname, @Check("4") @Const FloatBuffer params);
 
+	@DeprecatedGL
 	void glCopyColorSubTable(@GLenum int target, @GLsizei int start, int x, int y, @GLsizei int width);
 
+	@DeprecatedGL
 	void glCopyColorTable(@GLenum int target, @GLenum int internalformat, int x, int y, @GLsizei int width);
 
+	@DeprecatedGL
 	void glGetColorTable(@GLenum int target, @GLenum int format, @GLenum int type,
 	                     @OutParameter
 	                     @Check("256")
@@ -158,19 +166,24 @@ public interface ARB_imaging {
 	                     @GLdouble Buffer data);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetColorTableParameteriv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetColorTableParameterfv(@GLenum int target, @GLenum int pname, @Check("4") FloatBuffer params);
 
 	void glBlendEquation(@GLenum int mode);
 
 	void glBlendColor(@GLclampf float red, @GLclampf float green, @GLclampf float blue, @GLclampf float alpha);
 
+	@DeprecatedGL
 	void glHistogram(@GLenum int target, @GLsizei int width, @GLenum int internalformat, boolean sink);
 
+	@DeprecatedGL
 	void glResetHistogram(@GLenum int target);
 
+	@DeprecatedGL
 	void glGetHistogram(@GLenum int target, boolean reset, @GLenum int format, @GLenum int type,
 	                    @OutParameter
 	                    @BufferObject(BufferKind.PackPBO)
@@ -182,15 +195,20 @@ public interface ARB_imaging {
 	                    @GLdouble Buffer values);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetHistogramParameterfv(@GLenum int target, @GLenum int pname, @OutParameter @Check("256") FloatBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetHistogramParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("256") IntBuffer params);
 
+	@DeprecatedGL
 	void glMinmax(@GLenum int target, @GLenum int internalformat, boolean sink);
 
+	@DeprecatedGL
 	void glResetMinmax(@GLenum int target);
 
+	@DeprecatedGL
 	void glGetMinmax(@GLenum int target, boolean reset, @GLenum int format, @GLenum int types,
 	                 @OutParameter
 	                 @BufferObject(BufferKind.PackPBO)
@@ -202,11 +220,14 @@ public interface ARB_imaging {
 	                 @GLdouble Buffer values);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetMinmaxParameterfv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetMinmaxParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
+	@DeprecatedGL
 	void glConvolutionFilter1D(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLenum int format, @GLenum int type,
 	                           @BufferObject(BufferKind.UnpackPBO)
 	                           @Check("GLChecks.calculateImageStorage(image, format, type, width, 1, 1)")
@@ -217,6 +238,7 @@ public interface ARB_imaging {
 	                           @GLfloat
 	                           @GLdouble Buffer image);
 
+	@DeprecatedGL
 	void glConvolutionFilter2D(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLenum int type,
 	                           @BufferObject(BufferKind.UnpackPBO)
 	                           @Check("GLChecks.calculateImageStorage(image, format, type, width, height, 1)")
@@ -225,21 +247,28 @@ public interface ARB_imaging {
 	                           @GLshort
 	                           @GLint Buffer image);
 
+	@DeprecatedGL
 	void glConvolutionParameterf(@GLenum int target, @GLenum int pname, float params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glConvolutionParameterfv(@GLenum int target, @GLenum int pname, @Check("4") @Const FloatBuffer params);
 
+	@DeprecatedGL
 	void glConvolutionParameteri(@GLenum int target, @GLenum int pname, int params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glConvolutionParameteriv(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
+	@DeprecatedGL
 	void glCopyConvolutionFilter1D(@GLenum int target, @GLenum int internalformat, int x, int y, @GLsizei int width);
 
+	@DeprecatedGL
 	void glCopyConvolutionFilter2D(@GLenum int target, @GLenum int internalformat, int x, int y, @GLsizei int width, @GLsizei int height);
 
 	// TODO: check buffer size valid
+	@DeprecatedGL
 	void glGetConvolutionFilter(@GLenum int target, @GLenum int format, @GLenum int type,
 	                            @OutParameter
 	                            @BufferObject(BufferKind.PackPBO)
@@ -251,12 +280,15 @@ public interface ARB_imaging {
 	                            @GLdouble Buffer image);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetConvolutionParameterfv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetConvolutionParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	// TODO: check buffer size valid
+	@DeprecatedGL
 	void glSeparableFilter2D(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLenum int type,
 	                         @BufferObject(BufferKind.UnpackPBO)
 	                         @Check
@@ -276,6 +308,7 @@ public interface ARB_imaging {
 	                         @GLdouble Buffer column);
 
 	// TODO: check buffer size valid
+	@DeprecatedGL
 	void glGetSeparableFilter(@GLenum int target, @GLenum int format, @GLenum int type,
 	                          @OutParameter
 	                          @BufferObject(BufferKind.PackPBO)

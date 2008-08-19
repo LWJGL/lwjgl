@@ -283,6 +283,8 @@ public class JavaMethodsGenerator {
 			result = method_name.substring(0, method_name.length() - (postfix.length() + 1 + extension_postfix.length()));
 		else if (method_name.endsWith(postfix + extension_postfix))
 			result = method_name.substring(0, method_name.length() - (postfix.length() + extension_postfix.length()));
+		else if ( method_name.endsWith("_v" + extension_postfix) )
+			result = method_name.substring(0, method_name.length() - (2 + extension_postfix.length()));
 		else if (method_name.endsWith("v" + extension_postfix))
 			result = method_name.substring(0, method_name.length() - (1 + extension_postfix.length()));
 		else

@@ -31,43 +31,44 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.ByteBuffer;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 /**
  * <p/>
  * Context encapsulates an OpenGL context.
  * <p/>
- *
+ * <p/>
  * This class is thread-safe.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
- * $Id$
+ *          $Id$
  */
 final class Context {
-	/**
-	 * The platform specific implementation of context methods
-	 */
+
+	/** The platform specific implementation of context methods */
 	private final static ContextImplementation implementation;
 
 	/** The current Context */
 	private final static ThreadLocal current_context_local = new ThreadLocal();
-	
-	/**
-	 * Handle to the native GL rendering context
-	 */
+
+	/** Handle to the native GL rendering context */
 	private final ByteBuffer handle;
 	private final PeerInfo peer_info;
+
+	private final IntBuffer attribList;
+	private final boolean forwardCombatible;
 
 	/** Whether the context has been destroyed */
 	private boolean destroyed;
 
 	private boolean destroy_requested;
-	
+
 	/** The thread that has this context current, or null. */
 	private Thread thread;
 
@@ -77,7 +78,7 @@ final class Context {
 	}
 
 	private static ContextImplementation createImplementation() {
-		switch (LWJGLUtil.getPlatform()) {
+		switch ( LWJGLUtil.getPlatform() ) {
 			case LWJGLUtil.PLATFORM_LINUX:
 				return new LinuxContextImplementation();
 			case LWJGLUtil.PLATFORM_WINDOWS:
@@ -97,20 +98,26 @@ final class Context {
 		return (Context)current_context_local.get();
 	}
 
-	/**
-	 * Create a context with the specified peer info and shared context
-	 */
-	public Context(PeerInfo peer_info, Context shared_context) throws LWJGLException {
+	/** Create a context with the specified peer info and shared context */
+	Context(PeerInfo peer_info, ContextAttribs attribs, Context shared_context) throws LWJGLException {
 		Context context_lock = shared_context != null ? shared_context : this;
-		// If shared_context is not null, synchronize on it to make sure it is not deleted 
+		// If shared_context is not null, synchronize on it to make sure it is not deleted
 		// while this context is created. Otherwise, simply synchronize on ourself to avoid NPE
-		synchronized (context_lock) {
-			if (shared_context != null && shared_context.destroyed)
+		synchronized ( context_lock ) {
+			if ( shared_context != null && shared_context.destroyed )
 				throw new IllegalArgumentException("Shared context is destroyed");
 			GLContext.loadOpenGLLibrary();
 			try {
 				this.peer_info = peer_info;
-				this.handle = implementation.create(peer_info, shared_context != null ? shared_context.handle : null);
+				if ( attribs != null ) {
+					attribList = attribs.getAttribList();
+					forwardCombatible = attribs.isForwardCombatible();
+				} else {
+					attribList = null;
+					forwardCombatible = false;
+				}
+
+				this.handle = implementation.create(peer_info, attribList, shared_context != null ? shared_context.handle : null);
 			} catch (LWJGLException e) {
 				GLContext.unloadOpenGLLibrary();
 				throw e;
@@ -118,16 +125,14 @@ final class Context {
 		}
 	}
 
-	/**
-	 * Release the current context (if any). After this call, no context is current.
-	 */
+	/** Release the current context (if any). After this call, no context is current. */
 	public static void releaseCurrentContext() throws LWJGLException {
 		Context current_context = getCurrentContext();
-		if (current_context != null) {
+		if ( current_context != null ) {
 			implementation.releaseCurrentContext();
 			GLContext.useContext(null);
 			current_context_local.set(null);
-			synchronized (current_context) {
+			synchronized ( current_context ) {
 				current_context.thread = null;
 				current_context.checkDestroy();
 			}
@@ -141,64 +146,56 @@ final class Context {
 	 * on every releaseCurrentContext results in artifacts.
 	 */
 	public synchronized void releaseDrawable() throws LWJGLException {
-		if (destroyed)
+		if ( destroyed )
 			throw new IllegalStateException("Context is destroyed");
 		implementation.releaseDrawable(getHandle());
 	}
 
-	/**
-	 * Update the context. Should be called whenever it's drawable is moved or resized
-	 */
+	/** Update the context. Should be called whenever it's drawable is moved or resized */
 	public synchronized void update() {
-		if (destroyed)
+		if ( destroyed )
 			throw new IllegalStateException("Context is destroyed");
 		implementation.update(getHandle());
 	}
-	
-	/**
-	 * Swap the buffers on the current context. Only valid for double-buffered contexts
-	 */
+
+	/** Swap the buffers on the current context. Only valid for double-buffered contexts */
 	public static void swapBuffers() throws LWJGLException {
 		implementation.swapBuffers();
 	}
-	
+
 	private boolean canAccess() {
 		return thread == null || Thread.currentThread() == thread;
 	}
 
 	private void checkAccess() {
-		if (!canAccess())
+		if ( !canAccess() )
 			throw new IllegalStateException("From thread " + Thread.currentThread() + ": " + thread + " already has the context current");
 	}
 
-	/**
-	 * Make the context current
-	 */
+	/** Make the context current */
 	public synchronized void makeCurrent() throws LWJGLException {
 		checkAccess();
-		if (destroyed)
+		if ( destroyed )
 			throw new IllegalStateException("Context is destroyed");
 		thread = Thread.currentThread();
 		current_context_local.set(this);
 		implementation.makeCurrent(peer_info, handle);
-		GLContext.useContext(this);
+		GLContext.useContext(this, forwardCombatible);
 	}
 
 	ByteBuffer getHandle() {
 		return handle;
 	}
 
-	/**
-	 * Query whether the context is current
-	 */
+	/** Query whether the context is current */
 	public synchronized boolean isCurrent() throws LWJGLException {
-		if (destroyed)
+		if ( destroyed )
 			throw new IllegalStateException("Context is destroyed");
 		return implementation.isCurrent(handle);
 	}
 
 	private void checkDestroy() {
-		if (!destroyed && destroy_requested) {
+		if ( !destroyed && destroy_requested ) {
 			try {
 				releaseDrawable();
 				implementation.destroy(peer_info, handle);
@@ -215,16 +212,13 @@ final class Context {
 	 * Set the buffer swap interval. This call is a best-attempt at changing
 	 * the monitor swap interval, which is the minimum periodicity of color buffer swaps,
 	 * measured in video frame periods, and is not guaranteed to be successful.
-	 *
+	 * <p/>
 	 * A video frame period is the time required to display a full frame of video data.
-	 *
-	 * @param sync true to synchronize; false to ignore synchronization
 	 */
 	public static void setSwapInterval(int value) {
 		implementation.setSwapInterval(value);
 	}
-	
-	
+
 	/**
 	 * Destroy the context. This method behaves the same as destroy() with the extra
 	 * requirement that the context must be either current to the current thread or not
@@ -234,24 +228,25 @@ final class Context {
 		checkAccess();
 		destroy();
 	}
-	
+
 	/**
 	 * Request destruction of the Context. If the context is current, no context will be current after this call.
 	 * The context is destroyed when no thread has it current.
 	 */
 	public synchronized void destroy() throws LWJGLException {
-		if (destroyed)
+		if ( destroyed )
 			return;
 		destroy_requested = true;
 		boolean was_current = isCurrent();
 		int error = GL11.GL_NO_ERROR;
-		if (was_current) {
-			if (GLContext.getCapabilities() != null && GLContext.getCapabilities().OpenGL11)
+		if ( was_current ) {
+			if ( GLContext.getCapabilities() != null && GLContext.getCapabilities().OpenGL11 )
 				error = GL11.glGetError();
 			releaseCurrentContext();
 		}
 		checkDestroy();
-		if (was_current && error != GL11.GL_NO_ERROR)
+		if ( was_current && error != GL11.GL_NO_ERROR )
 			throw new OpenGLException(error);
 	}
+
 }

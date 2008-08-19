@@ -51,10 +51,10 @@ abstract class PeerInfo {
 		this.handle = handle;
 	}
 
-	private final void lockAndInitHandle() throws LWJGLException {
+	private void lockAndInitHandle() throws LWJGLException {
 		doLockAndInitHandle();
 	}
-	
+
 	public synchronized final void unlock() throws LWJGLException {
 		if (lock_count <= 0)
 			throw new IllegalStateException("PeerInfo not locked!");

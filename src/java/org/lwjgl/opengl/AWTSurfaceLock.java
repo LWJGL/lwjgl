@@ -54,7 +54,7 @@ final class AWTSurfaceLock {
 
 	private boolean				firstLockSucceeded	= false;
 
-	public AWTSurfaceLock() {
+	AWTSurfaceLock() {
 		lock_buffer = createHandle();
 	}
 
@@ -98,7 +98,7 @@ final class AWTSurfaceLock {
 
 	private static native boolean lockAndInitHandle(ByteBuffer lock_buffer, Canvas component) throws LWJGLException;
 
-	protected void unlock() throws LWJGLException {
+	void unlock() throws LWJGLException {
 		nUnlock(lock_buffer);
 	}
 

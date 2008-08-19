@@ -43,6 +43,7 @@ import java.nio.*;
  * @version $Revision$
  * $Id$
  */
+@DeprecatedGL
 public interface GL14 {
 	int GL_GENERATE_MIPMAP = 0x8191;
 	int GL_GENERATE_MIPMAP_HINT = 0x8192;
@@ -88,10 +89,13 @@ public interface GL14 {
 
 	void glBlendColor(@GLclampf float red, @GLclampf float green, @GLclampf float blue, @GLclampf float alpha);
 
+	@DeprecatedGL
 	void glFogCoordf(float coord);
 
+	@DeprecatedGL
 	void glFogCoordd(double coord);
 
+	@DeprecatedGL
 	void glFogCoordPointer(@AutoType("data") @GLenum int type, @GLsizei int stride,
 	                       @CachedReference
 	                       @BufferObject(BufferKind.ArrayVBO)
@@ -117,14 +121,19 @@ public interface GL14 {
 	@StripPostfix("params")
 	void glPointParameterfv(@GLenum int pname, @Check("4") @Const FloatBuffer params);
 
+	@DeprecatedGL
 	void glSecondaryColor3b(byte red, byte green, byte blue);
 
+	@DeprecatedGL
 	void glSecondaryColor3f(float red, float green, float blue);
 
+	@DeprecatedGL
 	void glSecondaryColor3d(double red, double green, double blue);
 
+	@DeprecatedGL
 	void glSecondaryColor3ub(@GLubyte byte red, @GLubyte byte green, @GLubyte byte blue);
 
+	@DeprecatedGL
 	void glSecondaryColorPointer(int size, @AutoType("data") @GLenum int type, @GLsizei int stride,
 	                             @BufferObject(BufferKind.ArrayVBO)
 	                             @Check
@@ -136,16 +145,22 @@ public interface GL14 {
 
 	void glBlendFuncSeparate(@GLenum int sfactorRGB, @GLenum int dfactorRGB, @GLenum int sfactorAlpha, @GLenum int dfactorAlpha);
 
+	@DeprecatedGL
 	void glWindowPos2f(float x, float y);
 
+	@DeprecatedGL
 	void glWindowPos2d(double x, double y);
 
+	@DeprecatedGL
 	void glWindowPos2i(int x, int y);
 
+	@DeprecatedGL
 	void glWindowPos3f(float x, float y, float z);
 
+	@DeprecatedGL
 	void glWindowPos3d(double x, double y, double z);
 
+	@DeprecatedGL
 	void glWindowPos3i(int x, int y, int z);
 }
 

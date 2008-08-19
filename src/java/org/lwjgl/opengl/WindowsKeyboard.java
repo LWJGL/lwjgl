@@ -63,7 +63,7 @@ final class WindowsKeyboard {
 	private long retained_millis;
 	private boolean retained_repeat;
 
-	public WindowsKeyboard(long hwnd) throws LWJGLException {
+	WindowsKeyboard(long hwnd) throws LWJGLException {
 		this.hwnd = hwnd;
 		keyboard_state = BufferUtils.createByteBuffer(256);
 	}
@@ -71,7 +71,7 @@ final class WindowsKeyboard {
 
 	public void destroy() {
 	}
-	
+
 	boolean isKeyDown(int lwjgl_keycode) {
 		return key_down_buffer[lwjgl_keycode] == 1;
 	}
@@ -84,7 +84,7 @@ final class WindowsKeyboard {
 		} else {
 			if (grabbed) {
 				grabbed = false;
-			}	
+			}
 		}
 	}
 
@@ -93,7 +93,7 @@ final class WindowsKeyboard {
 		keyDownBuffer.put(key_down_buffer);
 		keyDownBuffer.position(old_position);
 	}
-	
+
 	private static native int MapVirtualKey(int uCode, int uMapType);
 	private static native int ToUnicode(int wVirtKey, int wScanCode, ByteBuffer lpKeyState, CharBuffer pwszBuff, int cchBuff, int flags);
 	private static native int ToAscii(int wVirtKey, int wScanCode, ByteBuffer lpKeyState, ByteBuffer lpChar, int flags);
@@ -108,7 +108,7 @@ final class WindowsKeyboard {
 	}
 
 	private boolean checkShiftKey(int virt_key, byte state) {
-		int key_state = (GetKeyState(virt_key) >>> 15) & 0x1; 
+		int key_state = (GetKeyState(virt_key) >>> 15) & 0x1;
 		int lwjgl_code = WindowsKeycodes.mapVirtualKeyToLWJGLCode(virt_key);
 		return (key_down_buffer[lwjgl_code] == 1 - state) && (key_state == state);
 	}

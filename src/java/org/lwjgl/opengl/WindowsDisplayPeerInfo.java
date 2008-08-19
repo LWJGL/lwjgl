@@ -43,13 +43,13 @@ import org.lwjgl.LWJGLException;
  */
 final class WindowsDisplayPeerInfo extends WindowsPeerInfo {
 	private final PixelFormat pixel_format;
-	
-	public WindowsDisplayPeerInfo(PixelFormat pixel_format) throws LWJGLException {
+
+	WindowsDisplayPeerInfo(PixelFormat pixel_format) throws LWJGLException {
 		this.pixel_format = pixel_format;
 		GLContext.loadOpenGLLibrary();
 	}
 
-	final PixelFormat getPixelFormat() {
+	PixelFormat getPixelFormat() {
 		return pixel_format;
 	}
 

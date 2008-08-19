@@ -31,33 +31,35 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.ByteBuffer;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
 /**
- *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
- * $Id$
+ *          $Id$
  */
 final class WindowsContextImplementation implements ContextImplementation {
-	public ByteBuffer create(PeerInfo peer_info, ByteBuffer shared_context_handle) throws LWJGLException {
+
+	public ByteBuffer create(PeerInfo peer_info, IntBuffer attribs, ByteBuffer shared_context_handle) throws LWJGLException {
 		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
 		try {
-			return nCreate(peer_handle, shared_context_handle);
+			return nCreate(peer_handle, attribs, shared_context_handle);
 		} finally {
 			peer_info.unlock();
 		}
 	}
-	private static native ByteBuffer nCreate(ByteBuffer peer_handle, ByteBuffer shared_context_handle) throws LWJGLException;
+
+	private static native ByteBuffer nCreate(ByteBuffer peer_handle, IntBuffer attribs_handle, ByteBuffer shared_context_handle) throws LWJGLException;
 
 	public void swapBuffers() throws LWJGLException {
 		Context current_context = Context.getCurrentContext();
-		if (current_context == null)
+		if ( current_context == null )
 			throw new IllegalStateException("No context is current");
-		synchronized (current_context) {
+		synchronized ( current_context ) {
 			PeerInfo current_peer_info = current_context.getPeerInfo();
 			ByteBuffer peer_handle = current_peer_info.lockAndGetHandle();
 			try {
@@ -67,6 +69,7 @@ final class WindowsContextImplementation implements ContextImplementation {
 			}
 		}
 	}
+
 	private static native void nSwapBuffers(ByteBuffer peer_info_handle) throws LWJGLException;
 
 	public void releaseDrawable(ByteBuffer context_handle) throws LWJGLException {
@@ -78,6 +81,7 @@ final class WindowsContextImplementation implements ContextImplementation {
 	public void releaseCurrentContext() throws LWJGLException {
 		nReleaseCurrentContext();
 	}
+
 	private static native void nReleaseCurrentContext() throws LWJGLException;
 
 	public void makeCurrent(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException {
@@ -88,24 +92,28 @@ final class WindowsContextImplementation implements ContextImplementation {
 			peer_info.unlock();
 		}
 	}
+
 	private static native void nMakeCurrent(ByteBuffer peer_handle, ByteBuffer context_handle) throws LWJGLException;
 
 	public boolean isCurrent(ByteBuffer handle) throws LWJGLException {
 		boolean result = nIsCurrent(handle);
 		return result;
 	}
+
 	private static native boolean nIsCurrent(ByteBuffer context_handle) throws LWJGLException;
 
 	public void setSwapInterval(int value) {
 		boolean success = nSetSwapInterval(value);
-		if (!success)
+		if ( !success )
 			LWJGLUtil.log("Failed to set swap interval");
 		Util.checkGLError();
 	}
+
 	private static native boolean nSetSwapInterval(int value);
 
 	public void destroy(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException {
 		nDestroy(handle);
 	}
+
 	private static native void nDestroy(ByteBuffer context_handle) throws LWJGLException;
 }

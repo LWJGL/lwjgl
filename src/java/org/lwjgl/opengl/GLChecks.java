@@ -71,13 +71,19 @@ class GLChecks {
 		return scratch_buffer.get(0);
 	}
 
+	static int getNamedBufferObjectSize(ContextCapabilities caps, int buffer) {
+		IntBuffer scratch_buffer = caps.scratch_int_buffer;
+		EXTDirectStateAccess.glGetNamedBufferParameterEXT(buffer, GL15.GL_BUFFER_SIZE, scratch_buffer);
+		return scratch_buffer.get(0);
+	}
+
 	private static boolean checkBufferObject(ContextCapabilities caps, int buffer_enum, boolean state) {
 		IntBuffer scratch_buffer = caps.scratch_int_buffer;
 		GL11.glGetInteger(buffer_enum, scratch_buffer);
 		boolean is_enabled = scratch_buffer.get(0) != 0;
 		return state == is_enabled;
 	}
-	
+
 	/** Helper method to ensure that array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOdisabled(ContextCapabilities caps) {
 		if(StateTracker.getReferencesStack(caps).getReferences().arrayBuffer != 0)

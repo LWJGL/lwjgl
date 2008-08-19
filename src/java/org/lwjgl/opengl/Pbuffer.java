@@ -197,6 +197,31 @@ public final class Pbuffer implements Drawable {
 	 * 						 with the Display context (if created).
 	 */
 	public Pbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture, Drawable shared_drawable) throws LWJGLException {
+		this(width, height, pixel_format, renderTexture, shared_drawable, null);
+	}
+
+	/**
+	 * Create an instance of a Pbuffer with a unique OpenGL context. The buffer is single-buffered.
+	 * <p/>
+	 * NOTE: The Pbuffer will have its own context that shares display lists and textures with <code>shared_context</code>,
+	 * or, if <code>shared_context</code> is <code>null</code>, the Display context if it is created. The Pbuffer
+	 * will have its own OpenGL state. Therefore, state changes to a pbuffer will not be seen in the window context and vice versa.
+	 * <p/>
+	 * The renderTexture parameter defines the necessary state for enabling render-to-texture. When this parameter is null,
+	 * render-to-texture is not available. Before using render-to-texture, the Pbuffer capabilities must be queried to ensure that
+	 * it is supported. Currently only windows platform can support this feature, so it is recommended that EXT_framebuffer_object
+	 * or similar is used if available, for maximum portability.
+	 * <p/>
+	 *
+	 * @param width         Pbuffer width
+	 * @param height        Pbuffer height
+	 * @param pixel_format  Minimum Pbuffer context properties
+	 * @param renderTexture
+	 * @param shared_drawable If non-null the Pbuffer will share display lists and textures with it. Otherwise, the Pbuffer will share
+	 * 						 with the Display context (if created).
+	 * @param attribs      The ContextAttribs to use when creating the context. (optional, may be null)
+	 */
+	public Pbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture, Drawable shared_drawable, ContextAttribs attribs) throws LWJGLException {
 		if (pixel_format == null)
 			throw new NullPointerException("Pixel format must be non-null");
 		this.width = width;
@@ -210,7 +235,7 @@ public final class Pbuffer implements Drawable {
 			if (display_drawable != null)
 				shared_context = display_drawable.getContext();
 		}
-		this.context = new Context(peer_info, shared_context);
+		this.context = new Context(peer_info, attribs, shared_context);
 	}
 
 	private static PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture) throws LWJGLException {
@@ -229,7 +254,7 @@ public final class Pbuffer implements Drawable {
 	public Context getContext() {
 		return context;
 	}
-	
+
 	private void checkDestroyed() {
 		if (destroyed)
 			throw new IllegalStateException("Pbuffer is destroyed");

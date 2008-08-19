@@ -43,7 +43,7 @@ import org.lwjgl.LWJGLException;
  * $Id$
  */
 abstract class WindowsPeerInfo extends PeerInfo {
-	public WindowsPeerInfo() {
+	protected WindowsPeerInfo() {
 		super(createHandle());
 	}
 	private static native ByteBuffer createHandle();

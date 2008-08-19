@@ -52,7 +52,7 @@ public final class NondirectBufferWrapper {
 	private final static int INITIAL_BUFFER_SIZE = 1;
 
 	private final static ThreadLocal thread_buffer = new ThreadLocal() {
-		protected final Object initialValue() {
+		protected Object initialValue() {
 			return new CachedBuffers(INITIAL_BUFFER_SIZE);
 		}
 	};

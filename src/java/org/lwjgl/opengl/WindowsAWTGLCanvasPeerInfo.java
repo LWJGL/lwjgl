@@ -49,7 +49,7 @@ final class WindowsAWTGLCanvasPeerInfo extends WindowsPeerInfo {
 	private final PixelFormat pixel_format;
 	private boolean has_pixel_format= false;
 
-	public WindowsAWTGLCanvasPeerInfo(Canvas component, PixelFormat pixel_format) {
+	WindowsAWTGLCanvasPeerInfo(Canvas component, PixelFormat pixel_format) {
 		this.component = component;
 		this.pixel_format = pixel_format;
 	}

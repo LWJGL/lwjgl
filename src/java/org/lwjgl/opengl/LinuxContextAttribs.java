@@ -31,25 +31,53 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
-
-import java.awt.Canvas;
-
 /**
+ * An implementation of ContextAttribs using GLX_create_context.
+ * <p/><p/>
+ * ---- WIP - GLX_create_context has not been defined yet ----
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
- * @version $Revision$
- * $Id$
+ * @author spasi <spasi@users.sourceforge.net>
  */
-final class MacOSXAWTGLCanvasPeerInfo extends MacOSXCanvasPeerInfo {
-	private final Canvas component;
+final class LinuxContextAttribs extends ContextAttribs {
 
-	MacOSXAWTGLCanvasPeerInfo(Canvas component, PixelFormat pixel_format, boolean support_pbuffer) throws LWJGLException {
-		super(pixel_format, support_pbuffer);
-		this.component = component;
+	private static final int GLX_CONTEXT_MAJOR_VERSION_ARB = 0x2091;
+	private static final int GLX_CONTEXT_MINOR_VERSION_ARB = 0x2092;
+	private static final int GLX_CONTEXT_LAYER_PLANE_ARB = 0x2093;
+	private static final int GLX_CONTEXT_FLAGS_ARB = 0x2094;
+
+	private static final int GLX_CONTEXT_DEBUG_BIT_ARB = 0x0001;
+	private static final int GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB = 0x0002;
+
+	LinuxContextAttribs(final int majorVersion, final int minorVersion) {
+		super(majorVersion, minorVersion);
 	}
 
-	protected void doLockAndInitHandle() throws LWJGLException {
-		initHandle(component);
+	LinuxContextAttribs(final ContextAttribs attribs) {
+		super(attribs);
 	}
+
+	protected int getMajorVersionAttrib() {
+		return GLX_CONTEXT_MAJOR_VERSION_ARB;
+	}
+
+	protected int getMinorVersionAttrib() {
+		return GLX_CONTEXT_MINOR_VERSION_ARB;
+	}
+
+	protected int getLayerPlaneAttrib() {
+		return GLX_CONTEXT_LAYER_PLANE_ARB;
+	}
+
+	protected int getFlagsAttrib() {
+		return GLX_CONTEXT_FLAGS_ARB;
+	}
+
+	protected int getDebugBit() {
+		return GLX_CONTEXT_DEBUG_BIT_ARB;
+	}
+
+	protected int getForwardCombatibleBit() {
+		return GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB;
+	}
+
 }

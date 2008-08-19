@@ -31,33 +31,29 @@
  */
 package org.lwjgl.opengl;
 
-import java.awt.Canvas;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Point;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
+import org.lwjgl.Sys;
+
+import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.LWJGLUtil;
-import org.lwjgl.Sys;
-
 /**
- * <p>
+ * <p/>
  * An AWT rendering context.
- * <p>
- * @version $Revision$
+ * <p/>
+ *
  * @author $Author$
- * $Id$
+ *         $Id$
+ * @version $Revision$
  */
 public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, HierarchyListener {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private final static AWTCanvasImplementation implementation;
 	private boolean update_context;
 	private Object SYNC_LOCK = new Object();
@@ -67,7 +63,10 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 
 	/** The drawable to share context with */
 	private final Drawable drawable;
-	
+
+	/** The ContextAttribs to use when creating the context */
+	private final ContextAttribs attribs;
+
 	/** Context handle */
 	private PeerInfo peer_info;
 	private Context context;
@@ -87,7 +86,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	}
 
 	static AWTCanvasImplementation createImplementation() {
-		switch (LWJGLUtil.getPlatform()) {
+		switch ( LWJGLUtil.getPlatform() ) {
 			case LWJGLUtil.PLATFORM_LINUX:
 				return new LinuxCanvasImplementation();
 			case LWJGLUtil.PLATFORM_WINDOWS:
@@ -100,25 +99,21 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	}
 
 	private void setUpdate() {
-		synchronized(SYNC_LOCK) {
+		synchronized ( SYNC_LOCK ) {
 			update_context = true;
 		}
 	}
 
-	/**
-	 * This method should only be called internally.
-	 */
+	/** This method should only be called internally. */
 	public Context getContext() {
 		return context;
 	}
-	
-	/**
-	 * Constructor using the default PixelFormat.
-	 */
+
+	/** Constructor using the default PixelFormat. */
 	public AWTGLCanvas() throws LWJGLException {
 		this(new PixelFormat());
 	}
-	
+
 	/**
 	 * Create an AWTGLCanvas with the requested PixelFormat on the default GraphicsDevice.
 	 *
@@ -131,7 +126,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	/**
 	 * Create an AWTGLCanvas with the requested PixelFormat on the default GraphicsDevice.
 	 *
-	 * @param device the device to create the canvas on.
+	 * @param device       the device to create the canvas on.
 	 * @param pixel_format The desired pixel format. May not be null
 	 */
 	public AWTGLCanvas(GraphicsDevice device, PixelFormat pixel_format) throws LWJGLException {
@@ -141,94 +136,99 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	/**
 	 * Create an AWTGLCanvas with the requested PixelFormat on the specified GraphicsDevice.
 	 *
-	 * @param device the device to create the canvas on.
+	 * @param device       the device to create the canvas on.
 	 * @param pixel_format The desired pixel format. May not be null
-	 * @param drawable The Drawable to share context with
+	 * @param drawable     The Drawable to share context with
 	 */
 	public AWTGLCanvas(GraphicsDevice device, PixelFormat pixel_format, Drawable drawable) throws LWJGLException {
+		this(device, pixel_format, drawable, null);
+	}
+
+	/**
+	 * Create an AWTGLCanvas with the requested PixelFormat on the specified GraphicsDevice.
+	 *
+	 * @param device       the device to create the canvas on.
+	 * @param pixel_format The desired pixel format. May not be null
+	 * @param drawable     The Drawable to share context with
+	 * @param attribs      The ContextAttribs to use when creating the context. (optional, may be null)
+	 */
+	public AWTGLCanvas(GraphicsDevice device, PixelFormat pixel_format, Drawable drawable, ContextAttribs attribs) throws LWJGLException {
 		super(implementation.findConfiguration(device, pixel_format));
-		if (pixel_format == null)
+		if ( pixel_format == null )
 			throw new NullPointerException("Pixel format must be non-null");
 		addHierarchyListener(this);
 		addComponentListener(this);
 		this.drawable = drawable;
 		this.pixel_format = pixel_format;
+		this.attribs = attribs;
 	}
-	
+
 	/* (non-Javadoc)
-	 * @see java.awt.Canvas#addNotify()
-	 */
+		 * @see java.awt.Canvas#addNotify()
+		 */
 	public void addNotify() {
 		super.addNotify();
 	}
-	
+
 	/* (non-Javadoc)
-	 * @see java.awt.Component#removeNotify()
-	 */
+		 * @see java.awt.Component#removeNotify()
+		 */
 	public void removeNotify() {
-		synchronized (SYNC_LOCK) {
+		synchronized ( SYNC_LOCK ) {
 			destroyContext();
 			super.removeNotify();
 		}
-	} 
-	
-	/**
-	 * Set swap interval.
-	 */
+	}
+
+	/** Set swap interval. */
 	public void setSwapInterval(int swap_interval) {
-		synchronized(SYNC_LOCK) {
-			if (context == null)
+		synchronized ( SYNC_LOCK ) {
+			if ( context == null )
 				throw new IllegalStateException("Canvas not yet displayable");
 			Context.setSwapInterval(swap_interval);
 		}
 	}
-	
-	/**
-	 * Enable vsync
-	 */
+
+	/** Enable vsync */
 	public void setVSyncEnabled(boolean enabled) {
 		setSwapInterval(enabled ? 1 : 0);
 	}
-	
-	/**
-	 * Swap the canvas' buffer
-	 */
+
+	/** Swap the canvas' buffer */
 	public void swapBuffers() throws LWJGLException {
-		synchronized(SYNC_LOCK) {
-			if (context == null)
+		synchronized ( SYNC_LOCK ) {
+			if ( context == null )
 				throw new IllegalStateException("Canvas not yet displayable");
 			Context.swapBuffers();
 		}
 	}
-	
+
 	public void releaseContext() throws LWJGLException {
-		synchronized(SYNC_LOCK) {
-			if (context == null)
+		synchronized ( SYNC_LOCK ) {
+			if ( context == null )
 				throw new IllegalStateException("Canvas not yet displayable");
-			if (context.isCurrent())
+			if ( context.isCurrent() )
 				Context.releaseCurrentContext();
 		}
 	}
-	
+
 	/**
 	 * Make the canvas' context current. It is highly recommended that the context
 	 * is only made current inside the AWT thread (for example in an overridden paintGL()).
 	 */
 	public void makeCurrent() throws LWJGLException {
-		synchronized(SYNC_LOCK) {
-			if (context == null)
+		synchronized ( SYNC_LOCK ) {
+			if ( context == null )
 				throw new IllegalStateException("Canvas not yet displayable");
 			context.makeCurrent();
 		}
 	}
-	
-	/**
-	 * Destroy the OpenGL context. This happens when the component becomes undisplayable
-	 */
+
+	/** Destroy the OpenGL context. This happens when the component becomes undisplayable */
 	private void destroyContext() {
-		synchronized(SYNC_LOCK) {
+		synchronized ( SYNC_LOCK ) {
 			try {
-				if (context != null) {
+				if ( context != null ) {
 					context.forceDestroy();
 					context = null;
 					reentry_count = 0;
@@ -243,15 +243,13 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 
 	/**
 	 * Override this to do initialising of the context.
-	 * It will be called once from paint(), immediately after 
+	 * It will be called once from paint(), immediately after
 	 * the context is created and made current.
 	 */
 	protected void initGL() {
 	}
 
-	/**
-	 * Override this to do painting
-	 */
+	/** Override this to do painting */
 	protected void paintGL() {
 	}
 
@@ -261,36 +259,36 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	 */
 	public final void paint(Graphics g) {
 		LWJGLException exception = null;
-		synchronized (SYNC_LOCK) {
-			if (!isDisplayable())
+		synchronized ( SYNC_LOCK ) {
+			if ( !isDisplayable() )
 				return;
 			try {
-				if (peer_info == null) {
+				if ( peer_info == null ) {
 					this.peer_info = implementation.createPeerInfo(this, pixel_format);
 				}
 				peer_info.lockAndGetHandle();
 				try {
-					if (context == null) {
-						this.context = new Context(peer_info, drawable != null ? drawable.getContext() : null);
+					if ( context == null ) {
+						this.context = new Context(peer_info, attribs, drawable != null ? drawable.getContext() : null);
 						first_run = true;
 					}
 
-					if (reentry_count == 0)
+					if ( reentry_count == 0 )
 						context.makeCurrent();
 					reentry_count++;
 					try {
-						if (update_context) {
+						if ( update_context ) {
 							context.update();
 							update_context = false;
 						}
-						if (first_run) {
+						if ( first_run ) {
 							first_run = false;
 							initGL();
 						}
 						paintGL();
 					} finally {
 						reentry_count--;
-						if (reentry_count == 0)
+						if ( reentry_count == 0 )
 							Context.releaseCurrentContext();
 					}
 				} finally {
@@ -300,7 +298,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 				exception = e;
 			}
 		}
-		if (exception != null)
+		if ( exception != null )
 			exceptionOccurred(exception);
 	}
 
@@ -314,9 +312,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 		LWJGLUtil.log("Unhandled exception occurred, skipping paint(): " + exception);
 	}
 
-	/**
-	 * override update to avoid clearing
-	 */
+	/** override update to avoid clearing */
 	public void update(Graphics g) {
 		paint(g);
 	}
@@ -363,4 +359,5 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	public void hierarchyChanged(HierarchyEvent e) {
 		setUpdate();
 	}
+
 }

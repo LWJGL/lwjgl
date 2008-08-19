@@ -43,7 +43,7 @@ import org.lwjgl.LWJGLException;
  * $Id$
  */
 final class WindowsPbufferPeerInfo extends WindowsPeerInfo {
-	public WindowsPbufferPeerInfo(int width, int height, PixelFormat pixel_format, IntBuffer pixelFormatCaps, IntBuffer pBufferAttribs) throws LWJGLException {
+	WindowsPbufferPeerInfo(int width, int height, PixelFormat pixel_format, IntBuffer pixelFormatCaps, IntBuffer pBufferAttribs) throws LWJGLException {
 		nCreate(getHandle(), width, height, pixel_format, pixelFormatCaps, pBufferAttribs);
 	}
 	private static native void nCreate(ByteBuffer handle, int width, int height, PixelFormat pixel_format, IntBuffer pixelFormatCaps, IntBuffer pBufferAttribs) throws LWJGLException;
@@ -62,12 +62,12 @@ final class WindowsPbufferPeerInfo extends WindowsPeerInfo {
 		nBindTexImageToPbuffer(getHandle(), buffer);
 	}
 	private static native void nBindTexImageToPbuffer(ByteBuffer handle, int buffer);
-	
+
 	public void releaseTexImageFromPbuffer(int buffer) {
 		nReleaseTexImageFromPbuffer(getHandle(), buffer);
 	}
 	private static native void nReleaseTexImageFromPbuffer(ByteBuffer handle, int buffer);
-	
+
 	public void destroy() {
 		nDestroy(getHandle());
 	}

@@ -64,7 +64,7 @@ import com.sun.mirror.util.DeclarationFilter;
  */
 public class ContextGeneratorProcessorFactory implements AnnotationProcessorFactory, RoundCompleteListener {
 	private static boolean first_round = true;
-	
+
 	// Process any set of annotations
 	private static final Collection<String> supportedAnnotations =
 		unmodifiableCollection(Arrays.asList("*"));
@@ -114,6 +114,7 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 			writer.println("package org.lwjgl.opengl;");
 			writer.println();
 			writer.println("import org.lwjgl.LWJGLException;");
+			writer.println("import org.lwjgl.LWJGLUtil;");
 			writer.println("import org.lwjgl.BufferUtils;");
 			writer.println("import java.util.Set;");
 			writer.println("import java.nio.IntBuffer;");
@@ -139,6 +140,12 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 				}
 				writer.println();
 			}
+
+			writer.println("\tprivate static void remove(Set supported_extensions, String extension) {");
+			writer.println("\t\tLWJGLUtil.log(extension + \" was reported as available but an entry point is missing\");");
+			writer.println("\t\tsupported_extensions.remove(extension);");
+			writer.println("\t}\n");
+
 			ContextCapabilitiesGenerator.generateInitStubsPrologue(writer, context_specific);
 			for (TypeDeclaration typedecl : interface_decls) {
 				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;

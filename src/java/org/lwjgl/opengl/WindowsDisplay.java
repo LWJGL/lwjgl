@@ -150,7 +150,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private long small_icon;
 	private long large_icon;
 
-	public WindowsDisplay() {
+	WindowsDisplay() {
 		current_display = this;
 	}
 
@@ -191,7 +191,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private native long nCreateWindow(boolean fullscreen, int x, int y, int width, int height, boolean undecorated, boolean child_window, long parent_hwnd) throws LWJGLException;
 
 	private static boolean isUndecorated() {
-		return Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated"); 
+		return Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated");
 	}
 
 	private static long getHwnd(Canvas parent) throws LWJGLException {
@@ -200,7 +200,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		ByteBuffer parent_peer_info_handle = parent_peer_info.lockAndGetHandle();
 		try {
 			return parent_peer_info.getHwnd();
-		} finally { 
+		} finally {
 			parent_peer_info.unlock();
 		}
 	}
@@ -350,7 +350,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		}
 		return null;
 	}
-	
+
 	public String getVersion() {
 		String driver = getAdapter();
 		if (driver != null) {
@@ -449,11 +449,11 @@ final class WindowsDisplay implements DisplayImplementation {
 	public void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons) {
 		mouse.poll(coord_buffer, buttons);
 	}
-	
+
 	public void readMouse(ByteBuffer buffer) {
 		mouse.read(buffer);
 	}
-		
+
 	public void grabMouse(boolean grab) {
 		mouse.grab(grab, shouldGrab());
 		updateCursor();
@@ -540,11 +540,11 @@ final class WindowsDisplay implements DisplayImplementation {
 		keyboard.destroy();
 		keyboard = null;
 	}
-	
+
 	public void pollKeyboard(ByteBuffer keyDownBuffer) {
 		keyboard.poll(keyDownBuffer);
 	}
-	
+
 	public void readKeyboard(ByteBuffer buffer) {
 		keyboard.read(buffer);
 	}
@@ -576,7 +576,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		}
 	}
 	private native int nGetPbufferCapabilities(PixelFormat format) throws LWJGLException;
-	
+
 	public boolean isBufferLost(PeerInfo handle) {
 		return ((WindowsPbufferPeerInfo)handle).isBufferLost();
 	}
@@ -586,7 +586,7 @@ final class WindowsDisplay implements DisplayImplementation {
 			IntBuffer pBufferAttribs) throws LWJGLException {
 		return new WindowsPbufferPeerInfo(width, height, pixel_format, pixelFormatCaps, pBufferAttribs);
 	}
-	
+
 	public void setPbufferAttrib(PeerInfo handle, int attrib, int value) {
 		((WindowsPbufferPeerInfo)handle).setPbufferAttrib(attrib, value);
 	}
@@ -594,11 +594,11 @@ final class WindowsDisplay implements DisplayImplementation {
 	public void bindTexImageToPbuffer(PeerInfo handle, int buffer) {
 		((WindowsPbufferPeerInfo)handle).bindTexImageToPbuffer(buffer);
 	}
-	
+
 	public void releaseTexImageFromPbuffer(PeerInfo handle, int buffer) {
 		((WindowsPbufferPeerInfo)handle).releaseTexImageFromPbuffer(buffer);
 	}
-	
+
 	private void freeSmallIcon() {
 		if (small_icon != 0) {
 			destroyIcon(small_icon);
@@ -629,12 +629,12 @@ final class WindowsDisplay implements DisplayImplementation {
 		boolean done_small = false;
 		boolean done_large = false;
 		int used = 0;
-		
+
 		int small_icon_size = 16;
 		int large_icon_size = 32;
 		for (int i=0;i<icons.length;i++) {
 			int size = icons[i].limit() / 4;
-			
+
 			if ((((int) Math.sqrt(size)) == small_icon_size) && (!done_small)) {
 				freeSmallIcon();
 				small_icon = createIcon(small_icon_size, small_icon_size, icons[i].asIntBuffer());
@@ -650,7 +650,7 @@ final class WindowsDisplay implements DisplayImplementation {
 				done_large = true;
 			}
 		}
-		
+
 		return used;
 	}
 	private static native long createIcon(int width, int height, IntBuffer icon);
@@ -712,7 +712,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		else
 			return defWindowProc(hwnd, msg, wParam, lParam);
 	}
-	
+
 	private static native int defWindowProc(long hwnd, int msg, long wParam, long lParam);
 
 	private void checkCursorState() {

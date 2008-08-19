@@ -31,56 +31,62 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.ByteBuffer;
-
 import org.lwjgl.LWJGLException;
 
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
 /**
- *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
- * $Id$
+ *          $Id$
  */
 final class MacOSXContextImplementation implements ContextImplementation {
-	public ByteBuffer create(PeerInfo peer_info, ByteBuffer shared_context_handle) throws LWJGLException {
+
+	public ByteBuffer create(PeerInfo peer_info, IntBuffer attribs, ByteBuffer shared_context_handle) throws LWJGLException {
 		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
 		try {
-			return nCreate(peer_handle, shared_context_handle);
+			return nCreate(peer_handle, attribs, shared_context_handle);
 		} finally {
 			peer_info.unlock();
 		}
 	}
-	private static native ByteBuffer nCreate(ByteBuffer peer_handle, ByteBuffer shared_context_handle) throws LWJGLException;
+
+	private static native ByteBuffer nCreate(ByteBuffer peer_handle, IntBuffer attribs, ByteBuffer shared_context_handle) throws LWJGLException;
 
 	public void swapBuffers() throws LWJGLException {
 		Context current_context = Context.getCurrentContext();
-		if (current_context == null)
+		if ( current_context == null )
 			throw new IllegalStateException("No context is current");
-		synchronized (current_context) {
+		synchronized ( current_context ) {
 			nSwapBuffers(current_context.getHandle());
 		}
 	}
+
 	private static native void nSwapBuffers(ByteBuffer context_handle) throws LWJGLException;
 
 	public void update(ByteBuffer context_handle) {
 		nUpdate(context_handle);
 	}
+
 	private static native void nUpdate(ByteBuffer context_handle);
 
 	public void releaseCurrentContext() throws LWJGLException {
 		nReleaseCurrentContext();
 	}
+
 	private static native void nReleaseCurrentContext() throws LWJGLException;
 
 	public void releaseDrawable(ByteBuffer context_handle) throws LWJGLException {
 		clearDrawable(context_handle);
 	}
+
 	private static native void clearDrawable(ByteBuffer handle) throws LWJGLException;
 
 	static void resetView(PeerInfo peer_info, Context context) throws LWJGLException {
 		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
 		try {
-			synchronized (context) {
+			synchronized ( context ) {
 				clearDrawable(context.getHandle());
 				setView(peer_handle, context.getHandle());
 			}
@@ -88,7 +94,7 @@ final class MacOSXContextImplementation implements ContextImplementation {
 			peer_info.unlock();
 		}
 	}
-	
+
 	public void makeCurrent(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException {
 		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
 		try {
@@ -98,25 +104,30 @@ final class MacOSXContextImplementation implements ContextImplementation {
 			peer_info.unlock();
 		}
 	}
+
 	private static native void setView(ByteBuffer peer_handle, ByteBuffer context_handle) throws LWJGLException;
+
 	private static native void nMakeCurrent(ByteBuffer context_handle) throws LWJGLException;
 
 	public boolean isCurrent(ByteBuffer handle) throws LWJGLException {
 		boolean result = nIsCurrent(handle);
 		return result;
 	}
+
 	private static native boolean nIsCurrent(ByteBuffer context_handle) throws LWJGLException;
 
 	public void setSwapInterval(int value) {
 		Context current_context = Context.getCurrentContext();
-		synchronized (current_context) {
+		synchronized ( current_context ) {
 			nSetSwapInterval(current_context.getHandle(), value);
 		}
 	}
+
 	private static native void nSetSwapInterval(ByteBuffer context_handle, int value);
 
 	public void destroy(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException {
 		nDestroy(handle);
 	}
+
 	private static native void nDestroy(ByteBuffer context_handle) throws LWJGLException;
 }

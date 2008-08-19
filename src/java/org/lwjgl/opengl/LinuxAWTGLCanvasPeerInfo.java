@@ -48,10 +48,10 @@ final class LinuxAWTGLCanvasPeerInfo extends LinuxPeerInfo {
 	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
 	private int screen = -1;
 
-	public LinuxAWTGLCanvasPeerInfo(Canvas component) {
+	LinuxAWTGLCanvasPeerInfo(Canvas component) {
 		this.component = component;
 	}
-	
+
 	protected void doLockAndInitHandle() throws LWJGLException {
 		ByteBuffer surface_handle = awt_surface.lockAndGetHandle(component);
 		if (screen == -1) {

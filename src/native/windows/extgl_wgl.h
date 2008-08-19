@@ -172,6 +172,34 @@ typedef HDC (APIENTRY * wglGetCurrentReadDCARBPROC) (void);
 
 #define WGL_TYPE_RGBA_FLOAT_ATI									0x21A0
 
+/*------------------------------------------------------------------*/
+/*------------ WGL_ARB_framebuffer_sRGB ----------------------------*/
+/*------------------------------------------------------------------*/
+
+#define WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB						0x20A9
+
+/*---------------------------------------------------------------------------*/
+/*------------ WGL_EXT_pixel_format_packed_float ----------------------------*/
+/*---------------------------------------------------------------------------*/
+
+#define WGL_TYPE_RGBA_UNSIGNED_FLOAT_EXT              			0x20A8
+
+/*----------------------------------------------------------------*/
+/*------------ WGL_ARB_create_context ----------------------------*/
+/*----------------------------------------------------------------*/
+
+#define WGL_CONTEXT_MAJOR_VERSION_ARB							0x2091
+#define WGL_CONTEXT_MINOR_VERSION_ARB							0x2092
+#define WGL_CONTEXT_LAYER_PLANE_ARB								0x2093
+#define WGL_CONTEXT_FLAGS_ARB									0x2094
+
+#define WGL_CONTEXT_DEBUG_BIT_ARB								0x0001
+#define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB					0x0002
+
+#define ERROR_INVALID_VERSION_ARB								0x2095
+
+typedef HGLRC (APIENTRY * wglCreateContextAttribsARBPROC) (HDC hDC, HGLRC hShareContext, const int *attribList);
+
 typedef struct {
     bool WGL_ARB_buffer_region;
     bool WGL_ARB_extensions_string;
@@ -186,6 +214,10 @@ typedef struct {
     bool WGL_NV_render_texture_rectangle;
     bool WGL_ARB_pixel_format_float;
     bool WGL_ATI_pixel_format_float;
+    bool WGL_ARB_framebuffer_sRGB;
+	bool WGL_EXT_pixel_format_packed_float;
+    bool WGL_ARB_create_context;
+
 	wglGetExtensionsStringEXTPROC wglGetExtensionsStringEXT;
 
 	wglGetExtensionsStringARBPROC wglGetExtensionsStringARB;
@@ -209,6 +241,8 @@ typedef struct {
 
 	wglMakeContextCurrentARBPROC wglMakeContextCurrentARB;
 	wglGetCurrentReadDCARBPROC wglGetCurrentReadDCARB;
+
+	wglCreateContextAttribsARBPROC wglCreateContextAttribsARB;
 } WGLExtensions;
 
 extern void extgl_InitWGL(WGLExtensions *extensions);

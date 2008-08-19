@@ -56,7 +56,7 @@ final class LinuxKeyboard {
 
 	private final long xim;
 	private final long xic;
-	
+
 	private final int numlock_mask;
 	private final int modeswitch_mask;
 	private final int caps_lock_mask;
@@ -80,7 +80,7 @@ final class LinuxKeyboard {
 	private long deferred_nanos;
 	private byte deferred_key_state;
 
-	public LinuxKeyboard(long display, long window) {
+	LinuxKeyboard(long display, long window) {
 		long modifier_map = getModifierMapping(display);
 		int tmp_numlock_mask = 0;
 		int tmp_modeswitch_mask = 0;
@@ -194,7 +194,7 @@ final class LinuxKeyboard {
 		return num_chars;
 	}
 	private static native int lookupString(long event_ptr, ByteBuffer buffer, ByteBuffer compose_status);
-	
+
 	private int lookupStringUnicode(long event_ptr, int[] translation_buffer) {
 		int status = utf8LookupString(xic, event_ptr, native_translation_buffer, native_translation_buffer.position(), native_translation_buffer.remaining());
 		if (status != XLookupChars && status != XLookupBoth)

@@ -247,7 +247,7 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 		KEY_MAP[KeyEvent.VK_Z] = Keyboard.KEY_Z;
 	}
 
-	public KeyboardEventQueue(Component component) {
+	KeyboardEventQueue(Component component) {
 		super(Keyboard.EVENT_SIZE);
 		this.component = component;
 	}

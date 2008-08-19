@@ -131,21 +131,21 @@ interface DisplayImplementation extends InputImplementation {
 	/**
 	 * Method to test for buffer integrity
 	 */
-	public boolean isBufferLost(PeerInfo handle);
+	boolean isBufferLost(PeerInfo handle);
 
 	/**
 	 * Method to create a Pbuffer
 	 */
-	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
+	PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs) throws LWJGLException;
 
-	public void setPbufferAttrib(PeerInfo handle, int attrib, int value);
+	void setPbufferAttrib(PeerInfo handle, int attrib, int value);
 
-	public void bindTexImageToPbuffer(PeerInfo handle, int buffer);
+	void bindTexImageToPbuffer(PeerInfo handle, int buffer);
 
-	public void releaseTexImageFromPbuffer(PeerInfo handle, int buffer);
-	
+	void releaseTexImageFromPbuffer(PeerInfo handle, int buffer);
+
 	/**
 	 * Sets one or more icons for the Display.
 	 * <ul>
@@ -158,5 +158,5 @@ interface DisplayImplementation extends InputImplementation {
 	 * @param icons Array of icons in RGBA mode
 	 * @return number of icons used.
 	 */
-	public int setIcon(ByteBuffer[] icons);
+	int setIcon(ByteBuffer[] icons);
 }

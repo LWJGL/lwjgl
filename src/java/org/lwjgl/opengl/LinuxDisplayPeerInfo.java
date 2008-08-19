@@ -42,7 +42,7 @@ import org.lwjgl.LWJGLException;
  * $Id$
  */
 final class LinuxDisplayPeerInfo extends LinuxPeerInfo {
-	public LinuxDisplayPeerInfo(PixelFormat pixel_format) throws LWJGLException {
+	LinuxDisplayPeerInfo(PixelFormat pixel_format) throws LWJGLException {
 		LinuxDisplay.lockAWT();
 		try {
 			GLContext.loadOpenGLLibrary();
@@ -63,7 +63,7 @@ final class LinuxDisplayPeerInfo extends LinuxPeerInfo {
 		}
 	}
 	private static native void initDefaultPeerInfo(long display, int screen, ByteBuffer peer_info_handle, PixelFormat pixel_format) throws LWJGLException;
-	
+
 	protected void doLockAndInitHandle() throws LWJGLException {
 		LinuxDisplay.lockAWT();
 		try {
@@ -73,7 +73,7 @@ final class LinuxDisplayPeerInfo extends LinuxPeerInfo {
 		}
 	}
 	private static native void initDrawable(long window, ByteBuffer peer_info_handle);
-	
+
 	protected void doUnlock() throws LWJGLException {
 		// NO-OP
 	}

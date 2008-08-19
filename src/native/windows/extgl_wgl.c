@@ -129,6 +129,14 @@ static void extgl_InitWGLARBMakeCurrentRead(WGLExtensions *extensions) {
 		extensions->WGL_ARB_make_current_read = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
+static void extgl_InitWGLARBCreateContext(WGLExtensions *extensions) {
+	ExtFunction functions[] = {
+		{"wglCreateContextAttribsARB", (void **)&extensions->wglCreateContextAttribsARB}
+	};
+	if (extensions->WGL_ARB_create_context)
+		extensions->WGL_ARB_create_context = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+}
+
 static void extgl_InitSupportedWGLExtensions(WGLExtensions *extensions) {
 	extensions->WGL_ARB_buffer_region = WGLQueryExtension(extensions, "WGL_ARB_buffer_region");
 	extensions->WGL_ARB_make_current_read = WGLQueryExtension(extensions, "WGL_ARB_make_current_read");
@@ -141,6 +149,9 @@ static void extgl_InitSupportedWGLExtensions(WGLExtensions *extensions) {
 	extensions->WGL_EXT_swap_control = WGLQueryExtension(extensions, "WGL_EXT_swap_control");
 	extensions->WGL_NV_render_depth_texture = WGLQueryExtension(extensions, "WGL_NV_render_depth_texture");
 	extensions->WGL_NV_render_texture_rectangle = WGLQueryExtension(extensions, "WGL_NV_render_texture_rectangle");
+	extensions->WGL_ARB_framebuffer_sRGB = WGLQueryExtension(extensions, "WGL_ARB_framebuffer_sRGB") || WGLQueryExtension(extensions, "WGL_EXT_framebuffer_sRGB");
+	extensions->WGL_EXT_pixel_format_packed_float = WGLQueryExtension(extensions, "WGL_EXT_pixel_format_packed_float");
+	extensions->WGL_ARB_create_context = WGLQueryExtension(extensions, "WGL_ARB_create_context");
 }
 
 static void extgl_InitWGLEXTExtensionsString(WGLExtensions *extensions) {
@@ -160,7 +171,7 @@ static void extgl_InitWGLARBExtensionsString(WGLExtensions *extensions) {
 void extgl_InitWGL(WGLExtensions *extensions) {
 	extgl_InitWGLARBExtensionsString(extensions);
 	extgl_InitWGLEXTExtensionsString(extensions);
-		
+
 	extgl_InitSupportedWGLExtensions(extensions);
 
 	extgl_InitWGLARBMakeCurrentRead(extensions);
@@ -168,4 +179,5 @@ void extgl_InitWGL(WGLExtensions *extensions) {
 	extgl_InitWGLARBRenderTexture(extensions);
 	extgl_InitWGLARBPixelFormat(extensions);
 	extgl_InitWGLARBPbuffer(extensions);
+	extgl_InitWGLARBCreateContext(extensions);
 }

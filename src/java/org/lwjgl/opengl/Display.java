@@ -43,17 +43,6 @@ package org.lwjgl.opengl;
  * @author foo
  */
 
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.awt.Canvas;
-import java.awt.event.ComponentListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
@@ -62,12 +51,24 @@ import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.Arrays;
+import java.util.HashSet;
+
 public final class Display {
+
 	private static final Thread shutdown_hook = new Thread() {
-						public void run() {
-							reset();
-						}
-					};
+		public void run() {
+			reset();
+		}
+	};
 
 	/** The display implementor */
 	private static final DisplayImplementation display_impl;
@@ -86,7 +87,7 @@ public final class Display {
 
 	/** X coordinate of the window */
 	private static int x = -1;
-	
+
 	/** Cached window icons, for when Display is recreated */
 	private static ByteBuffer[] cached_icons;
 
@@ -117,8 +118,8 @@ public final class Display {
 	private static boolean parent_resized;
 
 	private static ComponentListener component_listener = new ComponentAdapter() {
-		public final void componentResized(ComponentEvent e) {
-			synchronized (GlobalLock.lock) {
+		public void componentResized(ComponentEvent e) {
+			synchronized ( GlobalLock.lock ) {
 				parent_resized = true;
 			}
 		}
@@ -135,7 +136,7 @@ public final class Display {
 		}
 		drawable = new Drawable() {
 			public Context getContext() {
-				synchronized (GlobalLock.lock) {
+				synchronized ( GlobalLock.lock ) {
 					return isCreated() ? context : null;
 				}
 			}
@@ -152,7 +153,7 @@ public final class Display {
 	}
 
 	private static DisplayImplementation createDisplayImplementation() {
-		switch (LWJGLUtil.getPlatform()) {
+		switch ( LWJGLUtil.getPlatform() ) {
 			case LWJGLUtil.PLATFORM_LINUX:
 				return new LinuxDisplay();
 			case LWJGLUtil.PLATFORM_WINDOWS:
@@ -164,9 +165,7 @@ public final class Display {
 		}
 	}
 
-	/**
-	 * Only constructed by ourselves
-	 */
+	/** Only constructed by ourselves */
 	private Display() {
 	}
 
@@ -176,7 +175,7 @@ public final class Display {
 	 * given mode is not guaranteed to be available nor is it guaranteed to be within the
 	 * current monitor specs (this is especially a problem with the frequency parameter).
 	 * Furthermore, it is not guaranteed that create() will detect an illegal display mode.
-	 *
+	 * <p/>
 	 * The only certain way to check
 	 * is to call create() and make sure it works.
 	 * Only non-palette-indexed modes are returned (ie. bpp will be 16, 24, or 32).
@@ -186,10 +185,10 @@ public final class Display {
 	 * @return an array of all display modes the system reckons it can handle.
 	 */
 	public static DisplayMode[] getAvailableDisplayModes() throws LWJGLException {
-		synchronized (GlobalLock.lock) {
+		synchronized ( GlobalLock.lock ) {
 			DisplayMode[] unfilteredModes = display_impl.getAvailableDisplayModes();
 
-			if (unfilteredModes == null) {
+			if ( unfilteredModes == null ) {
 				return new DisplayMode[0];
 			}
 
@@ -208,10 +207,11 @@ public final class Display {
 
 	/**
 	 * Return the current display mode, as set by setDisplayMode().
+	 *
 	 * @return The current display mode
 	 */
 	public static DisplayMode getDisplayMode() {
-		synchronized (GlobalLock.lock) {
+		synchronized ( GlobalLock.lock ) {
 			return current_mode;
 		}
 	}
@@ -224,20 +224,21 @@ public final class Display {
 	 * is also reset.
 	 *
 	 * @param mode The new display mode to set
+	 *
 	 * @throws LWJGLException if the display mode could not be set
 	 */
 	public static void setDisplayMode(DisplayMode mode) throws LWJGLException {
-		synchronized (GlobalLock.lock) {
-			if (mode == null)
+		synchronized ( GlobalLock.lock ) {
+			if ( mode == null )
 				throw new NullPointerException("mode must be non-null");
 			current_mode = mode;
-			if (isCreated()) {
+			if ( isCreated() ) {
 				destroyWindow();
 				// If mode is not fullscreen capable, make sure we are in windowed mode
-				if (!mode.isFullscreen())
+				if ( !mode.isFullscreen() )
 					resetFullscreen();
 				try {
-					if (fullscreen)
+					if ( fullscreen )
 						switchDisplayMode();
 					createWindow();
 					makeCurrentAndSetSwapInterval();
@@ -256,9 +257,9 @@ public final class Display {
 	}
 
 	private static int getWindowX() {
-		if (!fullscreen && parent == null) {
+		if ( !fullscreen && parent == null ) {
 			// if no display location set, center window
-			if (x == -1) {
+			if ( x == -1 ) {
 				return Math.max(0, (initial_mode.getWidth() - current_mode.getWidth()) / 2);
 			} else {
 				return x;
@@ -269,9 +270,9 @@ public final class Display {
 	}
 
 	private static int getWindowY() {
-		if (!fullscreen && parent == null) {
+		if ( !fullscreen && parent == null ) {
 			// if no display location set, center window
-			if (y == -1) {
+			if ( y == -1 ) {
 				return Math.max(0, (initial_mode.getHeight() - current_mode.getHeight()) / 2);
 			} else {
 				return y;
@@ -286,24 +287,24 @@ public final class Display {
 	 * A native context must exist, and it will be attached to the window.
 	 */
 	private static void createWindow() throws LWJGLException {
-		if (window_created) {
+		if ( window_created ) {
 			return;
 		}
 		Canvas tmp_parent = fullscreen ? null : parent;
-		if (tmp_parent != null && !tmp_parent.isDisplayable()) // Only a best effort check, since the parent can turn undisplayable hereafter
+		if ( tmp_parent != null && !tmp_parent.isDisplayable() ) // Only a best effort check, since the parent can turn undisplayable hereafter
 			throw new LWJGLException("Parent.isDisplayable() must be true");
-		if (tmp_parent != null) {
+		if ( tmp_parent != null ) {
 			tmp_parent.addComponentListener(component_listener);
 		}
 		DisplayMode mode = getEffectiveMode();
 		display_impl.createWindow(mode, fullscreen, tmp_parent, getWindowX(), getWindowY());
 		window_created = true;
-		
+
 		setTitle(title);
 		initControls();
-		
+
 		// set cached window icon if exists
-		if(cached_icons != null) {
+		if ( cached_icons != null ) {
 			setIcon(cached_icons);
 		} else {
 			setIcon(new ByteBuffer[] { LWJGLUtil.LWJGLIcon32x32, LWJGLUtil.LWJGLIcon16x16 });
@@ -312,7 +313,7 @@ public final class Display {
 
 	private static void releaseDrawable() {
 		try {
-			if (context != null && context.isCurrent()) {
+			if ( context != null && context.isCurrent() ) {
 				Context.releaseCurrentContext();
 				context.releaseDrawable();
 			}
@@ -322,19 +323,19 @@ public final class Display {
 	}
 
 	private static void destroyWindow() {
-		if (!window_created) {
+		if ( !window_created ) {
 			return;
 		}
-		if (parent != null) {
+		if ( parent != null ) {
 			parent.removeComponentListener(component_listener);
 		}
 		releaseDrawable();
 
 		// Automatically destroy keyboard & mouse
-		if (Mouse.isCreated()) {
+		if ( Mouse.isCreated() ) {
 			Mouse.destroy();
 		}
-		if (Keyboard.isCreated()) {
+		if ( Keyboard.isCreated() ) {
 			Keyboard.destroy();
 		}
 		display_impl.destroyWindow();
@@ -342,7 +343,7 @@ public final class Display {
 	}
 
 	private static void switchDisplayMode() throws LWJGLException {
-		if (!current_mode.isFullscreen()) {
+		if ( !current_mode.isFullscreen() ) {
 			throw new IllegalStateException("Only modes acquired from getAvailableDisplayModes() can be used for fullscreen display");
 		}
 		display_impl.switchDisplayMode(current_mode);
@@ -352,36 +353,36 @@ public final class Display {
 	 * Set the display configuration to the specified gamma, brightness and contrast.
 	 * The configuration changes will be reset when destroy() is called.
 	 *
-	 * @param gamma The gamma value
+	 * @param gamma      The gamma value
 	 * @param brightness The brightness value between -1.0 and 1.0, inclusive
-	 * @param contrast The contrast, larger than 0.0.
+	 * @param contrast   The contrast, larger than 0.0.
 	 */
 	public static void setDisplayConfiguration(float gamma, float brightness, float contrast) throws LWJGLException {
-		synchronized (GlobalLock.lock) {
-			if (!isCreated()) {
+		synchronized ( GlobalLock.lock ) {
+			if ( !isCreated() ) {
 				throw new LWJGLException("Display not yet created.");
 			}
-			if (brightness < -1.0f || brightness > 1.0f)
+			if ( brightness < -1.0f || brightness > 1.0f )
 				throw new IllegalArgumentException("Invalid brightness value");
-			if (contrast < 0.0f)
+			if ( contrast < 0.0f )
 				throw new IllegalArgumentException("Invalid contrast value");
 			int rampSize = display_impl.getGammaRampLength();
-			if (rampSize == 0) {
+			if ( rampSize == 0 ) {
 				throw new LWJGLException("Display configuration not supported");
 			}
 			FloatBuffer gammaRamp = BufferUtils.createFloatBuffer(rampSize);
-			for (int i = 0; i < rampSize; i++) {
-				float intensity = (float)i/(rampSize - 1);
+			for ( int i = 0; i < rampSize; i++ ) {
+				float intensity = (float)i / (rampSize - 1);
 				// apply gamma
 				float rampEntry = (float)java.lang.Math.pow(intensity, gamma);
 				// apply brightness
 				rampEntry += brightness;
 				// apply contrast
-				rampEntry = (rampEntry - 0.5f)*contrast + 0.5f;
+				rampEntry = (rampEntry - 0.5f) * contrast + 0.5f;
 				// Clamp entry to [0, 1]
-				if (rampEntry > 1.0f)
+				if ( rampEntry > 1.0f )
 					rampEntry = 1.0f;
-				else if (rampEntry < 0.0f)
+				else if ( rampEntry < 0.0f )
 					rampEntry = 0.0f;
 				gammaRamp.put(i, rampEntry);
 			}
@@ -401,13 +402,13 @@ public final class Display {
 		long timeNow;
 		long gapTo;
 		long savedTimeLate;
-		synchronized (GlobalLock.lock) {
+		synchronized ( GlobalLock.lock ) {
 			gapTo = Sys.getTimerResolution() / fps + timeThen;
 			timeNow = Sys.getTime();
 			savedTimeLate = timeLate;
 		}
 
-		while (gapTo > timeNow + savedTimeLate) {
+		while ( gapTo > timeNow + savedTimeLate ) {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
@@ -415,8 +416,8 @@ public final class Display {
 			timeNow = Sys.getTime();
 		}
 
-		synchronized (GlobalLock.lock) {
-			if (gapTo < timeNow)
+		synchronized ( GlobalLock.lock ) {
+			if ( gapTo < timeNow )
 				timeLate = timeNow - gapTo;
 			else
 				timeLate = 0;
@@ -425,29 +426,25 @@ public final class Display {
 		}
 	}
 
-	/**
-	 * @return the title of the window
-	 */
+	/** @return the title of the window */
 	public static String getTitle() {
-		synchronized (GlobalLock.lock) {
+		synchronized ( GlobalLock.lock ) {
 			return title;
 		}
 	}
 
 	private static void resetFullscreen() {
-		synchronized (GlobalLock.lock) {
-			if (Display.fullscreen) {
+		synchronized ( GlobalLock.lock ) {
+			if ( Display.fullscreen ) {
 				Display.fullscreen = false;
 				display_impl.resetDisplayMode();
 			}
 		}
 	}
 
-	/**
-	 * Return the last parent set with setParent().
-	 */
+	/** Return the last parent set with setParent(). */
 	public static Canvas getParent() {
-		synchronized (GlobalLock.lock) {
+		synchronized ( GlobalLock.lock ) {
 			return parent;
 		}
 	}
@@ -461,17 +458,16 @@ public final class Display {
 	 * and it is difficult to predict which AWT thread will process any given AWT event.<p>
 	 * While the Display is in fullscreen mode, the current parent will be ignored. Additionally, when a non null parent is specified,
 	 * the Dispaly will inherit the size of the parent, disregarding the currently set display mode.<p>
-	 *
 	 */
 	public static void setParent(Canvas parent) throws LWJGLException {
-		synchronized (GlobalLock.lock) {
-			if (Display.parent != parent) {
+		synchronized ( GlobalLock.lock ) {
+			if ( Display.parent != parent ) {
 				Display.parent = parent;
-				if (!isCreated())
+				if ( !isCreated() )
 					return;
 				destroyWindow();
 				try {
-					if (fullscreen) {
+					if ( fullscreen ) {
 						switchDisplayMode();
 					} else {
 						display_impl.resetDisplayMode();
@@ -496,18 +492,19 @@ public final class Display {
 	 * mode returned by getDisplayMode(). The native cursor position is also reset.
 	 *
 	 * @param fullscreen Specify the fullscreen mode of the context.
+	 *
 	 * @throws LWJGLException If fullscreen is true, and the current DisplayMode instance is not
-	 *						  from getAvailableDisplayModes() or if the mode switch fails.
+	 *                        from getAvailableDisplayModes() or if the mode switch fails.
 	 */
 	public static void setFullscreen(boolean fullscreen) throws LWJGLException {
-		synchronized (GlobalLock.lock) {
-			if (Display.fullscreen != fullscreen) {
+		synchronized ( GlobalLock.lock ) {
+			if ( Display.fullscreen != fullscreen ) {
 				Display.fullscreen = fullscreen;
-				if (!isCreated())
+				if ( !isCreated() )
 					return;
 				destroyWindow();
 				try {
-					if (fullscreen) {
+					if ( fullscreen ) {
 						switchDisplayMode();
 					} else {
 						display_impl.resetDisplayMode();
@@ -524,58 +521,51 @@ public final class Display {
 		}
 	}
 
-	/**
-	 * @return whether the Display is in fullscreen mode
-	 */
+	/** @return whether the Display is in fullscreen mode */
 	public static boolean isFullscreen() {
-		synchronized (GlobalLock.lock) {
+		synchronized ( GlobalLock.lock ) {
 			return fullscreen;
 		}
 	}
 
 	/**
 	 * Set the title of the window. This may be ignored by the underlying OS.
+	 *
 	 * @param newTitle The new window title
 	 */
 	public static void setTitle(String newTitle) {
-		synchronized (GlobalLock.lock) {
-			if (newTitle == null) {
+		synchronized ( GlobalLock.lock ) {
+			if ( newTitle == null ) {
 				newTitle = "";
 			}
 			title = newTitle;
-			if (isCreated())
+			if ( isCreated() )
 				display_impl.setTitle(title);
 		}
 	}
 
-	/**
-	 * @return true if the user or operating system has asked the window to close
-	 */
+	/** @return true if the user or operating system has asked the window to close */
 	public static boolean isCloseRequested() {
-		synchronized (GlobalLock.lock) {
-			if (!isCreated())
+		synchronized ( GlobalLock.lock ) {
+			if ( !isCreated() )
 				throw new IllegalStateException("Cannot determine close requested state of uncreated window");
 			return display_impl.isCloseRequested();
 		}
 	}
 
-	/**
-	 * @return true if the window is visible, false if not
-	 */
+	/** @return true if the window is visible, false if not */
 	public static boolean isVisible() {
-		synchronized (GlobalLock.lock) {
-			if (!isCreated())
+		synchronized ( GlobalLock.lock ) {
+			if ( !isCreated() )
 				throw new IllegalStateException("Cannot determine minimized state of uncreated window");
 			return display_impl.isVisible();
 		}
 	}
 
-	/**
-	 * @return true if window is active, that is, the foreground display of the operating system.
-	 */
+	/** @return true if window is active, that is, the foreground display of the operating system. */
 	public static boolean isActive() {
-		synchronized (GlobalLock.lock) {
-			if (!isCreated())
+		synchronized ( GlobalLock.lock ) {
+			if ( !isCreated() )
 				throw new IllegalStateException("Cannot determine focused state of uncreated window");
 			return display_impl.isActive();
 		}
@@ -589,11 +579,11 @@ public final class Display {
 	 * redraw when it returns true. The flag is cleared when update() or isDirty() is called.
 	 *
 	 * @return true if the window has been damaged by external changes
-	 * and needs to repaint itself
+	 *         and needs to repaint itself
 	 */
 	public static boolean isDirty() {
-		synchronized (GlobalLock.lock) {
-			if (!isCreated())
+		synchronized ( GlobalLock.lock ) {
+			if ( !isCreated() )
 				throw new IllegalStateException("Cannot determine dirty state of uncreated window");
 			return display_impl.isDirty();
 		}
@@ -605,8 +595,8 @@ public final class Display {
 	 * this method if update() is called periodically.
 	 */
 	public static void processMessages() {
-		synchronized (GlobalLock.lock) {
-			if (!isCreated())
+		synchronized ( GlobalLock.lock ) {
+			if ( !isCreated() )
 				throw new IllegalStateException("Display not created");
 
 			display_impl.update();
@@ -616,11 +606,12 @@ public final class Display {
 	/**
 	 * Swap the display buffers. This method is called from update(), and should normally not be called by
 	 * the application.
+	 *
 	 * @throws OpenGLException if an OpenGL error has occured since the last call to GL11.glGetError()
 	 */
 	public static void swapBuffers() throws LWJGLException {
-		synchronized (GlobalLock.lock) {
-			if (!isCreated())
+		synchronized ( GlobalLock.lock ) {
+			if ( !isCreated() )
 				throw new IllegalStateException("Display not created");
 
 			Util.checkGLError();
@@ -631,16 +622,17 @@ public final class Display {
 	/**
 	 * Update the window. This calls processMessages(), and if the window is visible
 	 * clears the dirty flag and calls swapBuffers() and finally polls the input devices.
+	 *
 	 * @throws OpenGLException if an OpenGL error has occured since the last call to GL11.glGetError()
 	 */
 	public static void update() {
-		synchronized (GlobalLock.lock) {
-			if (!isCreated())
+		synchronized ( GlobalLock.lock ) {
+			if ( !isCreated() )
 				throw new IllegalStateException("Display not created");
 
 			processMessages();
 			// We paint only when the window is visible or dirty
-			if (display_impl.isVisible() || display_impl.isDirty()) {
+			if ( display_impl.isVisible() || display_impl.isDirty() ) {
 				try {
 					swapBuffers();
 				} catch (LWJGLException e) {
@@ -649,7 +641,7 @@ public final class Display {
 			}
 
 			pollDevices();
-			if (parent_resized) {
+			if ( parent_resized ) {
 				reshape();
 				parent_resized = false;
 			}
@@ -658,16 +650,16 @@ public final class Display {
 
 	static void pollDevices() {
 		// Poll the input devices while we're here
-		if (Mouse.isCreated()) {
+		if ( Mouse.isCreated() ) {
 			Mouse.poll();
 			Mouse.updateCursor();
 		}
-		
-		if (Keyboard.isCreated()) {
+
+		if ( Keyboard.isCreated() ) {
 			Keyboard.poll();
 		}
-		
-		if(Controllers.isCreated()) {
+
+		if ( Controllers.isCreated() ) {
 			Controllers.poll();
 		}
 	}
@@ -678,59 +670,24 @@ public final class Display {
 	 * @throws LWJGLException If the context could not be released
 	 */
 	public static void releaseContext() throws LWJGLException {
-		synchronized (GlobalLock.lock) {
-			if (!isCreated())
+		synchronized ( GlobalLock.lock ) {
+			if ( !isCreated() )
 				throw new IllegalStateException("Display is not created");
-			if (context.isCurrent())
+			if ( context.isCurrent() )
 				Context.releaseCurrentContext();
 		}
 	}
-	
+
 	/**
 	 * Make the Display the current rendering context for GL calls.
 	 *
 	 * @throws LWJGLException If the context could not be made current
 	 */
 	public static void makeCurrent() throws LWJGLException {
-		synchronized (GlobalLock.lock) {
-			if (!isCreated())
+		synchronized ( GlobalLock.lock ) {
+			if ( !isCreated() )
 				throw new IllegalStateException("Display is not created");
 			context.makeCurrent();
-		}
-	}
-
-	/**
-	 * Create the OpenGL context. If isFullscreen() is true or if windowed
-	 * context are not supported on the platform, the display mode will be switched to the mode returned by
-	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
-	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
-	 * created with the given parameters, a LWJGLException will be thrown.
-	 *
-	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
-	 *
-	 * @throws LWJGLException
-	 */
-	public static void create() throws LWJGLException {
-		synchronized (GlobalLock.lock) {
-			create(new PixelFormat());
-		}
-	}
-
-	/**
-	 * Create the OpenGL context with the given minimum parameters. If isFullscreen() is true or if windowed
-	 * context are not supported on the platform, the display mode will be switched to the mode returned by
-	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
-	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
-	 * created with the given parameters, a LWJGLException will be thrown.
-	 *
-	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
-	 *
-	 * @param pixel_format Describes the minimum specifications the context must fulfill.
-	 * @throws LWJGLException
-	 */
-	public static void create(PixelFormat pixel_format) throws LWJGLException {
-		synchronized (GlobalLock.lock) {
-			create(pixel_format, null);
 		}
 	}
 
@@ -753,34 +710,112 @@ public final class Display {
 	}
 
 	/**
+	 * Create the OpenGL context. If isFullscreen() is true or if windowed
+	 * context are not supported on the platform, the display mode will be switched to the mode returned by
+	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
+	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
+	 * created with the given parameters, a LWJGLException will be thrown.
+	 * <p/>
+	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
+	 *
+	 * @throws LWJGLException
+	 */
+	public static void create() throws LWJGLException {
+		synchronized ( GlobalLock.lock ) {
+			create(new PixelFormat());
+		}
+	}
+
+	/**
 	 * Create the OpenGL context with the given minimum parameters. If isFullscreen() is true or if windowed
 	 * context are not supported on the platform, the display mode will be switched to the mode returned by
 	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
 	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
 	 * created with the given parameters, a LWJGLException will be thrown.
-	 *
+	 * <p/>
 	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
 	 *
 	 * @param pixel_format Describes the minimum specifications the context must fulfill.
-	 * @param shared_drawable The Drawable to share context with or null.
+	 *
+	 * @throws LWJGLException
+	 */
+	public static void create(PixelFormat pixel_format) throws LWJGLException {
+		synchronized ( GlobalLock.lock ) {
+			create(pixel_format, null, null);
+		}
+	}
+
+	/**
+	 * Create the OpenGL context with the given minimum parameters. If isFullscreen() is true or if windowed
+	 * context are not supported on the platform, the display mode will be switched to the mode returned by
+	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
+	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
+	 * created with the given parameters, a LWJGLException will be thrown.
+	 * <p/>
+	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
+	 *
+	 * @param pixel_format    Describes the minimum specifications the context must fulfill.
+	 * @param shared_drawable The Drawable to share context with. (optional, may be null)
+	 *
 	 * @throws LWJGLException
 	 */
 	public static void create(PixelFormat pixel_format, Drawable shared_drawable) throws LWJGLException {
-		synchronized (GlobalLock.lock) {
-			if (isCreated())
+		synchronized ( GlobalLock.lock ) {
+			create(pixel_format, shared_drawable, null);
+		}
+	}
+
+	/**
+	 * Create the OpenGL context with the given minimum parameters. If isFullscreen() is true or if windowed
+	 * context are not supported on the platform, the display mode will be switched to the mode returned by
+	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
+	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
+	 * created with the given parameters, a LWJGLException will be thrown.
+	 * <p/>
+	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
+	 *
+	 * @param pixel_format Describes the minimum specifications the context must fulfill.
+	 * @param attribs      The ContextAttribs to use when creating the context. (optional, may be null)
+	 *
+	 * @throws LWJGLException
+	 */
+	public static void create(PixelFormat pixel_format, ContextAttribs attribs) throws LWJGLException {
+		synchronized ( GlobalLock.lock ) {
+			create(pixel_format, null, attribs);
+		}
+	}
+
+	/**
+	 * Create the OpenGL context with the given minimum parameters. If isFullscreen() is true or if windowed
+	 * context are not supported on the platform, the display mode will be switched to the mode returned by
+	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
+	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
+	 * created with the given parameters, a LWJGLException will be thrown.
+	 * <p/>
+	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
+	 *
+	 * @param pixel_format    Describes the minimum specifications the context must fulfill.
+	 * @param shared_drawable The Drawable to share context with. (optional, may be null)
+	 * @param attribs         The ContextAttribs to use when creating the context. (optional, may be null)
+	 *
+	 * @throws LWJGLException
+	 */
+	public static void create(PixelFormat pixel_format, Drawable shared_drawable, ContextAttribs attribs) throws LWJGLException {
+		synchronized ( GlobalLock.lock ) {
+			if ( isCreated() )
 				throw new IllegalStateException("Only one LWJGL context may be instantiated at any one time.");
-			if (pixel_format == null)
+			if ( pixel_format == null )
 				throw new NullPointerException("pixel_format cannot be null");
 			removeShutdownHook();
 			registerShutdownHook();
-			if (fullscreen)
+			if ( fullscreen )
 				switchDisplayMode();
 			try {
 				peer_info = display_impl.createPeerInfo(pixel_format);
 				try {
 					createWindow();
 					try {
-						context = new Context(peer_info, shared_drawable != null ? shared_drawable.getContext() : null);
+						context = new Context(peer_info, attribs, shared_drawable != null ? shared_drawable.getContext() : null);
 						try {
 							makeCurrentAndSetSwapInterval();
 							initContext();
@@ -819,40 +854,38 @@ public final class Display {
 		return display_impl;
 	}
 
-	/**
-	 * Gets a boolean property as a privileged action.
-	 */
+	/** Gets a boolean property as a privileged action. */
 	static boolean getPrivilegedBoolean(final String property_name) {
 		Boolean value = (Boolean)AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {	
+			public Object run() {
 				return new Boolean(Boolean.getBoolean(property_name));
 			}
 		});
 		return value.booleanValue();
 	}
-	
+
 	private static void initControls() {
 		// Automatically create mouse, keyboard and controller
-		if (!getPrivilegedBoolean("org.lwjgl.opengl.Display.noinput")) {
-			if (!Mouse.isCreated() && !getPrivilegedBoolean("org.lwjgl.opengl.Display.nomouse")) {
+		if ( !getPrivilegedBoolean("org.lwjgl.opengl.Display.noinput") ) {
+			if ( !Mouse.isCreated() && !getPrivilegedBoolean("org.lwjgl.opengl.Display.nomouse") ) {
 				try {
 					Mouse.create();
 				} catch (LWJGLException e) {
-					if (LWJGLUtil.DEBUG) {
+					if ( LWJGLUtil.DEBUG ) {
 						e.printStackTrace(System.err);
 					} else {
-						LWJGLUtil.log("Failed to create Mouse: "+e);
+						LWJGLUtil.log("Failed to create Mouse: " + e);
 					}
 				}
 			}
-			if (!Keyboard.isCreated() && !getPrivilegedBoolean("org.lwjgl.opengl.Display.nokeyboard")) {
+			if ( !Keyboard.isCreated() && !getPrivilegedBoolean("org.lwjgl.opengl.Display.nokeyboard") ) {
 				try {
 					Keyboard.create();
 				} catch (LWJGLException e) {
-					if (LWJGLUtil.DEBUG) {
+					if ( LWJGLUtil.DEBUG ) {
 						e.printStackTrace(System.err);
 					} else {
-						LWJGLUtil.log("Failed to create Keyboard: "+e);
+						LWJGLUtil.log("Failed to create Keyboard: " + e);
 					}
 				}
 			}
@@ -864,8 +897,8 @@ public final class Display {
 	 * regardless of whether the Display was the current rendering context.
 	 */
 	public static void destroy() {
-		synchronized (GlobalLock.lock) {
-			if (!isCreated()) {
+		synchronized ( GlobalLock.lock ) {
+			if ( !isCreated() ) {
 				return;
 			}
 
@@ -904,11 +937,9 @@ public final class Display {
 		current_mode = initial_mode;
 	}
 
-	/**
-	 * @return true if the window's native peer has been created
-	 */
+	/** @return true if the window's native peer has been created */
 	public static boolean isCreated() {
-		synchronized (GlobalLock.lock) {
+		synchronized ( GlobalLock.lock ) {
 			return window_created;
 		}
 	}
@@ -917,27 +948,27 @@ public final class Display {
 	 * Set the buffer swap interval. This call is a best-attempt at changing
 	 * the monitor swap interval, which is the minimum periodicity of color buffer swaps,
 	 * measured in video frame periods, and is not guaranteed to be successful.
-	 *
+	 * <p/>
 	 * A video frame period is the time required to display a full frame of video data.
 	 *
 	 * @param value The swap interval in frames, 0 to disable
 	 */
 	public static void setSwapInterval(int value) {
-		synchronized (GlobalLock.lock) {
+		synchronized ( GlobalLock.lock ) {
 			swap_interval = value;
-			if (isCreated())
+			if ( isCreated() )
 				Context.setSwapInterval(swap_interval);
 		}
 	}
-	
-	
+
 	/**
 	 * Enable or disable vertical monitor synchronization. This call is a best-attempt at changing
 	 * the vertical refresh synchronization of the monitor, and is not guaranteed to be successful.
+	 *
 	 * @param sync true to synchronize; false to ignore synchronization
 	 */
 	public static void setVSyncEnabled(boolean sync) {
-		synchronized (GlobalLock.lock) {
+		synchronized ( GlobalLock.lock ) {
 			setSwapInterval(sync ? 1 : 0);
 		}
 	}
@@ -948,12 +979,13 @@ public final class Display {
 	 * to position the window such that it would extend off the screen, the window
 	 * is simply placed as close to the edge as possible.
 	 * <br><b>note</b>If no location has been specified (or x == y == -1) the window will be centered
+	 *
 	 * @param new_x The new window location on the x axis
 	 * @param new_y The new window location on the y axis
 	 */
 	public static void setLocation(int new_x, int new_y) {
-		synchronized (GlobalLock.lock) {
-			if (fullscreen) {
+		synchronized ( GlobalLock.lock ) {
+			if ( fullscreen ) {
 				return;
 			}
 
@@ -962,7 +994,7 @@ public final class Display {
 			y = new_y;
 
 			// offset if already created
-			if(isCreated()) {
+			if ( isCreated() ) {
 				reshape();
 			}
 		}
@@ -976,10 +1008,11 @@ public final class Display {
 	/**
 	 * Get the driver adapter string. This is a unique string describing the actual card's hardware, eg. "Geforce2", "PS2",
 	 * "Radeon9700". If the adapter cannot be determined, this function returns null.
+	 *
 	 * @return a String
 	 */
 	public static String getAdapter() {
-		synchronized (GlobalLock.lock) {
+		synchronized ( GlobalLock.lock ) {
 			return display_impl.getAdapter();
 		}
 	}
@@ -987,14 +1020,14 @@ public final class Display {
 	/**
 	 * Get the driver version. This is a vendor/adapter specific version string. If the version cannot be determined,
 	 * this function returns null.
+	 *
 	 * @return a String
 	 */
 	public static String getVersion() {
-		synchronized (GlobalLock.lock) {
+		synchronized ( GlobalLock.lock ) {
 			return display_impl.getVersion();
 		}
 	}
-	
 
 	/**
 	 * Sets one or more icons for the Display.
@@ -1004,21 +1037,22 @@ public final class Display {
 	 * <li>Mac OS X should be supplied one 128x128 icon</li>
 	 * </ul>
 	 * The implementation will use the supplied ByteBuffers with image data in RGBA and perform any conversions nescesarry for the specific platform.
-	 * <p>
+	 * <p/>
 	 * <b>NOTE:</b> The display will make a deep copy of the supplied byte buffer array, for the purpose
-	 * of recreating the icons when you go back and forth fullscreen mode. You therefore only need to 
+	 * of recreating the icons when you go back and forth fullscreen mode. You therefore only need to
 	 * set the icon once per instance.
 	 *
 	 * @param icons Array of icons in RGBA mode. Pass the icons in order of preference.
+	 *
 	 * @return number of icons used, or 0 if display hasn't been created
 	 */
 	public static int setIcon(ByteBuffer[] icons) {
-		synchronized (GlobalLock.lock) {
+		synchronized ( GlobalLock.lock ) {
 			// make deep copy so we dont rely on the supplied buffers later on
 			// don't recache!
-			if(cached_icons != icons) {
+			if ( cached_icons != icons ) {
 				cached_icons = new ByteBuffer[icons.length];
-				for(int i=0;i<icons.length; i++) {
+				for ( int i = 0; i < icons.length; i++ ) {
 					cached_icons[i] = BufferUtils.createByteBuffer(icons[i].capacity());
 					int old_position = icons[i].position();
 					cached_icons[i].put(icons[i]);
@@ -1027,7 +1061,7 @@ public final class Display {
 				}
 			}
 
-			if (Display.isCreated() && parent == null) {
+			if ( Display.isCreated() && parent == null ) {
 				return display_impl.setIcon(cached_icons);
 			} else {
 				return 0;

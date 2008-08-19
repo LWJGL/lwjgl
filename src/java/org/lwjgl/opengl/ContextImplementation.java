@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
 
@@ -48,42 +49,42 @@ interface ContextImplementation {
 	/**
 	 * Create a context.
 	 */
-	public ByteBuffer create(PeerInfo peer_info, ByteBuffer shared_context_handle) throws LWJGLException;
+	ByteBuffer create(PeerInfo peer_info, IntBuffer attribs, ByteBuffer shared_context_handle) throws LWJGLException;
 
 	/**
 	 * Swap the buffers of the current context.  Only valid for double-buffered contexts.
 	 */
-	public void swapBuffers() throws LWJGLException;
+	void swapBuffers() throws LWJGLException;
 
 	/**
 	 * Release the context from its drawable, if any.
 	 */
-	public void releaseDrawable(ByteBuffer context_handle) throws LWJGLException;
+	void releaseDrawable(ByteBuffer context_handle) throws LWJGLException;
 
 	/**
 	 * Release the current context (if any). After this call, no context is current.
 	 */
-	public void releaseCurrentContext() throws LWJGLException;
+	void releaseCurrentContext() throws LWJGLException;
 
 	/**
 	 * Update the context. Should be called whenever it's drawable is moved or resized
 	 */
-	public void update(ByteBuffer context_handle);
+	void update(ByteBuffer context_handle);
 
 	/**
 	 * Query whether the context is current
 	 */
-	public void makeCurrent(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException;
+	void makeCurrent(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException;
 
 	/**
 	 * Query whether the context is current
 	 */
-	public boolean isCurrent(ByteBuffer handle) throws LWJGLException;
+	boolean isCurrent(ByteBuffer handle) throws LWJGLException;
 
-	public void setSwapInterval(int value);
+	void setSwapInterval(int value);
 
 	/**
 	 * Destroys the Context.
 	 */
-	public void destroy(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException;
+	void destroy(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException;
 }

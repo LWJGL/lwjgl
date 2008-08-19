@@ -57,11 +57,6 @@ public class BufferChecks {
 	}
 
 	/**
-	 * Default buffer size for most buffer checks.
-	 */
-	private static final int DEFAULT_BUFFER_SIZE = 4;
-
-	/**
 	 * Helper methods to ensure a function pointer is not-null (0)
 	 */
 	public static void checkFunctionAddress(long pointer) {
@@ -129,7 +124,7 @@ public class BufferChecks {
 	private static void throwBufferSizeException(Buffer buf, int size) {
 		throw new IllegalArgumentException("Number of remaining buffer elements is " + buf.remaining() + ", must be at least " + size);
 	}
-			
+
 	/**
 	 * Helper method to ensure a buffer is big enough to receive data from a
 	 * glGet* operation.

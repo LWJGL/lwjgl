@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.DeprecatedGL;
 
 import java.nio.*;
 
@@ -43,7 +44,7 @@ import java.nio.*;
  * @version $Revision$
  * $Id$
  */
-
+@DeprecatedGL
 public interface GL11 {
 	/* AccumOp */
 	int GL_ACCUM = 0x0100;
@@ -714,26 +715,32 @@ public interface GL11 {
 	int GL_LOGIC_OP = GL_INDEX_LOGIC_OP;
 	int GL_TEXTURE_COMPONENTS = GL_TEXTURE_INTERNAL_FORMAT;
 
+	@DeprecatedGL
 	void glAccum(@GLenum int op, float value);
 
+	@DeprecatedGL
 	void glAlphaFunc(@GLenum int func, @GLclampf float ref);
 
 	void glClearColor(@GLclampf float red, @GLclampf float green, @GLclampf float blue, @GLclampf float alpha);
 
+	@DeprecatedGL
 	void glClearAccum(float red, float green, float blue, float alpha);
 
 	void glClear(@GLbitfield int mask);
 
+	@DeprecatedGL
 	void glCallLists(@AutoSize("lists") @GLsizei int n, @AutoType("lists") @GLenum int type,
 	                 @Const
 	                 @GLubyte
 	                 @GLushort
 	                 @GLuint Buffer lists);
 
+	@DeprecatedGL
 	void glCallList(@GLuint int list);
 
 	void glBlendFunc(@GLenum int sfactor, @GLenum int dfactor);
 
+	@DeprecatedGL
 	void glBitmap(@GLsizei int width, @GLsizei int height, float xorig, float yorig, float xmove, float ymove,
 	              @BufferObject(BufferKind.UnpackPBO)
 	              @Check("(((width + 7)/8)*height)")
@@ -742,6 +749,7 @@ public interface GL11 {
 
 	void glBindTexture(@GLenum int target, @GLuint int texture);
 
+	@DeprecatedGL
 	void glPrioritizeTextures(@AutoSize("textures") @GLsizei int n,
 			@Const
 			@GLuint IntBuffer textures,
@@ -749,6 +757,7 @@ public interface GL11 {
 			@Check("textures.remaining()")
 			@GLclampf FloatBuffer priorities);
 
+	@DeprecatedGL
 	boolean glAreTexturesResident(@AutoSize("textures") @GLsizei int n,
 			@Const
 			@GLuint IntBuffer textures,
@@ -756,8 +765,10 @@ public interface GL11 {
 			@GLboolean ByteBuffer residences);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glBegin(@GLenum int mode);
 
+	@DeprecatedGL
 	void glEnd();
 
 	@NoErrorCheck
@@ -765,6 +776,7 @@ public interface GL11 {
 
 	void glClearDepth(@GLclampd double depth);
 
+	@DeprecatedGL
 	void glDeleteLists(@GLuint int list, @GLsizei int range);
 
 	void glDeleteTextures(@AutoSize("textures") @GLsizei int n, @Const @GLuint IntBuffer textures);
@@ -781,6 +793,7 @@ public interface GL11 {
 
 	void glCopyPixels(int x, int y, int width, int height, int type);
 
+	@DeprecatedGL
 	void glColorPointer(int size, @AutoType("pointer") @GLenum int type, @GLsizei int stride,
 	                    @CachedReference
 	                    @Check
@@ -791,32 +804,41 @@ public interface GL11 {
 	                    @GLubyte
 	                    @GLbyte Buffer pointer);
 
+	@DeprecatedGL
 	void glColorMaterial(@GLenum int face, @GLenum int mode);
 
 	void glColorMask(boolean red, boolean green, boolean blue, boolean alpha);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glColor3b(byte red, byte green, byte blue);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glColor3f(float red, float green, float blue);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glColor3d(double red, double green, double blue);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glColor3ub(@GLubyte byte red, @GLubyte byte green, @GLubyte byte blue);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glColor4b(byte red, byte green, byte blue, byte alpha);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glColor4f(float red, float green, float blue, float alpha);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glColor4d(double red, double green, double blue, double alpha);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glColor4ub(@GLubyte byte red, @GLubyte byte green, @GLubyte byte blue, @GLubyte byte alpha);
 
 	void glClipPlane(@GLenum int plane, @Check("4") @Const DoubleBuffer equation);
@@ -824,31 +846,43 @@ public interface GL11 {
 	void glClearStencil(int s);
 
 	// This function is only used in indexed color mode
-//	void glClearIndex(float c);
+	//	void glClearIndex(float c);
+
+	@DeprecatedGL
 	void glEvalPoint1(int i);
 
+	@DeprecatedGL
 	void glEvalPoint2(int i, int j);
 
+	@DeprecatedGL
 	void glEvalMesh1(@GLenum int mode, int i1, int i2);
 
+	@DeprecatedGL
 	void glEvalMesh2(@GLenum int mode, int i1, int i2, int j1, int j2);
 
+	@DeprecatedGL
 	void glEvalCoord1f(float u);
 
+	@DeprecatedGL
 	void glEvalCoord1d(double u);
 
+	@DeprecatedGL
 	void glEvalCoord2f(float u, float v);
 
+	@DeprecatedGL
 	void glEvalCoord2d(double u, double v);
 
+	@DeprecatedGL
 	void glEnableClientState(@GLenum int cap);
 
+	@DeprecatedGL
 	void glDisableClientState(@GLenum int cap);
 
 	void glEnable(@GLenum int cap);
 
 	void glDisable(@GLenum int cap);
 
+	@DeprecatedGL
 	void glEdgeFlagPointer(int stride,
 	                       @CachedReference
 	                       @BufferObject(BufferKind.ArrayVBO)
@@ -856,8 +890,10 @@ public interface GL11 {
 	                       @Const
 	                       @GLbyte Buffer pointer);
 
+	@DeprecatedGL
 	void glEdgeFlag(boolean flag);
 
+	@DeprecatedGL
 	void glDrawPixels(@GLsizei int width, @GLsizei int height, @GLenum int format, @GLenum int type,
 	                  @Check("GLChecks.calculateImageStorage(pixels, format, type, width, height, 1)")
 	                  @BufferObject(BufferKind.UnpackPBO)
@@ -883,36 +919,47 @@ public interface GL11 {
 
 	void glDepthFunc(@GLenum int func);
 
+	@DeprecatedGL
 	void glFeedbackBuffer(@AutoSize("buffer") @GLsizei int size, @GLenum int type, FloatBuffer buffer);
 
 	@StripPostfix("values")
+	@DeprecatedGL
 	void glGetPixelMapfv(@GLenum int map, @OutParameter @Check("256") @BufferObject(BufferKind.PackPBO) FloatBuffer values);
 
 	@StripPostfix("values")
+	@DeprecatedGL
 	void glGetPixelMapuiv(@GLenum int map, @OutParameter @Check("256") @BufferObject(BufferKind.PackPBO) @GLuint IntBuffer values);
 
 	@StripPostfix("values")
+	@DeprecatedGL
 	void glGetPixelMapusv(@GLenum int map, @OutParameter @Check("256") @BufferObject(BufferKind.PackPBO) @GLushort ShortBuffer values);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetMaterialfv(@GLenum int face, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetMaterialiv(@GLenum int face, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("v")
+	@DeprecatedGL
 	void glGetMapfv(@GLenum int target, @GLenum int query, @OutParameter @Check("256") FloatBuffer v);
 
 	@StripPostfix("v")
+	@DeprecatedGL
 	void glGetMapdv(@GLenum int target, @GLenum int query, @OutParameter @Check("256") DoubleBuffer v);
 
 	@StripPostfix("v")
+	@DeprecatedGL
 	void glGetMapiv(@GLenum int target, @GLenum int query, @OutParameter @Check("256") IntBuffer v);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetLightfv(@GLenum int light, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetLightiv(@GLenum int light, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@NoErrorCheck
@@ -935,20 +982,26 @@ public interface GL11 {
 	void glGenTextures(@AutoSize("textures") @GLsizei int n, @OutParameter @GLuint IntBuffer textures);
 
 	@GLuint
+	@DeprecatedGL
 	int glGenLists(@GLsizei int range);
 
+	@DeprecatedGL
 	void glFrustum(double left, double right, double bottom, double top, double zNear, double zFar);
 
 	void glFrontFace(@GLenum int mode);
 
+	@DeprecatedGL
 	void glFogf(@GLenum int pname, float param);
 
+	@DeprecatedGL
 	void glFogi(@GLenum int pname, int param);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glFogfv(@GLenum int pname, @Check("4") @Const FloatBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glFogiv(@GLenum int pname, @Check("4") @Const IntBuffer params);
 
 	void glFlush();
@@ -970,6 +1023,7 @@ public interface GL11 {
 	                         @GLfloat
 	                         @GLdouble Buffer pointer);
 
+	@DeprecatedGL
 	void glInitNames();
 
 	void glHint(@GLenum int target, @GLenum int mode);
@@ -997,97 +1051,132 @@ public interface GL11 {
 	                   @GLdouble Buffer pixels);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetTexGeniv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetTexGenfv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetTexGendv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") DoubleBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetTexEnviv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glGetTexEnvfv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@Const
 	String glGetString(int name);
 
+	@DeprecatedGL
 	void glGetPolygonStipple(@OutParameter @BufferObject(BufferKind.PackPBO) @Check("1024") @GLubyte ByteBuffer mask);
 
+	@DeprecatedGL
 	boolean glIsList(@GLuint int list);
 
+	@DeprecatedGL
 	void glMaterialf(@GLenum int face, @GLenum int pname, float param);
 
+	@DeprecatedGL
 	void glMateriali(@GLenum int face, @GLenum int pname, int param);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glMaterialfv(@GLenum int face, @GLenum int pname, @Check("4") @Const FloatBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glMaterialiv(@GLenum int face, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
+	@DeprecatedGL
 	void glMapGrid1f(int un, float u1, float u2);
 
+	@DeprecatedGL
 	void glMapGrid1d(int un, double u1, double u2);
 
+	@DeprecatedGL
 	void glMapGrid2f(int un, float u1, float u2, int vn, float v1, float v2);
 
+	@DeprecatedGL
 	void glMapGrid2d(int un, double u1, double u2, int vn, double v1, double v2);
 
 	// TODO: check buffer size valid
+	@DeprecatedGL
 	void glMap2f(@GLenum int target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, @Check @Const FloatBuffer points);
 
+	@DeprecatedGL
 	void glMap2d(@GLenum int target, double u1, double u2, int ustride, int uorder, double v1, double v2, int vstride, int vorder, @Check @Const DoubleBuffer points);
 
 	// TODO: check buffer size valid
+	@DeprecatedGL
 	void glMap1f(@GLenum int target, float u1, float u2, int stride, int order, @Check @Const FloatBuffer points);
 
+	@DeprecatedGL
 	void glMap1d(@GLenum int target, double u1, double u2, int stride, int order, @Check @Const DoubleBuffer points);
 
 	void glLogicOp(@GLenum int opcode);
 
+	@DeprecatedGL
 	void glLoadName(@GLuint int name);
 
 	@StripPostfix("m")
+	@DeprecatedGL
 	void glLoadMatrixf(@Check("16") @Const FloatBuffer m);
 
 	@StripPostfix("m")
+	@DeprecatedGL
 	void glLoadMatrixd(@Check("16") @Const DoubleBuffer m);
 
+	@DeprecatedGL
 	void glLoadIdentity();
 
+	@DeprecatedGL
 	void glListBase(@GLuint int base);
 
 	void glLineWidth(float width);
 
+	@DeprecatedGL
 	void glLineStipple(int factor, @GLushort short pattern);
 
+	@DeprecatedGL
 	void glLightModelf(@GLenum int pname, float param);
 
+	@DeprecatedGL
 	void glLightModeli(@GLenum int pname, int param);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glLightModelfv(@GLenum int pname, @Check("4") @Const FloatBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glLightModeliv(@GLenum int pname, @Check("4") @Const IntBuffer params);
 
+	@DeprecatedGL
 	void glLightf(@GLenum int light, @GLenum int pname, float param);
 
+	@DeprecatedGL
 	void glLighti(@GLenum int light, @GLenum int pname, int param);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glLightfv(@GLenum int light, @GLenum int pname, @Check("4") @Const FloatBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glLightiv(@GLenum int light, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
 	boolean glIsTexture(@GLuint int texture);
 
+	@DeprecatedGL
 	void glMatrixMode(@GLenum int mode);
 
+	@DeprecatedGL
 	void glPolygonStipple(@BufferObject(BufferKind.UnpackPBO) @Check("1024") @Const @GLubyte ByteBuffer mask);
 
 	void glPolygonOffset(float factor, float units);
@@ -1096,10 +1185,13 @@ public interface GL11 {
 
 	void glPointSize(float size);
 
+	@DeprecatedGL
 	void glPixelZoom(float xfactor, float yfactor);
 
+	@DeprecatedGL
 	void glPixelTransferf(@GLenum int pname, float param);
 
+	@DeprecatedGL
 	void glPixelTransferi(@GLenum int pname, int param);
 
 	void glPixelStoref(@GLenum int pname, float param);
@@ -1107,18 +1199,24 @@ public interface GL11 {
 	void glPixelStorei(@GLenum int pname, int param);
 
 	@StripPostfix("values")
+	@DeprecatedGL
 	void glPixelMapfv(@GLenum int map, @AutoSize("values") @GLsizei int mapsize, @BufferObject(BufferKind.UnpackPBO) @Const FloatBuffer values);
 
 	@StripPostfix("values")
+	@DeprecatedGL
 	void glPixelMapuiv(@GLenum int map, @AutoSize("values") @GLsizei int mapsize, @BufferObject(BufferKind.UnpackPBO) @Const @GLuint IntBuffer values);
 
 	@StripPostfix("values")
+	@DeprecatedGL
 	void glPixelMapusv(@GLenum int map, @AutoSize("values") @GLsizei int mapsize, @BufferObject(BufferKind.UnpackPBO) @Const @GLushort ShortBuffer values);
 
+	@DeprecatedGL
 	void glPassThrough(float token);
 
+	@DeprecatedGL
 	void glOrtho(double left, double right, double bottom, double top, double zNear, double zFar);
 
+	@DeprecatedGL
 	void glNormalPointer(@AutoType("pointer") @GLenum int type, @GLsizei int stride,
 	                     @CachedReference
 	                     @BufferObject(BufferKind.ArrayVBO)
@@ -1130,45 +1228,61 @@ public interface GL11 {
 	                     @GLdouble Buffer pointer);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glNormal3b(byte nx, byte ny, byte nz);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glNormal3f(float nx, float ny, float nz);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glNormal3d(double nx, double ny, double nz);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glNormal3i(int nx, int ny, int nz);
 
+	@DeprecatedGL
 	void glNewList(@GLuint int list, @GLenum int mode);
 
+	@DeprecatedGL
 	void glEndList();
 
 	@StripPostfix("m")
+	@DeprecatedGL
 	void glMultMatrixf(@Check("16") @Const FloatBuffer m);
 
 	@StripPostfix("m")
+	@DeprecatedGL
 	void glMultMatrixd(@Check("16") @Const DoubleBuffer m);
 
 	void glShadeModel(@GLenum int mode);
 
+	@DeprecatedGL
 	void glSelectBuffer(@AutoSize("buffer") @GLsizei int size, @CachedReference @GLuint IntBuffer buffer);
 
 	void glScissor(int x, int y, @GLsizei int width, @GLsizei int height);
 
+	@DeprecatedGL
 	void glScalef(float x, float y, float z);
 
+	@DeprecatedGL
 	void glScaled(double x, double y, double z);
 
+	@DeprecatedGL
 	void glRotatef(float angle, float x, float y, float z);
 
+	@DeprecatedGL
 	int glRenderMode(@GLenum int mode);
 
+	@DeprecatedGL
 	void glRectf(float x1, float y1, float x2, float y2);
 
+	@DeprecatedGL
 	void glRectd(double x1, double y1, double x2, double y2);
 
+	@DeprecatedGL
 	void glRecti(int x1, int y1, int x2, int y2);
 
 	void glReadPixels(int x, int y, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLenum int type,
@@ -1182,44 +1296,62 @@ public interface GL11 {
 
 	void glReadBuffer(@GLenum int mode);
 
+	@DeprecatedGL
 	void glRasterPos2f(float x, float y);
 
+	@DeprecatedGL
 	void glRasterPos2d(double x, double y);
 
+	@DeprecatedGL
 	void glRasterPos2i(int x, int y);
 
+	@DeprecatedGL
 	void glRasterPos3f(float x, float y, float z);
 
+	@DeprecatedGL
 	void glRasterPos3d(double x, double y, double z);
 
+	@DeprecatedGL
 	void glRasterPos3i(int x, int y, int z);
 
+	@DeprecatedGL
 	void glRasterPos4f(float x, float y, float z, float w);
 
+	@DeprecatedGL
 	void glRasterPos4d(double x, double y, double z, double w);
 
+	@DeprecatedGL
 	void glRasterPos4i(int x, int y, int z, int w);
 
+	@DeprecatedGL
 	void glPushName(@GLuint int name);
 
+	@DeprecatedGL
 	void glPopName();
 
+	@DeprecatedGL
 	void glPushMatrix();
 
+	@DeprecatedGL
 	void glPopMatrix();
 
 	@Code("		StateTracker.pushAttrib(caps, mask);")
+	@DeprecatedGL
 	void glPushClientAttrib(@GLbitfield int mask);
 
 	@Code("		StateTracker.popAttrib(caps);")
+	@DeprecatedGL
 	void glPopClientAttrib();
 
+	@DeprecatedGL
 	void glPushAttrib(@GLbitfield int mask);
 
+	@DeprecatedGL
 	void glPopAttrib();
 
 	void glStencilFunc(@GLenum int func, int ref, @GLuint int mask);
 
+	@DeprecatedGL
 	void glVertexPointer(int size, @AutoType("pointer") @GLenum int type, @GLsizei int stride,
 	                     @CachedReference
 	                     @BufferObject(BufferKind.ArrayVBO)
@@ -1230,34 +1362,45 @@ public interface GL11 {
 	                     @GLdouble Buffer pointer);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glVertex2f(float x, float y);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glVertex2d(double x, double y);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glVertex2i(int x, int y);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glVertex3f(float x, float y, float z);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glVertex3d(double x, double y, double z);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glVertex3i(int x, int y, int z);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glVertex4f(float x, float y, float z, float w);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glVertex4d(double x, double y, double z, double w);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glVertex4i(int x, int y, int z, int w);
 
+	@DeprecatedGL
 	void glTranslatef(float x, float y, float z);
 
+	@DeprecatedGL
 	void glTranslated(double x, double y, double z);
 
 	void glTexImage1D(@GLenum int target, int level, int internalformat, @GLsizei int width, int border, @GLenum int format, @GLenum int type,
@@ -1310,31 +1453,42 @@ public interface GL11 {
 	@StripPostfix("param")
 	void glTexParameteriv(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer param);
 
+	@DeprecatedGL
 	void glTexGenf(@GLenum int coord, @GLenum int pname, float param);
 
+	@DeprecatedGL
 	void glTexGend(@GLenum int coord, @GLenum int pname, double param);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glTexGenfv(@GLenum int coord, @GLenum int pname, @Check("4") @Const FloatBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glTexGendv(@GLenum int coord, @GLenum int pname, @Check("4") @Const DoubleBuffer params);
 
+	@DeprecatedGL
 	void glTexGeni(@GLenum int coord, @GLenum int pname, int param);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glTexGeniv(@GLenum int coord, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
+	@DeprecatedGL
 	void glTexEnvf(@GLenum int target, @GLenum int pname, float param);
 
+	@DeprecatedGL
 	void glTexEnvi(@GLenum int target, @GLenum int pname, int param);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glTexEnvfv(@GLenum int target, @GLenum int pname, @Check("4") @Const FloatBuffer params);
 
 	@StripPostfix("params")
+	@DeprecatedGL
 	void glTexEnviv(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
+	@DeprecatedGL
 	void glTexCoordPointer(int size, @AutoType("pointer") @GLenum int type, @GLsizei int stride,
 	                       @CachedReference(index="GLChecks.getReferences(caps).glClientActiveTexture", name="glTexCoordPointer_buffer")
 	                       @BufferObject(BufferKind.ArrayVBO)
@@ -1344,27 +1498,35 @@ public interface GL11 {
 	                       @GLdouble Buffer pointer);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glTexCoord1f(float s);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glTexCoord1d(double s);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glTexCoord2f(float s, float t);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glTexCoord2d(double s, double t);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glTexCoord3f(float s, float t, float r);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glTexCoord3d(double s, double t, double r);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glTexCoord4f(float s, float t, float r, float q);
 
 	@NoErrorCheck
+	@DeprecatedGL
 	void glTexCoord4d(double s, double t, double r, double q);
 
 	void glStencilOp(@GLenum int fail, @GLenum int zfail, @GLenum int zpass);

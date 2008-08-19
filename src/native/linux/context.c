@@ -1,35 +1,35 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /**
  * $Id$
  *
@@ -122,14 +122,25 @@ static GLXFBConfig *chooseVisualGLX13FromBPP(JNIEnv *env, Display *disp, int scr
 	int num_aux_buffers = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "num_aux_buffers", "I"));
 	int accum_bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_bpp", "I"));
 	int accum_alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_alpha", "I"));
+	
 	bool stereo = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "stereo", "Z"));
 	bool floating_point = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
+	bool floating_point_packed = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point_packed", "Z"));
+	bool sRGB = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "sRGB", "Z"));
 
 	int bpe = convertToBPE(bpp);
 	int accum_bpe = convertToBPE(accum_bpp);
 	attrib_list_t attrib_list;
 	initAttribList(&attrib_list);
-	int render_type = floating_point ? GLX_RGBA_FLOAT_BIT : GLX_RGBA_BIT;
+	int render_type;
+	
+	if ( floating_point )
+		render_type = GLX_RGBA_FLOAT_BIT;
+	else if ( floating_point_packed )
+		render_type = GLX_RGBA_UNSIGNED_FLOAT_BIT_EXT;
+	else
+		render_type = GLX_RGBA_BIT;
+		
 	putAttrib(&attrib_list, GLX_RENDER_TYPE); putAttrib(&attrib_list, render_type);
 	putAttrib(&attrib_list, GLX_DOUBLEBUFFER); putAttrib(&attrib_list, double_buffer ? True : False);
 	putAttrib(&attrib_list, GLX_DRAWABLE_TYPE); putAttrib(&attrib_list, drawable_type);
@@ -151,6 +162,9 @@ static GLXFBConfig *chooseVisualGLX13FromBPP(JNIEnv *env, Display *disp, int scr
 	if (samples > 0) {
 		putAttrib(&attrib_list, GLX_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
 		putAttrib(&attrib_list, GLX_SAMPLES_ARB); putAttrib(&attrib_list, samples);
+	}
+	if (sRGB) {
+		putAttrib(&attrib_list, GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB); putAttrib(&attrib_list, True);
 	}
 	putAttrib(&attrib_list, None); putAttrib(&attrib_list, None);
 	int num_formats = 0;
@@ -188,7 +202,9 @@ static XVisualInfo *chooseVisualGLXFromBPP(JNIEnv *env, Display *disp, int scree
 	int num_aux_buffers = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "num_aux_buffers", "I"));
 	int accum_bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_bpp", "I"));
 	int accum_alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_alpha", "I"));
+
 	bool stereo = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "stereo", "Z"));
+	bool sRGB = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "sRGB", "Z"));
 
 	int bpe = convertToBPE(bpp);
 	int accum_bpe = convertToBPE(accum_bpp);
@@ -214,6 +230,8 @@ static XVisualInfo *chooseVisualGLXFromBPP(JNIEnv *env, Display *disp, int scree
 		putAttrib(&attrib_list, GLX_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
 		putAttrib(&attrib_list, GLX_SAMPLES_ARB); putAttrib(&attrib_list, samples);
 	}
+	if (sRGB)
+		putAttrib(&attrib_list, GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB);
 	putAttrib(&attrib_list, None);
 	return lwjgl_glXChooseVisual(disp, screen, attrib_list.attribs);
 }
@@ -272,10 +290,21 @@ bool initPeerInfo(JNIEnv *env, jobject peer_info_handle, Display *display, int s
 		return false;
 	}
 	bool floating_point = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
-	if (floating_point && !extension_flags.GLX_ARB_fbconfig_float) {
+	if (floating_point && !(extension_flags.GLX13 && extension_flags.GLX_ARB_fbconfig_float)) { // We need GLX13 to support floating point
 		throwException(env, "Floating point specified but there's no support for GLX_ARB_fbconfig_float");
 		return false;
 	}
+	bool floating_point_packed = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point_packed", "Z"));
+	if (floating_point_packed && !(extension_flags.GLX13 && extension_flags.GLX_EXT_fbconfig_packed_float)) { // We need GLX13 to support packed floating point
+		throwException(env, "Packed floating point specified but there's no support for GLX_EXT_fbconfig_packed_float");
+		return false;
+	}
+	bool sRGB = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "sRGB", "Z"));
+		if (sRGB && !extension_flags.GLX_ARB_framebuffer_sRGB) {
+			throwException(env, "sRGB specified but there's no support for GLX_ARB_framebuffer_sRGB");
+			return false;
+	}
+
 	peer_info->glx13 = extension_flags.GLX13;
 	if (peer_info->glx13) {
 		GLXFBConfig *configs = chooseVisualGLX13(env, display, screen, pixel_format, use_display_bpp, drawable_type, double_buffered);

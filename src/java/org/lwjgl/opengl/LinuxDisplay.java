@@ -81,7 +81,7 @@ final class LinuxDisplay implements DisplayImplementation {
 
 	/** Current window mode */
 	private static int current_window_mode = WINDOWED;
-	
+
 	/** Display mode switching API */
 	private static final int XRANDR = 10;
 	private static final int XF86VIDMODE = 11;
@@ -91,7 +91,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static long display;
 	private static long current_window;
 	private static long saved_error_handler;
-	
+
 	private static int display_connection_usage_count = 0;
 
 	/** Event buffer */
@@ -136,13 +136,13 @@ final class LinuxDisplay implements DisplayImplementation {
 	private LinuxMouse mouse;
 
 	private final FocusListener focus_listener = new FocusListener() {
-		public final void focusGained(FocusEvent e) {
+		public void focusGained(FocusEvent e) {
 			synchronized (GlobalLock.lock) {
 				parent_focused = true;
 				parent_focus_changed = true;
 			}
 		}
-		public final void focusLost(FocusEvent e) {
+		public void focusLost(FocusEvent e) {
 			synchronized (GlobalLock.lock) {
 				parent_focused = false;
 				parent_focus_changed = true;
@@ -167,7 +167,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 	private static native ByteBuffer nGetCurrentGammaRamp(long display, int screen) throws LWJGLException;
-	
+
 	private static int getBestDisplayModeExtension() {
 		int result;
 		if (isXrandrSupported()) {
@@ -182,7 +182,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 		return result;
 	}
-	
+
 	private static boolean isXrandrSupported() {
 		if (Display.getPrivilegedBoolean("LWJGL_DISABLE_XRANDR"))
 			return false;
@@ -240,7 +240,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 	private static native boolean nIsNetWMFullscreenSupported(long display, int screen) throws LWJGLException;
-	
+
 	/* Since Xlib is not guaranteed to be thread safe, we need a way to synchronize LWJGL
 	 * Xlib calls with AWT Xlib calls. Fortunately, JAWT implements Lock()/Unlock() to
 	 * do just that.
@@ -253,7 +253,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 	private static native void nLockAWT() throws LWJGLException;
-	
+
 	static void unlockAWT() {
 		try {
 			nUnlockAWT();
@@ -303,7 +303,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			closeDisplay(display);
 			resetErrorHandler(saved_error_handler);
 			display = 0;
-			GLContext.unloadOpenGLLibrary();	
+			GLContext.unloadOpenGLLibrary();
 		}*/
 	}
 
@@ -322,7 +322,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		} else
 			return WINDOWED;
 	}
-	
+
 	static long getDisplay() {
 		if (display_connection_usage_count <= 0)
 			throw new InternalError("display_connection_usage_count = " + display_connection_usage_count);
@@ -345,7 +345,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 	static native int nUngrabKeyboard(long display);
-	
+
 	private void grabKeyboard() {
 		if (!keyboard_grabbed) {
 			int res = nGrabKeyboard(getDisplay(), getWindow());
@@ -354,7 +354,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 	static native int nGrabKeyboard(long display, long window);
-	
+
 	private void grabPointer() {
 		if (!pointer_grabbed) {
 			int result = nGrabPointer(getDisplay(), getWindow(), None);
@@ -394,7 +394,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 		updateCursor();
 	}
-	
+
 	private void updateCursor() {
 		long cursor;
 		if (shouldGrab()) {
@@ -405,7 +405,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		nDefineCursor(getDisplay(), getWindow(), cursor);
 	}
 	private static native void nDefineCursor(long display, long window, long cursor_handle);
-	
+
 	private boolean isLegacyFullscreen() {
 		return current_window_mode == FULLSCREEN_LEGACY;
 	}
@@ -484,7 +484,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		ByteBuffer parent_peer_info_handle = parent_peer_info.lockAndGetHandle();
 		try {
 			return parent_peer_info.getDrawable();
-		} finally { 
+		} finally {
 			parent_peer_info.unlock();
 		}
 	}
@@ -548,8 +548,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void resetDisplayMode() {
 		lockAWT();
 		try {
-			if(current_mode != saved_mode)
-				switchDisplayMode(saved_mode);
+			switchDisplayMode(saved_mode);
 			if (isXF86VidModeSupported())
 				doSetGamma(saved_gamma);
 		} catch (LWJGLException e) {
@@ -646,7 +645,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			current_mode = saved_mode;
 			saved_gamma = getCurrentGammaRamp();
 			current_gamma = saved_gamma;
-			return current_mode;
+			return saved_mode;
 		} finally {
 			unlockAWT();
 		}
@@ -665,7 +664,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	
+
 	/** Assumes extension == XRANDR */
 	private static native DisplayMode nGetCurrentXRandrMode(long display, int screen) throws LWJGLException;
 
@@ -703,7 +702,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		peer_info = new LinuxDisplayPeerInfo(pixel_format);
 		return peer_info;
 	}
-	
+
 	static native void setInputFocus(long display, long window, long time);
 
 	private void relayEventToParent(LinuxEvent event_buffer, int event_mask) {
@@ -828,7 +827,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		mouse = null;
 		updateInputGrab();
 	}
-	
+
 	public void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons) {
 		lockAWT();
 		try {
@@ -837,7 +836,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	
+
 	public void readMouse(ByteBuffer buffer) {
 		lockAWT();
 		try {
@@ -846,7 +845,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	
+
 	public void setCursorPosition(int x, int y) {
 		lockAWT();
 		try {
@@ -949,7 +948,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private boolean shouldWarpPointer() {
 		return pointer_grabbed && shouldGrab();
 	}
-	
+
 	public int getNativeCursorCapabilities() {
 		lockAWT();
 		try {
@@ -976,7 +975,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	
+
 	public int getMinCursorSize() {
 		lockAWT();
 		try {
@@ -1012,7 +1011,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 	private static native int nGetMaxCursorSize(long display, long window);
-	
+
 	/* Keyboard */
 	public void createKeyboard() throws LWJGLException {
 		lockAWT();
@@ -1022,7 +1021,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	
+
 	public void destroyKeyboard() {
 		lockAWT();
 		try {
@@ -1032,7 +1031,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	
+
 	public void pollKeyboard(ByteBuffer keyDownBuffer) {
 		lockAWT();
 		try {
@@ -1050,7 +1049,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	
+
 	private static native long nCreateCursor(long display, int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
 
 	private static long createBlankCursor() {
@@ -1088,7 +1087,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 	static native void nDestroyCursor(long display, long cursorHandle);
-	
+
 	public int getPbufferCapabilities() {
 		lockAWT();
 		try {
@@ -1128,7 +1127,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void releaseTexImageFromPbuffer(PeerInfo handle, int buffer) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	private static ByteBuffer convertIcon(ByteBuffer icon, int width, int height) {
 		ByteBuffer icon_rgb = BufferUtils.createByteBuffer(icon.capacity());
 		int x;
@@ -1212,7 +1211,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	
+
 	private static native void nSetWindowIcon(long display, long window, ByteBuffer icon_rgb, int icon_rgb_size, ByteBuffer icon_mask, int icon_mask_size, int width, int height);
 
 	public int getWidth() {

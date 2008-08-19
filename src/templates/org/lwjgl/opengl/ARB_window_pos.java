@@ -31,21 +31,32 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.util.generator.DeprecatedGL;
+
+@DeprecatedGL
 public interface ARB_window_pos {
 
+	@DeprecatedGL
 	void glWindowPos2fARB(float x, float y);
 
+	@DeprecatedGL
 	void glWindowPos2dARB(double x, double y);
 
+	@DeprecatedGL
 	void glWindowPos2iARB(int x, int y);
 
+	@DeprecatedGL
 	void glWindowPos2sARB(short x, short y);
 
+	@DeprecatedGL
 	void glWindowPos3fARB(float x, float y, float z);
 
+	@DeprecatedGL
 	void glWindowPos3dARB(double x, double y, double z);
 
+	@DeprecatedGL
 	void glWindowPos3iARB(int x, int y, int z);
 
+	@DeprecatedGL
 	void glWindowPos3sARB(short x, short y, short z);
 }

@@ -48,7 +48,7 @@ typedef struct {
 } MacOSXContext;
 
 JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCreate
-  (JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject shared_context_handle) {
+  (JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject attribs, jobject shared_context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	MacOSXPeerInfo *peer_info;
 	MacOSXContext *shared_context_info;

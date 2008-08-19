@@ -42,7 +42,7 @@ import org.lwjgl.LWJGLException;
  * $Id$
  */
 final class MacOSXPbufferPeerInfo extends MacOSXPeerInfo {
-	public MacOSXPbufferPeerInfo(int width, int height, PixelFormat pixel_format) throws LWJGLException {
+	MacOSXPbufferPeerInfo(int width, int height, PixelFormat pixel_format) throws LWJGLException {
 		super(pixel_format, false, false, true, false);
 		nCreate(getHandle(), width, height);
 	}

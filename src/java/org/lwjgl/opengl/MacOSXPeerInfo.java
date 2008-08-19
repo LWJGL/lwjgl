@@ -43,7 +43,7 @@ import org.lwjgl.LWJGLUtil;
  * $Id$
  */
 abstract class MacOSXPeerInfo extends PeerInfo {
-	public MacOSXPeerInfo(PixelFormat pixel_format, boolean use_display_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException {
+	MacOSXPeerInfo(PixelFormat pixel_format, boolean use_display_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException {
 		super(createHandle());
 		if (pixel_format.isFloatingPoint() && !LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 4))
 			throw new LWJGLException("Floating point pixel format requested, but is not supported");

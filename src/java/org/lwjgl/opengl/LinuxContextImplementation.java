@@ -31,23 +31,24 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.ByteBuffer;
-
 import org.lwjgl.LWJGLException;
 
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
 /**
- *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
- * $Id$
+ *          $Id$
  */
 final class LinuxContextImplementation implements ContextImplementation {
-	public ByteBuffer create(PeerInfo peer_info, ByteBuffer shared_context_handle) throws LWJGLException {
+
+	public ByteBuffer create(PeerInfo peer_info, IntBuffer attribs, ByteBuffer shared_context_handle) throws LWJGLException {
 		LinuxDisplay.lockAWT();
 		try {
 			ByteBuffer peer_handle = peer_info.lockAndGetHandle();
 			try {
-				return nCreate(peer_handle, shared_context_handle);
+				return nCreate(peer_handle, attribs, shared_context_handle);
 			} finally {
 				peer_info.unlock();
 			}
@@ -56,16 +57,16 @@ final class LinuxContextImplementation implements ContextImplementation {
 		}
 	}
 
-	private static native ByteBuffer nCreate(ByteBuffer peer_handle, ByteBuffer shared_context_handle) throws LWJGLException;
+	private static native ByteBuffer nCreate(ByteBuffer peer_handle, IntBuffer attribs, ByteBuffer shared_context_handle) throws LWJGLException;
 
 	public void releaseDrawable(ByteBuffer context_handle) throws LWJGLException {
 	}
-	
+
 	public void swapBuffers() throws LWJGLException {
 		Context current_context = Context.getCurrentContext();
-		if (current_context == null)
+		if ( current_context == null )
 			throw new IllegalStateException("No context is current");
-		synchronized (current_context) {
+		synchronized ( current_context ) {
 			PeerInfo current_peer_info = current_context.getPeerInfo();
 			LinuxDisplay.lockAWT();
 			try {
@@ -80,13 +81,14 @@ final class LinuxContextImplementation implements ContextImplementation {
 			}
 		}
 	}
+
 	private static native void nSwapBuffers(ByteBuffer peer_info_handle) throws LWJGLException;
 
 	public void releaseCurrentContext() throws LWJGLException {
 		Context current_context = Context.getCurrentContext();
-		if (current_context == null)
+		if ( current_context == null )
 			throw new IllegalStateException("No context is current");
-		synchronized (current_context) {
+		synchronized ( current_context ) {
 			PeerInfo current_peer_info = current_context.getPeerInfo();
 			LinuxDisplay.lockAWT();
 			try {
@@ -101,6 +103,7 @@ final class LinuxContextImplementation implements ContextImplementation {
 			}
 		}
 	}
+
 	private static native void nReleaseCurrentContext(ByteBuffer peer_info_handle) throws LWJGLException;
 
 	public void update(ByteBuffer context_handle) {
@@ -119,8 +122,9 @@ final class LinuxContextImplementation implements ContextImplementation {
 			LinuxDisplay.unlockAWT();
 		}
 	}
+
 	private static native void nMakeCurrent(ByteBuffer peer_handle, ByteBuffer context_handle) throws LWJGLException;
-	
+
 	public boolean isCurrent(ByteBuffer handle) throws LWJGLException {
 		LinuxDisplay.lockAWT();
 		try {
@@ -130,18 +134,20 @@ final class LinuxContextImplementation implements ContextImplementation {
 			LinuxDisplay.unlockAWT();
 		}
 	}
+
 	private static native boolean nIsCurrent(ByteBuffer context_handle) throws LWJGLException;
 
 	public void setSwapInterval(int value) {
 		Context current_context = Context.getCurrentContext();
-		if (current_context == null)
+		if ( current_context == null )
 			throw new IllegalStateException("No context is current");
-		synchronized (current_context) {
+		synchronized ( current_context ) {
 			LinuxDisplay.lockAWT();
 			nSetSwapInterval(current_context.getHandle(), value);
 			LinuxDisplay.unlockAWT();
 		}
 	}
+
 	private static native void nSetSwapInterval(ByteBuffer context_handle, int value);
 
 	public void destroy(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException {
@@ -157,5 +163,6 @@ final class LinuxContextImplementation implements ContextImplementation {
 			LinuxDisplay.unlockAWT();
 		}
 	}
+
 	private static native void nDestroy(ByteBuffer peer_handle, ByteBuffer context_handle) throws LWJGLException;
 }

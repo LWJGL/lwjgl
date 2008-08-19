@@ -33,9 +33,10 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
 
-import java.nio.*;
+import java.nio.Buffer;
 
 public interface EXT_secondary_color {
+
 	int GL_COLOR_SUM_EXT = 0x8458;
 	int GL_CURRENT_SECONDARY_COLOR_EXT = 0x8459;
 	int GL_SECONDARY_COLOR_ARRAY_SIZE_EXT = 0x845A;

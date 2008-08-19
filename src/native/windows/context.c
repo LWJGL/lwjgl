@@ -193,7 +193,7 @@ static int convertToBPE(int bpp) {
 	return bpe;
 }
 
-static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extensions, jobject pixel_format, jobject pixelFormatCaps, int bpp, bool window, bool pbuffer, bool double_buffer, bool floating_point) {
+static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extensions, jobject pixel_format, jobject pixelFormatCaps, int bpp, bool window, bool pbuffer, bool double_buffer) {
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
 	int alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "alpha", "I"));
 	int depth = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "depth", "I"));
@@ -202,8 +202,13 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extens
 	int num_aux_buffers = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "num_aux_buffers", "I"));
 	int accum_bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_bpp", "I"));
 	int accum_alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_alpha", "I"));
+	
 	jboolean stereo = (*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "stereo", "Z"));
-	int pixel_type = floating_point ? WGL_TYPE_RGBA_FLOAT_ARB : WGL_TYPE_RGBA_ARB;
+	jboolean floating_point = (*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
+	jboolean floating_point_packed = (*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point_packed", "Z"));
+	jboolean sRGB = (*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "sRGB", "Z"));
+	
+	int pixel_type;
 	int iPixelFormat;
 	unsigned int num_formats_returned;
 	attrib_list_t attrib_list;
@@ -212,6 +217,13 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extens
 	BOOL result;
 	jlong i;
 	int bpe = convertToBPE(bpp);
+	
+	if ( floating_point )
+		pixel_type = WGL_TYPE_RGBA_FLOAT_ARB;
+	else if ( floating_point_packed )
+		pixel_type = WGL_TYPE_RGBA_UNSIGNED_FLOAT_EXT;
+	else
+		pixel_type = WGL_TYPE_RGBA_ARB;
 
 	initAttribList(&attrib_list);
 	if (window) {
@@ -240,6 +252,7 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extens
 	putAttrib(&attrib_list, WGL_ACCUM_ALPHA_BITS_ARB); putAttrib(&attrib_list, accum_alpha);
 	putAttrib(&attrib_list, WGL_STEREO_ARB); putAttrib(&attrib_list, stereo ? TRUE : FALSE);
 	putAttrib(&attrib_list, WGL_AUX_BUFFERS_ARB); putAttrib(&attrib_list, num_aux_buffers);
+	putAttrib(&attrib_list, WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB); putAttrib(&attrib_list, sRGB ? TRUE : FALSE);
 	// Assume caller checked extension availability
 	if (pixelFormatCaps != NULL) {
 		pixelFormatCaps_ptr = (GLuint *)(*env)->GetDirectBufferAddress(env, pixelFormatCaps);
@@ -258,14 +271,14 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extens
 	return iPixelFormat;
 }
 
-static int findPixelFormatARB(JNIEnv *env, HDC hdc, WGLExtensions *extensions, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer, bool floating_point) {
+static int findPixelFormatARB(JNIEnv *env, HDC hdc, WGLExtensions *extensions, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer) {
 	int bpp;
 	int iPixelFormat;
 	int fallback_bpp = 16;
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
 	if (use_hdc_bpp) {
 		bpp = GetDeviceCaps(hdc, BITSPIXEL);
-		iPixelFormat = findPixelFormatARBFromBPP(env, hdc, extensions, pixel_format, pixelFormatCaps, bpp, window, pbuffer, double_buffer, floating_point);
+		iPixelFormat = findPixelFormatARBFromBPP(env, hdc, extensions, pixel_format, pixelFormatCaps, bpp, window, pbuffer, double_buffer);
 		if ((*env)->ExceptionOccurred(env)) {
 			(*env)->ExceptionClear(env);
 			printfDebugJava(env, "Failed to find ARB pixel format with HDC depth %d, falling back to %d\n", bpp, fallback_bpp);
@@ -274,7 +287,7 @@ static int findPixelFormatARB(JNIEnv *env, HDC hdc, WGLExtensions *extensions, j
 			return iPixelFormat;
 	} else
 		bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "bpp", "I"));
-	return findPixelFormatARBFromBPP(env, hdc, extensions, pixel_format, pixelFormatCaps, bpp, window, pbuffer, double_buffer, floating_point);
+	return findPixelFormatARBFromBPP(env, hdc, extensions, pixel_format, pixelFormatCaps, bpp, window, pbuffer, double_buffer);
 }
 
 /*
@@ -381,7 +394,7 @@ static int findPixelFormatDefault(JNIEnv *env, HDC hdc, jobject pixel_format, bo
 	return findPixelFormatFromBPP(env, hdc, pixel_format, bpp, double_buffer);
 }
 
-static bool validateAndGetExtensions(JNIEnv *env, WGLExtensions *extensions, HDC dummy_hdc, HGLRC dummy_hglrc, int samples, bool floating_point, jobject pixelFormatCaps) {
+static bool validateAndGetExtensions(JNIEnv *env, WGLExtensions *extensions, HDC dummy_hdc, HGLRC dummy_hglrc, int samples, bool floating_point, bool floating_point_packed, bool sRGB, jobject pixelFormatCaps) {
 	if (!wglMakeCurrent(dummy_hdc, dummy_hglrc)) {
 		throwException(env, "Could not bind context to dummy window");
 		return false;
@@ -405,6 +418,14 @@ static bool validateAndGetExtensions(JNIEnv *env, WGLExtensions *extensions, HDC
 		throwException(env, "No support for WGL_ARB_pixel_format_float nor WGL_ATI_pixel_format_float");
 		return false;
 	}
+	if (floating_point_packed && !(extensions->WGL_EXT_pixel_format_packed_float)) {
+		throwException(env, "No support for WGL_EXT_pixel_format_packed_float");
+		return false;
+	}
+	if (sRGB && !(extensions->WGL_ARB_framebuffer_sRGB)) {
+		throwException(env, "No support for WGL_ARB_framebuffer_sRGB");
+		return false;
+	}
 	if (pixelFormatCaps != NULL && !extensions->WGL_ARB_render_texture) {
 		throwException(env, "No support for WGL_ARB_render_texture");
 		return false;
@@ -412,7 +433,7 @@ static bool validateAndGetExtensions(JNIEnv *env, WGLExtensions *extensions, HDC
 	return true;
 }
 
-int findPixelFormatOnDC(JNIEnv *env, HDC hdc, int origin_x, int origin_y, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer, bool floating_point) {
+int findPixelFormatOnDC(JNIEnv *env, HDC hdc, int origin_x, int origin_y, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer) {
 	HGLRC dummy_hglrc;
 	HDC saved_current_hdc;
 	HGLRC saved_current_hglrc;
@@ -421,8 +442,13 @@ int findPixelFormatOnDC(JNIEnv *env, HDC hdc, int origin_x, int origin_y, jobjec
 	HDC dummy_hdc;
 	int pixel_format_id;
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
+	
 	int samples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "samples", "I"));
-	bool use_arb_selection = samples > 0 || floating_point || pbuffer || pixelFormatCaps != NULL;
+	bool floating_point = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
+	bool floating_point_packed = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point_packed", "Z"));
+	bool sRGB = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "sRGB", "Z"));
+	bool use_arb_selection = samples > 0 || floating_point || floating_point_packed || sRGB || pbuffer || pixelFormatCaps != NULL;
+	
 	pixel_format_id = findPixelFormatDefault(env, hdc, pixel_format, use_hdc_bpp, double_buffer);
 	if (!(*env)->ExceptionOccurred(env) && use_arb_selection) {
 		dummy_hwnd = createDummyWindow(origin_x, origin_y);
@@ -444,8 +470,8 @@ int findPixelFormatOnDC(JNIEnv *env, HDC hdc, int origin_x, int origin_y, jobjec
 		// Save the current HDC and HGLRC to avoid disruption
 		saved_current_hdc = wglGetCurrentDC();
 		saved_current_hglrc = wglGetCurrentContext();
-		if (validateAndGetExtensions(env, &extensions, dummy_hdc, dummy_hglrc, samples, floating_point, pixelFormatCaps)) {
-			pixel_format_id = findPixelFormatARB(env, hdc, &extensions, pixel_format, pixelFormatCaps, use_hdc_bpp, window, pbuffer, double_buffer, floating_point);
+		if (validateAndGetExtensions(env, &extensions, dummy_hdc, dummy_hglrc, samples, floating_point, floating_point_packed, sRGB, pixelFormatCaps)) {
+			pixel_format_id = findPixelFormatARB(env, hdc, &extensions, pixel_format, pixelFormatCaps, use_hdc_bpp, window, pbuffer, double_buffer);
 		}
 		wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
 		wglDeleteContext(dummy_hglrc);

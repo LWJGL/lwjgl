@@ -29,22 +29,18 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.opengl;
+package org.lwjgl.util.generator;
 
-import org.lwjgl.util.generator.GLenum;
-import org.lwjgl.util.generator.GLuint;
+/**
+ * Use this annotation on extensions with deprecated functionality.
+ * Functions in such extensions marked with this annotation will not be loaded in a forward combatible context.
+ *
+ * @author spasi <spasi@users.sourceforge.net>
+ */
 
-public interface NV_conditional_render {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 
-	/**
-	 *  Accepted by the &lt;mode&gt; parameter of BeginConditionalRenderNV:
-	 */
-	int GL_QUERY_WAIT_NV = 0x8E13;
-	int GL_QUERY_NO_WAIT_NV = 0x8E14;
-	int GL_QUERY_BY_REGION_WAIT_NV = 0x8E15;
-	int GL_QUERY_BY_REGION_NO_WAIT_NV = 0x8E16;
-
-	void glBeginConditionalRenderNV(@GLuint int id, @GLenum int mode);
-	void glEndConditionalRenderNV();
-
+@Target({ ElementType.TYPE, ElementType.METHOD })
+public @interface DeprecatedGL {
 }

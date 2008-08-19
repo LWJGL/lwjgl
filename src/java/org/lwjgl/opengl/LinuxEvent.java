@@ -55,12 +55,12 @@ final class LinuxEvent {
 
 	private final ByteBuffer event_buffer;
 
-	public LinuxEvent() {
+	LinuxEvent() {
 		this.event_buffer = createEventBuffer();
 	}
 	private static native ByteBuffer createEventBuffer();
 
-	public final void copyFrom(LinuxEvent event) {
+	public void copyFrom(LinuxEvent event) {
 		int pos = event_buffer.position();
 		int event_pos = event.event_buffer.position();
 		event_buffer.put(event.event_buffer);
@@ -68,137 +68,137 @@ final class LinuxEvent {
 		event.event_buffer.position(event_pos);
 	}
 
-	public final static native int getPending(long display);
+	public static native int getPending(long display);
 
-	public final void sendEvent(long display, long window, boolean propagate, long event_mask) {
+	public void sendEvent(long display, long window, boolean propagate, long event_mask) {
 		nSendEvent(event_buffer, display, window, propagate, event_mask);
 	}
 	private static native void nSendEvent(ByteBuffer event_buffer, long display, long window, boolean propagate, long event_mask);
 
-	public final boolean filterEvent(long window) {
+	public boolean filterEvent(long window) {
 		return nFilterEvent(event_buffer, window);
 	}
 	private static native boolean nFilterEvent(ByteBuffer event_buffer, long window);
 
-	public final void nextEvent(long display) {
+	public void nextEvent(long display) {
 		nNextEvent(display, event_buffer);
 	}
 	private static native void nNextEvent(long display, ByteBuffer event_buffer);
 
-	public final int getType() {
+	public int getType() {
 		return nGetType(event_buffer);
 	}
 	private static native int nGetType(ByteBuffer event_buffer);
 
-	public final long getWindow() {
+	public long getWindow() {
 		return nGetWindow(event_buffer);
 	}
 	private static native long nGetWindow(ByteBuffer event_buffer);
 
-	public final void setWindow(long window) {
+	public void setWindow(long window) {
 		nSetWindow(event_buffer, window);
 	}
 	private static native void nSetWindow(ByteBuffer event_buffer, long window);
 
 	/* Focus methods */
 
-	public final int getFocusMode() {
+	public int getFocusMode() {
 		return nGetFocusMode(event_buffer);
 	}
 	private static native int nGetFocusMode(ByteBuffer event_buffer);
 
-	public final int getFocusDetail() {
+	public int getFocusDetail() {
 		return nGetFocusDetail(event_buffer);
 	}
 	private static native int nGetFocusDetail(ByteBuffer event_buffer);
 
 	/* ClientMessage methods */
 
-	public final long getClientMessageType() {
+	public long getClientMessageType() {
 		return nGetClientMessageType(event_buffer);
 	}
 	private static native long nGetClientMessageType(ByteBuffer event_buffer);
 
-	public final int getClientData(int index) {
+	public int getClientData(int index) {
 		return nGetClientData(event_buffer, index);
 	}
 	private static native int nGetClientData(ByteBuffer event_buffer, int index);
 
-	public final int getClientFormat() {
+	public int getClientFormat() {
 		return nGetClientFormat(event_buffer);
 	}
 	private static native int nGetClientFormat(ByteBuffer event_buffer);
 
 	/* Button methods */
 
-	public final long getButtonTime() {
+	public long getButtonTime() {
 		return nGetButtonTime(event_buffer);
 	}
 	private static native long nGetButtonTime(ByteBuffer event_buffer);
 
-	public final int getButtonState() {
+	public int getButtonState() {
 		return nGetButtonState(event_buffer);
 	}
 	private static native int nGetButtonState(ByteBuffer event_buffer);
 
-	public final int getButtonType() {
+	public int getButtonType() {
 		return nGetButtonType(event_buffer);
 	}
 	private static native int nGetButtonType(ByteBuffer event_buffer);
 
-	public final int getButtonButton() {
+	public int getButtonButton() {
 		return nGetButtonButton(event_buffer);
 	}
 	private static native int nGetButtonButton(ByteBuffer event_buffer);
 
-	public final long getButtonRoot() {
+	public long getButtonRoot() {
 		return nGetButtonRoot(event_buffer);
 	}
 	private static native long nGetButtonRoot(ByteBuffer event_buffer);
 
-	public final int getButtonXRoot() {
+	public int getButtonXRoot() {
 		return nGetButtonXRoot(event_buffer);
 	}
 	private static native int nGetButtonXRoot(ByteBuffer event_buffer);
 
-	public final int getButtonYRoot() {
+	public int getButtonYRoot() {
 		return nGetButtonYRoot(event_buffer);
 	}
 	private static native int nGetButtonYRoot(ByteBuffer event_buffer);
 
-	public final int getButtonX() {
+	public int getButtonX() {
 		return nGetButtonX(event_buffer);
 	}
 	private static native int nGetButtonX(ByteBuffer event_buffer);
 
-	public final int getButtonY() {
+	public int getButtonY() {
 		return nGetButtonY(event_buffer);
 	}
 	private static native int nGetButtonY(ByteBuffer event_buffer);
 
 	/* Key methods */
-	
-	public final long getKeyAddress() {
+
+	public long getKeyAddress() {
 		return nGetKeyAddress(event_buffer);
 	}
 	private static native long nGetKeyAddress(ByteBuffer event_buffer);
 
-	public final long getKeyTime() {
+	public long getKeyTime() {
 		return nGetKeyTime(event_buffer);
 	}
 	private static native int nGetKeyTime(ByteBuffer event_buffer);
 
-	public final int getKeyType() {
+	public int getKeyType() {
 		return nGetKeyType(event_buffer);
 	}
 	private static native int nGetKeyType(ByteBuffer event_buffer);
 
-	public final int getKeyKeyCode() {
+	public int getKeyKeyCode() {
 		return nGetKeyKeyCode(event_buffer);
 	}
 	private static native int nGetKeyKeyCode(ByteBuffer event_buffer);
 
-	public final int getKeyState() {
+	public int getKeyState() {
 		return nGetKeyState(event_buffer);
 	}
 	private static native int nGetKeyState(ByteBuffer event_buffer);

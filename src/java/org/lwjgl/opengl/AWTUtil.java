@@ -113,7 +113,7 @@ final class AWTUtil {
 			final GraphicsConfiguration config = component.getGraphicsConfiguration();
 			if (config != null) {
 				PointerInfo pointer_info = (PointerInfo)AccessController.doPrivileged(new PrivilegedExceptionAction() {
-					public final Object run() throws Exception {
+					public Object run() throws Exception {
 						return MouseInfo.getPointerInfo();
 					}
 				});

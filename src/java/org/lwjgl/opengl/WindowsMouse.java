@@ -63,7 +63,7 @@ final class WindowsMouse {
 	private int last_x;
 	private int last_y;
 
-	public WindowsMouse(long hwnd) throws LWJGLException {
+	WindowsMouse(long hwnd) throws LWJGLException {
 		this.hwnd = hwnd;
 		this.mouse_button_count = WindowsDisplay.getSystemMetrics(WindowsDisplay.SM_CMOUSEBUTTONS);
 		this.has_wheel = WindowsDisplay.getSystemMetrics(WindowsDisplay.SM_MOUSEWHEELPRESENT) != 0;
@@ -109,7 +109,7 @@ final class WindowsMouse {
 		}
 		accum_dx = accum_dy = accum_dwheel = 0;
 	}
-	
+
 	private void putMouseEventWithCoords(byte button, byte state, int coord1, int coord2, int dz, long nanos) {
 		mouse_event.clear();
 		mouse_event.put(button).put(state).putInt(coord1).putInt(coord2).putInt(dz).putLong(nanos);
@@ -149,7 +149,7 @@ final class WindowsMouse {
 			if (mouse_grabbed) {
 				mouse_grabbed = false;
 				WindowsDisplay.resetCursorClipping();
-			}	
+			}
 		}
 		event_queue.clearEvents();
 	}
