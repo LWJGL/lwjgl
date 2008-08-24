@@ -1063,11 +1063,9 @@ public interface GL11 {
 	void glGetTexGendv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") DoubleBuffer params);
 
 	@StripPostfix("params")
-	@DeprecatedGL
 	void glGetTexEnviv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
-	@DeprecatedGL
 	void glGetTexEnvfv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@Const
@@ -1474,18 +1472,14 @@ public interface GL11 {
 	@DeprecatedGL
 	void glTexGeniv(@GLenum int coord, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
-	@DeprecatedGL
 	void glTexEnvf(@GLenum int target, @GLenum int pname, float param);
 
-	@DeprecatedGL
 	void glTexEnvi(@GLenum int target, @GLenum int pname, int param);
 
 	@StripPostfix("params")
-	@DeprecatedGL
 	void glTexEnvfv(@GLenum int target, @GLenum int pname, @Check("4") @Const FloatBuffer params);
 
 	@StripPostfix("params")
-	@DeprecatedGL
 	void glTexEnviv(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
 	@DeprecatedGL
