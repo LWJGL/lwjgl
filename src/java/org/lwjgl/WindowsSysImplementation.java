@@ -45,7 +45,7 @@ import org.lwjgl.opengl.Display;
  * $Id$
  */
 final class WindowsSysImplementation extends DefaultSysImplementation {
-	private final static int JNI_VERSION = 19;
+	private final static int JNI_VERSION = 20;
 
 	static {
 		Sys.initialize();
