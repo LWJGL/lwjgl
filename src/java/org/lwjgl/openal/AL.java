@@ -122,7 +122,7 @@ public final class AL {
 				break;
 			case LWJGLUtil.PLATFORM_LINUX:
 				libname = "openal";
-				library_names = new String[]{"libopenal.so", "libopenal.so.0"};
+				library_names = new String[]{"libopenal64.so", "libopenal.so", "libopenal.so.0"};
 				break;
 			case LWJGLUtil.PLATFORM_MACOSX:
 				libname = "openal";
