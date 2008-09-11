@@ -283,8 +283,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 			GL11.glGetInteger(GL11.GL_VIEWPORT, current_viewport);
 			GL11.glViewport(current_viewport.get(0), current_viewport.get(1), current_viewport.get(2), current_viewport.get(3));
 		}
-		if (frame != null && frame.syncShouldWarpCursor() && mouse_queue != null) {
-			mouse_queue.warpCursor();
+		if (frame != null && mouse_queue != null) {
+			if (frame.syncShouldReleaseCursor())
+				MacOSXMouseEventQueue.nGrabMouse(false);
+			if (frame.syncShouldWarpCursor())
+				mouse_queue.warpCursor();
 		}
 	}
 

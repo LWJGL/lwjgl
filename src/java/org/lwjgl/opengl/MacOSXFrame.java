@@ -65,6 +65,7 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 	private boolean active;
 	private boolean minimized;
 	private boolean should_warp_cursor;
+	private boolean should_release_cursor;
 
 	MacOSXFrame(DisplayMode mode, final java.awt.DisplayMode requested_mode, boolean fullscreen, int x, int y) throws LWJGLException {
 		setResizable(false);
@@ -169,6 +170,8 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 	public void windowDeactivated(WindowEvent e) {
 		synchronized ( this ) {
 			active = false;
+			should_release_cursor = true;
+			should_warp_cursor = false;
 		}
 	}
 
@@ -176,6 +179,7 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 		synchronized ( this ) {
 			active = true;
 			should_warp_cursor = true;
+			should_release_cursor = false;
 		}
 	}
 
@@ -202,6 +206,15 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 
 	public MacOSXGLCanvas getCanvas() {
 		return canvas;
+	}
+
+	public boolean syncShouldReleaseCursor() {
+		boolean result;
+		synchronized ( this ) {
+			result = should_release_cursor;
+			should_release_cursor = false;
+		}
+		return result;
 	}
 
 	public boolean syncShouldWarpCursor() {

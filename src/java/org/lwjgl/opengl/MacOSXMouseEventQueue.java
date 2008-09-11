@@ -62,7 +62,8 @@ final class MacOSXMouseEventQueue extends MouseEventQueue {
 	private static synchronized void grabMouse(boolean grab) {
 		if (is_grabbed != grab) {
 			is_grabbed = grab;
-			nGrabMouse(grab);
+			if (!grab)
+				nGrabMouse(grab);
 		}
 	}
 
@@ -80,6 +81,7 @@ final class MacOSXMouseEventQueue extends MouseEventQueue {
 			int dy = -delta_buffer.get(1);
 			if (skip_event) {
 				skip_event = false;
+				nGrabMouse(isGrabbed());
 				return;
 			}
 			if ( dx != 0 || dy != 0 ) {
@@ -94,13 +96,13 @@ final class MacOSXMouseEventQueue extends MouseEventQueue {
 			// If we're going to warp the cursor position, we'll skip the next event to avoid bogus delta values
 			skip_event = isGrabbed();
 		}
-		if (isGrabbed()) {
+/*		if (isGrabbed()) {
 			Rectangle bounds = getComponent().getBounds();
 			Point location_on_screen = getComponent().getLocationOnScreen();
 			int x = location_on_screen.x + bounds.width/2;
 			int y = location_on_screen.y + bounds.height/2;
 			nWarpCursor(x, y);
-		}
+		}*/
 	}
 
 	private static native void getMouseDeltas(IntBuffer delta_buffer);
