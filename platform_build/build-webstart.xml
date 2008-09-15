@@ -44,6 +44,7 @@
 		<jar destfile="${lwjgl.temp}/jnlp/native_win32.jar" basedir="${lwjgl.temp}/jnlp/temp/native/win32"/>
 		<jar destfile="${lwjgl.temp}/jnlp/native_linux.jar" basedir="${lwjgl.temp}/jnlp/temp/native/linux"/>
 		<jar destfile="${lwjgl.temp}/jnlp/native_macosx.jar" basedir="${lwjgl.temp}/jnlp/temp/native/macosx"/>
+		<jar destfile="${lwjgl.temp}/jnlp/native_solaris.jar" basedir="${lwjgl.temp}/jnlp/temp/native/solaris"/>
 		
 		<!-- create media jar -->
 		<jar destfile="${lwjgl.temp}/jnlp/media.jar" basedir="${lwjgl.res}"/>	
@@ -51,6 +52,7 @@
 		<!-- sign 'em -->
 		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_util.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_solaris.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_linux.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_win32.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>

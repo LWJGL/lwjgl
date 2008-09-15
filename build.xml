@@ -28,6 +28,7 @@
 		<mkdir dir="${lwjgl.temp}/native/win32" 	taskname="initialiazing temp/win32 folder" />
 		<mkdir dir="${lwjgl.temp}/native/linux" 	taskname="initialiazing temp/linux folder" />
 		<mkdir dir="${lwjgl.temp}/native/macosx" 	taskname="initialiazing temp/macosx folder" />
+		<mkdir dir="${lwjgl.temp}/native/solaris" taskname="initialiazing temp/solaris folder" />
 	</target>
 	
 	<!-- Cleans up any files created during the execution of this script -->
@@ -146,6 +147,11 @@
 				<patternset refid="lwjgl-macosx.fileset" />
 			</fileset>
 		</copy>
+		<copy todir="${lwjgl.temp}/native/solaris">
+			<fileset dir="${lwjgl.lib}/solaris">
+				<patternset refid="lwjgl-solaris.fileset" />
+			</fileset>
+		</copy>		
 		
 		<!-- create base package -->
 		<zip destfile="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip">
