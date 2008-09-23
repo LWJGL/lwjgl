@@ -224,7 +224,7 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extens
 		pixel_type = WGL_TYPE_RGBA_UNSIGNED_FLOAT_EXT;
 	else
 		pixel_type = WGL_TYPE_RGBA_ARB;
-
+		
 	initAttribList(&attrib_list);
 	if (window) {
 		putAttrib(&attrib_list, WGL_DRAW_TO_WINDOW_ARB); putAttrib(&attrib_list, TRUE);
@@ -252,8 +252,10 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extens
 	putAttrib(&attrib_list, WGL_ACCUM_ALPHA_BITS_ARB); putAttrib(&attrib_list, accum_alpha);
 	putAttrib(&attrib_list, WGL_STEREO_ARB); putAttrib(&attrib_list, stereo ? TRUE : FALSE);
 	putAttrib(&attrib_list, WGL_AUX_BUFFERS_ARB); putAttrib(&attrib_list, num_aux_buffers);
-	if (sRGB)
+	if (sRGB) {
 		putAttrib(&attrib_list, WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB); putAttrib(&attrib_list, TRUE);
+	}
+
 	// Assume caller checked extension availability
 	if (pixelFormatCaps != NULL) {
 		pixelFormatCaps_ptr = (GLuint *)(*env)->GetDirectBufferAddress(env, pixelFormatCaps);
