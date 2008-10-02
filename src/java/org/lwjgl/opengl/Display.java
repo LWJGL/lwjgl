@@ -206,6 +206,17 @@ public final class Display {
 	}
 
 	/**
+	 * Return the initial desktop display mode.
+	 *
+	 * @return The desktop display mode
+	 */
+	public static DisplayMode getDesktopDisplayMode() {
+		synchronized (GlobalLock.lock) {
+			return initial_mode;
+		}
+	}
+
+	/**
 	 * Return the current display mode, as set by setDisplayMode().
 	 *
 	 * @return The current display mode
