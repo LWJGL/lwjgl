@@ -211,9 +211,7 @@ public final class Display {
 	 * @return The desktop display mode
 	 */
 	public static DisplayMode getDesktopDisplayMode() {
-		synchronized (GlobalLock.lock) {
-			return initial_mode;
-		}
+		return initial_mode;
 	}
 
 	/**
@@ -222,9 +220,7 @@ public final class Display {
 	 * @return The current display mode
 	 */
 	public static DisplayMode getDisplayMode() {
-		synchronized ( GlobalLock.lock ) {
-			return current_mode;
-		}
+		return current_mode;
 	}
 
 	/**
@@ -239,17 +235,18 @@ public final class Display {
 	 * @throws LWJGLException if the display mode could not be set
 	 */
 	public static void setDisplayMode(DisplayMode mode) throws LWJGLException {
-		synchronized ( GlobalLock.lock ) {
-			if ( mode == null )
+		synchronized (GlobalLock.lock) {
+			if (mode == null)
 				throw new NullPointerException("mode must be non-null");
+			boolean was_fullscreen = isFullscreen();
 			current_mode = mode;
-			if ( isCreated() ) {
+			if (isCreated()) {
 				destroyWindow();
 				// If mode is not fullscreen capable, make sure we are in windowed mode
-				if ( !mode.isFullscreen() )
-					resetFullscreen();
 				try {
-					if ( fullscreen )
+					if (was_fullscreen && !isFullscreen())
+						display_impl.resetDisplayMode();
+					else if (isFullscreen())
 						switchDisplayMode();
 					createWindow();
 					makeCurrentAndSetSwapInterval();
@@ -264,13 +261,13 @@ public final class Display {
 	}
 
 	private static DisplayMode getEffectiveMode() {
-		return !fullscreen && parent != null ? new DisplayMode(parent.getWidth(), parent.getHeight()) : current_mode;
+		return !isFullscreen() && parent != null ? new DisplayMode(parent.getWidth(), parent.getHeight()) : current_mode;
 	}
 
 	private static int getWindowX() {
-		if ( !fullscreen && parent == null ) {
+		if (!isFullscreen() && parent == null) {
 			// if no display location set, center window
-			if ( x == -1 ) {
+			if (x == -1) {
 				return Math.max(0, (initial_mode.getWidth() - current_mode.getWidth()) / 2);
 			} else {
 				return x;
@@ -281,7 +278,7 @@ public final class Display {
 	}
 
 	private static int getWindowY() {
-		if ( !fullscreen && parent == null ) {
+		if (!isFullscreen() && parent == null) {
 			// if no display location set, center window
 			if ( y == -1 ) {
 				return Math.max(0, (initial_mode.getHeight() - current_mode.getHeight()) / 2);
@@ -301,14 +298,14 @@ public final class Display {
 		if ( window_created ) {
 			return;
 		}
-		Canvas tmp_parent = fullscreen ? null : parent;
+		Canvas tmp_parent = isFullscreen() ? null : parent;
 		if ( tmp_parent != null && !tmp_parent.isDisplayable() ) // Only a best effort check, since the parent can turn undisplayable hereafter
 			throw new LWJGLException("Parent.isDisplayable() must be true");
 		if ( tmp_parent != null ) {
 			tmp_parent.addComponentListener(component_listener);
 		}
 		DisplayMode mode = getEffectiveMode();
-		display_impl.createWindow(mode, fullscreen, tmp_parent, getWindowX(), getWindowY());
+		display_impl.createWindow(mode, isFullscreen(), tmp_parent, getWindowX(), getWindowY());
 		window_created = true;
 
 		setTitle(title);
@@ -444,15 +441,6 @@ public final class Display {
 		}
 	}
 
-	private static void resetFullscreen() {
-		synchronized ( GlobalLock.lock ) {
-			if ( Display.fullscreen ) {
-				Display.fullscreen = false;
-				display_impl.resetDisplayMode();
-			}
-		}
-	}
-
 	/** Return the last parent set with setParent(). */
 	public static Canvas getParent() {
 		synchronized ( GlobalLock.lock ) {
@@ -472,13 +460,13 @@ public final class Display {
 	 */
 	public static void setParent(Canvas parent) throws LWJGLException {
 		synchronized ( GlobalLock.lock ) {
-			if ( Display.parent != parent ) {
+			if (Display.parent != parent) {
 				Display.parent = parent;
 				if ( !isCreated() )
 					return;
 				destroyWindow();
 				try {
-					if ( fullscreen ) {
+					if (isFullscreen()) {
 						switchDisplayMode();
 					} else {
 						display_impl.resetDisplayMode();
@@ -509,13 +497,14 @@ public final class Display {
 	 */
 	public static void setFullscreen(boolean fullscreen) throws LWJGLException {
 		synchronized ( GlobalLock.lock ) {
-			if ( Display.fullscreen != fullscreen ) {
-				Display.fullscreen = fullscreen;
-				if ( !isCreated() )
+			boolean was_fullscreen = isFullscreen();
+			Display.fullscreen = fullscreen;
+			if (was_fullscreen != isFullscreen()) {
+				if (!isCreated())
 					return;
 				destroyWindow();
 				try {
-					if ( fullscreen ) {
+					if (isFullscreen()) {
 						switchDisplayMode();
 					} else {
 						display_impl.resetDisplayMode();
@@ -534,8 +523,8 @@ public final class Display {
 
 	/** @return whether the Display is in fullscreen mode */
 	public static boolean isFullscreen() {
-		synchronized ( GlobalLock.lock ) {
-			return fullscreen;
+		synchronized (GlobalLock.lock) {
+			return fullscreen && current_mode.isFullscreen();
 		}
 	}
 
@@ -819,7 +808,7 @@ public final class Display {
 				throw new NullPointerException("pixel_format cannot be null");
 			removeShutdownHook();
 			registerShutdownHook();
-			if ( fullscreen )
+			if (isFullscreen())
 				switchDisplayMode();
 			try {
 				peer_info = display_impl.createPeerInfo(pixel_format);
@@ -996,16 +985,12 @@ public final class Display {
 	 */
 	public static void setLocation(int new_x, int new_y) {
 		synchronized ( GlobalLock.lock ) {
-			if ( fullscreen ) {
-				return;
-			}
-
 			// cache position
 			x = new_x;
 			y = new_y;
 
 			// offset if already created
-			if ( isCreated() ) {
+			if (isCreated() && !isFullscreen()) {
 				reshape();
 			}
 		}
