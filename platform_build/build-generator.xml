@@ -31,7 +31,7 @@
 			<arg value="-d"/>
 			<arg path="${lwjgl.src.native}/generated"/>
 			<arg value="-Atypemap=org.lwjgl.util.generator.ALTypeMap"/>
-			<!--<arg value="-Ageneratechecks"/>-->
+			<arg value="-Ageneratechecks"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/openal/AL10.java, org/lwjgl/openal/AL11.java"/>
 		</apply>
 	</target>
