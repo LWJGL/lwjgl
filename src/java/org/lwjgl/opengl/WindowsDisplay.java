@@ -511,7 +511,11 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private static native long getDC(long hwnd);
 	private static native long getDesktopWindow();
+	private static native long getForegroundWindow();
+
 	static void centerCursor(long hwnd) {
+		if (getForegroundWindow() != hwnd)
+			return;
 		getGlobalClientRect(hwnd, rect);
 		int local_offset_x = rect.left;
 		int local_offset_y = rect.top;
@@ -721,7 +725,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	private void updateClipping() {
-		if ((isFullscreen || (mouse != null && mouse.isGrabbed())) && !isMinimized && isFocused) {
+		if ((isFullscreen || (mouse != null && mouse.isGrabbed())) && !isMinimized && isFocused && getForegroundWindow() == getHwnd()) {
 			try {
 				setupCursorClipping(getHwnd());
 			} catch (LWJGLException e) {

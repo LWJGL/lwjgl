@@ -198,6 +198,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_clientToScreen(JNIEn
 	buffer[1] = point.y;
 }
 
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getForegroundWindow(JNIEnv *env, jclass unused) {
+	return (INT_PTR)GetForegroundWindow();
+}
+
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getDesktopWindow(JNIEnv *env, jclass unused) {
 	return (INT_PTR)GetDesktopWindow();
 }
