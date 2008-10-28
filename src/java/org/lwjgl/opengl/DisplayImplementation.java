@@ -47,7 +47,7 @@ import org.lwjgl.LWJGLException;
 
 interface DisplayImplementation extends InputImplementation {
 
-	void createWindow(DisplayMode mode, boolean fullscreen, Canvas parent, int x, int y) throws LWJGLException;
+	void createWindow(DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException;
 
 	void destroyWindow();
 

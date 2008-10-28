@@ -417,14 +417,14 @@ final class LinuxDisplay implements DisplayImplementation {
 			ungrabKeyboard();
 	}
 
-	public void createWindow(DisplayMode mode, boolean fullscreen, Canvas parent, int x, int y) throws LWJGLException {
+	public void createWindow(DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException {
 		lockAWT();
 		try {
 			incDisplay();
 			try {
 				ByteBuffer handle = peer_info.lockAndGetHandle();
 				try {
-					current_window_mode = getWindowMode(fullscreen);
+					current_window_mode = getWindowMode(Display.isFullscreen());
 					boolean undecorated = Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated") || current_window_mode != WINDOWED;
 					this.parent = parent;
 					parent_window = parent != null ? getHandle(parent) : getRootWindow(getDisplay(), getDefaultScreen());

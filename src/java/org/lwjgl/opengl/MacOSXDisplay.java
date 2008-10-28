@@ -94,7 +94,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 		}
 	}
 
-	public void createWindow(DisplayMode mode, boolean fullscreen, Canvas parent, int x, int y) throws LWJGLException {
+	public void createWindow(DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException {
+		boolean fullscreen = Display.isFullscreen();
 		hideUI(fullscreen);
 		close_requested = false;
 		try {

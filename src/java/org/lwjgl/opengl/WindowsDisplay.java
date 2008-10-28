@@ -138,7 +138,6 @@ final class WindowsDisplay implements DisplayImplementation {
 	private DisplayMode current_mode;
 
 	private boolean mode_set;
-	private boolean isFullscreen;
 	private boolean isMinimized;
 	private boolean isFocused;
 	private boolean did_maximize;
@@ -154,16 +153,15 @@ final class WindowsDisplay implements DisplayImplementation {
 		current_display = this;
 	}
 
-	public void createWindow(DisplayMode mode, boolean fullscreen, Canvas parent, int x, int y) throws LWJGLException {
+	public void createWindow(DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException {
 		close_requested = false;
 		is_dirty = false;
-		isFullscreen = fullscreen;
 		isMinimized = false;
 		isFocused = false;
 		did_maximize = false;
 		this.parent = parent;
 		long parent_hwnd = parent != null ? getHwnd(parent) : 0;
-		this.hwnd = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(), fullscreen || isUndecorated(), parent != null, parent_hwnd);
+		this.hwnd = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(), Display.isFullscreen() || isUndecorated(), parent != null, parent_hwnd);
 		if (hwnd == 0) {
 			throw new LWJGLException("Failed to create window");
 		}
@@ -259,7 +257,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		inAppActivate = true;
 		isFocused = active;
 		if (active) {
-			if (isFullscreen) {
+			if (Display.isFullscreen()) {
 				restoreDisplayMode();
 			}
 			if (parent == null) {
@@ -268,9 +266,9 @@ final class WindowsDisplay implements DisplayImplementation {
 				setFocus(getHwnd());
 			}
 			did_maximize = true;
-			if (isFullscreen)
+			if (Display.isFullscreen())
 				updateClipping();
-		} else if (isFullscreen) {
+		} else if (Display.isFullscreen()) {
 			showWindow(getHwnd(), SW_SHOWMINNOACTIVE);
 			resetDisplayMode();
 		} else
@@ -420,7 +418,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static native void nUpdate();
 
 	public void reshape(int x, int y, int width, int height) {
-		nReshape(getHwnd(), x, y, width, height, isFullscreen || isUndecorated(), parent != null);
+		nReshape(getHwnd(), x, y, width, height, Display.isFullscreen() || isUndecorated(), parent != null);
 	}
 	private static native void nReshape(long hwnd, int x, int y, int width, int height, boolean undecorated, boolean child);
 	public native DisplayMode[] getAvailableDisplayModes() throws LWJGLException;
@@ -723,7 +721,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	private void updateClipping() {
-		if ((isFullscreen || (mouse != null && mouse.isGrabbed())) && !isMinimized && isFocused && getForegroundWindow() == getHwnd()) {
+		if ((Display.isFullscreen() || (mouse != null && mouse.isGrabbed())) && !isMinimized && isFocused && getForegroundWindow() == getHwnd()) {
 			try {
 				setupCursorClipping(getHwnd());
 			} catch (LWJGLException e) {

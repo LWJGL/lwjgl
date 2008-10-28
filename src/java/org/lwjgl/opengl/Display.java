@@ -305,7 +305,7 @@ public final class Display {
 			tmp_parent.addComponentListener(component_listener);
 		}
 		DisplayMode mode = getEffectiveMode();
-		display_impl.createWindow(mode, isFullscreen(), tmp_parent, getWindowX(), getWindowY());
+		display_impl.createWindow(mode, tmp_parent, getWindowX(), getWindowY());
 		window_created = true;
 
 		setTitle(title);
