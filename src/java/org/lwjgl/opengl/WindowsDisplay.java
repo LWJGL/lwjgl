@@ -163,8 +163,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		did_maximize = false;
 		this.parent = parent;
 		long parent_hwnd = parent != null ? getHwnd(parent) : 0;
-		boolean isUndecorated = isUndecorated();
-		this.hwnd = nCreateWindow(fullscreen, x, y, mode.getWidth(), mode.getHeight(), isUndecorated, parent != null, parent_hwnd);
+		this.hwnd = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(), fullscreen || isUndecorated(), parent != null, parent_hwnd);
 		if (hwnd == 0) {
 			throw new LWJGLException("Failed to create window");
 		}
@@ -188,7 +187,7 @@ final class WindowsDisplay implements DisplayImplementation {
 			throw e;
 		}
 	}
-	private native long nCreateWindow(boolean fullscreen, int x, int y, int width, int height, boolean undecorated, boolean child_window, long parent_hwnd) throws LWJGLException;
+	private static native long nCreateWindow(int x, int y, int width, int height, boolean undecorated, boolean child_window, long parent_hwnd) throws LWJGLException;
 
 	private static boolean isUndecorated() {
 		return Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated");
@@ -421,8 +420,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static native void nUpdate();
 
 	public void reshape(int x, int y, int width, int height) {
-		if (!isFullscreen)
-			nReshape(getHwnd(), x, y, width, height, isUndecorated(), parent != null);
+		nReshape(getHwnd(), x, y, width, height, isFullscreen || isUndecorated(), parent != null);
 	}
 	private static native void nReshape(long hwnd, int x, int y, int width, int height, boolean undecorated, boolean child);
 	public native DisplayMode[] getAvailableDisplayModes() throws LWJGLException;

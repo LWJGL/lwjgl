@@ -151,7 +151,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getJNIVersion
 	return org_lwjgl_WindowsSysImplementation_JNI_VERSION;
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv *env, jobject self, jboolean fullscreen, jint x, jint y, jint width, jint height, jboolean undecorated, jboolean child_window, jlong parent_hwnd) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEnv *env, jclass unused, jint x, jint y, jint width, jint height, jboolean undecorated, jboolean child_window, jlong parent_hwnd) {
 	HWND hwnd;
 	static bool oneShotInitialised = false;
 	if (!oneShotInitialised) {
@@ -162,7 +162,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEn
 		oneShotInitialised = true;
 	}
 
-	hwnd = createWindow(WINDOWCLASSNAME, x, y, width, height, fullscreen, undecorated, child_window, (HWND)parent_hwnd);
+	hwnd = createWindow(WINDOWCLASSNAME, x, y, width, height, undecorated, child_window, (HWND)parent_hwnd);
 	return (INT_PTR)hwnd;
 }
 
@@ -299,7 +299,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nReshape(JNIEnv *env
 	DWORD exstyle, windowflags;
 	RECT clientSize;
 
-	getWindowFlags(&windowflags, &exstyle, false, undecorated, child);
+	getWindowFlags(&windowflags, &exstyle, undecorated, child);
 	
 	// If we're not a fullscreen window, adjust the height to account for the
 	// height of the title bar:
