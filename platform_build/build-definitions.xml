@@ -96,7 +96,7 @@
 	<!-- Files to include in linux, glibc2.3 package -->
 	<patternset id="lwjgl-linux.fileset">
 		<include name="liblwjgl*.so" />
-		<include name="libopenal.so" />    
+		<include name="libopenal*.so" />    
 		<include name="libjinput-linux.so" />
 		<include name="libjinput-linux64.so" />
 	</patternset>
