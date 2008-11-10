@@ -1,35 +1,30 @@
-/* Small parts were taken from glext.h, here's the lisence: */
+/* Small parts were taken from Mesa's glext.h and gl.h, here's the license: */
 
 /*
-** License Applicability. Except to the extent portions of this file are
-** made subject to an alternative license as permitted in the SGI Free
-** Software License B, Version 1.1 (the "License"), the contents of this
-** file are subject only to the provisions of the License. You may not use
-** this file except in compliance with the License. You may obtain a copy
-** of the License at Silicon Graphics, Inc., attn: Legal Services, 1600
-** Amphitheatre Parkway, Mountain View, CA 94043-1351, or at:
-**
-** http://oss.sgi.com/projects/FreeB
-**
-** Note that, as provided in the License, the Software is distributed on an
-** "AS IS" basis, with ALL EXPRESS AND IMPLIED WARRANTIES AND CONDITIONS
-** DISCLAIMED, INCLUDING, WITHOUT LIMITATION, ANY IMPLIED WARRANTIES AND
-** CONDITIONS OF MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS FOR A
-** PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
-**
-** Original Code. The Original Code is: OpenGL Sample Implementation,
-** Version 1.2.1, released January 26, 2000, developed by Silicon Graphics,
-** Inc. The Original Code is Copyright (c) 1991-2000 Silicon Graphics, Inc.
-** Copyright in any portions created by third parties is as indicated
-** elsewhere herein. All Rights Reserved.
-**
-** Additional Notice Provisions: This software was created using the
-** OpenGL(R) version 1.2.1 Sample Implementation published by SGI, but has
-** not been independently verified as being compliant with the OpenGL(R)
-** version 1.2.1 Specification.
-*/
+ * Mesa 3-D graphics library
+ * Version:  6.5.1
+ *
+ * Copyright (C) 1999-2006  Brian Paul   All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
-/*  Most parts copyright (c) 2001-2002 Lev Povalahev under this lisence: */
+/*  Some parts derived from files copyright (c) 2001-2002 Lev Povalahev under this license: */
 
 /* ----------------------------------------------------------------------------
 Copyright (c) 2002, Lev Povalahev
@@ -72,19 +67,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <jni.h>
 
-/*-----------------------------------------*/
-/*-----------------------------------------*/
-
-#if defined(_WIN32) && !defined(APIENTRY)
-#define WIN32_LEAN_AND_MEAN 1
-#include <windows.h>
-#endif
-
-#define __glext_h_
-#define __GLEXT_H_
-#define __gl_h_
-#define __GL_H__
-
 #include <string.h>
 #include <stddef.h>
 
@@ -92,19 +74,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #define APIENTRY
 #endif
 
-/* for mingw compatibility */
-typedef void (*_GLfuncptr)();
-
-#define GLAPI extern
-#define GLAPIENTRY
-
 #include "common_tools.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/* OpenGL 1.1 definition */
 
 #ifdef _MACOSX
 	typedef unsigned long GLenum;
@@ -123,41 +93,36 @@ extern "C" {
 	typedef double GLclampd;
 	typedef void GLvoid;
 #else
-	typedef unsigned int GLenum;
-	typedef unsigned char GLboolean;
-	typedef unsigned int GLbitfield;
-	typedef signed char GLbyte;
-	typedef short GLshort;
-	typedef int GLint;
-	typedef int GLsizei;
-	typedef unsigned char GLubyte;
-	typedef unsigned short GLushort;
-	typedef unsigned int GLuint;
-	typedef float GLfloat;
-	typedef float GLclampf;
-	typedef double GLdouble;
-	typedef double GLclampd;
-	typedef void GLvoid;
+	typedef unsigned int    GLenum;
+	typedef unsigned char   GLboolean;
+	typedef unsigned int    GLbitfield;
+	typedef void        GLvoid;
+	typedef signed char GLbyte;     /* 1-byte signed */
+	typedef short       GLshort;    /* 2-byte signed */
+	typedef int     GLint;      /* 4-byte signed */
+	typedef unsigned char   GLubyte;    /* 1-byte unsigned */
+	typedef unsigned short  GLushort;   /* 2-byte unsigned */
+	typedef unsigned int    GLuint;     /* 4-byte unsigned */
+	typedef int     GLsizei;    /* 4-byte signed */
+	typedef float       GLfloat;    /* single precision float */
+	typedef float       GLclampf;   /* single precision float in [0,1] */
+	typedef double      GLdouble;   /* double precision float */
+	typedef double      GLclampd;   /* double precision float in [0,1] */
 #endif
 
-// OpenGL 2.0 types
-typedef ptrdiff_t  GLintptr;
-typedef ptrdiff_t GLsizeiptr;
-typedef unsigned char GLchar;
+typedef char GLchar;            /* native character */
 
-// ARB_shader_objects types
-typedef unsigned int GLhandleARB;
-// ARB_vertex_buffer_object types
+typedef ptrdiff_t GLintptr;
+typedef ptrdiff_t GLsizeiptr;
 typedef ptrdiff_t GLintptrARB;
 typedef ptrdiff_t GLsizeiptrARB;
-typedef unsigned char GLcharARB;
-
-// NV_half_float types
+typedef char GLcharARB;     /* native character */
+typedef unsigned int GLhandleARB;   /* shader object handle */
+typedef unsigned short GLhalfARB;
+typedef unsigned short GLhalfNV;
 typedef unsigned short GLhalf;
-
-// EXT_timer_query types
-typedef unsigned long GLuint64EXT;
-typedef long GLint64EXT;
+typedef int64_t GLint64EXT;
+typedef uint64_t GLuint64EXT;
 
 /* helper stuff */
 
@@ -168,9 +133,5 @@ extern void extgl_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, 
 extern bool extgl_InitializeFunctions(int num_functions, ExtFunction *functions);
 extern bool extgl_QueryExtension(const GLubyte*extensions, const char *name);
 extern void *extgl_GetProcAddress(const char *name);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* __EXTGL_H__ */
