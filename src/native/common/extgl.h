@@ -70,11 +70,17 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <string.h>
 #include <stddef.h>
 
+#include "common_tools.h"
+
+#if defined(_WIN32) || defined(_WIN64)
+ #include <windows.h>	// fix APIENTRY macro redefinition
+ # define int64_t __int64
+ # define uint64_t unsigned __int64
+#endif
+
 #ifndef APIENTRY
 #define APIENTRY
 #endif
-
-#include "common_tools.h"
 
 #ifdef _MACOSX
 	typedef unsigned long GLenum;
