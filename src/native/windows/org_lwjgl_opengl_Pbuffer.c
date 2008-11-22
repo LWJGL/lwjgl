@@ -136,7 +136,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsPbufferPeerInfo_nCreate
 	const int *pBufferAttribs_ptr;
 	WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	int pixel_format_id;
-	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
 	
 	if ( pBufferAttribs != NULL ) {
 		pBufferAttribs_ptr = (const int *)(*env)->GetDirectBufferAddress(env, pBufferAttribs);
