@@ -86,52 +86,52 @@ static bool WGLQueryExtension(WGLExtensions *extensions, const char *name) {
 
 static void extgl_InitWGLARBPbuffer(WGLExtensions *extensions) {
 	ExtFunction functions[] = {
-		{"wglCreatePbufferARB", (void **)&extensions->wglCreatePbufferARB},
-		{"wglGetPbufferDCARB", (void **)&extensions->wglGetPbufferDCARB},
-		{"wglReleasePbufferDCARB", (void **)&extensions->wglReleasePbufferDCARB},
-		{"wglDestroyPbufferARB", (void **)&extensions->wglDestroyPbufferARB},
-		{"wglQueryPbufferARB", (void **)&extensions->wglQueryPbufferARB}};
+		{"wglCreatePbufferARB", (void *)&extensions->wglCreatePbufferARB},
+		{"wglGetPbufferDCARB", (void *)&extensions->wglGetPbufferDCARB},
+		{"wglReleasePbufferDCARB", (void *)&extensions->wglReleasePbufferDCARB},
+		{"wglDestroyPbufferARB", (void *)&extensions->wglDestroyPbufferARB},
+		{"wglQueryPbufferARB", (void *)&extensions->wglQueryPbufferARB}};
 	if (extensions->WGL_ARB_pbuffer)
 		extensions->WGL_ARB_pbuffer = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
 static void extgl_InitWGLARBPixelFormat(WGLExtensions *extensions) {
 	ExtFunction functions[] = {
-		{"wglGetPixelFormatAttribivARB", (void **)&extensions->wglGetPixelFormatAttribivARB},
-		{"wglGetPixelFormatAttribfvARB", (void **)&extensions->wglGetPixelFormatAttribfvARB},
-		{"wglChoosePixelFormatARB", (void **)&extensions->wglChoosePixelFormatARB}};
+		{"wglGetPixelFormatAttribivARB", (void *)&extensions->wglGetPixelFormatAttribivARB},
+		{"wglGetPixelFormatAttribfvARB", (void *)&extensions->wglGetPixelFormatAttribfvARB},
+		{"wglChoosePixelFormatARB", (void *)&extensions->wglChoosePixelFormatARB}};
 	if (extensions->WGL_ARB_pixel_format)
 		extensions->WGL_ARB_pixel_format = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
 static void extgl_InitWGLARBRenderTexture(WGLExtensions *extensions) {
 	ExtFunction functions[] = {
-		{"wglBindTexImageARB", (void **)&extensions->wglBindTexImageARB},
-		{"wglReleaseTexImageARB", (void **)&extensions->wglReleaseTexImageARB},
-		{"wglSetPbufferAttribARB", (void **)&extensions->wglSetPbufferAttribARB}};
+		{"wglBindTexImageARB", (void *)&extensions->wglBindTexImageARB},
+		{"wglReleaseTexImageARB", (void *)&extensions->wglReleaseTexImageARB},
+		{"wglSetPbufferAttribARB", (void *)&extensions->wglSetPbufferAttribARB}};
 	if (extensions->WGL_ARB_render_texture)
 		extensions->WGL_ARB_render_texture = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
 static void extgl_InitWGLEXTSwapControl(WGLExtensions *extensions) {
 	ExtFunction functions[] = {
-		{"wglSwapIntervalEXT", (void **)&extensions->wglSwapIntervalEXT},
-		{"wglGetSwapIntervalEXT", (void **)&extensions->wglGetSwapIntervalEXT}};
+		{"wglSwapIntervalEXT", (void *)&extensions->wglSwapIntervalEXT},
+		{"wglGetSwapIntervalEXT", (void *)&extensions->wglGetSwapIntervalEXT}};
 	if (extensions->WGL_EXT_swap_control)
 		extensions->WGL_EXT_swap_control = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
 static void extgl_InitWGLARBMakeCurrentRead(WGLExtensions *extensions) {
 	ExtFunction functions[] = {
-		{"wglMakeContextCurrentARB", (void **)&extensions->wglMakeContextCurrentARB},
-		{"wglGetCurrentReadDCARB", (void **)&extensions->wglGetCurrentReadDCARB}};
+		{"wglMakeContextCurrentARB", (void *)&extensions->wglMakeContextCurrentARB},
+		{"wglGetCurrentReadDCARB", (void *)&extensions->wglGetCurrentReadDCARB}};
 	if (extensions->WGL_ARB_make_current_read)
 		extensions->WGL_ARB_make_current_read = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
 static void extgl_InitWGLARBCreateContext(WGLExtensions *extensions) {
 	ExtFunction functions[] = {
-		{"wglCreateContextAttribsARB", (void **)&extensions->wglCreateContextAttribsARB}
+		{"wglCreateContextAttribsARB", (void *)&extensions->wglCreateContextAttribsARB}
 	};
 	if (extensions->WGL_ARB_create_context)
 		extensions->WGL_ARB_create_context = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
@@ -156,14 +156,14 @@ static void extgl_InitSupportedWGLExtensions(WGLExtensions *extensions) {
 
 static void extgl_InitWGLEXTExtensionsString(WGLExtensions *extensions) {
 	ExtFunction functions[] = {
-		{"wglGetExtensionsStringEXT", (void **)&extensions->wglGetExtensionsStringEXT}
+		{"wglGetExtensionsStringEXT", (void *)&extensions->wglGetExtensionsStringEXT}
 	};
 	extensions->WGL_EXT_extensions_string = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
 static void extgl_InitWGLARBExtensionsString(WGLExtensions *extensions) {
 	ExtFunction functions[] = {
-		{"wglGetExtensionsStringARB", (void **)&extensions->wglGetExtensionsStringARB}
+		{"wglGetExtensionsStringARB", (void *)&extensions->wglGetExtensionsStringARB}
 	};
 	extensions->WGL_ARB_extensions_string = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
