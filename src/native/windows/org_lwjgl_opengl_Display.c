@@ -162,7 +162,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEn
 		oneShotInitialised = true;
 	}
 
-	hwnd = createWindow(WINDOWCLASSNAME, x, y, width, height, undecorated, child_window, (HWND)parent_hwnd);
+	hwnd = createWindow(WINDOWCLASSNAME, x, y, width, height, undecorated, child_window, (HWND)(INT_PTR)parent_hwnd);
 	return (INT_PTR)hwnd;
 }
 
