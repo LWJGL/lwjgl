@@ -50,7 +50,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsPeerInfo_createHandle
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsPeerInfo_nChoosePixelFormat
   (JNIEnv *env, jclass clazz, jlong hdc_ptr, jint origin_x, jint origin_y, jobject pixel_format, jobject pixel_format_caps, jboolean use_hdc_bpp, jboolean window, jboolean pbuffer, jboolean double_buffer) {
 	HDC hdc = (HDC)(INT_PTR)hdc_ptr;
-	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
 	return findPixelFormatOnDC(env, hdc, origin_x, origin_y, pixel_format, pixel_format_caps, use_hdc_bpp, window, pbuffer, double_buffer);
 }
 
