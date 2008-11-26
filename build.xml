@@ -330,7 +330,6 @@
 			<param name="input" value="${input}"/>
 			<param name="output" value="${output}"/>
 		</antcall>
-		<delete file="${input}"/>
 	</target>
 	
 	<target name="applettest" depends="applet">

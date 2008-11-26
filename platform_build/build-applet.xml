@@ -71,6 +71,27 @@
 		</zip>
 		<signjar jar="applet/lwjgl_util_applet.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		
+		<!-- LZMA only, for 1.4 only clients -->
+		<antcall target="compress-resource">
+			<param name="input" value="applet/lwjgl.jar"/>
+			<param name="output" value="applet/lwjgl.jar.lzma"/>
+		</antcall>
+		<antcall target="compress-resource">
+			<param name="input" value="applet/lwjgl_util.jar"/>
+			<param name="output" value="applet/lwjgl_util.jar.lzma"/>
+		</antcall>
+		<antcall target="compress-resource">
+			<param name="input" value="applet/jinput.jar"/>
+			<param name="output" value="applet/jinput.jar.lzma"/>
+		</antcall>
+		<antcall target="compress-resource">
+			<param name="input" value="applet/lwjgl_applet.jar"/>
+			<param name="output" value="applet/lwjgl_applet.jar.lzma"/>
+		</antcall>
+		<antcall target="compress-resource">
+			<param name="input" value="applet/windows_natives.jar"/>
+			<param name="output" value="applet/windows_natives.jar.lzma"/>
+		</antcall>		
 		<antcall target="compress-sign-class">
 			<param name="dir" value="applet/"/>
 			<param name="jarfile" value="lwjgl"/>
