@@ -1072,7 +1072,7 @@ public interface AL10 {
 	 * @param buffers IntBuffer containing list of names that were unqueued
 	 */
 	@ALvoid
-	void alSourceUnqueueBuffers(@ALuint int source, @AutoSize("buffers") @ALsizei int n, @ALuint IntBuffer buffers);
+	void alSourceUnqueueBuffers(@ALuint int source, @AutoSize("buffers") @ALsizei int n, @OutParameter @ALuint IntBuffer buffers);
 
 	/**
 	 * <p>
