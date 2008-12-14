@@ -11,7 +11,7 @@ ant -Dversion=1.9.1 dist
 
 <project default="help" basedir="." name="">
 
-	<property name="eclipse.install" 			value="c:/devel/Eclipse3.3" />
+	<property name="eclipse.install" 			value="D:\Development\eclipse" />
 	<property name="eclipse.updatesite" 	value="http://www.lwjgl.org/update/" />
 	<property name="bundle.vendor"				value="LWJGL.org" />
 
