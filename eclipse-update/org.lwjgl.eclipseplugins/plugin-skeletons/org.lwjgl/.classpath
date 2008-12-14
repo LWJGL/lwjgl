@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry exported="true" kind="lib" path="lwjgl_util_applet.jar"/>
+	<classpathentry exported="true" kind="lib" path="native/win32/"/>
+	<classpathentry exported="true" kind="lib" path="native/macosx/"/>
+	<classpathentry exported="true" kind="lib" path="native/linux/"/>
+	<classpathentry exported="true" kind="lib" path="jinput.jar"/>
+	<classpathentry exported="true" kind="lib" path="lwjgl_util.jar"/>
+	<classpathentry exported="true" kind="lib" path="lwjgl.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

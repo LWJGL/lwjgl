@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+- <extension point="org.eclipse.help.toc">
+  <toc file="toc.xml" primary="true" /> 
+  <index path="index" /> 
+  </extension>
+- <!--  ============================= 
+  --> 
+- <!--  Define TOCs                   
+  --> 
+- <!--  ============================= 
+  --> 
+- <extension point="org.eclipse.help.toc">
+  <toc file="toc.xml" /> 
+  </extension>
+- <!--  ============================= 
+  --> 
+- <!--  Define Javadoc locations      
+  --> 
+- <!--  ============================= 
+  --> 
+- <extension point="org.eclipse.pde.core.javadoc">
+     <javadoc path="doc.zip!/javadoc/" archive="true">
+        <plugin id="org.lwjgl"/>
+     </javadoc>
+  </extension>
+  
+
+</plugin>

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+Call with
+
+ant -Dversion=1.9.1 dist
+
+(C) 2008 Jens von Pilgrim, developer@jevopi.de
+
+-->
+
+<project default="help" basedir="." name="">
+
+	<property name="eclipse.install" 			value="c:/devel/Eclipse3.3" />
+	<property name="eclipse.updatesite" 	value="http://www.lwjgl.org/update/" />
+	<property name="bundle.vendor"				value="LWJGL.org" />
+
+	<taskdef name="packagelist" classname="de.jevopi.ant.PackageList" >
+		<classpath>
+			<pathelement location="./anttasks/packagelist.jar"/>
+		</classpath>
+	</taskdef>
+	<taskdef resource="net/sf/ant4eclipse/antlib.xml">
+		<classpath>
+			<pathelement location="./anttasks/ant4eclipse-0.5.0.rc1.jar"/>
+			<pathelement location="./anttasks/ecj.jar"/>
+			<pathelement location="./anttasks/org.eclipse.osgi_3.2.0.v20060601.jar"/>
+		</classpath>
+	</taskdef>
+
+	<property name="version"					value="unknown" />
+	<property name="archives.dir"			value="lwjgl-archives/${version}" />
+	<property name="skeletons.dir"		value="plugin-skeletons" />
+
+	<property name="build.path"				value="build" />
+	<property name="build.temp"				value="${build.path}/temp" />
+	<property name="build.plugins"		value="${build.path}/plugins" />
+
+	<property name="lwjgl.zip"				value="lwjgl-${version}.zip" />
+	<property name="lwjgl_docs.zip"		value="lwjgl-docs-${version}.zip" />
+	<property name="lwjgl_source.zip"	value="lwjgl-source-${version}.zip" />
+
+	<property name="lwjgl.dir"				value="${build.temp}/lwjgl-${version}" />
+	<property name="lwjgl_docs.dir"		value="${build.temp}/javadoc" />
+	<property name="lwjgl_source.dir"	value="${build.temp}/src" />
+
+	<property name="NL"								value="&#10;" />
+
+	<target name="init">
+		<echo>Building plugins for version ${version}</echo>
+	</target>
+
+	<target name="dist"	depends="init" >
+
+		<mkdir dir="${build.temp}" />
+		
+		<!-- Copy sekeletons -->
+		<mkdir dir="${build.plugins}" />
+		<copy todir="${build.plugins}">
+			<fileset dir="${skeletons.dir}" />
+		</copy>
+
+		<!-- Build plugin org.lwjgl -->
+		<unzip src="${archives.dir}/${lwjgl.zip}" dest="${build.temp}" />
+		<copy todir="${build.plugins}/org.lwjgl/native">
+			<fileset dir="${lwjgl.dir}/native" />
+		</copy>
+		<copy todir="${build.plugins}/org.lwjgl/">
+			<fileset dir="${lwjgl.dir}/jar"/>
+		</copy>
+		<copy todir="${build.plugins}/org.lwjgl/doc">
+			<fileset dir="${lwjgl.dir}/doc" />
+		</copy>
+		<packagelist property="bundle.export-package" pathsep=",${NL} ">
+			<fileset  dir="${lwjgl.dir}/jar"/>
+			<patternset>
+				<exclude name="**/test/**" />
+				<exclude name="**/examples/**" />
+			</patternset>
+		</packagelist>
+		<pathconvert property="bundle.classpath.jars" pathsep=",${NL} "> 
+			<map from="${basedir}/${lwjgl.dir}/jar/" to="" />
+			<fileset dir="${lwjgl.dir}/jar" />
+		</pathconvert>
+
+		<!-- not using manifest task, since manifest wraps at the wrong positions -->
+		<echo file="${build.plugins}/org.lwjgl/META-INF/MANIFEST.MF" encoding="UTF-8">Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: LWJGL Lightweight Java Game Library
+Bundle-SymbolicName: org.lwjgl
+Bundle-Version: ${version}
+Bundle-Activator: org.lwjgl.Activator
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime
+Eclipse-LazyStart: true
+Bundle-Vendor: ${bundle.vendor}
+Export-Package: ${bundle.export-package}
+Bundle-ClassPath: ${bundle.classpath.jars},${NL} .
+</echo>
+
+		<!-- Build plugin org.lwjgl.doc -->
+		<copy file="${archives.dir}/${lwjgl_docs.zip}" tofile="${build.plugins}/org.lwjgl.doc/doc.zip" />
+		<echo file="${build.plugins}/org.lwjgl.doc/META-INF/MANIFEST.MF" encoding="UTF-8">Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: LWJGL Documentation
+Bundle-SymbolicName: org.lwjgl.doc;singleton:=true
+Bundle-Version: ${version}
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.help;bundle-version="[3.2.0,4.0.0)"
+Eclipse-LazyStart: true
+Bundle-Vendor: ${bundle.vendor}
+</echo>
+
+		<!-- Build plugin org.lwjgl.source -->
+		<unzip src="${archives.dir}/${lwjgl_source.zip}" dest="${build.temp}" />
+
+		<!-- Build src zips for plugin org.lwjgl -->
+		<property name="org.lwjgl.src.dir" value="${build.plugins}/org.lwjgl.source/src/org.lwjgl_${version}" />
+		<mkdir dir="${org.lwjgl.src.dir}" />
+		<zip destfile="${org.lwjgl.src.dir}/lwjglsrc.zip">
+			<fileset dir="${lwjgl_source.dir}/generated" />
+			<fileset dir="${lwjgl_source.dir}/java">
+				<exclude name="org/lwjgl/util/**" />
+			</fileset>
+		</zip>
+		<zip destfile="${org.lwjgl.src.dir}/lwjgl_utilsrc.zip">
+			<fileset dir="${lwjgl_source.dir}/java">
+				<include name="org/lwjgl/util/**" />
+				<exclude name="org/lwjgl/util/applet/**" />
+			</fileset>
+		</zip>
+		<zip destfile="${org.lwjgl.src.dir}/lwjgl_util_applet.zip">
+			<fileset dir="${lwjgl_source.dir}/java">
+				<include name="org/lwjgl/util/applet/**" />
+			</fileset>
+		</zip>
+		<!-- Build manfest -->
+
+<!-- not using manifest task, since manifest wraps at the wrong positions -->
+		<echo file="${build.plugins}/org.lwjgl.source/META-INF/MANIFEST.MF" encoding="UTF-8">Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: LWJGL Sources
+Bundle-SymbolicName: org.lwjgl.source;singleton:=true
+Bundle-Version: ${version}
+Bundle-Localization: plugin
+Bundle-Vendor: ${bundle.vendor}
+</echo>
+
+		<!-- Build plugin org.lwjgl.test -->
+		<echo file="${build.plugins}/org.lwjgl.test/META-INF/MANIFEST.MF" encoding="UTF-8">Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: LWJGL TestView
+Bundle-SymbolicName: org.lwjgl.test;singleton:=true
+Bundle-Version: ${version}
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.views,
+ org.eclipse.core.resources,
+ org.lwjgl;bundle-version="${version}"
+Bundle-Vendor: ${bundle.vendor}
+</echo>
+
+		<!-- Build org.lwjgl.feature -->
+		<copy file="${skeletons.dir}/org.lwjgl.feature/feature.xml"
+			tofile="${build.plugins}/org.lwjgl.feature/feature.xml"
+			encoding="UTF-8" overwrite="true">
+			<filterset>
+				<filter token="VERSION" value="${version}" />
+				<filter token="PROVIDERNAME" value="${bundle.vendor}" />
+				<filter token="UPDATEURL" value="${eclipse.updatesite}" />
+			</filterset>
+		</copy>
+		
+		<!-- Build update site -->
+		<copy file="${skeletons.dir}/org.lwjgl.updatesite/site.xml"
+			tofile="${build.plugins}/org.lwjgl.updatesite/site.xml"
+			encoding="UTF-8" overwrite="true">
+			<filterset>
+				<filter token="VERSION" value="${version}" />
+				<filter token="PROVIDERNAME" value="${bundle.vendor}" />
+				<filter token="UPDATEURL" value="${eclipse.updatesite}" />
+			</filterset>
+		</copy>
+
+		<!-- Eclipse build -->
+		<buildFeature
+			workspace="${build.plugins}"
+			targetPlatformLocation="${eclipse.install}"
+			projectname="org.lwjgl.feature"
+			buildPluginTarget="buildPlugin"
+			destDir="${build.plugins}/org.lwjgl.updatesite"
+			packageAsJar="true"/>
+	</target>
+
+	<target name="buildPlugin">
+		<echo>Build Plugin ${plugin.id}, Version ${plugin.version}</echo>
+		<buildPlugin
+			workspace="${build.plugins}"
+			targetPlatformLocation="${eclipse.install}"
+			projectname="${plugin.id}"
+			destDir="${build.plugins}/org.lwjgl.updatesite" 
+			packageAsJar="true">
+			<eclipseLibraryCompiler/>
+		</buildPlugin>
+	</target>
+
+	<target name="clean">
+		<delete dir="${build.path}" />
+	</target>
+
+	<target name="help">
+		<echo>Call this build with version number and target dist, e.g.</echo>
+		<echo>   ant -Dversion=1.1.2 dist</echo>
+	</target>
+
+</project>
