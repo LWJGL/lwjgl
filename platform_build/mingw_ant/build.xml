@@ -3,21 +3,19 @@
 <project name="lwjgl native code, native code" basedir="../../bin/lwjgl" default="compile">
 	<property name="native" location="../../src/native"/>
 	<property environment="env"/>
-	<property name="dxhome" location="${env.DXSDK_DIR}"/>
-	<property name="program_files" location="${env.ProgramFiles}"/>
-	<property name="alhome" location="${program_files}\OpenAL 1.1 with EFX SDK"/>
-	<property name="chome" location="c:/MinGW"/>
-	<property name="gcc" location="${chome}/bin/gcc"/>
-	<property name="strip" location="${chome}/bin/strip"/>
-	<property name="dllname" value="lwjgl.dll"/>
+	<property name="mingwhome" location="c:/MinGW64"/>
+	<property name="strip" location="${mingwhome}/bin/x86_64-pc-mingw32-strip"/>
+	<property name="gcc" location="${mingwhome}/bin/x86_64-pc-mingw32-gcc"/>
+	<property name="dlltool" location="${mingwhome}/bin/x86_64-pc-mingw32-dlltool"/>
+	<property name="dllname" value="lwjgl64.dll"/>
 
 	<target name="compile_dir">
 		<apply dir="." failonerror="true" executable="${gcc}" dest="." skipemptyfilesets="true">
-			<arg line="-c -Wall -O2 -std=gnu99"/>
+			<arg line="-c -Wall -O2 -std=gnu99 -D_JNI_IMPLEMENTATION_"/>
 			<arg value="-I${dxhome}/include"/>
 			<arg value="-I${alhome}/include"/>
-			<arg value="-I${java.home}/../include"/>
-			<arg value="-I${java.home}/../include/win32"/>
+			<arg value="-I${jdkhome}/../include"/>
+			<arg value="-I${jdkhome}/../include/win32"/>
 			<arg value="-I${native}/common"/>
 			<arg value="-I${native}/windows"/>
 			<srcfile/>
@@ -29,10 +27,18 @@
 	</target>
 
 	<target name="link">
+		<echo file="jawt.def">
+			EXPORTS
+			 JAWT_GetAWT
+		</echo>
+		<exec dir="." executable="${dlltool}" failonerror="true">
+			<arg line="--def jawt.def --kill-at --dllname jawt.dll --output-lib libjawt.a"/>
+		</exec>
 		<apply dir="." parallel="true" executable="${gcc}" failonerror="true">
 			<arg value="-Wl,--kill-at"/>
 			<arg line="-shared -o ${dllname}"/>
 			<srcfile/>
+			<arg line="libjawt.a"/>
 			<arg value="-L${java.home}/../lib"/>
 			<arg value="-L${alhome}/libs"/>
 			<arg line="${libs}"/>
@@ -48,7 +54,7 @@
 	</target>
 	
 	<target name="compile">
-		<property name="libs" value="-lKernel32 -lole32 -lOpenGL32 -lVersion -luser32 -lGdi32 -lAdvapi32 -ljawt -lwinmm"/>
+		<property name="libs" value="-lkernel32 -lole32 -lopengl32 -lversion -luser32 -lgdi32 -ladvapi32 -lwinmm"/>
 		<antcall target="compile_dir"/>
 		<antcall target="link"/>
 		<apply dir="." executable="${strip}">
