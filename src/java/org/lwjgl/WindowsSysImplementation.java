@@ -64,6 +64,10 @@ final class WindowsSysImplementation extends DefaultSysImplementation {
 	}
 	private static native long nGetTime();
 
+	public final boolean has64Bit() {
+		return true;
+	}
+
 	private static long getHwnd() {
 		if (!Display.isCreated())
 			return 0;

@@ -68,7 +68,7 @@ bool isDebugEnabled(void) {
 }
 
 static jstring sprintfJavaString(JNIEnv *env, const char *format, va_list ap) {
-#define BUFFER_SIZE 4000
+#define BUFFER_SIZE 400
 	char buffer[BUFFER_SIZE];
 	jstring str;
 #ifdef _MSC_VER
