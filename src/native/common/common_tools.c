@@ -67,17 +67,36 @@ bool isDebugEnabled(void) {
 	return debug;
 }
 
-static jstring sprintfJavaString(JNIEnv *env, const char *format, va_list ap) {
-#define BUFFER_SIZE 400
-	char buffer[BUFFER_SIZE];
-	jstring str;
+static int do_vsnprintf(char* buffer, size_t buffer_size, const char *format, va_list ap) {
 #ifdef _MSC_VER
-	vsnprintf_s(buffer, BUFFER_SIZE, _TRUNCATE, format, ap);
+	return vsnprintf_s(buffer, buffer_size, _TRUNCATE, format, ap);
 #else
-	vsnprintf(buffer, BUFFER_SIZE, format, ap);
+	return vsnprintf(buffer, buffer_size, format, ap);
 #endif
-	buffer[BUFFER_SIZE - 1] = '\0';
+}
+
+static jstring sprintfJavaString(JNIEnv *env, const char *format, va_list ap) {
+	int buffer_size = 2;
+	char *buffer;
+	jstring str;
+	int str_size;
+	va_list cp_ap;
+	buffer = (char *)malloc(sizeof(char)*buffer_size);
+	if (buffer == NULL)
+		return NULL;
+	va_copy(cp_ap, ap);
+	str_size = do_vsnprintf(buffer, buffer_size, format, ap);
+	if (str_size > buffer_size) {
+		free(buffer);
+		buffer_size = str_size + 1;
+		buffer = (char *)malloc(sizeof(char)*buffer_size);
+		if (buffer == NULL)
+			return NULL;
+		int blah = do_vsnprintf(buffer, buffer_size, format, cp_ap);
+	}
+	va_end(cp_ap);
 	str = (*env)->NewStringUTF(env, buffer);
+	free(buffer);
 	return str;
 }
 
