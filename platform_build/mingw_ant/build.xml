@@ -15,8 +15,8 @@
 			<arg line="-c -Wall -O2 -std=gnu99 -D_JNI_IMPLEMENTATION_"/>
 			<arg value="-I${dxhome}/include"/>
 			<arg value="-I${alhome}/include"/>
-			<arg value="-I${jdkhome}/../include"/>
-			<arg value="-I${jdkhome}/../include/win32"/>
+			<arg value="-I${jdkhome}/include"/>
+			<arg value="-I${jdkhome}/include/win32"/>
 			<arg value="-I${native}/common"/>
 			<arg value="-I${native}/windows"/>
 			<srcfile/>
