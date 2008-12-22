@@ -3,10 +3,11 @@
 <project name="lwjgl native code, native code" basedir="../../bin/lwjgl" default="compile">
 	<property name="native" location="../../src/native"/>
 	<property environment="env"/>
+	<property name="mingwprefix" location="x86_64-pc-mingw32-"/>
 	<property name="mingwhome" location="c:/MinGW64"/>
-	<property name="strip" location="${mingwhome}/bin/x86_64-pc-mingw32-strip"/>
-	<property name="gcc" location="${mingwhome}/bin/x86_64-pc-mingw32-gcc"/>
-	<property name="dlltool" location="${mingwhome}/bin/x86_64-pc-mingw32-dlltool"/>
+	<property name="strip" location="${mingwhome}/${mingwprefix}strip"/>
+	<property name="gcc" location="${mingwhome}/${mingwprefix}gcc"/>
+	<property name="dlltool" location="${mingwhome}/${mingwprefix}dlltool"/>
 	<property name="dllname" value="lwjgl64.dll"/>
 
 	<target name="compile_dir">
