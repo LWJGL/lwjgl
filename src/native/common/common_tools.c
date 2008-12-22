@@ -71,7 +71,11 @@ static int do_vsnprintf(char* buffer, size_t buffer_size, const char *format, va
 #ifdef _MSC_VER
 	return vsnprintf_s(buffer, buffer_size, _TRUNCATE, format, ap);
 #else
-	return vsnprintf(buffer, buffer_size, format, ap);
+	va_list cp_ap;
+	va_copy(cp_ap, ap);
+	int res = vsnprintf(buffer, buffer_size, format, cp_ap);
+	va_end(cp_ap);
+	return res;
 #endif
 }
 
@@ -80,11 +84,9 @@ static jstring sprintfJavaString(JNIEnv *env, const char *format, va_list ap) {
 	char *buffer;
 	jstring str;
 	int str_size;
-	va_list cp_ap;
 	buffer = (char *)malloc(sizeof(char)*buffer_size);
 	if (buffer == NULL)
 		return NULL;
-	va_copy(cp_ap, ap);
 	str_size = do_vsnprintf(buffer, buffer_size, format, ap);
 	if (str_size > buffer_size) {
 		free(buffer);
@@ -92,9 +94,8 @@ static jstring sprintfJavaString(JNIEnv *env, const char *format, va_list ap) {
 		buffer = (char *)malloc(sizeof(char)*buffer_size);
 		if (buffer == NULL)
 			return NULL;
-		int blah = do_vsnprintf(buffer, buffer_size, format, cp_ap);
+		do_vsnprintf(buffer, buffer_size, format, ap);
 	}
-	va_end(cp_ap);
 	str = (*env)->NewStringUTF(env, buffer);
 	free(buffer);
 	return str;
