@@ -74,13 +74,19 @@ public class FullScreenWindowedTest {
 		mainLoop();
 		cleanup();
 	}
+
+	private void switchMode() throws LWJGLException {
+		mode = findDisplayMode(800, 600, Display.getDisplayMode().getBitsPerPixel());
+		Display.setDisplayModeAndFullscreen(mode);
+	}
+
 	/**
 	 * Initializes the test
 	 */
 	private void initialize() {
 		try {
 			//find displaymode
-			mode = findDisplayMode(800, 600, Display.getDisplayMode().getBitsPerPixel());
+			switchMode();
 			// start of in windowed mode
 			Display.create();
 			glInit();
@@ -163,7 +169,7 @@ public class FullScreenWindowedTest {
 		//check for fullscreen key
 		if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
 			try {
-				Display.setFullscreen(true);
+				switchMode();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -171,7 +177,9 @@ public class FullScreenWindowedTest {
 		//check for window key
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
 			try {
-				Display.setFullscreen(false);
+				mode = new DisplayMode(640, 480);
+				Display.setDisplayModeAndFullscreen(mode);
+				glInit();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -237,15 +245,10 @@ public class FullScreenWindowedTest {
 		DisplayMode[] modes = Display.getAvailableDisplayModes();
 		for (int i = 0; i < modes.length; i++) {
 			if (modes[i].getWidth() == width && modes[i].getHeight() == height && modes[i].getBitsPerPixel() >= bpp && modes[i].getFrequency() <= 60) {
-				try {
-					Display.setDisplayMode(modes[i]);
-				} catch (LWJGLException e) {
-					e.printStackTrace();
-				}
 				return modes[i];
 			}
 		}
-		return Display.getDisplayMode();
+		return Display.getDesktopDisplayMode();
 	}
 	/**
 	 * Initializes OGL

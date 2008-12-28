@@ -496,10 +496,33 @@ public final class Display {
 	 *                        from getAvailableDisplayModes() or if the mode switch fails.
 	 */
 	public static void setFullscreen(boolean fullscreen) throws LWJGLException {
+		setDisplayModeAndFullscreenInternal(fullscreen, current_mode);
+	}
+
+	/**
+	 * Set the mode of the context. If no context has been created through create(),
+	 * the mode will apply when create() is called. If mode.isFullscreenCapable() is true, the context will become
+	 * a fullscreen context and the display mode is switched to the mode given by getDisplayMode(). If
+	 * mode.isFullscreenCapable() is false, the context will become a windowed context with the dimensions given in the
+	 * mode returned by getDisplayMode(). The native cursor position is also reset.
+	 *
+	 * @param mode The new display mode to set. Must be non-null.
+	 *
+	 * @throws LWJGLException If the mode switch fails.
+	 */
+	public static void setDisplayModeAndFullscreen(DisplayMode mode) throws LWJGLException {
+		setDisplayModeAndFullscreenInternal(mode.isFullscreenCapable(), mode);
+	}
+
+	private static void setDisplayModeAndFullscreenInternal(boolean fullscreen, DisplayMode mode) throws LWJGLException {
 		synchronized ( GlobalLock.lock ) {
+			if (mode == null)
+				throw new NullPointerException("mode must be non-null");
+			DisplayMode old_mode = current_mode;
+			current_mode = mode;
 			boolean was_fullscreen = isFullscreen();
 			Display.fullscreen = fullscreen;
-			if (was_fullscreen != isFullscreen()) {
+			if (was_fullscreen != isFullscreen() || !mode.equals(old_mode)) {
 				if (!isCreated())
 					return;
 				destroyWindow();
