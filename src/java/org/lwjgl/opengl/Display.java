@@ -351,7 +351,7 @@ public final class Display {
 	}
 
 	private static void switchDisplayMode() throws LWJGLException {
-		if ( !current_mode.isFullscreen() ) {
+		if ( !current_mode.isFullscreenCapable() ) {
 			throw new IllegalStateException("Only modes acquired from getAvailableDisplayModes() can be used for fullscreen display");
 		}
 		display_impl.switchDisplayMode(current_mode);
@@ -524,7 +524,7 @@ public final class Display {
 	/** @return whether the Display is in fullscreen mode */
 	public static boolean isFullscreen() {
 		synchronized (GlobalLock.lock) {
-			return fullscreen && current_mode.isFullscreen();
+			return fullscreen && current_mode.isFullscreenCapable();
 		}
 	}
 

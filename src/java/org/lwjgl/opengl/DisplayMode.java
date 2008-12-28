@@ -76,7 +76,7 @@ public final class DisplayMode {
 	}
 
 	/** True iff this instance can be used for fullscreen modes */
-	boolean isFullscreen() {
+	public boolean isFullscreenCapable() {
 		return fullscreen;
 	}
 
