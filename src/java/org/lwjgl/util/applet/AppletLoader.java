@@ -581,6 +581,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 					if (latestVersion <= readVersionFile(dir)) {
 						cacheAvailable = true;
 						percentage = 90;
+						
+						if(debugMode) {
+							System.out.println("Loading Cached Applet Version " + latestVersion);
+						}
 						debug_sleep(2000);
 					}
 				}
