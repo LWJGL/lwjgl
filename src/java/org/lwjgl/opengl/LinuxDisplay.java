@@ -125,8 +125,6 @@ final class LinuxDisplay implements DisplayImplementation {
 	private long current_cursor;
 	private long blank_cursor;
 	private Canvas parent;
-	private long parent_focus_window;
-	private boolean parent_focus_window_valid;
 	private long parent_window;
 	private boolean xembedded;
 	private boolean parent_focused;
@@ -432,7 +430,6 @@ final class LinuxDisplay implements DisplayImplementation {
 					mapRaised(getDisplay(), current_window);
 					xembedded = parent != null && isAncestorXEmbedded(parent_window);
 					blank_cursor = createBlankCursor();
-					parent_focus_window_valid = false;
 					current_cursor = None;
 					focused = false;
 					input_released = false;
@@ -858,22 +855,14 @@ final class LinuxDisplay implements DisplayImplementation {
 	private void checkInput() {
 		if (parent == null || !parent_focus_changed)
 			return;
-		if (focused) {
-			if (xembedded && !parent_focused && parent_focus_window_valid) {
-				if (nGetInputFocus(getDisplay()) != current_window) {
-					setInputFocusUnsafe(parent_focus_window);
-					parent_focus_changed = false;
-				}
+		
+		if (!focused && parent_focused) {
+			if (xembedded) {
+				// disable parent from taking focus back from Display when it is clicked
+				parent.setFocusable(false);
 			}
-		} else {
-			if (parent_focused) {
-				if (xembedded) {
-					parent_focus_window = nGetInputFocus(getDisplay());
-					parent_focus_window_valid = true;
-				}
-				setInputFocusUnsafe(getWindow());
-				parent_focus_changed = false;
-			}
+			setInputFocusUnsafe(getWindow());
+			parent_focus_changed = false;
 		}
 	}
 
@@ -881,10 +870,21 @@ final class LinuxDisplay implements DisplayImplementation {
 		if (focused == got_focus || focus_detail == NotifyDetailNone || focus_detail == NotifyPointer || focus_detail == NotifyPointerRoot)
 			return;
 		focused = got_focus;
+		
+		if (parent != null && xembedded && focused != parent.hasFocus()) {
+			return;
+		}
+		
 		if (focused) {
 			acquireInput();
 		} else {
 			releaseInput();
+			
+			if (parent != null && xembedded) {
+				setInputFocusUnsafe(0);
+				// re-enable parent focus to detect click on window
+				parent.setFocusable(true);
+			}
 		}
 	}
 	static native long nGetInputFocus(long display);
