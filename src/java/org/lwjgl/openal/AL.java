@@ -118,7 +118,7 @@ public final class AL {
 		switch (LWJGLUtil.getPlatform()) {
 			case LWJGLUtil.PLATFORM_WINDOWS:
 				libname = "OpenAL32";
-				library_names = new String[]{"OpenAL32.dll"};
+				library_names = new String[]{"OpenAL64.dll", "OpenAL32.dll"};
 				break;
 			case LWJGLUtil.PLATFORM_LINUX:
 				libname = "openal";
