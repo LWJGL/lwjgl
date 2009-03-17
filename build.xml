@@ -25,7 +25,7 @@
 		<mkdir dir="${lwjgl.temp}/doc" 						taskname="initialiazing temp/doc folder" />
 		<mkdir dir="${lwjgl.temp}/res" 						taskname="initialiazing temp/res folder" />
 		<mkdir dir="${lwjgl.temp}/native" 				taskname="initialiazing temp/native folder" />
-		<mkdir dir="${lwjgl.temp}/native/win32" 	taskname="initialiazing temp/win32 folder" />
+		<mkdir dir="${lwjgl.temp}/native/windows" 	taskname="initialiazing temp/windows folder" />
 		<mkdir dir="${lwjgl.temp}/native/linux" 	taskname="initialiazing temp/linux folder" />
 		<mkdir dir="${lwjgl.temp}/native/macosx" 	taskname="initialiazing temp/macosx folder" />
 		<mkdir dir="${lwjgl.temp}/native/solaris" taskname="initialiazing temp/solaris folder" />
@@ -41,7 +41,7 @@
 	<!-- Creates a distribution of LWJGL -->
 	<target name="release" description="Creates a distribution of LWJGL using supplied native binaries">
 		<!-- Warn user -->
-		<echo message="Before running the release target, please manually compile all platforms and place required files in ${lwjgl.lib}/win32, ${lwjgl.lib}/linux and ${lwjgl.lib}/macosx${line.separator}Missing files will result in a successfull built, but with incomplete release zips"/>
+		<echo message="Before running the release target, please manually compile all platforms and place required files in ${lwjgl.lib}/windows, ${lwjgl.lib}/linux and ${lwjgl.lib}/macosx${line.separator}Missing files will result in a successfull built, but with incomplete release zips"/>
   	<input 
   		message="All data in the ${lwjgl.dist} folder will be deleted. Continue? "
     	validargs="yes,no"
@@ -132,9 +132,10 @@
 		</delete>	
 
 	    <copy file="${lwjgl.lib}/jinput.jar" todir="${lwjgl.temp}/jar"/>
-		<copy todir="${lwjgl.temp}/native/win32">
-			<fileset dir="${lwjgl.lib}/win32">
-				<patternset refid="lwjgl-win32.fileset" />
+		<copy file="${lwjgl.lib}/lwjgl-debug.jar" todir="${lwjgl.temp}/jar"/>
+		<copy todir="${lwjgl.temp}/native/windows">
+			<fileset dir="${lwjgl.lib}/windows">
+				<patternset refid="lwjgl-windows.fileset" />
 			</fileset>
 		</copy>
 		<copy todir="${lwjgl.temp}/native/linux">
@@ -269,7 +270,7 @@
 	<!-- Compiles LWJGL on Win32 platforms  -->
 	<target name="-compile_native_win32" if="lwjgl.platform.windows">
 		<ant antfile="platform_build/windows_ant/build.xml" inheritAll="false"/>
-		<copy file="${lwjgl.bin}/lwjgl/lwjgl.dll" todir="${lwjgl.lib}/win32"/>
+		<copy file="${lwjgl.bin}/lwjgl/lwjgl.dll" todir="${lwjgl.lib}/windows"/>
 	</target>
 
 	<!-- Compiles LWJGL on Linux platforms -->
@@ -341,7 +342,7 @@
 
 	<target name="runtest" depends="all">
 		<fail message="test.mainclass is not set. Use 'ant -Dtest.mainclass=&lt;main-class&gt; runtest'" unless="test.mainclass"/>
-		<condition property="native_path" value="libs/win32">
+		<condition property="native_path" value="libs/windows">
 			<os family="windows" />
 		</condition>
 
@@ -367,7 +368,7 @@
 		<javadoc destdir="${lwjgl.docs}/javadoc" classpath="${lwjgl.lib}/jinput.jar" author="true" version="true" use="true" source="1.4" windowtitle="LWJGL API">
 			<fileset refid="lwjgl.javadoc.fileset" />
 			<doctitle><![CDATA[<h1>Lightweight Java Game Toolkit</h1>]]></doctitle>
-			<bottom><![CDATA[<i>Copyright &#169; 2002-2008 lwjgl.org. All Rights Reserved.</i>]]></bottom>
+			<bottom><![CDATA[<i>Copyright &#169; 2002-2009 lwjgl.org. All Rights Reserved.</i>]]></bottom>
 		</javadoc>
 	</target>
 </project>

@@ -85,10 +85,12 @@
 		<include name="3rdparty/*" />
 	</patternset>
 
-	<!-- Files to include in win32 package -->
-	<patternset id="lwjgl-win32.fileset">
+	<!-- Files to include in windows package -->
+	<patternset id="lwjgl-windows.fileset">
 		<include name="lwjgl.dll" />
+		<include name="lwjgl64.dll" />
 		<include name="OpenAL32.dll" />
+		<include name="OpenAL64.dll" />
     	<include name="jinput-dx8.dll" />
     	<include name="jinput-raw.dll" />
 	</patternset>
@@ -149,7 +151,7 @@
 		<exclude name="applet/lwjglkeystore" />
 	</patternset>		
 	
-	<uptodate property="lwjgl.main.built" targetfile="${lwjgl.lib}/win32/lwjgl.dll" >
+	<uptodate property="lwjgl.main.built" targetfile="${lwjgl.lib}/windows/lwjgl.dll" >
 	    <srcfiles dir= "${lwjgl.src.native}/common" includes="*.c*"/>
 	    <srcfiles dir= "${lwjgl.src.native}/windows" includes="*.c"/>
 	</uptodate>

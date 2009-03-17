@@ -30,8 +30,8 @@
 		
 		<!-- create each of the native jars -->
 		<jar destfile="applet/windows_natives.jar" taskname="windows_natives.jar">
-			<fileset dir="${lwjgl.lib}/win32">
-				<patternset refid="lwjgl-win32.fileset"/>
+			<fileset dir="${lwjgl.lib}/windows">
+				<patternset refid="lwjgl-windows.fileset"/>
 			</fileset>
 		</jar>
 		<signjar jar="applet/windows_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
@@ -61,7 +61,8 @@
   		<fileset dir="${lwjgl.res}" includes="applet*"/>
   	</jar>
 
-	  <copy file="${lwjgl.lib}/lwjgl.jar" todir="applet"/>
+	  	<copy file="${lwjgl.lib}/lwjgl.jar" todir="applet"/>
+		<copy file="${lwjgl.lib}/lwjgl-debug.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/lwjgl_util_applet.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/lwjgl_util.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/jinput.jar" todir="applet"/>
@@ -76,6 +77,11 @@
 			<param name="input" value="applet/lwjgl.jar"/>
 			<param name="output" value="applet/lwjgl.jar.lzma"/>
 		</antcall>
+		<antcall target="compress-resource">
+			<param name="input" value="applet/lwjgl-debug.jar"/>
+			<param name="output" value="applet/lwjgl-debug.jar.lzma"/>
+		</antcall>
+		
 		<antcall target="compress-resource">
 			<param name="input" value="applet/lwjgl_util.jar"/>
 			<param name="output" value="applet/lwjgl_util.jar.lzma"/>
@@ -95,6 +101,10 @@
 		<antcall target="compress-sign-class">
 			<param name="dir" value="applet/"/>
 			<param name="jarfile" value="lwjgl"/>
+		</antcall>
+		<antcall target="compress-sign-class">
+			<param name="dir" value="applet/"/>
+			<param name="jarfile" value="lwjgl-debug"/>
 		</antcall>
 		<antcall target="compress-sign-class">
 			<param name="dir" value="applet/"/>
