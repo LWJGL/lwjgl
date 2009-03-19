@@ -767,7 +767,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				// update only if a second or more has passed
 				if (timeLapse >= 1000) {
 					// get kb/s, nice that bytes/millis is same as kilobytes/seconds
-					float downloadSpeed = (float) bufferSize / timeLapse;
+					float downloadSpeed = (float) downloadedAmount / timeLapse;
 					// round to two decimal places
 					downloadSpeed = ((int)(downloadSpeed*100))/100f;
 					// set current speed message
