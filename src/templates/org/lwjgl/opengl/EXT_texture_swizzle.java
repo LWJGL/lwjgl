@@ -31,14 +31,22 @@
  */
 package org.lwjgl.opengl;
 
-public interface EXT_Cg_shader {
+public interface EXT_texture_swizzle {
 
 	/**
-	 * You can pass GL_CG_VERTEX_SHADER_EXT to glCreateShaderARB instead of GL_VERTEX_SHADER_ARB to create a vertex shader object
-	 * that will parse and compile its shader source with the Cg compiler front-end rather than the GLSL front-end. Likewise, you
-	 * can pass GL_CG_FRAGMENT_SHADER_EXT to glCreateShaderARB instead of GL_FRAGMENT_SHADER_ARB to create a fragment shader object
-	 * that will parse and compile its shader source with the Cg front-end rather than the GLSL front-end.
+	 * Accepted by the &lt;pname&gt; parameters of TexParameteri,
+	 * TexParameterf, TexParameteriv, TexParameterfv,
+	 * GetTexParameterfv, and GetTexParameteriv:
 	 */
-	int GL_CG_VERTEX_SHADER_EXT = 0x890E;
-	int GL_CG_FRAGMENT_SHADER_EXT = 0x890F;
+	int GL_TEXTURE_SWIZZLE_R_EXT = 0x8E42;
+	int GL_TEXTURE_SWIZZLE_G_EXT = 0x8E43;
+	int GL_TEXTURE_SWIZZLE_B_EXT = 0x8E44;
+	int GL_TEXTURE_SWIZZLE_A_EXT = 0x8E45;
+
+	/**
+	 * Accepted by the &lt;pname&gt; parameters of TexParameteriv,
+	 * TexParameterfv, GetTexParameterfv, and GetTexParameteriv:
+	 */
+	int GL_TEXTURE_SWIZZLE_RGBA_EXT = 0x8E46;
+
 }

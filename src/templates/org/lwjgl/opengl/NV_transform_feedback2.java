@@ -31,14 +31,36 @@
  */
 package org.lwjgl.opengl;
 
-public interface EXT_Cg_shader {
+import org.lwjgl.util.generator.*;
+
+import java.nio.IntBuffer;
+
+public interface NV_transform_feedback2 {
+
+	/** Accepted by the &lt;target&gt; parameter of BindTransformFeedbackNV: */
+
+	int GL_TRANSFORM_FEEDBACK_NV = 0x8E22;
 
 	/**
-	 * You can pass GL_CG_VERTEX_SHADER_EXT to glCreateShaderARB instead of GL_VERTEX_SHADER_ARB to create a vertex shader object
-	 * that will parse and compile its shader source with the Cg compiler front-end rather than the GLSL front-end. Likewise, you
-	 * can pass GL_CG_FRAGMENT_SHADER_EXT to glCreateShaderARB instead of GL_FRAGMENT_SHADER_ARB to create a fragment shader object
-	 * that will parse and compile its shader source with the Cg front-end rather than the GLSL front-end.
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetDoublev, GetIntegerv,
+	 * and GetFloatv:
 	 */
-	int GL_CG_VERTEX_SHADER_EXT = 0x890E;
-	int GL_CG_FRAGMENT_SHADER_EXT = 0x890F;
+	int GL_TRANSFORM_FEEDBACK_BUFFER_PAUSED_NV = 0x8E23;
+	int GL_TRANSFORM_FEEDBACK_BUFFER_ACTIVE_NV = 0x8E24;
+	int GL_TRANSFORM_FEEDBACK_BINDING_NV = 0x8E25;
+
+	void glBindTransformFeedbackNV(@GLenum int target, @GLuint int id);
+
+	void glDeleteTransformFeedbacksNV(@AutoSize("ids") @GLsizei int n, @Const @GLuint IntBuffer ids);
+
+	void glGenTransformFeedbacksNV(@AutoSize("ids") @GLsizei int n, @OutParameter @GLuint IntBuffer ids);
+
+	boolean glIsTransformFeedbackNV(@GLuint int id);
+
+	void glPauseTransformFeedbackNV();
+
+	void glResumeTransformFeedbackNV();
+
+	void glDrawTransformFeedbackNV(@GLenum int mode, @GLuint int id);
+
 }
