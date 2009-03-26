@@ -37,7 +37,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Iterator;
-import java.lang.annotation.Annotation;
 
 import com.sun.mirror.declaration.InterfaceDeclaration;
 import com.sun.mirror.declaration.MethodDeclaration;
@@ -117,6 +116,23 @@ public class ContextCapabilitiesGenerator {
 
 	public static void generateInitStubsPrologue(PrintWriter writer, boolean context_specific) {
 		writer.println("\tprivate Set " + ALL_INIT_METHOD_NAME + "(boolean forwardCompatible) throws LWJGLException {");
+
+		// Load the basic pointers we need to detect OpenGL version and supported extensions.
+		writer.println("\t\tGL11_glGetString_pointer = GLContext.getFunctionAddress(\"glGetString\");");
+
+		// Initialize GL11.glGetIntegerv and GL30.glGetStringi here, in case we have created an OpenGL 3.0 context.
+		// (they will be used in GLContext.getSupportedExtensions)
+		writer.println("\t\tGL11_glGetIntegerv_pointer = GLContext.getFunctionAddress(\"glGetIntegerv\");");
+		writer.println("\t\tGL30_glGetStringi_pointer = GLContext.getFunctionAddress(\"glGetStringi\");");
+
+		// Get the supported extensions set.
+		writer.println("\t\tGLContext.setCapabilities(this);");
+		writer.println("\t\tSet " + CACHED_EXTS_VAR_NAME + " = GLContext.getSupportedExtensions();");
+
+		// Force forward compatible mode when OpenGL version is 3.1 or higher and ARB_compatibility is not available.
+		writer.println("\t\tif ( supported_extensions.contains(\"OpenGL31\") && !supported_extensions.contains(\"GL_ARB_compatibility\") )");
+		writer.println("\t\t\tforwardCompatible = true;");
+
 		if ( !context_specific ) {
 			writer.println("\t\tif (" + STUBS_LOADED_NAME + ")");
 			writer.println("\t\t\treturn GLContext.getSupportedExtensions();");
@@ -125,11 +141,6 @@ public class ContextCapabilitiesGenerator {
 			writer.println("\t\tif (!" + getAddressesInitializerName("GL11") + "(forwardCompatible))");
 			writer.println("\t\t\tthrow new LWJGLException(\"GL11 not supported\");");
 		}
-		// Try to initialize GL30.glGetStringi here, in case we have created an OpenGL 3.0 context
-		// (it will be used in GLContext.getSupportedExtensions)
-		writer.println("\t\tGL30_glGetStringi_pointer = GLContext.getFunctionAddress(\"glGetStringi\");");
-		writer.println("\t\tGLContext.setCapabilities(this);");
-		writer.println("\t\tSet " + CACHED_EXTS_VAR_NAME + " = GLContext.getSupportedExtensions();");
 	}
 
 	public static void generateInitStubsEpilogue(PrintWriter writer, boolean context_specific) {

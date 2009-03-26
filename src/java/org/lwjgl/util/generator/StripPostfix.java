@@ -47,4 +47,5 @@ import java.lang.annotation.ElementType;
 @Target(ElementType.METHOD)
 public @interface StripPostfix {
 	String value(); // The parameter to deduce the postfix from
+	String extension() default "NULL";
 }

@@ -323,9 +323,13 @@ typedef const char * (APIENTRY * glXQueryExtensionsStringPROC) (Display *dpy, in
 /* GLX_SGI_swap_control */
 typedef void (APIENTRY * glXSwapIntervalSGIPROC)(int interval);
 
+/* GLX_ARB_create_context */
+typedef GLXContext (APIENTRY * glXCreateContextAttribsARBPROC) (Display *dpy, GLXFBConfig config, GLXContext share_context, Bool direct, const int *attrib_list);
+
 typedef struct {
     bool GLX12;
     bool GLX13;
+	bool GLX14;
 /*    bool GLX_EXT_visual_info;
     bool GLX_EXT_visual_rating;*/
     bool GLX_SGI_swap_control;
@@ -333,6 +337,7 @@ typedef struct {
 	bool GLX_ARB_fbconfig_float;
 	bool GLX_EXT_fbconfig_packed_float;
 	bool GLX_ARB_framebuffer_sRGB;
+	bool GLX_ARB_create_context;
 } GLXExtensions;
 
 /* Add _ to global symbols to avoid symbol clash with the OpenGL library */
@@ -377,6 +382,8 @@ extern glXQueryServerStringPROC lwjgl_glXQueryServerString;
 extern glXQueryExtensionsStringPROC lwjgl_glXQueryExtensionsString;
 
 extern glXSwapIntervalSGIPROC lwjgl_glXSwapIntervalSGI;
+
+extern glXCreateContextAttribsARBPROC lwjgl_glXCreateContextAttribsARB;
 
 extern bool extgl_InitGLX(Display *disp, int screen, GLXExtensions *extension_flags);
 

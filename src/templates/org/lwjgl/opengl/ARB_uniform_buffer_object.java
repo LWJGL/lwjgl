@@ -126,6 +126,7 @@ public interface ARB_uniform_buffer_object {
 
 	void glBindBufferBase(@GLenum int target, @GLuint int index, @GLuint int buffer);
 
+	@StripPostfix(value = "data", extension = "")
 	void glGetIntegeri_v(@GLenum int value, @GLuint int index, @OutParameter @Check("4")IntBuffer data);
 
 	void glUniformBlockBindingARB(@GLuint int program, @GLuint int uniformBlockIndex, @GLuint int uniformBlockBinding);

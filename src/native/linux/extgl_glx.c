@@ -74,6 +74,9 @@ glXQueryExtensionsStringPROC lwjgl_glXQueryExtensionsString = NULL;
 /* GLX_SGI_swap_control */
 glXSwapIntervalSGIPROC lwjgl_glXSwapIntervalSGI = NULL;
 
+/* GLX_ARB_create_context */
+glXCreateContextAttribsARBPROC lwjgl_glXCreateContextAttribsARB = NULL;
+
 static void * lib_gl_handle = NULL;
 
 typedef void * (APIENTRY * glXGetProcAddressARBPROC) (const GLubyte *procName);
@@ -142,6 +145,12 @@ static void extgl_InitGLXSGISwapControl() {
 	symbols_flags.GLX_SGI_swap_control = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
+static void extgl_InitGLXARBCreateContext() {
+	ExtFunction functions[] = {
+		{"glXCreateContextAttribsARB", (void*)&lwjgl_glXCreateContextAttribsARB}};
+	symbols_flags.GLX_ARB_create_context = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+}
+
 static void extgl_InitGLXSupportedExtensions(Display *disp, int screen, GLXExtensions *extension_flags) {
 /*	extension_flags.GLX_EXT_visual_info = GLXQueryExtension(disp, screen, "GLX_EXT_visual_info");
 	extension_flags.GLX_EXT_visual_rating = GLXQueryExtension(disp, screen, "GLX_EXT_visual_rating");*/
@@ -150,6 +159,7 @@ static void extgl_InitGLXSupportedExtensions(Display *disp, int screen, GLXExten
 	extension_flags->GLX_ARB_fbconfig_float = GLXQueryExtension(disp, screen, "GLX_ARB_fbconfig_float");
 	extension_flags->GLX_EXT_fbconfig_packed_float = GLXQueryExtension(disp, screen, "GLX_EXT_fbconfig_packed_float");
 	extension_flags->GLX_ARB_framebuffer_sRGB = GLXQueryExtension(disp, screen, "GLX_ARB_framebuffer_sRGB") || GLXQueryExtension(disp, screen, "GLX_EXT_framebuffer_sRGB");
+	extension_flags->GLX_ARB_create_context = GLXQueryExtension(disp, screen, "GLX_ARB_create_context");
 }
 
 bool extgl_Open(JNIEnv *env) {
@@ -181,6 +191,7 @@ bool extgl_Open(JNIEnv *env) {
 	extgl_InitGLX12();
 	extgl_InitGLX13();
 	extgl_InitGLXSGISwapControl();
+	extgl_InitGLXARBCreateContext();
 	return true;
 }
 
@@ -214,6 +225,7 @@ bool extgl_InitGLX(Display *disp, int screen, GLXExtensions *extension_flags) {
 		return false;
 	extension_flags->GLX12 = glx12;
 	extension_flags->GLX13 = major > 1 || (major == 1 && minor >= 3);
+	extension_flags->GLX14 = major > 1 || (major == 1 && minor >= 4);
 	extgl_InitGLXSupportedExtensions(disp, screen, extension_flags);
 	return true;
 }

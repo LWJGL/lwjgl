@@ -33,7 +33,9 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 public interface NV_explicit_multisample {
 
@@ -73,8 +75,10 @@ public interface NV_explicit_multisample {
 	int GL_INT_SAMPLER_RENDERBUFFER_NV = 0x8E57;
 	int GL_UNSIGNED_INT_SAMPLER_RENDERBUFFER_NV = 0x8E58;
 
+	@StripPostfix(value = "data", extension = "EXT")
 	void glGetBooleanIndexedvEXT(@GLenum int pname, @GLuint int index, @OutParameter @Check("16") @GLboolean ByteBuffer data);
 
+	@StripPostfix(value = "data", extension = "EXT")
 	void glGetIntegerIndexedvEXT(@GLenum int pname, @GLuint int index, @OutParameter @Check("16") IntBuffer data);
 
 	@StripPostfix("val")

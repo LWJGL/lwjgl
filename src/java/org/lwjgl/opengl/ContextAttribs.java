@@ -187,4 +187,16 @@ public final class ContextAttribs {
 		return attribs;
 	}
 
+	public String toString() {
+		StringBuffer sb = new StringBuffer(32);
+
+		sb.append("ContextAttribs:");
+		sb.append(" Version=").append(majorVersion).append('.').append(minorVersion);
+		sb.append(" - Layer=").append(layerPlane);
+		sb.append(" - Debug=").append(debug);
+		sb.append(" - ForwardCompatible=").append(forwardCompatible);
+
+		return sb.toString();
+	}
+
 }

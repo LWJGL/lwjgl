@@ -277,7 +277,7 @@ public class JavaMethodsGenerator {
 		postfix_parameter.getType().accept(translator);
 		String postfix = translator.getSignature();
 		String method_name = method.getSimpleName();
-		String extension_postfix = getExtensionPostfix(interface_decl);
+		String extension_postfix = "NULL".equals(strip_annotation.extension()) ? getExtensionPostfix(interface_decl) : strip_annotation.extension();
 		String result;
 		if (method_name.endsWith(postfix + "v" + extension_postfix))
 			result = method_name.substring(0, method_name.length() - (postfix.length() + 1 + extension_postfix.length()));
