@@ -74,8 +74,8 @@ public interface GL31 {
 	// ----------------------[ EXT_copy_buffer ]----------------------
 	// ---------------------------------------------------------------
 
-	int GL_COPY_READ_BUFFER = 0x0; // TODO: Find this value
-	int GL_COPY_WRITE_BUFFER = 0x0; // TODO: Find this value
+	int GL_COPY_READ_BUFFER = 0x8F36;
+	int GL_COPY_WRITE_BUFFER = 0x8F37;
 
 	void glCopyBufferSubData(@GLenum int readtarget, @GLenum int writetarget, @GLintptr long readoffset, @GLintptr long writeoffset, @GLsizeiptr long size);
 
