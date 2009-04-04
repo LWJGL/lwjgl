@@ -72,7 +72,7 @@ public final class ContextAttribs {
 		if ( majorVersion < 0 ||
 		     3 < majorVersion ||
 		     minorVersion < 0 ||
-		     (majorVersion == 3 && 0 < minorVersion) ||
+		     (majorVersion == 3 && 1 < minorVersion) ||
 		     (majorVersion == 2 && 1 < minorVersion) ||
 		     (majorVersion == 1 && 5 < minorVersion) )
 			throw new IllegalArgumentException("Invalid OpenGL version specified: " + majorVersion + '.' + minorVersion);
