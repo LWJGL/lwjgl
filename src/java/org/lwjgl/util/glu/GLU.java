@@ -37,6 +37,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Util;
+import org.lwjgl.util.glu.tessellation.GLUtessellatorImpl;
 
 /**
  * GLU.java
@@ -86,6 +87,7 @@ public class GLU {
 
 	/****           Tesselation constants           ****/
 
+	public static final double GLU_TESS_MAX_COORD              = 1.0e150;
 	public static final double TESS_MAX_COORD              = 1.0e150;
 
 	/* TessProperty */
@@ -419,5 +421,9 @@ public class GLU {
 			default:
 				return Util.translateGLErrorString(error_code);
 		}
+	}
+	
+	public static GLUtessellator gluNewTess() {
+		return new GLUtessellatorImpl();
 	}
 }
