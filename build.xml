@@ -254,12 +254,14 @@
 		<antcall target="-compile_native_win32" />
 
 		<condition property="lwjgl.platform.linux">
-			<or>
-				<os name="Linux" />
-				<os name="SunOS" />
-			</or>
+			<os name="Linux" />
 		</condition>
 		<antcall target="-compile_native_linux" />
+
+		<condition property="lwjgl.platform.solaris">
+			<os name="SunOS" />
+		</condition>
+		<antcall target="-compile_native_solaris" />
 
 		<condition property="lwjgl.platform.macosx">
 			<os name="Mac OS X" />
@@ -279,6 +281,15 @@
 	<target name="-compile_native_linux" if="lwjgl.platform.linux">
 		<ant antfile="platform_build/linux_ant/build.xml" inheritAll="false"/>
 		<copy todir="${lwjgl.lib}/linux">
+			<fileset dir="${lwjgl.bin}/lwjgl" includes="liblwjgl*.so"/>
+		</copy>
+	</target>
+
+	<!-- Compiles LWJGL on solaris platforms -->
+	<target name="-compile_native_solaris" if="lwjgl.platform.solaris">
+		<!-- Reusing the linux ant task, but copy the output to solaris -->
+		<ant antfile="platform_build/linux_ant/build.xml" inheritAll="false"/>
+		<copy todir="${lwjgl.lib}/solaris">
 			<fileset dir="${lwjgl.bin}/lwjgl" includes="liblwjgl*.so"/>
 		</copy>
 	</target>
