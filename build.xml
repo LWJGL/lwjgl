@@ -270,7 +270,9 @@
 	<!-- Compiles LWJGL on Win32 platforms  -->
 	<target name="-compile_native_win32" if="lwjgl.platform.windows">
 		<ant antfile="platform_build/windows_ant/build.xml" inheritAll="false"/>
-		<copy file="${lwjgl.bin}/lwjgl/lwjgl.dll" todir="${lwjgl.lib}/windows"/>
+		<copy todir="${lwjgl.lib}/windows">
+			<fileset dir="${lwjgl.bin}/lwjgl" includes="lwjgl*.dll"/>
+		</copy>
 	</target>
 
 	<!-- Compiles LWJGL on Linux platforms -->
