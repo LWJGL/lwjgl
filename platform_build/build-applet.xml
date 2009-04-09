@@ -69,7 +69,7 @@
   	</jar>
 
 	  	<copy file="${lwjgl.lib}/lwjgl.jar" todir="applet"/>
-		<copy file="${lwjgl.lib}/lwjgl-debug.jar" todir="applet" failonerror="false"/>
+		<copy file="${lwjgl.lib}/lwjgl-debug.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/lwjgl_util_applet.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/lwjgl_util.jar" todir="applet"/>
 		<copy file="${lwjgl.lib}/jinput.jar" todir="applet"/>

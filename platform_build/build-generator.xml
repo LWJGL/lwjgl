@@ -18,6 +18,8 @@
 	<!-- Proxy target to generate it all -->
 	<target name="generate-all" depends="generate-openal, generate-opengl, generate-opengl-capabilities, generate-opengl-references" description="Generates java and native source"/>
 
+	<target name="generate-debug" depends="generate-openal, generate-opengl-debug, generate-opengl-capabilities, generate-opengl-references" description="Generates java and native source"/>
+
 	<!-- Generate OpenAL -->
 	<target name="generate-openal" depends="generators" description="Generates java and native source for AL">
 		<apply executable="apt" parallel="true">
@@ -49,6 +51,25 @@
 			<arg value="-d"/>
 			<arg path="${lwjgl.src.native}/generated"/>
 			<!-- <arg value="-Ageneratechecks"/> -->
+			<arg value="-Acontextspecific"/>
+			<arg value="-Atypemap=org.lwjgl.util.generator.GLTypeMap"/>
+			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>
+		</apply>
+	</target>
+
+	<!-- Generate OpenGL -->
+	<target name="generate-opengl-debug" depends="generators" description="Generates java and native source for GL">
+		<apply executable="apt" parallel="true">
+			<arg value="-nocompile"/>
+			<arg value="-factory"/>
+			<arg value="org.lwjgl.util.generator.GeneratorProcessorFactory"/>
+			<arg value="-cp"/>
+			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg value="-s"/>
+			<arg path="${lwjgl.src}/generated"/>
+			<arg value="-d"/>
+			<arg path="${lwjgl.src.native}/generated"/>
+			<arg value="-Ageneratechecks"/>
 			<arg value="-Acontextspecific"/>
 			<arg value="-Atypemap=org.lwjgl.util.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>

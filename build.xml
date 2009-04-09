@@ -62,6 +62,7 @@
   	<antcall target="compile" />
  		<antcall target="javadoc" />
   	<antcall target="-createjars" />
+		<antcall target="debug-jars"/>
 		<antcall target="applet-release" />
   	
   	<!-- copy resources to res folder -->
@@ -93,6 +94,15 @@
 				<include name="*.jar"/>
 			</fileset>
 		</move>
+	</target>
+	
+	<target name="debug-jars" description="Creates the Java archives ONLY, the debug version of lwjgl jar, and places them in libs/" depends="jars">
+		<!--		<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="-initialize, compile, -createjars">-->
+		<!--<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="-initialize, compile, -createjars">-->
+		<antcall target="generate-debug"/>
+		<antcall target="compile"/>
+		<antcall target="-createjars"/>
+		<move tofile="libs/lwjgl-debug.jar" file="${lwjgl.temp}/jar/lwjgl.jar"/>
 	</target>
 
 	<!-- Packages the java files -->
@@ -132,7 +142,7 @@
 		</delete>	
 
 	    <copy file="${lwjgl.lib}/jinput.jar" todir="${lwjgl.temp}/jar"/>
-		<copy file="${lwjgl.lib}/lwjgl-debug.jar" todir="${lwjgl.temp}/jar" failonerror="false"/>
+		<copy file="${lwjgl.lib}/lwjgl-debug.jar" todir="${lwjgl.temp}/jar"/>
 		<copy todir="${lwjgl.temp}/native/windows">
 			<fileset dir="${lwjgl.lib}/windows">
 				<patternset refid="lwjgl-windows.fileset" />
