@@ -91,8 +91,8 @@
 		<include name="lwjgl64.dll" />
 		<include name="OpenAL32.dll" />
 		<include name="OpenAL64.dll" />
-    	<include name="jinput-dx8.dll" />
-    	<include name="jinput-raw.dll" />
+    	<include name="jinput-dx8*.dll" />
+    	<include name="jinput-raw*.dll" />
 	</patternset>
 	
 	<!-- Files to include in linux, glibc2.3 package -->

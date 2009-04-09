@@ -132,7 +132,7 @@
 		</delete>	
 
 	    <copy file="${lwjgl.lib}/jinput.jar" todir="${lwjgl.temp}/jar"/>
-		<copy file="${lwjgl.lib}/lwjgl-debug.jar" todir="${lwjgl.temp}/jar"/>
+		<copy file="${lwjgl.lib}/lwjgl-debug.jar" todir="${lwjgl.temp}/jar" failonerror="false"/>
 		<copy todir="${lwjgl.temp}/native/windows">
 			<fileset dir="${lwjgl.lib}/windows">
 				<patternset refid="lwjgl-windows.fileset" />
