@@ -58,15 +58,17 @@
   	<antcall target="-initialize" />
 
   	<!-- compile and create jars -->
-		<antcall target="generate-all"/>
+	<antcall target="generate-all"/>
   	<antcall target="compile" />
- 		<antcall target="javadoc" />
   	<antcall target="-createjars" />
-		<antcall target="debug-jars"/>
-		<antcall target="applet-release" />
+	<antcall target="generate-debug"/>
+	<antcall target="compile" />
+  	<antcall target="-createdebugjars" />
+ 	<antcall target="javadoc" />
+	<antcall target="applet-release" />
   	
   	<!-- copy resources to res folder -->
- 		<copy todir="${lwjgl.temp}/res">
+ 	<copy todir="${lwjgl.temp}/res">
     	<fileset dir="res"/>
   	</copy>
   	
@@ -96,15 +98,17 @@
 		</move>
 	</target>
 	
-	<target name="debug-jars" description="Creates the Java archives ONLY, the debug version of lwjgl jar, and places them in libs/" depends="jars">
-		<!--		<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="-initialize, compile, -createjars">-->
-		<!--<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="-initialize, compile, -createjars">-->
-		<antcall target="generate-debug"/>
-		<antcall target="compile"/>
-		<antcall target="-createjars"/>
-		<move tofile="libs/lwjgl-debug.jar" file="${lwjgl.temp}/jar/lwjgl.jar"/>
+	<!-- Packages the java files -->
+	<target name="-createdebugjars">
+		<!-- Create lwjgl.jar -->
+		<jar destfile="${lwjgl.temp}/jar/lwjgl-debug.jar" taskname="lwjgl-debug.jar">
+			<fileset refid="lwjgl.fileset" />
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+			</manifest>
+		</jar>
 	</target>
-
+	
 	<!-- Packages the java files -->
 	<target name="-createjars">
 		<!-- Create lwjgl.jar -->
