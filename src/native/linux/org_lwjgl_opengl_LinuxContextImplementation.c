@@ -76,17 +76,17 @@ static void createContextGLX13(JNIEnv *env, X11PeerInfo *peer_info, X11Context *
 	GLXFBConfig *config = getFBConfigFromPeerInfo(env, peer_info);
 	if (config == NULL)
 		return;
-	int render_type;
-	if (lwjgl_glXGetFBConfigAttrib(peer_info->display, *config, GLX_RENDER_TYPE, &render_type) != 0) {
-		throwException(env, "Could not get GLX_RENDER_TYPE attribute");
-		return;
-	}
-	int context_render_type = (render_type & GLX_RGBA_FLOAT_BIT) != 0 ? GLX_RGBA_FLOAT_TYPE : GLX_RGBA_TYPE;
 	GLXContext context;
 	if (attribs) {
 		const int *attrib_list = (const int *)(*env)->GetDirectBufferAddress(env, attribs);
 		context = lwjgl_glXCreateContextAttribsARB(peer_info->display, *config, shared_context, True, attrib_list);
 	} else {
+		int render_type;
+		if (lwjgl_glXGetFBConfigAttrib(peer_info->display, *config, GLX_RENDER_TYPE, &render_type) != 0) {
+			throwException(env, "Could not get GLX_RENDER_TYPE attribute");
+			return;
+		}
+		int context_render_type = (render_type & GLX_RGBA_FLOAT_BIT) != 0 ? GLX_RGBA_FLOAT_TYPE : GLX_RGBA_TYPE;
 		context = lwjgl_glXCreateNewContext(peer_info->display, *config, context_render_type, shared_context, True);
 	}
 	XFree(config);
