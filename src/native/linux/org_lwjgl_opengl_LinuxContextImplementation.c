@@ -72,7 +72,7 @@ static bool checkContext(JNIEnv *env, Display *display, GLXContext context) {
 	return true;
 }
 
-static void createContextGLX13(JNIEnv *env, X11PeerInfo *peer_info, X11Context *context_info, GLXContext shared_context) {
+static void createContextGLX13(JNIEnv *env, X11PeerInfo *peer_info, X11Context *context_info, jobject attribs, GLXContext shared_context) {
 	GLXFBConfig *config = getFBConfigFromPeerInfo(env, peer_info);
 	if (config == NULL)
 		return;
@@ -82,7 +82,13 @@ static void createContextGLX13(JNIEnv *env, X11PeerInfo *peer_info, X11Context *
 		return;
 	}
 	int context_render_type = (render_type & GLX_RGBA_FLOAT_BIT) != 0 ? GLX_RGBA_FLOAT_TYPE : GLX_RGBA_TYPE;
-	GLXContext context = lwjgl_glXCreateNewContext(peer_info->display, *config, context_render_type, shared_context, True);
+	GLXContext context;
+	if (attribs) {
+		const int *attrib_list = (const int *)(*env)->GetDirectBufferAddress(env, attribs);
+		context = lwjgl_glXCreateContextAttribsARB(peer_info->display, *config, shared_context, True, attrib_list);
+	} else {
+		context = lwjgl_glXCreateNewContext(peer_info->display, *config, context_render_type, shared_context, True);
+	}
 	XFree(config);
 	if (!checkContext(env, peer_info->display, context))
 		return;
@@ -129,7 +135,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nCrea
 		shared_context = shared_context_info->context;
 	}
 	if (peer_info->glx13) {
-		createContextGLX13(env, peer_info, context_info, shared_context);
+		createContextGLX13(env, peer_info, context_info, extension_flags.GLX_ARB_create_context ? attribs : NULL, shared_context);
 	} else {
 		createContextGLX(env, peer_info, context_info, shared_context);
 	}
