@@ -205,7 +205,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	
 	/** generic error message to display on error */
 	protected String[] 	genericErrorMessage = {	"An error occured while loading the applet.",
-												"Plese contact support to resolve this issue.",
+												"Please contact support to resolve this issue.",
 												"<placeholder for error message>"};
 	
 	/** whether a certificate refused error occured */
