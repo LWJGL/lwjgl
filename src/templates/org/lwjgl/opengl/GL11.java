@@ -1355,6 +1355,7 @@ public interface GL11 {
 	                     @BufferObject(BufferKind.ArrayVBO)
 	                     @Check
 	                     @Const
+	                     @GLshort
 	                     @GLint
 	                     @GLfloat
 	                     @GLdouble Buffer pointer);
@@ -1488,6 +1489,8 @@ public interface GL11 {
 	                       @BufferObject(BufferKind.ArrayVBO)
 	                       @Check
 	                       @Const
+						   @GLint
+						   @GLshort
 	                       @GLfloat
 	                       @GLdouble Buffer pointer);
 
