@@ -44,17 +44,22 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilePermission;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.net.SocketPermission;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.security.AccessControlException;
 import java.security.AccessController;
+import java.security.CodeSource;
+import java.security.PermissionCollection;
 import java.security.PrivilegedExceptionAction;
+import java.security.SecureClassLoader;
 import java.security.cert.Certificate;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
@@ -62,6 +67,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Pack200;
+
+import sun.net.www.ParseUtil;
+import sun.security.util.SecurityConstants;
 
 /**
  * <p>
@@ -169,6 +177,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/** urls of the jars to download */
 	protected URL[]		urlList;
+	
+	/** classLoader used to added downloaded jars to the classpath */
+	protected ClassLoader classLoader;
 	
 	/** actual thread that does the loading */
 	protected Thread	loaderThread;
@@ -666,18 +677,44 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
 		percentage = 95;
 		
-		Class[] parameters = new Class[] {URL.class};
+		URL[] urls = new URL[urlList.length];
 		
-		// modify class path by adding downloaded jars to it
-		for (int i = 0; i < urlList.length-1; i++) {
-			// get location of jar as a url
-			URL u = new URL("file:" + path + getJarName(urlList[i]));
-		
-			// add to class path
-			Method method = URLClassLoader.class.getDeclaredMethod("addURL", parameters);
-			method.setAccessible(true);
-			method.invoke(getClass().getClassLoader(), new Object[] {u});
+		for (int i = 0; i < urlList.length; i++) {
+			urls[i] = new URL("file:" + path + getJarName(urlList[i]));
 		}
+		
+		// added downloaded jars to the classpath with required permissions
+		classLoader = new URLClassLoader(urls) {
+			protected PermissionCollection getPermissions (CodeSource codesource) {
+				PermissionCollection perms = null;
+				
+				try {
+					// getPermissions from original classloader is important as it checks for signed jars ands shows any security dialogs needed
+					Method method = SecureClassLoader.class.getDeclaredMethod("getPermissions", new Class[] { CodeSource.class });
+					method.setAccessible(true);
+					perms = (PermissionCollection)method.invoke(getClass().getClassLoader(), new Object[] {codesource});
+					
+					String host = getCodeBase().getHost();
+			        
+			        if (host != null && (host.length() > 0)) {
+			        	// add permission to downloaded jars to access host they were from
+			        	perms.add(new SocketPermission(host, SecurityConstants.SOCKET_CONNECT_ACCEPT_ACTION));
+			        }
+			        else if (codesource.getLocation().getProtocol().equals("file")) {
+			        	// if running locally add file permission
+			        	String path = codesource.getLocation().getFile().replace('/', File.separatorChar);
+			            path = ParseUtil.decode(path);
+			            if (path.endsWith(File.separator)) path += "-";
+			            perms.add(new FilePermission(path, SecurityConstants.FILE_READ_ACTION));
+			        }
+		        
+		        } catch (Exception e) {
+					e.printStackTrace();
+				}
+		        
+		        return perms;
+		    }
+		};
 		
 		debug_sleep(2000);
 
@@ -699,7 +736,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
 		debug_sleep(2000);
 
-		Class appletClass = Class.forName(getParameter("al_main"));
+		Class appletClass = classLoader.loadClass(getParameter("al_main"));
 		lwjglApplet = (Applet) appletClass.newInstance();
 
 		lwjglApplet.setStub(this);
