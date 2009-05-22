@@ -536,7 +536,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * 3) extract natives
 	 * 4) add to jars to class path
 	 * 5) switch applets
-	 * 
 	 */
 	public void run() {
 		state = STATE_CHECKING_CACHE;
