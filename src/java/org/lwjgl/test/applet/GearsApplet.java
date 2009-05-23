@@ -45,10 +45,15 @@ public class GearsApplet extends Applet {
 		}
 	}
 
-	/**
-	 * @see java.applet.Applet#start()
-	 */
 	public void start() {
+		
+	}
+
+	public void stop() {
+		
+	}
+	
+	public void startApplet() {
 		gameThread = new Thread() {
 			public void run() {
 				running = true;
@@ -67,9 +72,6 @@ public class GearsApplet extends Applet {
 		gameThread.start();
 	}
 
-	public void stop() {
-	}
-
 	public void stopApplet() {
 		running = false;
 	}
@@ -78,6 +80,10 @@ public class GearsApplet extends Applet {
 		setLayout(new BorderLayout());
 		try {
 			display_parent = new Canvas() {
+				public final void addNotify() {
+					super.addNotify();
+					startLWJGL();
+				}
 				public final void removeNotify() {
 					destroyLWJGL();
 					super.removeNotify();
