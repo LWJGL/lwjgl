@@ -14,9 +14,13 @@ import org.lwjgl.opengl.GLContext;
 
 public class GearsApplet extends Applet {
 	
+	/** The Canvas where the LWJGL Display is added */
 	Canvas display_parent;
+	
+	/** Thread which runs the main game loop */
 	Thread gameThread;
 	
+	/** is the game loop running */
 	boolean running = false;
 	
 	private float	view_rotx	= 20.0f;
@@ -30,30 +34,12 @@ public class GearsApplet extends Applet {
 	
 	boolean keyDown = false;
 	
-	public void destroy() {
-		remove(display_parent);
-		super.destroy();
-		System.out.println("Clear up");
-	}
 	
-	private void destroyLWJGL() {
-		stopApplet();
-		try {
-			gameThread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void start() {
-		
-	}
-
-	public void stop() {
-		
-	}
-	
-	public void startApplet() {
+	/**
+	 * Once the Canvas is created its add notify method will call this method to 
+	 * start the LWJGL Display and game loop in another thread.
+	 */
+	public void startLWJGL() {
 		gameThread = new Thread() {
 			public void run() {
 				running = true;
@@ -71,11 +57,44 @@ public class GearsApplet extends Applet {
 		};
 		gameThread.start();
 	}
-
-	public void stopApplet() {
+	
+	
+	/**
+	 * Tell game loop to stop running, after which the LWJGL Display will be destoryed.
+	 * The main thread will wait for the Display.destroy() to complete
+	 */
+	private void stopLWJGL() {
 		running = false;
+		try {
+			gameThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
+	public void start() {
+		
+	}
+
+	public void stop() {
+		
+	}
+	
+	/**
+	 * Applet Destroy method will remove the canvas, before canvas is destroyed it will notify 
+	 * stopLWJGL() to stop main game loop and to destroy the Display
+	 */
+	public void destroy() {
+		remove(display_parent);
+		super.destroy();
+		System.out.println("Clear up");
+	}
+	
+	/**
+	 * initialise applet by adding a canvas to it, this canvas will start the LWJGL Display and game loop
+	 * in another thread. It will also stop the game loop and destroy the display on canvas removal when 
+	 * applet is destroyed.
+	 */
 	public void init() {
 		setLayout(new BorderLayout());
 		try {
@@ -85,7 +104,7 @@ public class GearsApplet extends Applet {
 					startLWJGL();
 				}
 				public final void removeNotify() {
-					destroyLWJGL();
+					stopLWJGL();
 					super.removeNotify();
 				}
 			};
@@ -231,7 +250,7 @@ public class GearsApplet extends Applet {
 			GL11.glTranslatef(0.0f, 0.0f, -40.0f);
 		} catch (Exception e) {
 			System.err.println(e);
-			stopApplet();
+			running = false;
 		}
 	}
 
