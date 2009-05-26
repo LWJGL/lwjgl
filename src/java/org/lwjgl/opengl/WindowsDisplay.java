@@ -62,6 +62,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private final static int WM_MBUTTONUP                     = 0x0208;
 	private final static int WM_MBUTTONDBLCLK                 = 0x0209;
 	private final static int WM_MOUSEWHEEL                    = 0x020A;
+	private final static int WM_MOUSELEAVE	                  = 0x02A3;
 	private final static int WM_KEYDOWN						  = 256;
 	private final static int WM_KEYUP						  = 257;
 	private final static int WM_SYSKEYUP					  = 261;
@@ -148,6 +149,8 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private long small_icon;
 	private long large_icon;
+
+	private boolean trackingMouse = false;
 
 	WindowsDisplay() {
 		current_display = this;
@@ -669,8 +672,18 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	private void handleMouseMoved(int x, int y, long millis) {
-		if (mouse != null)
-			mouse.handleMouseMoved(x, y, millis, shouldGrab());
+		if (mouse != null) {
+ 			mouse.handleMouseMoved(x, y, millis, shouldGrab());
+			
+			// if we're not tracking mouse and we get a mouse move event - START TRACKING!
+			if(!trackingMouse && !Mouse.isGrabbed()) {
+				LWJGLUtil.log("initial mouse move - need tracking");
+				
+				if (nTrackMouse(hwnd)) {
+					trackingMouse = true;
+				}
+			}
+		}
 	}
 
 	private void handleMouseScrolled(int amount, long millis) {
@@ -796,6 +809,9 @@ final class WindowsDisplay implements DisplayImplementation {
 			case WM_MBUTTONUP:
 				handleMouseButton(2, 0, millis);
 				return 0;
+			case WM_MOUSELEAVE:
+				handleMouseLeave(millis);
+				return 0;
 			case WM_SYSCHAR:
 			case WM_CHAR:
 				handleChar(wParam, lParam, millis);
@@ -886,4 +902,17 @@ final class WindowsDisplay implements DisplayImplementation {
 			return "Rect: top = " + top + " bottom = " + bottom + " left = " + left + " right = " + right;
 		}
 	}
+
+
+
+	
+	private static native boolean nTrackMouse(long hwnd);
+	
+	private void handleMouseLeave(long millis) {
+		handleMouseButton(0, 0, millis);
+		handleMouseButton(1, 0, millis);
+		handleMouseButton(2, 0, millis);
+		trackingMouse = false;
+	}
+
 }

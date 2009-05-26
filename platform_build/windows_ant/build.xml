@@ -52,7 +52,7 @@
 			<equals arg1="${os.arch}" arg2="x86"/>
 		</condition>
 		<echo message="${sdkhomelib}"/>
-		<property name="libs" value="Kernel32.lib ole32.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib jawt.lib delayimp.lib winmm.lib"/>
+		<property name="libs" value="Kernel32.lib ole32.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib jawt.lib delayimp.lib winmm.lib Comctl32.lib"/>
 		<antcall target="compile_dir"/>
 		<antcall target="link"/>
     </target>
