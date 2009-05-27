@@ -49,6 +49,7 @@
 #include "org_lwjgl_opengl_WindowsDisplay.h"
 #include "org_lwjgl_WindowsSysImplementation.h"
 #include "context.h"
+#include <commctrl.h>
 
 #define WINDOWCLASSNAME "LWJGL"
 
