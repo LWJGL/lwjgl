@@ -68,7 +68,6 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Pack200;
 
-import sun.net.www.ParseUtil;
 import sun.security.util.SecurityConstants;
 
 /**
@@ -78,7 +77,7 @@ import sun.security.util.SecurityConstants;
  * while the relevant jars (generic and native) are downloaded from a specified source.
  * </p>
  * <p>
- * The downloaded are extracted to the users temporary directory - and if enabled, cached for 
+ * The downloaded jars are extracted to the users temporary directory - and if enabled, cached for 
  * faster loading in future uses.
  * </p>
  * <p>
@@ -103,6 +102,7 @@ import sun.security.util.SecurityConstants;
  * <li>al_fgcolor - [String] Hex formated color to use as foreground. <i>Default: 000000</i>.</li>
  * <li>al_errorcolor - [String] Hex formated color to use as foreground color on error. <i>Default: ff0000</i>.</li>
  * <li>al_debug - [boolean] Whether to enable debug mode. <i>Default: false</i>.</li>
+ * <li>al_prepend_host - [boolean] Whether to limit caching to this domain, disable if your applet is hosted on multple domains and needs to share the cache. <i>Default: true</i>.</li>
  * </ul>
  * </p>
  * @author kappaOne
@@ -172,19 +172,19 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/** Color to write errors in */
 	protected Color		errorColor 	= Color.red;
 
-	/** color to write forground in */
+	/** color to write foreground in */
 	protected Color		fgColor 	= Color.black;	
 
 	/** urls of the jars to download */
 	protected URL[]		urlList;
 	
-	/** classLoader used to added downloaded jars to the classpath */
+	/** classLoader used to add downloaded jars to the classpath */
 	protected ClassLoader classLoader;
 	
 	/** actual thread that does the loading */
 	protected Thread	loaderThread;
 	
-	/** animation thread that renders our loaderscreen while loading */
+	/** animation thread that renders our load screen while loading */
 	protected Thread 	animationThread;
 
 	/** applet to load after all downloads are complete */
@@ -682,13 +682,13 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			urls[i] = new URL("file:" + path + getJarName(urlList[i]));
 		}
 		
-		// added downloaded jars to the classpath with required permissions
+		// add downloaded jars to the classpath with required permissions
 		classLoader = new URLClassLoader(urls) {
 			protected PermissionCollection getPermissions (CodeSource codesource) {
 				PermissionCollection perms = null;
 				
 				try {
-					// getPermissions from original classloader is important as it checks for signed jars ands shows any security dialogs needed
+					// getPermissions from original classloader is important as it checks for signed jars and shows any security dialogs needed
 					Method method = SecureClassLoader.class.getDeclaredMethod("getPermissions", new Class[] { CodeSource.class });
 					method.setAccessible(true);
 					perms = (PermissionCollection)method.invoke(getClass().getClassLoader(), new Object[] {codesource});
@@ -696,14 +696,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 					String host = getCodeBase().getHost();
 			        
 			        if (host != null && (host.length() > 0)) {
-			        	// add permission to downloaded jars to access host they were from
+			        	// add permission for downloaded jars to access host they were from
 			        	perms.add(new SocketPermission(host, SecurityConstants.SOCKET_CONNECT_ACCEPT_ACTION));
 			        }
 			        else if (codesource.getLocation().getProtocol().equals("file")) {
 			        	// if running locally add file permission
 			        	String path = codesource.getLocation().getFile().replace('/', File.separatorChar);
-			            path = ParseUtil.decode(path);
-			            if (path.endsWith(File.separator)) path += "-";
 			            perms.add(new FilePermission(path, SecurityConstants.FILE_READ_ACTION));
 			        }
 		        
