@@ -64,6 +64,7 @@
 	<antcall target="generate-debug"/>
 	<antcall target="compile" />
   	<antcall target="-createdebugjars" />
+	<antcall target="jars" />
  	<antcall target="javadoc" />
 	<antcall target="applet-release" />
   	
@@ -145,8 +146,9 @@
 			<fileset dir="${lwjgl.temp}/native/" includes="**/*"/>
 		</delete>	
 
-	    <copy file="${lwjgl.lib}/jinput.jar" todir="${lwjgl.temp}/jar"/>
-		<copy file="${lwjgl.lib}/lwjgl-debug.jar" todir="${lwjgl.temp}/jar"/>
+		<copy todir="${lwjgl.temp}/jar">
+			<fileset dir="${lwjgl.lib}/" includes="*.jar"/>
+		</copy>
 		<copy todir="${lwjgl.temp}/native/windows">
 			<fileset dir="${lwjgl.lib}/windows">
 				<patternset refid="lwjgl-windows.fileset" />
