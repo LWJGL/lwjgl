@@ -186,12 +186,14 @@ public interface ARB_shader_objects {
 			             @OutParameter
 	                     @Check(value = "1", canBeNull = true)
 	                     @GLsizei IntBuffer length,
+			             @OutParameter
 	                     @GLcharARB ByteBuffer infoLog);
 
 	void glGetAttachedObjectsARB(@GLhandleARB int containerObj, @AutoSize("obj") @GLsizei int maxCount,
 			                     @OutParameter
 	                             @Check(value = "1", canBeNull = true)
 	                             @GLsizei IntBuffer count,
+			                     @OutParameter
 	                             @GLhandleARB IntBuffer obj);
 
 	/**
@@ -209,6 +211,7 @@ public interface ARB_shader_objects {
 	                           @Check("1") IntBuffer size,
 	                           @Check("1")
 	                           @GLenum IntBuffer type,
+	                           @OutParameter
 	                           @GLcharARB ByteBuffer name);
 
 	@StripPostfix("params")
@@ -221,5 +224,6 @@ public interface ARB_shader_objects {
 			                  @OutParameter
 	                          @Check(value = "1", canBeNull = true)
 	                          @GLsizei IntBuffer length,
+			                  @OutParameter
 	                          @GLcharARB ByteBuffer source);
 }

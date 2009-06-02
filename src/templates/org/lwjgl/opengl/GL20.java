@@ -202,18 +202,21 @@ public interface GL20 {
 			                @OutParameter
 	                        @GLsizei
 	                        @Check(value = "1", canBeNull = true) IntBuffer length,
-	                        @GLchar ByteBuffer infoLog);
+			                @OutParameter
+			                @GLchar ByteBuffer infoLog);
 
 	void glGetProgramInfoLog(@GLuint int program, @AutoSize("infoLog") @GLsizei int maxLength,
 			                 @OutParameter
 	                         @GLsizei
 	                         @Check(value = "1", canBeNull = true) IntBuffer length,
+			                 @OutParameter
 	                         @GLchar ByteBuffer infoLog);
 
 	void glGetAttachedShaders(@GLuint int program, @AutoSize("shaders") @GLsizei int maxCount,
 			                  @OutParameter
 	                          @GLsizei
 	                          @Check(value = "1", canBeNull = true) IntBuffer count,
+			                  @OutParameter
 	                          @GLuint IntBuffer shaders);
 
 	/**
@@ -241,9 +244,10 @@ public interface GL20 {
 	@StripPostfix("params")
 	void glGetUniformiv(@GLuint int program, int location, @OutParameter @Check IntBuffer params);
 
-	void glGetShaderSource(@GLuint int shader, @OutParameter @AutoSize("source") @GLsizei int maxLength,
+	void glGetShaderSource(@GLuint int shader, @AutoSize("source") @GLsizei int maxLength,
 	                       @Check(value = "1", canBeNull = true)
 	                       @GLsizei IntBuffer length,
+	                       @OutParameter
 	                       @GLchar ByteBuffer source);
 
 	// ------------------------------------------------------------------
@@ -358,9 +362,8 @@ public interface GL20 {
 	                       @Check(value = "1", canBeNull = true)
 	                       @GLsizei IntBuffer length,
 	                       @Check("1") IntBuffer size,
-	                       @Check("1")
-	                       @GLenum IntBuffer type,
-	                       @Const
+	                       @Check("1") @GLenum IntBuffer type,
+	                       @OutParameter
 	                       @GLchar ByteBuffer name);
 
 	int glGetAttribLocation(@GLuint int program, @NullTerminated @Const @GLchar ByteBuffer name);
