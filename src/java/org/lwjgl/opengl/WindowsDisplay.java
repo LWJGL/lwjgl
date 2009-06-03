@@ -47,10 +47,13 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Cursor;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 final class WindowsDisplay implements DisplayImplementation {
 	private final static int GAMMA_LENGTH = 256;
+	
+	private final static int WM_CANCELMODE                    = 0x001F;
 	private final static int WM_MOUSEMOVE                     = 0x0200;
 	private final static int WM_LBUTTONDOWN                   = 0x0201;
 	private final static int WM_LBUTTONUP                     = 0x0202;
@@ -62,7 +65,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private final static int WM_MBUTTONUP                     = 0x0208;
 	private final static int WM_MBUTTONDBLCLK                 = 0x0209;
 	private final static int WM_MOUSEWHEEL                    = 0x020A;
-	private final static int WM_MOUSELEAVE	                  = 0x02A3;
+	private final static int WM_CAPTURECHANGED                = 0x0215;
 	private final static int WM_KEYDOWN						  = 256;
 	private final static int WM_KEYUP						  = 257;
 	private final static int WM_SYSKEYUP					  = 261;
@@ -150,7 +153,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private long small_icon;
 	private long large_icon;
 
-	private boolean trackingMouse = false;
+	private int captureMouse = -1;
 
 	WindowsDisplay() {
 		current_display = this;
@@ -661,10 +664,24 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static native long sendMessage(long hwnd, long msg, long wparam, long lparam);
 
 	private void handleMouseButton(int button, int state, long millis) {
-		if (mouse != null)
+		if (mouse != null) {
 			mouse.handleMouseButton((byte)button, (byte)state, millis);
-		if (parent != null && !isFocused)
+			
+			// done with capture?
+			if(captureMouse != -1 && button == captureMouse && state == 0) {
+				nReleaseCapture();
+				captureMouse = -1;
+				
+				// force mouse update - else we will run into an issue where the
+				// button state is "stale" while captureMouse == -1 which causes
+				// handleMouseMoved to issue a setCapture.
+				Mouse.poll();
+			}
+		}
+		
+		if (parent != null && !isFocused) {
 			setFocus(getHwnd());
+		}
 	}
 
 	private boolean shouldGrab() {
@@ -673,19 +690,23 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private void handleMouseMoved(int x, int y, long millis) {
 		if (mouse != null) {
- 			mouse.handleMouseMoved(x, y, millis, shouldGrab());
+			mouse.handleMouseMoved(x, y, millis, shouldGrab());
 			
-			// if we're not tracking mouse and we get a mouse move event - START TRACKING!
-			if(!trackingMouse && !Mouse.isGrabbed()) {
-				LWJGLUtil.log("initial mouse move - need tracking");
-				
-				if (nTrackMouse(hwnd)) {
-					trackingMouse = true;
+			// Moving - while mouse is down?
+			// need to capture
+			if(!Mouse.isGrabbed()) {
+				int button = firstMouseButtonDown();
+				if(captureMouse == -1 && button != -1) {
+					captureMouse = button;
+					nSetCapture(hwnd);
 				}
 			}
 		}
 	}
-
+	
+	private static native long nSetCapture(long hwnd);
+	private static native boolean nReleaseCapture();
+	
 	private void handleMouseScrolled(int amount, long millis) {
 		if (mouse != null)
 			mouse.handleMouseScrolled(amount, millis);
@@ -707,8 +728,14 @@ final class WindowsDisplay implements DisplayImplementation {
 		boolean repeat = state == previous_state; // Repeat message
 		byte extended = (byte)((lParam >>> 24) & 0x1);
 		int scan_code = (int)((lParam >>> 16) & 0xFF);
-		if (keyboard != null)
+		if (keyboard != null) {
 			keyboard.handleKey((int)wParam, scan_code, extended != 0, state, millis, repeat);
+			
+			if(captureMouse != -1 && keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+				nReleaseCapture();
+				captureMouse = -1;
+			}
+		}
 	}
 
 	private static int transformY(long hwnd, int y) {
@@ -809,9 +836,6 @@ final class WindowsDisplay implements DisplayImplementation {
 			case WM_MBUTTONUP:
 				handleMouseButton(2, 0, millis);
 				return 0;
-			case WM_MOUSELEAVE:
-				handleMouseLeave(millis);
-				return 0;
 			case WM_SYSCHAR:
 			case WM_CHAR:
 				handleChar(wParam, lParam, millis);
@@ -854,6 +878,15 @@ final class WindowsDisplay implements DisplayImplementation {
 			case WM_PAINT:
 				is_dirty = true;
 				return defWindowProc(hwnd, msg, wParam, lParam);
+			case WM_CANCELMODE:
+				nReleaseCapture();
+				/* fall through */
+			case WM_CAPTURECHANGED:
+				if(captureMouse != -1) {
+					handleMouseButton(captureMouse, 0, millis);
+					captureMouse = -1;
+				}
+				return 0;
 			default:
 				return defWindowProc(hwnd, msg, wParam, lParam);
 		}
@@ -865,6 +898,15 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	public int getHeight() {
 		return Display.getDisplayMode().getHeight();
+	}
+	
+	private int firstMouseButtonDown() {
+		for(int i=0; i<Mouse.getButtonCount(); i++) {
+			if(Mouse.isButtonDown(i)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	private static final class Rect {
@@ -902,17 +944,4 @@ final class WindowsDisplay implements DisplayImplementation {
 			return "Rect: top = " + top + " bottom = " + bottom + " left = " + left + " right = " + right;
 		}
 	}
-
-
-
-	
-	private static native boolean nTrackMouse(long hwnd);
-	
-	private void handleMouseLeave(long millis) {
-		handleMouseButton(0, 0, millis);
-		handleMouseButton(1, 0, millis);
-		handleMouseButton(2, 0, millis);
-		trackingMouse = false;
-	}
-
 }

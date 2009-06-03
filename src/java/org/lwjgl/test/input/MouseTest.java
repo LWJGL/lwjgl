@@ -238,6 +238,8 @@ public class MouseTest {
    */
   private void handleMouse() {
   	readBufferedMouse();
+  	
+  	Display.setTitle("x: " + Mouse.getX() + ", y: " + Mouse.getY() + ", [0]: " + Mouse.isButtonDown(0) + ", [1]: " + Mouse.isButtonDown(1) + ", [2]: " + Mouse.isButtonDown(2));
   }
   
   /**
