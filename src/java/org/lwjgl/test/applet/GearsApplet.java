@@ -9,6 +9,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.ARBTransposeMatrix;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 
@@ -23,16 +24,20 @@ public class GearsApplet extends Applet {
 	/** is the game loop running */
 	boolean running = false;
 	
-	private float	view_rotx	= 20.0f;
-	private float	view_roty	= 30.0f;
-	private float	view_rotz	= 0.0f;
-	private int		gear1;
-	private int		gear2;
-	private int		gear3;
-	private float	angle			= 0.0f;
+	/** variables used to rotate the view */
+	private float view_rotx	= 20.0f;
+	private float view_roty	= 30.0f;
+	private float view_rotz	= 0.0f;
 	
+	private int gear1;
+	private int	gear2;
+	private int	gear3;
+	private float angle;
 	
 	boolean keyDown = false;
+	
+	private int prevMouseX, prevMouseY;
+	private boolean mouseButtonDown = false;
 	
 	
 	/**
@@ -44,7 +49,6 @@ public class GearsApplet extends Applet {
 			public void run() {
 				running = true;
 				try {
-					System.out.println("display_parent.isDisplayable() = " + display_parent.isDisplayable());
 					Display.setParent(display_parent);
 					//Display.setVSyncEnabled(true);
 					Display.create();
@@ -138,18 +142,34 @@ public class GearsApplet extends Applet {
 			} else {
 				long timeUsed = 5000 + (startTime - System.currentTimeMillis());
 				startTime = System.currentTimeMillis() + 5000;
-/*				System.out.println(fps + " frames 2 in " + (float) (timeUsed / 1000f) + " seconds = "
-						+ (fps / (timeUsed / 1000f)));*/
+				System.out.println(fps + " frames 2 in " + (float) (timeUsed / 1000f) + " seconds = "
+						+ (fps / (timeUsed / 1000f)));
 				fps = 0;
 			}
 			
-			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-				view_roty += .1f;
-			else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-				view_roty -= .1f;
+			if (Mouse.isButtonDown(0)) {
+				if (!mouseButtonDown) {
+					prevMouseX = Mouse.getX();
+					prevMouseY= Mouse.getY();
+				}
+				mouseButtonDown = true;
+			}
+			else {
+				mouseButtonDown = false;
+			}
 			
-			if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
-				keyDown = true;
+			if (mouseButtonDown) {
+				int x = Mouse.getX();
+			    int y = Mouse.getY();
+			    
+				float thetaY = 360.0f * ( (float)(x-prevMouseX)/(float)display_parent.getWidth());
+			    float thetaX = 360.0f * ( (float)(prevMouseY-y)/(float)display_parent.getHeight());
+			    
+			    prevMouseX = x;
+			    prevMouseY = y;
+	
+			    view_rotx += thetaX;
+			    view_roty += thetaY;
 			}
 			
 			// F Key Pressed (i.e. released)
@@ -174,25 +194,31 @@ public class GearsApplet extends Applet {
 	
 	public void drawLoop() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		
 		GL11.glPushMatrix();
+		
 		GL11.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
 		GL11.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
 		GL11.glRotatef(view_rotz, 0.0f, 0.0f, 1.0f);
+		
 		GL11.glPushMatrix();
 		GL11.glTranslatef(-3.0f, -2.0f, 0.0f);
 		GL11.glRotatef(angle, 0.0f, 0.0f, 1.0f);
 		GL11.glCallList(gear1);
 		GL11.glPopMatrix();
+		
 		GL11.glPushMatrix();
 		GL11.glTranslatef(3.1f, -2.0f, 0.0f);
 		GL11.glRotatef(-2.0f * angle - 9.0f, 0.0f, 0.0f, 1.0f);
 		GL11.glCallList(gear2);
 		GL11.glPopMatrix();
+		
 		GL11.glPushMatrix();
 		GL11.glTranslatef(-3.1f, 4.2f, 0.0f);
 		GL11.glRotatef(-2.0f * angle - 25.0f, 0.0f, 0.0f, 1.0f);
 		GL11.glCallList(gear3);
 		GL11.glPopMatrix();
+		
 		GL11.glPopMatrix();
 	}
 
@@ -203,6 +229,7 @@ public class GearsApplet extends Applet {
 			FloatBuffer red = FloatBuffer.wrap(new float[] { 0.8f, 0.1f, 0.0f, 1.0f});
 			FloatBuffer green = FloatBuffer.wrap(new float[] { 0.0f, 0.8f, 0.2f, 1.0f});
 			FloatBuffer blue = FloatBuffer.wrap(new float[] { 0.2f, 0.2f, 1.0f, 1.0f});
+			
 			GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, pos);
 			GL11.glEnable(GL11.GL_CULL_FACE);
 			GL11.glEnable(GL11.GL_LIGHTING);
@@ -215,11 +242,13 @@ public class GearsApplet extends Applet {
 			GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE, red);
 			gear(1.0f, 4.0f, 1.0f, 20, 0.7f);
 			GL11.glEndList();
+			
 			gear2 = GL11.glGenLists(1);
 			GL11.glNewList(gear2, GL11.GL_COMPILE);
 			GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE, green);
 			gear(0.5f, 2.0f, 2.0f, 10, 0.7f);
 			GL11.glEndList();
+			
 			gear3 = GL11.glGenLists(1);
 			GL11.glNewList(gear3, GL11.GL_COMPILE);
 			GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE, blue);
@@ -227,11 +256,13 @@ public class GearsApplet extends Applet {
 			GL11.glEndList();
 			GL11.glEnable(GL11.GL_NORMALIZE);
 			GL11.glMatrixMode(GL11.GL_PROJECTION);
-/*			System.err.println("GL_VENDOR: " + GL11.glGetString(GL11.GL_VENDOR));
+			
+			System.err.println("GL_VENDOR: " + GL11.glGetString(GL11.GL_VENDOR));
 			System.err.println("GL_RENDERER: " + GL11.glGetString(GL11.GL_RENDERER));
 			System.err.println("GL_VERSION: " + GL11.glGetString(GL11.GL_VERSION));
 			System.err.println();
-			System.err.println("glLoadTransposeMatrixfARB() supported: " + GLContext.getCapabilities().GL_ARB_transpose_matrix);*/
+			System.err.println("glLoadTransposeMatrixfARB() supported: " + GLContext.getCapabilities().GL_ARB_transpose_matrix);
+			
 			if (!GLContext.getCapabilities().GL_ARB_transpose_matrix) {
 				// --- not using extensions
 				GL11.glLoadIdentity();
@@ -243,7 +274,7 @@ public class GearsApplet extends Applet {
 				identityTranspose.flip();
 				ARBTransposeMatrix.glLoadTransposeMatrixARB(identityTranspose);
 			}
-			float h = (float) 300 / (float) 300;
+			float h = (float) display_parent.getHeight() / (float) display_parent.getWidth();
 			GL11.glFrustum(-1.0f, 1.0f, -h, h, 5.0f, 60.0f);
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
 			GL11.glLoadIdentity();
