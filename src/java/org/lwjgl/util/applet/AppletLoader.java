@@ -48,6 +48,9 @@ import java.io.FilePermission;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.SocketPermission;
@@ -237,7 +240,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		String[] requiredArgs = {"al_main", "al_logo", "al_progressbar", "al_jars"};
 		for(int i=0; i<requiredArgs.length; i++) {
 			if(getParameter(requiredArgs[i]) == null) {
-				fatalErrorOccured("missing required applet parameter: " + requiredArgs[i]);
+				fatalErrorOccured("missing required applet parameter: " + requiredArgs[i], null);
 				return;				
 			}
 		}
@@ -261,7 +264,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
 		//sanity check
 		if(logo == null || progressbar == null) {
-			fatalErrorOccured("Unable to load logo and progressbar images");
+			fatalErrorOccured("Unable to load logo and progressbar images", null);
 		}
 		
 		// check for lzma support
@@ -279,6 +282,18 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		} catch (Throwable e) {
 			/* no pack200 support */
 		}		
+	}
+
+	/**
+	 * Generates a stacktrace in the form of a string
+	 * @param exception Exception to make stacktrace of
+	 * @return Stacktrace of exception in the form of a string
+	 */
+	private String generateStacktrace(Exception exception) {
+		Writer result = new StringWriter();
+		PrintWriter printWriter = new PrintWriter(result);
+		exception.printStackTrace(printWriter);
+		return result.toString();
 	}
 
 	/*
@@ -397,11 +412,13 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			}			
 			
 			for(int i=0; i<errorMessage.length; i++) {
-				int messageX = (getWidth() - fm.stringWidth(errorMessage[i])) / 2;
-				int messageY = (getHeight() - (fm.getHeight() * errorMessage.length)) / 2;
-				
-				og.setColor(errorColor);
-				og.drawString(errorMessage[i], messageX, messageY + i*fm.getHeight());
+				if(errorMessage[i] != null) {
+					int messageX = (getWidth() - fm.stringWidth(errorMessage[i])) / 2;
+					int messageY = (getHeight() - (fm.getHeight() * errorMessage.length)) / 2;
+					
+					og.setColor(errorColor);
+					og.drawString(errorMessage[i], messageX, messageY + i*fm.getHeight());
+				}
 			}
 		} else {
 			og.setColor(fgColor);
@@ -517,11 +534,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		} else if (osName.startsWith("Solaris") || osName.startsWith("SunOS")) {
 			nativeJar = getParameter("al_solaris");
 		} else {
-			fatalErrorOccured("OS (" + osName + ") not supported");
+			fatalErrorOccured("OS (" + osName + ") not supported", null);
 		}
 
 		if (nativeJar == null) {
-			fatalErrorOccured("no lwjgl natives files found");
+			fatalErrorOccured("no lwjgl natives files found", null);
 		} else {
 			nativeJar = trimExtensionByCapabilities(nativeJar);
 			urlList[jarCount - 1] = new URL(path, nativeJar);
@@ -626,10 +643,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 			state = STATE_DONE;		
 		} catch (AccessControlException ace) {
-			fatalErrorOccured(ace.getMessage());
+			fatalErrorOccured(ace.getMessage(), ace);
 			certificateRefused = true;
 		} catch (Exception e) {
-			fatalErrorOccured(e.getMessage());
+			fatalErrorOccured(e.getMessage(), e);
 		} finally {
 			loaderThread = null;
 		}
@@ -1172,10 +1189,13 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * 
 	 * @param error Error message to print
 	 */
-	protected void fatalErrorOccured(String error) {
+	protected void fatalErrorOccured(String error, Exception e) {
 		fatalError = true;
 		fatalErrorDescription = "Fatal error occured (" + state + "): " + error;
 		System.out.println(fatalErrorDescription);
+		if(e != null) {
+			System.out.println(generateStacktrace(e));
+		}
 		repaint();
 	}
 	
