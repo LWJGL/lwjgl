@@ -38,7 +38,6 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -70,6 +69,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Pack200;
+
+import javax.imageio.ImageIO;
 
 import sun.security.util.SecurityConstants;
 
@@ -259,8 +260,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		errorColor 		= getColor("al_errorcolor", Color.red);		
 
 		// load logos
-		logo 			= getImage("/" + getParameter("al_logo"));
-		progressbar 	= getImage("/" + getParameter("al_progressbar"));
+		logo 			= getImage(getParameter("al_logo"));
+		progressbar 	= getImage(getParameter("al_progressbar"));
 		
 		//sanity check
 		if(logo == null || progressbar == null) {
@@ -1112,11 +1113,14 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	protected Image getImage(String s) {
 		try {
-			DataInputStream datainputstream = new DataInputStream(getClass().getResourceAsStream(s));
-			byte abyte0[] = new byte[datainputstream.available()];
-			datainputstream.readFully(abyte0);
-			datainputstream.close();
-			return Toolkit.getDefaultToolkit().createImage(abyte0);
+			URL url = AppletLoader.class.getResource("/"+s);
+			
+			// if logo not found in jar, look at URL
+			if (url == null) {
+				url = new URL(getCodeBase(), s);
+			}
+			
+			return ImageIO.read(url);
 		} catch (Exception e) {
 			/* */
 		}
