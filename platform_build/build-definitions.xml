@@ -14,7 +14,7 @@
 	<property name="lwjgl.res" 						location="res" />
 	<property name="lwjgl.version" 				value="2.2.0" />
 
-	<property name="opengl-template-pattern" value="org/lwjgl/opengl/GL*.java,org/lwjgl/opengl/ARB*.java,org/lwjgl/opengl/ATI*.java,org/lwjgl/opengl/EXT*.java,org/lwjgl/opengl/NV*.java,org/lwjgl/opengl/HP*.java,org/lwjgl/opengl/IBM*.java,org/lwjgl/opengl/SUN*.java,org/lwjgl/opengl/SGIS*.java"/>
+	<property name="opengl-template-pattern" value="org/lwjgl/opengl/GL*.java,org/lwjgl/opengl/ARB*.java,org/lwjgl/opengl/ATI*.java,org/lwjgl/opengl/EXT*.java,org/lwjgl/opengl/NV*.java,org/lwjgl/opengl/HP*.java,org/lwjgl/opengl/IBM*.java,org/lwjgl/opengl/SUN*.java,org/lwjgl/opengl/SGIS*.java,org/lwjgl/opengl/GREMEDY*.java"/>
 	<!-- ================================================================== -->
 	<!-- Filesets used for targets 																					-->
 	<!-- ================================================================== -->
