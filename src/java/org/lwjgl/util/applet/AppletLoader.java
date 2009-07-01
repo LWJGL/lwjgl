@@ -38,6 +38,7 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.MediaTracker;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -69,8 +70,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Pack200;
-
-import javax.imageio.ImageIO;
 
 import sun.security.util.SecurityConstants;
 
@@ -1115,12 +1114,19 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		try {
 			URL url = AppletLoader.class.getResource("/"+s);
 			
-			// if logo not found in jar, look at URL
+			// if image not found in jar, look outside it
 			if (url == null) {
 				url = new URL(getCodeBase(), s);
 			}
 			
-			return ImageIO.read(url);
+			Image image = super.getImage(url);
+			
+			// wait for image to load
+			MediaTracker tracker = new MediaTracker(this);
+	        tracker.addImage(image, 0);
+	        tracker.waitForAll();
+	        
+	        return image;
 		} catch (Exception e) {
 			/* */
 		}
