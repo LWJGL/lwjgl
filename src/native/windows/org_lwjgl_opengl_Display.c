@@ -322,7 +322,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nReshape(JNIEnv *env
 static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height) {
 	unsigned char col;
 	unsigned char mask;
-	BITMAPINFO bitmapInfo;
+	BITMAPV5HEADER bitmapInfo;
 	HBITMAP cursorMask;
 	HBITMAP	colorBitmap;
 	ICONINFO iconInfo;
@@ -330,7 +330,6 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 	char *ptrCursorImage;
 	int x, y;
 	char *dstPtr;
-	int wordAlignedWidth;
 	int imageSize;
 	unsigned char *maskPixels;
 	int widthInBytes;
@@ -339,47 +338,38 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 	int scanlineWidth;
 	HBITMAP colorDIB;
 	
-	memset(&bitmapInfo, 0, sizeof(BITMAPINFO));
-	bitmapInfo.bmiHeader.biSize              = sizeof(BITMAPINFOHEADER);
-	bitmapInfo.bmiHeader.biWidth             = width;
-	bitmapInfo.bmiHeader.biHeight            = -height;
-	bitmapInfo.bmiHeader.biPlanes            = 1;
-	bitmapInfo.bmiHeader.biBitCount          = 24;
-	bitmapInfo.bmiHeader.biCompression       = BI_RGB;
+	memset(&bitmapInfo, 0, sizeof(BITMAPV5HEADER));
+	bitmapInfo.bV5Size              = sizeof(BITMAPV5HEADER);
+	bitmapInfo.bV5Width             = width;
+	bitmapInfo.bV5Height            = -height;
+	bitmapInfo.bV5Planes            = 1;
+	bitmapInfo.bV5BitCount          = 32;
+	bitmapInfo.bV5Compression       = BI_BITFIELDS;
+	bitmapInfo.bV5RedMask   =  0x00FF0000;
+    bitmapInfo.bV5GreenMask =  0x0000FF00;
+    bitmapInfo.bV5BlueMask  =  0x000000FF;
+    bitmapInfo.bV5AlphaMask =  0xFF000000;
 
 	colorDIB = CreateDIBSection(GetDC(NULL), (BITMAPINFO*)&(bitmapInfo),
 			DIB_RGB_COLORS, (void*)&(ptrCursorImage), NULL, 0);
 	if (!ptrCursorImage) {
 		throwException(env, "Could not allocate DIB section.");
 	}
-	
-	wordAlignedWidth = width * 3;
-	if (wordAlignedWidth % sizeof(long) != 0) {
-		wordAlignedWidth = (wordAlignedWidth / sizeof(long)) * sizeof(long) + sizeof(long);
-	}
+
 	for (y = 0; y < height; y++ ) {
-		dstPtr = ptrCursorImage + wordAlignedWidth*y;;
-		for (x = 0; x < width; x++ ) {
-			if ((pixels[y*width+x] & 0xFF000000) != 0) 
-			{
-				dstPtr[0] = (pixels[y*width+x] >> 0x10) & 0xFF;
-				dstPtr[1] = (pixels[y*width+x] >> 0x08) & 0xFF;
-				dstPtr[2] = pixels[y*width+x] & 0xFF;
-			} 
-			else 
-			{
-				dstPtr[0] = 0;
-				dstPtr[1] = 0;
-				dstPtr[2] = 0;
-			}
-			
-			dstPtr += 3;
-		}
-	}
-	
+   		dstPtr = ptrCursorImage + width*4*y;;
+   		for (x = 0; x < width; x++ ) {
+			dstPtr[0] = (pixels[y*width+x] >> 0x10) & 0xFF;
+			dstPtr[1] = (pixels[y*width+x] >> 0x08) & 0xFF;
+			dstPtr[2] = pixels[y*width+x] & 0xFF;
+			dstPtr[3] = (pixels[y*width+x] >> 0x18) & 0xFF;
+   			dstPtr += 4;
+   		}
+   	}
+
 
 	colorBitmap = CreateDIBitmap(GetDC(NULL),
-			(BITMAPINFOHEADER*)&bitmapInfo.bmiHeader,
+			(BITMAPINFOHEADER*)&bitmapInfo,
 			CBM_INIT,
 			(void *)ptrCursorImage,
 			(BITMAPINFO*)&bitmapInfo,
@@ -399,27 +389,7 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 	}
 	imageSize = scanlineWidth*height;
 	maskPixels = (unsigned char*)malloc(sizeof(unsigned char)*imageSize);
-	memset(maskPixels, 0, imageSize);
-	
-	for (y = 0; y < height; y++) {
-		leftShift = 7;
-		mask = 0;
-		maskPixelsOff = scanlineWidth*y;
-		for (x = 0; x < width; x++) {
-			col = (((pixels[(width*y)+x] & 0xFF000000) != 0) ? 1 : 0) << leftShift;
-			mask = mask | col;
-			leftShift--;
-			if (leftShift == -1) {
-				maskPixels[maskPixelsOff++] = ~mask;
-				leftShift = 7;
-				mask = 0;
-			}
-		}
-		// write what is left over
-		if (leftShift != 7) {
-			maskPixels[maskPixelsOff++] = ~mask;
-		}
-	}
+	memset(maskPixels, 0xFF, sizeof(unsigned char)*imageSize);
 	
 	cursorMask = CreateBitmap(width, height, 1, 1, maskPixels);
 	
