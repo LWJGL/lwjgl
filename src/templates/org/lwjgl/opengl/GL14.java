@@ -85,6 +85,15 @@ public interface GL14 {
 	int GL_MAX_TEXTURE_LOD_BIAS = 0x84FD;
 	int GL_MIRRORED_REPEAT = 0x8370;
 
+	int GL_BLEND_COLOR = 0x8005;
+	int GL_BLEND_EQUATION = 0x8009;
+
+	int GL_FUNC_ADD = 0x8006;
+	int GL_FUNC_SUBTRACT = 0x800A;
+	int GL_FUNC_REVERSE_SUBTRACT = 0x800B;
+	int GL_MIN = 0x8007;
+	int GL_MAX = 0x8008;
+
 	void glBlendEquation(@GLenum int mode);
 
 	void glBlendColor(@GLclampf float red, @GLclampf float green, @GLclampf float blue, @GLclampf float alpha);
