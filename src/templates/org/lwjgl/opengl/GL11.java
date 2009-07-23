@@ -1284,6 +1284,7 @@ public interface GL11 {
 	void glRecti(int x1, int y1, int x2, int y2);
 
 	void glReadPixels(int x, int y, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLenum int type,
+	                  @OutParameter
 	                  @BufferObject(BufferKind.PackPBO)
 	                  @Check("GLChecks.calculateImageStorage(pixels, format, type, width, height, 1)")
 	                  @GLbyte
