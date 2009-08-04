@@ -47,4 +47,10 @@ interface ContextAttribsImplementation {
 
 	int getForwardCompatibleBit();
 
+	int getProfileMaskAttrib();
+
+	int getProfileCoreBit();
+
+	int getProfileCompatibilityBit();
+
 }

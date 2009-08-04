@@ -129,6 +129,9 @@ typedef unsigned short GLhalfNV;
 typedef unsigned short GLhalf;
 typedef int64_t GLint64EXT;
 typedef uint64_t GLuint64EXT;
+typedef int64_t GLint64;
+typedef uint64_t GLuint64;
+typedef struct __GLsync *GLsync;
 
 /* helper stuff */
 

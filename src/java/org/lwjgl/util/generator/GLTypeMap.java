@@ -41,14 +41,16 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.*;
-
-import java.io.*;
-import java.util.*;
+import java.io.PrintWriter;
 import java.nio.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.sun.mirror.declaration.AnnotationMirror;
+import com.sun.mirror.type.PrimitiveType;
 
 public class GLTypeMap implements TypeMap {
+
 	private static final Map<Class, PrimitiveType.Kind> native_types_to_primitive;
 
 	static {
@@ -78,11 +80,14 @@ public class GLTypeMap implements TypeMap {
 		native_types_to_primitive.put(GLvoid.class, PrimitiveType.Kind.BYTE);
 		native_types_to_primitive.put(GLint64EXT.class, PrimitiveType.Kind.LONG);
 		native_types_to_primitive.put(GLuint64EXT.class, PrimitiveType.Kind.LONG);
+		native_types_to_primitive.put(GLint64.class, PrimitiveType.Kind.LONG);
+		native_types_to_primitive.put(GLuint64.class, PrimitiveType.Kind.LONG);
+		native_types_to_primitive.put(GLsync.class, PrimitiveType.Kind.LONG);
 	}
 
 	public PrimitiveType.Kind getPrimitiveTypeFromNativeType(Class native_type) {
 		PrimitiveType.Kind kind = native_types_to_primitive.get(native_type);
-		if (kind == null)
+		if ( kind == null )
 			throw new RuntimeException("Unsupported type " + native_type);
 		return kind;
 	}
@@ -96,50 +101,46 @@ public class GLTypeMap implements TypeMap {
 	}
 
 	public Signedness getSignednessFromType(Class type) {
-		if (GLuint.class.equals(type))
+		if ( GLuint.class.equals(type) )
 			return Signedness.UNSIGNED;
-		else if (GLint.class.equals(type))
+		else if ( GLint.class.equals(type) )
 			return Signedness.SIGNED;
-		else if (GLushort.class.equals(type))
+		else if ( GLushort.class.equals(type) )
 			return Signedness.UNSIGNED;
-		else if (GLshort.class.equals(type))
+		else if ( GLshort.class.equals(type) )
 			return Signedness.SIGNED;
-		else if (GLubyte.class.equals(type))
+		else if ( GLubyte.class.equals(type) )
 			return Signedness.UNSIGNED;
-		else if (GLbyte.class.equals(type))
+		else if ( GLbyte.class.equals(type) )
 			return Signedness.SIGNED;
-		else if (GLuint64EXT.class.equals(type))
+		else if ( GLuint64EXT.class.equals(type) )
 			return Signedness.UNSIGNED;
-		else if (GLint64EXT.class.equals(type))
+		else if ( GLint64EXT.class.equals(type) )
+			return Signedness.SIGNED;
+		else if ( GLuint64.class.equals(type) )
+			return Signedness.UNSIGNED;
+		else if ( GLint64.class.equals(type) )
 			return Signedness.SIGNED;
 		else
 			return Signedness.NONE;
 	}
 
 	public String translateAnnotation(Class annotation_type) {
-		if (annotation_type.equals(GLuint.class))
+		if ( annotation_type.equals(GLuint.class) || annotation_type.equals(GLint.class) )
 			return "i";
-		else if (annotation_type.equals(GLint.class))
-			return "i";
-		else if (annotation_type.equals(GLushort.class))
-			return"s";
-		else if (annotation_type.equals(GLshort.class))
+		else if ( annotation_type.equals(GLushort.class) || annotation_type.equals(GLshort.class) )
 			return "s";
-		else if (annotation_type.equals(GLubyte.class))
+		else if ( annotation_type.equals(GLubyte.class) || annotation_type.equals(GLbyte.class) )
 			return "b";
-		else if (annotation_type.equals(GLbyte.class))
-			return "b";
-		else if (annotation_type.equals(GLfloat.class))
+		else if ( annotation_type.equals(GLfloat.class) )
 			return "f";
-		else if (annotation_type.equals(GLdouble.class))
+		else if ( annotation_type.equals(GLdouble.class) )
 			return "d";
-		else if (annotation_type.equals(GLhalf.class))
+		else if ( annotation_type.equals(GLhalf.class) )
 			return "h";
-		else if (annotation_type.equals(GLuint64EXT.class))
+		else if ( annotation_type.equals(GLuint64EXT.class) || annotation_type.equals(GLint64EXT.class) || annotation_type.equals(GLuint64.class) || annotation_type.equals(GLint64.class) )
 			return "i64";
-		else if (annotation_type.equals(GLint64EXT.class))
-			return "i64";
-		else if (annotation_type.equals(GLboolean.class) || annotation_type.equals(GLvoid.class))
+		else if ( annotation_type.equals(GLboolean.class) || annotation_type.equals(GLvoid.class) )
 			return "";
 		else
 			throw new RuntimeException(annotation_type + " is not allowed");
@@ -147,7 +148,7 @@ public class GLTypeMap implements TypeMap {
 
 	public Class getNativeTypeFromPrimitiveType(PrimitiveType.Kind kind) {
 		Class type;
-		switch (kind) {
+		switch ( kind ) {
 			case INT:
 				type = GLint.class;
 				break;
@@ -184,43 +185,43 @@ public class GLTypeMap implements TypeMap {
 	}
 
 	private static Class[] getValidBufferTypes(Class type) {
-		if (type.equals(IntBuffer.class))
-			return new Class[]{GLbitfield.class, GLenum.class, GLhandleARB.class, GLint.class,
-							GLsizei.class, GLuint.class};
-		else if (type.equals(FloatBuffer.class))
-			return new Class[]{GLclampf.class, GLfloat.class};
-		else if (type.equals(ByteBuffer.class))
-			return new Class[]{GLboolean.class, GLbyte.class, GLcharARB.class, GLchar.class, GLubyte.class, GLvoid.class};
-		else if (type.equals(ShortBuffer.class))
-			return new Class[]{GLhalf.class, GLshort.class, GLushort.class};
-		else if (type.equals(DoubleBuffer.class))
-			return new Class[]{GLclampd.class, GLdouble.class};
-		else if (type.equals(LongBuffer.class))
-			return new Class[]{GLint64EXT.class, GLuint64EXT.class};
+		if ( type.equals(IntBuffer.class) )
+			return new Class[] { GLbitfield.class, GLenum.class, GLhandleARB.class, GLint.class,
+			                     GLsizei.class, GLuint.class };
+		else if ( type.equals(FloatBuffer.class) )
+			return new Class[] { GLclampf.class, GLfloat.class };
+		else if ( type.equals(ByteBuffer.class) )
+			return new Class[] { GLboolean.class, GLbyte.class, GLcharARB.class, GLchar.class, GLubyte.class, GLvoid.class };
+		else if ( type.equals(ShortBuffer.class) )
+			return new Class[] { GLhalf.class, GLshort.class, GLushort.class };
+		else if ( type.equals(DoubleBuffer.class) )
+			return new Class[] { GLclampd.class, GLdouble.class };
+		else if ( type.equals(LongBuffer.class) )
+			return new Class[] { GLint64EXT.class, GLuint64EXT.class, GLint64.class, GLuint64.class, GLsync.class };
 		else
-			return new Class[]{};
+			return new Class[] { };
 	}
 
 	private static Class[] getValidPrimitiveTypes(Class type) {
-		if (type.equals(long.class))
-			return new Class[]{GLintptrARB.class, GLuint.class, GLintptr.class, GLsizeiptrARB.class, GLsizeiptr.class, GLint64EXT.class, GLuint64EXT.class};
-		else if (type.equals(int.class))
-			return new Class[]{GLbitfield.class, GLenum.class, GLhandleARB.class, GLint.class, GLuint.class,
-							GLsizei.class};
-		else if (type.equals(double.class))
-			return new Class[]{GLclampd.class, GLdouble.class};
-		else if (type.equals(float.class))
-			return new Class[]{GLclampf.class, GLfloat.class};
-		else if (type.equals(short.class))
-			return new Class[]{GLhalf.class, GLshort.class, GLushort.class};
-		else if (type.equals(byte.class))
-			return new Class[]{GLbyte.class, GLcharARB.class, GLchar.class, GLubyte.class};
-		else if (type.equals(boolean.class))
-			return new Class[]{GLboolean.class};
-		else if (type.equals(void.class))
-			return new Class[]{GLvoid.class};
+		if ( type.equals(long.class) )
+			return new Class[] { GLintptrARB.class, GLuint.class, GLintptr.class, GLsizeiptrARB.class, GLsizeiptr.class, GLint64EXT.class, GLuint64EXT.class, GLint64.class, GLuint64.class, GLsync.class };
+		else if ( type.equals(int.class) )
+			return new Class[] { GLbitfield.class, GLenum.class, GLhandleARB.class, GLint.class, GLuint.class,
+			                     GLsizei.class };
+		else if ( type.equals(double.class) )
+			return new Class[] { GLclampd.class, GLdouble.class };
+		else if ( type.equals(float.class) )
+			return new Class[] { GLclampf.class, GLfloat.class };
+		else if ( type.equals(short.class) )
+			return new Class[] { GLhalf.class, GLshort.class, GLushort.class };
+		else if ( type.equals(byte.class) )
+			return new Class[] { GLbyte.class, GLcharARB.class, GLchar.class, GLubyte.class };
+		else if ( type.equals(boolean.class) )
+			return new Class[] { GLboolean.class };
+		else if ( type.equals(void.class) )
+			return new Class[] { GLvoid.class };
 		else
-			return new Class[]{};
+			return new Class[] { };
 	}
 
 	public String getTypedefPrefix() {
@@ -233,55 +234,59 @@ public class GLTypeMap implements TypeMap {
 
 	public Class[] getValidAnnotationTypes(Class type) {
 		Class[] valid_types;
-		if (Buffer.class.isAssignableFrom(type))
+		if ( Buffer.class.isAssignableFrom(type) )
 			valid_types = getValidBufferTypes(type);
-		else if (type.isPrimitive())
+		else if ( type.isPrimitive() )
 			valid_types = getValidPrimitiveTypes(type);
-		else if (String.class.equals(type))
-			valid_types = new Class[]{GLubyte.class};
+		else if ( String.class.equals(type) )
+			valid_types = new Class[] { GLubyte.class };
 		else
-			valid_types = new Class[]{};
+			valid_types = new Class[] { };
 		return valid_types;
 	}
 
 	public Class getInverseType(Class type) {
-		if (GLuint.class.equals(type))
+		if ( GLuint.class.equals(type) )
 			return GLint.class;
-		else if (GLint.class.equals(type))
+		else if ( GLint.class.equals(type) )
 			return GLuint.class;
-		else if (GLushort.class.equals(type))
+		else if ( GLushort.class.equals(type) )
 			return GLshort.class;
-		else if (GLshort.class.equals(type))
+		else if ( GLshort.class.equals(type) )
 			return GLushort.class;
-		else if (GLubyte.class.equals(type))
+		else if ( GLubyte.class.equals(type) )
 			return GLbyte.class;
-		else if (GLbyte.class.equals(type))
+		else if ( GLbyte.class.equals(type) )
 			return GLubyte.class;
-		else if (GLuint64EXT.class.equals(type))
+		else if ( GLuint64EXT.class.equals(type) )
 			return GLint64EXT.class;
-		else if (GLint64EXT.class.equals(type))
+		else if ( GLint64EXT.class.equals(type) )
 			return GLuint64EXT.class;
+		else if ( GLuint64.class.equals(type) )
+			return GLint64.class;
+		else if ( GLint64.class.equals(type) )
+			return GLuint64.class;
 		else
 			return null;
 	}
 
 	public String getAutoTypeFromAnnotation(AnnotationMirror annotation) {
 		Class annotation_class = NativeTypeTranslator.getClassFromType(annotation.getAnnotationType());
-		if (annotation_class.equals(GLint.class))
+		if ( annotation_class.equals(GLint.class) )
 			return "GL11.GL_INT";
-		else if (annotation_class.equals(GLbyte.class))
+		else if ( annotation_class.equals(GLbyte.class) )
 			return "GL11.GL_BYTE";
-		else if (annotation_class.equals(GLshort.class))
+		else if ( annotation_class.equals(GLshort.class) )
 			return "GL11.GL_SHORT";
-		if (annotation_class.equals(GLuint.class))
+		if ( annotation_class.equals(GLuint.class) )
 			return "GL11.GL_UNSIGNED_INT";
-		else if (annotation_class.equals(GLubyte.class))
+		else if ( annotation_class.equals(GLubyte.class) )
 			return "GL11.GL_UNSIGNED_BYTE";
-		else if (annotation_class.equals(GLushort.class))
+		else if ( annotation_class.equals(GLushort.class) )
 			return "GL11.GL_UNSIGNED_SHORT";
-		else if (annotation_class.equals(GLfloat.class))
+		else if ( annotation_class.equals(GLfloat.class) )
 			return "GL11.GL_FLOAT";
-		else if (annotation_class.equals(GLdouble.class))
+		else if ( annotation_class.equals(GLdouble.class) )
 			return "GL11.GL_DOUBLE";
 		else
 			return null;

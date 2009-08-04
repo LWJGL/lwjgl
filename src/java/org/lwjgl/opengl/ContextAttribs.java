@@ -48,7 +48,7 @@ import java.nio.IntBuffer;
  * implementation. Developers may encounter debug contexts being the same as non-debug contexts or forward compatible
  * contexts having support for deprecated functionality.
  * <p/>
- * Warning: This functionality is currently available on the Windows platform only. However, if the forwardCompatible
+ * If the forwardCompatible
  * attribute is used, LWJGL will not load the deprecated functionality (as defined in the OpenGL 3.0 specification). This
  * means that developers can start working on cleaning up their applications without an OpenGL 3.0 complaint driver.
  *
@@ -64,6 +64,9 @@ public final class ContextAttribs {
 	private boolean debug;
 	private boolean forwardCompatible;
 
+	private boolean profileCore;
+	private boolean profileCompatibility;
+
 	public ContextAttribs() {
 		this(1, 0);
 	}
@@ -72,7 +75,7 @@ public final class ContextAttribs {
 		if ( majorVersion < 0 ||
 		     3 < majorVersion ||
 		     minorVersion < 0 ||
-		     (majorVersion == 3 && 1 < minorVersion) ||
+		     (majorVersion == 3 && 2 < minorVersion) ||
 		     (majorVersion == 2 && 1 < minorVersion) ||
 		     (majorVersion == 1 && 5 < minorVersion) )
 			throw new IllegalArgumentException("Invalid OpenGL version specified: " + majorVersion + '.' + minorVersion);
@@ -84,6 +87,9 @@ public final class ContextAttribs {
 
 		this.debug = false;
 		this.forwardCompatible = false;
+
+		this.profileCore = 3 < majorVersion || (majorVersion == 3 && 2 <= minorVersion) ? true : false;
+		this.profileCompatibility = false;
 	}
 
 	private ContextAttribs(final ContextAttribs attribs) {
@@ -94,6 +100,9 @@ public final class ContextAttribs {
 
 		this.debug = attribs.debug;
 		this.forwardCompatible = attribs.forwardCompatible;
+
+		this.profileCore = attribs.profileCore;
+		this.profileCompatibility = attribs.profileCompatibility;
 	}
 
 	public int getMajorVersion() {
@@ -116,9 +125,20 @@ public final class ContextAttribs {
 		return forwardCompatible;
 	}
 
+	public boolean isProfileCore() {
+		return profileCore;
+	}
+
+	public boolean isProfileCompatibility() {
+		return profileCompatibility;
+	}
+
 	public ContextAttribs withLayer(final int layerPlane) {
 		if ( layerPlane < 0 )
 			throw new IllegalArgumentException("Invalid layer plane specified: " + layerPlane);
+
+		if ( layerPlane == this.layerPlane )
+			return this;
 
 		final ContextAttribs attribs = new ContextAttribs(this);
 		attribs.layerPlane = layerPlane;
@@ -126,14 +146,50 @@ public final class ContextAttribs {
 	}
 
 	public ContextAttribs withDebug(final boolean debug) {
+		if ( debug == this.debug )
+			return this;
+
 		final ContextAttribs attribs = new ContextAttribs(this);
 		attribs.debug = debug;
 		return attribs;
 	}
 
 	public ContextAttribs withForwardCompatible(final boolean forwardCompatible) {
+		if ( forwardCompatible == this.forwardCompatible )
+			return this;
+
 		final ContextAttribs attribs = new ContextAttribs(this);
 		attribs.forwardCompatible = forwardCompatible;
+		return attribs;
+	}
+
+	public ContextAttribs withProfileCore(final boolean profileCore) {
+		if ( majorVersion < 3 || (majorVersion == 3 && minorVersion < 2) )
+			throw new IllegalArgumentException("Profiles are only supported on OpenGL version 3.2 or higher.");
+
+		if ( profileCore == this.profileCore )
+			return this;
+
+		final ContextAttribs attribs = new ContextAttribs(this);
+		attribs.profileCore = profileCore;
+		if ( profileCore )
+			attribs.profileCompatibility = false;
+
+		return attribs;
+	}
+
+	public ContextAttribs withProfileCompatibility(final boolean profileCompatibility) {
+		if ( majorVersion < 3 || (majorVersion == 3 && minorVersion < 2) )
+			throw new IllegalArgumentException("Profiles are only supported on OpenGL version 3.2 or higher.");
+
+		if ( profileCompatibility == this.profileCompatibility )
+			return this;
+
+		final ContextAttribs attribs = new ContextAttribs(this);
+		attribs.profileCompatibility = profileCompatibility;
+		if ( profileCompatibility )
+			attribs.profileCore = false;
+
 		return attribs;
 	}
 
@@ -168,6 +224,14 @@ public final class ContextAttribs {
 		if ( 0 < flags )
 			attribCount++;
 
+		int profileMask = 0;
+		if ( profileCore )
+			profileMask |= implementation.getProfileCoreBit();
+		else if ( profileCompatibility )
+			profileMask |= implementation.getProfileCompatibilityBit();
+		if ( 0 < profileMask )
+			attribCount++;
+
 		if ( attribCount == 0 )
 			return null;
 
@@ -181,6 +245,8 @@ public final class ContextAttribs {
 			attribs.put(implementation.getLayerPlaneAttrib()).put(layerPlane);
 		if ( 0 < flags )
 			attribs.put(implementation.getFlagsAttrib()).put(flags);
+		if ( 0 < profileMask )
+			attribs.put(implementation.getProfileMaskAttrib()).put(profileMask);
 
 		attribs.put(0);
 		attribs.rewind();
@@ -195,6 +261,13 @@ public final class ContextAttribs {
 		sb.append(" - Layer=").append(layerPlane);
 		sb.append(" - Debug=").append(debug);
 		sb.append(" - ForwardCompatible=").append(forwardCompatible);
+		sb.append(" - Profile=");
+		if ( profileCore )
+			sb.append("Core");
+		else if ( profileCompatibility )
+			sb.append("Compatibility");
+		else
+			sb.append("None");
 
 		return sb.toString();
 	}

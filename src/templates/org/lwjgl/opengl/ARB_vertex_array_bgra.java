@@ -31,62 +31,12 @@
  */
 package org.lwjgl.opengl;
 
-/**
- * An implementation of ContextAttribs using WGL_create_context.
- *
- * @author spasi <spasi@users.sourceforge.net>
- */
-final class WindowsContextAttribs implements ContextAttribsImplementation {
+public interface ARB_vertex_array_bgra {
 
-	private static final int WGL_CONTEXT_MAJOR_VERSION_ARB = 0x2091;
-	private static final int WGL_CONTEXT_MINOR_VERSION_ARB = 0x2092;
-	private static final int WGL_CONTEXT_LAYER_PLANE_ARB = 0x2093;
-	private static final int WGL_CONTEXT_FLAGS_ARB = 0x2094;
-	private static final int WGL_CONTEXT_PROFILE_MASK_ARB = 0x9126;
-
-	private static final int WGL_CONTEXT_DEBUG_BIT_ARB = 0x0001;
-	private static final int WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB = 0x0002;
-
-	private static final int WGL_CONTEXT_CORE_PROFILE_BIT_ARB = 0x00000001;
-	private static final int WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB = 0x00000002;
-
-	WindowsContextAttribs() {
-	}
-
-	public int getMajorVersionAttrib() {
-		return WGL_CONTEXT_MAJOR_VERSION_ARB;
-	}
-
-	public int getMinorVersionAttrib() {
-		return WGL_CONTEXT_MINOR_VERSION_ARB;
-	}
-
-	public int getLayerPlaneAttrib() {
-		return WGL_CONTEXT_LAYER_PLANE_ARB;
-	}
-
-	public int getFlagsAttrib() {
-		return WGL_CONTEXT_FLAGS_ARB;
-	}
-
-	public int getDebugBit() {
-		return WGL_CONTEXT_DEBUG_BIT_ARB;
-	}
-
-	public int getForwardCompatibleBit() {
-		return WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB;
-	}
-
-	public int getProfileMaskAttrib() {
-		return WGL_CONTEXT_PROFILE_MASK_ARB;
-	}
-
-	public int getProfileCoreBit() {
-		return WGL_CONTEXT_CORE_PROFILE_BIT_ARB;
-	}
-
-	public int getProfileCompatibilityBit() {
-		return WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB;
-	}
+	/**
+	 * Accepted by the &lt;size&gt; parameter of ColorPointer,
+	 * SecondaryColorPointer, and VertexAttribPointer:
+	 */
+	int GL_BGRA = 0x80E1;
 
 }

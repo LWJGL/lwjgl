@@ -31,62 +31,33 @@
  */
 package org.lwjgl.opengl;
 
-/**
- * An implementation of ContextAttribs using WGL_create_context.
- *
- * @author spasi <spasi@users.sourceforge.net>
- */
-final class WindowsContextAttribs implements ContextAttribsImplementation {
+import org.lwjgl.util.generator.*;
 
-	private static final int WGL_CONTEXT_MAJOR_VERSION_ARB = 0x2091;
-	private static final int WGL_CONTEXT_MINOR_VERSION_ARB = 0x2092;
-	private static final int WGL_CONTEXT_LAYER_PLANE_ARB = 0x2093;
-	private static final int WGL_CONTEXT_FLAGS_ARB = 0x2094;
-	private static final int WGL_CONTEXT_PROFILE_MASK_ARB = 0x9126;
+import java.nio.Buffer;
 
-	private static final int WGL_CONTEXT_DEBUG_BIT_ARB = 0x0001;
-	private static final int WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB = 0x0002;
+public interface ARB_draw_elements_base_vertex {
 
-	private static final int WGL_CONTEXT_CORE_PROFILE_BIT_ARB = 0x00000001;
-	private static final int WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB = 0x00000002;
+	void glDrawElementsBaseVertex(@GLenum int mode, @AutoSize("indices") @GLsizei int count, @AutoType("indices") @GLenum int type,
+	                              @BufferObject(BufferKind.ElementVBO)
+	                              @Const
+	                              @GLubyte
+	                              @GLushort
+	                              @GLuint Buffer indices, int basevertex);
 
-	WindowsContextAttribs() {
-	}
+	void glDrawRangeElementsBaseVertex(@GLenum int mode, @GLuint int start, @GLuint int end, @AutoSize("indices") @GLsizei int count, @AutoType("indices") @GLenum int type,
+	                                   @BufferObject(BufferKind.ElementVBO)
+	                                   @Const
+	                                   @GLubyte
+	                                   @GLushort
+	                                   @GLuint Buffer indices, int basevertex);
 
-	public int getMajorVersionAttrib() {
-		return WGL_CONTEXT_MAJOR_VERSION_ARB;
-	}
+	void glDrawElementsInstancedBaseVertex(@GLenum int mode, @AutoSize("indices") @GLsizei int count, @AutoType("indices") @GLenum int type,
+	                                       @BufferObject(BufferKind.ElementVBO)
+	                                       @Const
+	                                       @GLubyte
+	                                       @GLushort
+	                                       @GLuint Buffer indices, @GLsizei int primcount, int basevertex);
 
-	public int getMinorVersionAttrib() {
-		return WGL_CONTEXT_MINOR_VERSION_ARB;
-	}
-
-	public int getLayerPlaneAttrib() {
-		return WGL_CONTEXT_LAYER_PLANE_ARB;
-	}
-
-	public int getFlagsAttrib() {
-		return WGL_CONTEXT_FLAGS_ARB;
-	}
-
-	public int getDebugBit() {
-		return WGL_CONTEXT_DEBUG_BIT_ARB;
-	}
-
-	public int getForwardCompatibleBit() {
-		return WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB;
-	}
-
-	public int getProfileMaskAttrib() {
-		return WGL_CONTEXT_PROFILE_MASK_ARB;
-	}
-
-	public int getProfileCoreBit() {
-		return WGL_CONTEXT_CORE_PROFILE_BIT_ARB;
-	}
-
-	public int getProfileCompatibilityBit() {
-		return WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB;
-	}
+	//void glMultiDrawElementsBaseVertex(@GLenum int mode, @GLsizei*count, @GLenum int type, void**indices, @GLsizei int primcount, int*basevertex)
 
 }

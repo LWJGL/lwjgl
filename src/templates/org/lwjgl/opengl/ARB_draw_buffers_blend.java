@@ -31,62 +31,17 @@
  */
 package org.lwjgl.opengl;
 
-/**
- * An implementation of ContextAttribs using WGL_create_context.
- *
- * @author spasi <spasi@users.sourceforge.net>
- */
-final class WindowsContextAttribs implements ContextAttribsImplementation {
+import org.lwjgl.util.generator.GLenum;
+import org.lwjgl.util.generator.GLuint;
 
-	private static final int WGL_CONTEXT_MAJOR_VERSION_ARB = 0x2091;
-	private static final int WGL_CONTEXT_MINOR_VERSION_ARB = 0x2092;
-	private static final int WGL_CONTEXT_LAYER_PLANE_ARB = 0x2093;
-	private static final int WGL_CONTEXT_FLAGS_ARB = 0x2094;
-	private static final int WGL_CONTEXT_PROFILE_MASK_ARB = 0x9126;
+public interface ARB_draw_buffers_blend {
 
-	private static final int WGL_CONTEXT_DEBUG_BIT_ARB = 0x0001;
-	private static final int WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB = 0x0002;
+	void glBlendEquationiARB(@GLuint int buf, @GLenum int mode);
 
-	private static final int WGL_CONTEXT_CORE_PROFILE_BIT_ARB = 0x00000001;
-	private static final int WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB = 0x00000002;
+	void glBlendEquationSeparateiARB(@GLuint int buf, @GLenum int modeRGB, @GLenum int modeAlpha);
 
-	WindowsContextAttribs() {
-	}
+	void glBlendFunciARB(@GLuint int buf, @GLenum int src, @GLenum int dst);
 
-	public int getMajorVersionAttrib() {
-		return WGL_CONTEXT_MAJOR_VERSION_ARB;
-	}
-
-	public int getMinorVersionAttrib() {
-		return WGL_CONTEXT_MINOR_VERSION_ARB;
-	}
-
-	public int getLayerPlaneAttrib() {
-		return WGL_CONTEXT_LAYER_PLANE_ARB;
-	}
-
-	public int getFlagsAttrib() {
-		return WGL_CONTEXT_FLAGS_ARB;
-	}
-
-	public int getDebugBit() {
-		return WGL_CONTEXT_DEBUG_BIT_ARB;
-	}
-
-	public int getForwardCompatibleBit() {
-		return WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB;
-	}
-
-	public int getProfileMaskAttrib() {
-		return WGL_CONTEXT_PROFILE_MASK_ARB;
-	}
-
-	public int getProfileCoreBit() {
-		return WGL_CONTEXT_CORE_PROFILE_BIT_ARB;
-	}
-
-	public int getProfileCompatibilityBit() {
-		return WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB;
-	}
+	void glBlendFuncSeparateiARB(@GLuint int buf, @GLenum int srcRGB, @GLenum int dstRGB, @GLenum int srcAlpha, @GLenum int dstAlpha);
 
 }

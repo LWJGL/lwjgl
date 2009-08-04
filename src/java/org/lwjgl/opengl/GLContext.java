@@ -200,6 +200,8 @@ public final class GLContext {
 		}
 
 		// ----------------------[ 3.X ]----------------------
+		if ( 3 < majorVersion || (3 == majorVersion && 2 <= minorVersion) )
+			supported_extensions.add("OpenGL32");
 		if ( 3 < majorVersion || (3 == majorVersion && 1 <= minorVersion) )
 			supported_extensions.add("OpenGL31");
 		if ( 3 <= majorVersion )

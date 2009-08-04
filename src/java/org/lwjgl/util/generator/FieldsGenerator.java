@@ -48,17 +48,23 @@ public class FieldsGenerator {
 		if (!(field_type instanceof PrimitiveType))
 			throw new RuntimeException("Field " + field.getSimpleName() + " is not a primitive type");
 		PrimitiveType field_type_prim = (PrimitiveType)field_type;
-		if (field_type_prim.getKind() != PrimitiveType.Kind.INT)
-			throw new RuntimeException("Field " + field.getSimpleName() + " is not of type 'int'");
-		Integer field_value = (Integer)field.getConstantValue();
+		if (field_type_prim.getKind() != PrimitiveType.Kind.INT && field_type_prim.getKind() != PrimitiveType.Kind.LONG)
+			throw new RuntimeException("Field " + field.getSimpleName() + " is not of type 'int' or 'long'");
+		Object field_value = field.getConstantValue();
 		if (field_value == null)
 			throw new RuntimeException("Field " + field.getSimpleName() + " has no initial value");
 	}
 
 	private static void generateField(PrintWriter writer, FieldDeclaration field) {
-		Integer field_value = (Integer)field.getConstantValue();
 		validateField(field);
-		String field_value_string = Integer.toHexString(field_value);
+
+		Object value = field.getConstantValue();
+		String field_value_string;
+		if ( value.getClass().equals(Integer.class) )
+			field_value_string = Integer.toHexString((Integer)field.getConstantValue());
+		else
+			field_value_string = Long.toHexString((Long)field.getConstantValue()) + 'l';
+
 		Utils.printDocComment(writer, field);
 		// Print field declaration
 		writer.println("\tpublic static final " + field.getType().toString() + " " + field.getSimpleName() + " = 0x" + field_value_string + ";");
