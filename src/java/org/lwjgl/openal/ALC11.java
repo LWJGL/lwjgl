@@ -184,7 +184,8 @@ public final class ALC11 {
 				
 				// checking for version 1.1+
 				if(major > 1 || minor >= 1) {
-					initNativeStubs();
+					ALC11.initNativeStubs();
+                                        AL11.initNativeStubs();
 				}		
 			}
 		} catch (LWJGLException le) {
