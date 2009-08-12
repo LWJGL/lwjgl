@@ -13,6 +13,10 @@
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/util/generator/**.java" source="1.5" target="1.5" taskname="generator">
 			<compilerarg value="-Xlint:all"/>
 		</javac>
+		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" source="1.4" target="1.4" taskname="generator">
+			<include name="org/lwjgl/opengl/GLSync.java"/>
+			<include name="org/lwjgl/opengl/PointerWrapper.java"/>
+		</javac>
 	</target>
 
 	<!-- Proxy target to generate it all -->
