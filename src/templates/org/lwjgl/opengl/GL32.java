@@ -35,8 +35,8 @@ import org.lwjgl.util.generator.*;
 
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
-import java.nio.LongBuffer;
 import java.nio.IntBuffer;
+import java.nio.LongBuffer;
 
 public interface GL32 {
 
@@ -296,23 +296,24 @@ public interface GL32 {
 	int GL_CONDITION_SATISFIED = 0x911C;
 	int GL_WAIT_FAILED = 0x911D;
 
-	/*
-	@GLsync long glFenceSync(@GLenum int condition, @GLbitfield int flags);
+	@GLpointer("GLsync")
+	GLSync glFenceSync(@GLenum int condition, @GLbitfield int flags);
 
-	boolean glIsSync(@GLsync long sync);
+	boolean glIsSync(@GLpointer("GLsync") GLSync sync);
 
-	void glDeleteSync(@GLsync long sync);
+	void glDeleteSync(@GLpointer("GLsync") GLSync sync);
 
-	@GLenum int glClientWaitSync(@GLsync long sync, @GLbitfield int flags, @GLuint64 long timeout);
+	@GLenum
+	int glClientWaitSync(@GLpointer("GLsync") GLSync sync, @GLbitfield int flags, @GLuint64 long timeout);
 
-	void glWaitSync(@GLsync long sync, @GLbitfield int flags, @GLuint64 long timeout);
+	void glWaitSync(@GLpointer("GLsync") GLSync sync, @GLbitfield int flags, @GLuint64 long timeout);
 
 	@StripPostfix("params")
 	void glGetInteger64v(@GLenum int pname, @OutParameter @Check("1") @GLint64 LongBuffer params);
 
-	void glGetSynciv(@GLsync long sync, @GLenum int pname,
+	void glGetSynciv(@GLpointer("GLsync") GLSync sync, @GLenum int pname,
 	                 @AutoSize("values") @GLsizei int bufSize,
 	                 @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
 	                 @OutParameter IntBuffer values);
-	*/
+
 }

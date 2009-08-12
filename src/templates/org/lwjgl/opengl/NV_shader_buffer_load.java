@@ -55,9 +55,9 @@ public interface NV_shader_buffer_load {
 
 	boolean glIsBufferResidentNV(@GLenum int target);
 
-	void glNamedMakeBufferResidentNV(@GLuint int buffer, @GLenum int access);
-
-	void glNamedMakeBufferNonResidentNV(@GLuint int buffer);
+	// TODO: These two are currently missing from the latest NV drivers, check again sometime.
+	//void glNamedMakeBufferResidentNV(@GLuint int buffer, @GLenum int access);
+	//void glNamedMakeBufferNonResidentNV(@GLuint int buffer);
 
 	boolean glIsNamedBufferResidentNV(@GLuint int buffer);
 

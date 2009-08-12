@@ -71,6 +71,8 @@ public class NativeMethodStubsGenerator {
 		writer.print(", ");
 		if (mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null) {
 			writer.print("jlong " + param.getSimpleName() + Utils.BUFFER_OBJECT_PARAMETER_POSTFIX);
+		} else if ( param.getAnnotation(GLpointer.class) != null ) {
+			writer.print("jlong " + param.getSimpleName());
 		} else {
 			JNITypeTranslator translator = new JNITypeTranslator();
 			param.getType().accept(translator);
@@ -81,14 +83,22 @@ public class NativeMethodStubsGenerator {
 	}
 
 	private static void generateMethodStub(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, String interface_name, MethodDeclaration method, Mode mode, boolean generate_error_checks, boolean context_specific) {
-		TypeMirror result_type = Utils.getMethodReturnType(method);
-		JNITypeTranslator translator = new JNITypeTranslator();
-		result_type.accept(translator);
-		if (!context_specific)
+		if ( !context_specific )
 			writer.print("static ");
 		else
 			writer.print("JNIEXPORT ");
-		writer.print(translator.getSignature() + " JNICALL ");
+
+		TypeMirror result_type = Utils.getMethodReturnType(method);
+
+		if ( method.getAnnotation(GLpointer.class) != null ) {
+			writer.print("jlong");
+		} else {
+			JNITypeTranslator translator = new JNITypeTranslator();
+			result_type.accept(translator);
+			writer.print(translator.getSignature());
+		}
+		writer.print(" JNICALL ");
+
 		writer.print(Utils.getQualifiedNativeMethodName(interface_name, method, generate_error_checks, context_specific));
 		if (mode == Mode.BUFFEROBJECT)
 			writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
@@ -140,8 +150,11 @@ public class NativeMethodStubsGenerator {
 					writer.print("safeNewBufferCached(env, ");
 				else
 					writer.print("safeNewBuffer(env, ");
-			} else if (String.class.equals(java_result_type))
+			} else if (String.class.equals(java_result_type)) {
 				writer.print("NewStringNativeUnsigned(env, ");
+			} else if ( method.getAnnotation(GLpointer.class) != null ) {
+				writer.print("(jlong)");
+			}
 			writer.print(Utils.RESULT_VAR_NAME);
 			if (Buffer.class.isAssignableFrom(java_result_type)) {
 				writer.print(", ");
@@ -176,6 +189,8 @@ public class NativeMethodStubsGenerator {
 			writer.print(translator.getSignature());
 			writer.print("*)");
 		}
+		if ( param.getAnnotation(GLpointer.class) != null )
+			writer.print("(" + param.getAnnotation(GLpointer.class).value() + ")");
 		if (param.getAnnotation(Result.class) != null || is_indirect)
 			writer.print("&");
 		if (param.getAnnotation(Result.class) != null) {

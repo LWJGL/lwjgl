@@ -41,6 +41,8 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
+import org.lwjgl.opengl.PointerWrapper;
+
 import com.sun.mirror.apt.*;
 import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
@@ -82,7 +84,7 @@ public class JavaMethodsGenerator {
 			Utils.printDocComment(writer, method);
 			writer.print("\tpublic static native ");
 		}
-		printResultType(writer, method);
+		printResultType(writer, method, true);
 		writer.print(" " + Utils.getSimpleNativeMethodName(method, generate_error_checks, context_specific));
 		if (mode == Mode.BUFFEROBJECT)
 			writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
@@ -131,7 +133,7 @@ public class JavaMethodsGenerator {
 			if (!first_parameter)
 				writer.print(", ");
 			first_parameter = false;
-			printResultType(writer, method);
+			printResultType(writer, method, native_stub);
 			writer.print(" " + Utils.CACHED_BUFFER_NAME);
 		}
 		return first_parameter;
@@ -147,7 +149,10 @@ public class JavaMethodsGenerator {
 				throw new RuntimeException("type of " + param + " is not a nio Buffer parameter but is annotated as buffer object");
 			writer.print("long " + param.getSimpleName() + Utils.BUFFER_OBJECT_PARAMETER_POSTFIX);
 		} else {
-			writer.print(type_info.getType().getSimpleName());
+			if ( native_stub && param.getAnnotation(GLpointer.class) != null )
+				writer.print("long");
+			else
+				writer.print(type_info.getType().getSimpleName());
 			writer.print(" " + param.getSimpleName());
 			if (buffer_type != null && native_stub)
 				writer.print(", int " + param.getSimpleName() + NativeMethodStubsGenerator.BUFFER_POSITION_POSTFIX);
@@ -179,7 +184,7 @@ public class JavaMethodsGenerator {
 	private static void printMethodWithMultiType(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, Mode mode, boolean generate_error_checks, boolean context_specific) {
 		Utils.printDocComment(writer, method);
 		writer.print("\tpublic static ");
-		printResultType(writer, method);
+		printResultType(writer, method, false);
 		StripPostfix strip_annotation = method.getAnnotation(StripPostfix.class);
 		String method_name = method.getSimpleName();
 		if (strip_annotation != null && mode == Mode.NORMAL)
@@ -204,8 +209,11 @@ public class JavaMethodsGenerator {
 		writer.print("\t\t");
 		boolean has_result = !result_type.equals(env.getTypeUtils().getVoidType());
 		if (has_result) {
-			printResultType(writer, method);
+			printResultType(writer, method, false);
 			writer.print(" " + Utils.RESULT_VAR_NAME + " = ");
+
+			if ( method.getAnnotation(GLpointer.class) != null )
+				writer.print("new " + method.getReturnType() + "(");
 		}
 		writer.print(Utils.getSimpleNativeMethodName(method, generate_error_checks, context_specific));
 		if (mode == Mode.BUFFEROBJECT)
@@ -217,6 +225,8 @@ public class JavaMethodsGenerator {
 				writer.print(", ");
 			writer.print(Utils.FUNCTION_POINTER_VAR_NAME);
 		}
+		if ( has_result && method.getAnnotation(GLpointer.class) != null )
+			writer.print(")");
 		writer.println(");");
 		if (generate_error_checks && method.getAnnotation(NoErrorCheck.class) == null)
 			writer.println("\t\t" + type_map.getErrorCheckMethodName() + ";");
@@ -373,6 +383,8 @@ public class JavaMethodsGenerator {
 							writer.print(" : 0");
 					} else
 						writer.print("0");
+				} else if ( param.getAnnotation(GLpointer.class) != null ) {
+					writer.print(".getPointer()");
 				}
 			}
 		}
@@ -492,7 +504,10 @@ public class JavaMethodsGenerator {
 			writer.println("\t\tBufferChecks.checkNullTerminated(" + name + ");");
 	}
 
-	private static void printResultType(PrintWriter writer, MethodDeclaration method) {
-		writer.print(Utils.getMethodReturnType(method).toString());
+	private static void printResultType(PrintWriter writer, MethodDeclaration method, boolean native_stub) {
+		if ( native_stub && method.getAnnotation(GLpointer.class) != null )
+			writer.print("long");
+		else
+			writer.print(Utils.getMethodReturnType(method).toString());
 	}
 }

@@ -79,6 +79,10 @@ public final class VersionTest {
 					ca = ca.withDebug(true);
 				else if ( "fc".equalsIgnoreCase(args[i]) )
 					ca = ca.withForwardCompatible(true);
+				else if ( "core".equalsIgnoreCase(args[i]) )
+					ca = ca.withProfileCore(true);
+				else if ( "compatibility".equalsIgnoreCase(args[i]) )
+					ca = ca.withProfileCompatibility(true);
 				else
 					argsError("Unknown argument: \'" + args[i] + "\'");
 			}
@@ -108,8 +112,12 @@ public final class VersionTest {
 
 		final String version = GL11.glGetString(GL11.GL_VERSION);
 
-		System.out.println("GL Version requested: " + majorInput + '.' + minorInput);
-		System.out.println("GL Version returned : " + version);
+		System.out.print("GL Version requested: " + majorInput + '.' + minorInput);
+		if ( ca.isProfileCore() )
+			System.out.print(" - Core Profile");
+		else if ( ca.isProfileCompatibility() )
+			System.out.print(" - Compatibility Profile");
+		System.out.println("\nGL Version returned : " + version);
 
 		final StringTokenizer version_tokenizer = new StringTokenizer(version, ". ");
 
@@ -125,6 +133,9 @@ public final class VersionTest {
 				System.out.println("\tThe requested version was not returned. The driver is buggy! :(");
 		} else
 			System.out.println("\tThe requested version was returned. :)");
+
+		if ( ca.isProfileCompatibility() && !GLContext.getCapabilities().GL_ARB_compatibility )
+			System.out.println("\tThe driver does not support the Compatibility Profile.");
 
 		System.out.println("\n---------\n");
 

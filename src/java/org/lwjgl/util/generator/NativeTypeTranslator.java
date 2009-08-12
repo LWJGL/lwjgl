@@ -42,6 +42,8 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
+import org.lwjgl.opengl.PointerWrapper;
+
 import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
 import com.sun.mirror.util.*;
@@ -77,8 +79,14 @@ public class NativeTypeTranslator implements TypeVisitor {
 		StringBuilder signature = new StringBuilder();
 		if (declaration.getAnnotation(Const.class) != null)
 			signature.append("const ");
-		// Use the name of the native type annotation as the C type name
-		signature.append(getAnnotationType().getSimpleName());
+
+		if ( declaration.getAnnotation(GLpointer.class) != null ) {
+			signature.append(declaration.getAnnotation(GLpointer.class).value());
+		} else {
+			// Use the name of the native type annotation as the C type name
+			signature.append(getAnnotationType().getSimpleName());
+		}
+
 		if (is_indirect)
 			signature.append(" *");
 		return signature.toString();
@@ -131,6 +139,8 @@ public class NativeTypeTranslator implements TypeVisitor {
 	}
 
 	public void visitClassType(ClassType t) {
+		is_indirect = true;
+
 		Class<?> c = getClassFromType(t);
 		if (String.class.equals(c)) {
 			native_types = new ArrayList<Class>();
@@ -141,9 +151,13 @@ public class NativeTypeTranslator implements TypeVisitor {
 		} else if (Buffer.class.isAssignableFrom(c)) {
 			PrimitiveType.Kind kind = getPrimitiveKindFromBufferClass(c);
 			getNativeTypeFromAnnotatedPrimitiveType(kind);
+		} else if ( PointerWrapper.class.isAssignableFrom(c) ) {
+			native_types = new ArrayList<Class>();
+			native_types.add(GLpointer.class);
+
+			is_indirect = false;
 		} else
 			throw new RuntimeException(t + " is not allowed");
-		is_indirect = true;
 	}
 
 	public void visitPrimitiveType(PrimitiveType t) {

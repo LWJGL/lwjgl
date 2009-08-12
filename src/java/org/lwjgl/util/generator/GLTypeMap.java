@@ -41,6 +41,8 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
+import org.lwjgl.opengl.PointerWrapper;
+
 import java.io.PrintWriter;
 import java.nio.*;
 import java.util.HashMap;
@@ -82,7 +84,6 @@ public class GLTypeMap implements TypeMap {
 		native_types_to_primitive.put(GLuint64EXT.class, PrimitiveType.Kind.LONG);
 		native_types_to_primitive.put(GLint64.class, PrimitiveType.Kind.LONG);
 		native_types_to_primitive.put(GLuint64.class, PrimitiveType.Kind.LONG);
-		native_types_to_primitive.put(GLsync.class, PrimitiveType.Kind.LONG);
 	}
 
 	public PrimitiveType.Kind getPrimitiveTypeFromNativeType(Class native_type) {
@@ -197,14 +198,14 @@ public class GLTypeMap implements TypeMap {
 		else if ( type.equals(DoubleBuffer.class) )
 			return new Class[] { GLclampd.class, GLdouble.class };
 		else if ( type.equals(LongBuffer.class) )
-			return new Class[] { GLint64EXT.class, GLuint64EXT.class, GLint64.class, GLuint64.class, GLsync.class };
+			return new Class[] { GLint64EXT.class, GLuint64EXT.class, GLint64.class, GLuint64.class };
 		else
 			return new Class[] { };
 	}
 
 	private static Class[] getValidPrimitiveTypes(Class type) {
 		if ( type.equals(long.class) )
-			return new Class[] { GLintptrARB.class, GLuint.class, GLintptr.class, GLsizeiptrARB.class, GLsizeiptr.class, GLint64EXT.class, GLuint64EXT.class, GLint64.class, GLuint64.class, GLsync.class };
+			return new Class[] { GLintptrARB.class, GLuint.class, GLintptr.class, GLsizeiptrARB.class, GLsizeiptr.class, GLint64EXT.class, GLuint64EXT.class, GLint64.class, GLuint64.class };
 		else if ( type.equals(int.class) )
 			return new Class[] { GLbitfield.class, GLenum.class, GLhandleARB.class, GLint.class, GLuint.class,
 			                     GLsizei.class };
@@ -240,6 +241,8 @@ public class GLTypeMap implements TypeMap {
 			valid_types = getValidPrimitiveTypes(type);
 		else if ( String.class.equals(type) )
 			valid_types = new Class[] { GLubyte.class };
+		else if ( PointerWrapper.class.isAssignableFrom(type) )
+			valid_types = new Class[] { GLpointer.class };
 		else
 			valid_types = new Class[] { };
 		return valid_types;
