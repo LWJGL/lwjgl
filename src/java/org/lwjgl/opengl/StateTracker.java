@@ -45,9 +45,7 @@ final class StateTracker {
 	}
 
 	private void doPopAttrib() {
-		if ((attrib_stack.popState() & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
-			references_stack.popState();
-		}
+		references_stack.popState(attrib_stack.popState());
 	}
 
 	static void pushAttrib(ContextCapabilities caps, int mask) {
@@ -56,9 +54,7 @@ final class StateTracker {
 
 	private void doPushAttrib(int mask) {
 		attrib_stack.pushState(mask);
-		if ((mask & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
-			references_stack.pushState();
-		}
+		references_stack.pushState();
 	}
 
 	static ReferencesStack getReferencesStack(ContextCapabilities caps) {
@@ -74,6 +70,13 @@ final class StateTracker {
                 case GL15.GL_ARRAY_BUFFER:
                     references_stack.getReferences().arrayBuffer = buffer;
                     break;
+                case GL21.GL_PIXEL_PACK_BUFFER:
+	                references_stack.getReferences().pixelPackBuffer = buffer;
+	                break;
+	            case GL21.GL_PIXEL_UNPACK_BUFFER:
+		            references_stack.getReferences().pixelUnpackBuffer = buffer;
+		            break;
+
             }
         }
 }

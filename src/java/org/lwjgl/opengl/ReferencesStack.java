@@ -44,12 +44,15 @@ class ReferencesStack {
 		if (pos == references_stack.length) {
 			growStack();
 		}
-		references_stack[pos].copy(references_stack[pos - 1]);
+		references_stack[pos].copy(references_stack[pos - 1], GL11.GL_ALL_CLIENT_ATTRIB_BITS);
 	}
 
-	public References popState() {
+	public References popState(int mask) {
 		References result = references_stack[stack_pos--];
+
+		references_stack[stack_pos].copy(result, ~mask);
 		result.clear();
+
 		return result;
 	}
 
@@ -58,10 +61,10 @@ class ReferencesStack {
 		System.arraycopy(references_stack, 0, new_references_stack, 0, references_stack.length);
 		references_stack = new_references_stack;
 		references_stack[references_stack.length - 1] = new References(GLContext.getCapabilities());
-        }
+    }
 
 	ReferencesStack() {
-                ContextCapabilities caps = GLContext.getCapabilities();
+        ContextCapabilities caps = GLContext.getCapabilities();
 		references_stack = new References[1];
 		stack_pos = 0;
 		for (int i = 0; i < references_stack.length; i++)

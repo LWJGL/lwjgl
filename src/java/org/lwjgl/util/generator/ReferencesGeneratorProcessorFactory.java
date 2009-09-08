@@ -69,7 +69,7 @@ public class ReferencesGeneratorProcessorFactory implements AnnotationProcessorF
 	private final static String REFERENCES_PARAMETER_NAME = "references";
 
 	private static boolean first_round = true;
-	
+
 	// Process any set of annotations
 	private static final Collection<String> supportedAnnotations =
 		unmodifiableCollection(Arrays.asList("*"));
@@ -120,19 +120,19 @@ public class ReferencesGeneratorProcessorFactory implements AnnotationProcessorF
 				}
 			}
 		}
-		
+
 		private static void generateCopiesFromParameters(PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method) {
 			for (ParameterDeclaration param : method.getParameters()) {
 				CachedReference cached_reference_annotation = param.getAnnotation(CachedReference.class);
 				if (cached_reference_annotation != null && cached_reference_annotation.name().length() == 0) {
 					Class nio_type = Utils.getNIOBufferType(param.getType());
 					String reference_name = Utils.getReferenceName(interface_decl, method, param);
-					writer.print("\t\tthis." + reference_name + " = ");
+					writer.print("\t\t\tthis." + reference_name + " = ");
 					writer.println(REFERENCES_PARAMETER_NAME + "." + reference_name + ";");
 				}
 			}
 		}
-		
+
 		private static void generateClearsFromMethods(PrintWriter writer, InterfaceDeclaration interface_decl) {
 			for (MethodDeclaration method : interface_decl.getMethods()) {
 				generateClearsFromParameters(writer, interface_decl, method);
@@ -158,7 +158,7 @@ public class ReferencesGeneratorProcessorFactory implements AnnotationProcessorF
 				}
 			}
 		}
-		
+
 		private static void generateReferencesFromMethods(PrintWriter writer, InterfaceDeclaration interface_decl) {
 			for (MethodDeclaration method : interface_decl.getMethods()) {
 				generateReferencesFromParameters(writer, interface_decl, method);
@@ -182,12 +182,14 @@ public class ReferencesGeneratorProcessorFactory implements AnnotationProcessorF
 				generateReferencesFromMethods(writer, interface_decl);
 			}
 			writer.println();
-			writer.println("\tvoid copy(" + REFERENCES_CLASS_NAME + " " + REFERENCES_PARAMETER_NAME + ") {");
-			writer.println("\t\tsuper.copy(" + REFERENCES_PARAMETER_NAME + ");");
+			writer.println("\tvoid copy(" + REFERENCES_CLASS_NAME + " " + REFERENCES_PARAMETER_NAME + ", int mask) {");
+			writer.println("\t\tsuper.copy(" + REFERENCES_PARAMETER_NAME + ", mask);");
+			writer.println("\t\tif ( (mask & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0 ) {");
 			for (TypeDeclaration typedecl : interface_decls) {
 				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
 				generateCopiesFromMethods(writer, interface_decl);
 			}
+			writer.println("\t\t}");
 			writer.println("\t}");
 			writer.println("\tvoid clear() {");
 			writer.println("\t\tsuper.clear();");

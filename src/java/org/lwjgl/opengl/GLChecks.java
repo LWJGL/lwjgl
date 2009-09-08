@@ -110,25 +110,25 @@ class GLChecks {
 
 	/** Helper method to ensure that pixel pack buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensurePackPBOdisabled(ContextCapabilities caps) {
-		if ((caps.GL_ARB_pixel_buffer_object || caps.GL_EXT_pixel_buffer_object || caps.OpenGL21) && !checkBufferObject(caps, GL21.GL_PIXEL_PACK_BUFFER_BINDING, false))
+		if ( StateTracker.getReferencesStack(caps).getReferences().pixelPackBuffer != 0 )
 			throw new OpenGLException("Cannot use Buffers when Pixel Pack Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that pixel pack buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensurePackPBOenabled(ContextCapabilities caps) {
-		if ((caps.GL_ARB_pixel_buffer_object || caps.GL_EXT_pixel_buffer_object || caps.OpenGL21) && !checkBufferObject(caps, GL21.GL_PIXEL_PACK_BUFFER_BINDING, true))
+		if ( StateTracker.getReferencesStack(caps).getReferences().pixelPackBuffer == 0 )
 			throw new OpenGLException("Cannot use offsets when Pixel Pack Buffer Object is disabled");
 	}
 
 	/** Helper method to ensure that pixel unpack buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureUnpackPBOdisabled(ContextCapabilities caps) {
-		if ((caps.GL_ARB_pixel_buffer_object || caps.GL_EXT_pixel_buffer_object || caps.OpenGL21) && !checkBufferObject(caps, GL21.GL_PIXEL_UNPACK_BUFFER_BINDING, false))
+		if ( StateTracker.getReferencesStack(caps).getReferences().pixelUnpackBuffer != 0 )
 			throw new OpenGLException("Cannot use Buffers when Pixel Unpack Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that pixel unpack buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureUnpackPBOenabled(ContextCapabilities caps) {
-		if ((caps.GL_ARB_pixel_buffer_object || caps.GL_EXT_pixel_buffer_object || caps.OpenGL21) && !checkBufferObject(caps, GL21.GL_PIXEL_UNPACK_BUFFER_BINDING, true))
+		if ( StateTracker.getReferencesStack(caps).getReferences().pixelUnpackBuffer == 0 )
 			throw new OpenGLException("Cannot use offsets when Pixel Unpack Buffer Object is disabled");
 	}
 

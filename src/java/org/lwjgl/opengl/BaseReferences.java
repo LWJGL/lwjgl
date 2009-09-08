@@ -41,9 +41,12 @@ class BaseReferences {
     int arrayBuffer;
     Buffer[] glVertexAttribPointer_buffer;
     Buffer[] glTexCoordPointer_buffer;
-    int glClientActiveTexture;
+	int glClientActiveTexture;
 
-    BaseReferences(ContextCapabilities caps) {
+	int pixelPackBuffer;
+	int pixelUnpackBuffer;
+
+	BaseReferences(ContextCapabilities caps) {
         IntBuffer temp = caps.scratch_int_buffer;
 
 		int max_vertex_attribs;
@@ -66,16 +69,26 @@ class BaseReferences {
     void clear() {
         this.elementArrayBuffer = 0;
         this.arrayBuffer = 0;
-        this.glClientActiveTexture = 0;
-        Arrays.fill(glVertexAttribPointer_buffer, null);
+	    this.glClientActiveTexture = 0;
+	    Arrays.fill(glVertexAttribPointer_buffer, null);
         Arrays.fill(glTexCoordPointer_buffer, null);
+
+	    this.pixelPackBuffer = 0;
+	    this.pixelUnpackBuffer = 0;
     }
 
-    void copy(BaseReferences references) {
-        this.elementArrayBuffer = references.elementArrayBuffer;
-        this.arrayBuffer = references.arrayBuffer;
-        this.glClientActiveTexture = references.glClientActiveTexture;
-        System.arraycopy(references.glVertexAttribPointer_buffer, 0, glVertexAttribPointer_buffer, 0, glVertexAttribPointer_buffer.length);
-        System.arraycopy(references.glTexCoordPointer_buffer, 0, glTexCoordPointer_buffer, 0, glTexCoordPointer_buffer.length);
+    void copy(BaseReferences references, int mask) {
+	    if ( (mask & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0 ) {
+		    this.elementArrayBuffer = references.elementArrayBuffer;
+		    this.arrayBuffer = references.arrayBuffer;
+		    this.glClientActiveTexture = references.glClientActiveTexture;
+		    System.arraycopy(references.glVertexAttribPointer_buffer, 0, glVertexAttribPointer_buffer, 0, glVertexAttribPointer_buffer.length);
+		    System.arraycopy(references.glTexCoordPointer_buffer, 0, glTexCoordPointer_buffer, 0, glTexCoordPointer_buffer.length);
+	    }
+
+	    if ( (mask & GL11.GL_CLIENT_PIXEL_STORE_BIT) != 0 ) {
+			this.pixelPackBuffer = references.pixelPackBuffer;
+			this.pixelUnpackBuffer = references.pixelUnpackBuffer;
+	    }
     }
 }

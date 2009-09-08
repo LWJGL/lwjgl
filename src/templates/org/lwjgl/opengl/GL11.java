@@ -1258,7 +1258,7 @@ public interface GL11 {
 	void glShadeModel(@GLenum int mode);
 
 	@DeprecatedGL
-	void glSelectBuffer(@AutoSize("buffer") @GLsizei int size, @CachedReference @GLuint IntBuffer buffer);
+	void glSelectBuffer(@AutoSize("buffer") @GLsizei int size, @GLuint IntBuffer buffer);
 
 	void glScissor(int x, int y, @GLsizei int width, @GLsizei int height);
 
