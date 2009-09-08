@@ -118,6 +118,7 @@ public class ContextCapabilitiesGenerator {
 		writer.println("\tprivate Set " + ALL_INIT_METHOD_NAME + "(boolean forwardCompatible) throws LWJGLException {");
 
 		// Load the basic pointers we need to detect OpenGL version and supported extensions.
+		writer.println("\t\tGL11_glGetError_pointer = GLContext.getFunctionAddress(\"glGetError\");");
 		writer.println("\t\tGL11_glGetString_pointer = GLContext.getFunctionAddress(\"glGetString\");");
 
 		// Initialize GL11.glGetIntegerv and GL30.glGetStringi here, in case we have created an OpenGL 3.0 context.

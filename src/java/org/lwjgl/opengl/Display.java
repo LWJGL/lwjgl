@@ -637,7 +637,8 @@ public final class Display {
 			if ( !isCreated() )
 				throw new IllegalStateException("Display not created");
 
-			Util.checkGLError();
+			if ( LWJGLUtil.DEBUG )
+				Util.checkGLError();
 			Context.swapBuffers();
 		}
 	}
