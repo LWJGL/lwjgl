@@ -52,7 +52,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.SocketPermission;
 import java.net.URL;
@@ -781,14 +780,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		URLConnection urlconnection;
 		
-		// disable the java caching
-		Field field = URLConnection.class.getDeclaredField("defaultUseCaches");
-		field.setAccessible(true);
-		field.setBoolean(URLConnection.class, false);
-
 		// calculate total size of jars to download
 		for (int i = 0; i < urlList.length; i++) {
 			urlconnection = urlList[i].openConnection();
+			urlconnection.setDefaultUseCaches(false);
 			totalSizeDownload += urlconnection.getContentLength();
 		}
 		
