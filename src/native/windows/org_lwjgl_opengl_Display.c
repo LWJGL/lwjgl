@@ -468,3 +468,12 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetCapture(JNIEnv 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nReleaseCapture(JNIEnv *env, jclass unused) {
 	return ReleaseCapture();
 }
+
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nTrackMouseEvent(JNIEnv *env, jclass clazz, jlong hwnd_ptr) {
+		HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
+		TRACKMOUSEEVENT tme;
+		tme.cbSize = sizeof(TRACKMOUSEEVENT);
+		tme.dwFlags = TME_LEAVE;
+		tme.hwndTrack = hwnd;
+		return TrackMouseEvent(&tme);
+}

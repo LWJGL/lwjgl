@@ -1221,4 +1221,8 @@ final class LinuxDisplay implements DisplayImplementation {
 	public int getHeight() {
 		return Display.getDisplayMode().getHeight();
 	}
+
+        public boolean isInsideWindow() {
+            return true;
+        }
 }

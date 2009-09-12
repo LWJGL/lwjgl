@@ -33,6 +33,8 @@ package org.lwjgl.input;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -134,6 +136,8 @@ public class Mouse {
 	/** Whether we need cursor animation emulation */
 	private static final boolean emulateCursorAnimation = 	LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_WINDOWS || 
 								LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_MACOSX;
+
+        private static final boolean allowNegativeMouseCoords = getPrivilegedBoolean("org.lwjgl.input.Mouse.allowNegativeMouseCoords");
 
 	/**
 	 * Mouse cannot be constructed.
@@ -338,9 +342,11 @@ public class Mouse {
 				x = poll_coord1;
 				y = poll_coord2;
 			}
-			x = Math.min(implementation.getWidth() - 1, Math.max(0, x));
-			y = Math.min(implementation.getHeight() - 1, Math.max(0, y));
-			dwheel += poll_dwheel;
+                        if(!allowNegativeMouseCoords) {
+                            x = Math.min(implementation.getWidth() - 1, Math.max(0, x));
+                            y = Math.min(implementation.getHeight() - 1, Math.max(0, y));
+                        }
+                        dwheel += poll_dwheel;
 			read();
 		}
 	}
@@ -634,4 +640,24 @@ public class Mouse {
 			}
 		}
 	}
+
+        /** Gets a boolean property as a privileged action. */
+	static boolean getPrivilegedBoolean(final String property_name) {
+		Boolean value = (Boolean)AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				return new Boolean(Boolean.getBoolean(property_name));
+			}
+		});
+		return value.booleanValue();
+	}
+
+        /**
+         * Retrieves whether or not the mouse cursor is within the bounds of the window.
+         * If the mouse cursor was moved outside the display during a drag, then the result of calling
+         * this method will be true until the button is released.
+         * @return true if mouse is inside display, false otherwise.
+         */
+        public static boolean isInsideWindow() {
+            return implementation.isInsideWindow();
+        }
 }

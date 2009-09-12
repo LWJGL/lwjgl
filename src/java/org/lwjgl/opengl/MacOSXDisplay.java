@@ -501,4 +501,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public int getHeight() {
 		return Display.getDisplayMode().getHeight();
 	}
+
+        public boolean isInsideWindow() {
+            return true;
+        }
 }

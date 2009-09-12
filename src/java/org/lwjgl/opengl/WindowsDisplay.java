@@ -66,6 +66,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private final static int WM_MBUTTONDBLCLK                 = 0x0209;
 	private final static int WM_MOUSEWHEEL                    = 0x020A;
 	private final static int WM_CAPTURECHANGED                = 0x0215;
+        private final static int WM_MOUSELEAVE                    = 0x02A3;
 	private final static int WM_KEYDOWN						  = 256;
 	private final static int WM_KEYUP						  = 257;
 	private final static int WM_SYSKEYUP					  = 261;
@@ -154,6 +155,8 @@ final class WindowsDisplay implements DisplayImplementation {
 	private long large_icon;
 
 	private int captureMouse = -1;
+        private boolean trackingMouse = false;
+        private boolean mouseInside = false;
 
 	WindowsDisplay() {
 		current_display = this;
@@ -813,6 +816,10 @@ final class WindowsDisplay implements DisplayImplementation {
 				int yPos = transformY(getHwnd(), (int)(short)((lParam >> 16) & 0xFFFF));
 				handleMouseMoved(xPos, yPos, millis);
 				checkCursorState();
+                                mouseInside = true;
+                                if(!trackingMouse) {
+                                    trackingMouse = nTrackMouseEvent(hwnd);
+                                }
 				return 0;
 			case WM_MOUSEWHEEL:
 				int dwheel = (int)(short)((wParam >> 16) & 0xFFFF);
@@ -878,6 +885,10 @@ final class WindowsDisplay implements DisplayImplementation {
 			case WM_PAINT:
 				is_dirty = true;
 				return defWindowProc(hwnd, msg, wParam, lParam);
+                        case WM_MOUSELEAVE:
+                            mouseInside = false;
+                            trackingMouse = false;
+                            return defWindowProc(hwnd, msg, wParam, lParam);
 			case WM_CANCELMODE:
 				nReleaseCapture();
 				/* fall through */
@@ -908,6 +919,12 @@ final class WindowsDisplay implements DisplayImplementation {
 		}
 		return -1;
 	}
+
+        private native boolean nTrackMouseEvent(long hwnd);
+
+        public boolean isInsideWindow() {
+            return mouseInside;
+        }
 
 	private static final class Rect {
 		public int top;

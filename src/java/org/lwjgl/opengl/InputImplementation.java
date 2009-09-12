@@ -129,4 +129,6 @@ public interface InputImplementation {
 	int getWidth();
 
 	int getHeight();
+
+        boolean isInsideWindow();
 }
