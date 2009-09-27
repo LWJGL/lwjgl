@@ -62,7 +62,7 @@ class BaseReferences {
         	GL11.glGetInteger(GL13.GL_MAX_TEXTURE_UNITS, temp);
 			max_texture_units = temp.get(0);
 		} else
-			max_texture_units = 0;
+			max_texture_units = 1;
         glTexCoordPointer_buffer = new Buffer[max_texture_units];
     }
 
