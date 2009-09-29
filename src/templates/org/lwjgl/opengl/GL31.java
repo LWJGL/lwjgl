@@ -231,7 +231,7 @@ public interface GL31 {
 	int GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER = 0x8A46;
 
 	/** Returned by GetActiveUniformsiv and GetUniformBlockIndex */
-	int GL_INVALID_INDEX = 0xFFFFFFFF; // TODO: Check if this is correct
+	int GL_INVALID_INDEX = 0xFFFFFFFF;
 
 	void glGetUniformIndices(@GLuint int program, @AutoSize("uniformIndices") @GLsizei int uniformCount,
 	                            @Const @NullTerminated @GLchar ByteBuffer uniformNames,

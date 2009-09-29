@@ -253,13 +253,9 @@ public interface GL32 {
 	 */
 	int GL_PROGRAM_POINT_SIZE = 0x8642;
 
-	void glProgramParameteri(@GLuint int program, @GLenum int pname, int value);
-
 	void glFramebufferTexture(@GLenum int target, @GLenum int attachment, @GLuint int texture, int level);
 
 	void glFramebufferTextureLayer(@GLenum int target, @GLenum int attachment, @GLuint int texture, int level, int layer);
-
-	void glFramebufferTextureFace(@GLenum int target, @GLenum int attachment, @GLuint int texture, int level, @GLenum int face);
 
 	// --------------------------------------------------------
 	// ----------------------[ ARB_sync ]----------------------

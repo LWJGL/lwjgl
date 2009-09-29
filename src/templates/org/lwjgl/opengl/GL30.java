@@ -262,8 +262,7 @@ public interface GL30 {
 	/** Accepted by the &lt;clamp&gt; parameter of ClampColor. */
 	int GL_FIXED_ONLY = 0x891D;
 
-	// TODO: ClampColor without the ARB postfix not present in NV driver atm.
-	void glClampColorARB(@GLenum int target, @GLenum int clamp);
+	void glClampColor(@GLenum int target, @GLenum int clamp);
 
 	// ----------------------------------------------------------------------
 	// ----------------------[ NV_depth_buffer_float ]----------------------
