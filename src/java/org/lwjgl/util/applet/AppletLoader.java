@@ -874,7 +874,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
                     	}
                     	else {
                     		// retry attempts exhasted, download failed
-                    		fatalErrorOccured("failed to download " + currentFile, null);
+                    		throw new Exception("failed to download " + currentFile);
                     	}
                     }
 	            }
