@@ -131,6 +131,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private WindowsDisplayPeerInfo peer_info;
 	private Object current_cursor;
 	private Canvas parent;
+	private static boolean hasParent = false;
 
 	private WindowsKeyboard keyboard;
 	private WindowsMouse mouse;
@@ -169,6 +170,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		isFocused = false;
 		did_maximize = false;
 		this.parent = parent;
+		hasParent = parent != null;
 		long parent_hwnd = parent != null ? getHwnd(parent) : 0;
 		this.hwnd = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(), Display.isFullscreen() || isUndecorated(), parent != null, parent_hwnd);
 		if (hwnd == 0) {
@@ -519,7 +521,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static native long getForegroundWindow();
 
 	static void centerCursor(long hwnd) {
-		if (getForegroundWindow() != hwnd)
+		if (getForegroundWindow() != hwnd && !hasParent)
 			return;
 		getGlobalClientRect(hwnd, rect);
 		int local_offset_x = rect.left;
@@ -764,7 +766,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	private void updateClipping() {
-		if ((Display.isFullscreen() || (mouse != null && mouse.isGrabbed())) && !isMinimized && isFocused && getForegroundWindow() == getHwnd()) {
+		if ((Display.isFullscreen() || (mouse != null && mouse.isGrabbed())) && !isMinimized && isFocused && (getForegroundWindow() == getHwnd() || hasParent)) {
 			try {
 				setupCursorClipping(getHwnd());
 			} catch (LWJGLException e) {
