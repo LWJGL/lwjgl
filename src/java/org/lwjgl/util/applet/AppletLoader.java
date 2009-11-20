@@ -73,6 +73,8 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Pack200;
 
+import com.sun.net.ssl.HttpsURLConnection;
+
 import sun.security.util.SecurityConstants;
 
 /**
@@ -789,6 +791,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		for (int i = 0; i < urlList.length; i++) {
 			urlconnection = urlList[i].openConnection();
 			urlconnection.setDefaultUseCaches(false);
+			if (urlconnection instanceof HttpURLConnection) {
+				((HttpURLConnection) urlconnection).setRequestMethod("HEAD");
+			}
 			fileSizes[i] = urlconnection.getContentLength();
 			totalSizeDownload += fileSizes[i];
 		}
