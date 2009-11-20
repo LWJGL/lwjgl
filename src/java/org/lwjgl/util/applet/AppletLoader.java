@@ -54,6 +54,7 @@ import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
+import java.net.JarURLConnection;
 import java.net.SocketPermission;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -1045,6 +1046,16 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		// get the current certificate to compare against native files 
 		Certificate[] certificate = AppletLoader.class.getProtectionDomain().getCodeSource().getCertificates();
+		
+		// workaround for bug where cached applet loader does not have certificates!?
+		if (certificate == null) {
+			URL location = AppletLoader.class.getProtectionDomain().getCodeSource().getLocation();
+			
+			// manually load the certificate
+			JarURLConnection jurl = (JarURLConnection) (new URL("jar:" + location.toString() + "!/org/lwjgl/util/applet/AppletLoader.class").openConnection());
+			jurl.setDefaultUseCaches(true);
+			certificate = jurl.getCertificates();
+		}
 
 		// create native folder
 		File nativeFolder = new File(path + "natives");
