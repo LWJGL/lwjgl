@@ -73,8 +73,6 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Pack200;
 
-import com.sun.net.ssl.HttpsURLConnection;
-
 import sun.security.util.SecurityConstants;
 
 /**
