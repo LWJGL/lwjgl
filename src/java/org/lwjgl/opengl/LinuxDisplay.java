@@ -871,13 +871,15 @@ final class LinuxDisplay implements DisplayImplementation {
 			return;
 		focused = got_focus;
 		
+		if (focused) {
+			acquireInput();
+		}
+		
 		if (parent != null && xembedded && focused != parent.hasFocus()) {
 			return;
 		}
 		
-		if (focused) {
-			acquireInput();
-		} else {
+		if (!focused) {
 			releaseInput();
 			
 			if (parent != null && xembedded) {
