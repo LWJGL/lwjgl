@@ -761,7 +761,6 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static native int defWindowProc(long hwnd, int msg, long wParam, long lParam);
 
 	private void checkCursorState() {
-		updateCursor();
 		updateClipping();
 	}
 

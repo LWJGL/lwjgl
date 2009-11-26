@@ -630,7 +630,7 @@ public class Mouse {
 	 */
 	public static void updateCursor() {
 		synchronized (OpenGLPackageAccess.global_lock) {
-			if (emulateCursorAnimation && currentCursor != null && currentCursor.hasTimedOut()) {
+			if (emulateCursorAnimation && currentCursor != null && currentCursor.hasTimedOut() && Mouse.isInsideWindow()) {
 				currentCursor.nextCursor();
 				try {
 					setNativeCursor(currentCursor);
