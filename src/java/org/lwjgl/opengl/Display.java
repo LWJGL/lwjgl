@@ -116,6 +116,9 @@ public final class Display {
 	private static boolean window_created = false;
 
 	private static boolean parent_resized;
+	
+	/** Initial Background Color of Display */
+	private static float r = 0, g = 0, b = 0;
 
 	private static ComponentListener component_listener = new ComponentAdapter() {
 		public void componentResized(ComponentEvent e) {
@@ -861,6 +864,20 @@ public final class Display {
 			}
 		}
 	}
+	
+	/**
+	*  Set the initial color of the Display. This method is called before the Display is created and will set the
+	*  background color to the one specified in this method.
+	*  
+	*  @param red - color value between 0 - 1
+	*  @param green - color value between 0 - 1
+	*  @param blue - color value between 0 - 1
+	*/
+	public static void setInitialBackground(float red, float green, float blue) {
+		r = red;
+		g = green;
+		b = blue;
+	}
 
 	private static void makeCurrentAndSetSwapInterval() throws LWJGLException {
 		makeCurrent();
@@ -869,6 +886,8 @@ public final class Display {
 	}
 
 	private static void initContext() {
+		// set background clear color
+		GL11.glClearColor(r, g, b, 1.0f);
 		// Clear window to avoid the desktop "showing through"
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		update();
