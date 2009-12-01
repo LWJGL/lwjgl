@@ -304,9 +304,13 @@ public interface GL32 {
 
 	void glWaitSync(@GLpointer("GLsync") GLSync sync, @GLbitfield int flags, @GLuint64 long timeout);
 
-	@StripPostfix("params")
-	void glGetInteger64v(@GLenum int pname, @OutParameter @Check("1") @GLint64 LongBuffer params);
+	@StripPostfix(value = "data", postfix = "64")
+	void glGetInteger64v(@GLenum int pname, @OutParameter @Check("1") @GLint64 LongBuffer data);
 
+	@StripPostfix(value = "data", postfix = "64")
+	void glGetInteger64i_v(@GLenum int value, @GLuint int index, @OutParameter @Check("4") @GLint64 LongBuffer data);
+
+	@StripPostfix("values")
 	void glGetSynciv(@GLpointer("GLsync") GLSync sync, @GLenum int pname,
 	                 @AutoSize("values") @GLsizei int bufSize,
 	                 @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,

@@ -283,22 +283,29 @@ public class JavaMethodsGenerator {
 	private static String getPostfixStrippedName(TypeMap type_map, InterfaceDeclaration interface_decl, MethodDeclaration method) {
 		StripPostfix strip_annotation = method.getAnnotation(StripPostfix.class);
 		ParameterDeclaration postfix_parameter = Utils.findParameter(method, strip_annotation.value());
-		PostfixTranslator translator = new PostfixTranslator(type_map, postfix_parameter);
-		postfix_parameter.getType().accept(translator);
-		String postfix = translator.getSignature();
+		String postfix = strip_annotation.postfix();
+		if ( "NULL".equals(postfix) ) {
+			PostfixTranslator translator = new PostfixTranslator(type_map, postfix_parameter);
+			postfix_parameter.getType().accept(translator);
+			postfix = translator.getSignature();
+		}
 		String method_name = method.getSimpleName();
 		String extension_postfix = "NULL".equals(strip_annotation.extension()) ? getExtensionPostfix(interface_decl) : strip_annotation.extension();
 		String result;
-		if (method_name.endsWith(postfix + "v" + extension_postfix))
+
+		if ( strip_annotation.hasPostfix() && method_name.endsWith(postfix + "v" + extension_postfix))
 			result = method_name.substring(0, method_name.length() - (postfix.length() + 1 + extension_postfix.length()));
-		else if (method_name.endsWith(postfix + extension_postfix))
+		else if ( strip_annotation.hasPostfix() && method_name.endsWith(postfix + extension_postfix))
 			result = method_name.substring(0, method_name.length() - (postfix.length() + extension_postfix.length()));
-		else if ( method_name.endsWith("_v" + extension_postfix) )
-			result = method_name.substring(0, method_name.length() - (2 + extension_postfix.length()));
+		else if ( strip_annotation.hasPostfix() && method_name.endsWith(postfix + "i_v" + extension_postfix) )
+			result = method_name.substring(0, method_name.length() - (postfix.length() + 3 + extension_postfix.length()));
+		else if ( method_name.endsWith("i_v" + extension_postfix) )
+			result = method_name.substring(0, method_name.length() - (3 + extension_postfix.length()));
 		else if (method_name.endsWith("v" + extension_postfix))
 			result = method_name.substring(0, method_name.length() - (1 + extension_postfix.length()));
 		else
 			throw new RuntimeException(method + " is specified as being postfix stripped on parameter " + postfix_parameter + ", but it's postfix is not '" + postfix + "' nor 'v'");
+
 		return result + extension_postfix;
 	}
 

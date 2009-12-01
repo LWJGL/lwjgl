@@ -725,7 +725,7 @@ public interface GL30 {
 
 	void glColorMaski(@GLuint int buf, boolean r, boolean g, boolean b, boolean a);
 
-	@StripPostfix("data")
+	@StripPostfix(value = "data", hasPostfix = false)
 	void glGetBooleani_v(@GLenum int value, @GLuint int index, @OutParameter @Check("4") @GLboolean ByteBuffer data);
 
 	@StripPostfix("data")

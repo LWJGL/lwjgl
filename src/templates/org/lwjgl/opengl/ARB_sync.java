@@ -82,9 +82,10 @@ public interface ARB_sync {
 
 	void glWaitSync(@GLpointer("GLsync") GLSync sync, @GLbitfield int flags, @GLuint64 long timeout);
 
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "64")
 	void glGetInteger64v(@GLenum int pname, @OutParameter @Check("1") @GLint64 LongBuffer params);
 
+	@StripPostfix("values")
 	void glGetSynciv(@GLpointer("GLsync") GLSync sync, @GLenum int pname,
 	                 @AutoSize("values") @GLsizei int bufSize,
 	                 @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,

@@ -215,8 +215,16 @@ public class ContextCapabilitiesGenerator {
 			writer.print("\t\t\t(");
 			if ( deprecated != null )
 				writer.print("forwardCompatible || ");
-			if ( dependent != null )
-				writer.print("!supported_extensions.contains(\"" + dependent.value() + "\") || ");
+			if ( dependent != null ) {
+				if ( dependent.value().indexOf(',') == -1 )
+					writer.print("!supported_extensions.contains(\"" + dependent.value() + "\") || ");
+				else {
+					writer.print("!(false");
+					for ( String extension : dependent.value().split(",") )
+						writer.print(" || supported_extensions.contains(\"" + extension + "\")");
+					writer.print(") || ");
+				}
+			}
 			if ( deprecated != null || dependent != null )
 				writer.print('(');
 			writer.print(Utils.getFunctionAddressName(d, method) + " = ");

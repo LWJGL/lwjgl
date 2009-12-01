@@ -53,4 +53,6 @@ public interface NV_geometry_program4 {
 
 	void glFramebufferTextureLayerEXT(@GLenum int target, @GLenum int attachment, @GLuint int texture, int level, int layer);
 
+	void glFramebufferTextureFaceEXT(@GLenum int target, @GLenum int attachment, @GLuint int texture, int level, @GLenum int face);
+
 }
