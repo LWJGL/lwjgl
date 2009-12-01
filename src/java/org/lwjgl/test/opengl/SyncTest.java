@@ -132,7 +132,7 @@ public final class SyncTest {
 		}
 
 		IntBuffer property = BufferUtils.createIntBuffer(1);
-		GL32.glGetSynciv(sync, GL32.GL_SYNC_STATUS, null, property);
+		GL32.glGetSync(sync, GL32.GL_SYNC_STATUS, null, property);
 		System.out.println("Sync Status: " + (property.get(0) == GL32.GL_UNSIGNALED ? "UNSIGNALED" : "SIGNALED"));
 
 		GL32.glDeleteSync(sync);
