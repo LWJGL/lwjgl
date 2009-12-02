@@ -44,6 +44,7 @@
 #include "org_lwjgl_WindowsSysImplementation.h"
 #include "common_tools.h"
 #include <malloc.h>
+#include <commctrl.h>
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_WindowsSysImplementation_nGetTime(JNIEnv * env, jclass unused) {
 	DWORD time;
@@ -65,6 +66,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_WindowsSysImplementation_nAlert(JNIEnv * e
 	
 	free(eMessageText);
 	free(cTitleBarText);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_WindowsSysImplementation_initCommonControls(JNIEnv * env, jclass unused) {
+	InitCommonControls();
 }
 
 JNIEXPORT jstring JNICALL Java_org_lwjgl_WindowsSysImplementation_nGetClipboard

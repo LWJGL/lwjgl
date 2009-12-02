@@ -94,9 +94,13 @@ final class WindowsSysImplementation extends DefaultSysImplementation {
 	}
 
 	public void alert(String title, String message) {
+		if(!Display.isCreated()) {
+			initCommonControls();
+		}
 		nAlert(getHwnd(), title, message);
 	}
 	private static native void nAlert(long parent_hwnd, String title, String message);
+	private static native void initCommonControls();
 
 	public boolean openURL(final String url) {
 		try {
