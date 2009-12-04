@@ -234,7 +234,7 @@ public interface GL31 {
 	int GL_INVALID_INDEX = 0xFFFFFFFF;
 
 	void glGetUniformIndices(@GLuint int program, @AutoSize("uniformIndices") @GLsizei int uniformCount,
-	                            @Const @NullTerminated @GLchar ByteBuffer uniformNames,
+	                            @Const @NullTerminated("uniformIndices.remaining()") @GLchar @StringList("uniformCount") ByteBuffer uniformNames,
 	                            @OutParameter @GLuint IntBuffer uniformIndices);
 
 	@StripPostfix("params")

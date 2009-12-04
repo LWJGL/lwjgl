@@ -864,7 +864,9 @@ public interface GL30 {
 
 	void glEndTransformFeedback();
 
-	void glTransformFeedbackVaryings(@GLuint int program, @GLsizei int count, @Const @NullTerminated @GLchar ByteBuffer varyings, @GLenum int bufferMode);
+	void glTransformFeedbackVaryings(@GLuint int program, @GLsizei int count,
+	                                 @Const @NullTerminated("count") @GLchar @StringList("count") ByteBuffer varyings,
+	                                 @GLenum int bufferMode);
 
 	void glGetTransformFeedbackVarying(@GLuint int program, @GLuint int index,
 	                                   @AutoSize("name") @GLsizei int bufSize,

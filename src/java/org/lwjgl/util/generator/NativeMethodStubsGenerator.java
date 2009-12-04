@@ -52,6 +52,7 @@ import java.nio.*;
 public class NativeMethodStubsGenerator {
 	private static final String BUFFER_ADDRESS_POSTFIX = "_address";
 	public static final String BUFFER_POSITION_POSTFIX = "_position";
+	private static final String STRING_LIST_POSTFIX = "_str";
 
 	public static void generateNativeMethodStubs(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration d, boolean generate_error_checks, boolean context_specific) {
 		for (MethodDeclaration method : d.getMethods()) {
@@ -120,6 +121,7 @@ public class NativeMethodStubsGenerator {
 			writer.print(" = (" + typedef_name + ")((intptr_t)");
 			writer.println(Utils.FUNCTION_POINTER_VAR_NAME + ");");
 		}
+		generateStringListInits(writer, method.getParameters());
 		writer.print("\t");
 		if (!result_type.equals(env.getTypeUtils().getVoidType())) {
 			Declaration return_declaration;
@@ -197,17 +199,21 @@ public class NativeMethodStubsGenerator {
 			writer.print(Utils.RESULT_VAR_NAME);
 		} else {
 			writer.print(param.getSimpleName());
-			if (Utils.isAddressableType(param.getType())) {
+			if ( param.getAnnotation(StringList.class) != null )
+				writer.print(STRING_LIST_POSTFIX);
+			else if (Utils.isAddressableType(param.getType()))
 				writer.print(BUFFER_ADDRESS_POSTFIX);
-			}
 		}
 	}
 
 	private static void generateStringDeallocations(PrintWriter writer, Collection<ParameterDeclaration> params) {
-		for (ParameterDeclaration param : params)
+		for (ParameterDeclaration param : params) {
 			if (Utils.getJavaType(param.getType()).equals(String.class) &&
 					param.getAnnotation(Result.class) == null)
 				writer.println("\tfree(" + param.getSimpleName() + BUFFER_ADDRESS_POSTFIX + ");");
+			else if (param.getAnnotation(StringList.class) != null ) // Free the string array mem
+				writer.println("\tfree(" + param.getSimpleName() + STRING_LIST_POSTFIX + ");");
+		}
 	}
 
 	private static void generateBufferParameterAddresses(TypeMap type_map, PrintWriter writer, MethodDeclaration method, Mode mode) {
@@ -249,5 +255,34 @@ public class NativeMethodStubsGenerator {
 				throw new RuntimeException("Illegal type " + java_type);
 		}
 		writer.println(";");
+
+		if ( param.getAnnotation(StringList.class) != null ) {
+			if ( param.getAnnotation(GLchar.class) == null ||
+			     param.getAnnotation(NullTerminated.class) == null ||
+			     param.getAnnotation(NullTerminated.class).value().length() == 0
+			)
+				throw new RuntimeException("StringList annotation can only be applied on null-terminated GLchar buffers.");
+
+			// Declare string array and loop counters
+			writer.print("\tGLchar **" + param.getSimpleName() + STRING_LIST_POSTFIX + "; ");
+			writer.println("\tunsigned int " + param.getSimpleName() + "_i = 0;");
+			writer.println("\tGLchar *" + param.getSimpleName() + "_next = (GLchar *)" + param.getSimpleName() + BUFFER_ADDRESS_POSTFIX + ";");
+		}
 	}
+
+	private static void generateStringListInits(PrintWriter writer, Collection<ParameterDeclaration> params) {
+		for ( ParameterDeclaration param : params ) {
+			StringList stringList_annotation = param.getAnnotation(StringList.class);
+			if ( stringList_annotation != null ) {
+				// Allocate the string array
+				writer.println("\t" + param.getSimpleName() + STRING_LIST_POSTFIX + " = (GLchar **) malloc(" + stringList_annotation.value() + "*sizeof(GLchar*));");
+				// Fill string array with the string pointers
+				writer.println("\tdo {");
+				writer.println("\t\t" + param.getSimpleName() + STRING_LIST_POSTFIX + "[" + param.getSimpleName() + "_i++] = " + param.getSimpleName() + "_next;");
+				writer.println("\t\t" + param.getSimpleName() + "_next += strlen(" + param.getSimpleName() + "_next) + 1;");
+				writer.println("\t} while ( " + param.getSimpleName() + "_i < " + stringList_annotation.value() + " );");
+			}
+		}
+	}
+
 }

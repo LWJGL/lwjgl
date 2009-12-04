@@ -101,7 +101,9 @@ public interface EXT_transform_feedback {
 
 	void glEndTransformFeedbackEXT();
 
-	void glTransformFeedbackVaryingsEXT(@GLuint int program, @GLsizei int count, @Const @NullTerminated @GLchar ByteBuffer varyings, @GLenum int bufferMode);
+	void glTransformFeedbackVaryingsEXT(@GLuint int program, @GLsizei int count,
+	                                    @Const @NullTerminated("count") @GLchar @StringList("count") ByteBuffer varyings,
+	                                    @GLenum int bufferMode);
 
 	void glGetTransformFeedbackVaryingEXT(@GLuint int program, @GLuint int index,
 	                                      @AutoSize("name") @GLsizei int bufSize,

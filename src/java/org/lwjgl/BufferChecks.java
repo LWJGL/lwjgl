@@ -74,6 +74,17 @@ public class BufferChecks {
 		}
 	}
 
+	public static void checkNullTerminated(ByteBuffer buf, int count) {
+		int nullFound = 0;
+		for ( int i = buf.position(); i < buf.limit(); i++ ) {
+			if ( buf.get(i) == 0 )
+				nullFound++;
+		}
+
+		if ( nullFound < count )
+			throw new IllegalArgumentException("Missing null termination");
+	}
+
 	public static void checkNotNull(Object o) {
 		if (o == null)
 			throw new IllegalArgumentException("Null argument");

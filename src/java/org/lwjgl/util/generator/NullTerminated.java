@@ -46,4 +46,5 @@ import java.lang.annotation.ElementType;
 
 @Target(ElementType.PARAMETER)
 public @interface NullTerminated {
+	String value() default "";
 }

@@ -41,8 +41,6 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-import org.lwjgl.opengl.PointerWrapper;
-
 import com.sun.mirror.apt.*;
 import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
@@ -471,23 +469,23 @@ public class JavaMethodsGenerator {
 					check_value = check_annotation.value();
 					can_be_null = check_annotation.canBeNull();
 				}
-				boolean null_terminated = param.getAnnotation(NullTerminated.class) != null;
+				NullTerminated null_terminated = param.getAnnotation(NullTerminated.class);
 				if (Buffer.class.isAssignableFrom(java_type)) {
 					boolean indirect_buffer_allowed = param.getAnnotation(CachedReference.class) == null;
 					boolean out_parameter = param.getAnnotation(OutParameter.class) != null;
 					TypeInfo typeinfo = typeinfos.get(param);
 					printParameterCheck(writer, param.getSimpleName(), typeinfo.getType().getSimpleName(), check_value, can_be_null, null_terminated, indirect_buffer_allowed, out_parameter);
-				} else if (String.class.equals(java_type)) {
+				} else if ( String.class.equals(java_type)) {
 					if (!can_be_null)
 						writer.println("\t\tBufferChecks.checkNotNull(" + param.getSimpleName() + ");");
 				}
 			}
 		}
 		if (method.getAnnotation(CachedResult.class) != null)
-			printParameterCheck(writer, Utils.CACHED_BUFFER_NAME, null, null, true, false, false, false);
+			printParameterCheck(writer, Utils.CACHED_BUFFER_NAME, null, null, true, null, false, false);
 	}
 
-	private static void printParameterCheck(PrintWriter writer, String name, String type, String check_value, boolean can_be_null, boolean null_terminated, boolean indirect_buffer_allowed, boolean out_parameter) {
+	private static void printParameterCheck(PrintWriter writer, String name, String type, String check_value, boolean can_be_null, NullTerminated null_terminated, boolean indirect_buffer_allowed, boolean out_parameter) {
 		if (indirect_buffer_allowed && out_parameter) {
 			writer.println("\t\t" + type + " " + name + SAVED_PARAMETER_POSTFIX + " = " + name + ";");
 		}
@@ -507,8 +505,15 @@ public class JavaMethodsGenerator {
 			writer.print("Direct(" + name);
 		}
 		writer.println(");");
-		if (null_terminated)
-			writer.println("\t\tBufferChecks.checkNullTerminated(" + name + ");");
+		if (null_terminated != null) {
+			writer.print("\t\tBufferChecks.checkNullTerminated(");
+			writer.print(name);
+			if ( null_terminated.value().length() > 0 ) {
+				writer.print(", ");
+				writer.print(null_terminated.value());
+			}
+			writer.println(");");
+		}
 	}
 
 	private static void printResultType(PrintWriter writer, MethodDeclaration method, boolean native_stub) {

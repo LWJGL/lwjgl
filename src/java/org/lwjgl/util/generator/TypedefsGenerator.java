@@ -76,7 +76,7 @@ public class TypedefsGenerator {
 		NativeTypeTranslator translator = new NativeTypeTranslator(type_map, param);
 		param.getType().accept(translator);
 		writer.print(translator.getSignature());
-		if (param.getAnnotation(Result.class) != null || param.getAnnotation(Indirect.class) != null)
+		if (param.getAnnotation(Result.class) != null || param.getAnnotation(Indirect.class) != null || param.getAnnotation(StringList.class) != null)
 			writer.print("*");
 		writer.print(" " + param.getSimpleName());
 	}
