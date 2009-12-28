@@ -47,8 +47,8 @@ public interface ARB_map_buffer_range {
 
 	@CachedResult
 	@GLvoid
-	ByteBuffer
-	glMapBufferRange(@GLenum int target, @GLintptr long offset, @GLsizeiptr long length, @GLbitfield int access);
+	@AutoResultSize("length")
+	ByteBuffer glMapBufferRange(@GLenum int target, @GLintptr long offset, @GLsizeiptr long length, @GLbitfield int access);
 
 	void glFlushMappedBufferRange(@GLenum int target, @GLintptr long offset, @GLsizeiptr long length);
 

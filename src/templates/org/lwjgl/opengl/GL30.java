@@ -242,8 +242,8 @@ public interface GL30 {
 
 	@CachedResult
 	@GLvoid
-	ByteBuffer
-	glMapBufferRange(@GLenum int target, @GLintptr long offset, @GLsizeiptr long length, @GLbitfield int access);
+	@AutoResultSize("length")
+	ByteBuffer glMapBufferRange(@GLenum int target, @GLintptr long offset, @GLsizeiptr long length, @GLbitfield int access);
 
 	void glFlushMappedBufferRange(@GLenum int target, @GLintptr long offset, @GLsizeiptr long length);
 

@@ -1286,6 +1286,7 @@ public interface EXT_direct_state_access {
 	@Dependent("OpenGL30")
 	@CachedResult
 	@GLvoid
+	@AutoResultSize("length")
 	ByteBuffer glMapNamedBufferRangeEXT(@GLuint int buffer, @GLintptr long offset, @GLsizeiptr long length, @GLbitfield int access);
 
 	@Dependent("OpenGL30")
