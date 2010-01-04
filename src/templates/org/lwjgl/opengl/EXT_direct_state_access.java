@@ -778,6 +778,29 @@ public interface EXT_direct_state_access {
 	                             @GLfloat
 	                             @GLdouble Buffer data);
 
+	/**
+	 * glMapNamedBufferEXT maps a GL buffer object to a ByteBuffer. The old_buffer argument can be null,
+	 * in which case a new ByteBuffer will be created, pointing to the returned memory. If old_buffer is non-null,
+	 * it will be returned if it points to the same mapped memory and has the same capacity as the buffer object,
+	 * otherwise a new ByteBuffer is created. That way, an application will normally use glMapNamedBufferEXT like this:
+	 * <p/>
+	 * ByteBuffer mapped_buffer; mapped_buffer = glMapNamedBufferEXT(..., ..., null); ... // Another map on the same buffer mapped_buffer = glMapNamedBufferEXT(..., ..., mapped_buffer);
+	 * <p/>
+	 * Only ByteBuffers returned from this method are to be passed as the old_buffer argument. User-created ByteBuffers cannot be reused.
+	 * <p/>
+	 * The version of this method without an explicit length argument calls glGetNamedBufferParameterEXT internally to
+	 * retrieve the current buffer object size, which may cause a pipeline flush and reduce application performance.
+	 * <p/>
+	 * The version of this method with an explicit length argument is a fast alternative to the one without. No GL call
+	 * is made to retrieve the buffer object size, so the user is responsible for tracking and using the appropriate length.<br>
+	 * Security warning: The length argument should match the buffer object size. Reading from or writing to outside
+	 * the memory region that corresponds to the mapped buffer object will cause native crashes.
+	 *
+	 * @param length        the length of the mapped memory in bytes.
+	 * @param old_buffer    A ByteBuffer. If this argument points to the same address and has the same capacity as the new mapping, it will be returned and no new buffer will be created.
+	 *
+	 * @return A ByteBuffer representing the mapped buffer memory.
+	 */
 	@Dependent("OpenGL15")
 	@CachedResult
 	@GLvoid
@@ -1283,8 +1306,22 @@ public interface EXT_direct_state_access {
 	in name and replace "enum target" parameter with "uint buffer"
 	 */
 
+	/**
+	 * glMapNamedBufferRangeEXT maps a GL buffer object range to a ByteBuffer. The old_buffer argument can be null,
+	 * in which case a new ByteBuffer will be created, pointing to the returned memory. If old_buffer is non-null,
+	 * it will be returned if it points to the same mapped memory and has the same capacity as the buffer object,
+	 * otherwise a new ByteBuffer is created. That way, an application will normally use glMapNamedBufferRangeEXT like this:
+	 * <p/>
+	 * ByteBuffer mapped_buffer; mapped_buffer = glMapNamedBufferRangeEXT(..., ..., ..., ..., null); ... // Another map on the same buffer mapped_buffer = glMapNamedBufferRangeEXT(..., ..., ..., ..., mapped_buffer);
+	 * <p/>
+	 * Only ByteBuffers returned from this method are to be passed as the old_buffer argument. User-created ByteBuffers cannot be reused.
+	 *
+	 * @param old_buffer    A ByteBuffer. If this argument points to the same address and has the same capacity as the new mapping, it will be returned and no new buffer will be created.
+	 *
+	 * @return A ByteBuffer representing the mapped buffer memory.
+	 */
 	@Dependent("OpenGL30")
-	@CachedResult
+	@CachedResult(isRange = true)
 	@GLvoid
 	@AutoResultSize("length")
 	ByteBuffer glMapNamedBufferRangeEXT(@GLuint int buffer, @GLintptr long offset, @GLsizeiptr long length, @GLbitfield int access);

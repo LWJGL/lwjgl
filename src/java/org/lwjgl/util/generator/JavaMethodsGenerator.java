@@ -68,6 +68,9 @@ public class JavaMethodsGenerator {
 				printMethodWithMultiType(env, type_map, writer, interface_decl, method, typeinfos_instance, Mode.NORMAL, generate_error_checks, context_specific);
 			}
 		}
+		if ( method.getAnnotation(CachedResult.class) != null && !method.getAnnotation(CachedResult.class).isRange() ) {
+			printMethodWithMultiType(env, type_map, writer, interface_decl, method, TypeInfo.getDefaultTypeInfoMap(method), Mode.CACHEDRESULT, generate_error_checks, context_specific);
+		}
 		printJavaNativeStub(writer, method, Mode.NORMAL, generate_error_checks, context_specific);
 		if (Utils.hasMethodBufferObjectParameter(method)) {
 			printMethodWithMultiType(env, type_map, writer, interface_decl, method, TypeInfo.getDefaultTypeInfoMap(method), Mode.BUFFEROBJECT, generate_error_checks, context_specific);
@@ -120,16 +123,23 @@ public class JavaMethodsGenerator {
 				first_parameter = generateParameterJava(writer, param, type_info, native_stub, first_parameter, mode);
 			}
 		}
+		CachedResult cached_result_annotation = method.getAnnotation(CachedResult.class);
 		TypeMirror result_type = Utils.getMethodReturnType(method);
 		if ((native_stub && Utils.getNIOBufferType(result_type) != null) || Utils.needResultSize(method)) {
-			if (!first_parameter)
-				writer.print(", ");
-			first_parameter = false;
-			writer.print("long " + Utils.RESULT_SIZE_NAME);
+			if (cached_result_annotation == null || !cached_result_annotation.isRange()) {
+				if (!first_parameter)
+					writer.print(", ");
+				first_parameter = false;
+				writer.print("long " + Utils.RESULT_SIZE_NAME);
+			}
 		}
-		if (method.getAnnotation(CachedResult.class) != null) {
+		if (cached_result_annotation != null) {
 			if (!first_parameter)
 				writer.print(", ");
+
+			if ( mode == Mode.CACHEDRESULT )
+				writer.print("long " + Utils.CACHED_BUFFER_LENGTH_NAME + ", ");
+
 			first_parameter = false;
 			printResultType(writer, method, native_stub);
 			writer.print(" " + Utils.CACHED_BUFFER_NAME);
@@ -403,16 +413,26 @@ public class JavaMethodsGenerator {
 				first_parameter = printMethodCallArgument(writer, method, param, typeinfos_instance, mode, first_parameter);
 			}
 		if (Utils.getNIOBufferType(Utils.getMethodReturnType(method)) != null) {
-			if (!first_parameter)
-				writer.print(", ");
-			first_parameter = false;
-			AutoResultSize auto_result_size_annotation = method.getAnnotation(AutoResultSize.class);
-			String result_size_expression;
-			if (auto_result_size_annotation == null)
-				result_size_expression = Utils.RESULT_SIZE_NAME;
-			else
-				result_size_expression = auto_result_size_annotation.value();
-			Utils.printExtraCallArguments(writer, method, result_size_expression);
+			if (method.getAnnotation(CachedResult.class) != null && method.getAnnotation(CachedResult.class).isRange()) {
+				first_parameter = false;
+				Utils.printExtraCallArguments(writer, method, "");
+			} else {
+				if (!first_parameter)
+					writer.print(", ");
+				first_parameter = false;
+
+				String result_size_expression;
+				if ( mode == Mode.CACHEDRESULT )
+					result_size_expression = Utils.CACHED_BUFFER_LENGTH_NAME;
+				else {
+					AutoResultSize auto_result_size_annotation = method.getAnnotation(AutoResultSize.class);
+					if (auto_result_size_annotation == null)
+						result_size_expression = Utils.RESULT_SIZE_NAME;
+					else
+						result_size_expression = auto_result_size_annotation.value();
+				}
+				Utils.printExtraCallArguments(writer, method, result_size_expression);
+			}
 		}
 		return first_parameter;
 	}

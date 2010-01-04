@@ -106,8 +106,10 @@ public class NativeMethodStubsGenerator {
 		writer.print("(JNIEnv *env, jclass clazz");
 		generateParameters(writer, method.getParameters(), mode);
 		if (Utils.getNIOBufferType(result_type) != null) {
-			writer.print(", jlong " + Utils.RESULT_SIZE_NAME);
-			if (method.getAnnotation(CachedResult.class) != null)
+			CachedResult cached_result_annotation = method.getAnnotation(CachedResult.class);
+			if (cached_result_annotation == null || !cached_result_annotation.isRange())
+				writer.print(", jlong " + Utils.RESULT_SIZE_NAME);
+			if (cached_result_annotation != null)
 				writer.print(", jobject " + Utils.CACHED_BUFFER_NAME);
 		}
 		if (context_specific) {
@@ -160,7 +162,10 @@ public class NativeMethodStubsGenerator {
 			writer.print(Utils.RESULT_VAR_NAME);
 			if (Buffer.class.isAssignableFrom(java_result_type)) {
 				writer.print(", ");
-				Utils.printExtraCallArguments(writer, method, Utils.RESULT_SIZE_NAME);
+				if (method.getAnnotation(CachedResult.class) != null && method.getAnnotation(CachedResult.class).isRange())
+					Utils.printExtraCallArguments(writer, method, method.getAnnotation(AutoResultSize.class).value());
+				else
+					Utils.printExtraCallArguments(writer, method, Utils.RESULT_SIZE_NAME);
 			}
 			if (Buffer.class.isAssignableFrom(java_result_type) ||
 				String.class.equals(java_result_type))

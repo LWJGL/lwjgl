@@ -71,6 +71,12 @@ class GLChecks {
 		return scratch_buffer.get(0);
 	}
 
+	static int getBufferObjectSizeATI(ContextCapabilities caps, int buffer) {
+		IntBuffer scratch_buffer = caps.scratch_int_buffer;
+		ATIVertexArrayObject.glGetObjectBufferATI(buffer, ATIVertexArrayObject.GL_OBJECT_BUFFER_SIZE_ATI, scratch_buffer);
+		return scratch_buffer.get(0);
+	}
+
 	static int getNamedBufferObjectSize(ContextCapabilities caps, int buffer) {
 		IntBuffer scratch_buffer = caps.scratch_int_buffer;
 		EXTDirectStateAccess.glGetNamedBufferParameterEXT(buffer, GL15.GL_BUFFER_SIZE, scratch_buffer);

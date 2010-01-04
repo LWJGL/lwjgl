@@ -58,13 +58,14 @@ public class Utils {
 	public static final String BUFFER_OBJECT_PARAMETER_POSTFIX = "_buffer_offset";
 	public static final String RESULT_SIZE_NAME = "result_size";
 	public static final String RESULT_VAR_NAME = "__result";
+	public static final String CACHED_BUFFER_LENGTH_NAME = "length";
 	public static final String CACHED_BUFFER_NAME = "old_buffer";
 	private static final String OVERLOADED_METHOD_PREFIX = "n";
 
 	public static String getTypedefName(MethodDeclaration method) {
 		return method.getSimpleName() + TYPEDEF_POSTFIX;
 	}
-	
+
 	public static String getFunctionAddressName(InterfaceDeclaration interface_decl, MethodDeclaration method) {
 		return interface_decl.getSimpleName() + "_" + method.getSimpleName() + FUNCTION_POINTER_POSTFIX;
 	}
@@ -201,7 +202,7 @@ public class Utils {
 	public static boolean needResultSize(MethodDeclaration method) {
 		return getNIOBufferType(getMethodReturnType(method)) != null && method.getAnnotation(AutoResultSize.class) == null;
 	}
-	
+
 	public static void printExtraCallArguments(PrintWriter writer, MethodDeclaration method, String size_parameter_name) {
 		writer.print(size_parameter_name);
 		if (method.getAnnotation(CachedResult.class) != null) {

@@ -43,4 +43,5 @@ import java.lang.annotation.ElementType;
 
 @Target(ElementType.METHOD)
 public @interface CachedResult {
+	boolean isRange() default false;
 }

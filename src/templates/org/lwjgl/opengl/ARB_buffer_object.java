@@ -104,13 +104,24 @@ public interface ARB_buffer_object {
 	                           @GLdouble Buffer data);
 
 	/**
-	 * glMapBufferARB maps a gl vertex buffer buffer to a ByteBuffer. The oldBuffer argument can be null,
-	 * in which case a new ByteBuffer will be created, pointing to the returned memory. If oldBuffer is non-null,
-	 * it will be returned if it points to the same mapped memory, otherwise a new ByteBuffer is created. That
-	 * way, an application will normally use glMapBufferARB like this:
+	 * glMapBufferARB maps a GL buffer object to a ByteBuffer. The old_buffer argument can be null,
+	 * in which case a new ByteBuffer will be created, pointing to the returned memory. If old_buffer is non-null,
+	 * it will be returned if it points to the same mapped memory and has the same capacity as the buffer object,
+	 * otherwise a new ByteBuffer is created. That way, an application will normally use glMapBufferARB like this:
 	 * <p/>
-	 * ByteBuffer mapped_buffer; mapped_buffer = glMapBufferARB(..., ..., ..., null); ... // Another map on the same buffer mapped_buffer = glMapBufferARB(..., ..., ..., mapped_buffer);
+	 * ByteBuffer mapped_buffer; mapped_buffer = glMapBufferARB(..., ..., null); ... // Another map on the same buffer mapped_buffer = glMapBufferARB(..., ..., mapped_buffer);
+	 * <p/>
+	 * Only ByteBuffers returned from this method are to be passed as the old_buffer argument. User-created ByteBuffers cannot be reused.
+	 * <p/>
+	 * The version of this method without an explicit length argument calls glGetBufferParameterARB internally to
+	 * retrieve the current buffer object size, which may cause a pipeline flush and reduce application performance.
+	 * <p/>
+	 * The version of this method with an explicit length argument is a fast alternative to the one without. No GL call
+	 * is made to retrieve the buffer object size, so the user is responsible for tracking and using the appropriate length.<br>
+	 * Security warning: The length argument should match the buffer object size. Reading from or writing to outside
+	 * the memory region that corresponds to the mapped buffer object will cause native crashes.
 	 *
+	 * @param length        the length of the mapped memory in bytes.
 	 * @param old_buffer    A ByteBuffer. If this argument points to the same address and has the same capacity as the new mapping, it will be returned and no new buffer will be created.
 	 *
 	 * @return A ByteBuffer representing the mapped buffer memory.

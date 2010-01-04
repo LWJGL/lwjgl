@@ -91,8 +91,12 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		}
 		if (Utils.getResultParameter(method) != null && !method.getReturnType().equals(env.getTypeUtils().getVoidType()))
 			throw new RuntimeException(method + " return type is not void but a parameter is annotated with Result");
-		if (method.getAnnotation(CachedResult.class) != null && Utils.getNIOBufferType(Utils.getMethodReturnType(method)) == null)
-			throw new RuntimeException(method + " return type is not a Buffer, but is annotated with CachedResult");
+		if (method.getAnnotation(CachedResult.class) != null) {
+			if (Utils.getNIOBufferType(Utils.getMethodReturnType(method)) == null)
+				throw new RuntimeException(method + " return type is not a Buffer, but is annotated with CachedResult");
+			if (method.getAnnotation(AutoResultSize.class) == null)
+				throw new RuntimeException(method + " is annotated with CachedResult but misses an AutoResultSize annotation");
+		}
 		validateTypes(method, method.getAnnotationMirrors(), method.getReturnType());
 	}
 
