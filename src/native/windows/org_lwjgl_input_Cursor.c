@@ -68,6 +68,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateCursor
 	int maskCount = 0;
 	HBITMAP	colorBitmap;
 	int x, y;
+	HDC hDC;
 	jobject handle_buffer = newJavaManagedByteBuffer(env, sizeof(HCURSOR));
 
 	int *pixels;
@@ -85,8 +86,10 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateCursor
 
 	bitmapInfo.bmiHeader.biBitCount          = 24;
 	bitmapInfo.bmiHeader.biCompression       = BI_RGB;
+	
+	hDC = GetDC(NULL);
 
-	colorDIB = CreateDIBSection(GetDC(NULL), (BITMAPINFO*)&(bitmapInfo),
+	colorDIB = CreateDIBSection(hDC, (BITMAPINFO*)&(bitmapInfo),
 			DIB_RGB_COLORS,
 			(void*)&(ptrCursorImage),
 			NULL, 0);
@@ -94,6 +97,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateCursor
 	dstPtr = ptrCursorImage;
 	if (!dstPtr) {
 		throwException(env, "Could not allocate DIB section.");
+		ReleaseDC(NULL, hDC);
 		return NULL;
 	}
 	for (y = 0; y < height; y++ ) {
@@ -107,7 +111,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateCursor
 		}
 	}
 
-	colorBitmap = CreateDIBitmap(GetDC(NULL),
+	colorBitmap = CreateDIBitmap(hDC,
 			(BITMAPINFOHEADER*)&bitmapInfo.bmiHeader,
 			CBM_INIT,
 			(void *)ptrCursorImage,
@@ -148,6 +152,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateCursor
 	DeleteObject(colorBitmap);
 	DeleteObject(cursorMask);
 	free(maskPixels);
+	ReleaseDC(NULL, hDC);
 
 	cursor_handle = (HCURSOR *)(*env)->GetDirectBufferAddress(env, handle_buffer);
 	*cursor_handle = cursor;
