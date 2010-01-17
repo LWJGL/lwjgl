@@ -69,10 +69,16 @@ public interface GL30 {
 
 	String glGetStringi(@GLenum int name, @GLuint int index);
 
-	void glClearBufferfv(@GLenum int buffer, @Const @Check("4")FloatBuffer value);
-	void glClearBufferiv(@GLenum int buffer, @Const @Check("4")IntBuffer value);
-	void glClearBufferuiv(@GLenum int buffer, @Const @Check("4")IntBuffer value);
-	void glClearBufferfi(@GLenum int buffer, float depth, int stencil);
+	@StripPostfix("value")
+	void glClearBufferfv(@GLenum int buffer, int drawbuffer, @Const @Check("4")FloatBuffer value);
+
+	@StripPostfix("value")
+	void glClearBufferiv(@GLenum int buffer, int drawbuffer, @Const @Check("4")IntBuffer value);
+
+	@StripPostfix("value")
+	void glClearBufferuiv(@GLenum int buffer, int drawbuffer, @Const @Check("4")IntBuffer value);
+	
+	void glClearBufferfi(@GLenum int buffer, int drawbuffer, float depth, int stencil);
 
 	// ---------------------------------------------------------------
 	// ----------------------[ EXT_gpu_shader4 ]----------------------
