@@ -44,6 +44,10 @@ public interface GL32 {
 	// ----------------------[ OpenGL 3.2 ]----------------------
 	// ----------------------------------------------------------
 
+	int GL_CONTEXT_PROFILE_MASK = 0x9126;
+	int GL_CONTEXT_CORE_PROFILE_BIT = 0x00000001;
+	int GL_CONTEXT_COMPATIBILITY_PROFILE_BIT = 0x00000002;
+
 	int GL_MAX_VERTEX_OUTPUT_COMPONENTS = 0x9122;
 	int GL_MAX_GEOMETRY_INPUT_COMPONENTS = 0x9123;
 	int GL_MAX_GEOMETRY_OUTPUT_COMPONENTS = 0x9124;

@@ -238,7 +238,8 @@ public class JavaMethodsGenerator {
 		writer.println(");");
 		if (generate_error_checks && method.getAnnotation(NoErrorCheck.class) == null)
 			writer.println("\t\t" + type_map.getErrorCheckMethodName() + ";");
-		printNondirectParameterCopies(writer, method, mode);
+		// DISABLED: indirect buffer support
+		//printNondirectParameterCopies(writer, method, mode);
 		if (has_result)
 			writer.println("\t\treturn " + Utils.RESULT_VAR_NAME + ";");
 		writer.println("\t}");
@@ -491,7 +492,7 @@ public class JavaMethodsGenerator {
 				}
 				NullTerminated null_terminated = param.getAnnotation(NullTerminated.class);
 				if (Buffer.class.isAssignableFrom(java_type)) {
-					boolean indirect_buffer_allowed = param.getAnnotation(CachedReference.class) == null;
+					boolean indirect_buffer_allowed = false && param.getAnnotation(CachedReference.class) == null; // DISABLED: indirect buffer support
 					boolean out_parameter = param.getAnnotation(OutParameter.class) != null;
 					TypeInfo typeinfo = typeinfos.get(param);
 					printParameterCheck(writer, param.getSimpleName(), typeinfo.getType().getSimpleName(), check_value, can_be_null, null_terminated, indirect_buffer_allowed, out_parameter);

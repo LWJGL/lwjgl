@@ -55,6 +55,7 @@ public class ContextCapabilitiesGenerator {
 	private final static String ALL_INIT_METHOD_NAME = "initAllStubs";
 	private final static String POINTER_INITIALIZER_POSTFIX = "_initNativeFunctionAddresses";
 	private final static String CACHED_EXTS_VAR_NAME = "supported_extensions";
+	private final static String PROFILE_MASK_VAR_NAME = "profileMask";
 	private final static String EXTENSION_PREFIX = "GL_";
 	private final static String CORE_PREFIX = "Open";
 
@@ -128,10 +129,11 @@ public class ContextCapabilitiesGenerator {
 
 		// Get the supported extensions set.
 		writer.println("\t\tGLContext.setCapabilities(this);");
-		writer.println("\t\tSet " + CACHED_EXTS_VAR_NAME + " = GLContext.getSupportedExtensions();");
+		writer.println("\t\tSet " + CACHED_EXTS_VAR_NAME + " = new HashSet(256);");
+		writer.println("\t\tint " + PROFILE_MASK_VAR_NAME + " = GLContext.getSupportedExtensions(" + CACHED_EXTS_VAR_NAME + ");");
 
 		// Force forward compatible mode when OpenGL version is 3.1 or higher and ARB_compatibility is not available.
-		writer.println("\t\tif ( supported_extensions.contains(\"OpenGL31\") && !supported_extensions.contains(\"GL_ARB_compatibility\") )");
+		writer.println("\t\tif ( supported_extensions.contains(\"OpenGL31\") && !(supported_extensions.contains(\"GL_ARB_compatibility\") || (profileMask & GL32.GL_CONTEXT_COMPATIBILITY_PROFILE_BIT) != 0) )");
 		writer.println("\t\t\tforwardCompatible = true;");
 
 		if ( !context_specific ) {

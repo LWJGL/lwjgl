@@ -173,13 +173,13 @@ public final class GLContext {
 	static native long getFunctionAddress(String name);
 
 	/**
-	 * Determine which extensions are available. Helper method to ContextCapabilities.
+	 * Determine which extensions are available and returns the context profile mask. Helper method to ContextCapabilities.
 	 *
-	 * @return A Set containing all available extension strings.
+	 * @param supported_extensions the Set to fill with the available extension names
+	 *
+	 * @return the context profile mask, will be 0 for any version < 3.2
 	 */
-	static Set getSupportedExtensions() {
-		final Set supported_extensions = new HashSet();
-
+	static int getSupportedExtensions(final Set supported_extensions) {
 		// Detect OpenGL version first
 
 		final String version = GL11.glGetString(GL11.GL_VERSION);
@@ -225,6 +225,8 @@ public final class GLContext {
 		if ( 1 < majorVersion || 1 <= minorVersion )
 			supported_extensions.add("OpenGL11");
 
+		int profileMask = 0;
+
 		if ( majorVersion < 3 ) {
 			// Parse EXTENSIONS string
 			final String extensions_string = GL11.glGetString(GL11.GL_EXTENSIONS);
@@ -242,9 +244,15 @@ public final class GLContext {
 
 			for ( int i = 0; i < extensionCount; i++ )
 				supported_extensions.add(GL30.glGetStringi(GL11.GL_EXTENSIONS, i));
+
+			// Get the context profile mask for versions >= 3.2
+			if ( 3 < majorVersion || 2 <= minorVersion ) {
+				GL11.glGetInteger(GL32.GL_CONTEXT_PROFILE_MASK, buffer);
+				profileMask = buffer.get(0);
+			}
 		}
 
-		return supported_extensions;
+		return profileMask;
 	}
 
 	/**

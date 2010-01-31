@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.GLenum;
 
-public interface AMD_vertex_shader_tesselator {
+public interface AMD_vertex_shader_tessellator {
 
 	/** Returned by the &lt;type&gt; parameter of GetActiveUniform: */
 	int GL_SAMPLER_BUFFER_AMD = 0x9001;

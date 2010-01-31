@@ -117,6 +117,7 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 			writer.println("import org.lwjgl.LWJGLUtil;");
 			writer.println("import org.lwjgl.BufferUtils;");
 			writer.println("import java.util.Set;");
+			writer.println("import java.util.HashSet;");
 			writer.println("import java.nio.IntBuffer;");
 			writer.println();
 			ContextCapabilitiesGenerator.generateClassPrologue(writer, context_specific);
