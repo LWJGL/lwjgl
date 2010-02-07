@@ -96,8 +96,6 @@ public interface GL31 {
 	 */
 	int GL_PRIMITIVE_RESTART_INDEX = 0x8F9E;
 
-	void glPrimitiveRestart();
-
 	void glPrimitiveRestartIndex(@GLuint int index);
 
 	// -------------------------------------------------------------------------

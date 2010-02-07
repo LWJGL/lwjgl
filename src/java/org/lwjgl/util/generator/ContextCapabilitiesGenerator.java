@@ -197,12 +197,13 @@ public class ContextCapabilitiesGenerator {
 
 		writer.print("\tprivate boolean " + getAddressesInitializerName(d.getSimpleName()) + "(");
 
-		DeprecatedGL deprecated = d.getAnnotation(DeprecatedGL.class);
+		boolean optional;
+		boolean deprecated = d.getAnnotation(DeprecatedGL.class) != null;
 		Dependent dependent = d.getAnnotation(Dependent.class);
-		if ( deprecated != null )
+		if ( deprecated )
 			writer.print("boolean forwardCompatible");
 		if ( dependent != null ) {
-			if ( deprecated != null )
+			if ( deprecated )
 				writer.print(",");
 			writer.print("Set supported_extensions");
 		}
@@ -211,11 +212,14 @@ public class ContextCapabilitiesGenerator {
 		writer.println("\t\treturn ");
 		while ( methods.hasNext() ) {
 			MethodDeclaration method = methods.next();
-			deprecated = method.getAnnotation(DeprecatedGL.class);
+			optional = method.getAnnotation(Optional.class) != null;
+			deprecated = method.getAnnotation(DeprecatedGL.class) != null;
 			dependent = method.getAnnotation(Dependent.class);
 
 			writer.print("\t\t\t(");
-			if ( deprecated != null )
+			if ( optional )
+				writer.print('(');
+			if ( deprecated )
 				writer.print("forwardCompatible || ");
 			if ( dependent != null ) {
 				if ( dependent.value().indexOf(',') == -1 )
@@ -227,7 +231,7 @@ public class ContextCapabilitiesGenerator {
 					writer.print(") || ");
 				}
 			}
-			if ( deprecated != null || dependent != null )
+			if ( deprecated || dependent != null )
 				writer.print('(');
 			writer.print(Utils.getFunctionAddressName(d, method) + " = ");
 			PlatformDependent platform_dependent = method.getAnnotation(PlatformDependent.class);
@@ -253,8 +257,10 @@ public class ContextCapabilitiesGenerator {
 			} else
 				writer.print("GLContext.getFunctionAddress(");
 			writer.print("\"" + method.getSimpleName() + "\")) != 0");
-			if ( deprecated != null || dependent != null )
+			if ( deprecated || dependent != null )
 				writer.print(')');
+			if ( optional )
+				writer.print(" || true)");
 			if ( methods.hasNext() )
 				writer.println(" &&");
 		}

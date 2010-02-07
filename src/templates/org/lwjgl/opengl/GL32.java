@@ -63,6 +63,7 @@ public interface GL32 {
 	// ----------------------[ ARB_draw_elements_base_vertex ]----------------------
 	// -----------------------------------------------------------------------------
 
+	@Optional(reason = "AMD's 3.2 implementation does not expose this (last driver checked: 10.1)")
 	void glDrawElementsBaseVertex(@GLenum int mode, @AutoSize("indices") @GLsizei int count, @AutoType("indices") @GLenum int type,
 	                              @BufferObject(BufferKind.ElementVBO)
 	                              @Const
@@ -70,6 +71,7 @@ public interface GL32 {
 	                              @GLushort
 	                              @GLuint Buffer indices, int basevertex);
 
+	@Optional(reason = "AMD's 3.2 implementation does not expose this (last driver checked: 10.1)")
 	void glDrawRangeElementsBaseVertex(@GLenum int mode, @GLuint int start, @GLuint int end, @AutoSize("indices") @GLsizei int count, @AutoType("indices") @GLenum int type,
 	                                   @BufferObject(BufferKind.ElementVBO)
 	                                   @Const
@@ -77,6 +79,7 @@ public interface GL32 {
 	                                   @GLushort
 	                                   @GLuint Buffer indices, int basevertex);
 
+	@Optional(reason = "AMD's 3.2 implementation does not expose this (last driver checked: 10.1)")
 	void glDrawElementsInstancedBaseVertex(@GLenum int mode, @AutoSize("indices") @GLsizei int count, @AutoType("indices") @GLenum int type,
 	                                       @BufferObject(BufferKind.ElementVBO)
 	                                       @Const
