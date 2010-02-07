@@ -315,6 +315,7 @@ public interface GL32 {
 	void glGetInteger64v(@GLenum int pname, @OutParameter @Check("1") @GLint64 LongBuffer data);
 
 	@StripPostfix(value = "data", postfix = "64")
+	@Optional(reason = "NV's 3.2 implementation does not expose this (last driver checked: 19?.??)")
 	void glGetInteger64i_v(@GLenum int value, @GLuint int index, @OutParameter @Check("4") @GLint64 LongBuffer data);
 
 	@StripPostfix("values")
