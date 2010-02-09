@@ -247,8 +247,18 @@ public final class GLContext {
 
 			// Get the context profile mask for versions >= 3.2
 			if ( 3 < majorVersion || 2 <= minorVersion ) {
+				Util.checkGLError(); // Make sure we have no errors up to this point
+
 				GL11.glGetInteger(GL32.GL_CONTEXT_PROFILE_MASK, buffer);
-				profileMask = buffer.get(0);
+
+				try {
+					// Retrieving GL_CONTEXT_PROFILE_MASK may generate an INVALID_OPERATION error on certain implementations, ignore.
+					// Happens on pre10.1 ATI drivers, when ContextAttribs.withProfileCompatibility is not used
+					Util.checkGLError();
+					profileMask = buffer.get(0);
+				} catch (OpenGLException e) {
+					LWJGLUtil.log("Failed to retrieve CONTEXT_PROFILE_MASK");
+				}
 			}
 		}
 
