@@ -58,7 +58,10 @@ class BaseReferences {
         glVertexAttribPointer_buffer = new Buffer[max_vertex_attribs];
 
 		int max_texture_units;
-		if (caps.OpenGL13 || caps.GL_ARB_multitexture) {
+		if (caps.OpenGL20) {
+			GL11.glGetInteger(GL20.GL_MAX_TEXTURE_IMAGE_UNITS, temp);
+			max_texture_units = temp.get(0);
+		} else if (caps.OpenGL13 || caps.GL_ARB_multitexture) {
         	GL11.glGetInteger(GL13.GL_MAX_TEXTURE_UNITS, temp);
 			max_texture_units = temp.get(0);
 		} else

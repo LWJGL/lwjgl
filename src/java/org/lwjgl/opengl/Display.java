@@ -881,7 +881,11 @@ public final class Display {
 
 	private static void makeCurrentAndSetSwapInterval() throws LWJGLException {
 		makeCurrent();
-		Util.checkGLError();
+		try {
+			Util.checkGLError();
+		} catch (OpenGLException e) {
+			LWJGLUtil.log("OpenGL error during context creation: " + e.getMessage());
+		}
 		setSwapInterval(swap_interval);
 	}
 
