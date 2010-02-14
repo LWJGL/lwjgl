@@ -127,26 +127,10 @@ final class LinuxDisplay implements DisplayImplementation {
 	private Canvas parent;
 	private long parent_window;
 	private boolean xembedded;
-	private boolean parent_focused;
-	private boolean parent_focus_changed;
+	private boolean parent_focus;
 
 	private LinuxKeyboard keyboard;
 	private LinuxMouse mouse;
-
-	private final FocusListener focus_listener = new FocusListener() {
-		public void focusGained(FocusEvent e) {
-			synchronized (GlobalLock.lock) {
-				parent_focused = true;
-				parent_focus_changed = true;
-			}
-		}
-		public void focusLost(FocusEvent e) {
-			synchronized (GlobalLock.lock) {
-				parent_focused = false;
-				parent_focus_changed = true;
-			}
-		}
-	};
 
 	private static ByteBuffer getCurrentGammaRamp() throws LWJGLException {
 		lockAWT();
@@ -439,11 +423,6 @@ final class LinuxDisplay implements DisplayImplementation {
 					grab = false;
 					minimized = false;
 					dirty = true;
-					if (parent != null) {
-						parent.addFocusListener(focus_listener);
-						parent_focused = parent.isFocusOwner();
-						parent_focus_changed = true;
-					}
 				} finally {
 					peer_info.unlock();
 				}
@@ -494,8 +473,6 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void destroyWindow() {
 		lockAWT();
 		try {
-			if (parent != null)
-				parent.removeFocusListener(focus_listener);
 			try {
 				setNativeCursor(null);
 			} catch (LWJGLException e) {
@@ -853,16 +830,20 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 
 	private void checkInput() {
-		if (parent == null || !parent_focus_changed)
-			return;
+		if (parent == null) return;
 		
-		if (!focused && parent_focused) {
-			if (xembedded) {
-				// disable parent from taking focus back from Display when it is clicked
-				parent.setFocusable(false);
+		if (parent_focus != parent.hasFocus()) {
+			parent_focus = parent.hasFocus();
+			
+			if (parent_focus) {
+				setInputFocusUnsafe(current_window);
 			}
-			setInputFocusUnsafe(getWindow());
-			parent_focus_changed = false;
+			else {
+				setInputFocusUnsafe(0);
+			}
+		}
+		else if (parent_focus && !focused) {
+			setInputFocusUnsafe(current_window);
 		}
 	}
 
@@ -874,19 +855,8 @@ final class LinuxDisplay implements DisplayImplementation {
 		if (focused) {
 			acquireInput();
 		}
-		
-		if (parent != null && xembedded && focused != parent.hasFocus()) {
-			return;
-		}
-		
-		if (!focused) {
+		else {
 			releaseInput();
-			
-			if (parent != null && xembedded) {
-				setInputFocusUnsafe(0);
-				// re-enable parent focus to detect click on window
-				parent.setFocusable(true);
-			}
 		}
 	}
 	static native long nGetInputFocus(long display);
