@@ -96,8 +96,7 @@ public class WaveData {
 				AudioSystem.getAudioInputStream(
 					new BufferedInputStream(path.openStream())));
 		} catch (Exception e) {
-			org.lwjgl.LWJGLUtil.log("Unable to create from: " + path);
-			e.printStackTrace();
+			org.lwjgl.LWJGLUtil.log("Unable to create from: " + path + ", " + e.getMessage());
 			return null;
 		}		
 	}
@@ -123,8 +122,7 @@ public class WaveData {
 			return create(
 				AudioSystem.getAudioInputStream(is));
 		} catch (Exception e) {
-			org.lwjgl.LWJGLUtil.log("Unable to create from inputstream");
-			e.printStackTrace();
+			org.lwjgl.LWJGLUtil.log("Unable to create from inputstream, " + e.getMessage());
 			return null;
 		}		
 	}	
@@ -141,7 +139,7 @@ public class WaveData {
 				AudioSystem.getAudioInputStream(
 					new BufferedInputStream(new ByteArrayInputStream(buffer))));
 		} catch (Exception e) {
-			e.printStackTrace();
+			org.lwjgl.LWJGLUtil.log("Unable to create from byte array, " + e.getMessage());
 			return null;
 		}
 	}
@@ -166,7 +164,7 @@ public class WaveData {
 			}
 			return create(bytes);
 		} catch (Exception e) {
-			e.printStackTrace();
+			org.lwjgl.LWJGLUtil.log("Unable to create from ByteBuffer, " + e.getMessage());
 			return null;
 		}
 	}	
@@ -204,26 +202,23 @@ public class WaveData {
 		}
 
 		//read data into buffer
-		byte[] buf =
-			new byte[audioformat.getChannels()
-				* (int) ais.getFrameLength()
-				* audioformat.getSampleSizeInBits()
-				/ 8];
-		int read = 0, total = 0;
+		ByteBuffer buffer = null;
 		try {
+			int available = ais.available();
+			if(available <= 0) {
+				available = ais.getFormat().getChannels() * (int) ais.getFrameLength() * ais.getFormat().getSampleSizeInBits() / 8;
+			}
+			byte[] buf = new byte[ais.available()];
+			int read = 0, total = 0;
 			while ((read = ais.read(buf, total, buf.length - total)) != -1
 				&& total < buf.length) {
 				total += read;
 			}
+			buffer = convertAudioBytes(buf, audioformat.getSampleSizeInBits() == 16);
 		} catch (IOException ioe) {
 			return null;
 		}
 
-		//insert data into bytebuffer
-		ByteBuffer buffer = convertAudioBytes(buf, audioformat.getSampleSizeInBits() == 16);
-/*		ByteBuffer buffer = ByteBuffer.allocateDirect(buf.length);
-		buffer.put(buf);
-		buffer.rewind();*/
 
 		//create our result
 		WaveData wavedata =
