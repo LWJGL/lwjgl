@@ -225,10 +225,15 @@ public class GearsApplet extends Applet {
 	protected void initGL() {
 		try {
 			// setup ogl
-			FloatBuffer pos = FloatBuffer.wrap(new float[] { 5.0f, 5.0f, 10.0f, 0.0f});
-			FloatBuffer red = FloatBuffer.wrap(new float[] { 0.8f, 0.1f, 0.0f, 1.0f});
-			FloatBuffer green = FloatBuffer.wrap(new float[] { 0.0f, 0.8f, 0.2f, 1.0f});
-			FloatBuffer blue = FloatBuffer.wrap(new float[] { 0.2f, 0.2f, 1.0f, 1.0f});
+			FloatBuffer pos = BufferUtils.createFloatBuffer(4).put(new float[] { 5.0f, 5.0f, 10.0f, 0.0f});
+			FloatBuffer red = BufferUtils.createFloatBuffer(4).put(new float[] { 0.8f, 0.1f, 0.0f, 1.0f});
+			FloatBuffer green = BufferUtils.createFloatBuffer(4).put(new float[] { 0.0f, 0.8f, 0.2f, 1.0f});
+			FloatBuffer blue = BufferUtils.createFloatBuffer(4).put(new float[] { 0.2f, 0.2f, 1.0f, 1.0f});
+			
+			pos.flip();
+			red.flip();
+			green.flip();
+			blue.flip();
 			
 			GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, pos);
 			GL11.glEnable(GL11.GL_CULL_FACE);
