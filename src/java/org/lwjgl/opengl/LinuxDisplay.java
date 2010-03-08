@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2008 LWJGL Project
+ * Copyright (c) 2002-2010 LWJGL Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,17 +38,15 @@ package org.lwjgl.opengl;
  * @author elias_naur
  */
 
+import java.awt.Canvas;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import java.awt.Canvas;
-import java.awt.event.FocusListener;
-import java.awt.event.FocusEvent;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.opengl.XRandR.Screen;
 
 final class LinuxDisplay implements DisplayImplementation {
 	/* X11 constants */
@@ -113,6 +111,8 @@ final class LinuxDisplay implements DisplayImplementation {
 	/** Saved mode to restore with */
 	private DisplayMode saved_mode;
 	private DisplayMode current_mode;
+	
+	private Screen[] savedXrandrConfig;
 
 	private boolean keyboard_grabbed;
 	private boolean pointer_grabbed;
@@ -522,7 +522,14 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void resetDisplayMode() {
 		lockAWT();
 		try {
-			switchDisplayMode(saved_mode);
+			if( current_displaymode_extension == XRANDR && savedXrandrConfig.length > 0 )
+			{
+				XRandR.setConfiguration( savedXrandrConfig );
+			}
+			else
+			{
+				switchDisplayMode(saved_mode);
+			}
 			if (isXF86VidModeSupported())
 				doSetGamma(saved_gamma);
 		} catch (LWJGLException e) {
@@ -608,6 +615,7 @@ final class LinuxDisplay implements DisplayImplementation {
 				throw new LWJGLException("No modes available");
 			switch (current_displaymode_extension) {
 				case XRANDR:
+					savedXrandrConfig = XRandR.getConfiguration();
 					saved_mode = getCurrentXRandrMode();
 					break;
 				case XF86VIDMODE:
@@ -880,7 +888,14 @@ final class LinuxDisplay implements DisplayImplementation {
 		if (current_window_mode == FULLSCREEN_NETWM) {
 			nIconifyWindow(getDisplay(), getWindow(), getDefaultScreen());
 			try {
-				switchDisplayModeOnTmpDisplay(saved_mode);
+				if( current_displaymode_extension == XRANDR && savedXrandrConfig.length > 0 )
+				{
+					XRandR.setConfiguration( savedXrandrConfig );
+				}
+				else
+				{
+					switchDisplayModeOnTmpDisplay(saved_mode);
+				}
 				setGammaRampOnTmpDisplay(saved_gamma);
 			} catch (LWJGLException e) {
 				LWJGLUtil.log("Failed to restore saved mode: " + e.getMessage());
