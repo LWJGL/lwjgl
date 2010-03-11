@@ -253,7 +253,9 @@ public class Utils {
 	}
 
 	public static String getSimpleNativeMethodName(MethodDeclaration method, boolean generate_error_checks, boolean context_specific) {
-		String method_name = method.getSimpleName();
+		String method_name;
+		Alternate alt_annotation = method.getAnnotation(Alternate.class);
+		method_name = alt_annotation == null ? method.getSimpleName() : alt_annotation.value();
 		if (isMethodIndirect(generate_error_checks, context_specific, method))
 			method_name = OVERLOADED_METHOD_PREFIX + method_name;
 		return method_name;

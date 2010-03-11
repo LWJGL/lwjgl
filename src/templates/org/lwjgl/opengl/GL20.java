@@ -157,40 +157,40 @@ public interface GL20 {
 	void glUniform4i(int location, int v0, int v1, int v2, int v3);
 
 	@StripPostfix("values")
-	void glUniform1fv(int location, @AutoSize("values") @GLsizei int count, FloatBuffer values);
+	void glUniform1fv(int location, @AutoSize("values") @GLsizei int count, @Const FloatBuffer values);
 
 	@StripPostfix("values")
-	void glUniform2fv(int location, @AutoSize(value = "values", expression = " >> 1") @GLsizei int count, FloatBuffer values);
+	void glUniform2fv(int location, @AutoSize(value = "values", expression = " >> 1") @GLsizei int count, @Const FloatBuffer values);
 
 	@StripPostfix("values")
-	void glUniform3fv(int location, @AutoSize(value = "values", expression = " / 3") @GLsizei int count, FloatBuffer values);
+	void glUniform3fv(int location, @AutoSize(value = "values", expression = " / 3") @GLsizei int count, @Const FloatBuffer values);
 
 	@StripPostfix("values")
-	void glUniform4fv(int location, @AutoSize(value = "values", expression = " >> 2") @GLsizei int count, FloatBuffer values);
+	void glUniform4fv(int location, @AutoSize(value = "values", expression = " >> 2") @GLsizei int count, @Const FloatBuffer values);
 
 	@StripPostfix("values")
-	void glUniform1iv(int location, @AutoSize("values") @GLsizei int count, IntBuffer values);
+	void glUniform1iv(int location, @AutoSize("values") @GLsizei int count, @Const IntBuffer values);
 
 	@StripPostfix("values")
-	void glUniform2iv(int location, @AutoSize(value = "values", expression = " >> 1") @GLsizei int count, IntBuffer values);
+	void glUniform2iv(int location, @AutoSize(value = "values", expression = " >> 1") @GLsizei int count, @Const IntBuffer values);
 
 	@StripPostfix("values")
-	void glUniform3iv(int location, @AutoSize(value = "values", expression = " / 3") @GLsizei int count, IntBuffer values);
+	void glUniform3iv(int location, @AutoSize(value = "values", expression = " / 3") @GLsizei int count, @Const IntBuffer values);
 
 	@StripPostfix("values")
-	void glUniform4iv(int location, @AutoSize(value = "values", expression = " >> 2") @GLsizei int count, IntBuffer values);
+	void glUniform4iv(int location, @AutoSize(value = "values", expression = " >> 2") @GLsizei int count, @Const IntBuffer values);
 
 	@StripPostfix("matrices")
 	void glUniformMatrix2fv(int location, @AutoSize(value = "matrices", expression = " >> 2") @GLsizei int count,
-	                        boolean transpose, FloatBuffer matrices);
+	                        boolean transpose, @Const FloatBuffer matrices);
 
 	@StripPostfix("matrices")
 	void glUniformMatrix3fv(int location, @AutoSize(value = "matrices", expression = " / (3 * 3)") @GLsizei int count,
-	                        boolean transpose, FloatBuffer matrices);
+	                        boolean transpose, @Const FloatBuffer matrices);
 
 	@StripPostfix("matrices")
 	void glUniformMatrix4fv(int location, @AutoSize(value = "matrices", expression = " >> 4") @GLsizei int count,
-	                        boolean transpose, FloatBuffer matrices);
+	                        boolean transpose, @Const FloatBuffer matrices);
 
 	@StripPostfix("params")
 	void glGetShaderiv(@GLuint int shader, @GLenum int pname, @OutParameter @Check IntBuffer params);

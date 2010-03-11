@@ -138,7 +138,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 							break;
 						}
 					}
-					if (!found_auto_size_param && param.getAnnotation(Result.class) == null)
+					if (!found_auto_size_param && param.getAnnotation(Result.class) == null && param.getAnnotation(Constant.class) == null)
 						throw new RuntimeException(param + " has no Check, Result nor Constant annotation and no other parameters has" +
 													" an @AutoSize annotation on it in method " + method);
 				}
@@ -146,8 +146,8 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 					throw new RuntimeException(param + " can't be annotated with both CachedReference and Result");
 				if (param.getAnnotation(BufferObject.class) != null && param.getAnnotation(Result.class) != null)
 					throw new RuntimeException(param + " can't be annotated with both BufferObject and Result");
-				if (param.getAnnotation(Constant.class) != null)
-					throw new RuntimeException("Buffer parameter " + param + " cannot be Constant");
+				//if (param.getAnnotation(Constant.class) != null)
+					//throw new RuntimeException("Buffer parameter " + param + " cannot be Constant");
 			} else {
 				if (param.getAnnotation(BufferObject.class) != null)
 					throw new RuntimeException(param + " type is not a buffer, but annotated as a BufferObject");

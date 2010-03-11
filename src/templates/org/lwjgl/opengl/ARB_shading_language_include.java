@@ -1,0 +1,73 @@
+/*
+ * Copyright (c) 2002-2008 LWJGL Project
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
+ *   from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package org.lwjgl.opengl;
+
+import org.lwjgl.util.generator.*;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
+public interface ARB_shading_language_include {
+
+	/** Accepted by the &lt;type&gt; parameter of NamedStringARB: */
+	int GL_SHADER_INCLUDE_ARB = 0x8DAE;
+
+	/** Accepted by the &lt;pname&gt; parameter of GetNamedStringivARB: */
+	int GL_NAMED_STRING_LENGTH_ARB = 0x8DE9;
+	int GL_NAMED_STRING_TYPE_ARB = 0x8DEA;
+
+	void glNamedStringARB(@GLenum int type, @AutoSize("name") int namelen, @Const ByteBuffer name, @AutoSize("string") int stringlen, @Const ByteBuffer string);
+
+	void glDeleteNamedStringARB(@AutoSize("name") int namelen, @Const ByteBuffer name);
+
+	void glCompileShaderIncludeARB(@GLuint int shader, @GLsizei int count,
+	                               @Const @NullTerminated("count") @StringList("count") @GLchar ByteBuffer path,
+	                               @Constant("null, 0") @Const IntBuffer length);
+
+	/* TODO: Implement @Check
+	@Alternate("glCompileShaderIncludeARB")
+	void glCompileShaderIncludeARB2(@GLuint int shader, @AutoSize("length") @GLsizei int count,
+	                               @Const @Check("...") @StringList("count") @GLchar ByteBuffer path,
+	                               @Const IntBuffer length);
+	*/
+
+	boolean glIsNamedStringARB(@AutoSize("name") int namelen, @Const ByteBuffer name);
+
+	void glGetNamedStringARB(@AutoSize("name") int namelen, @Const ByteBuffer name,
+	                         @AutoSize("string") @GLsizei int bufSize,
+	                         @OutParameter @Check(value = "1", canBeNull = true) IntBuffer stringlen,
+	                         @OutParameter ByteBuffer string);
+
+	@StripPostfix("params")
+	void glGetNamedStringivARB(@AutoSize("name") int namelen, @Const ByteBuffer name, @GLenum int pname, @Check("1") @OutParameter IntBuffer params);
+
+}

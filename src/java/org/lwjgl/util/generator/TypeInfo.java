@@ -168,7 +168,9 @@ public class TypeInfo {
 					}
 				}
 				Class type;
-				PrimitiveType.Kind kind = type_map.getPrimitiveTypeFromNativeType(annotation_type);
+				PrimitiveType.Kind kind;
+				GLvoid void_annotation = param.getAnnotation(GLvoid.class);
+				kind = void_annotation == null ? type_map.getPrimitiveTypeFromNativeType(annotation_type) : void_annotation.value();
 				if (Utils.getNIOBufferType(decl_type) != null)
 					type = getBufferTypeFromPrimitiveKind(kind);
 				else

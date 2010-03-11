@@ -29,22 +29,22 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.util.generator;
+package org.lwjgl.opengl;
 
-/**
- *
- * @author elias_naur <elias_naur@users.sourceforge.net>
- * @version $Revision$
- * $Id$
- */
+import org.lwjgl.util.generator.Extension;
 
-import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
+@Extension(postfix = "ARB", className = "ARBTextureCompressionBPTC")
+public interface ARB_texture_compression_bptc {
 
-import com.sun.mirror.type.PrimitiveType;
+	/**
+	 * Accepted by the &lt;internalformat&gt; parameter of TexImage2D, TexImage3D,
+	 * CopyTexImage2D, CopyTexImage3D, CompressedTexImage2DARB, and
+	 * CompressedTexImage3DARB and the &lt;format&gt; parameter of
+	 * CompressedTexSubImage2DARB and CompressedTexSubImage3DARB:
+	 */
+	int GL_COMPRESSED_RGBA_BPTC_UNORM_ARB = 0x8E8C;
+	int GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB = 0x8E8D;
+	int GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB = 0x8E8E;
+	int GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB = 0x8E8F;
 
-@NativeType
-@Target({ElementType.PARAMETER, ElementType.METHOD})
-public @interface GLvoid {
-	PrimitiveType.Kind value() default PrimitiveType.Kind.BYTE; 
 }

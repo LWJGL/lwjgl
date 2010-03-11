@@ -144,37 +144,37 @@ public interface ARB_shader_objects {
 	void glUniform4iARB(int location, int v0, int v1, int v2, int v3);
 
 	@StripPostfix("values")
-	void glUniform1fvARB(int location, @AutoSize("values") @GLsizei int count, FloatBuffer values);
+	void glUniform1fvARB(int location, @AutoSize("values") @GLsizei int count, @Const FloatBuffer values);
 
 	@StripPostfix("values")
-	void glUniform2fvARB(int location, @AutoSize(value = "values", expression = " >> 1") @GLsizei int count, FloatBuffer values);
+	void glUniform2fvARB(int location, @AutoSize(value = "values", expression = " >> 1") @GLsizei int count, @Const FloatBuffer values);
 
 	@StripPostfix("values")
-	void glUniform3fvARB(int location, @AutoSize(value = "values", expression = " / 3") @GLsizei int count, FloatBuffer values);
+	void glUniform3fvARB(int location, @AutoSize(value = "values", expression = " / 3") @GLsizei int count, @Const FloatBuffer values);
 
 	@StripPostfix("values")
-	void glUniform4fvARB(int location, @AutoSize(value = "values", expression = " >> 2") @GLsizei int count, FloatBuffer values);
+	void glUniform4fvARB(int location, @AutoSize(value = "values", expression = " >> 2") @GLsizei int count, @Const FloatBuffer values);
 
 	@StripPostfix("values")
-	void glUniform1ivARB(int location, @AutoSize(value = "values") @GLsizei int count, IntBuffer values);
+	void glUniform1ivARB(int location, @AutoSize(value = "values") @GLsizei int count, @Const IntBuffer values);
 
 	@StripPostfix("values")
-	void glUniform2ivARB(int location, @AutoSize(value = "values", expression = " >> 1") @GLsizei int count, IntBuffer values);
+	void glUniform2ivARB(int location, @AutoSize(value = "values", expression = " >> 1") @GLsizei int count, @Const IntBuffer values);
 
 	@StripPostfix("values")
-	void glUniform3ivARB(int location, @AutoSize(value = "values", expression = " / 3") @GLsizei int count, IntBuffer values);
+	void glUniform3ivARB(int location, @AutoSize(value = "values", expression = " / 3") @GLsizei int count, @Const IntBuffer values);
 
 	@StripPostfix("values")
-	void glUniform4ivARB(int location, @AutoSize(value = "values", expression = " >> 2") @GLsizei int count, IntBuffer values);
+	void glUniform4ivARB(int location, @AutoSize(value = "values", expression = " >> 2") @GLsizei int count, @Const IntBuffer values);
 
 	@StripPostfix("matrices")
-	void glUniformMatrix2fvARB(int location, @AutoSize(value = "matrices", expression = " >> 2") @GLsizei int count, boolean transpose, FloatBuffer matrices);
+	void glUniformMatrix2fvARB(int location, @AutoSize(value = "matrices", expression = " >> 2") @GLsizei int count, boolean transpose, @Const FloatBuffer matrices);
 
 	@StripPostfix("matrices")
-	void glUniformMatrix3fvARB(int location, @AutoSize(value = "matrices", expression = " / (3 * 3)") @GLsizei int count, boolean transpose, FloatBuffer matrices);
+	void glUniformMatrix3fvARB(int location, @AutoSize(value = "matrices", expression = " / (3 * 3)") @GLsizei int count, boolean transpose, @Const FloatBuffer matrices);
 
 	@StripPostfix("matrices")
-	void glUniformMatrix4fvARB(int location, @AutoSize(value = "matrices", expression = " >> 4") @GLsizei int count, boolean transpose, FloatBuffer matrices);
+	void glUniformMatrix4fvARB(int location, @AutoSize(value = "matrices", expression = " >> 4") @GLsizei int count, boolean transpose, @Const FloatBuffer matrices);
 
 	@StripPostfix("params")
 	void glGetObjectParameterfvARB(@GLhandleARB int obj, @GLenum int pname, @OutParameter @Check FloatBuffer params);

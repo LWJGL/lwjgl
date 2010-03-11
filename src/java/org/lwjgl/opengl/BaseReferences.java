@@ -46,6 +46,8 @@ class BaseReferences {
 	int pixelPackBuffer;
 	int pixelUnpackBuffer;
 
+	int indirectBuffer;
+
 	BaseReferences(ContextCapabilities caps) {
         IntBuffer temp = caps.scratch_int_buffer;
 
@@ -78,6 +80,8 @@ class BaseReferences {
 
 	    this.pixelPackBuffer = 0;
 	    this.pixelUnpackBuffer = 0;
+
+	    this.indirectBuffer = 0;
     }
 
     void copy(BaseReferences references, int mask) {
@@ -87,6 +91,8 @@ class BaseReferences {
 		    this.glClientActiveTexture = references.glClientActiveTexture;
 		    System.arraycopy(references.glVertexAttribPointer_buffer, 0, glVertexAttribPointer_buffer, 0, glVertexAttribPointer_buffer.length);
 		    System.arraycopy(references.glTexCoordPointer_buffer, 0, glTexCoordPointer_buffer, 0, glTexCoordPointer_buffer.length);
+
+		    this.indirectBuffer = references.indirectBuffer;
 	    }
 
 	    if ( (mask & GL11.GL_CLIENT_PIXEL_STORE_BIT) != 0 ) {

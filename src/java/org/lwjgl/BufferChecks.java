@@ -85,6 +85,13 @@ public class BufferChecks {
 			throw new IllegalArgumentException("Missing null termination");
 	}
 
+	/** Helper methods to ensure an IntBuffer is null-terminated */
+	public static void checkNullTerminated(IntBuffer buf) {
+		if ( buf.get(buf.limit() - 1) != 0 ) {
+			throw new IllegalArgumentException("Missing null termination");
+		}
+	}
+
 	public static void checkNotNull(Object o) {
 		if (o == null)
 			throw new IllegalArgumentException("Null argument");

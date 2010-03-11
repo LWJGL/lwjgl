@@ -29,22 +29,29 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.util.generator;
+package org.lwjgl.opengl;
 
-/**
- *
- * @author elias_naur <elias_naur@users.sourceforge.net>
- * @version $Revision$
- * $Id$
- */
+import org.lwjgl.util.generator.*;
 
-import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
+import java.nio.IntBuffer;
 
-import com.sun.mirror.type.PrimitiveType;
+@Extension(postfix = "")
+public interface ARB_transform_feedback3 {
 
-@NativeType
-@Target({ElementType.PARAMETER, ElementType.METHOD})
-public @interface GLvoid {
-	PrimitiveType.Kind value() default PrimitiveType.Kind.BYTE; 
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetDoublev, GetIntegerv,
+	 * and GetFloatv:
+	 */
+	int GL_MAX_TRANSFORM_FEEDBACK_BUFFERS = 0x8E70;
+	int GL_MAX_VERTEX_STREAMS = 0x8E71;
+
+	void glDrawTransformFeedbackStream(@GLenum int mode, @GLuint int id, @GLuint int stream);
+
+	void glBeginQueryIndexed(@GLenum int target, @GLuint int index, @GLuint int id);
+
+	void glEndQueryIndexed(@GLenum int target, @GLuint int index);
+
+	@StripPostfix("params")
+	void glGetQueryIndexediv(@GLenum int target, @GLuint int index, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
+
 }

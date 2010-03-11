@@ -76,6 +76,9 @@ final class StateTracker {
 	            case GL21.GL_PIXEL_UNPACK_BUFFER:
 		            references_stack.getReferences().pixelUnpackBuffer = buffer;
 		            break;
+	            case GL40.GL_DRAW_INDIRECT_BUFFER:
+		            references_stack.getReferences().indirectBuffer = buffer;
+		            break;
 
             }
         }

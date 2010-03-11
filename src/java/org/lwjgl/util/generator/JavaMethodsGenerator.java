@@ -71,10 +71,12 @@ public class JavaMethodsGenerator {
 		if ( method.getAnnotation(CachedResult.class) != null && !method.getAnnotation(CachedResult.class).isRange() ) {
 			printMethodWithMultiType(env, type_map, writer, interface_decl, method, TypeInfo.getDefaultTypeInfoMap(method), Mode.CACHEDRESULT, generate_error_checks, context_specific);
 		}
-		printJavaNativeStub(writer, method, Mode.NORMAL, generate_error_checks, context_specific);
-		if (Utils.hasMethodBufferObjectParameter(method)) {
-			printMethodWithMultiType(env, type_map, writer, interface_decl, method, TypeInfo.getDefaultTypeInfoMap(method), Mode.BUFFEROBJECT, generate_error_checks, context_specific);
-			printJavaNativeStub(writer, method, Mode.BUFFEROBJECT, generate_error_checks, context_specific);
+		if ( method.getAnnotation(Alternate.class) == null ) {
+			printJavaNativeStub(writer, method, Mode.NORMAL, generate_error_checks, context_specific);
+			if (Utils.hasMethodBufferObjectParameter(method)) {
+				printMethodWithMultiType(env, type_map, writer, interface_decl, method, TypeInfo.getDefaultTypeInfoMap(method), Mode.BUFFEROBJECT, generate_error_checks, context_specific);
+				printJavaNativeStub(writer, method, Mode.BUFFEROBJECT, generate_error_checks, context_specific);
+			}
 		}
 	}
 
@@ -194,7 +196,9 @@ public class JavaMethodsGenerator {
 		writer.print("\tpublic static ");
 		printResultType(writer, method, false);
 		StripPostfix strip_annotation = method.getAnnotation(StripPostfix.class);
-		String method_name = method.getSimpleName();
+		String method_name;
+		Alternate alt_annotation = method.getAnnotation(Alternate.class);
+		method_name = alt_annotation == null ? method.getSimpleName() : alt_annotation.value();
 		if (strip_annotation != null && mode == Mode.NORMAL)
 			method_name = getPostfixStrippedName(type_map, interface_decl, method);
 		writer.print(" " + method_name + "(");
@@ -298,7 +302,10 @@ public class JavaMethodsGenerator {
 			postfix_parameter.getType().accept(translator);
 			postfix = translator.getSignature();
 		}
-		String method_name = method.getSimpleName();
+		String method_name;
+		Alternate alt_annotation = method.getAnnotation(Alternate.class);
+		method_name = alt_annotation == null ? method.getSimpleName() : alt_annotation.value();
+
 		String extension_postfix = "NULL".equals(strip_annotation.extension()) ? getExtensionPostfix(interface_decl) : strip_annotation.extension();
 		String result;
 
@@ -491,7 +498,7 @@ public class JavaMethodsGenerator {
 					can_be_null = check_annotation.canBeNull();
 				}
 				NullTerminated null_terminated = param.getAnnotation(NullTerminated.class);
-				if (Buffer.class.isAssignableFrom(java_type)) {
+				if (Buffer.class.isAssignableFrom(java_type) && param.getAnnotation(Constant.class) == null) {
 					boolean indirect_buffer_allowed = false && param.getAnnotation(CachedReference.class) == null; // DISABLED: indirect buffer support
 					boolean out_parameter = param.getAnnotation(OutParameter.class) != null;
 					TypeInfo typeinfo = typeinfos.get(param);

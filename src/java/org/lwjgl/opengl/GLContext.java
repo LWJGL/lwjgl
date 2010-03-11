@@ -199,7 +199,13 @@ public final class GLContext {
 			LWJGLUtil.log("The major and/or minor OpenGL version is malformed: " + e.getMessage());
 		}
 
+		// ----------------------[ 4.X ]----------------------
+		if ( 4 <= majorVersion )
+			supported_extensions.add("OpenGL40");
+
 		// ----------------------[ 3.X ]----------------------
+		if ( 3 < majorVersion || (3 == majorVersion && 3 <= minorVersion) )
+			supported_extensions.add("OpenGL33");
 		if ( 3 < majorVersion || (3 == majorVersion && 2 <= minorVersion) )
 			supported_extensions.add("OpenGL32");
 		if ( 3 < majorVersion || (3 == majorVersion && 1 <= minorVersion) )

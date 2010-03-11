@@ -29,22 +29,18 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.util.generator;
+package org.lwjgl.opengl;
 
-/**
- *
- * @author elias_naur <elias_naur@users.sourceforge.net>
- * @version $Revision$
- * $Id$
- */
+import org.lwjgl.util.generator.Extension;
 
-import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
+@Extension(postfix = "ARB", className = "ARBTextureRGB10_A2UI")
+public interface ARB_texture_rgb10_a2ui {
 
-import com.sun.mirror.type.PrimitiveType;
+	/**
+	 * Accepted by the &lt;internalFormat&gt; parameter of TexImage1D, TexImage2D,
+	 * TexImage3D, CopyTexImage1D, CopyTexImage2D, RenderbufferStorage and
+	 * RenderbufferStorageMultisample:
+	 */
+	int GL_RGB10_A2UI = 0x906F;
 
-@NativeType
-@Target({ElementType.PARAMETER, ElementType.METHOD})
-public @interface GLvoid {
-	PrimitiveType.Kind value() default PrimitiveType.Kind.BYTE; 
 }

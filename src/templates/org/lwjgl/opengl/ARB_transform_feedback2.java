@@ -29,22 +29,37 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.util.generator;
+package org.lwjgl.opengl;
 
-/**
- *
- * @author elias_naur <elias_naur@users.sourceforge.net>
- * @version $Revision$
- * $Id$
- */
+import org.lwjgl.util.generator.*;
 
-import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
+import java.nio.IntBuffer;
 
-import com.sun.mirror.type.PrimitiveType;
+public interface ARB_transform_feedback2 {
 
-@NativeType
-@Target({ElementType.PARAMETER, ElementType.METHOD})
-public @interface GLvoid {
-	PrimitiveType.Kind value() default PrimitiveType.Kind.BYTE; 
+	/** Accepted by the &lt;target&gt; parameter of BindTransformFeedback: */
+	int GL_TRANSFORM_FEEDBACK = 0x8E22;
+
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetDoublev, GetIntegerv,
+	 * and GetFloatv:
+	 */
+	int GL_TRANSFORM_FEEDBACK_BUFFER_PAUSED = 0x8E23;
+	int GL_TRANSFORM_FEEDBACK_BUFFER_ACTIVE = 0x8E24;
+	int GL_TRANSFORM_FEEDBACK_BINDING = 0x8E25;
+
+	void glBindTransformFeedback(@GLenum int target, @GLuint int id);
+
+	void glDeleteTransformFeedbacks(@AutoSize("ids") @GLsizei int n, @Const @GLuint IntBuffer ids);
+
+	void glGenTransformFeedbacks(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
+
+	boolean glIsTransformFeedback(@GLuint int id);
+
+	void glPauseTransformFeedback();
+
+	void glResumeTransformFeedback();
+
+	void glDrawTransformFeedback(@GLenum int mode, @GLuint int id);
+
 }

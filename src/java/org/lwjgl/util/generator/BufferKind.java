@@ -42,5 +42,6 @@ public enum BufferKind {
 	UnpackPBO,
 	PackPBO,
 	ElementVBO,
-	ArrayVBO
+	ArrayVBO,
+	IndirectBO
 }

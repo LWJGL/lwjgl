@@ -29,22 +29,24 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.util.generator;
+package org.lwjgl.opengl;
 
-/**
- *
- * @author elias_naur <elias_naur@users.sourceforge.net>
- * @version $Revision$
- * $Id$
- */
+public interface ARB_texture_swizzle {
 
-import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
+	/**
+	 * Accepted by the &lt;pname&gt; parameters of TexParameteri,
+	 * TexParameterf, TexParameteriv, TexParameterfv,
+	 * GetTexParameterfv, and GetTexParameteriv:
+	 */
+	int GL_TEXTURE_SWIZZLE_R = 0x8E42;
+	int GL_TEXTURE_SWIZZLE_G = 0x8E43;
+	int GL_TEXTURE_SWIZZLE_B = 0x8E44;
+	int GL_TEXTURE_SWIZZLE_A = 0x8E45;
 
-import com.sun.mirror.type.PrimitiveType;
+	/**
+	 * Accepted by the &lt;pname&gt; parameters of TexParameteriv,
+	 * TexParameterfv, GetTexParameterfv, and GetTexParameteriv:
+	 */
+	int GL_TEXTURE_SWIZZLE_RGBA = 0x8E46;
 
-@NativeType
-@Target({ElementType.PARAMETER, ElementType.METHOD})
-public @interface GLvoid {
-	PrimitiveType.Kind value() default PrimitiveType.Kind.BYTE; 
 }

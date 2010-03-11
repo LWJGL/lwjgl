@@ -188,7 +188,7 @@ public class GLTypeMap implements TypeMap {
 	private static Class[] getValidBufferTypes(Class type) {
 		if ( type.equals(IntBuffer.class) )
 			return new Class[] { GLbitfield.class, GLenum.class, GLhandleARB.class, GLint.class,
-			                     GLsizei.class, GLuint.class };
+			                     GLsizei.class, GLuint.class, GLvoid.class };
 		else if ( type.equals(FloatBuffer.class) )
 			return new Class[] { GLclampf.class, GLfloat.class };
 		else if ( type.equals(ByteBuffer.class) )

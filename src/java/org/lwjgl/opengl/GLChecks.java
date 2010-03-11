@@ -114,6 +114,18 @@ class GLChecks {
 			throw new OpenGLException("Cannot use offsets when Element Array Buffer Object is disabled");
 	}
 
+	/** Helper method to ensure that array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
+	static void ensureIndirectBOdisabled(ContextCapabilities caps) {
+		if ( StateTracker.getReferencesStack(caps).getReferences().indirectBuffer != 0 )
+			throw new OpenGLException("Cannot use Buffers when Draw Indirect Object is enabled");
+	}
+
+	/** Helper method to ensure that array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
+	static void ensureIndirectBOenabled(ContextCapabilities caps) {
+		if ( StateTracker.getReferencesStack(caps).getReferences().indirectBuffer == 0 )
+			throw new OpenGLException("Cannot use offsets when Draw Indirect Object is disabled");
+	}
+
 	/** Helper method to ensure that pixel pack buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensurePackPBOdisabled(ContextCapabilities caps) {
 		if ( StateTracker.getReferencesStack(caps).getReferences().pixelPackBuffer != 0 )
