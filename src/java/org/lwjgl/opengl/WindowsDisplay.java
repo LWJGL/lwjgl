@@ -341,17 +341,32 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	public String getAdapter() {
 		try {
-			String adapter_string = WindowsRegistry.queryRegistrationKey(
+			String maxObjNo = WindowsRegistry.queryRegistrationKey(
 					WindowsRegistry.HKEY_LOCAL_MACHINE,
 					"HARDWARE\\DeviceMap\\Video",
-					"\\Device\\Video0");
-			String root_key = "\\registry\\machine\\";
-			if (adapter_string.toLowerCase().startsWith(root_key)) {
-				String driver_value = WindowsRegistry.queryRegistrationKey(
+					"MaxObjectNumber");
+			int maxObjectNumber = maxObjNo.charAt(0);
+			String vga_driver_value = "";
+			for(int i=0;i<maxObjectNumber;i++) {
+				String adapter_string = WindowsRegistry.queryRegistrationKey(
 						WindowsRegistry.HKEY_LOCAL_MACHINE,
-						adapter_string.substring(root_key.length()),
-						"InstalledDisplayDrivers");
-				return driver_value;
+						"HARDWARE\\DeviceMap\\Video",
+						"\\Device\\Video" + i);
+				String root_key = "\\registry\\machine\\";
+				if (adapter_string.toLowerCase().startsWith(root_key)) {
+					String driver_value = WindowsRegistry.queryRegistrationKey(
+							WindowsRegistry.HKEY_LOCAL_MACHINE,
+							adapter_string.substring(root_key.length()),
+							"InstalledDisplayDrivers");
+					if(driver_value.toUpperCase().startsWith("VGA")) {
+						vga_driver_value = driver_value;
+					} else if(!driver_value.toUpperCase().startsWith("RDP") && !driver_value.toUpperCase().startsWith("NMNDD")) {
+						return driver_value;
+					}
+				}
+			}
+			if(!vga_driver_value.equals("")) {
+				return vga_driver_value;
 			}
 		} catch (LWJGLException e) {
 			LWJGLUtil.log("Exception occurred while querying registry: " + e);
@@ -362,9 +377,12 @@ final class WindowsDisplay implements DisplayImplementation {
 	public String getVersion() {
 		String driver = getAdapter();
 		if (driver != null) {
-			WindowsFileVersion version = nGetVersion(driver + ".dll");
-			if (version != null)
-				return version.toString();
+			String[] drivers = driver.split(",");
+			if(drivers.length>0) {				
+				WindowsFileVersion version = nGetVersion(drivers[0] + ".dll");
+				if (version != null)
+					return version.toString();
+			}
 		}
 		return null;
 	}
