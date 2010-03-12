@@ -68,13 +68,24 @@ public interface AMD_performance_monitor {
 
 	void glGetPerfMonitorGroupStringAMD(@GLuint int group,
 	                                    @AutoSize("groupString") @GLsizei int bufSize,
-	                                    @OutParameter @Check(value = "1", canBeNull = true) @GLsizei IntBuffer length,
-	                                    @GLchar ByteBuffer groupString);
+	                                    @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
+	                                    @OutParameter @GLchar ByteBuffer groupString);
 
-	void glGetPerfMonitorCounterStringAMD(@GLuint int group, @GLuint int counter,
-	                                      @AutoSize("counterString") @GLsizei int bufSize,
-	                                      @OutParameter @Check(value = "1", canBeNull = true) @GLsizei IntBuffer length,
-	                                      @GLchar ByteBuffer counterString);
+	@Alternate("glGetPerfMonitorGroupStringAMD")
+	@GLstring(string = "groupString", maxLength = "bufSize")
+	void glGetPerfMonitorGroupStringAMD2(@GLuint int group, @GLsizei int bufSize,
+	                                    @OutParameter @GLsizei @Constant("groupString_length, 0") IntBuffer length,
+	                                    @OutParameter @GLchar ByteBuffer groupString);
+
+	void glGetPerfMonitorCounterStringAMD(@GLuint int group, @GLuint int counter, @AutoSize("counterString") @GLsizei int bufSize,
+	                                      @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
+	                                      @OutParameter @GLchar ByteBuffer counterString);
+
+	@Alternate("glGetPerfMonitorCounterStringAMD")
+	@GLstring(string = "counterString", maxLength = "bufSize")
+	void glGetPerfMonitorCounterStringAMD2(@GLuint int group, @GLuint int counter, @GLsizei int bufSize,
+	                                      @OutParameter @GLsizei @Constant("counterString_length, 0") IntBuffer length,
+	                                      @OutParameter @GLchar ByteBuffer counterString);
 
 	void glGetPerfMonitorCounterInfoAMD(@GLuint int group, @GLuint int counter, @GLenum int pname, @Check(value = "16") @GLvoid ByteBuffer data);
 

@@ -63,7 +63,13 @@ public interface GL33 {
 
 	void glBindFragDataLocationIndexed(@GLuint int program, @GLuint int colorNumber, @GLuint int index, @NullTerminated @Const @GLchar ByteBuffer name);
 
+	@Alternate("glBindFragDataLocationIndexed")
+	void glBindFragDataLocationIndexed(@GLuint int program, @GLuint int colorNumber, @GLuint int index, @NullTerminated CharSequence name);
+
 	int glGetFragDataIndex(@GLuint int program, @NullTerminated @Const @GLchar ByteBuffer name);
+
+	@Alternate("glGetFragDataIndex")
+	int glGetFragDataIndex(@GLuint int program, @NullTerminated CharSequence name);
 
 	// --------------------------------------------------------------------
 	// ----------------------[ ARB_occlusion_query2 ]----------------------

@@ -45,29 +45,50 @@ public interface ARB_shading_language_include {
 	int GL_NAMED_STRING_LENGTH_ARB = 0x8DE9;
 	int GL_NAMED_STRING_TYPE_ARB = 0x8DEA;
 
-	void glNamedStringARB(@GLenum int type, @AutoSize("name") int namelen, @Const ByteBuffer name, @AutoSize("string") int stringlen, @Const ByteBuffer string);
+	void glNamedStringARB(@GLenum int type,
+	                      @AutoSize("name") int namelen, @Const @GLchar ByteBuffer name,
+	                      @AutoSize("string") int stringlen, @Const @GLchar ByteBuffer string);
 
-	void glDeleteNamedStringARB(@AutoSize("name") int namelen, @Const ByteBuffer name);
+	@Alternate("glNamedStringARB")
+	void glNamedStringARB(@GLenum int type,
+	                      @Constant("name.length()") int namelen, CharSequence name,
+	                      @Constant("string.length()") int stringlen, @GLstringOffset("name.length()") CharSequence string);
+
+	void glDeleteNamedStringARB(@AutoSize("name") int namelen, @Const @GLchar ByteBuffer name);
+
+	@Alternate("glDeleteNamedStringARB")
+	void glDeleteNamedStringARB(@Constant("name.length()") int namelen, CharSequence name);
 
 	void glCompileShaderIncludeARB(@GLuint int shader, @GLsizei int count,
 	                               @Const @NullTerminated("count") @StringList("count") @GLchar ByteBuffer path,
 	                               @Constant("null, 0") @Const IntBuffer length);
 
-	/* TODO: Implement @Check
-	@Alternate("glCompileShaderIncludeARB")
-	void glCompileShaderIncludeARB2(@GLuint int shader, @AutoSize("length") @GLsizei int count,
-	                               @Const @Check("...") @StringList("count") @GLchar ByteBuffer path,
-	                               @Const IntBuffer length);
-	*/
+	@Alternate(value = "glCompileShaderIncludeARB", nativeAlt = true)
+	void glCompileShaderIncludeARB2(@GLuint int shader, @Constant("path.length") @GLsizei int count,
+	                                @Const @StringList(value = "count", lengths = "length") CharSequence[] path,
+	                                @Constant("StringUtils.getLengths(path), 0") @Const IntBuffer length);
 
-	boolean glIsNamedStringARB(@AutoSize("name") int namelen, @Const ByteBuffer name);
+	boolean glIsNamedStringARB(@AutoSize("name") int namelen, @Const @GLchar ByteBuffer name);
 
-	void glGetNamedStringARB(@AutoSize("name") int namelen, @Const ByteBuffer name,
+	@Alternate("glIsNamedStringARB")
+	boolean glIsNamedStringARB(@Constant("name.length()") int namelen, CharSequence name);
+
+	void glGetNamedStringARB(@AutoSize("name") int namelen, @Const @GLchar ByteBuffer name,
+	                         @AutoSize("string") @GLsizei int bufSize,
+	                         @OutParameter @Check(value = "1", canBeNull = true) IntBuffer stringlen,
+	                         @OutParameter ByteBuffer string);
+
+	@Alternate("glGetNamedStringARB")
+	void glGetNamedStringARB(@Constant("name.length()") int namelen, CharSequence name,
 	                         @AutoSize("string") @GLsizei int bufSize,
 	                         @OutParameter @Check(value = "1", canBeNull = true) IntBuffer stringlen,
 	                         @OutParameter ByteBuffer string);
 
 	@StripPostfix("params")
-	void glGetNamedStringivARB(@AutoSize("name") int namelen, @Const ByteBuffer name, @GLenum int pname, @Check("1") @OutParameter IntBuffer params);
+	void glGetNamedStringivARB(@AutoSize("name") int namelen, @Const @GLchar ByteBuffer name, @GLenum int pname, @Check("1") @OutParameter IntBuffer params);
+
+	@StripPostfix("params")
+	@Alternate("glGetNamedStringivARB")
+	void glGetNamedStringivARB2(@Constant("name.length()") int namelen, CharSequence name, @GLenum int pname, @Check("1") @OutParameter IntBuffer params);
 
 }

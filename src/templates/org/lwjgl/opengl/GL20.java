@@ -40,23 +40,17 @@ public interface GL20 {
 	// -------------------[ ARB_shading_language_100 ]-------------------
 	// ------------------------------------------------------------------
 
-	/**
-	 * Accepted by the &lt;name&gt; parameter of GetString:
-	 */
+	/** Accepted by the &lt;name&gt; parameter of GetString: */
 	int GL_SHADING_LANGUAGE_VERSION = 0x8B8C;
 
 	// ------------------------------------------------------------------
 	// ----------------------[ ARB_shader_objects ]----------------------
 	// ------------------------------------------------------------------
 
-	/**
-	 * Accepted by the &lt;pname&gt; argument of GetInteger:
-	 */
+	/** Accepted by the &lt;pname&gt; argument of GetInteger: */
 	int GL_CURRENT_PROGRAM = 0x8B8D;
 
-	/**
-	 * Accepted by the &lt;pname&gt; parameter of GetObjectParameter{fi}vARB:
-	 */
+	/** Accepted by the &lt;pname&gt; parameter of GetObjectParameter{fi}vARB: */
 	int GL_SHADER_TYPE = 0x8B4F;
 	int GL_DELETE_STATUS = 0x8B80;
 	int GL_COMPILE_STATUS = 0x8B81;
@@ -70,14 +64,10 @@ public interface GL20 {
 	int GL_ACTIVE_ATTRIBUTE_MAX_LENGTH = 0x8B8A;
 	int GL_SHADER_SOURCE_LENGTH = 0x8B88;
 
-	/**
-	 * Returned by the &lt;params&gt; parameter of GetObjectParameter{fi}vARB:
-	 */
+	/** Returned by the &lt;params&gt; parameter of GetObjectParameter{fi}vARB: */
 	int GL_SHADER_OBJECT = 0x8B48;
 
-	/**
-	 * Returned by the &lt;type&gt; parameter of GetActiveUniformARB:
-	 */
+	/** Returned by the &lt;type&gt; parameter of GetActiveUniformARB: */
 	int GL_FLOAT_VEC2 = 0x8B50;
 	int GL_FLOAT_VEC3 = 0x8B51;
 	int GL_FLOAT_VEC4 = 0x8B52;
@@ -107,14 +97,16 @@ public interface GL20 {
 	 * @param string
 	 */
 	void glShaderSource(@GLuint int shader, @Constant("1") @GLsizei int count,
-	                    @Indirect
-	                    @Check
-	                    @Const
-	                    @GLchar ByteBuffer string,
-	                    @AutoSize("string")
-	                    @Indirect
-	                    @Const
-	                    @GLint int length);
+	                    @Indirect @Const @GLchar @Check ByteBuffer string,
+	                    @AutoSize("string") @Indirect @Const @GLint int length);
+
+	@Alternate("glShaderSource")
+	void glShaderSource2(@GLuint int shader, @Constant("1") @GLsizei int count, CharSequence string, @Constant("string.length()") @Indirect @Const int length);
+
+	@Alternate(value = "glShaderSource", nativeAlt = true)
+	void glShaderSource3(@GLuint int shader, @Constant("strings.length") @GLsizei int count,
+	                     @Const @StringList(value = "count", lengths = "length") CharSequence[] strings,
+	                     @Constant("StringUtils.getLengths(strings), 0") @Const IntBuffer length);
 
 	int glCreateShader(@GLuint int type);
 
@@ -199,25 +191,28 @@ public interface GL20 {
 	void glGetProgramiv(@GLuint int program, @GLenum int pname, @OutParameter @Check IntBuffer params);
 
 	void glGetShaderInfoLog(@GLuint int shader, @AutoSize("infoLog") @GLsizei int maxLength,
-			                @OutParameter
-	                        @GLsizei
-	                        @Check(value = "1", canBeNull = true) IntBuffer length,
-			                @OutParameter
-			                @GLchar ByteBuffer infoLog);
+	                        @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
+	                        @OutParameter @GLchar ByteBuffer infoLog);
+
+	@Alternate("glGetShaderInfoLog")
+	@GLstring(string = "infoLog", maxLength = "maxLength")
+	void glGetShaderInfoLog2(@GLuint int shader, @GLsizei int maxLength,
+	                         @OutParameter @GLsizei @Constant("infoLog_length, 0") IntBuffer length,
+	                         @OutParameter @GLchar ByteBuffer infoLog);
 
 	void glGetProgramInfoLog(@GLuint int program, @AutoSize("infoLog") @GLsizei int maxLength,
-			                 @OutParameter
-	                         @GLsizei
-	                         @Check(value = "1", canBeNull = true) IntBuffer length,
-			                 @OutParameter
-	                         @GLchar ByteBuffer infoLog);
+	                         @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
+	                         @OutParameter @GLchar ByteBuffer infoLog);
+
+	@Alternate("glGetProgramInfoLog")
+	@GLstring(string = "infoLog", maxLength = "maxLength")
+	void glGetProgramInfoLog2(@GLuint int program, @GLsizei int maxLength,
+	                          @OutParameter @GLsizei @Constant("infoLog_length, 0") IntBuffer length,
+	                          @OutParameter @GLchar ByteBuffer infoLog);
 
 	void glGetAttachedShaders(@GLuint int program, @AutoSize("shaders") @GLsizei int maxCount,
-			                  @OutParameter
-	                          @GLsizei
-	                          @Check(value = "1", canBeNull = true) IntBuffer count,
-			                  @OutParameter
-	                          @GLuint IntBuffer shaders);
+	                          @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer count,
+	                          @OutParameter @GLuint IntBuffer shaders);
 
 	/**
 	 * Returns the location of the uniform with the specified name. The ByteBuffer should contain the uniform name as a
@@ -225,18 +220,25 @@ public interface GL20 {
 	 *
 	 * @param program
 	 * @param name
-	 *
 	 */
 	int glGetUniformLocation(@GLuint int program, @NullTerminated @Check("1") @Const @GLchar ByteBuffer name);
 
+	@Alternate("glGetUniformLocation")
+	int glGetUniformLocation(@GLuint int program, @NullTerminated CharSequence name);
+
 	void glGetActiveUniform(@GLuint int program, @GLuint int index, @AutoSize("name") @GLsizei int maxLength,
-	                        @Check(value = "1", canBeNull = true)
-	                        @OutParameter @GLsizei IntBuffer length,
-	                        @Check
-	                        @OutParameter @GLsizei IntBuffer size,
-	                        @Check
-	                        @OutParameter @GLenum IntBuffer type,
+	                        @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
+	                        @OutParameter @GLsizei @Check("1") IntBuffer size,
+	                        @OutParameter @GLenum @Check("1") IntBuffer type,
 	                        @OutParameter @GLchar ByteBuffer name);
+
+	@Alternate("glGetActiveUniform")
+	@GLstring(string = "name", maxLength = "maxLength")
+	void glGetActiveUniform2(@GLuint int program, @GLuint int index, @GLsizei int maxLength,
+	                         @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
+	                         @OutParameter @GLsizei @Check("1") IntBuffer size,
+	                         @OutParameter @GLenum @Check("1") IntBuffer type,
+	                         @OutParameter @GLchar ByteBuffer name);
 
 	@StripPostfix("params")
 	void glGetUniformfv(@GLuint int program, int location, @OutParameter @Check FloatBuffer params);
@@ -245,10 +247,14 @@ public interface GL20 {
 	void glGetUniformiv(@GLuint int program, int location, @OutParameter @Check IntBuffer params);
 
 	void glGetShaderSource(@GLuint int shader, @AutoSize("source") @GLsizei int maxLength,
-	                       @Check(value = "1", canBeNull = true)
-	                       @GLsizei IntBuffer length,
-	                       @OutParameter
-	                       @GLchar ByteBuffer source);
+	                       @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
+	                       @OutParameter @GLchar ByteBuffer source);
+
+	@Alternate("glGetShaderSource")
+	@GLstring(string = "source", maxLength = "maxLength")
+	void glGetShaderSource2(@GLuint int shader, @GLsizei int maxLength,
+	                        @OutParameter @GLsizei @Constant("source_length, 0") IntBuffer length,
+	                        @OutParameter @GLchar ByteBuffer source);
 
 	// ------------------------------------------------------------------
 	// ----------------------[ ARB_vertex_program ]----------------------
@@ -281,7 +287,7 @@ public interface GL20 {
 	void glVertexAttrib4Nub(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
 
 	void glVertexAttribPointer(@GLuint int index, int size, @AutoType("buffer") @GLenum int type, boolean normalized, @GLsizei int stride,
-	                           @CachedReference(index="index",name="glVertexAttribPointer_buffer")
+	                           @CachedReference(index = "index", name = "glVertexAttribPointer_buffer")
 	                           @BufferObject(BufferKind.ArrayVBO)
 	                           @Check
 	                           @Const
@@ -340,9 +346,7 @@ public interface GL20 {
 	int GL_VERTEX_PROGRAM_POINT_SIZE = 0x8642;
 	int GL_VERTEX_PROGRAM_TWO_SIDE = 0x8643;
 
-	/**
-	 * Accepted by the &lt;pname&gt; parameter of GetVertexAttrib{dfi}vARB:
-	 */
+	/** Accepted by the &lt;pname&gt; parameter of GetVertexAttrib{dfi}vARB: */
 	int GL_VERTEX_ATTRIB_ARRAY_ENABLED = 0x8622;
 	int GL_VERTEX_ATTRIB_ARRAY_SIZE = 0x8623;
 	int GL_VERTEX_ATTRIB_ARRAY_STRIDE = 0x8624;
@@ -350,23 +354,32 @@ public interface GL20 {
 	int GL_VERTEX_ATTRIB_ARRAY_NORMALIZED = 0x886A;
 	int GL_CURRENT_VERTEX_ATTRIB = 0x8626;
 
-	/**
-	 * Accepted by the &lt;pname&gt; parameter of GetVertexAttribPointervARB:
-	 */
+	/** Accepted by the &lt;pname&gt; parameter of GetVertexAttribPointervARB: */
 	int GL_VERTEX_ATTRIB_ARRAY_POINTER = 0x8645;
 
 	void glBindAttribLocation(@GLuint int program, @GLuint int index, @NullTerminated @Const @GLchar ByteBuffer name);
 
+	@Alternate("glBindAttribLocation")
+	void glBindAttribLocation(@GLuint int program, @GLuint int index, @NullTerminated CharSequence name);
+
 	void glGetActiveAttrib(@GLuint int program, @GLuint int index, @AutoSize("name") @GLsizei int maxLength,
-			               @OutParameter
-	                       @Check(value = "1", canBeNull = true)
-	                       @GLsizei IntBuffer length,
-	                       @Check("1") IntBuffer size,
-	                       @Check("1") @GLenum IntBuffer type,
-	                       @OutParameter
-	                       @GLchar ByteBuffer name);
+	                       @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
+	                       @OutParameter @Check("1") IntBuffer size,
+	                       @OutParameter @GLenum @Check("1") IntBuffer type,
+	                       @OutParameter @GLchar ByteBuffer name);
+
+	@Alternate("glGetActiveAttrib")
+	@GLstring(string = "name", maxLength = "maxLength")
+	void glGetActiveAttrib2(@GLuint int program, @GLuint int index, @GLsizei int maxLength,
+	                        @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
+	                        @OutParameter @Check("1") IntBuffer size,
+	                        @OutParameter @GLenum @Check("1") IntBuffer type,
+	                        @OutParameter @GLchar ByteBuffer name);
 
 	int glGetAttribLocation(@GLuint int program, @NullTerminated @Const @GLchar ByteBuffer name);
+
+	@Alternate("glGetAttribLocation")
+	int glGetAttribLocation(@GLuint int program, @NullTerminated CharSequence name);
 
 	// -------------------------------------------------------------------
 	// ----------------------[ ARB_fragment_shader ]----------------------
@@ -443,9 +456,7 @@ public interface GL20 {
 	 */
 	int GL_POINT_SPRITE_COORD_ORIGIN = 0x8CA0;
 
-	/**
-	 * Accepted by the &lt;param&gt; parameter of PointParameter{if}vARB:
-	 */
+	/** Accepted by the &lt;param&gt; parameter of PointParameter{if}vARB: */
 	int GL_LOWER_LEFT = 0x8CA1;
 	int GL_UPPER_LEFT = 0x8CA2;
 

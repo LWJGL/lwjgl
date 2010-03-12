@@ -42,6 +42,10 @@ import java.lang.annotation.Target;
  */
 @Target({ ElementType.METHOD })
 public @interface Alternate {
+
 	/** This must match an existing GL method name. */
 	String value();
+
+	/** If true, an alternate Java->native call will be created. Useful when the alternate implementation uses different types. */
+	boolean nativeAlt() default false;
 }

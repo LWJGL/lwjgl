@@ -31,10 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.Const;
-import org.lwjgl.util.generator.GLchar;
-import org.lwjgl.util.generator.GLuint;
-import org.lwjgl.util.generator.NullTerminated;
+import org.lwjgl.util.generator.*;
 
 import java.nio.ByteBuffer;
 
@@ -58,6 +55,12 @@ public interface ARB_blend_func_extended {
 
 	void glBindFragDataLocationIndexed(@GLuint int program, @GLuint int colorNumber, @GLuint int index, @NullTerminated @Const @GLchar ByteBuffer name);
 
+	@Alternate("glBindFragDataLocationIndexed")
+	void glBindFragDataLocationIndexed(@GLuint int program, @GLuint int colorNumber, @GLuint int index, @NullTerminated CharSequence name);
+
 	int glGetFragDataIndex(@GLuint int program, @NullTerminated @Const @GLchar ByteBuffer name);
+
+	@Alternate("glGetFragDataIndex")
+	int glGetFragDataIndex(@GLuint int program, @NullTerminated CharSequence name);
 
 }

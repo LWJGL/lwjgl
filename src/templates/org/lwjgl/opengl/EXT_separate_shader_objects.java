@@ -46,4 +46,8 @@ public interface EXT_separate_shader_objects {
 
 	@GLuint int glCreateShaderProgramEXT(@GLenum int type, @NullTerminated @Const @GLchar ByteBuffer string);
 
+	@Alternate("glCreateShaderProgramEXT")
+	@GLuint
+	int glCreateShaderProgramEXT(@GLenum int type, @NullTerminated CharSequence string);
+
 }

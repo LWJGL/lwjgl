@@ -56,7 +56,10 @@ public class JNITypeTranslator implements TypeVisitor {
 	}
 
 	public void visitArrayType(ArrayType t) {
-		throw new RuntimeException(t + " is not allowed");
+		if ( "java.lang.CharSequence".equals(t.getComponentType().toString()) )
+			signature.append("jobject");
+		else
+			throw new RuntimeException(t + " is not allowed");
 	}
 
 	public void visitClassType(ClassType t) {

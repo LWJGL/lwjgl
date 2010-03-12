@@ -141,21 +141,27 @@ public interface ARB_vertex_shader {
 
 	void glBindAttribLocationARB(@GLhandleARB int programObj, @GLuint int index, @NullTerminated @Const @GLcharARB ByteBuffer name);
 
-	void glGetActiveAttribARB(@GLhandleARB int programObj, @GLuint int index,
-	                          @AutoSize("name")
-	                          @GLsizei int maxLength,
-							  @OutParameter
-	                          @Check(value = "1", canBeNull = true)
-	                          @GLsizei IntBuffer length,
-							  @OutParameter
-	                          @Check("1") IntBuffer size,
-							  @OutParameter
-	                          @Check("1")
-	                          @GLenum IntBuffer type,
-							  @OutParameter
-	                          @GLcharARB ByteBuffer name);
+	@Alternate("glBindAttribLocationARB")
+	void glBindAttribLocationARB(@GLhandleARB int programObj, @GLuint int index, @NullTerminated CharSequence name);
+
+	void glGetActiveAttribARB(@GLhandleARB int programObj, @GLuint int index, @AutoSize("name") @GLsizei int maxLength,
+							  @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
+							  @OutParameter @Check("1") IntBuffer size,
+							  @OutParameter @GLenum @Check("1") IntBuffer type,
+							  @OutParameter @GLcharARB ByteBuffer name);
+
+	@Alternate("glGetActiveAttribARB")
+	@GLstring(string = "name", maxLength = "maxLength")
+	void glGetActiveAttribARB2(@GLhandleARB int programObj, @GLuint int index, @GLsizei int maxLength,
+	                          @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
+	                          @OutParameter @Check("1") IntBuffer size,
+	                          @OutParameter @GLenum @Check("1") IntBuffer type,
+	                          @OutParameter @GLcharARB ByteBuffer name);
 
 	int glGetAttribLocationARB(@GLhandleARB int programObj, @NullTerminated @Const @GLcharARB ByteBuffer name);
+
+	@Alternate("glGetAttribLocationARB")
+	int glGetAttribLocationARB(@GLhandleARB int programObj, @NullTerminated CharSequence name);
 
 	@StripPostfix("params")
 	void glGetVertexAttribfvARB(@GLuint int index, @GLenum int pname, @OutParameter @Check FloatBuffer params);

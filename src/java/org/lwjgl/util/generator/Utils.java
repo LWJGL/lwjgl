@@ -43,9 +43,16 @@ package org.lwjgl.util.generator;
 import com.sun.mirror.type.*;
 import java.nio.Buffer;
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.util.*;
 
+import javax.lang.model.util.SimpleTypeVisitor6;
+
 import com.sun.mirror.declaration.*;
+import com.sun.mirror.type.PrimitiveType.Kind;
+import com.sun.mirror.util.SimpleTypeVisitor;
+import com.sun.mirror.util.TypeVisitor;
+import com.sun.mirror.util.Types;
 
 public class Utils {
 	public static final String TYPEDEF_POSTFIX = "PROC";
@@ -63,11 +70,20 @@ public class Utils {
 	private static final String OVERLOADED_METHOD_PREFIX = "n";
 
 	public static String getTypedefName(MethodDeclaration method) {
-		return method.getSimpleName() + TYPEDEF_POSTFIX;
+		Alternate alt_annotation = method.getAnnotation(Alternate.class);
+		return (alt_annotation == null ? method.getSimpleName() : alt_annotation.value()) + TYPEDEF_POSTFIX;
 	}
 
 	public static String getFunctionAddressName(InterfaceDeclaration interface_decl, MethodDeclaration method) {
-		return interface_decl.getSimpleName() + "_" + method.getSimpleName() + FUNCTION_POINTER_POSTFIX;
+		return getFunctionAddressName(interface_decl, method, false);
+	}
+
+	public static String getFunctionAddressName(InterfaceDeclaration interface_decl, MethodDeclaration method, boolean forceAlt) {
+		Alternate alt_annotation = method.getAnnotation(Alternate.class);
+		if ( alt_annotation == null || (alt_annotation.nativeAlt() && !forceAlt) )
+			return interface_decl.getSimpleName() + "_" + method.getSimpleName() + FUNCTION_POINTER_POSTFIX;
+		else
+			return interface_decl.getSimpleName() + "_" + alt_annotation.value() + FUNCTION_POINTER_POSTFIX;
 	}
 
 	public static boolean isFinal(InterfaceDeclaration d) {
@@ -103,7 +119,7 @@ public class Utils {
 	}
 
 	public static boolean isAddressableType(Class type) {
-		return Buffer.class.isAssignableFrom(type) || String.class.equals(type);
+		return Buffer.class.isAssignableFrom(type) || String.class.equals(type) || CharSequence.class.equals(type) || CharSequence[].class.equals(type);
 	}
 
 	public static Class getJavaType(TypeMirror type_mirror) {
@@ -248,6 +264,8 @@ public class Utils {
 		Class<?> param_type = getJavaType(t);
 		if (Buffer.class.isAssignableFrom(param_type))
 			return param_type;
+		else if ( param_type == CharSequence.class || param_type == CharSequence[].class )
+			return ByteBuffer.class;
 		else
 			return null;
 	}
@@ -255,10 +273,15 @@ public class Utils {
 	public static String getSimpleNativeMethodName(MethodDeclaration method, boolean generate_error_checks, boolean context_specific) {
 		String method_name;
 		Alternate alt_annotation = method.getAnnotation(Alternate.class);
-		method_name = alt_annotation == null ? method.getSimpleName() : alt_annotation.value();
+		method_name = alt_annotation == null || alt_annotation.nativeAlt() ? method.getSimpleName() : alt_annotation.value();
 		if (isMethodIndirect(generate_error_checks, context_specific, method))
 			method_name = OVERLOADED_METHOD_PREFIX + method_name;
 		return method_name;
+	}
+
+	static boolean isReturnString(MethodDeclaration method, ParameterDeclaration param) {
+		GLstring string_annotation = method.getAnnotation(GLstring.class);
+		return string_annotation != null && string_annotation.string().equals(param.getSimpleName());
 	}
 
 }

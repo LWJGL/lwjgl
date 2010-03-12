@@ -178,6 +178,12 @@ public interface EXT_gpu_shader4 {
 
 	void glBindFragDataLocationEXT(@GLuint int program, @GLuint int colorNumber, @NullTerminated @Const @GLchar ByteBuffer name);
 
+	@Alternate("glBindFragDataLocationEXT")
+	void glBindFragDataLocationEXT(@GLuint int program, @GLuint int colorNumber, @NullTerminated CharSequence name);
+
 	int glGetFragDataLocationEXT(@GLuint int program, @NullTerminated @Const @GLchar ByteBuffer name);
+
+	@Alternate("glGetFragDataLocationEXT")
+	int glGetFragDataLocationEXT(@GLuint int program, @NullTerminated CharSequence name);
 
 }

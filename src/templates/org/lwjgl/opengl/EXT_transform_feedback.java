@@ -105,11 +105,23 @@ public interface EXT_transform_feedback {
 	                                    @Const @NullTerminated("count") @GLchar @StringList("count") ByteBuffer varyings,
 	                                    @GLenum int bufferMode);
 
-	void glGetTransformFeedbackVaryingEXT(@GLuint int program, @GLuint int index,
-	                                      @AutoSize("name") @GLsizei int bufSize,
-	                                      @OutParameter @Check(value = "1", canBeNull = true) @GLsizei IntBuffer length,
-	                                      @OutParameter @Check(value = "1", canBeNull = true) @GLsizei IntBuffer size,
-	                                      @OutParameter @Check(value = "1", canBeNull = true) @GLenum IntBuffer type,
+	@Alternate("glTransformFeedbackVaryingsEXT")
+	void glTransformFeedbackVaryingsEXT(@GLuint int program, @Constant("varyings.length") @GLsizei int count,
+	                                    @Const @NullTerminated @StringList("count") CharSequence[] varyings,
+	                                    @GLenum int bufferMode);
+
+	void glGetTransformFeedbackVaryingEXT(@GLuint int program, @GLuint int index, @AutoSize("name") @GLsizei int bufSize,
+	                                      @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
+	                                      @OutParameter @GLsizei @Check("1") IntBuffer size,
+	                                      @OutParameter @GLenum @Check("1") IntBuffer type,
 	                                      @GLchar ByteBuffer name);
+
+	@Alternate("glGetTransformFeedbackVaryingEXT")
+	@GLstring(string = "name", maxLength = "bufSize")
+	void glGetTransformFeedbackVaryingEXT2(@GLuint int program, @GLuint int index, @GLsizei int bufSize,
+	                                       @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
+	                                       @OutParameter @GLsizei @Check("1") IntBuffer size,
+	                                       @OutParameter @GLenum @Check("1") IntBuffer type,
+	                                       @GLchar ByteBuffer name);
 
 }

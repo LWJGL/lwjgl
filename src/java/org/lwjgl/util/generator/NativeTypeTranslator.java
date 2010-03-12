@@ -104,7 +104,12 @@ public class NativeTypeTranslator implements TypeVisitor {
 	}
 
 	public void visitArrayType(ArrayType t) {
-		throw new RuntimeException(t + " is not allowed");
+		if ( "java.lang.CharSequence".equals(t.getComponentType().toString()) ) {
+			is_indirect = true;
+			native_types = new ArrayList<Class>();
+			native_types.add(GLchar.class);
+		} else
+			throw new RuntimeException(t + " is not allowed");
 	}
 
 	public static PrimitiveType.Kind getPrimitiveKindFromBufferClass(Class c) {

@@ -210,8 +210,18 @@ public class ContextCapabilitiesGenerator {
 
 		writer.println(") {");
 		writer.println("\t\treturn ");
+
+		boolean first = true;
 		while ( methods.hasNext() ) {
 			MethodDeclaration method = methods.next();
+			if ( method.getAnnotation(Alternate.class) != null )
+				continue;
+
+			if ( !first )
+				writer.println(" &&");
+			else
+				first = false;
+
 			optional = method.getAnnotation(Optional.class) != null;
 			deprecated = method.getAnnotation(DeprecatedGL.class) != null;
 			dependent = method.getAnnotation(Dependent.class);
@@ -261,8 +271,6 @@ public class ContextCapabilitiesGenerator {
 				writer.print(')');
 			if ( optional )
 				writer.print(" || true)");
-			if ( methods.hasNext() )
-				writer.println(" &&");
 		}
 		writer.println(";");
 		writer.println("\t}");
@@ -271,7 +279,8 @@ public class ContextCapabilitiesGenerator {
 
 	public static void generateSymbolAddresses(PrintWriter writer, InterfaceDeclaration d) {
 		for ( MethodDeclaration method : d.getMethods() ) {
-			writer.println("\tlong " + Utils.getFunctionAddressName(d, method) + ";");
+			if ( method.getAnnotation(Alternate.class) == null )
+				writer.println("\tlong " + Utils.getFunctionAddressName(d, method) + ";");
 		}
 	}
 

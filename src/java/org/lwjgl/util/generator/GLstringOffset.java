@@ -32,17 +32,17 @@
 package org.lwjgl.util.generator;
 
 /**
+ * This annotation must be used when there are more than one CharSequence arguments in a method.
+ * TODO: Add support for CharSequence[] if/when we need it.
  *
- * @author spasi <spasi@users.sourceforge.net>
+ * @author spasi
  */
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-@Target({ElementType.PARAMETER, ElementType.METHOD})
-public @interface StringList {
-	/** Number of values in the string list (name of native-side parameter) */
+@Target({ ElementType.PARAMETER })
+public @interface GLstringOffset {
+	/** An expression that will specify the offset from which this String will be written to the ByteBuffer. */
 	String value();
-	/** List of string lengths (name of native-side parameter) */
-	String lengths() default "";
 }

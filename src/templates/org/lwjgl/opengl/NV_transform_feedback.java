@@ -33,8 +33,8 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
 
-import java.nio.IntBuffer;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 public interface NV_transform_feedback {
 
@@ -128,12 +128,27 @@ public interface NV_transform_feedback {
 
 	int glGetVaryingLocationNV(@GLuint int program, @NullTerminated @Const @GLchar ByteBuffer name);
 
+	@Alternate("glGetVaryingLocationNV")
+	int glGetVaryingLocationNV(@GLuint int program, @NullTerminated CharSequence name);
+
 	void glGetActiveVaryingNV(@GLuint int program, @GLuint int index, @AutoSize("name") @GLsizei int bufSize,
-							  @OutParameter @Check("1") @GLsizei IntBuffer length,
-							  @OutParameter @Check("1") @GLsizei IntBuffer size,
-							  @OutParameter @Check("1") @GLenum IntBuffer type, @GLchar ByteBuffer name);
+	                          @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
+	                          @OutParameter @GLsizei @Check("1") IntBuffer size,
+	                          @OutParameter @GLenum @Check("1") IntBuffer type,
+	                          @OutParameter @GLchar ByteBuffer name);
+
+	@Alternate("glGetActiveVaryingNV")
+	@GLstring(string = "name", maxLength = "bufSize")
+	void glGetActiveVaryingNV2(@GLuint int program, @GLuint int index, @GLsizei int bufSize,
+	                           @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
+	                           @OutParameter @GLsizei @Check("1") IntBuffer size,
+	                           @OutParameter @GLenum @Check("1") IntBuffer type,
+	                           @OutParameter @GLchar ByteBuffer name);
 
 	void glActiveVaryingNV(@GLuint int program, @NullTerminated @Const @GLchar ByteBuffer name);
+
+	@Alternate("glActiveVaryingNV")
+	void glActiveVaryingNV(@GLuint int program, @NullTerminated CharSequence name);
 
 	void glGetTransformFeedbackVaryingNV(@GLuint int program, @GLuint int index, @OutParameter @Check("1") IntBuffer location);
 

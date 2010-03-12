@@ -125,7 +125,8 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 	private void validateParameters(MethodDeclaration method) {
 		for (ParameterDeclaration param : method.getParameters()) {
 			validateTypes(method, param.getAnnotationMirrors(), param.getType());
-			if (Utils.getNIOBufferType(param.getType()) != null) {
+			Class<?> param_type = Utils.getJavaType(param.getType());
+			if (Utils.getNIOBufferType(param.getType()) != null && param_type != CharSequence.class && param_type != CharSequence[].class) {
 				Check parameter_check_annotation = param.getAnnotation(Check.class);
 				NullTerminated null_terminated_annotation = param.getAnnotation(NullTerminated.class);
 				if (parameter_check_annotation == null && null_terminated_annotation == null) {
@@ -138,7 +139,11 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 							break;
 						}
 					}
-					if (!found_auto_size_param && param.getAnnotation(Result.class) == null && param.getAnnotation(Constant.class) == null)
+					if (!found_auto_size_param
+							&& param.getAnnotation(Result.class) == null
+					        && param.getAnnotation(Constant.class) == null
+							&& !Utils.isReturnString(method, param)
+						)
 						throw new RuntimeException(param + " has no Check, Result nor Constant annotation and no other parameters has" +
 													" an @AutoSize annotation on it in method " + method);
 				}
@@ -158,8 +163,10 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 	}
 
 	private static void generateMethodsNativePointers(PrintWriter writer, Collection<? extends MethodDeclaration> methods) {
-		for (MethodDeclaration method : methods)
-			generateMethodNativePointers(writer, method);
+		for (MethodDeclaration method : methods) {
+			if ( method.getAnnotation(Alternate.class) == null )
+				generateMethodNativePointers(writer, method);
+		}
 	}
 
 	private static void generateMethodNativePointers(PrintWriter writer, MethodDeclaration method) {

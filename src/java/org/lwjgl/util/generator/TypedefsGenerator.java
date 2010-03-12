@@ -82,8 +82,10 @@ public class TypedefsGenerator {
 	}
 
 	public static void generateNativeTypedefs(TypeMap type_map, PrintWriter writer, Collection<? extends MethodDeclaration> methods) {
-		for (MethodDeclaration method : methods)
-			generateNativeTypedefs(type_map, writer, method);
+		for (MethodDeclaration method : methods) {
+			if ( method.getAnnotation(Alternate.class) == null )
+				generateNativeTypedefs(type_map, writer, method);
+		}
 	}
 
 }

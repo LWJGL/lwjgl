@@ -32,17 +32,19 @@
 package org.lwjgl.util.generator;
 
 /**
+ * Methods annotated with @GLstring will return a String instead of void.
  *
- * @author spasi <spasi@users.sourceforge.net>
+ * @author spasi
  */
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-@Target({ElementType.PARAMETER, ElementType.METHOD})
-public @interface StringList {
-	/** Number of values in the string list (name of native-side parameter) */
-	String value();
-	/** List of string lengths (name of native-side parameter) */
-	String lengths() default "";
+@NativeType
+@Target({ ElementType.METHOD })
+public @interface GLstring {
+	/** The ByteBuffer argument that will be used to retrieve the String bytes. */
+	String string();
+	/** The argument that specifies the maximum number of bytes that may be read. */
+	String maxLength();
 }

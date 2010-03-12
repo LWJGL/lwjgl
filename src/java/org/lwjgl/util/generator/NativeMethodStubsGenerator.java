@@ -56,6 +56,9 @@ public class NativeMethodStubsGenerator {
 
 	public static void generateNativeMethodStubs(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration d, boolean generate_error_checks, boolean context_specific) {
 		for (MethodDeclaration method : d.getMethods()) {
+			Alternate alt_annotation = method.getAnnotation(Alternate.class);
+			if ( alt_annotation != null && !alt_annotation.nativeAlt() )
+				continue;
 			generateMethodStub(env, type_map, writer, Utils.getQualifiedClassName(d), method, Mode.NORMAL, generate_error_checks, context_specific);
 			if (Utils.hasMethodBufferObjectParameter(method))
 				generateMethodStub(env, type_map, writer, Utils.getQualifiedClassName(d), method, Mode.BUFFEROBJECT, generate_error_checks, context_specific);
@@ -117,9 +120,10 @@ public class NativeMethodStubsGenerator {
 		}
 		writer.println(") {");
 		generateBufferParameterAddresses(type_map, writer, method, mode);
+		Alternate alt_annotation = method.getAnnotation(Alternate.class);
 		if (context_specific) {
 			String typedef_name = Utils.getTypedefName(method);
-			writer.print("\t" + typedef_name + " " + method.getSimpleName());
+			writer.print("\t" + typedef_name + " " + (alt_annotation == null ? method.getSimpleName() : alt_annotation.value()));
 			writer.print(" = (" + typedef_name + ")((intptr_t)");
 			writer.println(Utils.FUNCTION_POINTER_VAR_NAME + ");");
 		}
@@ -141,7 +145,7 @@ public class NativeMethodStubsGenerator {
 			} else
 				writer.print(" = ");
 		}
-		writer.print(method.getSimpleName() + "(");
+		writer.print((alt_annotation == null ? method.getSimpleName() : alt_annotation.value()) + "(");
 		generateCallParameters(writer, type_map, method.getParameters());
 		writer.print(")");
 		writer.println(";");
@@ -222,13 +226,13 @@ public class NativeMethodStubsGenerator {
 	}
 
 	private static void generateBufferParameterAddresses(TypeMap type_map, PrintWriter writer, MethodDeclaration method, Mode mode) {
+		boolean loopDeclared = false;
 		for (ParameterDeclaration param : method.getParameters())
-			if (Utils.isAddressableType(param.getType()) &&
-					param.getAnnotation(Result.class) == null)
-				generateBufferParameterAddress(type_map, writer, method,  param, mode);
+			if (Utils.isAddressableType(param.getType()) && param.getAnnotation(Result.class) == null)
+				loopDeclared = generateBufferParameterAddress(type_map, writer, method,  param, mode, loopDeclared);
 	}
 
-	private static void generateBufferParameterAddress(TypeMap type_map, PrintWriter writer, MethodDeclaration method, ParameterDeclaration param, Mode mode) {
+	private static boolean generateBufferParameterAddress(TypeMap type_map, PrintWriter writer, MethodDeclaration method, ParameterDeclaration param, Mode mode, boolean loopDeclared) {
 		NativeTypeTranslator translator = new NativeTypeTranslator(type_map, param);
 		param.getType().accept(translator);
 		writer.print("\t" + translator.getSignature() + param.getSimpleName());
@@ -240,7 +244,7 @@ public class NativeMethodStubsGenerator {
 			writer.print("offsetToPointer(" + param.getSimpleName() + Utils.BUFFER_OBJECT_PARAMETER_POSTFIX + "))");
 		} else {
 			Class java_type = Utils.getJavaType(param.getType());
-			if (Buffer.class.isAssignableFrom(java_type)) {
+			if (Buffer.class.isAssignableFrom(java_type) || java_type.equals(CharSequence.class) || java_type.equals(CharSequence[].class)) {
 				boolean explicitly_byte_sized = java_type.equals(Buffer.class) ||
 					translator.getAnnotationType().equals(type_map.getVoidType());
 				if (explicitly_byte_sized)
@@ -262,30 +266,47 @@ public class NativeMethodStubsGenerator {
 		writer.println(";");
 
 		if ( param.getAnnotation(StringList.class) != null ) {
-			if ( param.getAnnotation(GLchar.class) == null ||
-			     param.getAnnotation(NullTerminated.class) == null ||
-			     param.getAnnotation(NullTerminated.class).value().length() == 0
+			if ( Utils.getJavaType(param.getType()) != CharSequence[].class && (
+					param.getAnnotation(GLchar.class) == null ||
+			        param.getAnnotation(NullTerminated.class) == null ||
+			        param.getAnnotation(NullTerminated.class).value().length() == 0
+				)
 			)
 				throw new RuntimeException("StringList annotation can only be applied on null-terminated GLchar buffers.");
 
-			// Declare string array and loop counters
-			writer.print("\tGLchar **" + param.getSimpleName() + STRING_LIST_POSTFIX + "; ");
-			writer.println("\tunsigned int " + param.getSimpleName() + "_i = 0;");
-			writer.println("\tGLchar *" + param.getSimpleName() + "_next = (GLchar *)" + param.getSimpleName() + BUFFER_ADDRESS_POSTFIX + ";");
+			if ( "_str".equals(param.getSimpleName()) )
+				throw new RuntimeException("The name '_str' is not valid for arguments annotated with StringList");
+
+			// Declare loop counters and allocate string array
+			if ( !loopDeclared ) {
+				writer.println("\tunsigned int _str_i;");
+				writer.println("\tGLchar *_str_address;");
+				loopDeclared = true;
+			}
+			writer.println("\tGLchar **" + param.getSimpleName() + STRING_LIST_POSTFIX + " = (GLchar **) malloc(" + param.getAnnotation(StringList.class).value() + "*sizeof(GLchar*));");
 		}
+		return loopDeclared;
 	}
 
 	private static void generateStringListInits(PrintWriter writer, Collection<ParameterDeclaration> params) {
 		for ( ParameterDeclaration param : params ) {
 			StringList stringList_annotation = param.getAnnotation(StringList.class);
 			if ( stringList_annotation != null ) {
-				// Allocate the string array
-				writer.println("\t" + param.getSimpleName() + STRING_LIST_POSTFIX + " = (GLchar **) malloc(" + stringList_annotation.value() + "*sizeof(GLchar*));");
+				String lengths = stringList_annotation.lengths();
+
+				// Init vars
+				writer.println("\t_str_i = 0;");
+				writer.println("\t_str_address = (GLchar *)" + param.getSimpleName() + BUFFER_ADDRESS_POSTFIX + ";");
 				// Fill string array with the string pointers
-				writer.println("\tdo {");
-				writer.println("\t\t" + param.getSimpleName() + STRING_LIST_POSTFIX + "[" + param.getSimpleName() + "_i++] = " + param.getSimpleName() + "_next;");
-				writer.println("\t\t" + param.getSimpleName() + "_next += strlen(" + param.getSimpleName() + "_next) + 1;");
-				writer.println("\t} while ( " + param.getSimpleName() + "_i < " + stringList_annotation.value() + " );");
+				writer.println("\twhile ( _str_i < " + stringList_annotation.value() + " ) {");
+				if ( lengths.length() == 0 ) {
+					writer.println("\t\t" + param.getSimpleName() + STRING_LIST_POSTFIX + "[_str_i++] = _str_address;");
+					writer.println("\t\t_str_address += strlen(_str_address_next) + 1;");
+				} else {
+					writer.println("\t\t" + param.getSimpleName() + STRING_LIST_POSTFIX + "[_str_i] = _str_address;");
+					writer.println("\t\t_str_address += " + lengths + BUFFER_ADDRESS_POSTFIX + "[_str_i++];");
+				}
+				writer.println("\t}");
 			}
 		}
 	}

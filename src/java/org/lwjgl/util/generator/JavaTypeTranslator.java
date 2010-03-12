@@ -56,7 +56,10 @@ public class JavaTypeTranslator implements TypeVisitor {
 	}
 
 	public void visitArrayType(ArrayType t) {
-		throw new RuntimeException(t + " is not allowed");
+		if ( "java.lang.CharSequence".equals(t.getComponentType().toString()) )
+			type = CharSequence[].class;
+		else
+			throw new RuntimeException(t + " is not allowed");
 	}
 
 	public void visitPrimitiveType(PrimitiveType t) {

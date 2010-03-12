@@ -76,14 +76,14 @@ public interface GL30 {
 	String glGetStringi(@GLenum int name, @GLuint int index);
 
 	@StripPostfix("value")
-	void glClearBufferfv(@GLenum int buffer, int drawbuffer, @Const @Check("4")FloatBuffer value);
+	void glClearBufferfv(@GLenum int buffer, int drawbuffer, @Const @Check("4") FloatBuffer value);
 
 	@StripPostfix("value")
-	void glClearBufferiv(@GLenum int buffer, int drawbuffer, @Const @Check("4")IntBuffer value);
+	void glClearBufferiv(@GLenum int buffer, int drawbuffer, @Const @Check("4") IntBuffer value);
 
 	@StripPostfix("value")
-	void glClearBufferuiv(@GLenum int buffer, int drawbuffer, @Const @Check("4")IntBuffer value);
-	
+	void glClearBufferuiv(@GLenum int buffer, int drawbuffer, @Const @Check("4") IntBuffer value);
+
 	void glClearBufferfi(@GLenum int buffer, int drawbuffer, float depth, int stencil);
 
 	// ---------------------------------------------------------------
@@ -194,7 +194,7 @@ public interface GL30 {
 	                            @GLuint Buffer buffer);
 
 	@StripPostfix("params")
-	void glGetVertexAttribIiv(@GLuint int index, @GLenum int pname, @OutParameter @Check("4")IntBuffer params);
+	void glGetVertexAttribIiv(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
 	void glGetVertexAttribIuiv(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") @GLuint IntBuffer params);
@@ -224,7 +224,13 @@ public interface GL30 {
 
 	void glBindFragDataLocation(@GLuint int program, @GLuint int colorNumber, @NullTerminated @Const @GLchar ByteBuffer name);
 
+	@Alternate("glBindFragDataLocation")
+	void glBindFragDataLocation(@GLuint int program, @GLuint int colorNumber, @NullTerminated CharSequence name);
+
 	int glGetFragDataLocation(@GLuint int program, @NullTerminated @Const @GLchar ByteBuffer name);
+
+	@Alternate("glGetFragDataLocation")
+	int glGetFragDataLocation(@GLuint int program, @NullTerminated CharSequence name);
 
 	// ---------------------------------------------------------------------
 	// ----------------------[ NV_conditional_render ]----------------------
@@ -262,7 +268,7 @@ public interface GL30 {
 	 * <p/>
 	 * Only ByteBuffers returned from this method are to be passed as the old_buffer argument. User-created ByteBuffers cannot be reused.
 	 *
-	 * @param old_buffer    A ByteBuffer. If this argument points to the same address and has the same capacity as the new mapping, it will be returned and no new buffer will be created.
+	 * @param old_buffer A ByteBuffer. If this argument points to the same address and has the same capacity as the new mapping, it will be returned and no new buffer will be created.
 	 *
 	 * @return A ByteBuffer representing the mapped buffer memory.
 	 */
@@ -480,22 +486,22 @@ public interface GL30 {
 
 	void glBindRenderbuffer(@GLenum int target, @GLuint int renderbuffer);
 
-	void glDeleteRenderbuffers(@AutoSize("renderbuffers")int n, @Const @GLuint IntBuffer renderbuffers);
+	void glDeleteRenderbuffers(@AutoSize("renderbuffers") int n, @Const @GLuint IntBuffer renderbuffers);
 
-	void glGenRenderbuffers(@AutoSize("renderbuffers")int n, @OutParameter @GLuint IntBuffer renderbuffers);
+	void glGenRenderbuffers(@AutoSize("renderbuffers") int n, @OutParameter @GLuint IntBuffer renderbuffers);
 
 	void glRenderbufferStorage(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLsizei int height);
 
 	@StripPostfix("params")
-	void glGetRenderbufferParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4")IntBuffer params);
+	void glGetRenderbufferParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	boolean glIsFramebuffer(@GLuint int framebuffer);
 
 	void glBindFramebuffer(@GLenum int target, @GLuint int framebuffer);
 
-	void glDeleteFramebuffers(@AutoSize("framebuffers")int n, @Const @GLuint IntBuffer framebuffers);
+	void glDeleteFramebuffers(@AutoSize("framebuffers") int n, @Const @GLuint IntBuffer framebuffers);
 
-	void glGenFramebuffers(@AutoSize("framebuffers")int n, @OutParameter @GLuint IntBuffer framebuffers);
+	void glGenFramebuffers(@AutoSize("framebuffers") int n, @OutParameter @GLuint IntBuffer framebuffers);
 
 	@GLenum
 	int glCheckFramebufferStatus(@GLenum int target);
@@ -509,7 +515,7 @@ public interface GL30 {
 	void glFramebufferRenderbuffer(@GLenum int target, @GLenum int attachment, @GLenum int renderbuffertarget, @GLuint int renderbuffer);
 
 	@StripPostfix("params")
-	void glGetFramebufferAttachmentParameteriv(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter @Check("4")IntBuffer params);
+	void glGetFramebufferAttachmentParameteriv(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	void glGenerateMipmap(@GLenum int target);
 
@@ -648,13 +654,13 @@ public interface GL30 {
 	int GL_BGRA_INTEGER = 0x8D9B;
 
 	@StripPostfix("params")
-	void glTexParameterIiv(@GLenum int target, @GLenum int pname, @Check("4")IntBuffer params);
+	void glTexParameterIiv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
 	void glTexParameterIuiv(@GLenum int target, @GLenum int pname, @Check("4") @GLuint IntBuffer params);
 
 	@StripPostfix("params")
-	void glGetTexParameterIiv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4")IntBuffer params);
+	void glGetTexParameterIiv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
 	void glGetTexParameterIuiv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") @GLuint IntBuffer params);
@@ -755,7 +761,7 @@ public interface GL30 {
 	void glGetBooleani_v(@GLenum int value, @GLuint int index, @OutParameter @Check("4") @GLboolean ByteBuffer data);
 
 	@StripPostfix("data")
-	void glGetIntegeri_v(@GLenum int value, @GLuint int index, @OutParameter @Check("4")IntBuffer data);
+	void glGetIntegeri_v(@GLenum int value, @GLuint int index, @OutParameter @Check("4") IntBuffer data);
 
 	void glEnablei(@GLenum int target, @GLuint int index);
 
@@ -894,12 +900,24 @@ public interface GL30 {
 	                                 @Const @NullTerminated("count") @GLchar @StringList("count") ByteBuffer varyings,
 	                                 @GLenum int bufferMode);
 
-	void glGetTransformFeedbackVarying(@GLuint int program, @GLuint int index,
-	                                   @AutoSize("name") @GLsizei int bufSize,
-	                                   @OutParameter @Check(value = "1", canBeNull = true) @GLsizei IntBuffer length,
-	                                   @OutParameter @Check(value = "1", canBeNull = true) @GLsizei IntBuffer size,
-	                                   @OutParameter @Check(value = "1", canBeNull = true) @GLenum IntBuffer type,
+	@Alternate("glTransformFeedbackVaryings")
+	void glTransformFeedbackVaryings(@GLuint int program, @Constant("varyings.length") @GLsizei int count,
+	                                 @Const @NullTerminated @StringList("count") CharSequence[] varyings,
+	                                 @GLenum int bufferMode);
+
+	void glGetTransformFeedbackVarying(@GLuint int program, @GLuint int index, @AutoSize("name") @GLsizei int bufSize,
+	                                   @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
+	                                   @OutParameter @GLsizei @Check("1") IntBuffer size,
+	                                   @OutParameter @GLenum @Check("1") IntBuffer type,
 	                                   @GLchar ByteBuffer name);
+
+	@Alternate("glGetTransformFeedbackVarying")
+	@GLstring(string = "name", maxLength = "bufSize")
+	void glGetTransformFeedbackVarying2(@GLuint int program, @GLuint int index, @GLsizei int bufSize,
+	                                    @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
+	                                    @OutParameter @GLsizei @Check("1") IntBuffer size,
+	                                    @OutParameter @GLenum @Check("1") IntBuffer type,
+	                                    @GLchar ByteBuffer name);
 
 	// -----------------------------------------------------------------------
 	// ----------------------[ ARB_vertex_array_object ]----------------------
