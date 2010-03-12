@@ -192,7 +192,7 @@ public class NativeMethodStubsGenerator {
 	}
 
 	private static void generateCallParameter(PrintWriter writer, TypeMap type_map, ParameterDeclaration param) {
-		boolean is_indirect = param.getAnnotation(Indirect.class) != null;
+		boolean is_indirect = param.getAnnotation(Indirect.class) != null || param.getAnnotation(StringList.class) != null;
 		if (is_indirect) {
 			writer.print("(");
 			NativeTypeTranslator translator = new NativeTypeTranslator(type_map, param);
