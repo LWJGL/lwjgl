@@ -301,7 +301,7 @@ public class NativeMethodStubsGenerator {
 				writer.println("\twhile ( _str_i < " + stringList_annotation.value() + " ) {");
 				if ( lengths.length() == 0 ) {
 					writer.println("\t\t" + param.getSimpleName() + STRING_LIST_POSTFIX + "[_str_i++] = _str_address;");
-					writer.println("\t\t_str_address += strlen(_str_address_next) + 1;");
+					writer.println("\t\t_str_address += strlen(_str_address) + 1;");
 				} else {
 					writer.println("\t\t" + param.getSimpleName() + STRING_LIST_POSTFIX + "[_str_i] = _str_address;");
 					writer.println("\t\t_str_address += " + lengths + BUFFER_ADDRESS_POSTFIX + "[_str_i++];");
