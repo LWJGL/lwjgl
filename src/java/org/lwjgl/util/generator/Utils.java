@@ -46,13 +46,7 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.*;
 
-import javax.lang.model.util.SimpleTypeVisitor6;
-
 import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.PrimitiveType.Kind;
-import com.sun.mirror.util.SimpleTypeVisitor;
-import com.sun.mirror.util.TypeVisitor;
-import com.sun.mirror.util.Types;
 
 public class Utils {
 	public static final String TYPEDEF_POSTFIX = "PROC";
