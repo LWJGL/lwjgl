@@ -33,19 +33,18 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
 
-import java.nio.*;
+import java.nio.Buffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 @Extension(postfix = "ARB", isFinal = false)
 public interface ARB_program {
 
-	/**
-	 * Accepted by the &lt;format&gt; parameter of ProgramStringARB:
-	 */
+	/** Accepted by the &lt;format&gt; parameter of ProgramStringARB: */
 	int GL_PROGRAM_FORMAT_ASCII_ARB = 0x8875;
 
-	/**
-	 * Accepted by the &lt;pname&gt; parameter of GetProgramivARB:
-	 */
+	/** Accepted by the &lt;pname&gt; parameter of GetProgramivARB: */
 	int GL_PROGRAM_LENGTH_ARB = 0x8627;
 	int GL_PROGRAM_FORMAT_ARB = 0x8876;
 	int GL_PROGRAM_BINDING_ARB = 0x8677;
@@ -69,9 +68,7 @@ public interface ARB_program {
 	int GL_MAX_PROGRAM_ENV_PARAMETERS_ARB = 0x88B5;
 	int GL_PROGRAM_UNDER_NATIVE_LIMITS_ARB = 0x88B6;
 
-	/**
-	 * Accepted by the &lt;pname&gt; parameter of GetProgramStringARB:
-	 */
+	/** Accepted by the &lt;pname&gt; parameter of GetProgramStringARB: */
 	int GL_PROGRAM_STRING_ARB = 0x8628;
 
 	/**
@@ -85,14 +82,10 @@ public interface ARB_program {
 	int GL_MAX_PROGRAM_MATRICES_ARB = 0x862F;
 	int GL_MAX_PROGRAM_MATRIX_STACK_DEPTH_ARB = 0x862E;
 
-	/**
-	 * Accepted by the &lt;name&gt; parameter of GetString:
-	 */
+	/** Accepted by the &lt;name&gt; parameter of GetString: */
 	int GL_PROGRAM_ERROR_STRING_ARB = 0x8874;
 
-	/**
-	 * Accepted by the &lt;mode&gt; parameter of MatrixMode:
-	 */
+	/** Accepted by the &lt;mode&gt; parameter of MatrixMode: */
 	int GL_MATRIX0_ARB = 0x88C0;
 	int GL_MATRIX1_ARB = 0x88C1;
 	int GL_MATRIX2_ARB = 0x88C2;
@@ -127,6 +120,9 @@ public interface ARB_program {
 	int GL_MATRIX31_ARB = 0x88DF;
 
 	void glProgramStringARB(@GLenum int target, @GLenum int format, @AutoSize("string") @GLsizei int length, @Const @GLbyte Buffer string);
+
+	@Alternate("glProgramStringARB")
+	void glProgramStringARB(@GLenum int target, @GLenum int format, @Constant("string.length()") @GLsizei int length, CharSequence string);
 
 	void glBindProgramARB(@GLenum int target, @GLuint int program);
 
