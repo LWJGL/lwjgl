@@ -71,17 +71,17 @@ public class PostfixTranslator implements TypeVisitor {
 	}
 
 	private static PrimitiveType.Kind getPrimitiveKindFromBufferClass(Class c) {
-		if (IntBuffer.class.equals(c))
+		if (IntBuffer.class.equals(c) || int.class.equals(c) )
 			return PrimitiveType.Kind.INT;
-		else if (DoubleBuffer.class.equals(c))
+		else if (DoubleBuffer.class.equals(c) || double.class.equals(c) )
 			return PrimitiveType.Kind.DOUBLE;
-		else if (ShortBuffer.class.equals(c))
+		else if (ShortBuffer.class.equals(c) || short.class.equals(c) )
 			return PrimitiveType.Kind.SHORT;
-		else if (ByteBuffer.class.equals(c))
+		else if (ByteBuffer.class.equals(c) || byte.class.equals(c) )
 			return PrimitiveType.Kind.BYTE;
-		else if (FloatBuffer.class.equals(c))
+		else if (FloatBuffer.class.equals(c) || float.class.equals(c))
 			return PrimitiveType.Kind.FLOAT;
-		else if (LongBuffer.class.equals(c))
+		else if (LongBuffer.class.equals(c) || long.class.equals(c) )
 			return PrimitiveType.Kind.LONG;
 		else
 			throw new RuntimeException(c + " is not allowed");
@@ -127,7 +127,7 @@ public class PostfixTranslator implements TypeVisitor {
 	}
 
 	public void visitPrimitiveType(PrimitiveType t) {
-		throw new RuntimeException(t + " is not allowed");
+		visitPrimitiveTypeKind(t.getKind());
 	}
 
 	private void visitPrimitiveTypeKind(PrimitiveType.Kind kind) {

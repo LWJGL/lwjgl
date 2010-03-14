@@ -33,10 +33,7 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
 
-import java.nio.Buffer;
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
+import java.nio.*;
 
 @Extension(postfix = "ARB", isFinal = false)
 public interface ARB_program {
@@ -128,7 +125,14 @@ public interface ARB_program {
 
 	void glDeleteProgramsARB(@AutoSize("programs") @GLsizei int n, @Const @GLuint IntBuffer programs);
 
+	@Alternate("glDeleteProgramsARB")
+	void glDeleteProgramsARB(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, program), 0", keepParam = true) int program);
+
 	void glGenProgramsARB(@AutoSize("programs") @GLsizei int n, @OutParameter @GLuint IntBuffer programs);
+
+	@Alternate("glGenProgramsARB")
+	@GLreturn("programs")
+	void glGenProgramsARB2(@Constant("1") @GLsizei int n, @OutParameter @GLuint IntBuffer programs);
 
 	void glProgramEnvParameter4fARB(int target, int index, float x, float y, float z, float w);
 
@@ -165,7 +169,17 @@ public interface ARB_program {
 	@StripPostfix("params")
 	void glGetProgramivARB(@GLenum int target, @GLenum int parameterName, @OutParameter @Check("4") IntBuffer params);
 
+	@Alternate("glGetProgramivARB")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetProgramivARB2(@GLenum int target, @GLenum int parameterName, @OutParameter IntBuffer params);
+
 	void glGetProgramStringARB(@GLenum int target, @GLenum int parameterName, @OutParameter @Check @GLbyte Buffer paramString);
+
+	@Alternate("glGetProgramStringARB")
+	@Code("\t\tint programLength = glGetProgramARB(target, GL_PROGRAM_LENGTH_ARB);")
+	@GLreturn(value="paramString", maxLength = "programLength", forceMaxLength = true)
+	void glGetProgramStringARB2(@GLenum int target, @GLenum int parameterName, @OutParameter @GLchar ByteBuffer paramString);
 
 	boolean glIsProgramARB(@GLuint int program);
 }

@@ -215,17 +215,33 @@ public interface GL40 {
 
 	@StripPostfix("values")
 	void glGetActiveSubroutineUniformiv(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLenum int pname,
-	                                    @Check("1") @OutParameter IntBuffer values);
+	                                    @OutParameter @Check("1") IntBuffer values);
 
-	void glGetActiveSubroutineUniformName(@GLuint int program, @GLenum int shadertype, @GLuint int index,
-	                                      @AutoSize("name") @GLsizei int bufsize,
+	@Alternate("glGetActiveSubroutineUniformiv")
+	@GLreturn("values")
+	@StripPostfix("values")
+	void glGetActiveSubroutineUniformiv2(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLenum int pname,
+	                                     @OutParameter IntBuffer values);
+
+	void glGetActiveSubroutineUniformName(@GLuint int program, @GLenum int shadertype, @GLuint int index, @AutoSize("name") @GLsizei int bufsize,
 	                                      @OutParameter @Check(value = "1", canBeNull = true) @GLsizei IntBuffer length,
-	                                      @OutParameter ByteBuffer name);
+	                                      @OutParameter @GLchar ByteBuffer name);
 
-	void glGetActiveSubroutineName(@GLuint int program, @GLenum int shadertype, @GLuint int index,
-	                               @AutoSize("name") @GLsizei int bufsize,
+	@Alternate("glGetActiveSubroutineUniformName")
+	@GLreturn(value = "name", maxLength = "bufsize")
+	void glGetActiveSubroutineUniformName2(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLsizei int bufsize,
+	                                       @OutParameter @Constant("name_length, 0") @GLsizei IntBuffer length,
+	                                       @OutParameter @GLchar ByteBuffer name);
+
+	void glGetActiveSubroutineName(@GLuint int program, @GLenum int shadertype, @GLuint int index, @AutoSize("name") @GLsizei int bufsize,
 	                               @OutParameter @Check(value = "1", canBeNull = true) @GLsizei IntBuffer length,
-	                               @OutParameter ByteBuffer name);
+	                               @OutParameter @GLchar ByteBuffer name);
+
+	@Alternate("glGetActiveSubroutineName")
+	@GLreturn(value = "name", maxLength = "bufsize")
+	void glGetActiveSubroutineName2(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLsizei int bufsize,
+	                                @OutParameter @Constant("name_length, 0") @GLsizei IntBuffer length,
+	                                @OutParameter @GLchar ByteBuffer name);
 
 	@StripPostfix("indices")
 	void glUniformSubroutinesuiv(@GLenum int shadertype, @AutoSize("indices") @GLsizei int count, @Const @GLuint IntBuffer indices);
@@ -233,8 +249,18 @@ public interface GL40 {
 	@StripPostfix("params")
 	void glGetUniformSubroutineuiv(@GLenum int shadertype, int location, @Check("1") @OutParameter @GLuint IntBuffer params);
 
+	@Alternate("glGetUniformSubroutineuiv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetUniformSubroutineuiv2(@GLenum int shadertype, int location, @OutParameter @GLuint IntBuffer params);
+
 	@StripPostfix("values")
 	void glGetProgramStageiv(@GLuint int program, @GLenum int shadertype, @GLenum int pname, @Check("1") @OutParameter IntBuffer values);
+
+	@Alternate("glGetProgramStageiv")
+	@GLreturn("values")
+	@StripPostfix("values")
+	void glGetProgramStageiv2(@GLuint int program, @GLenum int shadertype, @GLenum int pname, @OutParameter IntBuffer values);
 
 	// -----------------------------------------------------------------------
 	// ----------------------[ ARB_tessellation_shader ]----------------------
@@ -374,7 +400,14 @@ public interface GL40 {
 
 	void glDeleteTransformFeedbacks(@AutoSize("ids") @GLsizei int n, @Const @GLuint IntBuffer ids);
 
-	void glGenTransformFeedbacks(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
+	@Alternate("glDeleteTransformFeedbacks")
+	void glDeleteTransformFeedbacks(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, id), 0", keepParam = true) int id);
+
+	void glGenTransformFeedbacks(@AutoSize("ids") @GLsizei int n, @OutParameter @GLuint IntBuffer ids);
+
+	@Alternate("glGenTransformFeedbacks")
+	@GLreturn("ids")
+	void glGenTransformFeedbacks2(@Constant("1") @GLsizei int n, @OutParameter @GLuint IntBuffer ids);
 
 	boolean glIsTransformFeedback(@GLuint int id);
 
@@ -402,5 +435,10 @@ public interface GL40 {
 
 	@StripPostfix("params")
 	void glGetQueryIndexediv(@GLenum int target, @GLuint int index, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
+
+	@Alternate("glGetQueryIndexediv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetQueryIndexediv2(@GLenum int target, @GLuint int index, @GLenum int pname, @OutParameter IntBuffer params);
 
 }

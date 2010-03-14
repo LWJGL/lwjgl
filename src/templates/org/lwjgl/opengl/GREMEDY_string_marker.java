@@ -31,14 +31,15 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.AutoSize;
-import org.lwjgl.util.generator.Const;
-import org.lwjgl.util.generator.GLsizei;
+import org.lwjgl.util.generator.*;
 
 import java.nio.ByteBuffer;
 
 public interface GREMEDY_string_marker {
 
 	void glStringMarkerGREMEDY(@AutoSize("string") @GLsizei int len, @Const ByteBuffer string);
+
+	@Alternate("glStringMarkerGREMEDY")
+	void glStringMarkerGREMEDY(@Constant("string.length()") @GLsizei int len, CharSequence string);
 
 }

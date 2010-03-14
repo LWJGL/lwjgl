@@ -38,8 +38,6 @@
 
 package org.lwjgl.test.opengl.shaders;
 
-import java.nio.ByteBuffer;
-
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.ARBVertexShader;
 import org.lwjgl.opengl.GL11;
@@ -64,8 +62,7 @@ final class ShaderVSH extends Shader {
 
 		printShaderObjectInfoLog(file, shaderID);
 
-		ARBShaderObjects.glGetObjectParameterARB(shaderID, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB, programBuffer);
-		if ( programBuffer.get(0) == GL11.GL_FALSE )
+		if ( ARBShaderObjects.glGetObjectParameteriARB(shaderID, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE )
 			ShadersTest.kill("A compilation error occured in a vertex shader.");
 
 		programID = ARBShaderObjects.glCreateProgramObjectARB();
@@ -75,8 +72,7 @@ final class ShaderVSH extends Shader {
 
 		printShaderProgramInfoLog(programID);
 
-		ARBShaderObjects.glGetObjectParameterARB(programID, ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB, programBuffer);
-		if ( programBuffer.get(0) == GL11.GL_FALSE )
+		if ( ARBShaderObjects.glGetObjectParameteriARB(programID, ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL11.GL_FALSE )
 			ShadersTest.kill("A linking error occured in a shader program.");
 
 		uniformLocation = getUniformLocation(programID, "UNIFORMS");

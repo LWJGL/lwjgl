@@ -106,7 +106,7 @@ public interface GL20 {
 	@Alternate(value = "glShaderSource", nativeAlt = true)
 	void glShaderSource3(@GLuint int shader, @Constant("strings.length") @GLsizei int count,
 	                     @Const @StringList(value = "count", lengths = "length") CharSequence[] strings,
-	                     @Constant("StringUtils.getLengths(strings), 0") @Const IntBuffer length);
+	                     @Constant("APIUtils.getLengths(strings), 0") @Const IntBuffer length);
 
 	int glCreateShader(@GLuint int type);
 
@@ -187,15 +187,25 @@ public interface GL20 {
 	@StripPostfix("params")
 	void glGetShaderiv(@GLuint int shader, @GLenum int pname, @OutParameter @Check IntBuffer params);
 
+	@Alternate("glGetShaderiv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetShaderiv2(@GLuint int shader, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@StripPostfix("params")
 	void glGetProgramiv(@GLuint int program, @GLenum int pname, @OutParameter @Check IntBuffer params);
+
+	@Alternate("glGetProgramiv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetProgramiv2(@GLuint int program, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGetShaderInfoLog(@GLuint int shader, @AutoSize("infoLog") @GLsizei int maxLength,
 	                        @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
 	                        @OutParameter @GLchar ByteBuffer infoLog);
 
 	@Alternate("glGetShaderInfoLog")
-	@GLstring(string = "infoLog", maxLength = "maxLength")
+	@GLreturn(value = "infoLog", maxLength = "maxLength")
 	void glGetShaderInfoLog2(@GLuint int shader, @GLsizei int maxLength,
 	                         @OutParameter @GLsizei @Constant("infoLog_length, 0") IntBuffer length,
 	                         @OutParameter @GLchar ByteBuffer infoLog);
@@ -205,7 +215,7 @@ public interface GL20 {
 	                         @OutParameter @GLchar ByteBuffer infoLog);
 
 	@Alternate("glGetProgramInfoLog")
-	@GLstring(string = "infoLog", maxLength = "maxLength")
+	@GLreturn(value = "infoLog", maxLength = "maxLength")
 	void glGetProgramInfoLog2(@GLuint int program, @GLsizei int maxLength,
 	                          @OutParameter @GLsizei @Constant("infoLog_length, 0") IntBuffer length,
 	                          @OutParameter @GLchar ByteBuffer infoLog);
@@ -233,7 +243,7 @@ public interface GL20 {
 	                        @OutParameter @GLchar ByteBuffer name);
 
 	@Alternate("glGetActiveUniform")
-	@GLstring(string = "name", maxLength = "maxLength")
+	@GLreturn(value = "name", maxLength = "maxLength")
 	void glGetActiveUniform2(@GLuint int program, @GLuint int index, @GLsizei int maxLength,
 	                         @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
 	                         @OutParameter @GLsizei @Check("1") IntBuffer size,
@@ -251,7 +261,7 @@ public interface GL20 {
 	                       @OutParameter @GLchar ByteBuffer source);
 
 	@Alternate("glGetShaderSource")
-	@GLstring(string = "source", maxLength = "maxLength")
+	@GLreturn(value = "source", maxLength = "maxLength")
 	void glGetShaderSource2(@GLuint int shader, @GLsizei int maxLength,
 	                        @OutParameter @GLsizei @Constant("source_length, 0") IntBuffer length,
 	                        @OutParameter @GLchar ByteBuffer source);
@@ -369,7 +379,7 @@ public interface GL20 {
 	                       @OutParameter @GLchar ByteBuffer name);
 
 	@Alternate("glGetActiveAttrib")
-	@GLstring(string = "name", maxLength = "maxLength")
+	@GLreturn(value = "name", maxLength = "maxLength")
 	void glGetActiveAttrib2(@GLuint int program, @GLuint int index, @GLsizei int maxLength,
 	                        @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
 	                        @OutParameter @Check("1") IntBuffer size,
@@ -430,6 +440,9 @@ public interface GL20 {
 	int GL_DRAW_BUFFER15 = 0x8834;
 
 	void glDrawBuffers(@AutoSize("buffers") @GLsizei int size, @Const @GLenum IntBuffer buffers);
+
+	@Alternate("glDrawBuffers")
+	void glDrawBuffers(@Constant("1") @GLsizei int size, @Constant(value = "APIUtils.getBufferInt().put(0, buffer), 0", keepParam = true) int buffer);
 
 	// ----------------------------------------------------------------
 	// ----------------------[ ARB_point_sprite ]----------------------

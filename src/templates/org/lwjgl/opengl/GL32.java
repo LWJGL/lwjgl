@@ -314,14 +314,30 @@ public interface GL32 {
 	@StripPostfix(value = "data", postfix = "64")
 	void glGetInteger64v(@GLenum int pname, @OutParameter @Check("1") @GLint64 LongBuffer data);
 
+	@Alternate("glGetInteger64v")
+	@GLreturn("data")
+	@StripPostfix(value = "data", postfix = "64")
+	void glGetInteger64v2(@GLenum int pname, @OutParameter @GLint64 LongBuffer data);
+
 	@StripPostfix(value = "data", postfix = "64")
 	@Optional(reason = "NV's 3.2 implementation does not expose this (last driver checked: 19?.??)")
 	void glGetInteger64i_v(@GLenum int value, @GLuint int index, @OutParameter @Check("4") @GLint64 LongBuffer data);
 
+	@Alternate("glGetInteger64i_v")
+	@GLreturn("data")
+	@StripPostfix(value = "data", postfix = "64")
+	@Optional(reason = "NV's 3.2 implementation does not expose this (last driver checked: 19?.??)")
+	void glGetInteger64i_v2(@GLenum int value, @GLuint int index, @OutParameter @GLint64 LongBuffer data);
+
 	@StripPostfix("values")
-	void glGetSynciv(@GLpointer("GLsync") GLSync sync, @GLenum int pname,
-	                 @AutoSize("values") @GLsizei int bufSize,
+	void glGetSynciv(@GLpointer("GLsync") GLSync sync, @GLenum int pname, @AutoSize("values") @GLsizei int bufSize,
 	                 @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
 	                 @OutParameter IntBuffer values);
 
+	@Alternate("glGetSynciv")
+	@GLreturn("values")
+	@StripPostfix("values")
+	void glGetSynciv2(@GLpointer("GLsync") GLSync sync, @GLenum int pname, @Constant("1") @GLsizei int bufSize,
+	                  @OutParameter @GLsizei @Constant("null, 0") IntBuffer length,
+	                  @OutParameter IntBuffer values);
 }

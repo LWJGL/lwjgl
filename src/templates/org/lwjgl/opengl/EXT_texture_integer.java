@@ -31,11 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.Check;
-import org.lwjgl.util.generator.GLenum;
-import org.lwjgl.util.generator.GLuint;
-import org.lwjgl.util.generator.StripPostfix;
-import org.lwjgl.util.generator.OutParameter;
+import org.lwjgl.util.generator.*;
 
 import java.nio.IntBuffer;
 
@@ -116,13 +112,31 @@ public interface EXT_texture_integer {
 	@StripPostfix("params")
 	void glTexParameterIivEXT(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
 
+	@Alternate("glTexParameterIivEXT")
+	@StripPostfix(value = "param", postfix = "v")
+	void glTexParameterIivEXT(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtils.getBufferInt().put(0, param), 0", keepParam = true) int param);
+
 	@StripPostfix("params")
 	void glTexParameterIuivEXT(@GLenum int target, @GLenum int pname, @Check("4") @GLuint IntBuffer params);
+
+	@Alternate("glTexParameterIuivEXT")
+	@StripPostfix(value = "param", postfix = "v")
+	void glTexParameterIuivEXT(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtils.getBufferInt().put(0, param), 0", keepParam = true) int param);
 
 	@StripPostfix("params")
 	void glGetTexParameterIivEXT(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
+	@Alternate("glGetTexParameterIivEXT")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetTexParameterIivEXT2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@StripPostfix("params")
 	void glGetTexParameterIuivEXT(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") @GLuint IntBuffer params);
+
+	@Alternate("glGetTexParameterIuivEXT")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetTexParameterIuivEXT2(@GLenum int target, @GLenum int pname, @OutParameter @GLuint IntBuffer params);
 
 }

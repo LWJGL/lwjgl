@@ -33,57 +33,72 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
 
-import java.nio.*;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 @Extension(postfix = "NV", isFinal = false)
 public interface NV_program {
 
-	/**
-	 Accepted by the &lt;pname&gt; parameter of GetProgramivNV:
-	 */
+	/** Accepted by the &lt;pname&gt; parameter of GetProgramivNV: */
 	int GL_PROGRAM_TARGET_NV = 0x8646;
 	int GL_PROGRAM_LENGTH_NV = 0x8627;
 	int GL_PROGRAM_RESIDENT_NV = 0x8647;
 
-	/**
-	 Accepted by the &lt;pname&gt; parameter of GetProgramStringNV:
-	 */
+	/** Accepted by the &lt;pname&gt; parameter of GetProgramStringNV: */
 	int GL_PROGRAM_STRING_NV = 0x8628;
 
 	/**
-	 Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
-	 GetFloatv, and GetDoublev:
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 * GetFloatv, and GetDoublev:
 	 */
 	int GL_PROGRAM_ERROR_POSITION_NV = 0x864B;
 
-	/**
-	 Accepted by the &lt;name&gt; parameter of GetString:
-	 */
+	/** Accepted by the &lt;name&gt; parameter of GetString: */
 	int GL_PROGRAM_ERROR_STRING_NV = 0x8874;
 
 	void glLoadProgramNV(@GLenum int target, @GLuint int programID, @AutoSize("string") @GLsizei int length, @Const @GLubyte Buffer string);
+
+	@Alternate("glLoadProgramNV")
+	void glLoadProgramNV(@GLenum int target, @GLuint int programID, @Constant("string.length()") @GLsizei int length, CharSequence string);
 
 	void glBindProgramNV(@GLenum int target, @GLuint int programID);
 
 	void glDeleteProgramsNV(@AutoSize("programs") @GLsizei int n, @Const @GLuint IntBuffer programs);
 
+	@Alternate("glDeleteProgramsNV")
+	void glDeleteProgramsNV(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, program), 0", keepParam = true) int program);
+
 	void glGenProgramsNV(@AutoSize("programs") @GLsizei int n, @OutParameter @GLuint IntBuffer programs);
+
+	@Alternate("glGenProgramsNV")
+	@GLreturn("programs")
+	void glGenProgramsNV2(@Constant("1") @GLsizei int n, @OutParameter @GLuint IntBuffer programs);
 
 	@StripPostfix("params")
 	void glGetProgramivNV(@GLuint int programID, @GLenum int parameterName, @OutParameter @Check @GLint IntBuffer params);
 
+	@Alternate("glGetProgramivNV")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetProgramivNV2(@GLuint int programID, @GLenum int parameterName, @OutParameter @GLint IntBuffer params);
+
 	void glGetProgramStringNV(@GLuint int programID, @GLenum int parameterName, @OutParameter @Check @GLubyte Buffer paramString);
+
+	@Alternate("glGetProgramStringNV")
+	@Code("\t\tint programLength = glGetProgramNV(programID, GL_PROGRAM_LENGTH_NV);")
+	@GLreturn(value="paramString", maxLength = "programLength", forceMaxLength = true)
+	void glGetProgramStringNV2(@GLuint int programID, @GLenum int parameterName, @OutParameter @GLchar ByteBuffer paramString);
 
 	boolean glIsProgramNV(@GLuint int programID);
 
-	@Code("		if (programIDs.remaining() != programResidences.remaining())\n" +
-	      "			throw new IllegalArgumentException(\"programIDs.remaining() != programResidences.remaining()\");")
 	boolean glAreProgramsResidentNV(@AutoSize("programIDs") @GLsizei int n,
-	                                @Const
-	                                @GLuint IntBuffer programIDs,
-	                                @Check
-	                                @GLboolean ByteBuffer programResidences);
+	                                @Const @GLuint IntBuffer programIDs,
+	                                @OutParameter @GLboolean @Check("programIDs.remaining()") ByteBuffer programResidences);
 
 	void glRequestResidentProgramsNV(@AutoSize("programIDs") @GLsizei int n, @GLuint IntBuffer programIDs);
+
+	@Alternate("glRequestResidentProgramsNV")
+	void glRequestResidentProgramsNV(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, programID), 0", keepParam = true) int programID);
 }
 

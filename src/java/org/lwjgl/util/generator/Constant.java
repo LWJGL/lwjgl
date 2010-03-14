@@ -44,4 +44,6 @@ import java.lang.annotation.ElementType;
 @Target(ElementType.PARAMETER)
 public @interface Constant {
 	String value();
+	/** If true, the original parameter will not be removed from the method. */
+	boolean keepParam() default false;
 }

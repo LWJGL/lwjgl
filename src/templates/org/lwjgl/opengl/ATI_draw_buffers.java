@@ -60,4 +60,7 @@ public interface ATI_draw_buffers {
 	int GL_DRAW_BUFFER15_ATI = 0x8834;
 
 	void glDrawBuffersATI(@AutoSize("buffers") @GLsizei int size, @Const @GLenum IntBuffer buffers);
+
+	@Alternate("glDrawBuffersATI")
+	void glDrawBuffersATI(@Constant("1") @GLsizei int size, @Constant(value = "APIUtils.getBufferInt().put(0, buffer), 0", keepParam = true) int buffer);
 }

@@ -138,7 +138,7 @@ public interface NV_transform_feedback {
 	                          @OutParameter @GLchar ByteBuffer name);
 
 	@Alternate("glGetActiveVaryingNV")
-	@GLstring(string = "name", maxLength = "bufSize")
+	@GLreturn(value = "name", maxLength = "bufSize")
 	void glGetActiveVaryingNV2(@GLuint int program, @GLuint int index, @GLsizei int bufSize,
 	                           @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
 	                           @OutParameter @GLsizei @Check("1") IntBuffer size,
@@ -151,5 +151,9 @@ public interface NV_transform_feedback {
 	void glActiveVaryingNV(@GLuint int program, @NullTerminated CharSequence name);
 
 	void glGetTransformFeedbackVaryingNV(@GLuint int program, @GLuint int index, @OutParameter @Check("1") IntBuffer location);
+
+	@Alternate("glGetTransformFeedbackVaryingNV")
+	@GLreturn("location")
+	void glGetTransformFeedbackVaryingNV2(@GLuint int program, @GLuint int index, @OutParameter IntBuffer location);
 
 }

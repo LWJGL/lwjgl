@@ -33,9 +33,10 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
 
-import java.nio.*;
+import java.nio.IntBuffer;
 
 public interface NV_occlusion_query {
+
 	int GL_OCCLUSION_TEST_HP = 0x8165;
 	int GL_OCCLUSION_TEST_RESULT_HP = 0x8166;
 	/* HP_occlusion_test */
@@ -46,7 +47,14 @@ public interface NV_occlusion_query {
 
 	void glGenOcclusionQueriesNV(@AutoSize("piIDs") @GLsizei int n, @OutParameter @GLuint IntBuffer piIDs);
 
+	@Alternate("glGenOcclusionQueriesNV")
+	@GLreturn("piIDs")
+	void glGenOcclusionQueriesNV2(@Constant("1") @GLsizei int n, @OutParameter @GLuint IntBuffer piIDs);
+
 	void glDeleteOcclusionQueriesNV(@AutoSize("piIDs") @GLsizei int n, @Const @GLuint IntBuffer piIDs);
+
+	@Alternate("glDeleteOcclusionQueriesNV")
+	void glDeleteOcclusionQueriesNV(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, piID), 0", keepParam = true) int piID);
 
 	boolean glIsOcclusionQueryNV(@GLuint int id);
 
@@ -57,6 +65,16 @@ public interface NV_occlusion_query {
 	@StripPostfix("params")
 	void glGetOcclusionQueryuivNV(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") @GLuint IntBuffer params);
 
+	@Alternate("glGetOcclusionQueryuivNV")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetOcclusionQueryuivNV2(@GLuint int id, @GLenum int pname, @OutParameter @GLuint IntBuffer params);
+
 	@StripPostfix("params")
 	void glGetOcclusionQueryivNV(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
+
+	@Alternate("glGetOcclusionQueryivNV")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetOcclusionQueryivNV2(@GLuint int id, @GLenum int pname, @OutParameter IntBuffer params);
 }

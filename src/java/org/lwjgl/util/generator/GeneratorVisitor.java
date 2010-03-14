@@ -81,7 +81,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 			throw new RuntimeException("Method " + method.getSimpleName() + " throws checked exceptions");
 		validateParameters(method);
 		StripPostfix strip_annotation = method.getAnnotation(StripPostfix.class);
-		if (strip_annotation != null) {
+		if (strip_annotation != null && method.getAnnotation(Alternate.class) == null) {
 			String postfix_param_name = strip_annotation.value();
 			ParameterDeclaration postfix_param = Utils.findParameter(method, postfix_param_name);
 			if (Utils.isParameterMultiTyped(postfix_param))
@@ -142,9 +142,9 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 					if (!found_auto_size_param
 							&& param.getAnnotation(Result.class) == null
 					        && param.getAnnotation(Constant.class) == null
-							&& !Utils.isReturnString(method, param)
+							&& !Utils.isReturnParameter(method, param)
 						)
-						throw new RuntimeException(param + " has no Check, Result nor Constant annotation and no other parameters has" +
+						throw new RuntimeException(param + " has no Check, Result nor Constant annotation, is not the return parameter and no other parameter has" +
 													" an @AutoSize annotation on it in method " + method);
 				}
 				if (param.getAnnotation(CachedReference.class) != null && param.getAnnotation(Result.class) != null)
@@ -249,10 +249,11 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 	}
 
 	public void visitInterfaceDeclaration(InterfaceDeclaration d) {
+		File input = d.getPosition().file();
+		File output = new File(env.getOptions().get("-s") + '/' + d.getPackage().getQualifiedName().replace('.', '/'), Utils.getSimpleClassName(d) + ".java");
+
 		try {
 			// Skip this class if the output exists and the input has not been modified.
-			File input = d.getPosition().file();
-			File output = new File(env.getOptions().get("-s") + '/' + d.getPackage().getQualifiedName().replace('.', '/'), Utils.getSimpleClassName(d) + ".java");
 			if ( output.exists() && input.lastModified() < output.lastModified() )
 				return;
 
@@ -260,7 +261,14 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 				generateJavaSource(d);
 			if (d.getMethods().size() > 0)
 				generateNativeSource(d);
-		} catch (IOException e) {
+		} catch (Exception e) {
+			try {
+				// If anything goes wrong mid-gen, delete output to allow regen next time we run.
+				if ( output.exists() )
+					output.delete();
+			} catch (Exception e2) {
+				// ignore
+			}
 			throw new RuntimeException(e);
 		}
 	}

@@ -113,10 +113,7 @@ public interface GL14 {
 	                       @GLfloat
 	                       @GLdouble Buffer data);
 
-	@Code("		if (piFirst.remaining() != piCount.remaining()) {\n" +
-	      "			throw new IllegalArgumentException(\"piFirst.remaining() != piCount.remaining()\");\n" +
-	      "		}")
-	void glMultiDrawArrays(@GLenum int mode, IntBuffer piFirst, @Check @GLsizei IntBuffer piCount, @AutoSize("piFirst") @GLsizei int primcount);
+	void glMultiDrawArrays(@GLenum int mode, IntBuffer piFirst, @Check("piFirst.remaining()") @GLsizei IntBuffer piCount, @AutoSize("piFirst") @GLsizei int primcount);
 
 	//void glMultiDrawElements(int mode, int piCount, int type, int pIndices, int primcount);
 

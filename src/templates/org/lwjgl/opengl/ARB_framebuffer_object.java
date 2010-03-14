@@ -190,7 +190,14 @@ public interface ARB_framebuffer_object {
 
 	void glDeleteRenderbuffers(@AutoSize("renderbuffers") @GLsizei int n, @Const @GLuint IntBuffer renderbuffers);
 
+	@Alternate("glDeleteRenderbuffers")
+	void glDeleteRenderbuffers(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, renderbuffer), 0", keepParam = true) int renderbuffer);
+
 	void glGenRenderbuffers(@AutoSize("renderbuffers") @GLsizei int n, @OutParameter @GLuint IntBuffer renderbuffers);
+
+	@Alternate("glGenRenderbuffers")
+	@GLreturn("renderbuffers")
+	void glGenRenderbuffers2(@Constant("1") @GLsizei int n, @OutParameter @GLuint IntBuffer renderbuffers);
 
 	void glRenderbufferStorage(@GLenum int target, @GLenum int internalformat,
 	                           @GLsizei int width, @GLsizei int height);
@@ -202,13 +209,25 @@ public interface ARB_framebuffer_object {
 	@StripPostfix("params")
 	void glGetRenderbufferParameteriv(@GLenum int target, @GLenum int pname, @Check("4") @OutParameter IntBuffer params);
 
+	@Alternate("glGetRenderbufferParameteriv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetRenderbufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+
 	boolean glIsFramebuffer(@GLuint int framebuffer);
 
 	void glBindFramebuffer(@GLenum int target, @GLuint int framebuffer);
 
 	void glDeleteFramebuffers(@AutoSize("framebuffers") @GLsizei int n, @Const @GLuint IntBuffer framebuffers);
 
+	@Alternate("glDeleteFramebuffers")
+	void glDeleteFramebuffers(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, framebuffer), 0", keepParam = true) int framebuffer);
+
 	void glGenFramebuffers(@AutoSize("framebuffers") @GLsizei int n, @OutParameter @GLuint IntBuffer framebuffers);
+
+	@Alternate("glGenFramebuffers")
+	@GLreturn("framebuffers")
+	void glGenFramebuffers2(@Constant("1") @GLsizei int n, @OutParameter @GLuint IntBuffer framebuffers);
 
 	@GLenum
 	int glCheckFramebufferStatus(@GLenum int target);
@@ -232,6 +251,12 @@ public interface ARB_framebuffer_object {
 	@StripPostfix("params")
 	void glGetFramebufferAttachmentParameteriv(@GLenum int target, @GLenum int attachment,
 	                                           @GLenum int pname, @Check("4") @OutParameter IntBuffer params);
+
+	@Alternate("glGetFramebufferAttachmentParameteriv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetFramebufferAttachmentParameteriv2(@GLenum int target, @GLenum int attachment,
+	                                            @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glBlitFramebuffer(int srcX0, int srcY0, int srcX1, int srcY1,
 	                       int dstX0, int dstY0, int dstX1, int dstY1,

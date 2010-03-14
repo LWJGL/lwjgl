@@ -32,17 +32,24 @@
 package org.lwjgl.util.generator;
 
 /**
- * This annotation must be used when there are more than one CharSequence arguments in a method.
- * TODO: Add support for CharSequence[] if/when we need it.
+ * When a method is annonated with @GLreturn, the specified output Buffer parameter
+ * will be used to return a single value. The primitive type will match the Buffer type.
+ * String will be returned if the Buffer is a ByteBuffer annotated with @GLchar.
  *
  * @author spasi
  */
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-@Target({ ElementType.PARAMETER })
-public @interface GLstringOffset {
-	/** An expression that will specify the offset from which this String will be written to the ByteBuffer. */
+@NativeType
+@Target({ ElementType.METHOD })
+public @interface GLreturn {
+	/** The Buffer parameter to use as the method result. */
 	String value();
+	/** The argument that specifies the maximum number of bytes that may be read (String results only). */
+	String maxLength() default "";
+	/** If true, the maxLength value is going to be used when creating the String. */
+	boolean forceMaxLength() default false;
+	///** If we use the byte buffer for another parameter, an offset must be used. */
+	//String offset() default "";
 }

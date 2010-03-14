@@ -44,7 +44,6 @@ package org.lwjgl.test.opengl;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
@@ -191,9 +190,7 @@ public final class VBOTest {
 			System.out.println("ARB VBO not supported!");
 			System.exit(1);
 		}
-		IntBuffer int_buffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
-		ARBBufferObject.glGenBuffersARB(int_buffer);
-		buffer_id = int_buffer.get(0);
+		buffer_id = ARBBufferObject.glGenBuffersARB();
 		ARBBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, buffer_id);
 		vertices = ByteBuffer.allocateDirect(2 * 4 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		vertices.put(-50).put(-50).put(50).put(-50).put(50).put(50).put(-50).put(50);
@@ -206,9 +203,7 @@ public final class VBOTest {
 	 * Cleanup
 	 */
 	private static void cleanup() {
-		IntBuffer int_buffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
-		int_buffer.put(0, buffer_id);
-		ARBBufferObject.glDeleteBuffersARB(int_buffer);
+		ARBBufferObject.glDeleteBuffersARB(buffer_id);
 		Display.destroy();
 	}
 }

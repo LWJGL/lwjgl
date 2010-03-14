@@ -46,7 +46,17 @@ public interface EXT_timer_query {
 	@StripPostfix("params")
 	void glGetQueryObjecti64vEXT(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") @GLint64EXT LongBuffer params);
 
+	@Alternate("glGetQueryObjecti64vEXT")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetQueryObjecti64vEXT2(@GLuint int id, @GLenum int pname, @OutParameter @GLint64EXT LongBuffer params);
+
 	@StripPostfix("params")
 	void glGetQueryObjectui64vEXT(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") @GLuint64EXT LongBuffer params);
+
+	@Alternate("glGetQueryObjectui64vEXT")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetQueryObjectui64vEXT2(@GLuint int id, @GLenum int pname, @OutParameter @GLuint64EXT LongBuffer params);
 
 }

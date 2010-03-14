@@ -488,12 +488,24 @@ public interface GL30 {
 
 	void glDeleteRenderbuffers(@AutoSize("renderbuffers") int n, @Const @GLuint IntBuffer renderbuffers);
 
+	@Alternate("glDeleteRenderbuffers")
+	void glDeleteRenderbuffers(@Constant("1") int n, @Constant(value = "APIUtils.getBufferInt().put(0, renderbuffer), 0", keepParam = true) int renderbuffer);
+
 	void glGenRenderbuffers(@AutoSize("renderbuffers") int n, @OutParameter @GLuint IntBuffer renderbuffers);
+
+	@Alternate("glGenRenderbuffers")
+	@GLreturn("renderbuffers")
+	void glGenRenderbuffers2(@Constant("1") int n, @OutParameter @GLuint IntBuffer renderbuffers);
 
 	void glRenderbufferStorage(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLsizei int height);
 
 	@StripPostfix("params")
 	void glGetRenderbufferParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
+
+	@Alternate("glGetRenderbufferParameteriv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetRenderbufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	boolean glIsFramebuffer(@GLuint int framebuffer);
 
@@ -501,7 +513,14 @@ public interface GL30 {
 
 	void glDeleteFramebuffers(@AutoSize("framebuffers") int n, @Const @GLuint IntBuffer framebuffers);
 
+	@Alternate("glDeleteFramebuffers")
+	void glDeleteFramebuffers(@Constant("1") int n, @Constant(value = "APIUtils.getBufferInt().put(0, framebuffer), 0", keepParam = true) int framebuffer);
+
 	void glGenFramebuffers(@AutoSize("framebuffers") int n, @OutParameter @GLuint IntBuffer framebuffers);
+
+	@Alternate("glGenFramebuffers")
+	@GLreturn("framebuffers")
+	void glGenFramebuffers2(@Constant("1") int n, @OutParameter @GLuint IntBuffer framebuffers);
 
 	@GLenum
 	int glCheckFramebufferStatus(@GLenum int target);
@@ -516,6 +535,11 @@ public interface GL30 {
 
 	@StripPostfix("params")
 	void glGetFramebufferAttachmentParameteriv(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
+
+	@Alternate("glGetFramebufferAttachmentParameteriv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetFramebufferAttachmentParameteriv2(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGenerateMipmap(@GLenum int target);
 
@@ -656,14 +680,32 @@ public interface GL30 {
 	@StripPostfix("params")
 	void glTexParameterIiv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
 
+	@Alternate("glTexParameterIiv")
+	@StripPostfix(value = "param", postfix = "v")
+	void glTexParameterIiv(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtils.getBufferInt().put(0, param), 0", keepParam = true) int param);
+
 	@StripPostfix("params")
 	void glTexParameterIuiv(@GLenum int target, @GLenum int pname, @Check("4") @GLuint IntBuffer params);
+
+	@Alternate("glTexParameterIuiv")
+	@StripPostfix(value = "param", postfix = "v")
+	void glTexParameterIuiv(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtils.getBufferInt().put(0, param), 0", keepParam = true) int param);
 
 	@StripPostfix("params")
 	void glGetTexParameterIiv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
+	@Alternate("glGetTexParameterIiv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetTexParameterIiv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@StripPostfix("params")
 	void glGetTexParameterIuiv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") @GLuint IntBuffer params);
+
+	@Alternate("glGetTexParameterIuiv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetTexParameterIuiv2(@GLenum int target, @GLenum int pname, @OutParameter @GLuint IntBuffer params);
 
 	// -----------------------------------------------------------------
 	// ----------------------[ EXT_texture_array ]----------------------
@@ -760,8 +802,18 @@ public interface GL30 {
 	@StripPostfix(value = "data", hasPostfix = false)
 	void glGetBooleani_v(@GLenum int value, @GLuint int index, @OutParameter @Check("4") @GLboolean ByteBuffer data);
 
+	@Alternate("glGetBooleani_v")
+	@GLreturn("data")
+	@StripPostfix(value = "data", hasPostfix = false)
+	void glGetBooleani_v2(@GLenum int value, @GLuint int index, @OutParameter @GLboolean ByteBuffer data);
+
 	@StripPostfix("data")
 	void glGetIntegeri_v(@GLenum int value, @GLuint int index, @OutParameter @Check("4") IntBuffer data);
+
+	@Alternate("glGetIntegeri_v")
+	@GLreturn("data")
+	@StripPostfix("data")
+	void glGetIntegeri_v2(@GLenum int value, @GLuint int index, @OutParameter IntBuffer data);
 
 	void glEnablei(@GLenum int target, @GLuint int index);
 
@@ -909,15 +961,15 @@ public interface GL30 {
 	                                   @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
 	                                   @OutParameter @GLsizei @Check("1") IntBuffer size,
 	                                   @OutParameter @GLenum @Check("1") IntBuffer type,
-	                                   @GLchar ByteBuffer name);
+	                                   @OutParameter @GLchar ByteBuffer name);
 
 	@Alternate("glGetTransformFeedbackVarying")
-	@GLstring(string = "name", maxLength = "bufSize")
+	@GLreturn(value = "name", maxLength = "bufSize")
 	void glGetTransformFeedbackVarying2(@GLuint int program, @GLuint int index, @GLsizei int bufSize,
 	                                    @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
 	                                    @OutParameter @GLsizei @Check("1") IntBuffer size,
 	                                    @OutParameter @GLenum @Check("1") IntBuffer type,
-	                                    @GLchar ByteBuffer name);
+	                                    @OutParameter @GLchar ByteBuffer name);
 
 	// -----------------------------------------------------------------------
 	// ----------------------[ ARB_vertex_array_object ]----------------------
@@ -933,7 +985,14 @@ public interface GL30 {
 
 	void glDeleteVertexArrays(@AutoSize("arrays") @GLsizei int n, @Const @GLuint IntBuffer arrays);
 
+	@Alternate("glDeleteVertexArrays")
+	void glDeleteVertexArrays(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, array), 0", keepParam = true) int array);
+
 	void glGenVertexArrays(@AutoSize("arrays") @GLsizei int n, @OutParameter @GLuint IntBuffer arrays);
+
+	@Alternate("glGenVertexArrays")
+	@GLreturn("arrays")
+	void glGenVertexArrays2(@Constant("1") @GLsizei int n, @OutParameter @GLuint IntBuffer arrays);
 
 	boolean glIsVertexArray(@GLuint int array);
 

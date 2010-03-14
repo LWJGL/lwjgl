@@ -31,17 +31,13 @@
  */
 package org.lwjgl.test.opengl;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.*;
 
-import java.nio.IntBuffer;
 import java.util.Random;
 
-/**
- * @author spasi <spasi@users.sourceforge.net>
- */
+/** @author spasi <spasi@users.sourceforge.net> */
 public final class SyncTest {
 
 	private SyncTest() {
@@ -131,9 +127,7 @@ public final class SyncTest {
 				System.out.println("Unexpected wait status: 0x" + Integer.toHexString(status));
 		}
 
-		IntBuffer property = BufferUtils.createIntBuffer(1);
-		GL32.glGetSync(sync, GL32.GL_SYNC_STATUS, null, property);
-		System.out.println("Sync Status: " + (property.get(0) == GL32.GL_UNSIGNALED ? "UNSIGNALED" : "SIGNALED"));
+		System.out.println("Sync Status: " + (GL32.glGetSync(sync, GL32.GL_SYNC_STATUS) == GL32.GL_UNSIGNALED ? "UNSIGNALED" : "SIGNALED"));
 
 		GL32.glDeleteSync(sync);
 

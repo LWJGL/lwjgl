@@ -122,7 +122,7 @@ public class JavaMethodsGenerator {
 				}
 			} else if (
 					param.getAnnotation(Result.class) == null
-			            && (native_stub || (param.getAnnotation(Constant.class) == null && !Utils.isReturnString(method, param)))
+			            && (native_stub || ((param.getAnnotation(Constant.class) == null || param.getAnnotation(Constant.class).keepParam()) && !Utils.isReturnParameter(method, param)))
 			            && (getAutoTypeParameter(method, param) == null || mode != Mode.AUTOS)
 				)
 			{
@@ -237,12 +237,9 @@ public class JavaMethodsGenerator {
 			if ( method.getAnnotation(GLpointer.class) != null )
 				writer.print("new " + method.getReturnType() + "(");
 		}
-		GLstring string_annotation = method.getAnnotation(GLstring.class);
-		if ( string_annotation != null ) {
+		if ( method.getAnnotation(GLreturn.class) != null ) {
 			has_result = true;
-			writer.println("IntBuffer " + string_annotation.string() + "_length = StringUtils.getLengths(1);");
-			writer.println("\t\tByteBuffer " + string_annotation.string() + " = StringUtils.getBuffer(" + string_annotation.maxLength() + ");");
-			writer.print("\t\t");
+			Utils.printGLReturnPre(writer, method, method.getAnnotation(GLreturn.class));
 		}
 		writer.print(Utils.getSimpleNativeMethodName(method, generate_error_checks, context_specific));
 		if (mode == Mode.BUFFEROBJECT)
@@ -262,12 +259,10 @@ public class JavaMethodsGenerator {
 		// DISABLED: indirect buffer support
 		//printNondirectParameterCopies(writer, method, mode);
 		if (has_result) {
-			if ( string_annotation == null )
+			if ( method.getAnnotation(GLreturn.class) == null )
 				writer.println("\t\treturn " + Utils.RESULT_VAR_NAME + ";");
-			else {
-				writer.println("\t\t" + string_annotation.string() + ".limit(" + string_annotation.string() + "_length.get(0));");
-				writer.println("\t\treturn StringUtils.getString(" + string_annotation.string() + ");");
-			}
+			else
+				Utils.printGLReturnPost(writer, method, method.getAnnotation(GLreturn.class));
 		}
 		writer.println("\t}");
 	}
@@ -403,22 +398,20 @@ public class JavaMethodsGenerator {
 			if (mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null) {
 				writer.print(param.getSimpleName() + Utils.BUFFER_OBJECT_PARAMETER_POSTFIX);
 			} else {
+				Class type = typeinfos_instance.get(param).getType();
 				boolean hide_buffer = mode == Mode.AUTOS && getAutoTypeParameter(method, param) != null;
 				if (hide_buffer)
 					writer.print("null");
 				else {
-					Class type = typeinfos_instance.get(param).getType();
 					if ( type == CharSequence.class || type == CharSequence[].class ) {
-						GLstringOffset offset_annotation = param.getAnnotation(GLstringOffset.class);
+						final String offset = Utils.getStringOffset(method, param);
 
-						writer.print("StringUtils.getBuffer");
-						if ( offset_annotation != null )
-							writer.print("Offset");
+						writer.print("APIUtils.getBuffer");
 						if ( param.getAnnotation(NullTerminated.class) != null )
 							writer.print("NT");
 						writer.print("(" + param.getSimpleName());
-						if ( offset_annotation != null )
-							writer.print(", " + offset_annotation.value());
+						if ( offset != null )
+							writer.print(", " + offset);
 						writer.print(")");
 						hide_buffer = true;
 					} else
@@ -443,9 +436,10 @@ public class JavaMethodsGenerator {
 							writer.print(" << " + shifting);
 						if (check_annotation != null && check_annotation.canBeNull())
 							writer.print(" : 0");
-					} else if ( param.getAnnotation(GLstringOffset.class) != null )
-						writer.print(param.getAnnotation(GLstringOffset.class).value());
-					else
+					} else if ( type == CharSequence.class || type == CharSequence[].class ) {
+						final String offset = Utils.getStringOffset(method, param);
+						writer.print(offset == null ? "0" : offset);
+					} else
 						writer.print("0");
 				} else if ( param.getAnnotation(GLpointer.class) != null ) {
 					writer.print(".getPointer()");
@@ -531,7 +525,7 @@ public class JavaMethodsGenerator {
 					(mode != Mode.BUFFEROBJECT || param.getAnnotation(BufferObject.class) == null) &&
 					(mode != Mode.AUTOS || getAutoTypeParameter(method, param) == null) &&
 					param.getAnnotation(Result.class) == null &&
-			        !Utils.isReturnString(method, param) ) {
+			        !Utils.isReturnParameter(method, param) ) {
 				String check_value = null;
 				boolean can_be_null = false;
 				Check check_annotation = param.getAnnotation(Check.class);
@@ -589,8 +583,8 @@ public class JavaMethodsGenerator {
 	private static void printResultType(PrintWriter writer, MethodDeclaration method, boolean native_stub) {
 		if ( native_stub && method.getAnnotation(GLpointer.class) != null )
 			writer.print("long");
-		else if ( !native_stub && method.getAnnotation(GLstring.class) != null )
-			writer.print("String");
+		else if ( !native_stub && method.getAnnotation(GLreturn.class) != null )
+			writer.print(Utils.getMethodReturnType(method, method.getAnnotation(GLreturn.class), false));
 		else
 			writer.print(Utils.getMethodReturnType(method).toString());
 	}

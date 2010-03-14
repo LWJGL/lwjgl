@@ -62,32 +62,29 @@ public class JavaTypeTranslator implements TypeVisitor {
 			throw new RuntimeException(t + " is not allowed");
 	}
 
-	public void visitPrimitiveType(PrimitiveType t) {
-		switch (t.getKind()) {
+	public static Class getPrimitiveClassFromKind(PrimitiveType.Kind kind) {
+		switch ( kind ) {
 			case LONG:
-				type = long.class;
-				break;
+				return long.class;
 			case INT:
-				type = int.class;
-				break;
+				return int.class;
 			case DOUBLE:
-				type = double.class;
-				break;
+				return double.class;
 			case FLOAT:
-				type = float.class;
-				break;
+				return float.class;
 			case SHORT:
-				type = short.class;
-				break;
+				return short.class;
 			case BYTE:
-				type = byte.class;
-				break;
+				return byte.class;
 			case BOOLEAN:
-				type = boolean.class;
-				break;
+				return boolean.class;
 			default:
-				throw new RuntimeException(t.getKind() + " is not allowed");
+				throw new RuntimeException(kind + " is not allowed");
 		}
+	}
+
+	public void visitPrimitiveType(PrimitiveType t) {
+		type = getPrimitiveClassFromKind(t.getKind());
 	}
 
 	public void visitDeclaredType(DeclaredType t) {

@@ -52,7 +52,14 @@ public interface ARB_transform_feedback2 {
 
 	void glDeleteTransformFeedbacks(@AutoSize("ids") @GLsizei int n, @Const @GLuint IntBuffer ids);
 
-	void glGenTransformFeedbacks(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
+	@Alternate("glDeleteTransformFeedbacks")
+	void glDeleteTransformFeedbacks(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, id), 0", keepParam = true) int id);
+
+	void glGenTransformFeedbacks(@AutoSize("ids") @GLsizei int n, @OutParameter @GLuint IntBuffer ids);
+
+	@Alternate("glGenTransformFeedbacks")
+	@GLreturn("ids")
+	void glGenTransformFeedbacks2(@Constant("1") @GLsizei int n, @OutParameter @GLuint IntBuffer ids);
 
 	boolean glIsTransformFeedback(@GLuint int id);
 

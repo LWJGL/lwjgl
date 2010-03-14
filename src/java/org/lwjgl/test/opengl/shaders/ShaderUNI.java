@@ -70,8 +70,7 @@ final class ShaderUNI extends Shader {
 
 		printShaderObjectInfoLog(file, shaderID);
 
-		GL20.glGetShader(shaderID, GL20.GL_COMPILE_STATUS, programBuffer);
-		if ( programBuffer.get(0) == GL11.GL_FALSE )
+		if ( GL20.glGetShader(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE )
 			ShadersTest.kill("A compilation error occured in a vertex shader.");
 
 		programID = GL20.glCreateProgram();
@@ -81,27 +80,19 @@ final class ShaderUNI extends Shader {
 
 		printShaderProgramInfoLog(programID);
 
-		GL20.glGetProgram(programID, GL20.GL_LINK_STATUS, programBuffer);
-		if ( programBuffer.get(0) == GL11.GL_FALSE )
+		if ( GL20.glGetProgram(programID, GL20.GL_LINK_STATUS) == GL11.GL_FALSE )
 			ShadersTest.kill("A linking error occured in a shader program.");
 
 		final String[] uniformNames = { "uniformA", "uniformB" };
 
-		IntBuffer indexes = BufferUtils.createIntBuffer(uniformNames.length);
-		IntBuffer params = BufferUtils.createIntBuffer(uniformNames.length);
-		IntBuffer getBuffer = BufferUtils.createIntBuffer(16);
-		IntBuffer buffers = BufferUtils.createIntBuffer(1);
-
 		// Get uniform block index and data size
 		final int blockIndex = ARBUniformBufferObject.glGetUniformBlockIndex(programID, "test");
-		ARBUniformBufferObject.glGetActiveUniformBlock(programID, blockIndex, ARBUniformBufferObject.GL_UNIFORM_BLOCK_DATA_SIZE, getBuffer);
-		final int blockSize = getBuffer.get(0);
+		final int blockSize = ARBUniformBufferObject.glGetActiveUniformBlock(programID, blockIndex, ARBUniformBufferObject.GL_UNIFORM_BLOCK_DATA_SIZE);
 
 		System.out.println("blockSize = " + blockSize);
 
 		// Create uniform buffer object and allocate a ByteBuffer
-		GL15.glGenBuffers(buffers);
-		bufferID = buffers.get(0);
+		bufferID = GL15.glGenBuffers();
 		GL15.glBindBuffer(ARBUniformBufferObject.GL_UNIFORM_BUFFER, bufferID);
 		GL15.glBufferData(ARBUniformBufferObject.GL_UNIFORM_BUFFER, blockSize, GL15.GL_DYNAMIC_DRAW);
 		buffer = BufferUtils.createFloatBuffer(blockSize);
@@ -111,6 +102,9 @@ final class ShaderUNI extends Shader {
 		ARBUniformBufferObject.glUniformBlockBinding(programID, blockIndex, 0);
 
 		// Get uniform information
+		IntBuffer indexes = BufferUtils.createIntBuffer(uniformNames.length);
+		IntBuffer params = BufferUtils.createIntBuffer(uniformNames.length);
+
 		ARBUniformBufferObject.glGetUniformIndices(programID, uniformNames, indexes);
 		uniformA_index = indexes.get(0);
 		uniformB_index = indexes.get(1);

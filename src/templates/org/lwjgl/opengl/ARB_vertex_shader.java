@@ -151,7 +151,7 @@ public interface ARB_vertex_shader {
 							  @OutParameter @GLcharARB ByteBuffer name);
 
 	@Alternate("glGetActiveAttribARB")
-	@GLstring(string = "name", maxLength = "maxLength")
+	@GLreturn(value = "name", maxLength = "maxLength")
 	void glGetActiveAttribARB2(@GLhandleARB int programObj, @GLuint int index, @GLsizei int maxLength,
 	                          @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
 	                          @OutParameter @Check("1") IntBuffer size,

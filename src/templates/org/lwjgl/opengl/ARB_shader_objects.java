@@ -33,18 +33,16 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 public interface ARB_shader_objects {
 
-	/**
-	 * Accepted by the &lt;pname&gt; argument of GetHandleARB:
-	 */
+	/** Accepted by the &lt;pname&gt; argument of GetHandleARB: */
 	int GL_PROGRAM_OBJECT_ARB = 0x8B40;
 
-	/**
-	 * Accepted by the &lt;pname&gt; parameter of GetObjectParameter{fi}vARB:
-	 */
+	/** Accepted by the &lt;pname&gt; parameter of GetObjectParameter{fi}vARB: */
 	int GL_OBJECT_TYPE_ARB = 0x8B4E;
 	int GL_OBJECT_SUBTYPE_ARB = 0x8B4F;
 	int GL_OBJECT_DELETE_STATUS_ARB = 0x8B80;
@@ -57,14 +55,10 @@ public interface ARB_shader_objects {
 	int GL_OBJECT_ACTIVE_UNIFORM_MAX_LENGTH_ARB = 0x8B87;
 	int GL_OBJECT_SHADER_SOURCE_LENGTH_ARB = 0x8B88;
 
-	/**
-	 * Returned by the &lt;params&gt; parameter of GetObjectParameter{fi}vARB:
-	 */
+	/** Returned by the &lt;params&gt; parameter of GetObjectParameter{fi}vARB: */
 	int GL_SHADER_OBJECT_ARB = 0x8B48;
 
-	/**
-	 * Returned by the &lt;type&gt; parameter of GetActiveUniformARB:
-	 */
+	/** Returned by the &lt;type&gt; parameter of GetActiveUniformARB: */
 	int GL_FLOAT = 0x1406;
 	int GL_FLOAT_VEC2_ARB = 0x8B50;
 	int GL_FLOAT_VEC3_ARB = 0x8B51;
@@ -114,7 +108,7 @@ public interface ARB_shader_objects {
 	@Alternate(value = "glShaderSourceARB", nativeAlt = true)
 	void glShaderSourceARB3(@GLhandleARB int shader, @Constant("strings.length") @GLsizei int count,
 	                        @Const @StringList(value = "count", lengths = "length") CharSequence[] strings,
-	                        @Constant("StringUtils.getLengths(strings), 0") @Const IntBuffer length);
+	                        @Constant("APIUtils.getLengths(strings), 0") @Const IntBuffer length);
 
 	void glCompileShaderARB(@GLhandleARB int shaderObj);
 
@@ -181,22 +175,32 @@ public interface ARB_shader_objects {
 	@StripPostfix("params")
 	void glGetObjectParameterfvARB(@GLhandleARB int obj, @GLenum int pname, @OutParameter @Check FloatBuffer params);
 
+	@Alternate("glGetObjectParameterfvARB")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetObjectParameterfvARB2(@GLhandleARB int obj, @GLenum int pname, @OutParameter FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetObjectParameterivARB(@GLhandleARB int obj, @GLenum int pname, @OutParameter @Check IntBuffer params);
 
+	@Alternate("glGetObjectParameterivARB")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetObjectParameterivARB2(@GLhandleARB int obj, @GLenum int pname, @OutParameter IntBuffer params);
+
 	void glGetInfoLogARB(@GLhandleARB int obj, @AutoSize("infoLog") @GLsizei int maxLength,
 	                     @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
-			             @OutParameter @GLcharARB ByteBuffer infoLog);
+	                     @OutParameter @GLcharARB ByteBuffer infoLog);
 
 	@Alternate("glGetInfoLogARB")
-	@GLstring(string = "infoLog", maxLength = "maxLength")
+	@GLreturn(value = "infoLog", maxLength = "maxLength")
 	void glGetInfoLogARB2(@GLhandleARB int obj, @GLsizei int maxLength,
-	                     @OutParameter @GLsizei @Constant("infoLog_length, 0") IntBuffer length,
-	                     @OutParameter @GLcharARB ByteBuffer infoLog);
+	                      @OutParameter @GLsizei @Constant("infoLog_length, 0") IntBuffer length,
+	                      @OutParameter @GLcharARB ByteBuffer infoLog);
 
 	void glGetAttachedObjectsARB(@GLhandleARB int containerObj, @AutoSize("obj") @GLsizei int maxCount,
 	                             @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer count,
-			                     @OutParameter @GLhandleARB IntBuffer obj);
+	                             @OutParameter @GLhandleARB IntBuffer obj);
 
 	/**
 	 * Returns the location of the uniform with the specified name. The ByteBuffer should contain the uniform name as a <b>null-terminated</b> string.
@@ -210,18 +214,18 @@ public interface ARB_shader_objects {
 	int glGetUniformLocationARB(@GLhandleARB int programObj, @NullTerminated CharSequence name);
 
 	void glGetActiveUniformARB(@GLhandleARB int programObj, @GLuint int index, @AutoSize("name") @GLsizei int maxLength,
-			                   @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
-			                   @OutParameter @Check("1") IntBuffer size,
+	                           @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
+	                           @OutParameter @Check("1") IntBuffer size,
 	                           @OutParameter @GLenum @Check("1") IntBuffer type,
 	                           @OutParameter @GLcharARB ByteBuffer name);
 
 	@Alternate("glGetActiveUniformARB")
-	@GLstring(string = "name", maxLength = "maxLength")
+	@GLreturn(value = "name", maxLength = "maxLength")
 	void glGetActiveUniformARB2(@GLhandleARB int programObj, @GLuint int index, @GLsizei int maxLength,
-	                           @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
-	                           @OutParameter @Check("1") IntBuffer size,
-	                           @OutParameter @GLenum @Check("1") IntBuffer type,
-	                           @OutParameter @GLcharARB ByteBuffer name);
+	                            @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
+	                            @OutParameter @Check("1") IntBuffer size,
+	                            @OutParameter @GLenum @Check("1") IntBuffer type,
+	                            @OutParameter @GLcharARB ByteBuffer name);
 
 	@StripPostfix("params")
 	void glGetUniformfvARB(@GLhandleARB int programObj, int location, @OutParameter @Check FloatBuffer params);
@@ -230,13 +234,13 @@ public interface ARB_shader_objects {
 	void glGetUniformivARB(@GLhandleARB int programObj, int location, @OutParameter @Check IntBuffer params);
 
 	void glGetShaderSourceARB(@GLhandleARB int obj, @AutoSize("source") @GLsizei int maxLength,
-			                  @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
-			                  @OutParameter @GLcharARB ByteBuffer source);
+	                          @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
+	                          @OutParameter @GLcharARB ByteBuffer source);
 
 	@Alternate("glGetShaderSourceARB")
-	@GLstring(string = "source", maxLength = "maxLength")
+	@GLreturn(value = "source", maxLength = "maxLength")
 	void glGetShaderSourceARB2(@GLhandleARB int obj, @GLsizei int maxLength,
-	                          @OutParameter @GLsizei @Constant("source_length, 0") IntBuffer length,
-	                          @OutParameter @GLcharARB ByteBuffer source);
+	                           @OutParameter @GLsizei @Constant("source_length, 0") IntBuffer length,
+	                           @OutParameter @GLcharARB ByteBuffer source);
 
 }

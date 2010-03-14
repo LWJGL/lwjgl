@@ -220,7 +220,7 @@ public class GLTypeMap implements TypeMap {
 		else if ( type.equals(boolean.class) )
 			return new Class[] { GLboolean.class };
 		else if ( type.equals(void.class) )
-			return new Class[] { GLvoid.class, GLstring.class };
+			return new Class[] { GLvoid.class, GLreturn.class };
 		else
 			return new Class[] { };
 	}
@@ -244,7 +244,7 @@ public class GLTypeMap implements TypeMap {
 		else if ( PointerWrapper.class.isAssignableFrom(type) )
 			valid_types = new Class[] { GLpointer.class };
 		else if (void.class.equals(type) )
-			valid_types = new Class[] { GLstring.class };
+			valid_types = new Class[] { GLreturn.class };
 		else
 			valid_types = new Class[] { };
 		return valid_types;

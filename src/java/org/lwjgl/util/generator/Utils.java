@@ -40,15 +40,17 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-import com.sun.mirror.type.*;
+import java.io.PrintWriter;
 import java.nio.Buffer;
-import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.*;
 
 import com.sun.mirror.declaration.*;
+import com.sun.mirror.type.PrimitiveType;
+import com.sun.mirror.type.TypeMirror;
 
 public class Utils {
+
 	public static final String TYPEDEF_POSTFIX = "PROC";
 	public static final String FUNCTION_POINTER_VAR_NAME = "function_pointer";
 	public static final String FUNCTION_POINTER_POSTFIX = "_pointer";
@@ -209,6 +211,29 @@ public class Utils {
 		return result_type;
 	}
 
+	public static String getMethodReturnType(MethodDeclaration method, GLreturn return_annotation, boolean buffer) {
+		ParameterDeclaration return_param = null;
+		for ( ParameterDeclaration param : method.getParameters() ) {
+			if ( param.getSimpleName().equals(return_annotation.value()) ) {
+				return_param = param;
+				break;
+			}
+		}
+		if ( return_param == null )
+			throw new RuntimeException("The @GLreturn parameter \"" + return_annotation.value() + "\" could not be found in method: " + method);
+
+		PrimitiveType.Kind kind = NativeTypeTranslator.getPrimitiveKindFromBufferClass(Utils.getJavaType(return_param.getType()));
+		if ( return_param.getAnnotation(GLboolean.class) != null )
+			kind = PrimitiveType.Kind.BOOLEAN;
+
+		if ( kind == PrimitiveType.Kind.BYTE && (return_param.getAnnotation(GLchar.class) != null || return_param.getAnnotation(GLcharARB.class) != null) )
+			return "String";
+		else {
+			final String type = JavaTypeTranslator.getPrimitiveClassFromKind(kind).getName();
+			return buffer ? Character.toUpperCase(type.charAt(0)) + type.substring(1) : type;
+		}
+	}
+
 	public static boolean needResultSize(MethodDeclaration method) {
 		return getNIOBufferType(getMethodReturnType(method)) != null && method.getAnnotation(AutoResultSize.class) == null;
 	}
@@ -273,9 +298,98 @@ public class Utils {
 		return method_name;
 	}
 
-	static boolean isReturnString(MethodDeclaration method, ParameterDeclaration param) {
-		GLstring string_annotation = method.getAnnotation(GLstring.class);
-		return string_annotation != null && string_annotation.string().equals(param.getSimpleName());
+	static boolean isReturnParameter(MethodDeclaration method, ParameterDeclaration param) {
+		GLreturn string_annotation = method.getAnnotation(GLreturn.class);
+		if ( string_annotation == null || !string_annotation.value().equals(param.getSimpleName()) )
+			return false;
+
+		if ( param.getAnnotation(OutParameter.class) == null )
+			throw new RuntimeException("The parameter specified in @GLreturn is not annotated with @OutParameter in method: " + method);
+
+		if ( param.getAnnotation(Check.class) != null )
+			throw new RuntimeException("The parameter specified in @GLreturn is annotated with @Check in method: " + method);
+
+		if ( param.getAnnotation(GLchar.class) != null && Utils.getJavaType(param.getType()).equals(ByteBuffer.class) && string_annotation.maxLength().length() == 0 )
+			throw new RuntimeException("The @GLreturn annotation is missing a maxLength parameter in method: " + method);
+
+		return true;
+	}
+
+	static String getStringOffset(MethodDeclaration method, ParameterDeclaration param) {
+		String offset = null;
+		for ( ParameterDeclaration p : method.getParameters() ) {
+			if ( param != null && p.getSimpleName().equals(param.getSimpleName()) )
+				break;
+
+			final Class type = Utils.getJavaType(p.getType());
+			if ( type.equals(CharSequence.class) ) {
+				if ( offset == null )
+					offset = p.getSimpleName() + ".length()";
+				else
+					offset += " + " + p.getSimpleName() + ".length()";
+				if ( p.getAnnotation(NullTerminated.class) != null ) offset += " + 1";
+
+			} else if ( type.equals(CharSequence[].class) ) {
+				if ( offset == null )
+					offset = "APIUtils.getTotalLength(" + p.getSimpleName() + ")";
+				else
+					offset += " + APIUtils.getTotalLength(" + p.getSimpleName() + ")";
+				if ( p.getAnnotation(NullTerminated.class) != null ) offset += " + " + p.getSimpleName() + ".length";
+			}
+
+		}
+		return offset;
+	}
+
+	static void printGLReturnPre(PrintWriter writer, MethodDeclaration method, GLreturn return_annotation) {
+		final String return_type = getMethodReturnType(method, return_annotation, true);
+
+		if ( "String".equals(return_type) ) {
+			if ( !return_annotation.forceMaxLength() ) {
+				writer.println("IntBuffer " + return_annotation.value() + "_length = APIUtils.getLengths();");
+				writer.print("\t\t");
+			}
+			writer.print("ByteBuffer " + return_annotation.value() + " = APIUtils.getBufferByte(" + return_annotation.maxLength());
+			/*
+				Params that use the return buffer will advance its position while filling it. When we return, the position will be
+				at the right spot for grabbing the returned string bytes. We only have to make sure that the original buffer was
+				large enough to hold everything, so that no re-allocations happen while filling.
+			 */
+			final String offset = getStringOffset(method, null);
+			if ( offset != null )
+				writer.print(" + " + offset);
+			writer.println(");");
+		} else {
+			final String buffer_type = "Boolean".equals(return_type) ? "Byte" : return_type;
+			writer.print(buffer_type + "Buffer " + return_annotation.value() + " = APIUtils.getBuffer" + buffer_type + "(");
+			if ( "Byte".equals(buffer_type) )
+				writer.print('1');
+			writer.println(");");
+		}
+
+		writer.print("\t\t");
+	}
+
+	static void printGLReturnPost(PrintWriter writer, MethodDeclaration method, GLreturn return_annotation) {
+		final String return_type = getMethodReturnType(method, return_annotation, true);
+
+		if ( "String".equals(return_type) ) {
+			writer.print("\t\t" + return_annotation.value() + ".limit(");
+			final String offset = getStringOffset(method, null);
+			if ( offset != null)
+				writer.print(offset + " + ");
+			if ( return_annotation.forceMaxLength() )
+				writer.print(return_annotation.maxLength());
+			else
+				writer.print(return_annotation.value() + "_length.get(0)");
+			writer.println(");");
+			writer.println("\t\treturn APIUtils.getString(" + return_annotation.value() + ");");
+		} else {
+			writer.print("\t\treturn " + return_annotation.value() + ".get(0)");
+			if ( "Boolean".equals(return_type) )
+				writer.print(" == 1");
+			writer.println(";");
+		}
 	}
 
 }

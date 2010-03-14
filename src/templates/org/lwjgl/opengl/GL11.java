@@ -32,17 +32,15 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
-import org.lwjgl.util.generator.DeprecatedGL;
 
 import java.nio.*;
 
 /**
- *
  * The core OpenGL1.1 API.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
- * $Id$
+ *          $Id$
  */
 @DeprecatedGL
 public interface GL11 {
@@ -751,18 +749,18 @@ public interface GL11 {
 
 	@DeprecatedGL
 	void glPrioritizeTextures(@AutoSize("textures") @GLsizei int n,
-			@Const
-			@GLuint IntBuffer textures,
-			@Const
-			@Check("textures.remaining()")
-			@GLclampf FloatBuffer priorities);
+	                          @Const
+	                          @GLuint IntBuffer textures,
+	                          @Const
+	                          @Check("textures.remaining()")
+	                          @GLclampf FloatBuffer priorities);
 
 	@DeprecatedGL
 	boolean glAreTexturesResident(@AutoSize("textures") @GLsizei int n,
-			@Const
-			@GLuint IntBuffer textures,
-			@Check("textures.remaining()")
-			@GLboolean ByteBuffer residences);
+	                              @Const
+	                              @GLuint IntBuffer textures,
+	                              @Check("textures.remaining()")
+	                              @GLboolean ByteBuffer residences);
 
 	@NoErrorCheck
 	@DeprecatedGL
@@ -780,6 +778,9 @@ public interface GL11 {
 	void glDeleteLists(@GLuint int list, @GLsizei int range);
 
 	void glDeleteTextures(@AutoSize("textures") @GLsizei int n, @Const @GLuint IntBuffer textures);
+
+	@Alternate("glDeleteTextures")
+	void glDeleteTextures(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, texture), 0", keepParam = true) int texture);
 
 	void glCullFace(@GLenum int mode);
 
@@ -970,16 +971,40 @@ public interface GL11 {
 	@StripPostfix("params")
 	void glGetBooleanv(@GLenum int pname, @OutParameter @Check("16") @GLboolean ByteBuffer params);
 
+	@Alternate("glGetBooleanv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetBooleanv2(@GLenum int pname, @OutParameter @GLboolean ByteBuffer params);
+
 	@StripPostfix("params")
 	void glGetDoublev(@GLenum int pname, @OutParameter @Check("16") DoubleBuffer params);
+
+	@Alternate("glGetDoublev")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetDoublev2(@GLenum int pname, @OutParameter DoubleBuffer params);
 
 	@StripPostfix("params")
 	void glGetFloatv(@GLenum int pname, @OutParameter @Check("16") FloatBuffer params);
 
+	@Alternate("glGetFloatv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetFloatv2(@GLenum int pname, @OutParameter FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetIntegerv(@GLenum int pname, @OutParameter @Check("16") IntBuffer params);
 
+	@Alternate("glGetIntegerv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetIntegerv2(@GLenum int pname, @OutParameter IntBuffer params);
+
 	void glGenTextures(@AutoSize("textures") @GLsizei int n, @OutParameter @GLuint IntBuffer textures);
+
+	@Alternate("glGenTextures")
+	@GLreturn("textures")
+	void glGenTextures2(@Constant("1") @GLsizei int n, @OutParameter @GLuint IntBuffer textures);
 
 	@GLuint
 	@DeprecatedGL
@@ -1031,17 +1056,37 @@ public interface GL11 {
 	@StripPostfix("params")
 	void glGetTexParameterfv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
+	@Alternate("glGetTexParameterfv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetTexParameterfv2(@GLenum int target, @GLenum int pname, @OutParameter FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetTexParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
+
+	@Alternate("glGetTexParameteriv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetTexParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
 	void glGetTexLevelParameterfv(@GLenum int target, int level, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
+	@Alternate("glGetTexLevelParameterfv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetTexLevelParameterfv2(@GLenum int target, int level, @GLenum int pname, @OutParameter FloatBuffer params);
+
 	@StripPostfix("params")
 	void glGetTexLevelParameteriv(@GLenum int target, int level, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
+	@Alternate("glGetTexLevelParameteriv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetTexLevelParameteriv2(@GLenum int target, int level, @GLenum int pname, @OutParameter IntBuffer params);
+
 	void glGetTexImage(@GLenum int target, int level, @GLenum int format, @GLenum int type,
-			           @OutParameter
+	                   @OutParameter
 	                   @BufferObject(BufferKind.PackPBO)
 	                   @Check("GLChecks.calculateImageStorage(pixels, format, type, 1, 1, 1)")
 	                   @GLbyte
@@ -1054,19 +1099,47 @@ public interface GL11 {
 	@DeprecatedGL
 	void glGetTexGeniv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
+	@Alternate("glGetTexGeniv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	@DeprecatedGL
+	void glGetTexGeniv2(@GLenum int coord, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@StripPostfix("params")
 	@DeprecatedGL
 	void glGetTexGenfv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
+
+	@Alternate("glGetTexGenfv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	@DeprecatedGL
+	void glGetTexGenfv2(@GLenum int coord, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@StripPostfix("params")
 	@DeprecatedGL
 	void glGetTexGendv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") DoubleBuffer params);
 
+	@Alternate("glGetTexGendv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	@DeprecatedGL
+	void glGetTexGendv2(@GLenum int coord, @GLenum int pname, @OutParameter DoubleBuffer params);
+
 	@StripPostfix("params")
 	void glGetTexEnviv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
+	@Alternate("glGetTexEnviv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetTexEnviv2(@GLenum int coord, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@StripPostfix("params")
 	void glGetTexEnvfv(@GLenum int coord, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
+
+	@Alternate("glGetTexEnvfv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetTexEnvfv2(@GLenum int coord, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@Const
 	String glGetString(int name);
@@ -1104,6 +1177,7 @@ public interface GL11 {
 	void glMapGrid2d(int un, double u1, double u2, int vn, double v1, double v2);
 
 	// TODO: check buffer size valid
+
 	@DeprecatedGL
 	void glMap2f(@GLenum int target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, @Check @Const FloatBuffer points);
 
@@ -1111,6 +1185,7 @@ public interface GL11 {
 	void glMap2d(@GLenum int target, double u1, double u2, int ustride, int uorder, double v1, double v2, int vstride, int vorder, @Check @Const DoubleBuffer points);
 
 	// TODO: check buffer size valid
+
 	@DeprecatedGL
 	void glMap1f(@GLenum int target, float u1, float u2, int stride, int order, @Check @Const FloatBuffer points);
 
@@ -1486,12 +1561,12 @@ public interface GL11 {
 
 	@DeprecatedGL
 	void glTexCoordPointer(int size, @AutoType("pointer") @GLenum int type, @GLsizei int stride,
-	                       @CachedReference(index="GLChecks.getReferences(caps).glClientActiveTexture", name="glTexCoordPointer_buffer")
+	                       @CachedReference(index = "GLChecks.getReferences(caps).glClientActiveTexture", name = "glTexCoordPointer_buffer")
 	                       @BufferObject(BufferKind.ArrayVBO)
 	                       @Check
 	                       @Const
-						   @GLint
-						   @GLshort
+	                       @GLint
+	                       @GLshort
 	                       @GLfloat
 	                       @GLdouble Buffer pointer);
 

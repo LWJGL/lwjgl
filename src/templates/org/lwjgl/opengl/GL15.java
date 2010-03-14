@@ -33,7 +33,9 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
 
-import java.nio.*;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 public interface GL15 {
 	// ----------------------------------------------------------------------
@@ -92,7 +94,14 @@ public interface GL15 {
 
 	void glDeleteBuffers(@AutoSize("buffers") @GLsizei int n, @Const @GLuint IntBuffer buffers);
 
+	@Alternate("glDeleteBuffers")
+	void glDeleteBuffers(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, buffer), 0", keepParam = true) int buffer);
+
 	void glGenBuffers(@AutoSize("buffers") @GLsizei int n, @OutParameter @GLuint IntBuffer buffers);
+
+	@Alternate("glGenBuffers")
+	@GLreturn("buffers")
+	void glGenBuffers2(@Constant("1") @GLsizei int n, @OutParameter @GLuint IntBuffer buffers);
 
 	boolean glIsBuffer(@GLuint int buffer);
 
@@ -115,7 +124,7 @@ public interface GL15 {
 	                     @GLdouble Buffer data);
 
 	void glGetBufferSubData(@GLenum int target, @GLintptr long offset, @AutoSize("data") @GLsizeiptr long size,
-			                @OutParameter
+	                        @OutParameter
 	                        @Check
 	                        @GLbyte
 	                        @GLshort
@@ -140,9 +149,8 @@ public interface GL15 {
 	 * is made to retrieve the buffer object size, so the user is responsible for tracking and using the appropriate length.<br>
 	 * Security warning: The length argument should match the buffer object size. Reading from or writing to outside
 	 * the memory region that corresponds to the mapped buffer object will cause native crashes.
-	 * 
-	 * @param length        the length of the mapped memory in bytes.
-	 * @param old_buffer    A ByteBuffer. If this argument points to the same address and has the same capacity as the new mapping, it will be returned and no new buffer will be created.
+	 *
+	 * @param old_buffer A ByteBuffer. If this argument points to the same address and has the same capacity as the new mapping, it will be returned and no new buffer will be created.
 	 *
 	 * @return A ByteBuffer representing the mapped buffer memory.
 	 */
@@ -155,6 +163,11 @@ public interface GL15 {
 
 	@StripPostfix("params")
 	void glGetBufferParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
+
+	@Alternate("glGetBufferParameteriv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetBufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("pointer")
 	@AutoResultSize("GLChecks.getBufferObjectSize(caps, target)")
@@ -170,22 +183,27 @@ public interface GL15 {
 	 */
 	int GL_SAMPLES_PASSED = 0x8914;
 
-	/**
-	 Accepted by the &lt;pname&gt; parameter of GetQueryiv:
-	 */
+	/** Accepted by the &lt;pname&gt; parameter of GetQueryiv: */
 	int GL_QUERY_COUNTER_BITS = 0x8864;
 	int GL_CURRENT_QUERY = 0x8865;
 
 	/**
-	 Accepted by the &lt;pname&gt; parameter of GetQueryObjectiv and
-	 GetQueryObjectuiv:
+	 * Accepted by the &lt;pname&gt; parameter of GetQueryObjectiv and
+	 * GetQueryObjectuiv:
 	 */
 	int GL_QUERY_RESULT = 0x8866;
 	int GL_QUERY_RESULT_AVAILABLE = 0x8867;
 
 	void glGenQueries(@AutoSize("ids") @GLsizei int n, @OutParameter @GLuint IntBuffer ids);
 
+	@Alternate("glGenQueries")
+	@GLreturn("ids")
+	void glGenQueries2(@Constant("1") @GLsizei int n, @OutParameter @GLuint IntBuffer ids);
+
 	void glDeleteQueries(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
+
+	@Alternate("glDeleteQueries")
+	void glDeleteQueries(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, id), 0", keepParam = true) int id);
 
 	boolean glIsQuery(@GLuint int id);
 
@@ -196,9 +214,24 @@ public interface GL15 {
 	@StripPostfix("params")
 	void glGetQueryiv(@GLenum int target, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
+	@Alternate("glGetQueryiv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetQueryiv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@StripPostfix("params")
 	void glGetQueryObjectiv(@GLenum int id, @GLenum int pname, @OutParameter @Check("1") @GLint IntBuffer params);
 
+	@Alternate("glGetQueryObjectiv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetQueryObjectiv2(@GLenum int id, @GLenum int pname, @OutParameter @GLint IntBuffer params);
+
 	@StripPostfix("params")
 	void glGetQueryObjectuiv(@GLenum int id, @GLenum int pname, @OutParameter @Check("1") @GLuint IntBuffer params);
+
+	@Alternate("glGetQueryObjectuiv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetQueryObjectuiv2(@GLenum int id, @GLenum int pname, @OutParameter @GLuint IntBuffer params);
 }

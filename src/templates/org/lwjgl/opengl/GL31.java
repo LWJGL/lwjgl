@@ -243,17 +243,26 @@ public interface GL31 {
 	@StripPostfix("params")
 	void glGetActiveUniformsiv(@GLuint int program, @AutoSize("uniformIndices") @GLsizei int uniformCount,
 	                           @Const @GLuint IntBuffer uniformIndices,
-	                           @GLenum int pname, @Check("uniformIndices.remaining()") @GLint IntBuffer params);
+	                           @GLenum int pname,
+	                           @OutParameter @Check("uniformIndices.remaining()") @GLint IntBuffer params);
+
+	@Alternate("glGetActiveUniformsiv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetActiveUniformsiv(@GLuint int program, @Constant("1") @GLsizei int uniformCount,
+	                           @Constant(value = "APIUtils.getBufferInt().put(0, uniformIndex), 0", keepParam = true) int uniformIndex,
+	                           @GLenum int pname,
+	                           @OutParameter @GLint IntBuffer params);
 
 	void glGetActiveUniformName(@GLuint int program, @GLuint int uniformIndex, @AutoSize("uniformName") @GLsizei int bufSize,
 	                            @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
-	                            @GLchar ByteBuffer uniformName);
+	                            @OutParameter @GLchar ByteBuffer uniformName);
 
 	@Alternate("glGetActiveUniformName")
-	@GLstring(string = "uniformName", maxLength = "bufSize")
+	@GLreturn(value = "uniformName", maxLength = "bufSize")
 	void glGetActiveUniformName2(@GLuint int program, @GLuint int uniformIndex, @GLsizei int bufSize,
 	                             @OutParameter @GLsizei @Constant("uniformName_length, 0") IntBuffer length,
-	                             @GLchar ByteBuffer uniformName);
+	                             @OutParameter @GLchar ByteBuffer uniformName);
 
 	@GLuint
 	int glGetUniformBlockIndex(@GLuint int program, @Const @NullTerminated @GLchar ByteBuffer uniformBlockName);
@@ -268,13 +277,13 @@ public interface GL31 {
 
 	void glGetActiveUniformBlockName(@GLuint int program, @GLuint int uniformBlockIndex, @AutoSize("uniformBlockName") @GLsizei int bufSize,
 	                                 @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
-	                                 @GLchar ByteBuffer uniformBlockName);
+	                                 @OutParameter @GLchar ByteBuffer uniformBlockName);
 
 	@Alternate("glGetActiveUniformBlockName")
-	@GLstring(string = "uniformBlockName", maxLength = "bufSize")
+	@GLreturn(value = "uniformBlockName", maxLength = "bufSize")
 	void glGetActiveUniformBlockName2(@GLuint int program, @GLuint int uniformBlockIndex, @GLsizei int bufSize,
 	                                  @OutParameter @GLsizei @Constant("uniformBlockName_length, 0") IntBuffer length,
-	                                  @GLchar ByteBuffer uniformBlockName);
+	                                  @OutParameter @GLchar ByteBuffer uniformBlockName);
 
 	void glUniformBlockBinding(@GLuint int program, @GLuint int uniformBlockIndex, @GLuint int uniformBlockBinding);
 

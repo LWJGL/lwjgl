@@ -43,8 +43,18 @@ public interface EXT_draw_buffers2 {
 	@StripPostfix("data")
 	void glGetBooleanIndexedvEXT(@GLenum int value, @GLuint int index, @OutParameter @Check("4") @GLboolean ByteBuffer data);
 
+	@Alternate("glGetBooleanIndexedvEXT")
+	@GLreturn("data")
+	@StripPostfix("data")
+	void glGetBooleanIndexedvEXT2(@GLenum int value, @GLuint int index, @OutParameter @GLboolean ByteBuffer data);
+
 	@StripPostfix("data")
 	void glGetIntegerIndexedvEXT(@GLenum int value, @GLuint int index, @OutParameter @Check("4") IntBuffer data);
+
+	@Alternate("glGetIntegerIndexedvEXT")
+	@GLreturn("data")
+	@StripPostfix("data")
+	void glGetIntegerIndexedvEXT2(@GLenum int value, @GLuint int index, @OutParameter IntBuffer data);
 
     void glEnableIndexedEXT(@GLenum int target, @GLuint int index);
 

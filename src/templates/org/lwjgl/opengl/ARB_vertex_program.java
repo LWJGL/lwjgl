@@ -56,9 +56,7 @@ public interface ARB_vertex_program extends ARB_program {
 	int GL_VERTEX_PROGRAM_TWO_SIDE_ARB = 0x8643;
 	int GL_COLOR_SUM_ARB = 0x8458;
 
-	/**
-	 * Accepted by the &lt;pname&gt; parameter of GetVertexAttrib[dfi]vARB:
-	 */
+	/** Accepted by the &lt;pname&gt; parameter of GetVertexAttrib[dfi]vARB: */
 	int GL_VERTEX_ATTRIB_ARRAY_ENABLED_ARB = 0x8622;
 	int GL_VERTEX_ATTRIB_ARRAY_SIZE_ARB = 0x8623;
 	int GL_VERTEX_ATTRIB_ARRAY_STRIDE_ARB = 0x8624;
@@ -66,14 +64,10 @@ public interface ARB_vertex_program extends ARB_program {
 	int GL_VERTEX_ATTRIB_ARRAY_NORMALIZED_ARB = 0x886A;
 	int GL_CURRENT_VERTEX_ATTRIB_ARB = 0x8626;
 
-	/**
-	 * Accepted by the &lt;pname&gt; parameter of GetVertexAttribPointervARB:
-	 */
+	/** Accepted by the &lt;pname&gt; parameter of GetVertexAttribPointervARB: */
 	int GL_VERTEX_ATTRIB_ARRAY_POINTER_ARB = 0x8645;
 
-	/**
-	 * Accepted by the &lt;pname&gt; parameter of GetProgramivARB:
-	 */
+	/** Accepted by the &lt;pname&gt; parameter of GetProgramivARB: */
 	int GL_PROGRAM_ADDRESS_REGISTERS_ARB = 0x88B0;
 	int GL_MAX_PROGRAM_ADDRESS_REGISTERS_ARB = 0x88B1;
 	int GL_PROGRAM_NATIVE_ADDRESS_REGISTERS_ARB = 0x88B2;
@@ -112,7 +106,7 @@ public interface ARB_vertex_program extends ARB_program {
 	void glVertexAttrib4NubARB(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
 
 	void glVertexAttribPointerARB(@GLuint int index, int size, @AutoType("buffer") @GLenum int type, boolean normalized, @GLsizei int stride,
-                                      @CachedReference(index="index",name="glVertexAttribPointer_buffer")
+	                              @CachedReference(index = "index", name = "glVertexAttribPointer_buffer")
 	                              @BufferObject(BufferKind.ArrayVBO)
 	                              @Check
 	                              @Const

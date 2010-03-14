@@ -105,17 +105,19 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 			}
 			if (typemap_classname == null)
 				throw new RuntimeException("No TypeMap class name specified with -Atypemap=<class-name>");
+
+			TypeDeclaration lastFile = null;
 			try {
 				TypeMap type_map = (TypeMap)(Class.forName(typemap_classname).newInstance());
 				for (TypeDeclaration typedecl : env.getSpecifiedTypeDeclarations()) {
+					lastFile = typedecl;
 					typedecl.accept(getDeclarationScanner(new GeneratorVisitor(env, type_map, generate_error_checks, context_specific), NO_OP));
 				}
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			} catch (InstantiationException e) {
-				throw new RuntimeException(e);
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(e);
+			} catch (Exception e) {
+				if ( lastFile == null )
+					throw new RuntimeException(e);
+				else
+					throw new RuntimeException("\n-- Failed to process template: " + lastFile.getQualifiedName() + " --", e);
 			}
 		}
 	}

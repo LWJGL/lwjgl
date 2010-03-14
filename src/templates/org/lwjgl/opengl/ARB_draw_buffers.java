@@ -60,4 +60,7 @@ public interface ARB_draw_buffers {
 	int GL_DRAW_BUFFER15_ARB = 0x8834;
 
 	void glDrawBuffersARB(@AutoSize("buffers") @GLsizei int size, @Const @GLenum IntBuffer buffers);
+
+	@Alternate("glDrawBuffersARB")
+	void glDrawBuffersARB(@Constant("1") @GLsizei int size, @Constant(value = "APIUtils.getBufferInt().put(0, buffer), 0", keepParam = true) int buffer);
 }

@@ -103,4 +103,9 @@ public interface NV_vertex_buffer_unified_memory {
 	@StripPostfix("result")
 	void glGetIntegerui64i_vNV(@GLenum int value, @GLuint int index, @OutParameter @Check("1") @GLuint64EXT LongBuffer result);
 
+	@Alternate("glGetIntegerui64i_vNV")
+	@GLreturn("result")
+	@StripPostfix("result")
+	void glGetIntegerui64i_vNV2(@GLenum int value, @GLuint int index, @OutParameter @GLuint64EXT LongBuffer result);
+
 }

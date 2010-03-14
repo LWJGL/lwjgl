@@ -78,8 +78,18 @@ public interface NV_explicit_multisample {
 	@StripPostfix(value = "data", extension = "EXT")
 	void glGetBooleanIndexedvEXT(@GLenum int pname, @GLuint int index, @OutParameter @Check("16") @GLboolean ByteBuffer data);
 
+	@Alternate("glGetBooleanIndexedvEXT")
+	@GLreturn("data")
+	@StripPostfix(value = "data", extension = "EXT")
+	void glGetBooleanIndexedvEXT2(@GLenum int pname, @GLuint int index, @OutParameter @GLboolean ByteBuffer data);
+
 	@StripPostfix(value = "data", extension = "EXT")
 	void glGetIntegerIndexedvEXT(@GLenum int pname, @GLuint int index, @OutParameter @Check("16") IntBuffer data);
+
+	@Alternate("glGetIntegerIndexedvEXT")
+	@GLreturn("data")
+	@StripPostfix(value = "data", extension = "EXT")
+	void glGetIntegerIndexedvEXT2(@GLenum int pname, @GLuint int index, @OutParameter IntBuffer data);
 
 	@StripPostfix("val")
 	void glGetMultisamplefvNV(@GLenum int pname, @GLuint int index, @OutParameter @Check("2") FloatBuffer val);

@@ -56,7 +56,17 @@ public interface ARB_timer_query {
 	@StripPostfix("params")
 	void glGetQueryObjecti64v(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") @GLint64 LongBuffer params);
 
+	@Alternate("glGetQueryObjecti64v")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetQueryObjecti64v2(@GLuint int id, @GLenum int pname, @OutParameter @GLint64 LongBuffer params);
+
 	@StripPostfix("params")
 	void glGetQueryObjectui64v(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") @GLuint64 LongBuffer params);
+
+	@Alternate("glGetQueryObjectui64v")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetQueryObjectui64v2(@GLuint int id, @GLenum int pname, @OutParameter @GLuint64 LongBuffer params);
 
 }

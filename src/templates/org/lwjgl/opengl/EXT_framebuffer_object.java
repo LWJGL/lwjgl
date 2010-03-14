@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
 
-import java.nio.*;
+import java.nio.IntBuffer;
 
 public interface EXT_framebuffer_object {
 
@@ -60,9 +60,7 @@ public interface EXT_framebuffer_object {
 	int GL_STENCIL_INDEX8_EXT = 0x8D48;
 	int GL_STENCIL_INDEX16_EXT = 0x8D49;
 
-	/**
-	 * Accepted by the &lt;pname&gt; parameter of GetRenderbufferParameterivEXT:
-	 */
+	/** Accepted by the &lt;pname&gt; parameter of GetRenderbufferParameterivEXT: */
 	int GL_RENDERBUFFER_WIDTH_EXT = 0x8D42;
 	int GL_RENDERBUFFER_HEIGHT_EXT = 0x8D43;
 	int GL_RENDERBUFFER_INTERNAL_FORMAT_EXT = 0x8D44;
@@ -107,9 +105,7 @@ public interface EXT_framebuffer_object {
 	int GL_DEPTH_ATTACHMENT_EXT = 0x8D00;
 	int GL_STENCIL_ATTACHMENT_EXT = 0x8D20;
 
-	/**
-	 * Returned by CheckFramebufferStatusEXT():
-	 */
+	/** Returned by CheckFramebufferStatusEXT(): */
 	int GL_FRAMEBUFFER_COMPLETE_EXT = 0x8CD5;
 	int GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT = 0x8CD6;
 	int GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT = 0x8CD7;
@@ -119,17 +115,13 @@ public interface EXT_framebuffer_object {
 	int GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT = 0x8CDC;
 	int GL_FRAMEBUFFER_UNSUPPORTED_EXT = 0x8CDD;
 
-	/**
-	 * Accepted by GetIntegerv():
-	 */
+	/** Accepted by GetIntegerv(): */
 	int GL_FRAMEBUFFER_BINDING_EXT = 0x8CA6;
 	int GL_RENDERBUFFER_BINDING_EXT = 0x8CA7;
 	int GL_MAX_COLOR_ATTACHMENTS_EXT = 0x8CDF;
 	int GL_MAX_RENDERBUFFER_SIZE_EXT = 0x84E8;
 
-	/**
-	 * Returned by GetError():
-	 */
+	/** Returned by GetError(): */
 	int GL_INVALID_FRAMEBUFFER_OPERATION_EXT = 0x0506;
 
 	boolean glIsRenderbufferEXT(@GLuint int renderbuffer);
@@ -138,12 +130,24 @@ public interface EXT_framebuffer_object {
 
 	void glDeleteRenderbuffersEXT(@AutoSize("renderbuffers") int n, @Const @GLuint IntBuffer renderbuffers);
 
+	@Alternate("glDeleteRenderbuffersEXT")
+	void glDeleteRenderbuffersEXT(@Constant("1") int n, @Constant(value = "APIUtils.getBufferInt().put(0, renderbuffer), 0", keepParam = true) int renderbuffer);
+
 	void glGenRenderbuffersEXT(@AutoSize("renderbuffers") int n, @OutParameter @GLuint IntBuffer renderbuffers);
+
+	@Alternate("glGenRenderbuffersEXT")
+	@GLreturn("renderbuffers")
+	void glGenRenderbuffersEXT2(@Constant("1") int n, @OutParameter @GLuint IntBuffer renderbuffers);
 
 	void glRenderbufferStorageEXT(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLsizei int height);
 
 	@StripPostfix("params")
 	void glGetRenderbufferParameterivEXT(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
+
+	@Alternate("glGetRenderbufferParameterivEXT")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetRenderbufferParameterivEXT2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	boolean glIsFramebufferEXT(@GLuint int framebuffer);
 
@@ -151,7 +155,14 @@ public interface EXT_framebuffer_object {
 
 	void glDeleteFramebuffersEXT(@AutoSize("framebuffers") int n, @Const @GLuint IntBuffer framebuffers);
 
+	@Alternate("glDeleteFramebuffersEXT")
+	void glDeleteFramebuffersEXT(@Constant("1") int n, @Constant(value = "APIUtils.getBufferInt().put(0, framebuffer), 0", keepParam = true) int framebuffer);
+
 	void glGenFramebuffersEXT(@AutoSize("framebuffers") int n, @OutParameter @GLuint IntBuffer framebuffers);
+
+	@Alternate("glGenFramebuffersEXT")
+	@GLreturn("framebuffers")
+	void glGenFramebuffersEXT2(@Constant("1") int n, @OutParameter @GLuint IntBuffer framebuffers);
 
 	@GLenum
 	int glCheckFramebufferStatusEXT(@GLenum int target);
@@ -166,6 +177,11 @@ public interface EXT_framebuffer_object {
 
 	@StripPostfix("params")
 	void glGetFramebufferAttachmentParameterivEXT(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
+
+	@Alternate("glGetFramebufferAttachmentParameterivEXT")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetFramebufferAttachmentParameterivEXT2(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGenerateMipmapEXT(@GLenum int target);
 }

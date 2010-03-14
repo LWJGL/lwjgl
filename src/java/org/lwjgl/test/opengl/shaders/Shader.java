@@ -37,21 +37,18 @@
  */
 package org.lwjgl.test.opengl.shaders;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.ARBProgram;
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.GL11;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+
 abstract class Shader {
 
-	private static final IntBuffer int_buffer = BufferUtils.createIntBuffer(16);
-	protected static IntBuffer programBuffer = BufferUtils.createIntBuffer(1);
 	protected static ByteBuffer fileBuffer = BufferUtils.createByteBuffer(1024 * 10);
 
 	protected Shader() {
@@ -60,18 +57,6 @@ abstract class Shader {
 	abstract void render();
 
 	abstract void cleanup();
-
-	/**
-	 * Obtain a GL integer value from the driver
-	 *
-	 * @param gl_enum The GL value you want
-	 *
-	 * @return the integer value
-	 */
-	public static int glGetInteger(int gl_enum) {
-		GL11.glGetInteger(gl_enum, int_buffer);
-		return int_buffer.get(0);
-	}
 
 	protected static String getShaderText(String file) {
 		String shader = null;
@@ -107,7 +92,7 @@ abstract class Shader {
 
 	protected static void checkProgramError(String programFile, String programSource) {
 		if ( GL11.glGetError() == GL11.GL_INVALID_OPERATION ) {
-			final int errorPos = glGetInteger(ARBProgram.GL_PROGRAM_ERROR_POSITION_ARB);
+			final int errorPos = GL11.glGetInteger(ARBProgram.GL_PROGRAM_ERROR_POSITION_ARB);
 			int lineStart = 0;
 			int lineEnd = -1;
 			for ( int i = 0; i < programSource.length(); i++ ) {
@@ -140,9 +125,7 @@ abstract class Shader {
 	}
 
 	protected static void printShaderObjectInfoLog(String file, int ID) {
-		ARBShaderObjects.glGetObjectParameterARB(ID, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB, programBuffer);
-
-		final int logLength = programBuffer.get(0);
+		final int logLength = ARBShaderObjects.glGetObjectParameteriARB(ID, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB);
 		if ( logLength <= 1 )
 			return;
 
@@ -153,9 +136,7 @@ abstract class Shader {
 	}
 
 	protected static void printShaderProgramInfoLog(int ID) {
-		ARBShaderObjects.glGetObjectParameterARB(ID, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB, programBuffer);
-
-		final int logLength = programBuffer.get(0);
+		final int logLength = ARBShaderObjects.glGetObjectParameteriARB(ID, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB);
 		if ( logLength <= 1 )
 			return;
 

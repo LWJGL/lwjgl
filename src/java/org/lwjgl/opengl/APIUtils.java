@@ -33,45 +33,41 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.BufferUtils;
 
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.IntBuffer;
+import java.nio.*;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 
 /** @author spasi */
-final class StringUtils {
+final class APIUtils {
 
 	private static final int INITIAL_BUFFER_SIZE = 256;
 	private static final int INITIAL_LENGTHS_SIZE = 4;
 
+	private static final int BUFFERS_SIZE = 32;
+
 	private static final ThreadLocal arrayTL = new ThreadLocal() {
-		protected Object initialValue() {
-			return new char[INITIAL_BUFFER_SIZE];
-		}
+		protected Object initialValue() { return new char[INITIAL_BUFFER_SIZE]; }
 	};
 
 	private static final ThreadLocal bufferTL = new ThreadLocal() {
-		protected Object initialValue() {
-			return BufferUtils.createByteBuffer(INITIAL_BUFFER_SIZE);
-		}
+		protected Object initialValue() { return BufferUtils.createByteBuffer(INITIAL_BUFFER_SIZE); }
 	};
 
 	private static final ThreadLocal lengthsTL = new ThreadLocal() {
-		protected Object initialValue() {
-			return BufferUtils.createIntBuffer(INITIAL_LENGTHS_SIZE);
-		}
+		protected Object initialValue() { return BufferUtils.createIntBuffer(INITIAL_LENGTHS_SIZE); }
 	};
 
 	private static final ThreadLocal infiniteSeqTL = new ThreadLocal() {
-		protected Object initialValue() {
-			return new InfiniteCharSequence();
-		}
+		protected Object initialValue() { return new InfiniteCharSequence(); }
+	};
+
+	private static final ThreadLocal buffersTL = new ThreadLocal() {
+		protected Object initialValue() { return new Buffers(); }
 	};
 
 	private static CharsetEncoder encoder = Charset.forName("US-ASCII").newEncoder();
 
-	private StringUtils() {
+	private APIUtils() {
 	}
 
 	private static char[] getArray(final int size) {
@@ -89,7 +85,7 @@ final class StringUtils {
 		return array;
 	}
 
-	static ByteBuffer getBuffer(final int size) {
+	static ByteBuffer getBufferByte(final int size) {
 		ByteBuffer buffer = (ByteBuffer)bufferTL.get();
 
 		if ( buffer.capacity() < size ) {
@@ -99,13 +95,13 @@ final class StringUtils {
 
 			buffer = BufferUtils.createByteBuffer(size);
 			bufferTL.set(buffer);
-		}
+		} else
+			buffer.clear();
 
-		buffer.clear();
 		return buffer;
 	}
 
-	private static ByteBuffer getBufferOffset(final int size) {
+	private static ByteBuffer getBufferByteOffset(final int size) {
 		ByteBuffer buffer = (ByteBuffer)bufferTL.get();
 
 		if ( buffer.capacity() < size ) {
@@ -124,6 +120,20 @@ final class StringUtils {
 		return buffer;
 	}
 
+	static ShortBuffer getBufferShort() { return ((Buffers)buffersTL.get()).shorts; }
+
+	static IntBuffer getBufferInt() { return ((Buffers)buffersTL.get()).ints; }
+
+	static LongBuffer getBufferLong() { return ((Buffers)buffersTL.get()).longs; }
+
+	static FloatBuffer getBufferFloat() { return ((Buffers)buffersTL.get()).floats; }
+
+	static DoubleBuffer getBufferDouble() { return ((Buffers)buffersTL.get()).doubles; }
+
+	static IntBuffer getLengths() {
+		return getLengths(1);
+	}
+
 	static IntBuffer getLengths(final int size) {
 		IntBuffer lengths = (IntBuffer)lengthsTL.get();
 
@@ -134,14 +144,20 @@ final class StringUtils {
 
 			lengths = BufferUtils.createIntBuffer(size);
 			lengthsTL.set(lengths);
-		}
+		} else
+			lengths.clear();
 
-		lengths.clear();
 		return lengths;
 	}
 
-	static InfiniteCharSequence getInfiniteSeq() {
+	private static InfiniteCharSequence getInfiniteSeq() {
 		return (InfiniteCharSequence)infiniteSeqTL.get();
+	}
+
+	private static void encode(final ByteBuffer buffer, final CharSequence string) {
+		final InfiniteCharSequence infiniteSeq = getInfiniteSeq();
+		infiniteSeq.setString(string);
+		encoder.encode(infiniteSeq.buffer, buffer, true);
 	}
 
 	/**
@@ -161,12 +177,6 @@ final class StringUtils {
 		return new String(charArray, 0, length);
 	}
 
-	private static void encode(final ByteBuffer buffer, final CharSequence string) {
-		final InfiniteCharSequence infiniteSeq = getInfiniteSeq();
-		infiniteSeq.setString(string);
-		encoder.encode(infiniteSeq.buffer, buffer, true);
-	}
-
 	/**
 	 * Returns a buffer containing the specified string as bytes.
 	 *
@@ -175,7 +185,7 @@ final class StringUtils {
 	 * @return the String as a ByteBuffer
 	 */
 	static ByteBuffer getBuffer(final CharSequence string) {
-		final ByteBuffer buffer = getBuffer(string.length());
+		final ByteBuffer buffer = getBufferByte(string.length());
 
 		encode(buffer, string);
 
@@ -190,8 +200,8 @@ final class StringUtils {
 	 *
 	 * @return the String as a ByteBuffer
 	 */
-	static ByteBuffer getBufferOffset(final CharSequence string, final int offset) {
-		final ByteBuffer buffer = getBufferOffset(offset + string.length());
+	static ByteBuffer getBuffer(final CharSequence string, final int offset) {
+		final ByteBuffer buffer = getBufferByteOffset(offset + string.length());
 
 		encode(buffer, string);
 
@@ -207,7 +217,7 @@ final class StringUtils {
 	 * @return the String as a ByteBuffer
 	 */
 	static ByteBuffer getBufferNT(final CharSequence string) {
-		final ByteBuffer buffer = getBuffer(string.length() + 1);
+		final ByteBuffer buffer = getBufferByte(string.length() + 1);
 
 		encode(buffer, string);
 
@@ -216,7 +226,7 @@ final class StringUtils {
 		return buffer;
 	}
 
-	private static int getTotalLength(final CharSequence[] strings) {
+	static int getTotalLength(final CharSequence[] strings) {
 		int length = 0;
 		for ( int i = 0; i < strings.length; i++ )
 			length += strings[i].length();
@@ -232,7 +242,7 @@ final class StringUtils {
 	 * @return the Strings as a ByteBuffer
 	 */
 	static ByteBuffer getBuffer(final CharSequence[] strings) {
-		final ByteBuffer buffer = getBuffer(getTotalLength(strings));
+		final ByteBuffer buffer = getBufferByte(getTotalLength(strings));
 
 		final InfiniteCharSequence infiniteSeq = getInfiniteSeq();
 		for ( int i = 0; i < strings.length; i++ ) {
@@ -253,7 +263,7 @@ final class StringUtils {
 	 * @return the Strings as a ByteBuffer
 	 */
 	static ByteBuffer getBufferNT(final CharSequence[] strings) {
-		final ByteBuffer buffer = getBuffer(getTotalLength(strings) + strings.length);
+		final ByteBuffer buffer = getBufferByte(getTotalLength(strings) + strings.length);
 
 		final InfiniteCharSequence infiniteSeq = getInfiniteSeq();
 		for ( int i = 0; i < strings.length; i++ ) {
@@ -319,6 +329,26 @@ final class StringUtils {
 		public CharSequence subSequence(final int start, final int end) {
 			return string.subSequence(start, end);
 		}
+	}
+
+	private static class Buffers {
+
+		final ShortBuffer shorts;
+		final IntBuffer ints;
+		final LongBuffer longs;
+
+		final FloatBuffer floats;
+		final DoubleBuffer doubles;
+
+		Buffers() {
+			shorts = BufferUtils.createShortBuffer(BUFFERS_SIZE);
+			ints = BufferUtils.createIntBuffer(BUFFERS_SIZE);
+			longs = BufferUtils.createLongBuffer(BUFFERS_SIZE);
+
+			floats = BufferUtils.createFloatBuffer(BUFFERS_SIZE);
+			doubles = BufferUtils.createDoubleBuffer(BUFFERS_SIZE);
+		}
+
 	}
 
 }

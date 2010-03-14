@@ -33,14 +33,14 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
 
-import java.nio.*;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 @Extension(postfix = "ARB", isFinal = false)
 public interface ARB_buffer_object {
 
-	/**
-	 * Accepted by the &lt;usage&gt; parameter of BufferDataARB:
-	 */
+	/** Accepted by the &lt;usage&gt; parameter of BufferDataARB: */
 	int GL_STREAM_DRAW_ARB = 0x88E0;
 	int GL_STREAM_READ_ARB = 0x88E1;
 	int GL_STREAM_COPY_ARB = 0x88E2;
@@ -51,16 +51,12 @@ public interface ARB_buffer_object {
 	int GL_DYNAMIC_READ_ARB = 0x88E9;
 	int GL_DYNAMIC_COPY_ARB = 0x88EA;
 
-	/**
-	 * Accepted by the &lt;access&gt; parameter of MapBufferARB:
-	 */
+	/** Accepted by the &lt;access&gt; parameter of MapBufferARB: */
 	int GL_READ_ONLY_ARB = 0x88B8;
 	int GL_WRITE_ONLY_ARB = 0x88B9;
 	int GL_READ_WRITE_ARB = 0x88BA;
 
-	/**
-	 * Accepted by the &lt;pname&gt; parameter of GetBufferParameterivARB:
-	 */
+	/** Accepted by the &lt;pname&gt; parameter of GetBufferParameterivARB: */
 	int GL_BUFFER_SIZE_ARB = 0x8764;
 	int GL_BUFFER_USAGE_ARB = 0x8765;
 	int GL_BUFFER_ACCESS_ARB = 0x88BB;
@@ -72,7 +68,14 @@ public interface ARB_buffer_object {
 
 	void glDeleteBuffersARB(@AutoSize("buffers") @GLsizei int n, @Const @GLuint IntBuffer buffers);
 
-	void glGenBuffersARB(@AutoSize("buffers") int n, @OutParameter @GLuint IntBuffer buffers);
+	@Alternate("glDeleteBuffersARB")
+	void glDeleteBuffersARB(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, buffer), 0", keepParam = true) int buffer);
+
+	void glGenBuffersARB(@AutoSize("buffers") @GLsizei int n, @OutParameter @GLuint IntBuffer buffers);
+
+	@Alternate("glGenBuffersARB")
+	@GLreturn("buffers")
+	void glGenBuffersARB2(@Constant("1") @GLsizei int n, @OutParameter @GLuint IntBuffer buffers);
 
 	boolean glIsBufferARB(@GLuint int buffer);
 
@@ -121,8 +124,8 @@ public interface ARB_buffer_object {
 	 * Security warning: The length argument should match the buffer object size. Reading from or writing to outside
 	 * the memory region that corresponds to the mapped buffer object will cause native crashes.
 	 *
-	 * @param length        the length of the mapped memory in bytes.
-	 * @param old_buffer    A ByteBuffer. If this argument points to the same address and has the same capacity as the new mapping, it will be returned and no new buffer will be created.
+	 * @param length     the length of the mapped memory in bytes.
+	 * @param old_buffer A ByteBuffer. If this argument points to the same address and has the same capacity as the new mapping, it will be returned and no new buffer will be created.
 	 *
 	 * @return A ByteBuffer representing the mapped buffer memory.
 	 */
@@ -135,6 +138,11 @@ public interface ARB_buffer_object {
 
 	@StripPostfix("params")
 	void glGetBufferParameterivARB(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
+
+	@Alternate("glGetBufferParameterivARB")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetBufferParameterivARB2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("pointer")
 	@AutoResultSize("GLChecks.getBufferObjectSizeARB(caps, target)")

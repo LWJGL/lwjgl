@@ -54,4 +54,9 @@ public interface ARB_transform_feedback3 {
 	@StripPostfix("params")
 	void glGetQueryIndexediv(@GLenum int target, @GLuint int index, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
+	@Alternate("glGetQueryIndexediv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetQueryIndexediv2(@GLenum int target, @GLuint int index, @GLenum int pname, @OutParameter IntBuffer params);
+
 }

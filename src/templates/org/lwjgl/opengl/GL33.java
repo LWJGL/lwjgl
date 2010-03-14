@@ -93,7 +93,14 @@ public interface GL33 {
 
 	void glGenSamplers(@AutoSize("samplers") @GLsizei int count, @OutParameter @GLuint IntBuffer samplers);
 
+	@Alternate("glGenSamplers")
+	@GLreturn("samplers")
+	void glGenSamplers2(@Constant("1") @GLsizei int count, @OutParameter @GLuint IntBuffer samplers);
+
 	void glDeleteSamplers(@AutoSize("samplers") @GLsizei int count, @Const @GLuint IntBuffer samplers);
+
+	@Alternate("glDeleteSamplers")
+	void glDeleteSamplers(@Constant("1") @GLsizei int count, @Constant(value = "APIUtils.getBufferInt().put(0, sampler), 0", keepParam = true) int sampler);
 
 	boolean glIsSampler(@GLuint int sampler);
 
@@ -118,14 +125,34 @@ public interface GL33 {
 	@StripPostfix("params")
 	void glGetSamplerParameteriv(@GLuint int sampler, @GLenum int pname, @Check("4") @OutParameter IntBuffer params);
 
+	@Alternate("glGetSamplerParameteriv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetSamplerParameteriv2(@GLuint int sampler, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@StripPostfix("params")
 	void glGetSamplerParameterfv(@GLuint int sampler, @GLenum int pname, @Check("4") @OutParameter FloatBuffer params);
+
+	@Alternate("glGetSamplerParameterfv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetSamplerParameterfv2(@GLuint int sampler, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@StripPostfix("params")
 	void glGetSamplerParameterIiv(@GLuint int sampler, @GLenum int pname, @Check("4") @OutParameter IntBuffer params);
 
+	@Alternate("glGetSamplerParameterIiv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetSamplerParameterIiv2(@GLuint int sampler, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@StripPostfix("params")
-	void glGetSamplerParameterIfv(@GLuint int sampler, @GLenum int pname, @Check("4") @OutParameter FloatBuffer params);
+	void glGetSamplerParameterIuiv(@GLuint int sampler, @GLenum int pname, @Check("4") @OutParameter IntBuffer params);
+
+	@Alternate("glGetSamplerParameterIuiv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetSamplerParameterIuiv2(@GLuint int sampler, @GLenum int pname, @OutParameter IntBuffer params);
 
 	// -------------------------------------------------------------------
 	// ----------------------[ ARB_texture_rgb10_a2ui ]----------------------
@@ -180,8 +207,18 @@ public interface GL33 {
 	@StripPostfix("params")
 	void glGetQueryObjecti64v(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") @GLint64 LongBuffer params);
 
+	@Alternate("glGetQueryObjecti64v")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetQueryObjecti64v2(@GLuint int id, @GLenum int pname, @OutParameter @GLint64 LongBuffer params);
+
 	@StripPostfix("params")
 	void glGetQueryObjectui64v(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") @GLuint64 LongBuffer params);
+
+	@Alternate("glGetQueryObjectui64v")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetQueryObjectui64v2(@GLuint int id, @GLenum int pname, @OutParameter @GLuint64 LongBuffer params);
 
 	// --------------------------------------------------------------------
 	// ----------------------[ ARB_instanced_arrays ]----------------------
