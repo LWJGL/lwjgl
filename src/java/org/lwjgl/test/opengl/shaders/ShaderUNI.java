@@ -38,23 +38,27 @@
 package org.lwjgl.test.opengl.shaders;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.ARBUniformBufferObject;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.*;
 
-import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 final class ShaderUNI extends Shader {
 
 	final String file;
-	final ByteBuffer source;
+	final String source;
 
 	final int shaderID;
 	final int programID;
 
-	final int uniformA;
-	final int uniformB;
+	final int bufferID;
+	final FloatBuffer buffer;
+
+	final int uniformA_index;
+	final int uniformA_offset;
+
+	final int uniformB_index;
+	final int uniformB_offset;
 
 	ShaderUNI(final String shaderFile) {
 		file = shaderFile;
@@ -81,38 +85,73 @@ final class ShaderUNI extends Shader {
 		if ( programBuffer.get(0) == GL11.GL_FALSE )
 			ShadersTest.kill("A linking error occured in a shader program.");
 
-		uniformA = getUniformLocation(programID, "uniformA");
-		uniformB = getUniformLocation(programID, "uniformB");
+		final String[] uniformNames = { "uniformA", "uniformB" };
 
-		String[] uniformNames = { "uniformA", "uniformB" };
-		IntBuffer tmp = BufferUtils.createIntBuffer(uniformNames.length);
+		IntBuffer indexes = BufferUtils.createIntBuffer(uniformNames.length);
+		IntBuffer params = BufferUtils.createIntBuffer(uniformNames.length);
+		IntBuffer getBuffer = BufferUtils.createIntBuffer(16);
+		IntBuffer buffers = BufferUtils.createIntBuffer(1);
 
-		ARBUniformBufferObject.glGetUniformIndices(programID, toByteBuffer(uniformNames), tmp);
+		// Get uniform block index and data size
+		final int blockIndex = ARBUniformBufferObject.glGetUniformBlockIndex(programID, "test");
+		ARBUniformBufferObject.glGetActiveUniformBlock(programID, blockIndex, ARBUniformBufferObject.GL_UNIFORM_BLOCK_DATA_SIZE, getBuffer);
+		final int blockSize = getBuffer.get(0);
 
-		System.out.println("uniformA index = " + tmp.get(0));
-		System.out.println("uniformB index = " + tmp.get(1));
-	}
+		System.out.println("blockSize = " + blockSize);
 
-	private static ByteBuffer toByteBuffer(String[] strs) {
-		int length = 0;
-		for ( int i = 0; i < strs.length; i++ )
-			length += strs[i].length() + 1; // +1 for the NULL-character
+		// Create uniform buffer object and allocate a ByteBuffer
+		GL15.glGenBuffers(buffers);
+		bufferID = buffers.get(0);
+		GL15.glBindBuffer(ARBUniformBufferObject.GL_UNIFORM_BUFFER, bufferID);
+		GL15.glBufferData(ARBUniformBufferObject.GL_UNIFORM_BUFFER, blockSize, GL15.GL_DYNAMIC_DRAW);
+		buffer = BufferUtils.createFloatBuffer(blockSize);
 
-		final ByteBuffer buff = BufferUtils.createByteBuffer(length);
-		for ( int i = 0; i < strs.length; i++ ) {
-			buff.put(strs[i].getBytes());
-			buff.put((byte)0); // The ending NULL-character
-		}
-		buff.flip();
+		// Attach UBO and associate uniform block to binding point 0
+		ARBUniformBufferObject.glBindBufferBase(ARBUniformBufferObject.GL_UNIFORM_BUFFER, 0, bufferID);
+		ARBUniformBufferObject.glUniformBlockBinding(programID, blockIndex, 0);
 
-		return buff;
+		// Get uniform information
+		ARBUniformBufferObject.glGetUniformIndices(programID, uniformNames, indexes);
+		uniformA_index = indexes.get(0);
+		uniformB_index = indexes.get(1);
+
+		ARBUniformBufferObject.glGetActiveUniforms(programID, indexes, ARBUniformBufferObject.GL_UNIFORM_OFFSET, params);
+		uniformA_offset = params.get(0);
+		uniformB_offset = params.get(1);
+
+		System.out.println("\nuniformA index = " + uniformA_index);
+		System.out.println("uniformB index = " + uniformB_index);
+
+		System.out.println("\nuniformA offset = " + uniformA_offset + " - should be 0 for std140");
+		System.out.println("uniformB offset = " + uniformB_offset + " - should be 16 for std140");
+
+		Util.checkGLError();
 	}
 
 	void render() {
 		GL20.glUseProgram(programID);
 
-		GL20.glUniform2f(uniformA, ShadersTest.getSin(), ShadersTest.getSpecularity() * 8.0f);
-		GL20.glUniform3f(uniformB, 0.0f, 0.7f, 0.0f);
+		//* -- std140 layout
+		// Uniform A
+		buffer.put(0, ShadersTest.getSin()).put(1, ShadersTest.getSpecularity() * 8.0f);
+		// Uniform B - str140 alignment at 16 bytes
+		buffer.put(4, 0.0f).put(5, 0.7f).put(6, 0.0f);
+
+		GL15.glBindBuffer(ARBUniformBufferObject.GL_UNIFORM_BUFFER, bufferID);
+		GL15.glBufferData(ARBUniformBufferObject.GL_UNIFORM_BUFFER, buffer, GL15.GL_DYNAMIC_DRAW);
+		//*/
+
+		/* -- non-std140 layout
+		// Uniform A
+		buffer.put(ShadersTest.getSin()).put(ShadersTest.getSpecularity() * 8.0f);
+		buffer.flip();
+		GL15.glBufferSubData(ARBUniformBufferObject.GL_UNIFORM_BUFFER, uniformA_offset, buffer);
+		// Uniform B
+		buffer.clear();
+		buffer.put(0.0f).put(0.7f).put(0.0f);
+		buffer.flip();
+		GL15.glBufferSubData(ARBUniformBufferObject.GL_UNIFORM_BUFFER, uniformB_offset, buffer);
+		//*/
 
 		ShadersTest.renderObject();
 

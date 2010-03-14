@@ -250,6 +250,12 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 
 	public void visitInterfaceDeclaration(InterfaceDeclaration d) {
 		try {
+			// Skip this class if the output exists and the input has not been modified.
+			File input = d.getPosition().file();
+			File output = new File(env.getOptions().get("-s") + '/' + d.getPackage().getQualifiedName().replace('.', '/'), Utils.getSimpleClassName(d) + ".java");
+			if ( output.exists() && input.lastModified() < output.lastModified() )
+				return;
+
 			if (d.getMethods().size() > 0 || d.getFields().size() > 0)
 				generateJavaSource(d);
 			if (d.getMethods().size() > 0)

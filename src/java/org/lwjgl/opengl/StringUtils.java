@@ -34,7 +34,10 @@ package org.lwjgl.opengl;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.IntBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 
 /** @author spasi */
 final class StringUtils {
@@ -59,6 +62,14 @@ final class StringUtils {
 			return BufferUtils.createIntBuffer(INITIAL_LENGTHS_SIZE);
 		}
 	};
+
+	private static final ThreadLocal infiniteSeqTL = new ThreadLocal() {
+		protected Object initialValue() {
+			return new InfiniteCharSequence();
+		}
+	};
+
+	private static CharsetEncoder encoder = Charset.forName("US-ASCII").newEncoder();
 
 	private StringUtils() {
 	}
@@ -129,14 +140,17 @@ final class StringUtils {
 		return lengths;
 	}
 
-	/*
+	static InfiniteCharSequence getInfiniteSeq() {
+		return (InfiniteCharSequence)infiniteSeqTL.get();
+	}
+
+	/**
 	 * Reads a byte string from the specified buffer.
 	 *
 	 * @param buffer
 	 *
 	 * @return the buffer as a String.
 	 */
-
 	static String getString(final ByteBuffer buffer) {
 		final int length = buffer.remaining();
 		final char[] charArray = getArray(length);
@@ -145,6 +159,12 @@ final class StringUtils {
 			charArray[i - buffer.position()] = (char)buffer.get(i);
 
 		return new String(charArray, 0, length);
+	}
+
+	private static void encode(final ByteBuffer buffer, final CharSequence string) {
+		final InfiniteCharSequence infiniteSeq = getInfiniteSeq();
+		infiniteSeq.setString(string);
+		encoder.encode(infiniteSeq.buffer, buffer, true);
 	}
 
 	/**
@@ -157,8 +177,7 @@ final class StringUtils {
 	static ByteBuffer getBuffer(final CharSequence string) {
 		final ByteBuffer buffer = getBuffer(string.length());
 
-		for ( int i = 0; i < string.length(); i++ )
-			buffer.put((byte)string.charAt(i));
+		encode(buffer, string);
 
 		buffer.flip();
 		return buffer;
@@ -174,8 +193,7 @@ final class StringUtils {
 	static ByteBuffer getBufferOffset(final CharSequence string, final int offset) {
 		final ByteBuffer buffer = getBufferOffset(offset + string.length());
 
-		for ( int i = 0; i < string.length(); i++ )
-			buffer.put((byte)string.charAt(i));
+		encode(buffer, string);
 
 		buffer.flip();
 		return buffer;
@@ -191,12 +209,19 @@ final class StringUtils {
 	static ByteBuffer getBufferNT(final CharSequence string) {
 		final ByteBuffer buffer = getBuffer(string.length() + 1);
 
-		for ( int i = 0; i < string.length(); i++ )
-			buffer.put((byte)string.charAt(i));
+		encode(buffer, string);
 
 		buffer.put((byte)0);
 		buffer.flip();
 		return buffer;
+	}
+
+	private static int getTotalLength(final CharSequence[] strings) {
+		int length = 0;
+		for ( int i = 0; i < strings.length; i++ )
+			length += strings[i].length();
+
+		return length;
 	}
 
 	/**
@@ -207,17 +232,14 @@ final class StringUtils {
 	 * @return the Strings as a ByteBuffer
 	 */
 	static ByteBuffer getBuffer(final CharSequence[] strings) {
-		int length = 0;
-		for ( int i = 0; i < strings.length; i++ )
-			length += strings[i].length();
+		final ByteBuffer buffer = getBuffer(getTotalLength(strings));
 
-		final ByteBuffer buffer = getBuffer(length);
-
+		final InfiniteCharSequence infiniteSeq = getInfiniteSeq();
 		for ( int i = 0; i < strings.length; i++ ) {
-			final CharSequence string = strings[i];
-			for ( int j = 0; j < string.length(); j++ )
-				buffer.put((byte)string.charAt(i));
+			infiniteSeq.setString(strings[i]);
+			encoder.encode(infiniteSeq.buffer, buffer, true);
 		}
+		infiniteSeq.clear();
 
 		buffer.flip();
 		return buffer;
@@ -231,18 +253,15 @@ final class StringUtils {
 	 * @return the Strings as a ByteBuffer
 	 */
 	static ByteBuffer getBufferNT(final CharSequence[] strings) {
-		int length = 0;
-		for ( int i = 0; i < strings.length; i++ )
-			length += strings[i].length() + 1;
+		final ByteBuffer buffer = getBuffer(getTotalLength(strings) + strings.length);
 
-		final ByteBuffer buffer = getBuffer(length);
-
+		final InfiniteCharSequence infiniteSeq = getInfiniteSeq();
 		for ( int i = 0; i < strings.length; i++ ) {
-			final CharSequence string = strings[i];
-			for ( int j = 0; j < string.length(); j++ )
-				buffer.put((byte)string.charAt(i));
+			infiniteSeq.setString(strings[i]);
+			encoder.encode(infiniteSeq.buffer, buffer, true);
 			buffer.put((byte)0);
 		}
+		infiniteSeq.clear();
 
 		buffer.flip();
 		return buffer;
@@ -263,6 +282,43 @@ final class StringUtils {
 
 		buffer.flip();
 		return buffer;
+	}
+
+	/**
+	 * A mutable CharSequence with very large initial length. We can wrap this in a re-usable CharBuffer for decoding.
+	 * We cannot subclass CharBuffer because of {@link CharBuffer#toString(int,int)}.
+	 */
+	private static class InfiniteCharSequence implements CharSequence {
+
+		final CharBuffer buffer;
+
+		CharSequence string;
+
+		InfiniteCharSequence() {
+			buffer = CharBuffer.wrap(this);
+		}
+
+		void setString(final CharSequence string) {
+			this.string = string;
+			this.buffer.position(0);
+			this.buffer.limit(string.length());
+		}
+
+		void clear() {
+			this.string = null;
+		}
+
+		public int length() {
+			return Integer.MAX_VALUE;
+		}
+
+		public char charAt(final int index) {
+			return string.charAt(index);
+		}
+
+		public CharSequence subSequence(final int start, final int end) {
+			return string.subSequence(start, end);
+		}
 	}
 
 }

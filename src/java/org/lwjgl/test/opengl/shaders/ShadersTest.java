@@ -141,35 +141,37 @@ public final class ShadersTest {
 			kill(e.getMessage());
 		}
 
+		final ContextCapabilities caps = GLContext.getCapabilities();
+
 		if ( "NONE".equalsIgnoreCase(args[0]) ) {
 			shader = null;
 		} else if ( "VP".equalsIgnoreCase(args[0]) ) {
-			if ( !GLContext.getCapabilities().GL_ARB_vertex_program )
+			if ( !caps.GL_ARB_vertex_program )
 				kill("The ARB_vertex_program extension is not supported.");
 
 			shader = new ShaderVP("shaderVP.vp");
 		} else if ( "FP".equalsIgnoreCase(args[0]) ) {
-			if ( !GLContext.getCapabilities().GL_ARB_vertex_program )
+			if ( !caps.GL_ARB_vertex_program )
 				kill("The ARB_vertex_program extension is not supported.");
-			if ( !GLContext.getCapabilities().GL_ARB_fragment_program )
+			if ( !caps.GL_ARB_fragment_program )
 				kill("The ARB_fragment_program extension is not supported.");
 
 			shader = new ShaderFP("shaderFP.vp", "shaderFP.fp");
 		} else if ( "VSH".equalsIgnoreCase(args[0]) ) {
-			if ( !GLContext.getCapabilities().GL_ARB_vertex_shader )
+			if ( !caps.GL_ARB_vertex_shader )
 				kill("The ARB_vertex_shader extension is not supported.");
 
 			shader = new ShaderVSH("shaderVSH.vsh");
 		} else if ( "FSH".equalsIgnoreCase(args[0]) ) {
-			if ( !GLContext.getCapabilities().GL_ARB_vertex_shader )
+			if ( !caps.GL_ARB_vertex_shader )
 				kill("The ARB_vertex_shader extension is not supported.");
-			if ( !GLContext.getCapabilities().GL_ARB_fragment_shader )
+			if ( !caps.GL_ARB_fragment_shader )
 				kill("The ARB_fragment_shader extension is not supported.");
 
 			shader = new ShaderFSH("shaderFSH.vsh", "shaderFSH.fsh");
 		} else if ("UNI".equalsIgnoreCase(args[0]) ) {
-			if ( !GLContext.getCapabilities().OpenGL31 )
-				kill("OpenGL version 3.1 is not supported.");
+			if ( !(caps.OpenGL31 || caps.GL_ARB_uniform_buffer_object) )
+				kill("Neither OpenGL version 3.1 nor ARB_uniform_buffer_object are supported.");
 
 			shader = new ShaderUNI("shaderUNI.vsh");
 		} else {
@@ -316,6 +318,7 @@ public final class ShadersTest {
 		System.out.println("vsh\t- Use ARB_vertex_shader (GLSL) only.");
 		System.out.println("fp\t- Use ARB_vertex_program + ARB_fragment_program (low-level).");
 		System.out.println("fsh\t- Use ARB_vertex_shader + ARB_fragment_shader (GLSL).");
+		System.out.println("uni\t- Use ARB_uniform_buffer_object to update shader uniforms (GLSL).");
 
 		cleanup();
 		System.exit(-1);

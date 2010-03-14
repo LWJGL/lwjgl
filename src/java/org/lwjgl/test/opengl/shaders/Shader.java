@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -73,8 +73,8 @@ abstract class Shader {
 		return int_buffer.get(0);
 	}
 
-	protected static ByteBuffer getShaderText(String file) {
-		ByteBuffer shader = null;
+	protected static String getShaderText(String file) {
+		String shader = null;
 
 		try {
 			ClassLoader loader = ShadersTest.class.getClassLoader();
@@ -93,10 +93,10 @@ abstract class Shader {
 
 			fileBuffer.flip();
 
-			shader = BufferUtils.createByteBuffer(fileBuffer.limit());
-			shader.put(fileBuffer);
+			byte[] array = new byte[fileBuffer.remaining()];
+			fileBuffer.get(array);
+			shader = new String(array);
 
-			shader.clear();
 			fileBuffer.clear();
 		} catch (IOException e) {
 			ShadersTest.kill("Failed to read the shader source file: " + file, e);
@@ -105,17 +105,13 @@ abstract class Shader {
 		return shader;
 	}
 
-	protected static void checkProgramError(String programFile, ByteBuffer programSource) {
+	protected static void checkProgramError(String programFile, String programSource) {
 		if ( GL11.glGetError() == GL11.GL_INVALID_OPERATION ) {
-			programSource.clear();
-			final byte[] bytes = new byte[programSource.capacity()];
-			programSource.get(bytes);
-
 			final int errorPos = glGetInteger(ARBProgram.GL_PROGRAM_ERROR_POSITION_ARB);
 			int lineStart = 0;
 			int lineEnd = -1;
-			for ( int i = 0; i < bytes.length; i++ ) {
-				if ( bytes[i] == '\n' ) {
+			for ( int i = 0; i < programSource.length(); i++ ) {
+				if ( programSource.charAt(i) == '\n' ) {
 					if ( i <= errorPos ) {
 						lineStart = i + 1;
 					} else {
@@ -126,28 +122,16 @@ abstract class Shader {
 			}
 
 			if ( lineEnd == -1 )
-				lineEnd = bytes.length;
+				lineEnd = programSource.length();
 
 			ShadersTest.kill("Low-level program error in file: " + programFile
-			                 + "\n\tError line: " + new String(bytes, lineStart, lineEnd - lineStart)
+			                 + "\n\tError line: " + programSource.substring(lineStart, lineEnd)
 			                 + "\n\tError message: " + GL11.glGetString(ARBProgram.GL_PROGRAM_ERROR_STRING_ARB));
 		}
 	}
 
 	protected static int getUniformLocation(int ID, String name) {
-		fileBuffer.clear();
-
-		int length = name.length();
-
-		char[] charArray = new char[length];
-		name.getChars(0, length, charArray, 0);
-
-		for ( int i = 0; i < length; i++ )
-			fileBuffer.put((byte)charArray[i]);
-		fileBuffer.put((byte)0); // Must be null-terminated.
-		fileBuffer.flip();
-
-		final int location = ARBShaderObjects.glGetUniformLocationARB(ID, fileBuffer);
+		final int location = ARBShaderObjects.glGetUniformLocationARB(ID, name);
 
 		if ( location == -1 )
 			throw new IllegalArgumentException("The uniform \"" + name + "\" does not exist in the Shader Program.");
@@ -159,42 +143,25 @@ abstract class Shader {
 		ARBShaderObjects.glGetObjectParameterARB(ID, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB, programBuffer);
 
 		final int logLength = programBuffer.get(0);
-
 		if ( logLength <= 1 )
 			return;
 
-		final ByteBuffer log = BufferUtils.createByteBuffer(logLength);
-
-		ARBShaderObjects.glGetInfoLogARB(ID, null, log);
-
-		final char[] charArray = new char[logLength];
-		for ( int i = 0; i < logLength; i++ )
-			charArray[i] = (char)log.get();
-
 		System.out.println("\nInfo Log of Shader Object: " + file);
 		System.out.println("--------------------------");
-		System.out.println(new String(charArray, 0, logLength));
+		System.out.println(ARBShaderObjects.glGetInfoLogARB(ID, logLength));
+
 	}
 
 	protected static void printShaderProgramInfoLog(int ID) {
 		ARBShaderObjects.glGetObjectParameterARB(ID, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB, programBuffer);
 
 		final int logLength = programBuffer.get(0);
-
 		if ( logLength <= 1 )
 			return;
 
-		final ByteBuffer log = BufferUtils.createByteBuffer(logLength);
-
-		ARBShaderObjects.glGetInfoLogARB(ID, null, log);
-
-		final char[] charArray = new char[logLength];
-		for ( int i = 0; i < logLength; i++ )
-			charArray[i] = (char)log.get();
-
 		System.out.println("\nShader Program Info Log: ");
 		System.out.println("--------------------------");
-		System.out.println(new String(charArray, 0, logLength));
+		System.out.println(ARBShaderObjects.glGetInfoLogARB(ID, logLength));
 	}
 
 }

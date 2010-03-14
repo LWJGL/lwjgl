@@ -161,7 +161,7 @@ public class NativeMethodStubsGenerator {
 			} else if (String.class.equals(java_result_type)) {
 				writer.print("NewStringNativeUnsigned(env, ");
 			} else if ( method.getAnnotation(GLpointer.class) != null ) {
-				writer.print("(jlong)");
+				writer.print("(intptr_t)");
 			}
 			writer.print(Utils.RESULT_VAR_NAME);
 			if (Buffer.class.isAssignableFrom(java_result_type)) {
@@ -192,8 +192,8 @@ public class NativeMethodStubsGenerator {
 	}
 
 	private static void generateCallParameter(PrintWriter writer, TypeMap type_map, ParameterDeclaration param) {
-		boolean is_indirect = param.getAnnotation(Indirect.class) != null || param.getAnnotation(StringList.class) != null;
-		if (is_indirect) {
+		boolean is_indirect = param.getAnnotation(Indirect.class) != null;
+		if (is_indirect || param.getAnnotation(StringList.class) != null) {
 			writer.print("(");
 			NativeTypeTranslator translator = new NativeTypeTranslator(type_map, param);
 			param.getType().accept(translator);
@@ -201,7 +201,7 @@ public class NativeMethodStubsGenerator {
 			writer.print("*)");
 		}
 		if ( param.getAnnotation(GLpointer.class) != null )
-			writer.print("(" + param.getAnnotation(GLpointer.class).value() + ")");
+			writer.print("(" + param.getAnnotation(GLpointer.class).value() + ")(intptr_t)");
 		if (param.getAnnotation(Result.class) != null || is_indirect)
 			writer.print("&");
 		if (param.getAnnotation(Result.class) != null) {

@@ -49,6 +49,7 @@
     <include name="org/lwjgl/test/opengl/shaders/shaderFSH.vsh" />
     <include name="org/lwjgl/test/opengl/shaders/shaderVP.vp" />
     <include name="org/lwjgl/test/opengl/shaders/shaderVSH.vsh" />
+    <include name="org/lwjgl/test/opengl/shaders/shaderUNI.vsh" />
 	</fileset>  
 
 	<!-- Files to include in the lwjgl_util.jar file -->

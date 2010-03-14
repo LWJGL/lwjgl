@@ -1,7 +1,10 @@
 #version 140
+#extension GL_ARB_uniform_buffer_object : enable
 
-uniform vec2 uniformA;
-uniform vec3 uniformB;
+layout(std140) uniform test {
+	vec2 uniformA;
+	vec3 uniformB;
+};
 
 void main(void) {
 	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
