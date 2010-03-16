@@ -73,6 +73,8 @@ public class JavaMethodsGenerator {
 		}
 		Alternate alt_annotation = method.getAnnotation(Alternate.class);
 		if ( alt_annotation == null || alt_annotation.nativeAlt() ) {
+			if ( alt_annotation != null && method.getSimpleName().equals(alt_annotation.value()) )
+				throw new RuntimeException("An alternate function with native code should have a different name than the main function.");
 			printJavaNativeStub(writer, method, Mode.NORMAL, generate_error_checks, context_specific);
 			if (Utils.hasMethodBufferObjectParameter(method)) {
 				printMethodWithMultiType(env, type_map, writer, interface_decl, method, TypeInfo.getDefaultTypeInfoMap(method), Mode.BUFFEROBJECT, generate_error_checks, context_specific);

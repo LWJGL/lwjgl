@@ -173,9 +173,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		writer.println("static " + Utils.getTypedefName(method) + " " + method.getSimpleName() + ";");
 	}
 
-	private void generateJavaSource(InterfaceDeclaration d) throws IOException {
-		validateMethods(d);
-		PrintWriter java_writer = env.getFiler().createTextFile(Filer.Location.SOURCE_TREE, d.getPackage().getQualifiedName(), new File(Utils.getSimpleClassName(d) + ".java"), null);
+	private void generateJavaSource(InterfaceDeclaration d, PrintWriter java_writer) throws IOException {
 		java_writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
 		java_writer.println();
 		java_writer.println("package " + d.getPackage().getQualifiedName() + ";");
@@ -252,23 +250,25 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		File input = d.getPosition().file();
 		File output = new File(env.getOptions().get("-s") + '/' + d.getPackage().getQualifiedName().replace('.', '/'), Utils.getSimpleClassName(d) + ".java");
 
+		PrintWriter java_writer = null;
+
 		try {
 			// Skip this class if the output exists and the input has not been modified.
 			if ( output.exists() && input.lastModified() < output.lastModified() )
 				return;
 
-			if (d.getMethods().size() > 0 || d.getFields().size() > 0)
-				generateJavaSource(d);
+			if (d.getMethods().size() > 0 || d.getFields().size() > 0) {
+				validateMethods(d);
+				java_writer = env.getFiler().createTextFile(Filer.Location.SOURCE_TREE, d.getPackage().getQualifiedName(), new File(Utils.getSimpleClassName(d) + ".java"), null);
+				generateJavaSource(d, java_writer);
+			}
 			if (d.getMethods().size() > 0)
 				generateNativeSource(d);
 		} catch (Exception e) {
-			try {
-				// If anything goes wrong mid-gen, delete output to allow regen next time we run.
-				if ( output.exists() )
-					output.delete();
-			} catch (Exception e2) {
-				// ignore
-			}
+			// If anything goes wrong mid-gen, delete output to allow regen next time we run.
+			if ( java_writer != null ) java_writer.close();
+			if ( output.exists() ) output.delete();
+
 			throw new RuntimeException(e);
 		}
 	}

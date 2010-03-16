@@ -153,6 +153,8 @@ final class ShaderUNI extends Shader {
 	}
 
 	void cleanup() {
+		GL15.glDeleteBuffers(bufferID);
+
 		GL20.glDetachShader(programID, shaderID);
 
 		GL20.glDeleteShader(shaderID);

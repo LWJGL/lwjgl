@@ -52,6 +52,8 @@ public class RegisterStubsGenerator {
 		Iterator<? extends MethodDeclaration> it = d.getMethods().iterator();
 		while (it.hasNext()) {
 			MethodDeclaration method = it.next();
+			if ( method.getAnnotation(Alternate.class) != null )
+				continue;
 			EnumSet<Platform> platforms;
 			PlatformDependent platform_annotation = method.getAnnotation(PlatformDependent.class);
 			if (platform_annotation != null)

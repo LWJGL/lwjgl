@@ -721,6 +721,10 @@ public interface AL10 {
 	@ALvoid
 	void alGenSources(@AutoSize("sources") @ALsizei int n, @OutParameter @ALuint IntBuffer sources);
 
+	@Alternate(value = "alGenSources", nativeAlt = true)
+	@ALvoid
+	void alGenSources2(@Constant("1") @ALsizei int n, @Result @ALuint int source);
+
 	/**
 	 * The application requests deletion of a number of Sources by DeleteSources.
 	 *
@@ -728,6 +732,10 @@ public interface AL10 {
 	 */
 	@ALvoid
 	void alDeleteSources(@AutoSize("sources") @ALsizei int n, @ALuint IntBuffer sources);
+
+	@Alternate(value = "alDeleteSources", nativeAlt = true)
+	@ALvoid
+	void alDeleteSources2(@Constant("1") @ALsizei int n, @Indirect @ALuint int source);
 
 	/**
 	 * The application can verify whether a source name is valid using the IsSource query.
@@ -945,6 +953,10 @@ public interface AL10 {
 	@ALvoid
 	void alGenBuffers(@AutoSize("buffers") @ALsizei int n, @OutParameter @ALuint IntBuffer buffers);
 
+	@Alternate(value = "alGenBuffers", nativeAlt = true)
+	@ALvoid
+	void alGenBuffers2(@Constant("1") @ALsizei int n, @Result @ALuint int buffer);
+
 	/**
 	 * <p>
 	 * The application requests deletion of a number of Buffers by calling DeleteBuffers.
@@ -963,6 +975,10 @@ public interface AL10 {
 	 */
 	@ALvoid
 	void alDeleteBuffers(@AutoSize("buffers") @ALsizei int n, @ALuint IntBuffer buffers);
+
+	@Alternate(value = "alDeleteBuffers", nativeAlt = true)
+	@ALvoid
+	void alDeleteBuffers2(@Constant("1") @ALsizei int n, @Indirect @ALuint int buffer);
 
 	/**
 	 * The application can verify whether a buffer Name is valid using the IsBuffer query.
@@ -1052,6 +1068,10 @@ public interface AL10 {
 	@ALvoid
 	void alSourceQueueBuffers(@ALuint int source, @AutoSize("buffers") @ALsizei int n, @ALuint IntBuffer buffers);
 
+	@Alternate(value = "alSourceQueueBuffers", nativeAlt = true)
+	@ALvoid
+	void alSourceQueueBuffers2(@ALuint int source, @Constant("1") @ALsizei int n, @Indirect @ALuint int buffer);
+
 	/**
 	 * <p>
 	 * Once a queue entry for a buffer has been appended to a queue and is pending
@@ -1073,6 +1093,10 @@ public interface AL10 {
 	 */
 	@ALvoid
 	void alSourceUnqueueBuffers(@ALuint int source, @AutoSize("buffers") @ALsizei int n, @OutParameter @ALuint IntBuffer buffers);
+
+	@Alternate(value = "alSourceUnqueueBuffers", nativeAlt = true)
+	@ALvoid
+	void alSourceUnqueueBuffers2(@ALuint int source, @Constant("1") @ALsizei int n, @Result @ALuint int buffer);
 
 	/**
 	 * <p>
