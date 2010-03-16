@@ -87,7 +87,7 @@ public class NativeMethodStubsGenerator {
 	}
 
 	private static void generateMethodStub(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, String interface_name, MethodDeclaration method, Mode mode, boolean generate_error_checks, boolean context_specific) {
-		if ( !context_specific )
+		if ( !context_specific && method.getAnnotation(Alternate.class) == null )
 			writer.print("static ");
 		else
 			writer.print("JNIEXPORT ");

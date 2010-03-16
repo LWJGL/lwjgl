@@ -58,12 +58,14 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 	private final TypeMap type_map;
 	private final boolean generate_error_checks;
 	private final boolean context_specific;
+	private final long generatorLM;
 
-	public GeneratorVisitor(AnnotationProcessorEnvironment env, TypeMap type_map, boolean generate_error_checks, boolean context_specific) {
+	public GeneratorVisitor(AnnotationProcessorEnvironment env, TypeMap type_map, boolean generate_error_checks, boolean context_specific, long generatorLM) {
 		this.env = env;
 		this.type_map = type_map;
 		this.generate_error_checks = generate_error_checks;
 		this.context_specific = context_specific;
+		this.generatorLM = generatorLM;
 	}
 
 	private void validateMethods(InterfaceDeclaration d) {
@@ -254,7 +256,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 
 		try {
 			// Skip this class if the output exists and the input has not been modified.
-			if ( output.exists() && input.lastModified() < output.lastModified() )
+			if ( output.exists() && Math.max(input.lastModified(), generatorLM) < output.lastModified() )
 				return;
 
 			if (d.getMethods().size() > 0 || d.getFields().size() > 0) {

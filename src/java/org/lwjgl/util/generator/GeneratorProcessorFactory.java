@@ -35,6 +35,8 @@ package org.lwjgl.util.generator;
 import com.sun.mirror.apt.*;
 import com.sun.mirror.declaration.*;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.util.Collection;
 import java.util.Set;
 import java.util.Map;
@@ -108,10 +110,11 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 
 			TypeDeclaration lastFile = null;
 			try {
+				long generatorLM = getGeneratorLastModified();
 				TypeMap type_map = (TypeMap)(Class.forName(typemap_classname).newInstance());
 				for (TypeDeclaration typedecl : env.getSpecifiedTypeDeclarations()) {
 					lastFile = typedecl;
-					typedecl.accept(getDeclarationScanner(new GeneratorVisitor(env, type_map, generate_error_checks, context_specific), NO_OP));
+					typedecl.accept(getDeclarationScanner(new GeneratorVisitor(env, type_map, generate_error_checks, context_specific, generatorLM), NO_OP));
 				}
 			} catch (Exception e) {
 				if ( lastFile == null )
@@ -119,6 +122,36 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 				else
 					throw new RuntimeException("\n-- Failed to process template: " + lastFile.getQualifiedName() + " --", e);
 			}
+		}
+
+		/**
+		 * Gets the time of the latest change on the Generator classes.
+		 *
+		 * @return time of the latest change
+		 */
+		private static long getGeneratorLastModified() {
+			final File pck = new File(System.getProperty("user.dir") + "/bin/org/lwjgl/util/generator");
+			if ( !pck.exists() || !pck.isDirectory() )
+				return Long.MAX_VALUE;
+
+			final File[] classes = pck.listFiles(new FileFilter() {
+				public boolean accept(final File pathname) {
+					return pathname.isFile() && pathname.getName().endsWith(".class");
+				}
+			});
+
+			if ( classes == null || classes.length == 0 )
+				return Long.MAX_VALUE;
+
+			long lastModified = 0;
+
+			for ( File clazz : classes ) {
+				long lm = clazz.lastModified();
+				if ( lastModified < lm )
+					lastModified = lm;
+			}
+
+			return lastModified;
 		}
 	}
 }
