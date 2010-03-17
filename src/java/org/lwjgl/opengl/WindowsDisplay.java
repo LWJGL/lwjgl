@@ -690,15 +690,16 @@ final class WindowsDisplay implements DisplayImplementation {
 		if (mouse != null) {
 			mouse.handleMouseButton((byte)button, (byte)state, millis);
 			
+			// need to capture?
+			if (captureMouse == -1 && button != -1 && state == 1) {
+				captureMouse = button;
+				nSetCapture(hwnd);
+			}
+			
 			// done with capture?
 			if(captureMouse != -1 && button == captureMouse && state == 0) {
-				nReleaseCapture();
 				captureMouse = -1;
-				
-				// force mouse update - else we will run into an issue where the
-				// button state is "stale" while captureMouse == -1 which causes
-				// handleMouseMoved to issue a setCapture.
-				Mouse.poll();
+				nReleaseCapture();
 			}
 		}
 		
@@ -714,16 +715,6 @@ final class WindowsDisplay implements DisplayImplementation {
 	private void handleMouseMoved(int x, int y, long millis) {
 		if (mouse != null) {
 			mouse.handleMouseMoved(x, y, millis, shouldGrab());
-			
-			// Moving - while mouse is down?
-			// need to capture
-			if(!Mouse.isGrabbed()) {
-				int button = firstMouseButtonDown();
-				if(captureMouse == -1 && button != -1) {
-					captureMouse = button;
-					nSetCapture(hwnd);
-				}
-			}
 		}
 	}
 	
