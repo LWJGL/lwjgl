@@ -227,6 +227,22 @@ public interface ARB_shader_objects {
 	                            @OutParameter @GLenum @Check("1") IntBuffer type,
 	                            @OutParameter @GLcharARB ByteBuffer name);
 
+	@Alternate(value = "glGetActiveUniformARB", javaAlt = true)
+	@GLreturn(value = "size")
+	void glGetActiveUniformSizeARB(@GLhandleARB int programObj, @GLuint int index, @Constant("0") @GLsizei int maxLength,
+	                               @OutParameter @GLsizei @Constant("null, 0") IntBuffer length,
+	                               @OutParameter IntBuffer size,
+	                               @OutParameter @GLenum @Constant("size, 1") IntBuffer type, // Reuse size buffer and ignore
+	                               @GLcharARB @Constant("APIUtils.getBufferByte(0), 0") ByteBuffer name);
+
+	@Alternate(value = "glGetActiveUniformARB", javaAlt = true)
+	@GLreturn(value = "type")
+	void glGetActiveUniformTypeARB(@GLhandleARB int programObj, @GLuint int index, @Constant("0") @GLsizei int maxLength,
+	                               @OutParameter @GLsizei @Constant("null, 0") IntBuffer length,
+	                               @OutParameter @Constant("type, 1") IntBuffer size, // Reuse type buffer and ignore
+	                               @OutParameter @GLenum IntBuffer type,
+	                               @GLcharARB @Constant("APIUtils.getBufferByte(0), 0") ByteBuffer name);
+
 	@StripPostfix("params")
 	void glGetUniformfvARB(@GLhandleARB int programObj, int location, @OutParameter @Check FloatBuffer params);
 

@@ -250,7 +250,7 @@ public interface GL31 {
 	@GLreturn("params")
 	@StripPostfix("params")
 	void glGetActiveUniformsiv(@GLuint int program, @Constant("1") @GLsizei int uniformCount,
-	                           @Constant(value = "APIUtils.getBufferInt().put(0, uniformIndex), 0", keepParam = true) int uniformIndex,
+	                           @Constant(value = "params.put(1, uniformIndex), 1", keepParam = true) int uniformIndex, // Reuse params buffer
 	                           @GLenum int pname,
 	                           @OutParameter @GLint IntBuffer params);
 

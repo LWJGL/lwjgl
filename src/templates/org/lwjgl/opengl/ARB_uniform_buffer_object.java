@@ -117,7 +117,7 @@ public interface ARB_uniform_buffer_object {
 	@GLreturn("params")
 	@StripPostfix("params")
 	void glGetActiveUniformsiv(@GLuint int program, @Constant("1") @GLsizei int uniformCount,
-	                           @Constant(value = "APIUtils.getBufferInt().put(1, uniformIndex), 1", keepParam = true) int uniformIndex, // index 0 used by return value
+	                           @Constant(value = "params.put(1, uniformIndex), 1", keepParam = true) int uniformIndex, // Reuse params buffer
 	                           @GLenum int pname,
 	                           @OutParameter @GLint IntBuffer params);
 

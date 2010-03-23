@@ -154,7 +154,8 @@ public class Utils {
 			while (doc_lines.hasMoreTokens())
 				writer.println("\t *" + doc_lines.nextToken());
 			writer.println("\t */");
-		}
+		} else if ( (decl instanceof MethodDeclaration) && decl.getAnnotation(Alternate.class) != null )
+			writer.println("\t/** Overloads " + decl.getAnnotation(Alternate.class).value() + " */");
 	}
 
 	public static AnnotationMirror getParameterAutoAnnotation(ParameterDeclaration param) {

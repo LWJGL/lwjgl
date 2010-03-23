@@ -210,7 +210,7 @@ public class JavaMethodsGenerator {
 		StripPostfix strip_annotation = method.getAnnotation(StripPostfix.class);
 		String method_name;
 		Alternate alt_annotation = method.getAnnotation(Alternate.class);
-		method_name = alt_annotation == null ? method.getSimpleName() : alt_annotation.value();
+		method_name = alt_annotation == null || alt_annotation.javaAlt() ? method.getSimpleName() : alt_annotation.value();
 		if (strip_annotation != null && mode == Mode.NORMAL)
 			method_name = getPostfixStrippedName(type_map, interface_decl, method);
 		writer.print(" " + method_name + "(");
@@ -324,7 +324,7 @@ public class JavaMethodsGenerator {
 		}
 		String method_name;
 		Alternate alt_annotation = method.getAnnotation(Alternate.class);
-		method_name = alt_annotation == null ? method.getSimpleName() : alt_annotation.value();
+		method_name = alt_annotation == null || alt_annotation.javaAlt() ? method.getSimpleName() : alt_annotation.value();
 
 		String extension_postfix = "NULL".equals(strip_annotation.extension()) ? getExtensionPostfix(interface_decl) : strip_annotation.extension();
 		String result;

@@ -48,4 +48,7 @@ public @interface Alternate {
 
 	/** If true, an alternate Java->native call will be created. Useful when the alternate implementation uses different types. */
 	boolean nativeAlt() default false;
+
+	/** If true, the alternate method's name will be used for the Java call. */
+	boolean javaAlt() default false;
 }
