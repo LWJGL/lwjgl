@@ -125,6 +125,9 @@ public class Mouse {
 	private static int			event_x;
 	private static int			event_y;
 	private static long			event_nanos;
+	/** The position of the mouse it was grabbed at */
+	private static int			grab_x;
+	private static int			grab_y;
 
 	/** Buffer size in events */
 	private static final int	BUFFER_SIZE									= 50;
@@ -611,15 +614,27 @@ public class Mouse {
 	 */
 	public static void setGrabbed(boolean grab) {
 		synchronized (OpenGLPackageAccess.global_lock) {
-			isGrabbed = grab;
+			
 			if (isCreated()) {
-				implementation.grabMouse(isGrabbed);
+				if (grab && !isGrabbed) {
+					// store location mouse was grabbed
+					grab_x = x;
+					grab_y = y;
+				}				
+				else if (!grab && isGrabbed) {
+					// move mouse back to location it was grabbed before ungrabbing
+					if ((Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) != 0)
+						implementation.setCursorPosition(grab_x, grab_y);
+				}
+				
+				implementation.grabMouse(grab);
 				// Get latest values from native side
 				poll();
 				event_x = x;
 				event_y = y;
 				resetMouse();
 			}
+			isGrabbed = grab;
 		}
 	}
 
