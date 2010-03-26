@@ -614,14 +614,15 @@ public class Mouse {
 	 */
 	public static void setGrabbed(boolean grab) {
 		synchronized (OpenGLPackageAccess.global_lock) {
-			
+			boolean grabbed = isGrabbed;
+			isGrabbed = grab;
 			if (isCreated()) {
-				if (grab && !isGrabbed) {
+				if (grab && !grabbed) {
 					// store location mouse was grabbed
 					grab_x = x;
 					grab_y = y;
 				}				
-				else if (!grab && isGrabbed) {
+				else if (!grab && grabbed) {
 					// move mouse back to location it was grabbed before ungrabbing
 					if ((Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) != 0)
 						implementation.setCursorPosition(grab_x, grab_y);
@@ -634,7 +635,6 @@ public class Mouse {
 				event_y = y;
 				resetMouse();
 			}
-			isGrabbed = grab;
 		}
 	}
 
