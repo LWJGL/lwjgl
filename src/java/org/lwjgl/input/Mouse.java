@@ -204,8 +204,13 @@ public class Mouse {
 				throw new IllegalStateException("Mouse is not created");
 			x = event_x = new_x;
 			y = event_y = new_y;
-			if (!isGrabbed() && (Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) != 0)
+			if (!isGrabbed() && (Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) != 0) {
 				implementation.setCursorPosition(x, y);
+			}
+			else {
+				grab_x = new_x;
+				grab_y = new_y;
+			}
 		}
 	}
 	
