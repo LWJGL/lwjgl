@@ -275,6 +275,12 @@ public interface GL31 {
 	void glGetActiveUniformBlockiv(@GLuint int program, @GLuint int uniformBlockIndex, @GLenum int pname,
 	                               @OutParameter @Check(value = "16") @GLint IntBuffer params);
 
+	@Alternate("glGetActiveUniformBlockiv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetActiveUniformBlockiv2(@GLuint int program, @GLuint int uniformBlockIndex, @GLenum int pname,
+	                                @OutParameter @GLint IntBuffer params);
+
 	void glGetActiveUniformBlockName(@GLuint int program, @GLuint int uniformBlockIndex, @AutoSize("uniformBlockName") @GLsizei int bufSize,
 	                                 @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
 	                                 @OutParameter @GLchar ByteBuffer uniformBlockName);

@@ -31,23 +31,27 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.*;
+public interface APPLE_ycbcr_422 {
 
-import java.nio.*;
+	/**
+	 * Accepted by the &lt;format&gt; parameter of DrawPixels, ReadPixels, TexImage1D,
+	 * TexImage2D, GetTexImage, TexImage3D, TexSubImage1D, TexSubImage2D,
+	 * TexSubImage3D, GetHistogram, GetMinmax, ConvolutionFilter1D,
+	 * ConvolutionFilter2D, ConvolutionFilter3D, GetConvolutionFilter,
+	 * SeparableFilter2D, SeparableFilter3D, GetSeparableFilter, ColorTable,
+	 * GetColorTable:
+	 */
+	int GL_YCBCR_422_APPLE = 0x85B9;
 
-public interface ATI_element_array {
-	int GL_ELEMENT_ARRAY_ATI = 0x8768;
-	int GL_ELEMENT_ARRAY_TYPE_ATI = 0x8769;
-	int GL_ELEMENT_ARRAY_POINTER_ATI = 0x876A;
+	/**
+	 * Accepted by the &lt;type&gt; parameter of DrawPixels, ReadPixels, TexImage1D,
+	 * TexImage2D, GetTexImage, TexImage3D, TexSubImage1D, TexSubImage2D,
+	 * TexSubImage3D, GetHistogram, GetMinmax, ConvolutionFilter1D,
+	 * ConvolutionFilter2D, ConvolutionFilter3D, GetConvolutionFilter,
+	 * SeparableFilter2D, SeparableFilter3D, GetSeparableFilter, ColorTable,
+	 * GetColorTable:
+	 */
+	int GL_UNSIGNED_SHORT_8_8_APPLE = 0x85BA;
+	int GL_UNSIGNED_SHORT_8_8_REV_APPLE = 0x85BB;
 
-	void glElementPointerATI(@AutoType("pPointer") @GLenum int type,
-	                         @Check
-	                         @Const
-	                         @GLubyte
-	                         @GLushort
-	                         @GLuint Buffer pPointer);
-
-	void glDrawElementArrayATI(@GLenum int mode, @GLsizei int count);
-
-	void glDrawRangeElementArrayATI(@GLenum int mode, @GLuint int start, @GLuint int end, @GLsizei int count);
 }

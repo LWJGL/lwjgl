@@ -31,23 +31,33 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.*;
+public interface APPLE_float_pixels {
 
-import java.nio.*;
+	/**
+	 * Accepted by the  parameters of DrawPixels, ReadPixels, TexImage1D,
+	 * TexImage2D, TexImage3D, TexSubImage1D, TexSubImage2D, TexSubImage3D, and
+	 * GetTexImage:
+	 */
+	int GL_HALF_APPLE = 0x140B;
 
-public interface ATI_element_array {
-	int GL_ELEMENT_ARRAY_ATI = 0x8768;
-	int GL_ELEMENT_ARRAY_TYPE_ATI = 0x8769;
-	int GL_ELEMENT_ARRAY_POINTER_ATI = 0x876A;
+	/** Accepted by the GetBooleanv: */
+	int GL_COLOR_FLOAT_APPLE = 0x8A0F;
 
-	void glElementPointerATI(@AutoType("pPointer") @GLenum int type,
-	                         @Check
-	                         @Const
-	                         @GLubyte
-	                         @GLushort
-	                         @GLuint Buffer pPointer);
+	/**
+	 * Accepted by the  parameter of TexImage1D,
+	 * TexImage2D, and TexImage3D:
+	 */
+	int GL_RGBA_FLOAT32_APPLE = 0x8814;
+	int GL_RGB_FLOAT32_APPLE = 0x8815;
+	int GL_ALPHA_FLOAT32_APPLE = 0x8816;
+	int GL_INTENSITY_FLOAT32_APPLE = 0x8817;
+	int GL_LUMINANCE_FLOAT32_APPLE = 0x8818;
+	int GL_LUMINANCE_ALPHA_FLOAT32_APPLE = 0x8819;
+	int GL_RGBA_FLOAT16_APPLE = 0x881A;
+	int GL_RGB_FLOAT16_APPLE = 0x881B;
+	int GL_ALPHA_FLOAT16_APPLE = 0x881C;
+	int GL_INTENSITY_FLOAT16_APPLE = 0x881D;
+	int GL_LUMINANCE_FLOAT16_APPLE = 0x881E;
+	int GL_LUMINANCE_ALPHA_FLOAT16_APPLE = 0x881F;
 
-	void glDrawElementArrayATI(@GLenum int mode, @GLsizei int count);
-
-	void glDrawRangeElementArrayATI(@GLenum int mode, @GLuint int start, @GLuint int end, @GLsizei int count);
 }

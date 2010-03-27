@@ -31,23 +31,28 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.*;
+public interface APPLE_packed_pixels {
 
-import java.nio.*;
+	/**
+	 * Accepted by the &lt;type&gt; parameter of DrawPixels, ReadPixels, TexImage1D,
+	 * TexImage2D, GetTexImage, TexImage3D, TexSubImage1D,
+	 * TexSubImage2D, TexSubImage3D, GetHistogram, GetMinmax,
+	 * ConvolutionFilter1D, ConvolutionFilter2D, ConvolutionFilter3D,
+	 * GetConvolutionFilter, SeparableFilter2D, SeparableFilter3D,
+	 * GetSeparableFilter, ColorTable, GetColorTable, TexImage4DSGIS,
+	 * and TexSubImage4DSGIS:
+	 */
+	int GL_UNSIGNED_BYTE_3_3_2 = 0x8032;
+	int GL_UNSIGNED_BYTE_2_3_3_REV = 0x8362;
+	int GL_UNSIGNED_SHORT_5_6_5 = 0x8363;
+	int GL_UNSIGNED_SHORT_5_6_5_REV = 0x8364;
+	int GL_UNSIGNED_SHORT_4_4_4_4 = 0x8033;
+	int GL_UNSIGNED_SHORT_4_4_4_4_REV = 0x8365;
+	int GL_UNSIGNED_SHORT_5_5_5_1 = 0x8034;
+	int GL_UNSIGNED_SHORT_1_5_5_5_REV = 0x8366;
+	int GL_UNSIGNED_INT_8_8_8_8 = 0x8035;
+	int GL_UNSIGNED_INT_8_8_8_8_REV = 0x8367;
+	int GL_UNSIGNED_INT_10_10_10_2 = 0x8036;
+	int GL_UNSIGNED_INT_2_10_10_10_REV = 0x8368;
 
-public interface ATI_element_array {
-	int GL_ELEMENT_ARRAY_ATI = 0x8768;
-	int GL_ELEMENT_ARRAY_TYPE_ATI = 0x8769;
-	int GL_ELEMENT_ARRAY_POINTER_ATI = 0x876A;
-
-	void glElementPointerATI(@AutoType("pPointer") @GLenum int type,
-	                         @Check
-	                         @Const
-	                         @GLubyte
-	                         @GLushort
-	                         @GLuint Buffer pPointer);
-
-	void glDrawElementArrayATI(@GLenum int mode, @GLsizei int count);
-
-	void glDrawRangeElementArrayATI(@GLenum int mode, @GLuint int start, @GLuint int end, @GLsizei int count);
 }
