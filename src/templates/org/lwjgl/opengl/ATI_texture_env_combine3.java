@@ -31,26 +31,15 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.*;
-
-@ForceInit
-public interface NV_primitive_restart {
+public interface ATI_texture_env_combine3 {
 
 	/**
-	 * Accepted by the &lt;array&gt; parameter of EnableClientState and
-	 * DisableClientState, by the &lt;cap&gt; parameter of IsEnabled, and by
-	 * the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv, and
-	 * GetDoublev:
+	 * Accepted by the &lt;params&gt; parameter of TexEnvf, TexEnvi, TexEnvfv,
+	 * and TexEnviv when the &lt;pname&gt; parameter value is COMBINE_RGB_ARB
+	 * or COMBINE_ALPHA_ARB
 	 */
-	int GL_PRIMITIVE_RESTART_NV = 0x8558;
+	int GL_MODULATE_ADD_ATI = 0x8744;
+	int GL_MODULATE_SIGNED_ADD_ATI = 0x8745;
+	int GL_MODULATE_SUBTRACT_ATI = 0x8746;
 
-	/**
-	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
-	 * GetFloatv, and GetDoublev:
-	 */
-	int GL_PRIMITIVE_RESTART_INDEX_NV = 0x8559;
-
-	void glPrimitiveRestartNV();
-
-	void glPrimitiveRestartIndexNV(@GLuint int index);
 }

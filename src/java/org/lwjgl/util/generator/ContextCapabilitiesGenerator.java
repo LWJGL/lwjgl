@@ -164,6 +164,8 @@ public class ContextCapabilitiesGenerator {
 	public static void generateInitStubs(PrintWriter writer, InterfaceDeclaration d, boolean context_specific) {
 		if ( d.getMethods().size() > 0 ) {
 			if ( context_specific ) {
+				if ( d.getAnnotation(ForceInit.class) != null )
+					writer.println("\t\t" + CACHED_EXTS_VAR_NAME + ".add(\"" + translateFieldName(d.getSimpleName()) + "\");");
 				writer.print("\t\tif (" + CACHED_EXTS_VAR_NAME + ".contains(\"");
 				writer.print(translateFieldName(d.getSimpleName()) + "\")");
 				writer.print(" && !" + getAddressesInitializerName(d.getSimpleName()) + "(");
@@ -218,7 +220,7 @@ public class ContextCapabilitiesGenerator {
 				continue;
 
 			if ( !first )
-				writer.println(" &&");
+				writer.println(" &");
 			else
 				first = false;
 

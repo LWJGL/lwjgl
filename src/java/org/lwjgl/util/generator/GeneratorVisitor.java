@@ -186,6 +186,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		//java_writer.println("import org.lwjgl.NondirectBufferWrapper;");
 		java_writer.println("import java.nio.*;");
 		java_writer.println();
+		Utils.printDocComment(java_writer, d);
 		java_writer.print("public ");
 		boolean is_final = Utils.isFinal(d);
 		if (is_final)

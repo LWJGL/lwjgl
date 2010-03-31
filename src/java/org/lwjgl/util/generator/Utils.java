@@ -149,11 +149,12 @@ public class Utils {
 	public static void printDocComment(PrintWriter writer, Declaration decl) {
 		String doc_comment = decl.getDocComment();
 		if (doc_comment != null) {
-			writer.println("\t/**");
+			String tab = decl instanceof InterfaceDeclaration ? "" : "\t";
+			writer.println(tab + "/**");
 			StringTokenizer doc_lines = new StringTokenizer(doc_comment, "\n");
 			while (doc_lines.hasMoreTokens())
-				writer.println("\t *" + doc_lines.nextToken());
-			writer.println("\t */");
+				writer.println(tab + " * " + doc_lines.nextToken());
+			writer.println(tab + " */");
 		} else if ( (decl instanceof MethodDeclaration) && decl.getAnnotation(Alternate.class) != null )
 			writer.println("\t/** Overloads " + decl.getAnnotation(Alternate.class).value() + " */");
 	}
