@@ -250,6 +250,16 @@ public interface GL20 {
 	                         @OutParameter @GLenum @Check("1") IntBuffer type,
 	                         @OutParameter @GLchar ByteBuffer name);
 
+	/** This version returns both size and type in the sizeType buffer (at .position() and .position() + 1). */
+	@Alternate("glGetActiveUniformARB")
+	@GLreturn(value = "name", maxLength = "maxLength")
+	void glGetActiveUniform3(@GLuint int program, @GLuint int index, @GLsizei int maxLength,
+	                         @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
+	                         @OutParameter @Check("2") IntBuffer sizeType,
+	                         @OutParameter @GLenum @Constant("sizeType, sizeType.position() + 1") IntBuffer type,
+	                         @OutParameter @GLchar ByteBuffer name);
+
+	/** This version returns only the uniform size. */
 	@Alternate(value = "glGetActiveUniform", javaAlt = true)
 	@GLreturn(value = "size")
 	void glGetActiveUniformSize(@GLuint int program, @GLuint int index, @Constant("0") @GLsizei int maxLength,
@@ -258,6 +268,7 @@ public interface GL20 {
 	                            @OutParameter @GLenum @Constant("size, 1") IntBuffer type, // Reuse size buffer and ignore
 	                            @GLchar @Constant("APIUtils.getBufferByte(0), 0") ByteBuffer name);
 
+	/** This version returns only the uniform type. */
 	@Alternate(value = "glGetActiveUniform", javaAlt = true)
 	@GLreturn(value = "type")
 	void glGetActiveUniformType(@GLuint int program, @GLuint int index, @Constant("0") @GLsizei int maxLength,
