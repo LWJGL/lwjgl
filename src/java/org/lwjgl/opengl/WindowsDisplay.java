@@ -542,6 +542,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		if (getForegroundWindow() != hwnd && !hasParent)
 			return;
 		getGlobalClientRect(hwnd, rect);
+		/* -- This is wrong on multi-monitor setups
 		int local_offset_x = rect.left;
 		int local_offset_y = rect.top;
 		getGlobalClientRect(getDesktopWindow(), rect2);
@@ -551,6 +552,9 @@ final class WindowsDisplay implements DisplayImplementation {
 		nSetCursorPosition(center_x, center_y);
 		int local_x = center_x - local_offset_x;
 		int local_y = center_y - local_offset_y;
+		*/
+		int local_x = (rect.right - rect.left) / 2;
+		int local_y = (rect.bottom - rect.top) / 2;
 		if (current_display != null)
 			current_display.setMousePosition(local_x, transformY(hwnd, local_y));
 	}

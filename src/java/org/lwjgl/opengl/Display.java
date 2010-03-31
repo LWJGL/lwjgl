@@ -627,6 +627,7 @@ public final class Display {
 
 			display_impl.update();
 		}
+		pollDevices();
 	}
 
 	/**
@@ -666,8 +667,9 @@ public final class Display {
 					throw new RuntimeException(e);
 				}
 			}
+			if ( swap_interval != 0 ) // Handle events again when vsync is enabled, to reduced input lag.
+				processMessages();
 
-			pollDevices();
 			if ( parent_resized ) {
 				reshape();
 				parent_resized = false;

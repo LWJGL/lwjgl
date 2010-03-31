@@ -121,8 +121,10 @@ static void handleMessages(JNIEnv *env) {
 				PM_REMOVE      // removal options
 				))
 	{
-		DispatchMessage(&msg);
+		if (msg.message == WM_QUIT) 
+			break; 
 		TranslateMessage(&msg);
+		DispatchMessage(&msg);
 	}
 }
 
