@@ -251,7 +251,7 @@ public interface GL20 {
 	                         @OutParameter @GLchar ByteBuffer name);
 
 	/** This version returns both size and type in the sizeType buffer (at .position() and .position() + 1). */
-	@Alternate("glGetActiveUniformARB")
+	@Alternate("glGetActiveUniform")
 	@GLreturn(value = "name", maxLength = "maxLength")
 	void glGetActiveUniform3(@GLuint int program, @GLuint int index, @GLsizei int maxLength,
 	                         @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
