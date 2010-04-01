@@ -52,6 +52,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.JarURLConnection;
@@ -68,6 +69,7 @@ import java.security.SecureClassLoader;
 import java.security.cert.Certificate;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
+import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
@@ -232,6 +234,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	protected String[] 	certificateRefusedMessage = { "Permissions for Applet Refused.",
 												      "Please accept the permissions dialog to allow",
 												      "the applet to continue the loading process."};
+	
+	/** have natives been loaded by another instance of this applet */
+	static protected boolean natives_loaded = false;
 	
 	/*
 	 * @see java.applet.Applet#init()
@@ -736,12 +741,66 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		};
 		
 		debug_sleep(2000);
-
+		
+		// unload natives loaded by a previous instance of this lwjgl applet
+		unloadNatives(path);
+		
 		// add natives files path to native class path
 		System.setProperty("org.lwjgl.librarypath", path + "natives");
 
 		// Make sure jinput knows about the new path too
 		System.setProperty("net.java.games.input.librarypath", path + "natives");
+		
+		// mark natives as loaded
+		natives_loaded = true;
+	}
+	
+	/**
+	 * Unload natives loaded by a different classloader.
+	 * 
+	 * Due to limitations of the jvm, native files can only 
+	 * be loaded once and only be used by the classloader 
+	 * they were loaded from.
+	 * 
+	 * Due to the way applets on plugin1 work, one jvm must
+	 * be used for all applets. We need to use multiple 
+	 * classloaders in the same jvm due to LWJGL's static 
+	 * nature. I order to solver this we simply remove the 
+	 * natives from a previous classloader allowing a new 
+	 * classloader to use those natives in the same jvm.
+	 * 
+	 * This method will only attempt to unload natives from a
+	 * previous classloader if it detects that the natives have
+	 * been loaded in the same jvm.
+	 * 
+	 * @param nativePath directory where natives are stored
+	 */
+	private void unloadNatives(String nativePath) {
+		
+		// check whether natives have been loaded into this jvm
+		if (!natives_loaded) {
+			return;
+		}
+		
+		try {
+			Field field = ClassLoader.class.getDeclaredField("loadedLibraryNames");
+			field.setAccessible(true);
+			Vector libs = (Vector) field.get(getClass().getClassLoader());
+			
+			String path = new File(nativePath).getCanonicalPath();
+			
+			for (int i = 0; i < libs.size(); i++) {
+				String s = (String) libs.get(i);
+				
+				// if a native from the nativePath directory is loaded, unload it
+				if (s.startsWith(path)) {
+					libs.remove(i);
+					i--;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
