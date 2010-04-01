@@ -96,6 +96,7 @@ import sun.security.util.SecurityConstants;
  * <li>al_linux - [String] Jar containing native files for linux.</li>
  * <li>al_mac - [String] Jar containing native files for mac.</li>
  * <li>al_solaris - [String] Jar containing native files for solaris.</li>
+ * <li>al_freebsd - [String] Jar containing native files for freebsd.</li>
  * </ul>
  * </p>
  * <p>
@@ -529,12 +530,14 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
 		if (osName.startsWith("Win")) {
 			nativeJar = getParameter("al_windows");
-		} else if (osName.startsWith("Linux") || osName.startsWith("FreeBSD")) {
+		} else if (osName.startsWith("Linux")) {
 			nativeJar = getParameter("al_linux");
 		} else if (osName.startsWith("Mac")) {
 			nativeJar = getParameter("al_mac");
 		} else if (osName.startsWith("Solaris") || osName.startsWith("SunOS")) {
 			nativeJar = getParameter("al_solaris");
+		} else if (osName.startsWith("FreeBSD")) {
+			nativeJar = getParameter("al_freebsd");
 		} else {
 			fatalErrorOccured("OS (" + osName + ") not supported", null);
 		}
