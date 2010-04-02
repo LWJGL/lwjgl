@@ -1,5 +1,7 @@
 <project name="LWJGL" default="all" basedir=".">
 
+	<property name="build.sysclasspath" value="last" />
+
 	<import file="platform_build/build-definitions.xml"/>
 	<import file="platform_build/build-generator.xml"/>
 	<import file="platform_build/build-applet.xml"/>
@@ -58,13 +60,16 @@
   	<antcall target="-initialize" />
 
   	<!-- compile and create jars -->
-	<antcall target="generate-all"/>
-  	<antcall target="compile" />
-  	<antcall target="-createjars" />
 	<antcall target="generate-debug"/>
 	<antcall target="compile" />
   	<antcall target="-createdebugjars" />
-	<antcall target="jars" />
+		<!-- Generator will skip all templates if we don't clean -->
+		<delete dir="${lwjgl.bin}" quiet="true" failonerror="false" taskname="cleaning bin folder" />
+		<mkdir dir="${lwjgl.bin}" taskname="initialiazing bin folder" />
+	<antcall target="generate-all"/>
+  	<antcall target="compile" />
+  	<antcall target="-createjars" />
+	<antcall target="-jars_NoDEP" />
  	<antcall target="javadoc" />
 	<antcall target="applet-release" />
   	
@@ -90,8 +95,10 @@
 
 	<!-- Create ONLY the jar archives -->
 	<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="-initialize, generate-all, compile, -createjars">
-		<!--		<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="-initialize, compile, -createjars">-->
-		<!--<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="-initialize, compile, -createjars">-->
+		<antcall target="-jars_NoDEP" />
+	</target>
+
+	<target name="-jars_NoDEP">
 		<move todir="libs/">
 			<fileset dir="${lwjgl.temp}/jar">
 				<include name="*.jar"/>
@@ -395,7 +402,7 @@
 	
 	<!-- Creates the Javadoc -->
 	<target name="javadoc" description="Creates javadoc from java source code">
-		<javadoc destdir="${lwjgl.docs}/javadoc" classpath="${lwjgl.lib}/jinput.jar" author="true" version="true" use="true" source="1.4" windowtitle="LWJGL API">
+		<javadoc destdir="${lwjgl.docs}/javadoc" classpath="${lwjgl.lib}/jinput.jar" author="true" version="true" use="true" source="1.4" windowtitle="LWJGL API" useexternalfile="true">
 			<fileset refid="lwjgl.javadoc.fileset" />
 			<doctitle><![CDATA[<h1>Lightweight Java Game Toolkit</h1>]]></doctitle>
 			<bottom><![CDATA[<i>Copyright &#169; 2002-2009 lwjgl.org. All Rights Reserved.</i>]]></bottom>
