@@ -116,7 +116,7 @@ public final class Display {
 	private static boolean window_created = false;
 
 	private static boolean parent_resized;
-	
+
 	/** Initial Background Color of Display */
 	private static float r = 0, g = 0, b = 0;
 
@@ -648,17 +648,27 @@ public final class Display {
 	}
 
 	/**
-	 * Update the window. This calls processMessages(), and if the window is visible
-	 * clears the dirty flag and calls swapBuffers() and finally polls the input devices.
+	 * Update the window. If the window is visible clears
+	 * the dirty flag and calls swapBuffers() and finally
+	 * polls the input devices.
 	 *
-	 * @throws OpenGLException if an OpenGL error has occured since the last call to GL11.glGetError()
 	 */
 	public static void update() {
+		update(true);
+	}
+
+	/**
+	 * Update the window. If the window is visible clears
+	 * the dirty flag and calls swapBuffers() and finally
+	 * polls the input devices if processMessages is true.
+	 *
+	 * @param processMessages Poll input devices if true
+	 */
+	public static void update(boolean processMessages) {
 		synchronized ( GlobalLock.lock ) {
 			if ( !isCreated() )
 				throw new IllegalStateException("Display not created");
 
-			processMessages();
 			// We paint only when the window is visible or dirty
 			if ( display_impl.isVisible() || display_impl.isDirty() ) {
 				try {
@@ -667,13 +677,14 @@ public final class Display {
 					throw new RuntimeException(e);
 				}
 			}
-			if ( swap_interval != 0 ) // Handle events again when vsync is enabled, to reduced input lag.
-				processMessages();
 
 			if ( parent_resized ) {
 				reshape();
 				parent_resized = false;
 			}
+
+			if ( processMessages )
+				processMessages();
 		}
 	}
 
@@ -866,11 +877,11 @@ public final class Display {
 			}
 		}
 	}
-	
+
 	/**
 	*  Set the initial color of the Display. This method is called before the Display is created and will set the
 	*  background color to the one specified in this method.
-	*  
+	*
 	*  @param red - color value between 0 - 1
 	*  @param green - color value between 0 - 1
 	*  @param blue - color value between 0 - 1
