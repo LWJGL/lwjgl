@@ -78,6 +78,7 @@
 		  <zipfileset dir="${lwjgl.res}" includes="Footsteps.wav, ILtest.tga, Missing_you.mod"/>
 		</zip>
 		<signjar jar="applet/lwjgl_util_applet.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="applet/lzma.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		
 		<!-- LZMA only, for 1.4 only clients -->
 		<antcall target="compress-resource">
