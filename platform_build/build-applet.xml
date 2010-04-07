@@ -68,12 +68,12 @@
   		<fileset dir="${lwjgl.res}" includes="applet*"/>
   	</jar>
 
-	  	<copy file="${lwjgl.lib}/lwjgl.jar" todir="applet"/>
-		<copy file="${lwjgl.lib}/lwjgl-debug.jar" todir="applet"/>
-		<copy file="${lwjgl.lib}/lwjgl_util_applet.jar" todir="applet"/>
-		<copy file="${lwjgl.lib}/lwjgl_util.jar" todir="applet"/>
-		<copy file="${lwjgl.lib}/jinput.jar" todir="applet"/>
-		<copy file="${lwjgl.lib}/lzma.jar" todir="applet"/>
+	  	<copy file="${lwjgl.lib}/lwjgl.jar" todir="applet" overwrite="true"/>
+		<copy file="${lwjgl.lib}/lwjgl-debug.jar" todir="applet" overwrite="true"/>
+		<copy file="${lwjgl.lib}/lwjgl_util_applet.jar" todir="applet" overwrite="true"/>
+		<copy file="${lwjgl.lib}/lwjgl_util.jar" todir="applet" overwrite="true"/>
+		<copy file="${lwjgl.lib}/jinput.jar" todir="applet" overwrite="true"/>
+		<copy file="${lwjgl.lib}/lzma.jar" todir="applet" overwrite="true"/>
 		<zip destfile="applet/res.jar">
 		  <zipfileset dir="${lwjgl.res}" includes="Footsteps.wav, ILtest.tga, Missing_you.mod"/>
 		</zip>
