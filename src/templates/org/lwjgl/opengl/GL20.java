@@ -404,29 +404,39 @@ public interface GL20 {
 	                       @OutParameter @GLenum @Check("1") IntBuffer type,
 	                       @OutParameter @GLchar ByteBuffer name);
 
+	/** Overloads glGetActiveAttrib. This version returns both size and type in the sizeType buffer (at .position() and .position() + 1). */
 	@Alternate("glGetActiveAttrib")
 	@GLreturn(value = "name", maxLength = "maxLength")
 	void glGetActiveAttrib2(@GLuint int program, @GLuint int index, @GLsizei int maxLength,
 	                        @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
-	                        @OutParameter @Check("1") IntBuffer size,
-	                        @OutParameter @GLenum @Check("1") IntBuffer type,
+	                        @OutParameter @Check("2") IntBuffer sizeType,
+	                        @OutParameter @GLenum @Constant("sizeType, sizeType.position() + 1") IntBuffer type,
 	                        @OutParameter @GLchar ByteBuffer name);
 
+	/** Overloads glGetActiveAttrib. This version returns only the attrib name. */
+	@Alternate(value = "glGetActiveAttrib", javaAlt = true)
+	@GLreturn(value = "name", maxLength = "maxLength")
+	void glGetActiveAttrib(@GLuint int program, @GLuint int index, @GLsizei int maxLength,
+	                       @OutParameter @GLsizei @Constant("name_length, 0, APIUtils.getBufferInt(), 0, APIUtils.getBufferInt(), 1") IntBuffer length,
+	                       @OutParameter @GLchar ByteBuffer name);
+
+	/** Overloads glGetActiveAttribARB. This version returns only the attrib size. */
 	@Alternate(value = "glGetActiveAttrib", javaAlt = true)
 	@GLreturn(value = "size")
 	void glGetActiveAttribSize(@GLuint int program, @GLuint int index, @Constant("0") @GLsizei int maxLength,
 	                           @OutParameter @GLsizei @Constant("null, 0") IntBuffer length,
 	                           @OutParameter IntBuffer size,
 	                           @OutParameter @GLenum @Constant("size, 1") IntBuffer type, // Reuse size buffer and ignore
-	                           @GLchar @Constant("APIUtils.getBufferByte(0), 0") ByteBuffer name);
+	                           @OutParameter @GLchar @Constant("APIUtils.getBufferByte(0), 0") ByteBuffer name);
 
+	/** Overloads glGetActiveAttrib. This version returns only the attrib type. */
 	@Alternate(value = "glGetActiveAttrib", javaAlt = true)
 	@GLreturn(value = "type")
 	void glGetActiveAttribType(@GLuint int program, @GLuint int index, @Constant("0") @GLsizei int maxLength,
 	                           @OutParameter @GLsizei @Constant("null, 0") IntBuffer length,
 	                           @OutParameter @Constant("type, 1") IntBuffer size, // Reuse type buffer and ignore
 	                           @OutParameter @GLenum IntBuffer type,
-	                           @GLchar @Constant("APIUtils.getBufferByte(0), 0") ByteBuffer name);
+	                           @OutParameter @GLchar @Constant("APIUtils.getBufferByte(0), 0") ByteBuffer name);
 
 	int glGetAttribLocation(@GLuint int program, @NullTerminated @Const @GLchar ByteBuffer name);
 

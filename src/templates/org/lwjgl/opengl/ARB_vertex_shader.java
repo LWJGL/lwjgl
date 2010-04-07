@@ -151,14 +151,14 @@ public interface ARB_vertex_shader {
 	                           @OutParameter @GLenum @Constant("sizeType, sizeType.position() + 1") IntBuffer type,
 	                           @OutParameter @GLcharARB ByteBuffer name);
 
-	/** Overloads glGetActiveAttribARB. This version returns only the uniform name. */
+	/** Overloads glGetActiveAttribARB. This version returns only the attrib name. */
 	@Alternate(value = "glGetActiveAttribARB", javaAlt = true)
 	@GLreturn(value = "name", maxLength = "maxLength")
 	void glGetActiveAttribARB(@GLhandleARB int programObj, @GLuint int index, @GLsizei int maxLength,
 	                          @OutParameter @GLsizei @Constant("name_length, 0, APIUtils.getBufferInt(), 0, APIUtils.getBufferInt(), 1") IntBuffer length,
 	                          @OutParameter @GLcharARB ByteBuffer name);
 
-	/** Overloads glGetActiveAttribARB. This version returns only the uniform size. */
+	/** Overloads glGetActiveAttribARB. This version returns only the attrib size. */
 	@Alternate(value = "glGetActiveAttribARB", javaAlt = true)
 	@GLreturn(value = "size")
 	void glGetActiveAttribSizeARB(@GLhandleARB int programObj, @GLuint int index, @Constant("0") @GLsizei int maxLength,
@@ -167,7 +167,7 @@ public interface ARB_vertex_shader {
 	                              @OutParameter @GLenum @Constant("size, 1") IntBuffer type, // Reuse size buffer and ignore
 	                              @OutParameter @GLcharARB @Constant("APIUtils.getBufferByte(0), 0") ByteBuffer name);
 
-	/** Overloads glGetActiveAttribARB. This version returns only the uniform type. */
+	/** Overloads glGetActiveAttribARB. This version returns only the attrib type. */
 	@Alternate(value = "glGetActiveAttribARB", javaAlt = true)
 	@GLreturn(value = "type")
 	void glGetActiveAttribTypeARB(@GLhandleARB int programObj, @GLuint int index, @Constant("0") @GLsizei int maxLength,
