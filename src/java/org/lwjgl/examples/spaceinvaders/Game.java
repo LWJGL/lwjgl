@@ -167,6 +167,9 @@ public class Game {
 
   /** Mouse movement on x axis */
 	private int	mouseX;
+	
+	/** Is this an application or applet */
+	private static boolean isApplication = false;
 
 	/**
 	 * Construct our game and set it running.
@@ -210,13 +213,15 @@ public class Game {
 	public void initialize() {
 		// initialize the window beforehand
 		try {
-      setDisplayMode();
-      Display.setTitle(WINDOW_TITLE);
-      Display.setFullscreen(fullscreen);
-      Display.create();
-      
+			setDisplayMode();
+			Display.setTitle(WINDOW_TITLE);
+			Display.setFullscreen(fullscreen);
+			Display.create();
+	      
 			// grab the mouse, dont want that hideous cursor when we're playing!
-			Mouse.setGrabbed(true);
+			if (isApplication) {	
+				Mouse.setGrabbed(true);
+			}
 
 			// enable textures since we're going to use these for our sprites
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -426,6 +431,10 @@ public class Game {
 			// update window contents
 			Display.update();
 		}
+		
+		// clean up
+		soundManager.destroy();
+		Display.destroy();
 	}
 
 	/**
@@ -542,7 +551,7 @@ public class Game {
 		}
 
 		// if escape has been pressed, stop the game
-		if (Display.isCloseRequested() || Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+		if ((Display.isCloseRequested() || Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) && isApplication) {
 			Game.gameRunning = false;
 		}
 	}
@@ -579,6 +588,7 @@ public class Game {
 	 * @param argv The arguments that are passed into our game
 	 */
 	public static void main(String argv[]) {
+		isApplication = true;
 		System.out.println("Use -fullscreen for fullscreen mode");
 		new Game((argv.length > 0 && argv[0].equalsIgnoreCase("-fullscreen"))).execute();
 		System.exit(0);
@@ -587,10 +597,8 @@ public class Game {
 	/**
 	 * 
 	 */
-	private void execute() {
+	public void execute() {
 		gameLoop();
-		soundManager.destroy();
-		Display.destroy();
 	}
 
 	/**
