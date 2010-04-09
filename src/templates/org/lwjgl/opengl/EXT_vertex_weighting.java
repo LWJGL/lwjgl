@@ -50,6 +50,7 @@ public interface EXT_vertex_weighting {
 	int GL_VERTEX_WEIGHT_ARRAY_STRIDE_EXT = 0x850F;
 	int GL_VERTEX_WEIGHT_ARRAY_POINTER_EXT = 0x8510;
 
+	@NoErrorCheck
 	void glVertexWeightfEXT(float weight);
 
 	void glVertexWeightPointerEXT(@GLsizei int size, @AutoType("pPointer") @GLenum int type, @GLsizei int stride,

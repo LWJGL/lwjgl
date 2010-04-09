@@ -79,30 +79,43 @@ public interface ARB_vertex_program extends ARB_program {
 	 */
 	int GL_MAX_VERTEX_ATTRIBS_ARB = 0x8869;
 
+	@NoErrorCheck
 	void glVertexAttrib1sARB(@GLuint int index, short x);
 
+	@NoErrorCheck
 	void glVertexAttrib1fARB(@GLuint int index, float x);
 
+	@NoErrorCheck
 	void glVertexAttrib1dARB(@GLuint int index, double x);
 
+	@NoErrorCheck
 	void glVertexAttrib2sARB(@GLuint int index, short x, short y);
 
+	@NoErrorCheck
 	void glVertexAttrib2fARB(@GLuint int index, float x, float y);
 
+	@NoErrorCheck
 	void glVertexAttrib2dARB(@GLuint int index, double x, double y);
 
+	@NoErrorCheck
 	void glVertexAttrib3sARB(@GLuint int index, short x, short y, short z);
 
+	@NoErrorCheck
 	void glVertexAttrib3fARB(@GLuint int index, float x, float y, float z);
 
+	@NoErrorCheck
 	void glVertexAttrib3dARB(@GLuint int index, double x, double y, double z);
 
+	@NoErrorCheck
 	void glVertexAttrib4sARB(@GLuint int index, short x, short y, short z, short w);
 
+	@NoErrorCheck
 	void glVertexAttrib4fARB(@GLuint int index, float x, float y, float z, float w);
 
+	@NoErrorCheck
 	void glVertexAttrib4dARB(@GLuint int index, double x, double y, double z, double w);
 
+	@NoErrorCheck
 	void glVertexAttrib4NubARB(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
 
 	void glVertexAttribPointerARB(@GLuint int index, int size, @AutoType("buffer") @GLenum int type, boolean normalized, @GLsizei int stride,

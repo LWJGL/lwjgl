@@ -32,12 +32,26 @@
 package org.lwjgl.opengl;
 
 final class StateTracker {
-	private final ReferencesStack references_stack;
+	private ReferencesStack references_stack;
 	private final StateStack attrib_stack;
 
+	private boolean insideBeginEnd;
+
 	StateTracker() {
-		references_stack = new ReferencesStack();
 		attrib_stack = new StateStack(0);
+	}
+
+	/** This is called after getting function addresses. */
+	void init() {
+		references_stack = new ReferencesStack();
+	}
+
+	static void setBeginEnd(ContextCapabilities caps, boolean inside) {
+		caps.tracker.insideBeginEnd = inside;
+	}
+
+	boolean isBeginEnd() {
+		return insideBeginEnd;
 	}
 
 	static void popAttrib(ContextCapabilities caps) {

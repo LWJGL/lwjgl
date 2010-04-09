@@ -47,98 +47,136 @@ public interface ARB_vertex_type_2_10_10_10_rev {
 	int GL_UNSIGNED_INT_2_10_10_10_REV = GL12.GL_UNSIGNED_INT_2_10_10_10_REV;
 	int GL_INT_2_10_10_10_REV = 0x8D9F;
 
+	@NoErrorCheck
 	void glVertexP2ui(@GLenum int type, @GLuint int value);
 
+	@NoErrorCheck
 	void glVertexP3ui(@GLenum int type, @GLuint int value);
 
+	@NoErrorCheck
 	void glVertexP4ui(@GLenum int type, @GLuint int value);
 
+	@NoErrorCheck
 	@StripPostfix("value")
 	void glVertexP2uiv(@GLenum int type, @Check("2") @Const @GLuint IntBuffer value);
 
+	@NoErrorCheck
 	@StripPostfix("value")
 	void glVertexP3uiv(@GLenum int type, @Check("3") @Const @GLuint IntBuffer value);
 
+	@NoErrorCheck
 	@StripPostfix("value")
 	void glVertexP4uiv(@GLenum int type, @Check("4") @Const @GLuint IntBuffer value);
 
+	@NoErrorCheck
 	void glTexCoordP1ui(@GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	void glTexCoordP2ui(@GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	void glTexCoordP3ui(@GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	void glTexCoordP4ui(@GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	@StripPostfix("coords")
 	void glTexCoordP1uiv(@GLenum int type, @Check("1") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	@StripPostfix("coords")
 	void glTexCoordP2uiv(@GLenum int type, @Check("2") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	@StripPostfix("coords")
 	void glTexCoordP3uiv(@GLenum int type, @Check("3") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	@StripPostfix("coords")
 	void glTexCoordP4uiv(@GLenum int type, @Check("4") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	void glMultiTexCoordP1ui(@GLenum int texture, @GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	void glMultiTexCoordP2ui(@GLenum int texture, @GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	void glMultiTexCoordP3ui(@GLenum int texture, @GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	void glMultiTexCoordP4ui(@GLenum int texture, @GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	@StripPostfix("coords")
 	void glMultiTexCoordP1uiv(@GLenum int texture, @GLenum int type, @Check("1") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	@StripPostfix("coords")
 	void glMultiTexCoordP2uiv(@GLenum int texture, @GLenum int type, @Check("2") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	@StripPostfix("coords")
 	void glMultiTexCoordP3uiv(@GLenum int texture, @GLenum int type, @Check("3") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	@StripPostfix("coords")
 	void glMultiTexCoordP4uiv(@GLenum int texture, @GLenum int type, @Check("4") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	void glNormalP3ui(@GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	@StripPostfix("coords")
 	void glNormalP3uiv(@GLenum int type, @Check("3") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	void glColorP3ui(@GLenum int type, @GLuint int color);
 
+	@NoErrorCheck
 	void glColorP4ui(@GLenum int type, @GLuint int color);
 
+	@NoErrorCheck
 	@StripPostfix("color")
 	void glColorP3uiv(@GLenum int type, @Check("3") @Const @GLuint IntBuffer color);
 
+	@NoErrorCheck
 	@StripPostfix("color")
 	void glColorP4uiv(@GLenum int type, @Check("4") @Const @GLuint IntBuffer color);
 
+	@NoErrorCheck
 	void glSecondaryColorP3ui(@GLenum int type, @GLuint int color);
 
+	@NoErrorCheck
 	@StripPostfix("color")
 	void glSecondaryColorP3uiv(@GLenum int type, @Check("3") @Const @GLuint IntBuffer color);
 
+	@NoErrorCheck
 	void glVertexAttribP1ui(@GLuint int index, @GLenum int type, boolean normalized, @GLuint int value);
 
+	@NoErrorCheck
 	void glVertexAttribP2ui(@GLuint int index, @GLenum int type, boolean normalized, @GLuint int value);
 
+	@NoErrorCheck
 	void glVertexAttribP3ui(@GLuint int index, @GLenum int type, boolean normalized, @GLuint int value);
 
+	@NoErrorCheck
 	void glVertexAttribP4ui(@GLuint int index, @GLenum int type, boolean normalized, @GLuint int value);
 
+	@NoErrorCheck
 	@StripPostfix("value")
 	void glVertexAttribP1uiv(@GLuint int index, @GLenum int type, boolean normalized, @Check("1") @Const @GLuint IntBuffer value);
 
+	@NoErrorCheck
 	@StripPostfix("value")
 	void glVertexAttribP2uiv(@GLuint int index, @GLenum int type, boolean normalized, @Check("2") @Const @GLuint IntBuffer value);
 
+	@NoErrorCheck
 	@StripPostfix("value")
 	void glVertexAttribP3uiv(@GLuint int index, @GLenum int type, boolean normalized, @Check("3") @Const @GLuint IntBuffer value);
 
+	@NoErrorCheck
 	@StripPostfix("value")
 	void glVertexAttribP4uiv(@GLuint int index, @GLenum int type, boolean normalized, @Check("4") @Const @GLuint IntBuffer value);
 

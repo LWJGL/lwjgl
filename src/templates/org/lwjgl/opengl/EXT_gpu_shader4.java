@@ -83,55 +83,75 @@ public interface EXT_gpu_shader4 {
 	int GL_MIN_PROGRAM_TEXEL_OFFSET_EXT = 0x8904;
 	int GL_MAX_PROGRAM_TEXEL_OFFSET_EXT = 0x8905;
 
+	@NoErrorCheck
 	void glVertexAttribI1iEXT(@GLuint int index, int x);
 
+	@NoErrorCheck
 	void glVertexAttribI2iEXT(@GLuint int index, int x, int y);
 
+	@NoErrorCheck
 	void glVertexAttribI3iEXT(@GLuint int index, int x, int y, int z);
 
+	@NoErrorCheck
 	void glVertexAttribI4iEXT(@GLuint int index, int x, int y, int z, int w);
 
+	@NoErrorCheck
 	void glVertexAttribI1uiEXT(@GLuint int index, @GLuint int x);
 
+	@NoErrorCheck
 	void glVertexAttribI2uiEXT(@GLuint int index, @GLuint int x, @GLuint int y);
 
+	@NoErrorCheck
 	void glVertexAttribI3uiEXT(@GLuint int index, @GLuint int x, @GLuint int y, @GLuint int z);
 
+	@NoErrorCheck
 	void glVertexAttribI4uiEXT(@GLuint int index, @GLuint int x, @GLuint int y, @GLuint int z, @GLuint int w);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribI1ivEXT(@GLuint int index, @Check("1") @Const IntBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribI2ivEXT(@GLuint int index, @Check("2") @Const IntBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribI3ivEXT(@GLuint int index, @Check("3") @Const IntBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribI4ivEXT(@GLuint int index, @Check("4") @Const IntBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribI1uivEXT(@GLuint int index, @Check("1") @Const @GLuint IntBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribI2uivEXT(@GLuint int index, @Check("2") @Const @GLuint IntBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribI3uivEXT(@GLuint int index, @Check("3") @Const @GLuint IntBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribI4uivEXT(@GLuint int index, @Check("4") @Const @GLuint IntBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribI4bvEXT(@GLuint int index, @Check("4") @Const ByteBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribI4svEXT(@GLuint int index, @Check("4") @Const ShortBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribI4ubvEXT(@GLuint int index, @Check("4") @Const @GLubyte ByteBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribI4usvEXT(@GLuint int index, @Check("4") @Const @GLushort ShortBuffer v);
 

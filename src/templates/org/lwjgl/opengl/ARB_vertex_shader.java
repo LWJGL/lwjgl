@@ -87,30 +87,43 @@ public interface ARB_vertex_shader {
 	int GL_FLOAT_MAT3_ARB = 0x8B5B;
 	int GL_FLOAT_MAT4_ARB = 0x8B5C;
 
+	@NoErrorCheck
 	void glVertexAttrib1sARB(@GLuint int index, short v0);
 
+	@NoErrorCheck
 	void glVertexAttrib1fARB(@GLuint int index, float v0);
 
+	@NoErrorCheck
 	void glVertexAttrib1dARB(@GLuint int index, double v0);
 
+	@NoErrorCheck
 	void glVertexAttrib2sARB(@GLuint int index, short v0, short v1);
 
+	@NoErrorCheck
 	void glVertexAttrib2fARB(@GLuint int index, float v0, float v1);
 
+	@NoErrorCheck
 	void glVertexAttrib2dARB(@GLuint int index, double v0, double v1);
 
+	@NoErrorCheck
 	void glVertexAttrib3sARB(@GLuint int index, short v0, short v1, short v2);
 
+	@NoErrorCheck
 	void glVertexAttrib3fARB(@GLuint int index, float v0, float v1, float v2);
 
+	@NoErrorCheck
 	void glVertexAttrib3dARB(@GLuint int index, double v0, double v1, double v2);
 
+	@NoErrorCheck
 	void glVertexAttrib4sARB(@GLuint int index, short v0, short v1, short v2, short v3);
 
+	@NoErrorCheck
 	void glVertexAttrib4fARB(@GLuint int index, float v0, float v1, float v2, float v3);
 
+	@NoErrorCheck
 	void glVertexAttrib4dARB(@GLuint int index, double v0, double v1, double v2, double v3);
 
+	@NoErrorCheck
 	void glVertexAttrib4NubARB(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
 
 	void glVertexAttribPointerARB(@GLuint int index, int size, @AutoType("buffer") @GLenum int type, boolean normalized, @GLsizei int stride,

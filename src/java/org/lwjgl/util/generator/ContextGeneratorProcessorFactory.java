@@ -74,7 +74,7 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 	}
 
 	public Collection<String> supportedOptions() {
-		return unmodifiableCollection(Arrays.asList("-Acontextspecific"));
+		return unmodifiableCollection(Arrays.asList("-Acontextspecific", "-Ageneratechecks"));
 	}
 
 	public void roundComplete(RoundCompleteEvent event) {
@@ -99,15 +99,16 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 
 		public void process() {
 			Map<String, String> options = env.getOptions();
+			boolean generate_error_checks = options.containsKey("-Ageneratechecks");
 			boolean context_specific = options.containsKey("-Acontextspecific");
 			try {
-				generateContextCapabilitiesSource(context_specific);
+				generateContextCapabilitiesSource(context_specific, generate_error_checks);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
 
-		private void generateContextCapabilitiesSource(boolean context_specific) throws IOException {
+		private void generateContextCapabilitiesSource(boolean context_specific, boolean generate_error_checks) throws IOException {
 			PrintWriter writer = env.getFiler().createTextFile(Filer.Location.SOURCE_TREE, "org.lwjgl.opengl", new File(Utils.CONTEXT_CAPS_CLASS_NAME + ".java"), null);
 			writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
 			writer.println();
@@ -120,7 +121,7 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 			writer.println("import java.util.HashSet;");
 			writer.println("import java.nio.IntBuffer;");
 			writer.println();
-			ContextCapabilitiesGenerator.generateClassPrologue(writer, context_specific);
+			ContextCapabilitiesGenerator.generateClassPrologue(writer, context_specific, generate_error_checks);
 			DeclarationFilter filter = DeclarationFilter.getFilter(InterfaceDeclaration.class);
 			Collection<TypeDeclaration> interface_decls = filter.filter(env.getSpecifiedTypeDeclarations());
 			for (TypeDeclaration typedecl : interface_decls) {
@@ -179,7 +180,7 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 				if (Utils.isFinal(interface_decl))
 					ContextCapabilitiesGenerator.generateInitializer(writer, interface_decl);
 			}
-			writer.println("\t\ttracker = new StateTracker();");
+			writer.println("\t\ttracker.init();");
 			writer.println("\t}");
 			writer.println("}");
 			writer.close();

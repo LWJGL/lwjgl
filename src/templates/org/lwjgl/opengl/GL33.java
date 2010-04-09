@@ -244,135 +244,173 @@ public interface GL33 {
 	 */
 	int GL_INT_2_10_10_10_REV = 0x8D9F;
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glVertexP2ui(@GLenum int type, @GLuint int value);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glVertexP3ui(@GLenum int type, @GLuint int value);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glVertexP4ui(@GLenum int type, @GLuint int value);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("value")
 	void glVertexP2uiv(@GLenum int type, @Check("2") @Const @GLuint IntBuffer value);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("value")
 	void glVertexP3uiv(@GLenum int type, @Check("3") @Const @GLuint IntBuffer value);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("value")
 	void glVertexP4uiv(@GLenum int type, @Check("4") @Const @GLuint IntBuffer value);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glTexCoordP1ui(@GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glTexCoordP2ui(@GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glTexCoordP3ui(@GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glTexCoordP4ui(@GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("coords")
 	void glTexCoordP1uiv(@GLenum int type, @Check("1") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("coords")
 	void glTexCoordP2uiv(@GLenum int type, @Check("2") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("coords")
 	void glTexCoordP3uiv(@GLenum int type, @Check("3") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("coords")
 	void glTexCoordP4uiv(@GLenum int type, @Check("4") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glMultiTexCoordP1ui(@GLenum int texture, @GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glMultiTexCoordP2ui(@GLenum int texture, @GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glMultiTexCoordP3ui(@GLenum int texture, @GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glMultiTexCoordP4ui(@GLenum int texture, @GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("coords")
 	void glMultiTexCoordP1uiv(@GLenum int texture, @GLenum int type, @Check("1") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("coords")
 	void glMultiTexCoordP2uiv(@GLenum int texture, @GLenum int type, @Check("2") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("coords")
 	void glMultiTexCoordP3uiv(@GLenum int texture, @GLenum int type, @Check("3") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("coords")
 	void glMultiTexCoordP4uiv(@GLenum int texture, @GLenum int type, @Check("4") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glNormalP3ui(@GLenum int type, @GLuint int coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("coords")
 	void glNormalP3uiv(@GLenum int type, @Check("3") @Const @GLuint IntBuffer coords);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glColorP3ui(@GLenum int type, @GLuint int color);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glColorP4ui(@GLenum int type, @GLuint int color);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("color")
 	void glColorP3uiv(@GLenum int type, @Check("3") @Const @GLuint IntBuffer color);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("color")
 	void glColorP4uiv(@GLenum int type, @Check("4") @Const @GLuint IntBuffer color);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glSecondaryColorP3ui(@GLenum int type, @GLuint int color);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("color")
 	void glSecondaryColorP3uiv(@GLenum int type, @Check("3") @Const @GLuint IntBuffer color);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glVertexAttribP1ui(@GLuint int index, @GLenum int type, boolean normalized, @GLuint int value);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glVertexAttribP2ui(@GLuint int index, @GLenum int type, boolean normalized, @GLuint int value);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glVertexAttribP3ui(@GLuint int index, @GLenum int type, boolean normalized, @GLuint int value);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	void glVertexAttribP4ui(@GLuint int index, @GLenum int type, boolean normalized, @GLuint int value);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("value")
 	void glVertexAttribP1uiv(@GLuint int index, @GLenum int type, boolean normalized, @Check("1") @Const @GLuint IntBuffer value);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("value")
 	void glVertexAttribP2uiv(@GLuint int index, @GLenum int type, boolean normalized, @Check("2") @Const @GLuint IntBuffer value);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("value")
 	void glVertexAttribP3uiv(@GLuint int index, @GLenum int type, boolean normalized, @Check("3") @Const @GLuint IntBuffer value);
 
+	@NoErrorCheck
 	@DeprecatedGL
 	@StripPostfix("value")
 	void glVertexAttribP4uiv(@GLuint int index, @GLenum int type, boolean normalized, @Check("4") @Const @GLuint IntBuffer value);

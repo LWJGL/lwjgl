@@ -59,9 +59,10 @@ public class ContextCapabilitiesGenerator {
 	private final static String EXTENSION_PREFIX = "GL_";
 	private final static String CORE_PREFIX = "Open";
 
-	public static void generateClassPrologue(PrintWriter writer, boolean context_specific) {
+	public static void generateClassPrologue(PrintWriter writer, boolean context_specific, boolean generate_error_checks) {
 		writer.println("public class " + Utils.CONTEXT_CAPS_CLASS_NAME + " {");
-		writer.println("\tfinal StateTracker tracker;");
+		writer.println("\tstatic final boolean DEBUG = " + Boolean.toString(generate_error_checks) + ";");
+		writer.println("\tfinal StateTracker tracker = new StateTracker();");
 		writer.println("\tfinal IntBuffer scratch_int_buffer = BufferUtils.createIntBuffer(16);");
 		writer.println();
 		if ( !context_specific ) {

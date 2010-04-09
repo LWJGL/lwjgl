@@ -46,66 +46,91 @@ public interface NV_half_float {
 	 */
 	int GL_HALF_FLOAT_NV = 0x140B;
 
+	@NoErrorCheck
 	void glVertex2hNV(@GLhalf short x, @GLhalf short y);
 
+	@NoErrorCheck
 	void glVertex3hNV(@GLhalf short x, @GLhalf short y, @GLhalf short z);
 
+	@NoErrorCheck
 	void glVertex4hNV(@GLhalf short x, @GLhalf short y, @GLhalf short z, @GLhalf short w);
 
+	@NoErrorCheck
 	void glNormal3hNV(@GLhalf short nx, @GLhalf short ny, @GLhalf short nz);
 
+	@NoErrorCheck
 	void glColor3hNV(@GLhalf short red, @GLhalf short green, @GLhalf short blue);
 
+	@NoErrorCheck
 	void glColor4hNV(@GLhalf short red, @GLhalf short green, @GLhalf short blue, @GLhalf short alpha);
 
+	@NoErrorCheck
 	void glTexCoord1hNV(@GLhalf short s);
 
+	@NoErrorCheck
 	void glTexCoord2hNV(@GLhalf short s, @GLhalf short t);
 
+	@NoErrorCheck
 	void glTexCoord3hNV(@GLhalf short s, @GLhalf short t, @GLhalf short r);
 
+	@NoErrorCheck
 	void glTexCoord4hNV(@GLhalf short s, @GLhalf short t, @GLhalf short r, @GLhalf short q);
 
+	@NoErrorCheck
 	void glMultiTexCoord1hNV(@GLenum int target, @GLhalf short s);
 
+	@NoErrorCheck
 	void glMultiTexCoord2hNV(@GLenum int target, @GLhalf short s, @GLhalf short t);
 
+	@NoErrorCheck
 	void glMultiTexCoord3hNV(@GLenum int target, @GLhalf short s, @GLhalf short t, @GLhalf short r);
 
+	@NoErrorCheck
 	void glMultiTexCoord4hNV(@GLenum int target, @GLhalf short s, @GLhalf short t, @GLhalf short r, @GLhalf short q);
 
+	@NoErrorCheck
 	void glFogCoordhNV(@GLhalf short fog);
 
+	@NoErrorCheck
 	void glSecondaryColor3hNV(@GLhalf short red, @GLhalf short green, @GLhalf short blue);
 
 	@Optional(reason = "AMD does not expose this (last driver checked: 10.3)")
+	@NoErrorCheck
 	void glVertexWeighthNV(@GLhalf short weight);
 
 	@Optional(reason = "AMD does not expose this (last driver checked: 10.3)")
+	@NoErrorCheck
 	void glVertexAttrib1hNV(@GLuint int index, @GLhalf short x);
 
 	@Optional(reason = "AMD does not expose this (last driver checked: 10.3)")
+	@NoErrorCheck
 	void glVertexAttrib2hNV(@GLuint int index, @GLhalf short x, @GLhalf short y);
 
 	@Optional(reason = "AMD does not expose this (last driver checked: 10.3)")
+	@NoErrorCheck
 	void glVertexAttrib3hNV(@GLuint int index, @GLhalf short x, @GLhalf short y, @GLhalf short z);
 
 	@Optional(reason = "AMD does not expose this (last driver checked: 10.3)")
+	@NoErrorCheck
 	void glVertexAttrib4hNV(@GLuint int index, @GLhalf short x, @GLhalf short y, @GLhalf short z, @GLhalf short w);
 
 	@Optional(reason = "AMD does not expose this (last driver checked: 10.3)")
+	@NoErrorCheck
 	@StripPostfix("attribs")
 	void glVertexAttribs1hvNV(@GLuint int index, @AutoSize("attribs") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
 
 	@Optional(reason = "AMD does not expose this (last driver checked: 10.3)")
+	@NoErrorCheck
 	@StripPostfix("attribs")
 	void glVertexAttribs2hvNV(@GLuint int index, @AutoSize(value = "attribs", expression = " >> 1") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
 
 	@Optional(reason = "AMD does not expose this (last driver checked: 10.3)")
+	@NoErrorCheck
 	@StripPostfix("attribs")
 	void glVertexAttribs3hvNV(@GLuint int index, @AutoSize(value = "attribs", expression = " / 3") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
 
 	@Optional(reason = "AMD does not expose this (last driver checked: 10.3)")
+	@NoErrorCheck
 	@StripPostfix("attribs")
 	void glVertexAttribs4hvNV(@GLuint int index, @AutoSize(value = "attribs", expression = " >> 2") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
 }

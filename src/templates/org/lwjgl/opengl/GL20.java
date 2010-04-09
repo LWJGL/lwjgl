@@ -296,30 +296,43 @@ public interface GL20 {
 	// ----------------------[ ARB_vertex_program ]----------------------
 	// ------------------------------------------------------------------
 
+	@NoErrorCheck
 	void glVertexAttrib1s(@GLuint int index, short x);
 
+	@NoErrorCheck
 	void glVertexAttrib1f(@GLuint int index, float x);
 
+	@NoErrorCheck
 	void glVertexAttrib1d(@GLuint int index, double x);
 
+	@NoErrorCheck
 	void glVertexAttrib2s(@GLuint int index, short x, short y);
 
+	@NoErrorCheck
 	void glVertexAttrib2f(@GLuint int index, float x, float y);
 
+	@NoErrorCheck
 	void glVertexAttrib2d(@GLuint int index, double x, double y);
 
+	@NoErrorCheck
 	void glVertexAttrib3s(@GLuint int index, short x, short y, short z);
 
+	@NoErrorCheck
 	void glVertexAttrib3f(@GLuint int index, float x, float y, float z);
 
+	@NoErrorCheck
 	void glVertexAttrib3d(@GLuint int index, double x, double y, double z);
 
+	@NoErrorCheck
 	void glVertexAttrib4s(@GLuint int index, short x, short y, short z, short w);
 
+	@NoErrorCheck
 	void glVertexAttrib4f(@GLuint int index, float x, float y, float z, float w);
 
+	@NoErrorCheck
 	void glVertexAttrib4d(@GLuint int index, double x, double y, double z, double w);
 
+	@NoErrorCheck
 	void glVertexAttrib4Nub(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
 
 	void glVertexAttribPointer(@GLuint int index, int size, @AutoType("buffer") @GLenum int type, boolean normalized, @GLsizei int stride,

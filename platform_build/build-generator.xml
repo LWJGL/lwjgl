@@ -22,7 +22,7 @@
 	<!-- Proxy target to generate it all -->
 	<target name="generate-all" depends="generate-openal, generate-opengl, generate-opengl-capabilities, generate-opengl-references" description="Generates java and native source"/>
 
-	<target name="generate-debug" depends="generate-openal-debug, generate-opengl-debug, generate-opengl-capabilities, generate-opengl-references" description="Generates java and native source"/>
+	<target name="generate-debug" depends="generate-openal-debug, generate-opengl-debug, generate-opengl-capabilities-debug, generate-opengl-references" description="Generates java and native source"/>
 
 	<!-- Generate OpenAL -->
 	<target name="generate-openal" depends="generators" description="Generates java and native source for AL">
@@ -96,7 +96,7 @@
 		</apply>
 	</target>
 
-	<!-- Generate context capabilities -->
+	<!-- Generate references -->
 	<target name="generate-opengl-references" depends="generators" description="Generates java and native source for GL">
 		<apply executable="apt" parallel="true">
 			<arg value="-nocompile"/>
@@ -110,7 +110,7 @@
 		</apply>
 	</target>
 	
-		<!-- Generate context capabilities -->
+	<!-- Generate context capabilities -->
 	<target name="generate-opengl-capabilities" depends="generators" description="Generates java and native source for GL">
 		<apply executable="apt" parallel="true">
 			<arg value="-nocompile"/>
@@ -120,6 +120,22 @@
 			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
 			<arg value="-s"/>
 			<arg path="${lwjgl.src}/generated"/>
+			<arg value="-Acontextspecific"/>
+			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>
+		</apply>
+	</target>	
+	
+	<!-- Generate context capabilities [DEBUG] -->
+	<target name="generate-opengl-capabilities-debug" depends="generators" description="Generates java and native source for GL">
+		<apply executable="apt" parallel="true">
+			<arg value="-nocompile"/>
+			<arg value="-factory"/>
+			<arg value="org.lwjgl.util.generator.ContextGeneratorProcessorFactory"/>
+			<arg value="-cp"/>
+			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg value="-s"/>
+			<arg path="${lwjgl.src}/generated"/>
+			<arg value="-Ageneratechecks"/>
 			<arg value="-Acontextspecific"/>
 			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>
 		</apply>

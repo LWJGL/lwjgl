@@ -49,6 +49,8 @@ public final class Util {
 	 *
 	 */
 	public static void checkGLError() throws OpenGLException {
+		if ( ContextCapabilities.DEBUG && GLContext.getCapabilities().tracker.isBeginEnd() ) // Do not call GetError inside a Begin/End pair.
+			return;
 		int err = GL11.glGetError();
 		if ( err != GL11.GL_NO_ERROR ) {
 			throw new OpenGLException(err);

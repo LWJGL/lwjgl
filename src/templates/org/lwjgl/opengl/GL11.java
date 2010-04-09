@@ -764,9 +764,11 @@ public interface GL11 {
 
 	@NoErrorCheck
 	@DeprecatedGL
+	@Code("\t\tif ( ContextCapabilities.DEBUG ) StateTracker.setBeginEnd(caps, true);")
 	void glBegin(@GLenum int mode);
 
 	@DeprecatedGL
+	@Code("\t\tif ( ContextCapabilities.DEBUG ) StateTracker.setBeginEnd(caps, false);")
 	void glEnd();
 
 	@NoErrorCheck

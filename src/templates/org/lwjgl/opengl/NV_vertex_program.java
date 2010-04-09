@@ -241,65 +241,90 @@ public interface NV_vertex_program extends NV_program {
 	                             @GLfloat
 	                             @GLdouble Buffer buffer);
 
+	@NoErrorCheck
 	void glVertexAttrib1sNV(@GLuint int index, short x);
 
+	@NoErrorCheck
 	void glVertexAttrib1fNV(@GLuint int index, float x);
 
+	@NoErrorCheck
 	void glVertexAttrib1dNV(@GLuint int index, double x);
 
+	@NoErrorCheck
 	void glVertexAttrib2sNV(@GLuint int index, short x, short y);
 
+	@NoErrorCheck
 	void glVertexAttrib2fNV(@GLuint int index, float x, float y);
 
+	@NoErrorCheck
 	void glVertexAttrib2dNV(@GLuint int index, double x, double y);
 
+	@NoErrorCheck
 	void glVertexAttrib3sNV(@GLuint int index, short x, short y, short z);
 
+	@NoErrorCheck
 	void glVertexAttrib3fNV(@GLuint int index, float x, float y, float z);
 
+	@NoErrorCheck
 	void glVertexAttrib3dNV(@GLuint int index, double x, double y, double z);
 
+	@NoErrorCheck
 	void glVertexAttrib4sNV(@GLuint int index, short x, short y, short z, short w);
 
+	@NoErrorCheck
 	void glVertexAttrib4fNV(@GLuint int index, float x, float y, float z, float w);
 
+	@NoErrorCheck
 	void glVertexAttrib4dNV(@GLuint int index, double x, double y, double z, double w);
 
+	@NoErrorCheck
 	void glVertexAttrib4ubNV(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribs1svNV(@GLuint int index, @AutoSize("v") @GLsizei int n, @Const ShortBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribs1fvNV(@GLuint int index, @AutoSize("v") @GLsizei int n, @Const FloatBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribs1dvNV(@GLuint int index, @AutoSize("v") @GLsizei int n, @Const DoubleBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribs2svNV(@GLuint int index, @AutoSize(value = "v", expression = " >> 1") @GLsizei int n, @Const ShortBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribs2fvNV(@GLuint int index, @AutoSize(value = "v", expression = " >> 1") @GLsizei int n, @Const FloatBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribs2dvNV(@GLuint int index, @AutoSize(value = "v", expression = " >> 1") @GLsizei int n, @Const DoubleBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribs3svNV(@GLuint int index, @AutoSize(value = "v", expression = " / 3") @GLsizei int n, @Const ShortBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribs3fvNV(@GLuint int index, @AutoSize(value = "v", expression = " / 3") @GLsizei int n, @Const FloatBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribs3dvNV(@GLuint int index, @AutoSize(value = "v", expression = " / 3") @GLsizei int n, @Const DoubleBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribs4svNV(@GLuint int index, @AutoSize(value = "v", expression = " >> 2") @GLsizei int n, @Const ShortBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribs4fvNV(@GLuint int index, @AutoSize(value = "v", expression = " >> 2") @GLsizei int n, @Const FloatBuffer v);
 
+	@NoErrorCheck
 	@StripPostfix("v")
 	void glVertexAttribs4dvNV(@GLuint int index, @AutoSize(value = "v", expression = " >> 2") @GLsizei int n, @Const DoubleBuffer v);
 }
