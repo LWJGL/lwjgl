@@ -846,7 +846,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			if (parent_focus) {
 				setInputFocusUnsafe(current_window);
 			}
-			else {
+			else if (xembedded) {
 				setInputFocusUnsafe(0);
 			}
 		}
