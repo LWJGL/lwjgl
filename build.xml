@@ -256,6 +256,59 @@
 		</javah>
 	</target>
 	
+	<target name="version-mismatch">
+		<loadfile srcfile="${lwjgl.src}/java/org/lwjgl/WindowsSysImplementation.java" property="lwjgl.java.windows.version">
+			<filterchain>
+				<tokenfilter>
+	    		<containsstring contains="JNI_VERSION ="/>
+				</tokenfilter>
+			</filterchain>
+		</loadfile>
+		<loadfile srcfile="${lwjgl.src}/java/org/lwjgl/LinuxSysImplementation.java" property="lwjgl.java.linux.version">
+			<filterchain>
+				<tokenfilter>
+	    		<containsstring contains="JNI_VERSION ="/>
+				</tokenfilter>
+			</filterchain>
+		</loadfile>			
+		<loadfile srcfile="${lwjgl.src}/java/org/lwjgl/MacOSXSysImplementation.java" property="lwjgl.java.macosx.version">
+			<filterchain>
+				<tokenfilter>
+	    		<containsstring contains="JNI_VERSION ="/>
+				</tokenfilter>
+			</filterchain>
+		</loadfile>
+		<loadfile srcfile="${lwjgl.src.native}/windows/org_lwjgl_WindowsSysImplementation.h" property="lwjgl.native.windows.version">
+			<filterchain>
+				<tokenfilter>
+	    		<containsstring contains="#define org_lwjgl_WindowsSysImplementation_JNI_VERSION"/>
+				</tokenfilter>
+			</filterchain>
+		</loadfile>
+		<loadfile srcfile="${lwjgl.src.native}/linux/org_lwjgl_LinuxSysImplementation.h" property="lwjgl.native.linux.version">
+			<filterchain>
+				<tokenfilter>
+	    		<containsstring contains="#define org_lwjgl_LinuxSysImplementation_JNI_VERSION"/>
+				</tokenfilter>
+			</filterchain>
+		</loadfile>				
+		<loadfile srcfile="${lwjgl.src.native}/macosx/org_lwjgl_MacOSXSysImplementation.h" property="lwjgl.native.macosx.version">
+			<filterchain>
+				<tokenfilter>
+	    		<containsstring contains="#define org_lwjgl_MacOSXSysImplementation_JNI_VERSION"/>
+				</tokenfilter>
+			</filterchain>
+		</loadfile>
+		<echo>
+			lwjgl.java.windows.version = ${lwjgl.java.windows.version}
+			lwjgl.native.windows.version = ${lwjgl.native.windows.version}			
+			lwjgl.java.linux.version = ${lwjgl.java.linux.version}
+			lwjgl.native.linux.version = ${lwjgl.native.linux.version}			
+			lwjgl.java.macosx.version = ${lwjgl.java.macosx.version}
+			lwjgl.native.macosx.version = ${lwjgl.native.macosx.version}			
+		</echo>
+	</target>
+	
 	<!-- Compiles the Java source code -->
 	<target name="compile" description="Compiles the java source code" depends="-initialize">
 		<javac debug="yes" destdir="${lwjgl.bin}" source="1.4" target="1.4" classpath="${lwjgl.lib}/jinput.jar:${lwjgl.lib}/AppleJavaExtensions.jar" taskname="core">
@@ -272,7 +325,7 @@
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/examples/**" source="1.4" target="1.4" taskname="examples" />
 	</target>	
 	
-	<target name="compile_native" depends="headers" description="Compiles the native files">
+	<target name="compile_native" depends="headers, version-mismatch" description="Compiles the native files">
 		<condition property="lwjgl.platform.windows">
 			<os family="windows" />
 		</condition>
