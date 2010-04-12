@@ -315,6 +315,29 @@
 		</echo>
 	</target>
 	
+	<macrodef name="version-check">
+	  <attribute name="platform"/>
+	  <sequential>
+			<java classname="org.lwjgl.test.NativeTest" logError="false" resultproperty="nativetest.res" outputproperty="nativetest.out" errorproperty="nativetest.err" fork="true">
+				<jvmarg value="-Djava.library.path=libs/@{platform}"/>
+	    	<classpath>
+	      	<pathelement path="${lwjgl.bin}"/>
+	        <pathelement path="${java.class.path}"/>
+	      </classpath>
+	    </java>
+	    
+	    <fail message="Unable to load native library: ${nativetest.err}">
+	     <condition>
+	       <not>
+	         <equals arg1="OK" arg2="${nativetest.out}"/>
+	       </not>
+	     </condition>
+	   </fail>
+	   
+	   <echo message="Successfully executed NativeTest"/>
+		</sequential>
+	</macrodef>
+	
 	<!-- Compiles the Java source code -->
 	<target name="compile" description="Compiles the java source code" depends="-initialize">
 		<javac debug="yes" destdir="${lwjgl.bin}" source="1.4" target="1.4" classpath="${lwjgl.lib}/jinput.jar:${lwjgl.lib}/AppleJavaExtensions.jar" taskname="core">
@@ -359,6 +382,7 @@
 		<copy todir="${lwjgl.lib}/windows">
 			<fileset dir="${lwjgl.bin}/lwjgl" includes="lwjgl*.dll"/>
 		</copy>
+		<version-check platform="windows"/>
 	</target>
 
 	<!-- Compiles LWJGL on Linux platforms -->
@@ -367,6 +391,7 @@
 		<copy todir="${lwjgl.lib}/linux">
 			<fileset dir="${lwjgl.bin}/lwjgl" includes="liblwjgl*.so"/>
 		</copy>
+		<version-check platform="linux"/>
 	</target>
 
 	<!-- Compiles LWJGL on solaris platforms -->
@@ -376,12 +401,14 @@
 		<copy todir="${lwjgl.lib}/solaris">
 			<fileset dir="${lwjgl.bin}/lwjgl" includes="liblwjgl*.so"/>
 		</copy>
+		<version-check platform="solaris"/>
 	</target>
 
 	<!-- Compiles LWJGL on Mac platforms -->
 	<target name="-compile_native_macosx" if="lwjgl.platform.macosx">
 		<ant antfile="platform_build/macosx_ant/build.xml" inheritAll="false"/>
 		<copy file="${lwjgl.bin}/lwjgl/liblwjgl.jnilib" todir="${lwjgl.lib}/macosx"/>
+		<version-check platform="macosx"/>
 	</target>
 	
 	<target name="repack200" description="Pack200-repack a jar file">
