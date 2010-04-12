@@ -256,6 +256,12 @@
 		</javah>
 	</target>
 	
+	<target name="touch-version">
+		<touch file="${lwjgl.src.native}/windows/org_lwjgl_opengl_Display.c"/>
+		<touch file="${lwjgl.src.native}/linux/org_lwjgl_opengl_Display.c"/>
+		<touch file="${lwjgl.src.native}/macosx/org_lwjgl_opengl_Display.m"/>
+	</target>
+	
 	<target name="version-mismatch">
 		<loadfile srcfile="${lwjgl.src}/java/org/lwjgl/WindowsSysImplementation.java" property="lwjgl.java.windows.version">
 			<filterchain>
@@ -325,7 +331,7 @@
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/examples/**" source="1.4" target="1.4" taskname="examples" />
 	</target>	
 	
-	<target name="compile_native" depends="headers, version-mismatch" description="Compiles the native files">
+	<target name="compile_native" depends="headers, touch-version, version-mismatch" description="Compiles the native files">
 		<condition property="lwjgl.platform.windows">
 			<os family="windows" />
 		</condition>
