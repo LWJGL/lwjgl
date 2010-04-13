@@ -391,7 +391,7 @@
 		<copy todir="${lwjgl.lib}/linux">
 			<fileset dir="${lwjgl.bin}/lwjgl" includes="liblwjgl*.so"/>
 		</copy>
-		<version-check platform="linux"/>
+		<!-- headless issues <version-check platform="linux"/> -->
 	</target>
 
 	<!-- Compiles LWJGL on solaris platforms -->
