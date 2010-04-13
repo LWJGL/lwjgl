@@ -32,6 +32,7 @@
 package org.lwjgl.test;
 
 import org.lwjgl.Sys;
+import java.awt.Toolkit;
 
 /**
  * <br>
@@ -43,13 +44,19 @@ import org.lwjgl.Sys;
  */
 public class NativeTest {
   
+  public void invokeSys() {
+    Sys.getVersion();
+  }
+  
   /**
    * Entry point for test
    * 
    * @param args ignored
    */
   public static void main(String[] args) {
-	  Sys.getVersion();
+    // try to "load" awt - work around for headless issue on linux
+    Toolkit.getDefaultToolkit();
+	  new NativeTest().invokeSys();
 	  System.out.println("OK");
   }
 }
