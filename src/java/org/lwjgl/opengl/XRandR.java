@@ -40,6 +40,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 /**
  * Utility for working with the xrandr commmand-line utility. Assumes
@@ -103,7 +105,12 @@ public class XRandR {
 	 *         xrandr is not supported
 	 */
 	public static Screen[] getConfiguration() {
-		populate();
+		AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				populate();
+				return null;
+			}
+		});
 
 		return (Screen[]) current.clone();
 	}
