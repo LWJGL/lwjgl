@@ -55,9 +55,9 @@ public interface NV_shader_buffer_load {
 
 	boolean glIsBufferResidentNV(@GLenum int target);
 
-	// TODO: These two are currently missing from the latest NV drivers, check again sometime.
-	//void glNamedMakeBufferResidentNV(@GLuint int buffer, @GLenum int access);
-	//void glNamedMakeBufferNonResidentNV(@GLuint int buffer);
+	void glMakeNamedBufferResidentNV(@GLuint int buffer, @GLenum int access);
+
+	void glMakeNamedBufferNonResidentNV(@GLuint int buffer);
 
 	boolean glIsNamedBufferResidentNV(@GLuint int buffer);
 
@@ -88,7 +88,7 @@ public interface NV_shader_buffer_load {
 	void glUniformui64NV(int location, @GLuint64EXT long value);
 
 	@StripPostfix("value")
-	void glUniformui64vNV(int location, @AutoSize("value") @GLsizei int count, @GLuint64EXT LongBuffer value);
+	void glUniformui64vNV(int location, @AutoSize("value") @GLsizei int count, @Const @GLuint64EXT LongBuffer value);
 
 	@StripPostfix("params")
 	void glGetUniformui64vNV(@GLuint int program, int location, @OutParameter @Check("1") @GLuint64EXT LongBuffer params);
@@ -96,6 +96,6 @@ public interface NV_shader_buffer_load {
 	void glProgramUniformui64NV(@GLuint int program, int location, @GLuint64EXT long value);
 
 	@StripPostfix("value")
-	void glProgramUniformui64vNV(@GLuint int program, int location, @AutoSize("value") @GLsizei int count, @GLuint64EXT LongBuffer value);
+	void glProgramUniformui64vNV(@GLuint int program, int location, @AutoSize("value") @GLsizei int count, @Const @GLuint64EXT LongBuffer value);
 
 }

@@ -168,7 +168,7 @@ public interface EXT_gpu_shader4 {
 								   @GLuint Buffer buffer);
 
 	@StripPostfix("params")
-	void glGetVertexAttribIivEXT(@GLuint int index, @GLenum int pname, @OutParameter @Check("4")IntBuffer params);
+	void glGetVertexAttribIivEXT(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
 	void glGetVertexAttribIuivEXT(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") @GLuint IntBuffer params);

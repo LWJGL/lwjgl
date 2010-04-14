@@ -137,13 +137,13 @@ public interface ARB_vertex_program extends ARB_program {
 	void glDisableVertexAttribArrayARB(@GLuint int index);
 
 	@StripPostfix("params")
-	void glGetVertexAttribfvARB(@GLuint int index, @GLenum int pname, @OutParameter @Check FloatBuffer params);
+	void glGetVertexAttribfvARB(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	void glGetVertexAttribdvARB(@GLuint int index, @GLenum int pname, @OutParameter @Check DoubleBuffer params);
+	void glGetVertexAttribdvARB(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") DoubleBuffer params);
 
 	@StripPostfix("params")
-	void glGetVertexAttribivARB(@GLuint int index, @GLenum int pname, @OutParameter @Check IntBuffer params);
+	void glGetVertexAttribivARB(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
 	@StripPostfix("result")
 	void glGetVertexAttribPointervARB(@GLuint int index, @GLenum int pname, @Result @GLvoid ByteBuffer result);
