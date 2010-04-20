@@ -32,47 +32,65 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 
 /**
- * The Drawable interface describes an OpenGL drawable with an associated
- * Context.
- *
- * @author elias_naur
+ * @author Spasi
+ * @since 20 Απρ 2010
  */
 
-public interface Drawable {
+/**
+ * A Drawable implementation that shares its context with another Drawable. This is useful
+ * for background loading of resources. See org.lwjgl.test.opengl.multithread.BackgroundLoad
+ * for an example.
+ *
+ * @author Spasi
+ */
+public final class SharedDrawable implements Drawable {
 
-	/**
-	 * [INTERNAL USE ONLY] Returns the Drawable's Context.
-	 *
-	 * @return the Drawable's Context
-	 */
-	Context getContext();
+	private Context context;
 
-	/**
-	 * [INTERNAL USE ONLY] Creates a new Context that is shared with the Drawable's Context.
-	 *
-	 * @return a Context shared with the Drawable's Context.
-	 */
-	Context createSharedContext() throws LWJGLException;
+	private boolean destroyed;
 
-	/**
-	 * Makes the Drawable's context current in the current thread.
-	 *
-	 * @throws LWJGLException
-	 */
-	void makeCurrent() throws LWJGLException;
+	public SharedDrawable(final Drawable drawable) throws LWJGLException {
+		this.context = drawable.createSharedContext();
+	}
 
-	/**
-	 * If the Drawable's context is current in the current thread, no context will be current after a call to this method.
-	 *
-	 * @throws LWJGLException
-	 */
-	void releaseContext() throws LWJGLException;
+	public Context getContext() {
+		return context;
+	}
 
-	/**
-	 * Destroys the Drawable.
-	 */
-	void destroy();
+	public Context createSharedContext() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void makeCurrent() throws LWJGLException {
+		checkDestroyed();
+		context.makeCurrent();
+
+	}
+
+	public void releaseContext() throws LWJGLException {
+		checkDestroyed();
+		if ( context.isCurrent() )
+			Context.releaseCurrentContext();
+	}
+
+	public void destroy() {
+		if ( destroyed )
+			return;
+
+		try {
+			context.forceDestroy();
+			destroyed = true;
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Exception occurred while destroying SharedDrawable: " + e);
+		}
+	}
+
+	private void checkDestroyed() {
+		if ( destroyed )
+			throw new IllegalStateException("SharedDrawable is destroyed");
+	}
 
 }

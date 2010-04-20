@@ -255,6 +255,12 @@ public final class Pbuffer implements Drawable {
 		return context;
 	}
 
+	public Context createSharedContext() throws LWJGLException {
+		synchronized ( GlobalLock.lock ) {
+			return new Context(peer_info, context.getContextAttribs(), context);
+		}
+	}
+
 	private void checkDestroyed() {
 		if (destroyed)
 			throw new IllegalStateException("Pbuffer is destroyed");
@@ -279,6 +285,12 @@ public final class Pbuffer implements Drawable {
 	public synchronized void makeCurrent() throws LWJGLException {
 		checkDestroyed();
 		context.makeCurrent();
+	}
+
+	public void releaseContext() throws LWJGLException {
+		checkDestroyed();
+		if ( context.isCurrent() )
+			Context.releaseCurrentContext();
 	}
 
 	/**

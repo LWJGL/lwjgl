@@ -143,6 +143,26 @@ public final class Display {
 					return isCreated() ? context : null;
 				}
 			}
+
+			public Context createSharedContext() throws LWJGLException {
+				synchronized ( GlobalLock.lock ) {
+					if ( !isCreated() ) throw new IllegalStateException("Display must be created.");
+
+					return new Context(peer_info, context.getContextAttribs(), context);
+				}
+			}
+
+			public void makeCurrent() throws LWJGLException {
+				Display.makeCurrent();
+			}
+
+			public void releaseContext() throws LWJGLException {
+				Display.releaseContext();
+			}
+
+			public void destroy() {
+				Display.destroy();
+			}
 		};
 	}
 

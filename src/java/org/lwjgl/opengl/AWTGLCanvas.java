@@ -109,6 +109,16 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 		return context;
 	}
 
+	public Context createSharedContext() throws LWJGLException {
+		synchronized ( GlobalLock.lock ) {
+			synchronized ( SYNC_LOCK ) {
+				if ( context == null ) throw new IllegalStateException("Canvas not yet displayable");
+
+				return new Context(peer_info, context.getContextAttribs(), context);
+			}
+		}
+	}
+
 	/** Constructor using the default PixelFormat. */
 	public AWTGLCanvas() throws LWJGLException {
 		this(new PixelFormat());
@@ -175,7 +185,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 		 */
 	public void removeNotify() {
 		synchronized ( SYNC_LOCK ) {
-			destroyContext();
+			destroy();
 			super.removeNotify();
 		}
 	}
@@ -225,7 +235,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	}
 
 	/** Destroy the OpenGL context. This happens when the component becomes undisplayable */
-	private void destroyContext() {
+	public final void destroy() {
 		synchronized ( SYNC_LOCK ) {
 			try {
 				if ( context != null ) {

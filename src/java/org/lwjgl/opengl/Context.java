@@ -61,7 +61,7 @@ final class Context {
 	private final ByteBuffer handle;
 	private final PeerInfo peer_info;
 
-	private final IntBuffer attribList;
+	private final ContextAttribs contextAttribs;
 	private final boolean forwardCompatible;
 
 	/** Whether the context has been destroyed */
@@ -94,6 +94,10 @@ final class Context {
 		return peer_info;
 	}
 
+	ContextAttribs getContextAttribs() {
+		return contextAttribs;
+	}
+
 	static Context getCurrentContext() {
 		return (Context)current_context_local.get();
 	}
@@ -109,6 +113,9 @@ final class Context {
 			GLContext.loadOpenGLLibrary();
 			try {
 				this.peer_info = peer_info;
+				this.contextAttribs = attribs;
+
+				IntBuffer attribList;
 				if ( attribs != null ) {
 					attribList = attribs.getAttribList();
 					forwardCompatible = attribs.isForwardCompatible();

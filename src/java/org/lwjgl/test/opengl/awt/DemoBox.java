@@ -150,7 +150,7 @@ public class DemoBox extends Frame {
 		addWindowListener(new WindowAdapter() {
 
 			public void windowClosing(WindowEvent e) {
-				demoCanvas.destroy();
+				demoCanvas.destroyCanvas();
 				dispose();
 				System.exit(0);
 			}
@@ -269,7 +269,7 @@ public class DemoBox extends Frame {
 			}
 		}
 
-		public void destroy() {
+		public void destroyCanvas() {
 			setActiveDemo(null);
 			renderThread = null;
 		}
