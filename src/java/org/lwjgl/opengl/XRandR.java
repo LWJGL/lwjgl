@@ -40,8 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 /**
  * Utility for working with the xrandr commmand-line utility. Assumes
@@ -105,12 +103,7 @@ public class XRandR {
 	 *         xrandr is not supported
 	 */
 	public static Screen[] getConfiguration() {
-		AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				populate();
-				return null;
-			}
-		});
+		populate();
 
 		return (Screen[]) current.clone();
 	}
@@ -119,20 +112,11 @@ public class XRandR {
 	 * @param screens
 	 *           The desired screen set, may not be <code>null</code>
 	 */
-	public static void setConfiguration(final Screen[]/* ... */screens) {
+	public static void setConfiguration(Screen[]/* ... */screens) {
 		if (screens.length == 0) {
 			throw new IllegalArgumentException("Must specify at least one screen");
 		}
-		
-		AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				setScreen(screens);
-				return null;
-			}
-		});
-	}
-	
-	private static void setScreen(Screen[] screens) {
+
 		List/* <String> */cmd = new ArrayList/* <String> */();
 		cmd.add("xrandr");
 
@@ -173,6 +157,7 @@ public class XRandR {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	/**
@@ -180,13 +165,7 @@ public class XRandR {
 	 *         xrandr is not supported
 	 */
 	public static String[] getScreenNames() {
-		AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				populate();
-				return null;
-			}
-		});
-		
+		populate();
 		return (String[]) screens.keySet().toArray(new String[screens.size()]);
 	}
 
@@ -196,13 +175,7 @@ public class XRandR {
 	 *         <code>null</code> if there is no such screen
 	 */
 	public static Screen[] getResolutions(String name) {
-		AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				populate();
-				return null;
-			}
-		});
-		
+		populate();
 		// clone the array to prevent held copies being altered
 		return (Screen[]) ((Screen[]) screens.get(name)).clone();
 	}

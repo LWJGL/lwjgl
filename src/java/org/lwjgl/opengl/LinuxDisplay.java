@@ -48,6 +48,9 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.opengl.XRandR.Screen;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 final class LinuxDisplay implements DisplayImplementation {
 	/* X11 constants */
 	public final static int CurrentTime = 0;
@@ -524,7 +527,12 @@ final class LinuxDisplay implements DisplayImplementation {
 		try {
 			if( current_displaymode_extension == XRANDR && savedXrandrConfig.length > 0 )
 			{
-				XRandR.setConfiguration( savedXrandrConfig );
+				AccessController.doPrivileged(new PrivilegedAction() {
+					public Object run() {
+						XRandR.setConfiguration( savedXrandrConfig );
+						return null;
+					}
+				});
 			}
 			else
 			{
@@ -615,7 +623,11 @@ final class LinuxDisplay implements DisplayImplementation {
 				throw new LWJGLException("No modes available");
 			switch (current_displaymode_extension) {
 				case XRANDR:
-					savedXrandrConfig = XRandR.getConfiguration();
+					savedXrandrConfig = (Screen[])AccessController.doPrivileged(new PrivilegedAction() {
+						public Object run() {
+							return XRandR.getConfiguration();
+						}
+					});
 					saved_mode = getCurrentXRandrMode();
 					break;
 				case XF86VIDMODE:
@@ -890,7 +902,12 @@ final class LinuxDisplay implements DisplayImplementation {
 			try {
 				if( current_displaymode_extension == XRANDR && savedXrandrConfig.length > 0 )
 				{
-					XRandR.setConfiguration( savedXrandrConfig );
+					AccessController.doPrivileged(new PrivilegedAction() {
+						public Object run() {
+							XRandR.setConfiguration( savedXrandrConfig );
+							return null;
+						}
+					});
 				}
 				else
 				{
