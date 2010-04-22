@@ -12,6 +12,9 @@ Do not create the keyboard when creating the display
 org.lwjgl.util.Debug
 Whether to output debug info
 
+org.lwjgl.util.NoChecks
+Whether to disable runtime function/buffer checks and state tracking.
+
 org.lwjgl.opengl.Display.allowSoftwareOpenGL
 Whether to allow creation of a software only opengl context
 
