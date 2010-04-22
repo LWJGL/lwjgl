@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.LWJGLUtil;
 
 /**
  * @author Spasi
@@ -46,51 +45,14 @@ import org.lwjgl.LWJGLUtil;
  *
  * @author Spasi
  */
-public final class SharedDrawable implements Drawable {
-
-	private Context context;
-
-	private boolean destroyed;
+public final class SharedDrawable extends AbstractDrawable {
 
 	public SharedDrawable(final Drawable drawable) throws LWJGLException {
-		this.context = drawable.createSharedContext();
-	}
-
-	public Context getContext() {
-		return context;
+		this.context = ((DrawableLWJGL)drawable).createSharedContext();
 	}
 
 	public Context createSharedContext() {
 		throw new UnsupportedOperationException();
-	}
-
-	public void makeCurrent() throws LWJGLException {
-		checkDestroyed();
-		context.makeCurrent();
-
-	}
-
-	public void releaseContext() throws LWJGLException {
-		checkDestroyed();
-		if ( context.isCurrent() )
-			Context.releaseCurrentContext();
-	}
-
-	public void destroy() {
-		if ( destroyed )
-			return;
-
-		try {
-			context.forceDestroy();
-			destroyed = true;
-		} catch (LWJGLException e) {
-			LWJGLUtil.log("Exception occurred while destroying SharedDrawable: " + e);
-		}
-	}
-
-	private void checkDestroyed() {
-		if ( destroyed )
-			throw new IllegalStateException("SharedDrawable is destroyed");
 	}
 
 }

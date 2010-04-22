@@ -35,6 +35,7 @@ import java.nio.Buffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.LWJGLUtil;
 
 /**
  * A class to check buffer boundaries in GL methods. Many GL
@@ -60,93 +61,78 @@ class GLChecks {
 	}
 
 	static int getBufferObjectSize(ContextCapabilities caps, int buffer_enum) {
-		IntBuffer scratch_buffer = caps.scratch_int_buffer;
-		GL15.glGetBufferParameter(buffer_enum, GL15.GL_BUFFER_SIZE, scratch_buffer);
-		return scratch_buffer.get(0);
+		return GL15.glGetBufferParameter(buffer_enum, GL15.GL_BUFFER_SIZE);
 	}
 
 	static int getBufferObjectSizeARB(ContextCapabilities caps, int buffer_enum) {
-		IntBuffer scratch_buffer = caps.scratch_int_buffer;
-		ARBBufferObject.glGetBufferParameterARB(buffer_enum, ARBBufferObject.GL_BUFFER_SIZE_ARB, scratch_buffer);
-		return scratch_buffer.get(0);
+		return ARBBufferObject.glGetBufferParameterARB(buffer_enum, ARBBufferObject.GL_BUFFER_SIZE_ARB);
 	}
 
 	static int getBufferObjectSizeATI(ContextCapabilities caps, int buffer) {
-		IntBuffer scratch_buffer = caps.scratch_int_buffer;
-		ATIVertexArrayObject.glGetObjectBufferATI(buffer, ATIVertexArrayObject.GL_OBJECT_BUFFER_SIZE_ATI, scratch_buffer);
-		return scratch_buffer.get(0);
+		return ATIVertexArrayObject.glGetObjectBufferATI(buffer, ATIVertexArrayObject.GL_OBJECT_BUFFER_SIZE_ATI);
 	}
 
 	static int getNamedBufferObjectSize(ContextCapabilities caps, int buffer) {
-		IntBuffer scratch_buffer = caps.scratch_int_buffer;
-		EXTDirectStateAccess.glGetNamedBufferParameterEXT(buffer, GL15.GL_BUFFER_SIZE, scratch_buffer);
-		return scratch_buffer.get(0);
-	}
-
-	private static boolean checkBufferObject(ContextCapabilities caps, int buffer_enum, boolean state) {
-		IntBuffer scratch_buffer = caps.scratch_int_buffer;
-		GL11.glGetInteger(buffer_enum, scratch_buffer);
-		boolean is_enabled = scratch_buffer.get(0) != 0;
-		return state == is_enabled;
+		return EXTDirectStateAccess.glGetNamedBufferParameterEXT(buffer, GL15.GL_BUFFER_SIZE);
 	}
 
 	/** Helper method to ensure that array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOdisabled(ContextCapabilities caps) {
-		if(StateTracker.getReferencesStack(caps).getReferences().arrayBuffer != 0)
+		if( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().arrayBuffer != 0 )
 			throw new OpenGLException("Cannot use Buffers when Array Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOenabled(ContextCapabilities caps) {
-		if(StateTracker.getReferencesStack(caps).getReferences().arrayBuffer == 0)
+		if( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().arrayBuffer == 0 )
 			throw new OpenGLException("Cannot use offsets when Array Buffer Object is disabled");
 	}
 
 	/** Helper method to ensure that element array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureElementVBOdisabled(ContextCapabilities caps) {
-		if(StateTracker.getReferencesStack(caps).getReferences().elementArrayBuffer != 0)
+		if( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().elementArrayBuffer != 0 )
 			throw new OpenGLException("Cannot use Buffers when Element Array Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that element array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureElementVBOenabled(ContextCapabilities caps) {
-		if(StateTracker.getReferencesStack(caps).getReferences().elementArrayBuffer == 0)
+		if( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().elementArrayBuffer == 0 )
 			throw new OpenGLException("Cannot use offsets when Element Array Buffer Object is disabled");
 	}
 
 	/** Helper method to ensure that array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureIndirectBOdisabled(ContextCapabilities caps) {
-		if ( StateTracker.getReferencesStack(caps).getReferences().indirectBuffer != 0 )
+		if ( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().indirectBuffer != 0 )
 			throw new OpenGLException("Cannot use Buffers when Draw Indirect Object is enabled");
 	}
 
 	/** Helper method to ensure that array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureIndirectBOenabled(ContextCapabilities caps) {
-		if ( StateTracker.getReferencesStack(caps).getReferences().indirectBuffer == 0 )
+		if ( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().indirectBuffer == 0 )
 			throw new OpenGLException("Cannot use offsets when Draw Indirect Object is disabled");
 	}
 
 	/** Helper method to ensure that pixel pack buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensurePackPBOdisabled(ContextCapabilities caps) {
-		if ( StateTracker.getReferencesStack(caps).getReferences().pixelPackBuffer != 0 )
+		if ( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().pixelPackBuffer != 0 )
 			throw new OpenGLException("Cannot use Buffers when Pixel Pack Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that pixel pack buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensurePackPBOenabled(ContextCapabilities caps) {
-		if ( StateTracker.getReferencesStack(caps).getReferences().pixelPackBuffer == 0 )
+		if ( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().pixelPackBuffer == 0 )
 			throw new OpenGLException("Cannot use offsets when Pixel Pack Buffer Object is disabled");
 	}
 
 	/** Helper method to ensure that pixel unpack buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureUnpackPBOdisabled(ContextCapabilities caps) {
-		if ( StateTracker.getReferencesStack(caps).getReferences().pixelUnpackBuffer != 0 )
+		if ( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().pixelUnpackBuffer != 0 )
 			throw new OpenGLException("Cannot use Buffers when Pixel Unpack Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that pixel unpack buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureUnpackPBOenabled(ContextCapabilities caps) {
-		if ( StateTracker.getReferencesStack(caps).getReferences().pixelUnpackBuffer == 0 )
+		if ( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().pixelUnpackBuffer == 0 )
 			throw new OpenGLException("Cannot use offsets when Pixel Unpack Buffer Object is disabled");
 	}
 
@@ -162,19 +148,19 @@ class GLChecks {
 	 * @return the size, in elements, of the image
 	 */
 	static int calculateImageStorage(Buffer buffer, int format, int type, int width, int height, int depth) {
-		return calculateImageStorage(format, type, width, height, depth) >> BufferUtils.getElementSizeExponent(buffer);
+		return LWJGLUtil.CHECKS ? calculateImageStorage(format, type, width, height, depth) >> BufferUtils.getElementSizeExponent(buffer) : 0;
 	}
 
 	static int calculateTexImage1DStorage(Buffer buffer, int format, int type, int width) {
-		return calculateTexImage1DStorage(format, type, width) >> BufferUtils.getElementSizeExponent(buffer);
+		return LWJGLUtil.CHECKS ? calculateTexImage1DStorage(format, type, width) >> BufferUtils.getElementSizeExponent(buffer) : 0;
 	}
 
 	static int calculateTexImage2DStorage(Buffer buffer, int format, int type, int width, int height) {
-		return calculateTexImage2DStorage(format, type, width, height) >> BufferUtils.getElementSizeExponent(buffer);
+		return LWJGLUtil.CHECKS ? calculateTexImage2DStorage(format, type, width, height) >> BufferUtils.getElementSizeExponent(buffer) : 0;
 	}
 
 	static int calculateTexImage3DStorage(Buffer buffer, int format, int type, int width, int height, int depth) {
-		return calculateTexImage3DStorage(format, type, width, height, depth) >> BufferUtils.getElementSizeExponent(buffer);
+		return LWJGLUtil.CHECKS ? calculateTexImage3DStorage(format, type, width, height, depth) >> BufferUtils.getElementSizeExponent(buffer) : 0;
 	}
 
 	/**

@@ -71,6 +71,11 @@ public interface ATI_vertex_array_object {
 	@StripPostfix("params")
 	void glGetObjectBufferivATI(@GLuint int buffer, @GLenum int pname, @OutParameter @Check IntBuffer params);
 
+	@Alternate("glGetObjectBufferivATI")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetObjectBufferivATI2(@GLuint int buffer, @GLenum int pname, @OutParameter IntBuffer params);
+
 	void glFreeObjectBufferATI(@GLuint int buffer);
 
 	void glArrayObjectATI(@GLenum int array, int size, @GLenum int type, @GLsizei int stride, @GLuint int buffer, @GLuint int offset);

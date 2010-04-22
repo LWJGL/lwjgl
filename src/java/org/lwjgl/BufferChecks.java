@@ -60,7 +60,7 @@ public class BufferChecks {
 	 * Helper methods to ensure a function pointer is not-null (0)
 	 */
 	public static void checkFunctionAddress(long pointer) {
-		if (pointer == 0) {
+		if (LWJGLUtil.CHECKS && pointer == 0) {
 			throw new IllegalStateException("Function is not supported");
 		}
 	}
@@ -69,20 +69,22 @@ public class BufferChecks {
 	 * Helper methods to ensure a ByteBuffer is null-terminated
 	 */
 	public static void checkNullTerminated(ByteBuffer buf) {
-		if (buf.get(buf.limit() - 1) != 0) {
+		if ( LWJGLUtil.CHECKS && buf.get(buf.limit() - 1) != 0) {
 			throw new IllegalArgumentException("Missing null termination");
 		}
 	}
 
 	public static void checkNullTerminated(ByteBuffer buf, int count) {
-		int nullFound = 0;
-		for ( int i = buf.position(); i < buf.limit(); i++ ) {
-			if ( buf.get(i) == 0 )
-				nullFound++;
-		}
+		if ( LWJGLUtil.CHECKS ) {
+			int nullFound = 0;
+			for ( int i = buf.position(); i < buf.limit(); i++ ) {
+				if ( buf.get(i) == 0 )
+					nullFound++;
+			}
 
-		if ( nullFound < count )
-			throw new IllegalArgumentException("Missing null termination");
+			if ( nullFound < count )
+				throw new IllegalArgumentException("Missing null termination");
+		}
 	}
 
 	/** Helper methods to ensure an IntBuffer is null-terminated */
@@ -93,7 +95,7 @@ public class BufferChecks {
 	}
 
 	public static void checkNotNull(Object o) {
-		if (o == null)
+		if ( LWJGLUtil.CHECKS && o == null)
 			throw new IllegalArgumentException("Null argument");
 	}
 
@@ -101,37 +103,37 @@ public class BufferChecks {
 	 * Helper methods to ensure a buffer is direct (and, implicitly, non-null).
 	 */
 	public static void checkDirect(ByteBuffer buf) {
-		if (!buf.isDirect()) {
+		if ( LWJGLUtil.CHECKS && !buf.isDirect()) {
 			throw new IllegalArgumentException("ByteBuffer is not direct");
 		}
 	}
 
 	public static void checkDirect(ShortBuffer buf) {
-		if (!buf.isDirect()) {
+		if ( LWJGLUtil.CHECKS && !buf.isDirect()) {
 			throw new IllegalArgumentException("ShortBuffer is not direct");
 		}
 	}
 
 	public static void checkDirect(IntBuffer buf) {
-		if (!buf.isDirect()) {
+		if ( LWJGLUtil.CHECKS && !buf.isDirect()) {
 			throw new IllegalArgumentException("IntBuffer is not direct");
 		}
 	}
 
 	public static void checkDirect(LongBuffer buf) {
-		if (!buf.isDirect()) {
+		if ( LWJGLUtil.CHECKS && !buf.isDirect()) {
 			throw new IllegalArgumentException("LongBuffer is not direct");
 		}
 	}
 
 	public static void checkDirect(FloatBuffer buf) {
-		if (!buf.isDirect()) {
+		if ( LWJGLUtil.CHECKS && !buf.isDirect()) {
 			throw new IllegalArgumentException("FloatBuffer is not direct");
 		}
 	}
 
 	public static void checkDirect(DoubleBuffer buf) {
-		if (!buf.isDirect()) {
+		if ( LWJGLUtil.CHECKS && !buf.isDirect()) {
 			throw new IllegalArgumentException("DoubleBuffer is not direct");
 		}
 	}
@@ -154,38 +156,50 @@ public class BufferChecks {
 	 * @throws IllegalArgumentException
 	 */
 	public static void checkBufferSize(Buffer buf, int size) {
-		if (buf.remaining() < size) {
+		if ( LWJGLUtil.CHECKS && buf.remaining() < size) {
 			throwBufferSizeException(buf, size);
 		}
 	}
 
 	public static void checkBuffer(ByteBuffer buf, int size) {
-		checkBufferSize(buf, size);
-		checkDirect(buf);
+		if ( LWJGLUtil.CHECKS ) {
+			checkBufferSize(buf, size);
+			checkDirect(buf);
+		}
 	}
 
 	public static void checkBuffer(ShortBuffer buf, int size) {
-		checkBufferSize(buf, size);
-		checkDirect(buf);
+		if ( LWJGLUtil.CHECKS ) {
+			checkBufferSize(buf, size);
+			checkDirect(buf);
+		}
 	}
 
 	public static void checkBuffer(IntBuffer buf, int size) {
-		checkBufferSize(buf, size);
-		checkDirect(buf);
+		if ( LWJGLUtil.CHECKS ) {
+			checkBufferSize(buf, size);
+			checkDirect(buf);
+		}
 	}
 
 	public static void checkBuffer(LongBuffer buf, int size) {
-		checkBufferSize(buf, size);
-		checkDirect(buf);
+		if ( LWJGLUtil.CHECKS ) {
+			checkBufferSize(buf, size);
+			checkDirect(buf);
+		}
 	}
 
 	public static void checkBuffer(FloatBuffer buf, int size) {
-		checkBufferSize(buf, size);
-		checkDirect(buf);
+		if ( LWJGLUtil.CHECKS ) {
+			checkBufferSize(buf, size);
+			checkDirect(buf);
+		}
 	}
 
 	public static void checkBuffer(DoubleBuffer buf, int size) {
-		checkBufferSize(buf, size);
-		checkDirect(buf);
+		if ( LWJGLUtil.CHECKS ) {
+			checkBufferSize(buf, size);
+			checkDirect(buf);
+		}
 	}
 }

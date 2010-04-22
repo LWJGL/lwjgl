@@ -35,7 +35,6 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
-import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 
 /**
@@ -49,7 +48,7 @@ import org.lwjgl.Sys;
  * @version $Revision$
  * $Id$
  */
-public final class Pbuffer implements Drawable {
+public final class Pbuffer extends AbstractDrawable {
 	/**
 	 * Indicates that Pbuffers can be created.
 	 */
@@ -136,11 +135,6 @@ public final class Pbuffer implements Drawable {
 	public static final int DEPTH_BUFFER = RenderTexture.WGL_DEPTH_COMPONENT_NV;
 
 	/**
-	 * Handle to the native GL rendering context
-	 */
-	private final PeerInfo peer_info;
-
-	/**
 	 * Width
 	 */
 	private final int width;
@@ -149,10 +143,6 @@ public final class Pbuffer implements Drawable {
 	 * Height
 	 */
 	private final int height;
-
-	private final Context context;
-
-	private boolean destroyed;
 
 	static {
 		Sys.initialize();
@@ -227,14 +217,11 @@ public final class Pbuffer implements Drawable {
 		this.width = width;
 		this.height = height;
 		this.peer_info = createPbuffer(width, height, pixel_format, renderTexture);
-		Context shared_context = null;
-		if (shared_drawable != null) {
-			shared_context = shared_drawable.getContext();
-		} else {
-			Drawable display_drawable = Display.getDrawable();
-			if (display_drawable != null)
-				shared_context = display_drawable.getContext();
-		}
+		Context shared_context;
+		if (shared_drawable != null)
+			shared_context = ((DrawableLWJGL)shared_drawable).getContext();
+		else
+			shared_context = ((DrawableLWJGL)Display.getDrawable()).getContext(); // May be null
 		this.context = new Context(peer_info, attribs, shared_context);
 	}
 
@@ -251,21 +238,6 @@ public final class Pbuffer implements Drawable {
 					renderTexture.pBufferAttribs);
 	}
 
-	public Context getContext() {
-		return context;
-	}
-
-	public Context createSharedContext() throws LWJGLException {
-		synchronized ( GlobalLock.lock ) {
-			return new Context(peer_info, context.getContextAttribs(), context);
-		}
-	}
-
-	private void checkDestroyed() {
-		if (destroyed)
-			throw new IllegalStateException("Pbuffer is destroyed");
-	}
-
 	/**
 	 * Method to test for validity of the buffer. If this function returns true, the buffer contents is lost. The buffer can still
 	 * be used, but the results are undefined. The application is expected to release the buffer if needed, destroy it and recreate
@@ -279,43 +251,12 @@ public final class Pbuffer implements Drawable {
 	}
 
 	/**
-	 * Method to make the Pbuffer context current. All subsequent OpenGL calls will go to this buffer.
-	 * @throws LWJGLException if the context could not be made current
-	 */
-	public synchronized void makeCurrent() throws LWJGLException {
-		checkDestroyed();
-		context.makeCurrent();
-	}
-
-	public void releaseContext() throws LWJGLException {
-		checkDestroyed();
-		if ( context.isCurrent() )
-			Context.releaseCurrentContext();
-	}
-
-	/**
 	 * Gets the Pbuffer capabilities.
 	 *
 	 * @return a bitmask of Pbuffer capabilities.
 	 */
 	public static int getCapabilities() {
 		return Display.getImplementation().getPbufferCapabilities();
-	}
-
-	/**
-	 * Destroys the Pbuffer. After this call, there will be no valid GL rendering context - regardless of whether this Pbuffer was
-	 * the current rendering context or not.
-	 */
-	public synchronized void destroy() {
-		if (destroyed)
-			return;
-		try {
-			context.forceDestroy();
-			peer_info.destroy();
-			destroyed = true;
-		} catch (LWJGLException e) {
-			LWJGLUtil.log("Exception occurred while destroying pbuffer: " + e);
-		}
 	}
 
 	// -----------------------------------------------------------------------------------------

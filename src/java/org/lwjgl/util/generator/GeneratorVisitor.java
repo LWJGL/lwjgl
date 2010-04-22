@@ -180,10 +180,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		java_writer.println();
 		java_writer.println("package " + d.getPackage().getQualifiedName() + ";");
 		java_writer.println();
-		java_writer.println("import org.lwjgl.LWJGLException;");
-		java_writer.println("import org.lwjgl.BufferChecks;");
-		// DISABLED: indirect buffer support
-		//java_writer.println("import org.lwjgl.NondirectBufferWrapper;");
+		java_writer.println("import org.lwjgl.*;");
 		java_writer.println("import java.nio.*;");
 		java_writer.println();
 		Utils.printDocComment(java_writer, d);

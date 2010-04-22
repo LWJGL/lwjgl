@@ -266,7 +266,9 @@ public class LWJGLUtil {
 
 	/** Debug flag. */
 	public static final boolean DEBUG = getPrivilegedBoolean("org.lwjgl.util.Debug");
-	
+
+	public static final boolean CHECKS = !getPrivilegedBoolean("org.lwjgl.util.NoChecks");
+
 	static {
 		LWJGLIcon16x16.flip();
 		LWJGLIcon32x32.flip();

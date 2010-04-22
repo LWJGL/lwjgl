@@ -437,8 +437,9 @@ final class WindowsDisplay implements DisplayImplementation {
 			 * is maximized helps some gfx cards recover from fullscreen
 			 */
 			try {
-				if (Display.getDrawable().getContext() != null && Display.getDrawable().getContext().isCurrent())
-					Display.getDrawable().getContext().makeCurrent();
+				Context context = ((DrawableLWJGL)Display.getDrawable()).getContext();
+				if (context != null && context.isCurrent())
+					context.makeCurrent();
 			} catch (LWJGLException e) {
 				LWJGLUtil.log("Exception occurred while trying to make context current: " + e);
 			}

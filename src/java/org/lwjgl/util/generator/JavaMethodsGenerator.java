@@ -261,9 +261,12 @@ public class JavaMethodsGenerator {
 		// DISABLED: indirect buffer support
 		//printNondirectParameterCopies(writer, method, mode);
 		if (has_result) {
-			if ( method.getAnnotation(GLreturn.class) == null )
-				writer.println("\t\treturn " + Utils.RESULT_VAR_NAME + ";");
-			else
+			if ( method.getAnnotation(GLreturn.class) == null ) {
+				if ( ByteBuffer.class.equals(Utils.getJavaType(result_type)) )
+					writer.println("\t\treturn " + Utils.RESULT_VAR_NAME + ".order(ByteOrder.nativeOrder());"); // safeNewBuffer returns a direct ByteBuffer with BIG_ENDIAN order.
+				else
+					writer.println("\t\treturn " + Utils.RESULT_VAR_NAME + ";");
+			} else
 				Utils.printGLReturnPost(writer, method, method.getAnnotation(GLreturn.class));
 		}
 		writer.println("\t}");
@@ -490,7 +493,7 @@ public class JavaMethodsGenerator {
                                         cachedReference != null &&
 					(mode != Mode.BUFFEROBJECT || param.getAnnotation(BufferObject.class) == null) &&
 					param.getAnnotation(Result.class) == null) {
-				writer.print("\t\t" + Utils.CHECKS_CLASS_NAME + ".getReferences(caps).");
+				writer.print("\t\tif ( LWJGLUtil.CHECKS ) " + Utils.CHECKS_CLASS_NAME + ".getReferences(caps).");
                                 if(cachedReference.name().length() > 0) {
                                     writer.print(cachedReference.name());
                                 } else {

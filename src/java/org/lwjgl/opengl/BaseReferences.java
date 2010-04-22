@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 import java.nio.Buffer;
-import java.nio.IntBuffer;
 import java.util.Arrays;
 
 class BaseReferences {
@@ -49,24 +48,19 @@ class BaseReferences {
 	int indirectBuffer;
 
 	BaseReferences(ContextCapabilities caps) {
-        IntBuffer temp = caps.scratch_int_buffer;
-
 		int max_vertex_attribs;
-		if (caps.OpenGL20 || caps.GL_ARB_vertex_shader) {
-	        GL11.glGetInteger(ARBVertexShader.GL_MAX_VERTEX_ATTRIBS_ARB, temp);
-			max_vertex_attribs = temp.get(0);
-		} else
+		if (caps.OpenGL20 || caps.GL_ARB_vertex_shader)
+			max_vertex_attribs = GL11.glGetInteger(ARBVertexShader.GL_MAX_VERTEX_ATTRIBS_ARB);
+		else
 			max_vertex_attribs = 0;
         glVertexAttribPointer_buffer = new Buffer[max_vertex_attribs];
 
 		int max_texture_units;
-		if (caps.OpenGL20) {
-			GL11.glGetInteger(GL20.GL_MAX_TEXTURE_IMAGE_UNITS, temp);
-			max_texture_units = temp.get(0);
-		} else if (caps.OpenGL13 || caps.GL_ARB_multitexture) {
-        	GL11.glGetInteger(GL13.GL_MAX_TEXTURE_UNITS, temp);
-			max_texture_units = temp.get(0);
-		} else
+		if (caps.OpenGL20)
+			max_texture_units = GL11.glGetInteger(GL20.GL_MAX_TEXTURE_IMAGE_UNITS);
+		else if (caps.OpenGL13 || caps.GL_ARB_multitexture)
+			max_texture_units = GL11.glGetInteger(GL13.GL_MAX_TEXTURE_UNITS);
+		else
 			max_texture_units = 1;
         glTexCoordPointer_buffer = new Buffer[max_texture_units];
     }

@@ -78,7 +78,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 			AccessController.doPrivileged(new PrivilegedExceptionAction() {
 				public Object run() throws Exception {
 					Application.getApplication().addApplicationListener(new ApplicationAdapter() {
-						public final void handleQuit(ApplicationEvent event) {
+						public void handleQuit(ApplicationEvent event) {
 							doHandleQuit();
 						}
 					});
@@ -271,15 +271,16 @@ final class MacOSXDisplay implements DisplayImplementation {
 		 *
 		 * - elias
 		 */
+		AbstractDrawable drawable = (AbstractDrawable)Display.getDrawable();
 		if (Display.isFullscreen() && (frame != null && frame.getCanvas().syncCanvasPainted() || should_update)) {
 			try {
-				MacOSXContextImplementation.resetView(Display.getDrawable().getContext().getPeerInfo(), Display.getDrawable().getContext());
+				MacOSXContextImplementation.resetView(drawable.peer_info, drawable.context);
 			} catch (LWJGLException e) {
 				LWJGLUtil.log("Failed to reset context: " + e);
 			}
 		}
 		if (should_update) {
-			Display.getDrawable().getContext().update();
+			drawable.context.update();
 			/* This is necessary to make sure the context won't "forget" about the view size */
 			GL11.glGetInteger(GL11.GL_VIEWPORT, current_viewport);
 			GL11.glViewport(current_viewport.get(0), current_viewport.get(1), current_viewport.get(2), current_viewport.get(3));

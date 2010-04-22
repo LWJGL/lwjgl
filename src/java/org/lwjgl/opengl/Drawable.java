@@ -42,19 +42,8 @@ import org.lwjgl.LWJGLException;
 
 public interface Drawable {
 
-	/**
-	 * [INTERNAL USE ONLY] Returns the Drawable's Context.
-	 *
-	 * @return the Drawable's Context
-	 */
-	Context getContext();
-
-	/**
-	 * [INTERNAL USE ONLY] Creates a new Context that is shared with the Drawable's Context.
-	 *
-	 * @return a Context shared with the Drawable's Context.
-	 */
-	Context createSharedContext() throws LWJGLException;
+	/** Returns true if the Drawable's context is current in the current thread. */
+	boolean isCurrent() throws LWJGLException;
 
 	/**
 	 * Makes the Drawable's context current in the current thread.
@@ -70,9 +59,7 @@ public interface Drawable {
 	 */
 	void releaseContext() throws LWJGLException;
 
-	/**
-	 * Destroys the Drawable.
-	 */
+	/** Destroys the Drawable. */
 	void destroy();
 
 }

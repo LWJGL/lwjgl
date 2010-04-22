@@ -106,14 +106,10 @@ public final class Display {
 	/** Swap interval */
 	private static int swap_interval;
 
-	/** A unique context object, so we can track different contexts between creates() and destroys() */
-	private static PeerInfo peer_info;
-	private static Context context;
-
 	/** The Drawable instance that tracks the current Display context */
-	private final static Drawable drawable;
+	private static final AbstractDrawable drawable;
 
-	private static boolean window_created = false;
+	private static boolean window_created;
 
 	private static boolean parent_resized;
 
@@ -137,31 +133,20 @@ public final class Display {
 		} catch (LWJGLException e) {
 			throw new RuntimeException(e);
 		}
-		drawable = new Drawable() {
-			public Context getContext() {
-				synchronized ( GlobalLock.lock ) {
-					return isCreated() ? context : null;
-				}
-			}
-
-			public Context createSharedContext() throws LWJGLException {
-				synchronized ( GlobalLock.lock ) {
-					if ( !isCreated() ) throw new IllegalStateException("Display must be created.");
-
-					return new Context(peer_info, context.getContextAttribs(), context);
-				}
-			}
-
-			public void makeCurrent() throws LWJGLException {
-				Display.makeCurrent();
-			}
-
-			public void releaseContext() throws LWJGLException {
-				Display.releaseContext();
-			}
-
+		drawable = new AbstractDrawable() {
 			public void destroy() {
-				Display.destroy();
+				synchronized ( GlobalLock.lock ) {
+					if ( !isCreated() )
+						return;
+
+					releaseDrawable();
+					super.destroy();
+					destroyWindow();
+					x = y = -1;
+					cached_icons = null;
+					reset();
+					removeShutdownHook();
+				}
 			}
 		};
 	}
@@ -258,24 +243,23 @@ public final class Display {
 	 * @throws LWJGLException if the display mode could not be set
 	 */
 	public static void setDisplayMode(DisplayMode mode) throws LWJGLException {
-		synchronized (GlobalLock.lock) {
-			if (mode == null)
+		synchronized ( GlobalLock.lock ) {
+			if ( mode == null )
 				throw new NullPointerException("mode must be non-null");
 			boolean was_fullscreen = isFullscreen();
 			current_mode = mode;
-			if (isCreated()) {
+			if ( isCreated() ) {
 				destroyWindow();
 				// If mode is not fullscreen capable, make sure we are in windowed mode
 				try {
-					if (was_fullscreen && !isFullscreen())
+					if ( was_fullscreen && !isFullscreen() )
 						display_impl.resetDisplayMode();
-					else if (isFullscreen())
+					else if ( isFullscreen() )
 						switchDisplayMode();
 					createWindow();
 					makeCurrentAndSetSwapInterval();
 				} catch (LWJGLException e) {
-					destroyContext();
-					destroyPeerInfo();
+					drawable.destroy();
 					display_impl.resetDisplayMode();
 					throw e;
 				}
@@ -288,9 +272,9 @@ public final class Display {
 	}
 
 	private static int getWindowX() {
-		if (!isFullscreen() && parent == null) {
+		if ( !isFullscreen() && parent == null ) {
 			// if no display location set, center window
-			if (x == -1) {
+			if ( x == -1 ) {
 				return Math.max(0, (initial_mode.getWidth() - current_mode.getWidth()) / 2);
 			} else {
 				return x;
@@ -301,7 +285,7 @@ public final class Display {
 	}
 
 	private static int getWindowY() {
-		if (!isFullscreen() && parent == null) {
+		if ( !isFullscreen() && parent == null ) {
 			// if no display location set, center window
 			if ( y == -1 ) {
 				return Math.max(0, (initial_mode.getHeight() - current_mode.getHeight()) / 2);
@@ -344,6 +328,7 @@ public final class Display {
 
 	private static void releaseDrawable() {
 		try {
+			Context context = drawable.context;
 			if ( context != null && context.isCurrent() ) {
 				Context.releaseCurrentContext();
 				context.releaseDrawable();
@@ -483,13 +468,13 @@ public final class Display {
 	 */
 	public static void setParent(Canvas parent) throws LWJGLException {
 		synchronized ( GlobalLock.lock ) {
-			if (Display.parent != parent) {
+			if ( Display.parent != parent ) {
 				Display.parent = parent;
 				if ( !isCreated() )
 					return;
 				destroyWindow();
 				try {
-					if (isFullscreen()) {
+					if ( isFullscreen() ) {
 						switchDisplayMode();
 					} else {
 						display_impl.resetDisplayMode();
@@ -497,8 +482,7 @@ public final class Display {
 					createWindow();
 					makeCurrentAndSetSwapInterval();
 				} catch (LWJGLException e) {
-					destroyContext();
-					destroyPeerInfo();
+					drawable.destroy();
 					display_impl.resetDisplayMode();
 					throw e;
 				}
@@ -539,18 +523,18 @@ public final class Display {
 
 	private static void setDisplayModeAndFullscreenInternal(boolean fullscreen, DisplayMode mode) throws LWJGLException {
 		synchronized ( GlobalLock.lock ) {
-			if (mode == null)
+			if ( mode == null )
 				throw new NullPointerException("mode must be non-null");
 			DisplayMode old_mode = current_mode;
 			current_mode = mode;
 			boolean was_fullscreen = isFullscreen();
 			Display.fullscreen = fullscreen;
-			if (was_fullscreen != isFullscreen() || !mode.equals(old_mode)) {
-				if (!isCreated())
+			if ( was_fullscreen != isFullscreen() || !mode.equals(old_mode) ) {
+				if ( !isCreated() )
 					return;
 				destroyWindow();
 				try {
-					if (isFullscreen()) {
+					if ( isFullscreen() ) {
 						switchDisplayMode();
 					} else {
 						display_impl.resetDisplayMode();
@@ -558,8 +542,7 @@ public final class Display {
 					createWindow();
 					makeCurrentAndSetSwapInterval();
 				} catch (LWJGLException e) {
-					destroyContext();
-					destroyPeerInfo();
+					drawable.destroy();
 					display_impl.resetDisplayMode();
 					throw e;
 				}
@@ -569,7 +552,7 @@ public final class Display {
 
 	/** @return whether the Display is in fullscreen mode */
 	public static boolean isFullscreen() {
-		synchronized (GlobalLock.lock) {
+		synchronized ( GlobalLock.lock ) {
 			return fullscreen && current_mode.isFullscreenCapable();
 		}
 	}
@@ -671,7 +654,6 @@ public final class Display {
 	 * Update the window. If the window is visible clears
 	 * the dirty flag and calls swapBuffers() and finally
 	 * polls the input devices.
-	 *
 	 */
 	public static void update() {
 		update(true);
@@ -730,12 +712,12 @@ public final class Display {
 	 * @throws LWJGLException If the context could not be released
 	 */
 	public static void releaseContext() throws LWJGLException {
-		synchronized ( GlobalLock.lock ) {
-			if ( !isCreated() )
-				throw new IllegalStateException("Display is not created");
-			if ( context.isCurrent() )
-				Context.releaseCurrentContext();
-		}
+		drawable.releaseContext();
+	}
+
+	/** Returns true if the Display's context is current in the current thread. */
+	public static boolean isCurrent() throws LWJGLException {
+		return drawable.isCurrent();
 	}
 
 	/**
@@ -744,11 +726,7 @@ public final class Display {
 	 * @throws LWJGLException If the context could not be made current
 	 */
 	public static void makeCurrent() throws LWJGLException {
-		synchronized ( GlobalLock.lock ) {
-			if ( !isCreated() )
-				throw new IllegalStateException("Display is not created");
-			context.makeCurrent();
-		}
+		drawable.makeCurrent();
 	}
 
 	private static void removeShutdownHook() {
@@ -868,19 +846,19 @@ public final class Display {
 				throw new NullPointerException("pixel_format cannot be null");
 			removeShutdownHook();
 			registerShutdownHook();
-			if (isFullscreen())
+			if ( isFullscreen() )
 				switchDisplayMode();
 			try {
-				peer_info = display_impl.createPeerInfo(pixel_format);
+				drawable.peer_info = display_impl.createPeerInfo(pixel_format);
 				try {
 					createWindow();
 					try {
-						context = new Context(peer_info, attribs, shared_drawable != null ? shared_drawable.getContext() : null);
+						drawable.context = new Context(drawable.peer_info, attribs, shared_drawable != null ? ((AbstractDrawable)shared_drawable).getContext() : null);
 						try {
 							makeCurrentAndSetSwapInterval();
 							initContext();
 						} catch (LWJGLException e) {
-							destroyContext();
+							drawable.destroy();
 							throw e;
 						}
 					} catch (LWJGLException e) {
@@ -888,7 +866,7 @@ public final class Display {
 						throw e;
 					}
 				} catch (LWJGLException e) {
-					destroyPeerInfo();
+					drawable.destroy();
 					throw e;
 				}
 			} catch (LWJGLException e) {
@@ -899,13 +877,13 @@ public final class Display {
 	}
 
 	/**
-	*  Set the initial color of the Display. This method is called before the Display is created and will set the
-	*  background color to the one specified in this method.
-	*
-	*  @param red - color value between 0 - 1
-	*  @param green - color value between 0 - 1
-	*  @param blue - color value between 0 - 1
-	*/
+	 * Set the initial color of the Display. This method is called before the Display is created and will set the
+	 * background color to the one specified in this method.
+	 *
+	 * @param red   - color value between 0 - 1
+	 * @param green - color value between 0 - 1
+	 * @param blue  - color value between 0 - 1
+	 */
 	public static void setInitialBackground(float red, float green, float blue) {
 		r = red;
 		g = green;
@@ -977,41 +955,14 @@ public final class Display {
 	 * regardless of whether the Display was the current rendering context.
 	 */
 	public static void destroy() {
-		synchronized ( GlobalLock.lock ) {
-			if ( !isCreated() ) {
-				return;
-			}
-
-			releaseDrawable();
-			destroyContext();
-			destroyWindow();
-			destroyPeerInfo();
-			x = y = -1;
-			cached_icons = null;
-			reset();
-			removeShutdownHook();
-		}
-	}
-
-	private static void destroyPeerInfo() {
-		peer_info.destroy();
-		peer_info = null;
-	}
-
-	private static void destroyContext() {
-		try {
-			context.forceDestroy();
-		} catch (LWJGLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			context = null;
-		}
+		drawable.destroy();
 	}
 
 	/*
 	 * Reset display mode if fullscreen. This method is also called from the shutdown hook added
 	 * in the static constructor
 	 */
+
 	private static void reset() {
 		display_impl.resetDisplayMode();
 		current_mode = initial_mode;
@@ -1070,7 +1021,7 @@ public final class Display {
 			y = new_y;
 
 			// offset if already created
-			if (isCreated() && !isFullscreen()) {
+			if ( isCreated() && !isFullscreen() ) {
 				reshape();
 			}
 		}

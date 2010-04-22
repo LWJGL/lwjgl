@@ -78,8 +78,6 @@ abstract class BackgroundLoader {
 
 				System.out.println("** Sleeping, no texture created yet **");
 
-				long start = System.currentTimeMillis();
-
 				try {
 					Thread.sleep(2000);
 				} catch (InterruptedException e) {

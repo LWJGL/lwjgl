@@ -50,7 +50,7 @@ import java.awt.event.HierarchyListener;
  *         $Id$
  * @version $Revision$
  */
-public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, HierarchyListener {
+public class AWTGLCanvas extends Canvas implements DrawableLWJGL, ComponentListener, HierarchyListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -109,13 +109,12 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 		return context;
 	}
 
+	/** This method should only be called internally. */
 	public Context createSharedContext() throws LWJGLException {
-		synchronized ( GlobalLock.lock ) {
-			synchronized ( SYNC_LOCK ) {
-				if ( context == null ) throw new IllegalStateException("Canvas not yet displayable");
+		synchronized ( SYNC_LOCK ) {
+			if ( context == null ) throw new IllegalStateException("Canvas not yet displayable");
 
-				return new Context(peer_info, context.getContextAttribs(), context);
-			}
+			return new Context(peer_info, context.getContextAttribs(), context);
 		}
 	}
 
@@ -213,12 +212,11 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 		}
 	}
 
-	public void releaseContext() throws LWJGLException {
+	public boolean isCurrent() throws LWJGLException {
 		synchronized ( SYNC_LOCK ) {
-			if ( context == null )
-				throw new IllegalStateException("Canvas not yet displayable");
-			if ( context.isCurrent() )
-				Context.releaseCurrentContext();
+			if ( context == null ) throw new IllegalStateException("Canvas not yet displayable");
+
+			return context.isCurrent();
 		}
 	}
 
@@ -231,6 +229,15 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 			if ( context == null )
 				throw new IllegalStateException("Canvas not yet displayable");
 			context.makeCurrent();
+		}
+	}
+
+	public void releaseContext() throws LWJGLException {
+		synchronized ( SYNC_LOCK ) {
+			if ( context == null )
+				throw new IllegalStateException("Canvas not yet displayable");
+			if ( context.isCurrent() )
+				Context.releaseCurrentContext();
 		}
 	}
 
@@ -279,7 +286,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 				peer_info.lockAndGetHandle();
 				try {
 					if ( context == null ) {
-						this.context = new Context(peer_info, attribs, drawable != null ? drawable.getContext() : null);
+						this.context = new Context(peer_info, attribs, drawable != null ? ((DrawableLWJGL)drawable).getContext() : null);
 						first_run = true;
 					}
 
