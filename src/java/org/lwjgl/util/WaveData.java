@@ -108,7 +108,7 @@ public class WaveData {
 	 * @return WaveData containing data, or null if a failure occured
 	 */
 	public static WaveData create(String path) {
-		return create(WaveData.class.getClassLoader().getResource(path));
+		return create(Thread.currentThread().getContextClassLoader().getResource(path));
 	}
 	
 	/**
