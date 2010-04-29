@@ -467,7 +467,7 @@ public class Mouse {
 	}
 
 	/**
-	 * @return Current events delta x. Only valid when the mouse is grabbed.
+	 * @return Current events delta x.
 	 */
 	public static int getEventDX() {
 		synchronized (OpenGLPackageAccess.global_lock) {
@@ -476,7 +476,7 @@ public class Mouse {
 	}
 
 	/**
-	 * @return Current events delta y. Only valid when the mouse is grabbed.
+	 * @return Current events delta y.
 	 */
 	public static int getEventDY() {
 		synchronized (OpenGLPackageAccess.global_lock) {
@@ -485,7 +485,7 @@ public class Mouse {
 	}
 
 	/**
-	 * @return Current events absolute x. Only valid when the mouse is not grabbed.
+	 * @return Current events absolute x.
 	 */
 	public static int getEventX() {
 		synchronized (OpenGLPackageAccess.global_lock) {
@@ -494,7 +494,7 @@ public class Mouse {
 	}
 
 	/**
-	 * @return Current events absolute y. Only valid when the mouse is not grabbed.
+	 * @return Current events absolute y.
 	 */
 	public static int getEventY() {
 		synchronized (OpenGLPackageAccess.global_lock) {
@@ -550,7 +550,7 @@ public class Mouse {
 	}
 
 	/**
-	 * @return Movement on the x axis since last time getDX() was called. Only valid when the mouse is grabbed.
+	 * @return Movement on the x axis since last time getDX() was called.
 	 */
 	public static int getDX() {
 		synchronized (OpenGLPackageAccess.global_lock) {
@@ -561,7 +561,7 @@ public class Mouse {
 	}
 
 	/**
-	 * @return Movement on the y axis since last time getDY() was called. Only valid when the mouse is grabbed.
+	 * @return Movement on the y axis since last time getDY() was called.
 	 */
 	public static int getDY() {
 		synchronized (OpenGLPackageAccess.global_lock) {
