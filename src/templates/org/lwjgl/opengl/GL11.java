@@ -1147,7 +1147,7 @@ public interface GL11 {
 	String glGetString(int name);
 
 	@DeprecatedGL
-	void glGetPolygonStipple(@OutParameter @BufferObject(BufferKind.PackPBO) @Check("1024") @GLubyte ByteBuffer mask);
+	void glGetPolygonStipple(@OutParameter @BufferObject(BufferKind.PackPBO) @Check("128") @GLubyte ByteBuffer mask);
 
 	@DeprecatedGL
 	boolean glIsList(@GLuint int list);
@@ -1252,7 +1252,7 @@ public interface GL11 {
 	void glMatrixMode(@GLenum int mode);
 
 	@DeprecatedGL
-	void glPolygonStipple(@BufferObject(BufferKind.UnpackPBO) @Check("1024") @Const @GLubyte ByteBuffer mask);
+	void glPolygonStipple(@BufferObject(BufferKind.UnpackPBO) @Check("128") @Const @GLubyte ByteBuffer mask);
 
 	void glPolygonOffset(float factor, float units);
 
