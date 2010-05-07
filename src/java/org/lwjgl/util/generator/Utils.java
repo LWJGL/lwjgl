@@ -166,7 +166,9 @@ public class Utils {
 		return null;
 	}
 
+	// DISABLED: We always generate indirect methods. (affects OpenAL only at the time of this change)
 	public static boolean isMethodIndirect(boolean generate_error_checks, boolean context_specific, MethodDeclaration method) {
+		/*
 		for (ParameterDeclaration param : method.getParameters()) {
 			if (isAddressableType(param.getType()) || getParameterAutoAnnotation(param) != null ||
 					param.getAnnotation(Constant.class) != null)
@@ -176,6 +178,8 @@ public class Utils {
 			method.getAnnotation(CachedResult.class) != null ||
 			(generate_error_checks && method.getAnnotation(NoErrorCheck.class) == null) ||
 			context_specific;
+		*/
+		return true;
 	}
 
 	public static String getNativeQualifiedName(String qualified_name) {
