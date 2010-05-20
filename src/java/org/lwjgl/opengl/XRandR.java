@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -82,10 +83,10 @@ public class XRandR {
 						name = sa[0];
 
 						// record the current config
-						currentList.add(new Screen(name, sa[2]));
+						parseScreen(currentList, name, sa[2]);
 					} else if (Pattern.matches("\\d*x\\d*", sa[0])) {
 						// found a new mode line
-						possibles.add(new Screen(name, sa[0]));
+						parseScreen(possibles, name, sa[0]);
 					}
 				}
 
@@ -179,7 +180,43 @@ public class XRandR {
 		// clone the array to prevent held copies being altered
 		return (Screen[]) ((Screen[]) screens.get(name)).clone();
 	}
+    
+    private static final Pattern SCREEN_PATTERN1 = Pattern.compile("^(\\d+)x(\\d+)\\+(\\d+)\\+(\\d+)$");
+    private static final Pattern SCREEN_PATTERN2 = Pattern.compile("^(\\d+)x(\\d+)$");
 
+    /**
+     * Parses a screen configuration and adds it to the list if it's valid.
+     * 
+     * @param list
+     *           the list to add the Screen to if it's valid 
+     * @param name
+     *           the name of this screen                          
+	 * @param conf
+	 *           config string, format either widthxheight or
+	 *           widthxheight+xPos+yPos
+	 */             
+    private static void parseScreen(List /* <Screen> */ list, String name, String what) {
+        Matcher m = SCREEN_PATTERN1.matcher(what);
+        if(!m.matches()) {
+            m = SCREEN_PATTERN2.matcher(what);
+            if(!m.matches()) {
+                System.out.println("Did not match: " + what);
+                return;
+            }
+        }
+        int width = Integer.parseInt(m.group(1));
+        int height = Integer.parseInt(m.group(2));
+        int xpos, ypos;
+        if(m.groupCount() > 3) {
+            xpos = Integer.parseInt(m.group(3));
+            ypos = Integer.parseInt(m.group(4));
+        } else {
+            xpos = 0;
+            ypos = 0;
+        }
+        list.add(new Screen(name, width, height, xpos, ypos));
+    }
+    
 	/**
 	 * Encapsulates the configuration of a monitor. Resolution is
 	 * fixed, position is mutable
@@ -213,24 +250,12 @@ public class XRandR {
 		 */
 		public int			yPos	= 0;
 
-		/**
-		 * @param name
-		 *           name of the screen
-		 * @param conf
-		 *           config string, format either widthxheight or
-		 *           widthxheight+xPos+yPos
-		 */
-		private Screen(String name, String conf) {
+		private Screen(String name, int width, int height, int xPos, int yPos) {
 			this.name = name;
-
-			String[] sa = conf.split("\\D");
-			width = Integer.parseInt(sa[0]);
-			height = Integer.parseInt(sa[1]);
-
-			if (sa.length > 2) {
-				xPos = Integer.parseInt(sa[2]);
-				yPos = Integer.parseInt(sa[3]);
-			}
+			this.width = width;
+			this.height = height;
+			this.xPos = xPos;
+			this.yPos = yPos;
 		}
 
 		private void getArgs(List/* <String> */argList) {
