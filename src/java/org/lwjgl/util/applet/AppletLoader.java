@@ -339,7 +339,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		if (lwjglApplet != null) {
 			lwjglApplet.stop();
 		}
-		super.stop();
 	}
 	
 	/*
@@ -352,8 +351,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
 		progressbar = null;
 		logo 		= null;
-		
-		super.destroy();
 	}
 	
 	/**
