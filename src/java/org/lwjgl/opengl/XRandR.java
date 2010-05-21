@@ -97,7 +97,7 @@ public class XRandR
 
 				screens.put( name, possibles.toArray( new Screen[ possibles.size() ] ) );
 
-				current = ( Screen[] ) currentList.toArray( new Screen[ currentList.size() ] );
+				current = (Screen[]) currentList.toArray(new Screen[currentList.size()]);
 			}
 			catch( Throwable e )
 			{
@@ -116,7 +116,7 @@ public class XRandR
 	{
 		populate();
 
-		return current.clone();
+		return (Screen[]) current.clone();
 	}
 
 	/**
@@ -203,7 +203,7 @@ public class XRandR
 	{
 		populate();
 		// clone the array to prevent held copies being altered
-		return ( ( Screen[] ) screens.get( name ) ).clone();
+		return (Screen[]) ((Screen[]) screens.get(name)).clone();
 	}
 
 	private static final Pattern SCREEN_PATTERN1 =
@@ -303,7 +303,7 @@ public class XRandR
 			argList.add( xPos + "x" + yPos );
 		}
 
-		@Override
+		//@Override
 		public String toString()
 		{
 			return name + " " + width + "x" + height + " @ " + xPos + "x" + yPos;
