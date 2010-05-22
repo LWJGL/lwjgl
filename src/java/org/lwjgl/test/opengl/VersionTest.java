@@ -29,13 +29,6 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*
- * Created by LWJGL.
- * User: spasi
- * Date: 2009-04-04
- * Time: 21:20:24 pm
- */
-
 package org.lwjgl.test.opengl;
 
 import org.lwjgl.LWJGLException;
@@ -44,6 +37,11 @@ import org.lwjgl.opengl.*;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
+/**
+ * Tests the ARB_create_context extension through the use of the ContextAttribs class.
+ *
+ * @author Spasi
+ */
 public final class VersionTest {
 
 	private VersionTest() {
@@ -110,46 +108,105 @@ public final class VersionTest {
 
 		System.out.println("\n---------\n");
 
+		System.out.println("Requested " + ca);
+
 		final String version = GL11.glGetString(GL11.GL_VERSION);
 
-		System.out.print("GL Version requested: " + majorInput + '.' + minorInput);
-		if ( ca.isProfileCore() )
-			System.out.print(" - Core Profile");
-		else if ( ca.isProfileCompatibility() )
-			System.out.print(" - Compatibility Profile");
-		System.out.println("\nGL Version returned : " + version);
+		boolean deprecated = false;
+		try {
+			GL11.glVertex3f(0.0f, 0.0f, 0.0f);
+			deprecated = true;
+		} catch (Throwable t) {}
 
 		final StringTokenizer version_tokenizer = new StringTokenizer(version, ". ");
 
 		int majorVersion = Integer.parseInt(version_tokenizer.nextToken());
 		int minorVersion = Integer.parseInt(version_tokenizer.nextToken());
 
-		if ( majorVersion != majorInput || minorVersion != minorInput ) {
-			if ( majorInput == 1 && minorInput == 0 )
-				System.out.println("\tThe maximum supported version has been returned. The driver is well-behaved. :)");
-			else if ( majorInput < 3 && majorVersion < 3 )
-				System.out.println("\tThe maximum supported version pre-3.0 has been returned. The driver is well-behaved. :)");
-			else
-				System.out.println("\tThe requested version was not returned. The driver is buggy! :(");
-		} else
-			System.out.println("\tThe requested version was returned. :)");
+		final boolean compatibilityProfile;
+		final boolean coreProfile;
 
-		if ( ca.isProfileCompatibility() && !GLContext.getCapabilities().GL_ARB_compatibility )
-			System.out.println("\tThe driver does not support the Compatibility Profile.");
+		if ( 3 < majorVersion || (majorVersion == 3 && 2 <= minorVersion) ) {
+			final int profileMask = GL11.glGetInteger(GL32.GL_CONTEXT_PROFILE_MASK);
 
-		System.out.println("\n---------\n");
+			compatibilityProfile = (profileMask & GL32.GL_CONTEXT_COMPATIBILITY_PROFILE_BIT) != 0;
+			coreProfile = (profileMask & GL32.GL_CONTEXT_CORE_PROFILE_BIT) != 0;
+		} else {
+			compatibilityProfile = false;
+			coreProfile = false;
+		}
 
-		System.out.println("Debug mode: " + ca.isDebug());
-		System.out.println("Forward compatible mode: " + ca.isForwardCompatible());
-		System.out.println("ARB_compatibility: " + GLContext.getCapabilities().GL_ARB_compatibility);
-		try {
-			GL11.glVertex3f(0.0f, 0.0f, 0.0f);
-			System.out.println("Deprecated functionality present: " + true);
-		} catch (Throwable t) {
-			System.out.println("Deprecated functionality present: " + false);
-			if ( GLContext.getCapabilities().GL_ARB_compatibility ) {
-				System.out.println("\tARB_compatibility is present, but LWJGL has enabled pseudo-forward compatible mode.");
-			}
+		System.out.println("\nGL_VERSION returned : " + version);
+		System.out.println("\tCore profile: " + coreProfile);
+		System.out.println("\tCompatibility profile: " + compatibilityProfile);
+		System.out.println("ARB_compatibility present: " + GLContext.getCapabilities().GL_ARB_compatibility);
+		System.out.println("Deprecated functionality present: " + deprecated);
+		if ( !deprecated && GLContext.getCapabilities().GL_ARB_compatibility )
+			System.out.println("\tARB_compatibility is present, but LWJGL has enabled pseudo-forward compatible mode.");
+
+		System.out.println("\n---------");
+
+		boolean success = false;
+		boolean check;
+		if ( majorInput < 3 || minorInput == 0 ) {
+			System.out.println("\nA version less than or equal to 3.0 is requested, the context\n" +
+			                   "returned may implement any of the following versions:");
+
+			System.out.println("\n1) Any version no less than that requested and no greater than 3.0.");
+			check = (majorInput < majorVersion || (majorInput == majorVersion && minorInput <= minorVersion)) // Satisfies requested version
+			        && (majorVersion < 3 || (majorVersion == 3 && minorVersion == 0)); // 3.0 or earlier
+			System.out.println("\t" + check);
+			success |= check;
+
+			System.out.println("\n2) Version 3.1, if the GL_ARB_compatibility extension is also implemented.");
+			check = majorVersion == 3 && minorVersion == 1 && GLContext.getCapabilities().GL_ARB_compatibility;
+			System.out.println("\t" + check);
+			success |= check;
+
+			System.out.println("\n3) The compatibility profile of version 3.2 or greater.");
+			check = compatibilityProfile; // No need to check version, profiles are only available with 3.2+.
+			System.out.println("\t" + check);
+			success |= check;
+
+			System.out.println("\nTEST " + (success ? "SUCCEEDED" : "FAILED"));
+			if ( !success && ca.isForwardCompatible() )
+				System.out.println("\t(probably because the forward compatible flag was set)");
+		} else if ( majorInput == 3 && minorInput == 1 ) {
+			System.out.println("\nVersion 3.1 is requested, the context returned may implement\n" +
+			                   "any of the following versions:");
+
+			System.out.println("\n1) Version 3.1. The GL_ARB_compatibility extension may or may not\n" +
+			                   "be implemented, as determined by the implementation.");
+			check = majorVersion == 3 && minorVersion == 1;
+			System.out.println("\t" + check);
+			success |= check;
+
+			System.out.println("\n2) The core profile of version 3.2 or greater.");
+			check = coreProfile; // No need to check version, profiles are only available with 3.2+.
+			System.out.println("\t" + check);
+			success |= check;
+
+			System.out.println("\nTEST " + (success ? "SUCCEEDED" : "FAILED"));
+		} else {
+			System.out.println("\nVersion 3.2 or greater is requested, the context returned may\n" +
+			                   "implement any of the following versions:");
+
+			System.out.println("\n1) The requested profile of the requested version.");
+			check = majorInput == majorVersion && minorInput == minorVersion
+			        && (!ca.isProfileCompatibility() || compatibilityProfile)
+			        && (!ca.isProfileCore() || coreProfile);
+			System.out.println("\t" + check);
+			success |= check;
+
+			System.out.println("\n2) The requested profile of any later version, so long as no\n" +
+			                   "features have been removed from that later version and profile.");
+			check = majorInput < majorVersion || (majorInput == majorVersion && minorInput < minorVersion)
+			                                     && (!ca.isProfileCompatibility() || compatibilityProfile)
+			                                     && (!ca.isProfileCore() || coreProfile);
+			System.out.println("\t" + check);
+			success |= check;
+
+			System.out.println("\nTEST " + (success ? "SUCCEEDED" : "FAILED"));
 		}
 	}
 
@@ -174,12 +231,14 @@ public final class VersionTest {
 
 	private static void argsError(final String msg) {
 		System.out.println("\nInvalid arguments error: " + msg);
-		System.out.println("\nUsage: VersionTest <majorVersion> <minorVersion> {<layer>, 'debug', 'fc'}:\n");
+		System.out.println("\nUsage: VersionTest <majorVersion> <minorVersion> {'core'|'compatibility', <layer>, 'debug', 'fc'}:\n");
 		System.out.println("majorVersion\t- Major OpenGL version.");
 		System.out.println("majorVersion\t- Minor OpenGL version.");
+		System.out.println("core\t- Sets the Core Profile bit (optional, requires 3.2+).");
+		System.out.println("compatibility\t- Sets the Compatibility Profile bit (optional, requires 3.2+).");
 		System.out.println("layer\t- Layer plane (optional).");
 		System.out.println("debug\t- Enables debug mode (optional).");
-		System.out.println("fc\t- Enables forward compatibility mode (optional).");
+		System.out.println("fc\t- Enables forward compatibility mode (optional, requires 3.0+).");
 
 		cleanup();
 		System.exit(-1);

@@ -179,6 +179,7 @@ public final class VBOIndexTest {
 		                                                   mapped_indices_buffer);
 		if ( new_mapped_buffer != mapped_indices_buffer )
 			mapped_indices_int_buffer = new_mapped_buffer.order(ByteOrder.nativeOrder()).asIntBuffer();
+		mapped_indices_buffer = new_mapped_buffer;
 
 		mapped_float_buffer.rewind();
 		vertices.rewind();

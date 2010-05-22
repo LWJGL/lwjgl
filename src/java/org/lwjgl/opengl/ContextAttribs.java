@@ -37,16 +37,16 @@ import org.lwjgl.LWJGLUtil;
 import java.nio.IntBuffer;
 
 /**
- * This class represents the context attributes passed to CreateContextAttribs of the XGL_create_context extension.
+ * This class represents the context attributes passed to CreateContextAttribs of the ARB_create_context and
+ * ARB_create_context_profile extensions.
  * These attributes can be used to indicate at context creation which OpenGL interface will be used. This includes the
  * OpenGL version, the layer plane on which rendering takes place and also optional debug and forward combatibility modes.
- * (read the XGL_create_context spec for details)
+ * (read the ARB_create_context spec for details)
  * <p/>
  * Use of this class is optional. If an OpenGL context is created without passing an instance of this class
- * (or XGL_create_context is not supported), the old context creation code will be used. Use of ContextAttribs is required
- * to create an OpenGL 3.0 or newer context. Support for debug and forward compatible mobes is not guaranteed by the OpenGL
- * implementation. Developers may encounter debug contexts being the same as non-debug contexts or forward compatible
- * contexts having support for deprecated functionality.
+ * (or ARB_create_context is not supported), the old context creation code will be used. Support for debug and forward
+ * compatible mobes is not guaranteed by the OpenGL implementation. Developers may encounter debug contexts being the same
+ * as non-debug contexts or forward compatible contexts having support for deprecated functionality.
  * <p/>
  * If the forwardCompatible
  * attribute is used, LWJGL will not load the deprecated functionality (as defined in the OpenGL 3.0 specification). This
@@ -72,10 +72,10 @@ public final class ContextAttribs {
 	}
 
 	public ContextAttribs(final int majorVersion, final int minorVersion) {
-		if ( majorVersion < 0 ||
-		     3 < majorVersion ||
+		if ( majorVersion < 0 || 4 < majorVersion ||
 		     minorVersion < 0 ||
-		     (majorVersion == 3 && 2 < minorVersion) ||
+		     (majorVersion == 4 && 0 < minorVersion) ||
+		     (majorVersion == 3 && 3 < minorVersion) ||
 		     (majorVersion == 2 && 1 < minorVersion) ||
 		     (majorVersion == 1 && 5 < minorVersion) )
 			throw new IllegalArgumentException("Invalid OpenGL version specified: " + majorVersion + '.' + minorVersion);
@@ -88,7 +88,7 @@ public final class ContextAttribs {
 		this.debug = false;
 		this.forwardCompatible = false;
 
-		this.profileCore = 3 < majorVersion || (majorVersion == 3 && 2 <= minorVersion) ? true : false;
+		this.profileCore = false;
 		this.profileCompatibility = false;
 	}
 
