@@ -160,8 +160,9 @@ public final class AL {
 			
 			if(openDevice) {
 				device = ALC10.alcOpenDevice(deviceArguments);
-				if (device == null)
+				if (device == null) {
 					throw new LWJGLException("Could not open ALC device");
+				}
 	
 				if (contextFrequency == -1) {
 					context = ALC10.alcCreateContext(device, null);
@@ -177,7 +178,18 @@ public final class AL {
 			throw e;
 		}
 				
-		ALC11.initialize();				
+		ALC11.initialize();
+
+		// Load EFX10 native stubs if ALC_EXT_EFX is supported.
+		// Is there any situation where the current device supports ALC_EXT_EFX and one
+		// later created by the user does not?
+		// Do we have to call resetNativeStubs(EFX10.class); somewhere? Not done for AL11
+		// either.
+		// This can either be here or in ALC11, since ALC_EXT_EFX indirectly requires AL 1.1
+		// for functions like alSource3i.
+		if (ALC10.alcIsExtensionPresent(device, EFX10.ALC_EXT_EFX_NAME)){
+		    EFX10.initNativeStubs();
+		}
 	}
 
 	/**
