@@ -7,7 +7,7 @@
 		  </antcall>
 	</target>
 	
-	<target name="webstart_demo-release" depends="jars">
+	<target name="webstart_demo-release">
 		<input 	message="Please type the password for the keystore" addproperty="sign.pwd"/>
 
 		<antcall target="-webstart_demo">
@@ -25,6 +25,8 @@
 		
 		<!-- unzip common files -->
 		<unzip src="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip" dest="${lwjgl.temp}/jnlp/temp" overwrite="true"/>
+		<copy file="${lwjgl.lib}/lwjgl_test.jar" tofile="${lwjgl.temp}/jnlp/temp/lwjgl-${lwjgl.version}/lwjgl_test.jar"/>
+		<copy file="${lwjgl.lib}/lwjgl_util.jar" tofile="${lwjgl.temp}/jnlp/temp/lwjgl-${lwjgl.version}/lwjgl_util.jar"/>
 		
 		<!-- move files to unified structure -->
 		<move todir="${lwjgl.temp}/jnlp/temp">
@@ -36,15 +38,54 @@
 		<!-- move relevant files to root -->
 		<move todir="${lwjgl.temp}/jnlp/" flatten="true">
 			<fileset dir="${lwjgl.temp}/jnlp/temp">
-				<include name="**/**.jar"/>
+				<include name="**/jinput.jar"/>
+				<include name="**/lwjgl*.jar"/>
 			</fileset>
 		</move>
 		
+		<!-- update Trusted-Library -->
+		<jar destfile="${lwjgl.temp}/jnlp/jinput.jar" update="true">
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
+			</manifest>
+		</jar>
+		
+		<jar destfile="${lwjgl.temp}/jnlp/lwjgl_util.jar" update="true">
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
+			</manifest>
+		</jar>		
+		
 		<!-- create native jars -->
-		<jar destfile="${lwjgl.temp}/jnlp/native_windows.jar" basedir="${lwjgl.temp}/jnlp/temp/native/windows"/>
-		<jar destfile="${lwjgl.temp}/jnlp/native_linux.jar" basedir="${lwjgl.temp}/jnlp/temp/native/linux"/>
-		<jar destfile="${lwjgl.temp}/jnlp/native_macosx.jar" basedir="${lwjgl.temp}/jnlp/temp/native/macosx"/>
-		<jar destfile="${lwjgl.temp}/jnlp/native_solaris.jar" basedir="${lwjgl.temp}/jnlp/temp/native/solaris"/>
+		<jar destfile="${lwjgl.temp}/jnlp/native_windows.jar" basedir="${lwjgl.temp}/jnlp/temp/native/windows">
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
+			</manifest>		
+		</jar>
+		
+		<jar destfile="${lwjgl.temp}/jnlp/native_linux.jar" basedir="${lwjgl.temp}/jnlp/temp/native/linux">
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
+			</manifest>		
+		</jar>
+		
+		<jar destfile="${lwjgl.temp}/jnlp/native_macosx.jar" basedir="${lwjgl.temp}/jnlp/temp/native/macosx">
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
+			</manifest>		
+		</jar>
+		
+		<jar destfile="${lwjgl.temp}/jnlp/native_solaris.jar" basedir="${lwjgl.temp}/jnlp/temp/native/solaris">
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
+			</manifest>		
+		</jar>
 		
 		<!-- create media jar -->
 		<jar destfile="${lwjgl.temp}/jnlp/media.jar" basedir="${lwjgl.res}"/>	
