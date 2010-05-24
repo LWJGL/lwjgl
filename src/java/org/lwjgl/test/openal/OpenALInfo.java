@@ -32,6 +32,10 @@
 package org.lwjgl.test.openal;
 
 import java.nio.IntBuffer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -40,6 +44,8 @@ import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.ALC10;
 import org.lwjgl.openal.ALC11;
 import org.lwjgl.openal.ALCdevice;
+import org.lwjgl.openal.EFX10;
+import org.lwjgl.openal.EFXUtil;
 
 /**
  *
@@ -70,6 +76,7 @@ public class OpenALInfo {
 		
 		printALCInfo();
 		printALInfo();
+		printEFXInfo();
 		
 		checkForErrors();
 		
@@ -94,7 +101,7 @@ public class OpenALInfo {
 		device = ALC10.alcGetContextsDevice(ALC10.alcGetCurrentContext());
 		checkForErrors();
 		
-	    System.out.println("Default device: " + ALC10.alcGetString(device, ALC10.ALC_DEFAULT_DEVICE_SPECIFIER));
+	    System.out.println("Default playback device: " + ALC10.alcGetString(device, ALC10.ALC_DEFAULT_DEVICE_SPECIFIER));
 
 	    System.out.println("Default capture device: " + ALC10.alcGetString(device, ALC11.ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER));
 
@@ -128,6 +135,62 @@ public class OpenALInfo {
 			System.out.println("    " + extensions[i]);
 		}
 	    checkForErrors();		
+	}
+	
+	private void printEFXInfo() {
+		if(!EFXUtil.isEfxSupported()) {
+			System.out.println("EFX not available");
+			return;
+		}
+		
+		ALCdevice device = AL.getDevice();		
+        IntBuffer major = BufferUtils.createIntBuffer(1);
+        IntBuffer minor = BufferUtils.createIntBuffer(1);
+        IntBuffer sends = BufferUtils.createIntBuffer(1);
+        ALC10.alcGetInteger(device, EFX10.ALC_EFX_MAJOR_VERSION, major);
+        ALC10.alcGetInteger(device, EFX10.ALC_EFX_MINOR_VERSION, minor);
+        if(ALC10.alcGetError(device) == ALC10.ALC_NO_ERROR) {
+        	System.out.println(String.format("EFX version: %d.%d",major.get(), minor.get()));
+        }
+        
+        ALC10.alcGetInteger(device, EFX10.ALC_MAX_AUXILIARY_SENDS, sends);
+        if(ALC10.alcGetError(device) == ALC10.ALC_NO_ERROR) {
+        	System.out.println("Max auxiliary sends: " + sends.get());
+        }
+        
+        System.out.println("Supported filters: ");
+        HashMap<String, Integer> filters = new HashMap<String, Integer>();
+        filters.put("Low-pass", 		EFX10.AL_FILTER_LOWPASS);
+        filters.put("High-pass", 		EFX10.AL_FILTER_HIGHPASS);
+        filters.put("Band-pass", 		EFX10.AL_FILTER_BANDPASS);
+
+        for(Entry<String, Integer> entry : filters.entrySet()) {
+        	if(EFXUtil.isFilterSupported(entry.getValue())) {
+        		System.out.println("    " + entry.getKey());
+        	}
+        }
+        
+        System.out.println("Supported effects: ");
+        HashMap<String, Integer> effects = new HashMap<String, Integer>();
+        effects.put("EAX Reverb", 			EFX10.AL_EFFECT_EAXREVERB);
+        effects.put("Reverb", 				EFX10.AL_EFFECT_REVERB);
+        effects.put("Chorus", 				EFX10.AL_EFFECT_CHORUS);
+        effects.put("Distortion", 			EFX10.AL_EFFECT_DISTORTION);
+        effects.put("Echo", 				EFX10.AL_EFFECT_ECHO);
+        effects.put("Flanger", 				EFX10.AL_EFFECT_FLANGER);
+        effects.put("Frequency Shifter", 	EFX10.AL_EFFECT_FREQUENCY_SHIFTER);
+        effects.put("Vocal Morpher", 		EFX10.AL_EFFECT_VOCAL_MORPHER);
+        effects.put("Pitch Shifter", 		EFX10.AL_EFFECT_PITCH_SHIFTER);
+        effects.put("Ring Modulator", 		EFX10.AL_EFFECT_RING_MODULATOR);
+        effects.put("Autowah", 				EFX10.AL_EFFECT_AUTOWAH);
+        effects.put("Compressor", 			EFX10.AL_EFFECT_COMPRESSOR);
+        effects.put("Equalizer", 			EFX10.AL_EFFECT_EQUALIZER);
+
+        for(Entry<String, Integer> entry : effects.entrySet()) {
+        	if(EFXUtil.isEffectSupported(entry.getValue())) {
+        		System.out.println("    " + entry.getKey());
+        	}
+        }
 	}
 	
 	private void printDevices(int which, String kind) {
