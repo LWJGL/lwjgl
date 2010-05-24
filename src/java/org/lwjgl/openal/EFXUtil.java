@@ -58,14 +58,11 @@ public final class EFXUtil {
      * @return True if ALC_EXT_EFX is supported, false if not.
      * @throws OpenALException If OpenAL has not been created yet.
      */
-    private static boolean isEfxSupported() {
+    public static boolean isEfxSupported() {
         if (!AL.isCreated()) {
             throw new OpenALException("OpenAL has not been created.");
         }
-        if (ALC10.alcIsExtensionPresent(AL.getDevice(), EFX10.ALC_EXT_EFX_NAME)) {
-            return true;
-        }
-        return false;
+        return ALC10.alcIsExtensionPresent(AL.getDevice(), EFX10.ALC_EXT_EFX_NAME);
     }
 
     /**
