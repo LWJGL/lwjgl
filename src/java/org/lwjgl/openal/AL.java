@@ -217,8 +217,10 @@ public final class AL {
 			device = null;
 		}
 		resetNativeStubs(AL10.class);
+		resetNativeStubs(AL11.class);
 		resetNativeStubs(ALC10.class);
 		resetNativeStubs(ALC11.class);
+		resetNativeStubs(EFX10.class);
 
 		if (created)
 			nDestroy();
