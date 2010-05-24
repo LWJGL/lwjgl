@@ -33,8 +33,6 @@ package org.lwjgl.test.openal;
 
 import java.nio.IntBuffer;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import org.lwjgl.BufferUtils;
