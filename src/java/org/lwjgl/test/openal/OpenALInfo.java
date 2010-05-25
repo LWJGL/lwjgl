@@ -33,6 +33,9 @@ package org.lwjgl.test.openal;
 
 import java.nio.IntBuffer;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import org.lwjgl.BufferUtils;
@@ -148,7 +151,7 @@ public class OpenALInfo {
         ALC10.alcGetInteger(device, EFX10.ALC_EFX_MAJOR_VERSION, major);
         ALC10.alcGetInteger(device, EFX10.ALC_EFX_MINOR_VERSION, minor);
         if(ALC10.alcGetError(device) == ALC10.ALC_NO_ERROR) {
-        	System.out.println(String.format("EFX version: %d.%d",major.get(), minor.get()));
+        	System.out.println("EFX version: " + major.get() + "." + minor.get());
         }
         
         ALC10.alcGetInteger(device, EFX10.ALC_MAX_AUXILIARY_SENDS, sends);
@@ -157,36 +160,44 @@ public class OpenALInfo {
         }
         
         System.out.println("Supported filters: ");
-        HashMap<String, Integer> filters = new HashMap<String, Integer>();
-        filters.put("Low-pass", 		EFX10.AL_FILTER_LOWPASS);
-        filters.put("High-pass", 		EFX10.AL_FILTER_HIGHPASS);
-        filters.put("Band-pass", 		EFX10.AL_FILTER_BANDPASS);
+        HashMap filters = new HashMap();
+        filters.put("Low-pass", 		new Integer(EFX10.AL_FILTER_LOWPASS));
+        filters.put("High-pass", 		new Integer(EFX10.AL_FILTER_HIGHPASS));
+        filters.put("Band-pass", 		new Integer(EFX10.AL_FILTER_BANDPASS));
 
-        for(Entry<String, Integer> entry : filters.entrySet()) {
-        	if(EFXUtil.isFilterSupported(entry.getValue())) {
-        		System.out.println("    " + entry.getKey());
+        Set entries = filters.entrySet();
+        for(Iterator i = entries.iterator(); i.hasNext();) {
+        	Map.Entry entry = (Entry) i.next();
+        	int value = ((Integer)entry.getValue()).intValue();
+        	String key = (String) entry.getKey();
+        	if(EFXUtil.isFilterSupported(value)) {
+        		System.out.println("    " + key);
         	}
         }
         
         System.out.println("Supported effects: ");
-        HashMap<String, Integer> effects = new HashMap<String, Integer>();
-        effects.put("EAX Reverb", 			EFX10.AL_EFFECT_EAXREVERB);
-        effects.put("Reverb", 				EFX10.AL_EFFECT_REVERB);
-        effects.put("Chorus", 				EFX10.AL_EFFECT_CHORUS);
-        effects.put("Distortion", 			EFX10.AL_EFFECT_DISTORTION);
-        effects.put("Echo", 				EFX10.AL_EFFECT_ECHO);
-        effects.put("Flanger", 				EFX10.AL_EFFECT_FLANGER);
-        effects.put("Frequency Shifter", 	EFX10.AL_EFFECT_FREQUENCY_SHIFTER);
-        effects.put("Vocal Morpher", 		EFX10.AL_EFFECT_VOCAL_MORPHER);
-        effects.put("Pitch Shifter", 		EFX10.AL_EFFECT_PITCH_SHIFTER);
-        effects.put("Ring Modulator", 		EFX10.AL_EFFECT_RING_MODULATOR);
-        effects.put("Autowah", 				EFX10.AL_EFFECT_AUTOWAH);
-        effects.put("Compressor", 			EFX10.AL_EFFECT_COMPRESSOR);
-        effects.put("Equalizer", 			EFX10.AL_EFFECT_EQUALIZER);
+        HashMap effects = new HashMap();
+        effects.put("EAX Reverb", 			new Integer(EFX10.AL_EFFECT_EAXREVERB));
+        effects.put("Reverb", 				new Integer(EFX10.AL_EFFECT_REVERB));
+        effects.put("Chorus", 				new Integer(EFX10.AL_EFFECT_CHORUS));
+        effects.put("Distortion", 			new Integer(EFX10.AL_EFFECT_DISTORTION));
+        effects.put("Echo", 				new Integer(EFX10.AL_EFFECT_ECHO));
+        effects.put("Flanger", 				new Integer(EFX10.AL_EFFECT_FLANGER));
+        effects.put("Frequency Shifter", 	new Integer(EFX10.AL_EFFECT_FREQUENCY_SHIFTER));
+        effects.put("Vocal Morpher", 		new Integer(EFX10.AL_EFFECT_VOCAL_MORPHER));
+        effects.put("Pitch Shifter", 		new Integer(EFX10.AL_EFFECT_PITCH_SHIFTER));
+        effects.put("Ring Modulator", 		new Integer(EFX10.AL_EFFECT_RING_MODULATOR));
+        effects.put("Autowah", 				new Integer(EFX10.AL_EFFECT_AUTOWAH));
+        effects.put("Compressor", 			new Integer(EFX10.AL_EFFECT_COMPRESSOR));
+        effects.put("Equalizer", 			new Integer(EFX10.AL_EFFECT_EQUALIZER));
 
-        for(Entry<String, Integer> entry : effects.entrySet()) {
-        	if(EFXUtil.isEffectSupported(entry.getValue())) {
-        		System.out.println("    " + entry.getKey());
+        entries = filters.entrySet();
+        for(Iterator i = entries.iterator(); i.hasNext();) {
+        	Map.Entry entry = (Entry) i.next();
+        	int value = ((Integer)entry.getValue()).intValue();
+        	String key = (String) entry.getKey();
+        	if(EFXUtil.isEffectSupported(value)) {
+        		System.out.println("    " + key);
         	}
         }
 	}
