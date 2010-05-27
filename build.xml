@@ -253,6 +253,7 @@
 			<class name="org.lwjgl.openal.AL" />
 			<class name="org.lwjgl.opengl.GLContext" />
 			<class name="org.lwjgl.opengl.Pbuffer" />
+			<class name="org.lwjgl.opengl.AMDDebugOutputCallback" />
 		</javah>
 	</target>
 	

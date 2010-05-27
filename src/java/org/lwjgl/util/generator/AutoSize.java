@@ -49,4 +49,5 @@ import java.lang.annotation.ElementType;
 public @interface AutoSize {
 	String value(); // The name of the Buffer parameter
 	String expression() default ""; // This value is added after the argument
+	boolean canBeNull() default false; // When this is true and the Buffer parameter is null, 0 will be used.
 }

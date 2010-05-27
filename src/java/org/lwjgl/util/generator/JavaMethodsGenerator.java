@@ -387,7 +387,10 @@ public class JavaMethodsGenerator {
 				String auto_parameter_name = auto_type_annotation.value();
 				ParameterDeclaration auto_target_param = Utils.findParameter(method, auto_parameter_name);
 				TypeInfo auto_target_type_info = typeinfos_instance.get(auto_target_param);
-				writer.print("(" + auto_parameter_name + ".remaining()");
+				if ( auto_type_annotation.canBeNull() )
+					writer.print("((" + auto_parameter_name + " == null ? 0 : " + auto_parameter_name + ".remaining())");
+				else
+					writer.print("(" + auto_parameter_name + ".remaining()");
 				// Shift the remaining if the target parameter is multityped and there's no AutoType to track type
 				boolean shift_remaining = !hasAnyParameterAutoTypeAnnotation(method, auto_target_param) && Utils.isParameterMultiTyped(auto_target_param);
 				if (shift_remaining) {
@@ -446,8 +449,13 @@ public class JavaMethodsGenerator {
 						writer.print(offset == null ? "0" : offset);
 					} else
 						writer.print("0");
-				} else if ( param.getAnnotation(GLpointer.class) != null ) {
-					writer.print(".getPointer()");
+				} else {
+					GLpointer pointer_annotation = param.getAnnotation(GLpointer.class);
+					if ( pointer_annotation != null ) {
+						if ( pointer_annotation.canBeNull() )
+							writer.print(" == null ? 0 : " + param.getSimpleName());
+						writer.print(".getPointer()");
+					}
 				}
 			}
 		}

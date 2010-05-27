@@ -160,6 +160,7 @@ static void extgl_InitGLXSupportedExtensions(Display *disp, int screen, GLXExten
 	extension_flags->GLX_EXT_fbconfig_packed_float = GLXQueryExtension(disp, screen, "GLX_EXT_fbconfig_packed_float");
 	extension_flags->GLX_ARB_framebuffer_sRGB = GLXQueryExtension(disp, screen, "GLX_ARB_framebuffer_sRGB") || GLXQueryExtension(disp, screen, "GLX_EXT_framebuffer_sRGB");
 	extension_flags->GLX_ARB_create_context = GLXQueryExtension(disp, screen, "GLX_ARB_create_context");
+	extension_flags->GLX_NV_multisample_coverage = GLXQueryExtension(disp, screen, "GLX_NV_multisample_coverage");
 }
 
 bool extgl_Open(JNIEnv *env) {

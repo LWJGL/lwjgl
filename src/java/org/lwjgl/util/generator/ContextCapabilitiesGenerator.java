@@ -51,13 +51,13 @@ import com.sun.mirror.type.InterfaceType;
  */
 public class ContextCapabilitiesGenerator {
 
-	private final static String STUBS_LOADED_NAME = "loaded_stubs";
-	private final static String ALL_INIT_METHOD_NAME = "initAllStubs";
-	private final static String POINTER_INITIALIZER_POSTFIX = "_initNativeFunctionAddresses";
-	private final static String CACHED_EXTS_VAR_NAME = "supported_extensions";
-	private final static String PROFILE_MASK_VAR_NAME = "profileMask";
-	private final static String EXTENSION_PREFIX = "GL_";
-	private final static String CORE_PREFIX = "Open";
+	private static final String STUBS_LOADED_NAME = "loaded_stubs";
+	private static final String ALL_INIT_METHOD_NAME = "initAllStubs";
+	private static final String POINTER_INITIALIZER_POSTFIX = "_initNativeFunctionAddresses";
+	private static final String CACHED_EXTS_VAR_NAME = "supported_extensions";
+	private static final String PROFILE_MASK_VAR_NAME = "profileMask";
+	private static final String EXTENSION_PREFIX = "GL_";
+	private static final String CORE_PREFIX = "Open";
 
 	public static void generateClassPrologue(PrintWriter writer, boolean context_specific, boolean generate_error_checks) {
 		writer.println("public class " + Utils.CONTEXT_CAPS_CLASS_NAME + " {");
@@ -107,6 +107,12 @@ public class ContextCapabilitiesGenerator {
 			writer.println();
 			writer.print("\t\t\t&& " + CACHED_EXTS_VAR_NAME + ".contains(\"");
 			writer.print(translateFieldName(super_interface.getDeclaration().getSimpleName()) + "\")");
+		}
+		Alias alias_annotation = d.getAnnotation(Alias.class);
+		if ( alias_annotation != null ) {
+			writer.println();
+			writer.print("\t\t\t|| " + CACHED_EXTS_VAR_NAME + ".contains(\"");
+			writer.print(translateFieldName(alias_annotation.value()) + "\")");
 		}
 		writer.println(";");
 	}
@@ -164,10 +170,19 @@ public class ContextCapabilitiesGenerator {
 	public static void generateInitStubs(PrintWriter writer, InterfaceDeclaration d, boolean context_specific) {
 		if ( d.getMethods().size() > 0 ) {
 			if ( context_specific ) {
+				final Alias alias_annotation = d.getAnnotation(Alias.class);
+
 				if ( d.getAnnotation(ForceInit.class) != null )
 					writer.println("\t\t" + CACHED_EXTS_VAR_NAME + ".add(\"" + translateFieldName(d.getSimpleName()) + "\");");
-				writer.print("\t\tif (" + CACHED_EXTS_VAR_NAME + ".contains(\"");
+				writer.print("\t\tif (");
+				if ( alias_annotation != null )
+					writer.print("(");
+				writer.print(CACHED_EXTS_VAR_NAME + ".contains(\"");
 				writer.print(translateFieldName(d.getSimpleName()) + "\")");
+				if ( alias_annotation != null ) {
+					writer.print(" || " + CACHED_EXTS_VAR_NAME + ".contains(\"");
+					writer.print(translateFieldName(alias_annotation.value()) + "\"))");
+				}
 				writer.print(" && !" + getAddressesInitializerName(d.getSimpleName()) + "(");
 				if ( d.getAnnotation(DeprecatedGL.class) != null )
 					writer.print("forwardCompatible");
@@ -176,10 +191,16 @@ public class ContextCapabilitiesGenerator {
 						writer.print(",");
 					writer.print("supported_extensions");
 				}
-				writer.println("))");
-				//writer.print("\t\t\t" + CACHED_EXTS_VAR_NAME + ".remove(\"");
+				if ( alias_annotation != null ) {
+					writer.println(")) {");
+					writer.print("\t\t\tremove(" + CACHED_EXTS_VAR_NAME + ", \"");
+					writer.println(translateFieldName(alias_annotation.value()) + "\");");
+				} else
+					writer.println("))");
 				writer.print("\t\t\tremove(" + CACHED_EXTS_VAR_NAME + ", \"");
 				writer.println(translateFieldName(d.getSimpleName()) + "\");");
+				if ( alias_annotation != null )
+					writer.println("\t\t}");
 			} else {
 				writer.print("\t\tGLContext." + Utils.STUB_INITIALIZER_NAME + "(" + Utils.getSimpleClassName(d));
 				writer.println(".class, " + CACHED_EXTS_VAR_NAME + ", \"" + translateFieldName(d.getSimpleName()) + "\");");
@@ -209,6 +230,9 @@ public class ContextCapabilitiesGenerator {
 				writer.print(",");
 			writer.print("Set supported_extensions");
 		}
+
+		Alias alias_annotation = d.getAnnotation(Alias.class);
+		boolean aliased = alias_annotation != null && alias_annotation.postfix().length() > 0;
 
 		writer.println(") {");
 		writer.println("\t\treturn ");
@@ -266,9 +290,12 @@ public class ContextCapabilitiesGenerator {
 						writer.print(", ");
 				}
 				writer.print("}, ");
+			} else if ( aliased ) {
+				writer.print("GLContext.getFunctionAddress(new String[] {\"" + method.getSimpleName() + "\",\"" + method.getSimpleName() + alias_annotation.postfix() + "\"})) != 0");
 			} else
 				writer.print("GLContext.getFunctionAddress(");
-			writer.print("\"" + method.getSimpleName() + "\")) != 0");
+			if ( !aliased )
+				writer.print("\"" + method.getSimpleName() + "\")) != 0");
 			if ( deprecated || dependent != null )
 				writer.print(')');
 			if ( optional )

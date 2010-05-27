@@ -271,6 +271,11 @@
 #define GLX_CONTEXT_DEBUG_BIT_ARB				0x0001
 #define GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB	0x0002
 
+/* GLX_NV_multisample_coverage  */
+#define GLX_COVERAGE_SAMPLES_NV              100001
+#define GLX_COLOR_SAMPLES_NV                 0x20B3
+
+
 typedef XID GLXContextID;
 typedef XID GLXPixmap;
 typedef XID GLXDrawable;
@@ -346,6 +351,7 @@ typedef struct {
 	bool GLX_EXT_fbconfig_packed_float;
 	bool GLX_ARB_framebuffer_sRGB;
 	bool GLX_ARB_create_context;
+	bool GLX_NV_multisample_coverage;
 } GLXExtensions;
 
 /* Add _ to global symbols to avoid symbol clash with the OpenGL library */

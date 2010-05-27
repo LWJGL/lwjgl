@@ -31,22 +31,30 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.Alias;
-import org.lwjgl.util.generator.Extension;
+import org.lwjgl.util.generator.*;
 
-@Extension(postfix = "ARB", className = "ARBTextureCompressionBPTC")
-@Alias("EXT_texture_compression_bptc")
-public interface ARB_texture_compression_bptc {
+import java.nio.IntBuffer;
 
-	/**
-	 * Accepted by the &lt;internalformat&gt; parameter of TexImage2D, TexImage3D,
-	 * CopyTexImage2D, CopyTexImage3D, CompressedTexImage2DARB, and
-	 * CompressedTexImage3DARB and the &lt;format&gt; parameter of
-	 * CompressedTexSubImage2DARB and CompressedTexSubImage3DARB:
-	 */
-	int GL_COMPRESSED_RGBA_BPTC_UNORM_ARB = 0x8E8C;
-	int GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB = 0x8E8D;
-	int GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB = 0x8E8E;
-	int GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB = 0x8E8F;
+public interface AMD_name_gen_delete {
+
+	/** Accepted as the &lt;identifier&gt; parameter of GenNamesAMD and DeleteNamesAMD: */
+	int GL_DATA_BUFFER_AMD = 0x9151,
+		GL_PERFORMANCE_MONITOR_AMD = 0x9152,
+		GL_QUERY_OBJECT_AMD = 0x9153,
+		GL_VERTEX_ARRAY_OBJECT_AMD = 0x9154,
+		GL_SAMPLER_OBJECT_AMD = 0x9155;
+
+	void glGenNamesAMD(@GLenum int identifier, @AutoSize("names") @GLuint int num, @OutParameter @GLuint IntBuffer names);
+
+	@Alternate("glGenNamesAMD")
+	@GLreturn("names")
+	void glGenNamesAMD2(@GLenum int identifier, @Constant("1") @GLsizei int num, @OutParameter @GLuint IntBuffer names);
+
+	void glDeleteNamesAMD(@GLenum int identifier, @AutoSize("names") @GLsizei int num, @Const @GLuint IntBuffer names);
+
+	@Alternate("glDeleteNamesAMD")
+	void glDeleteNamesAMD(@GLenum int identifier, @Constant("1") @GLsizei int num, @Constant(value = "APIUtils.getBufferInt().put(0, name), 0", keepParam = true) int name);
+
+	boolean glIsNameAMD(@GLenum int identifier, @GLuint int name);
 
 }

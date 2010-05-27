@@ -148,7 +148,7 @@ public final class VersionTest {
 
 		boolean success = false;
 		boolean check;
-		if ( majorInput < 3 || minorInput == 0 ) {
+		if ( majorInput < 3 || (majorInput == 3 && minorInput == 0) ) {
 			System.out.println("\nA version less than or equal to 3.0 is requested, the context\n" +
 			                   "returned may implement any of the following versions:");
 

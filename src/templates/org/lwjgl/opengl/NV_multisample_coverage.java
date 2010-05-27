@@ -31,8 +31,13 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.Alias;
+public interface NV_multisample_coverage {
 
-@Alias("EXT_texture_buffer_object_rgb32")
-public interface ARB_texture_buffer_object_rgb32 {
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetDoublev,
+	 * GetIntegerv, and GetFloatv:
+	 */
+	int GL_COVERAGE_SAMPLES_NV = 0x80A9;
+	int GL_COLOR_SAMPLES_NV = 0x8E20;
+
 }

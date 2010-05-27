@@ -66,6 +66,14 @@ public final class PixelFormat {
 	 * 0 means that anti-aliasing is disabled.
 	 */
 	private int samples;
+	/**
+	 * The number of COLOR_SAMPLES_NV to use for Coverage Sample Anti-aliasing (CSAA).
+	 * When this number is greater than 0, the {@code samples} property will be treated
+	 * as if it were the COVERAGE_SAMPLES_NV property.
+	 * <p/>
+	 * This property is currently a no-op for the MacOS implementation.
+	 */
+	private int colorSamples;
 	/** The number of auxiliary buffers */
 	private int num_aux_buffers;
 	/** The number of bits per pixel in the accumulation buffer */
@@ -76,9 +84,15 @@ public final class PixelFormat {
 	private boolean stereo;
 	/** Whether this format specifies a floating point format */
 	private boolean floating_point;
-	/** Whether this format specifies a packed floating point format (32 bit unsigned - R11F_G11F_B10F) */
+	/**
+	 * Whether this format specifies a packed floating point format (32 bit unsigned - R11F_G11F_B10F)
+	 * This property is currently a no-op for the MacOS implementation.
+	 */
 	private boolean floating_point_packed;
-	/** Whether this format specifies an sRGB format */
+	/**
+	 * Whether this format specifies an sRGB format
+	 * This property is currently a no-op for the MacOS implementation.
+	 */
 	private boolean sRGB;
 
 	/**
@@ -132,6 +146,7 @@ public final class PixelFormat {
 		this.stencil = pf.stencil;
 
 		this.samples = pf.samples;
+		this.colorSamples = pf.colorSamples;
 
 		this.num_aux_buffers = pf.num_aux_buffers;
 
@@ -242,6 +257,38 @@ public final class PixelFormat {
 
 		final PixelFormat pf = new PixelFormat(this);
 		pf.samples = samples;
+		return pf;
+	}
+
+	/**
+	 * Returns a new PixelFormat object with the same properties as this PixelFormat and the new color samples values.
+	 * A value greater than 0 is valid only if the {@code samples} property is also greater than 0. Additionally, the
+	 * color samples value needs to be lower than or equal to the {@code samples} property.
+	 *
+	 * @param colorSamples    the new color samples value.
+	 *
+	 * @return the new PixelFormat
+	 */
+	public PixelFormat withCoverageSamples(final int colorSamples) {
+		return withCoverageSamples(colorSamples, samples);
+	}
+
+	/**
+	 * Returns a new PixelFormat object with the same properties as this PixelFormat and the new color samples
+	 * and coverage samples values.
+	 *
+	 * @param colorSamples    the new color samples value. This value must be lower than or equal to the coverage samples value.
+	 * @param coverageSamples the new coverage samples value.
+	 *
+	 * @return the new PixelFormat
+	 */
+	public PixelFormat withCoverageSamples(final int colorSamples, final int coverageSamples) {
+		if ( coverageSamples < 0 || colorSamples < 0 || (coverageSamples == 0 && 0 < colorSamples) || coverageSamples < colorSamples  )
+			throw new IllegalArgumentException("Invalid number of coverage samples specified: " + coverageSamples + " - " + colorSamples);
+
+		final PixelFormat pf = new PixelFormat(this);
+		pf.samples = coverageSamples;
+		pf.colorSamples = colorSamples;
 		return pf;
 	}
 

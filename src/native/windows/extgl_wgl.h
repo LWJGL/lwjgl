@@ -200,6 +200,15 @@ typedef HDC (APIENTRY * wglGetCurrentReadDCARBPROC) (void);
 
 typedef HGLRC (APIENTRY * wglCreateContextAttribsARBPROC) (HDC hDC, HGLRC hShareContext, const int *attribList);
 
+/*---------------------------------------------------------------------*/
+/*------------ WGL_NV_multisample_coverage ----------------------------*/
+/*---------------------------------------------------------------------*/
+
+#define WGL_COVERAGE_SAMPLES_NV                                 0x2042
+#define WGL_COLOR_SAMPLES_NV                                    0x20B9
+
+/*---------------------------------------------------------------------*/
+
 typedef struct {
     bool WGL_ARB_buffer_region;
     bool WGL_ARB_extensions_string;
@@ -217,6 +226,7 @@ typedef struct {
     bool WGL_ARB_framebuffer_sRGB;
 	bool WGL_EXT_pixel_format_packed_float;
     bool WGL_ARB_create_context;
+    bool WGL_NV_multisample_coverage;
 
 	wglGetExtensionsStringEXTPROC wglGetExtensionsStringEXT;
 

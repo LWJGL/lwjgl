@@ -119,6 +119,7 @@ static GLXFBConfig *chooseVisualGLX13FromBPP(JNIEnv *env, Display *disp, int scr
 	int depth = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "depth", "I"));
 	int stencil = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "stencil", "I"));
 	int samples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "samples", "I"));
+	int colorSamples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "colorSamples", "I"));
 	int num_aux_buffers = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "num_aux_buffers", "I"));
 	int accum_bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_bpp", "I"));
 	int accum_alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_alpha", "I"));
@@ -161,7 +162,9 @@ static GLXFBConfig *chooseVisualGLX13FromBPP(JNIEnv *env, Display *disp, int scr
 	// Assume the caller has checked support for multisample
 	if (samples > 0) {
 		putAttrib(&attrib_list, GLX_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
-		putAttrib(&attrib_list, GLX_SAMPLES_ARB); putAttrib(&attrib_list, samples);
+		putAttrib(&attrib_list, GLX_SAMPLES_ARB); putAttrib(&attrib_list, samples); // GLX_COVERAGE_SAMPLES_NV if colorSamples > 0
+        if ( colorSamples > 0 )
+            putAttrib(&attrib_list, GLX_COLOR_SAMPLES_NV); putAttrib(&attrib_list, colorSamples);
 	}
 	if (sRGB) {
 		putAttrib(&attrib_list, GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB); putAttrib(&attrib_list, True);
@@ -199,6 +202,7 @@ static XVisualInfo *chooseVisualGLXFromBPP(JNIEnv *env, Display *disp, int scree
 	int depth = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "depth", "I"));
 	int stencil = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "stencil", "I"));
 	int samples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "samples", "I"));
+	int colorSamples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "colorSamples", "I"));
 	int num_aux_buffers = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "num_aux_buffers", "I"));
 	int accum_bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_bpp", "I"));
 	int accum_alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_alpha", "I"));
@@ -228,7 +232,9 @@ static XVisualInfo *chooseVisualGLXFromBPP(JNIEnv *env, Display *disp, int scree
 	// Assume the caller has checked support for multisample
 	if (samples > 0) {
 		putAttrib(&attrib_list, GLX_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
-		putAttrib(&attrib_list, GLX_SAMPLES_ARB); putAttrib(&attrib_list, samples);
+		putAttrib(&attrib_list, GLX_SAMPLES_ARB); putAttrib(&attrib_list, samples); // GLX_COVERAGE_SAMPLES_NV if colorSamples > 0
+        if ( colorSamples > 0 )
+            putAttrib(&attrib_list, GLX_COLOR_SAMPLES_NV); putAttrib(&attrib_list, colorSamples);
 	}
 	if (sRGB)
 		putAttrib(&attrib_list, GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB);
@@ -287,6 +293,11 @@ bool initPeerInfo(JNIEnv *env, jobject peer_info_handle, Display *display, int s
 	int samples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "samples", "I"));
 	if (samples > 0 && !extension_flags.GLX_ARB_multisample) {
 		throwException(env, "Samples > 0 specified but there's no support for GLX_ARB_multisample");
+		return false;
+	}
+	int colorSamples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "colorSamples", "I"));
+	if (colorSamples > 0 && !extension_flags.GLX_NV_multisample_coverage) {
+		throwException(env, "Color samples > 0 specified but there's no support for GLX_NV_multisample_coverage");
 		return false;
 	}
 	bool floating_point = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));

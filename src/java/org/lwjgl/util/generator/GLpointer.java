@@ -40,4 +40,5 @@ import java.lang.annotation.ElementType;
 @Target({ElementType.PARAMETER, ElementType.METHOD})
 public @interface GLpointer {
 	String value(); // The native pointer type.
+	boolean canBeNull() default false; // Whether the pointer may be null.
 }

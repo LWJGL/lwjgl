@@ -35,7 +35,6 @@ import org.lwjgl.LWJGLException;
 
 /**
  * @author Spasi
- * @since 20 Απρ 2010
  */
 
 /**

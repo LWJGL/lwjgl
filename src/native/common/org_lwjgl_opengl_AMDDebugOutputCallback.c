@@ -29,10 +29,39 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.Alias;
+/**
+ * JNI implementation of the AMD_debug_output function callback.
+ *
+ * @author Spasi
+ */
 
-@Alias("EXT_texture_buffer_object_rgb32")
-public interface ARB_texture_buffer_object_rgb32 {
+#include <jni.h>
+#include "common_tools.h"
+#include "extgl.h"
+#include "org_lwjgl_opengl_AMDDebugOutputCallback.h"
+
+static void APIENTRY debugOutputCallback(GLuint id, GLenum category, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam) {
+    jclass callback_class;
+	jmethodID callback_method;
+	JNIEnv *env = getThreadEnv();
+	if (env != NULL && !(*env)->ExceptionOccurred(env)) {
+		callback_class = (*env)->FindClass(env, "org/lwjgl/opengl/AMDDebugOutputUtil");
+		if ( callback_class != NULL ) {
+			callback_method = (*env)->GetStaticMethodID(env, callback_class, "messageCallback", "(IIILjava/lang/String;Ljava/nio/ByteBuffer;)V");
+			if ( callback_method != NULL ) {
+				(*env)->CallStaticVoidMethod(env, callback_class, callback_method,
+                            (jint)id,
+				            (jint)category,
+				            (jint)severity,
+                            NewStringNativeWithLength(env, message, length),
+				            NULL
+                );
+			}
+		}
+	}
+}
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_AMDDebugOutputCallback_getFunctionPointer(JNIEnv *env, jclass clazz) {
+    return (jlong)(intptr_t)&debugOutputCallback;
 }

@@ -5,7 +5,6 @@ import org.lwjgl.LWJGLUtil;
 
 /**
  * @author Spasi
- * @since 22 Απρ 2010
  */
 abstract class AbstractDrawable implements DrawableLWJGL {
 

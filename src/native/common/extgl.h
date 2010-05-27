@@ -133,6 +133,9 @@ typedef int64_t GLint64;
 typedef uint64_t GLuint64;
 typedef struct __GLsync *GLsync;
 
+/* AMD_debug_output callback function pointer. */
+typedef void (APIENTRY *GLDEBUGPROCAMD)(GLuint id, GLenum category, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam);
+
 /* helper stuff */
 
 /* initializes everything, call this right after the rc is created. the function returns true if successful */

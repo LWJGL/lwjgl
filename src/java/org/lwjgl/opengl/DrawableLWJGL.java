@@ -4,7 +4,6 @@ import org.lwjgl.LWJGLException;
 
 /**
  * @author Spasi
- * @since 23 Απρ 2010
  */
 interface DrawableLWJGL extends Drawable {
 

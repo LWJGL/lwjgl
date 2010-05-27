@@ -29,10 +29,26 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.opengl;
+package org.lwjgl.util.generator;
 
-import org.lwjgl.util.generator.Alias;
+/**
+ * This annotation can be used for extensions that have aliases
+ * with the exact same functionality.
+ * <p/>
+ * This is currently only implemented for context-specific functionality.
+ *
+ * @author Spasi <spasi@users.sourceforge.net>
+ */
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 
-@Alias("EXT_texture_buffer_object_rgb32")
-public interface ARB_texture_buffer_object_rgb32 {
+@Target(ElementType.TYPE)
+public @interface Alias {
+
+	/** The aliased extension name. */
+	String value();
+
+	/** The function name postfix for the aliased version. (optional) */
+	String postfix() default "";
+
 }

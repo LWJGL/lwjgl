@@ -152,6 +152,7 @@ static void extgl_InitSupportedWGLExtensions(WGLExtensions *extensions) {
 	extensions->WGL_ARB_framebuffer_sRGB = WGLQueryExtension(extensions, "WGL_ARB_framebuffer_sRGB") || WGLQueryExtension(extensions, "WGL_EXT_framebuffer_sRGB");
 	extensions->WGL_EXT_pixel_format_packed_float = WGLQueryExtension(extensions, "WGL_EXT_pixel_format_packed_float");
 	extensions->WGL_ARB_create_context = WGLQueryExtension(extensions, "WGL_ARB_create_context");
+	extensions->WGL_NV_multisample_coverage = WGLQueryExtension(extensions, "WGL_NV_multisample_coverage");
 }
 
 static void extgl_InitWGLEXTExtensionsString(WGLExtensions *extensions) {

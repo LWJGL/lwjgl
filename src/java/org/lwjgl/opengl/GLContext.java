@@ -169,6 +169,22 @@ public final class GLContext {
 		return 0;
 	}
 
+	/**
+	 * Helper method to get a pointer to a named function with aliases in the OpenGL library.
+	 *
+	 * @param aliases the function name aliases.
+	 *
+	 * @return the function pointer address
+	 */
+	static long getFunctionAddress(String[] aliases) {
+		for ( int i = 0; i < aliases.length; i++ ) {
+			long address = getFunctionAddress(aliases[i]);
+			if ( address != 0 )
+				return address;
+		}
+		return 0;
+	}
+
 	/** Helper method to get a pointer to a named function in the OpenGL library */
 	static native long getFunctionAddress(String name);
 
