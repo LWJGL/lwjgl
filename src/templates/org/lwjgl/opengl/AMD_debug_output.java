@@ -73,6 +73,18 @@ public interface AMD_debug_output {
 	@Alternate("glDebugMessageInsertAMD")
 	void glDebugMessageInsertAMD(@GLenum int category, @GLenum int severity, @GLuint int id, @Constant("buf.length()") @GLsizei int length, CharSequence buf);
 
+	/**
+	 * The {@code AMDDebugOutputCallback.Handler} implementation passed to this method will be used for
+	 * AMD_debug_output messages. If callback is null, any previously registered handler for the current
+	 * thread will be unregistered and stop receiving messages.
+	 * <p/>
+	 * The userParam buffer will be passed to the GL, but the current implementation will ignore it and
+	 * never return it to the handler. Instead, users are encouraged to use a custom callback handler
+	 * implentation to store context-specific data.
+	 *
+	 * @param callback  the callback function to use
+	 * @param userParam the user-specified data
+	 */
 	void glDebugMessageCallbackAMD(@GLpointer(value = "GLDEBUGPROCAMD", canBeNull = true) AMDDebugOutputCallback callback, @Check(canBeNull = true) @GLvoid ByteBuffer userParam);
 
 	@GLuint
