@@ -236,8 +236,9 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extens
 	if (samples > 0) {
 		putAttrib(&attrib_list, WGL_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
 	    putAttrib(&attrib_list, WGL_SAMPLES_ARB); putAttrib(&attrib_list, samples); // WGL_COVERAGE_SAMPLES_NV if colorSamples > 0
-	    if ( colorSamples > 0 )
+	    if ( colorSamples > 0 ) {
 	        putAttrib(&attrib_list, WGL_COLOR_SAMPLES_NV); putAttrib(&attrib_list, colorSamples);
+        }
 	}
 	putAttrib(&attrib_list, WGL_ACCUM_BITS_ARB); putAttrib(&attrib_list, accum_bpp);
 	putAttrib(&attrib_list, WGL_ACCUM_ALPHA_BITS_ARB); putAttrib(&attrib_list, accum_alpha);

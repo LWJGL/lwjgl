@@ -163,8 +163,9 @@ static GLXFBConfig *chooseVisualGLX13FromBPP(JNIEnv *env, Display *disp, int scr
 	if (samples > 0) {
 		putAttrib(&attrib_list, GLX_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
 		putAttrib(&attrib_list, GLX_SAMPLES_ARB); putAttrib(&attrib_list, samples); // GLX_COVERAGE_SAMPLES_NV if colorSamples > 0
-        if ( colorSamples > 0 )
+        if ( colorSamples > 0 ) {
             putAttrib(&attrib_list, GLX_COLOR_SAMPLES_NV); putAttrib(&attrib_list, colorSamples);
+        }
 	}
 	if (sRGB) {
 		putAttrib(&attrib_list, GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB); putAttrib(&attrib_list, True);
