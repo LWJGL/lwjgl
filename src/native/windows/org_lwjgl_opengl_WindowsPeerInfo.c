@@ -42,8 +42,7 @@
 #include "context.h"
 #include "common_tools.h"
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsPeerInfo_createHandle
-  (JNIEnv *env, jclass clazz) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsPeerInfo_createHandle(JNIEnv *env, jclass clazz) {
 	return newJavaManagedByteBuffer(env, sizeof(WindowsPeerInfo));
 }
 
