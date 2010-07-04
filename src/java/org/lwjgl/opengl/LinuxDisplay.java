@@ -410,7 +410,11 @@ final class LinuxDisplay implements DisplayImplementation {
 				ByteBuffer handle = peer_info.lockAndGetHandle();
 				try {
 					current_window_mode = getWindowMode(Display.isFullscreen());
-					boolean undecorated = Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated") || current_window_mode != WINDOWED;
+					// Setting _MOTIF_WM_HINTS in fullscreen mode is problematic for certain window
+					// managers. We do not set MWM_HINTS_DECORATIONS in fullscreen mode anymore,
+					// unless org.lwjgl.opengl.Window.undecorated_fs has been specified.
+					// See native/linux/org_lwjgl_opengl_Display.c, createWindow function.
+					boolean undecorated = Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated") || (current_window_mode != WINDOWED && Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated_fs"));
 					this.parent = parent;
 					parent_window = parent != null ? getHandle(parent) : getRootWindow(getDisplay(), getDefaultScreen());
 					current_window = nCreateWindow(getDisplay(), getDefaultScreen(), handle, mode, current_window_mode, x, y, undecorated, parent_window);

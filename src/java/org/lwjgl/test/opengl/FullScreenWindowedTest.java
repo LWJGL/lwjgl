@@ -222,6 +222,8 @@ public class FullScreenWindowedTest {
 		if (angleRotation > MAX_SPEED) {
 			angleRotation = MAX_SPEED;
 		}
+
+		while ( Mouse.next() );
 	}
 	/**
 	 * Cleans up the test

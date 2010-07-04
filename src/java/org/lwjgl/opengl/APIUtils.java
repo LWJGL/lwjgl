@@ -158,6 +158,7 @@ final class APIUtils {
 		final InfiniteCharSequence infiniteSeq = getInfiniteSeq();
 		infiniteSeq.setString(string);
 		encoder.encode(infiniteSeq.buffer, buffer, true);
+		infiniteSeq.clear();
 	}
 
 	/**
