@@ -106,11 +106,17 @@ import sun.security.util.SecurityConstants;
  * <ul>
  * <li>al_version - [int or float] Version of deployment. If this is specified, the jars will be cached and 
  * reused if the version matches. If version doesn't match all of the files are reloaded.</li>
+ * <li>al_debug - [boolean] Whether to enable debug mode. <i>Default: false</i>.</li>
+ * <li>al_prepend_host - [boolean] Whether to limit caching to this domain, disable if your applet is hosted on multple domains and needs to share the cache. <i>Default: true</i>.</li>
+ * <ul>
+ * <li>al_windows64 - [String] If specified it will be used instead of al_windows on 64bit windows systems.</li>
+ * <li>al_windows32 - [String] If specifed it will be used instead of al_windows on 32bit windows systems.</li>
+ * <li>al_linux64 - [String] If specifed it will be used instead of al_linux on 64bit linux systems.</li>
+ * <li>al_linux32 - [String] If specifed it will be used instead of al_linux on 32bit linux systems.</li>
+ * <ul>
  * <li>al_bgcolor - [String] Hex formated color to use as background. <i>Default: ffffff</i>.</li>
  * <li>al_fgcolor - [String] Hex formated color to use as foreground. <i>Default: 000000</i>.</li>
  * <li>al_errorcolor - [String] Hex formated color to use as foreground color on error. <i>Default: ff0000</i>.</li>
- * <li>al_debug - [boolean] Whether to enable debug mode. <i>Default: false</i>.</li>
- * <li>al_prepend_host - [boolean] Whether to limit caching to this domain, disable if your applet is hosted on multple domains and needs to share the cache. <i>Default: true</i>.</li>
  * </ul>
  * </p>
  * @author kappaOne
@@ -531,9 +537,31 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		String nativeJar 	= null;
 		
 		if (osName.startsWith("Win")) {
-			nativeJar = getParameter("al_windows");
+			
+			// check if arch specific natives have been specified
+			if (System.getProperty("os.arch").endsWith("64")) {
+				nativeJar = getParameter("al_windows64");
+			} else {
+				nativeJar = getParameter("al_windows32");
+			}
+			
+			if (nativeJar == null) {
+				nativeJar = getParameter("al_windows");
+			}
+			
 		} else if (osName.startsWith("Linux")) {
-			nativeJar = getParameter("al_linux");
+			
+			// check if arch specific natives have been specified
+			if (System.getProperty("os.arch").endsWith("64")) {
+				nativeJar = getParameter("al_linux64");
+			} else {
+				nativeJar = getParameter("al_linux32");
+			}
+			
+			if (nativeJar == null) {
+				nativeJar = getParameter("al_linux");
+			}
+			
 		} else if (osName.startsWith("Mac")) {
 			nativeJar = getParameter("al_mac");
 		} else if (osName.startsWith("Solaris") || osName.startsWith("SunOS")) {
