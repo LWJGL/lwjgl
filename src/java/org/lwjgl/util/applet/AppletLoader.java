@@ -114,9 +114,9 @@ import sun.security.util.SecurityConstants;
  * <li>al_linux64 - [String] If specifed it will be used instead of al_linux on 64bit linux systems.</li>
  * <li>al_linux32 - [String] If specifed it will be used instead of al_linux on 32bit linux systems.</li>
  * <ul>
- * <li>al_bgcolor - [String] Hex formated color to use as background. <i>Default: ffffff</i>.</li>
- * <li>al_fgcolor - [String] Hex formated color to use as foreground. <i>Default: 000000</i>.</li>
- * <li>al_errorcolor - [String] Hex formated color to use as foreground color on error. <i>Default: ff0000</i>.</li>
+ * <li>boxbgcolor - [String] any String AWT color ("red", "blue", etc), RGB (0-255) or hex formated color (#RRGGBB) to use as background. <i>Default: #ffffff</i>.</li>
+ * <li>boxfgcolor - [String] any String AWT color ("red", "blue", etc), RGB (0-255) or hex formated color (#RRGGBB) to use as foreground. <i>Default: #000000</i>.</li>
+ * <li>boxerrorcolor - [String] any String AWT color ("red", "blue", etc), RGB (0-255) or hex formated color (#RRGGBB) to use as foreground color on error. <i>Default: #ff0000</i>.</li>
  * </ul>
  * </p>
  * @author kappaOne
@@ -266,11 +266,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		prependHost 	= getBooleanParameter("al_prepend_host", true);
 		
 		// get colors of applet
-		bgColor 		= getColor("al_bgcolor", Color.white);
+		bgColor 		= getColor("boxbgcolor", Color.white);
 		setBackground(bgColor);
 
-		fgColor 		= getColor("al_fgcolor", Color.black);
-		errorColor 		= getColor("al_errorcolor", Color.red);		
+		fgColor 		= getColor("boxfgcolor", Color.black);
+		errorColor 		= getColor("boxerrorcolor", Color.red);		
 
 		// load logos
 		logo 			= getImage(getParameter("al_logo"));
@@ -1318,12 +1318,39 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * @param defaultColor Default color to use if no color to load
 	 * @return Color to use
 	 */
-	protected Color getColor(String color, Color defaultColor) {
-		String param_color = getParameter(color);
-		if (param_color != null) {
-			return new Color(Integer.parseInt(param_color, 16));
-		}
-		return defaultColor;
+	protected Color getColor(String param, Color defaultColor) {
+		String color = getParameter(param);
+		
+		if (color == null) return defaultColor;
+		
+		// Check if RGB format
+        if (color.indexOf(",") != -1) {
+            StringTokenizer st = new StringTokenizer(color, ",");
+            
+            // We've got three components for the color
+            try {
+            	return new Color(Integer.parseInt(st.nextToken().trim()), 
+    							 Integer.parseInt(st.nextToken().trim()), 
+    							 Integer.parseInt(st.nextToken().trim()));
+            } catch (Exception e) {
+                // failed to parse
+            	return defaultColor;
+            }
+        }
+        
+        // Check & decode if the color is in hexadecimal color format (i.e. #808000)
+        try {
+        	return Color.decode(color);
+        } catch (NumberFormatException e) {
+        	// ignore exception
+        }
+        
+        // Get the color by name if it exists
+        try {
+        	return (Color)Color.class.getField(color).get(null);
+        } catch (Exception e) {
+        	return defaultColor;
+        }
 	}
 	
 	/**
