@@ -39,6 +39,9 @@ package org.lwjgl.opengl;
  */
 
 import java.awt.Canvas;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -410,6 +413,10 @@ final class LinuxDisplay implements DisplayImplementation {
 				ByteBuffer handle = peer_info.lockAndGetHandle();
 				try {
 					current_window_mode = getWindowMode(Display.isFullscreen());
+					// Try to enable Lecagy FullScreen Support in Compiz, else
+					// we may have trouble with stuff overlapping our fullscreen window.
+					if ( current_window_mode != WINDOWED )
+						Compiz.setLegacyFullscreenSupport(true);
 					// Setting _MOTIF_WM_HINTS in fullscreen mode is problematic for certain window
 					// managers. We do not set MWM_HINTS_DECORATIONS in fullscreen mode anymore,
 					// unless org.lwjgl.opengl.Window.undecorated_fs has been specified.
@@ -490,6 +497,9 @@ final class LinuxDisplay implements DisplayImplementation {
 			ungrabKeyboard();
 			nDestroyWindow(getDisplay(), getWindow());
 			decDisplay();
+
+			if ( current_window_mode != WINDOWED )
+				Compiz.setLegacyFullscreenSupport(false);
 		} finally {
 			unlockAWT();
 		}
@@ -544,6 +554,8 @@ final class LinuxDisplay implements DisplayImplementation {
 			}
 			if (isXF86VidModeSupported())
 				doSetGamma(saved_gamma);
+
+			Compiz.setLegacyFullscreenSupport(false);
 		} catch (LWJGLException e) {
 			LWJGLUtil.log("Caught exception while resetting mode: " + e);
 		} finally {
@@ -618,6 +630,8 @@ final class LinuxDisplay implements DisplayImplementation {
 	public DisplayMode init() throws LWJGLException {
 		lockAWT();
 		try {
+			Compiz.init();
+
 			delete_atom = internAtom("WM_DELETE_WINDOW", false);
 			current_displaymode_extension = getBestDisplayModeExtension();
 			if (current_displaymode_extension == NONE)
@@ -1233,4 +1247,96 @@ final class LinuxDisplay implements DisplayImplementation {
         public boolean isInsideWindow() {
             return true;
         }
+
+	/**
+	 * Helper class for managing Compiz's workarounds.
+	 */
+	private static final class Compiz {
+
+		private static final String LEGACY_FULLSCREEN_SUPPORT = "/org/freedesktop/compiz/workarounds/allscreens/legacy_fullscreen";
+
+		private static boolean dbusAvailable;
+
+		private static boolean legacyFullscreenSupport;
+
+		private Compiz() {
+		}
+
+		static void init() {
+			if ( Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.nocompiz_lfs") )
+				return;
+
+			AccessController.doPrivileged(new PrivilegedAction() {
+				public Object run() {
+					try {
+						legacyFullscreenSupport = getBoolean(LEGACY_FULLSCREEN_SUPPORT);
+						dbusAvailable = true;
+					} catch (LWJGLException e) {
+						LWJGLUtil.log("Compiz Dbus communication failed. Reason: " + e.getMessage());
+					}
+					return null;
+				}
+			});
+		}
+
+		static void setLegacyFullscreenSupport(final boolean enabled) {
+			if ( !dbusAvailable || legacyFullscreenSupport )
+				return;
+
+			AccessController.doPrivileged(new PrivilegedAction() {
+				public Object run() {
+					try {
+						setBoolean(LEGACY_FULLSCREEN_SUPPORT, enabled);
+					} catch (LWJGLException e) {
+						LWJGLUtil.log("Failed to change Compiz Legacy Fullscreen Support. Reason: " + e.getMessage());
+					}
+					return null;
+				}
+			});
+		}
+
+		private static boolean getBoolean(final String option) throws LWJGLException {
+			try {
+				final Process p = Runtime.getRuntime().exec(new String[] {
+					"dbus-send", "--print-reply", "--type=method_call", "--dest=org.freedesktop.compiz", option, "org.freedesktop.compiz.get"
+				});
+				final int exitValue = p.waitFor();
+				if ( exitValue != 0 )
+					throw new LWJGLException("Dbus error.");
+
+				final BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				String reply = br.readLine(); // header
+
+				if ( !reply.startsWith("method return") )
+					throw new LWJGLException("Invalid Dbus reply.");
+
+				reply = br.readLine().trim(); // value
+				if ( !reply.startsWith("boolean") )
+					throw new LWJGLException("Invalid Dbus reply.");
+
+				return "true".equalsIgnoreCase(reply.substring("boolean".length() + 1));
+			} catch (IOException e) {
+				throw new LWJGLException("Dbus command failed.", e);
+			} catch (InterruptedException e) {
+				throw new LWJGLException("Dbus command failed.", e);
+			}
+		}
+
+		private static void setBoolean(final String option, final boolean value) throws LWJGLException {
+			try {
+				final Process p = Runtime.getRuntime().exec(new String[] {
+					"dbus-send", "--type=method_call", "--dest=org.freedesktop.compiz", option, "org.freedesktop.compiz.set", "boolean:" + Boolean.toString(value)
+				});
+				final int exitValue = p.waitFor();
+				if ( exitValue != 0 )
+					throw new LWJGLException("Dbus error.");
+			} catch (IOException e) {
+				throw new LWJGLException("Dbus command failed.", e);
+			} catch (InterruptedException e) {
+				throw new LWJGLException("Dbus command failed.", e);
+			}
+		}
+
+	}
+
 }

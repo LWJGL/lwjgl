@@ -219,7 +219,7 @@ public class XRandR
 	 *           the list to add the Screen to if it's valid
 	 * @param name
 	 *           the name of this screen
-	 * @param conf
+	 * @param what
 	 *           config string, format either widthxheight or
 	 *           widthxheight+xPos+yPos
 	 */
@@ -231,7 +231,7 @@ public class XRandR
 			m = SCREEN_PATTERN2.matcher( what );
 			if( !m.matches() )
 			{
-				System.out.println( "Did not match: " + what );
+				LWJGLUtil.log( "Did not match: " + what );
 				return;
 			}
 		}

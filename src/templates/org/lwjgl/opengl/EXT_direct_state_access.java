@@ -519,11 +519,11 @@ public interface EXT_direct_state_access {
     value parameters
 	 */
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 10.3)")
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	void glEnableClientStateiEXT(@GLenum int array, @GLuint int index);
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 10.3)")
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	void glDisableClientStateiEXT(@GLenum int array, @GLuint int index);
 
@@ -565,7 +565,7 @@ public interface EXT_direct_state_access {
     and before state value parameters
 	 */
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 10.3)")
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	@StripPostfix("params")
 	void glGetFloati_vEXT(@GLenum int pname, @GLuint int index, @OutParameter @Check("16") FloatBuffer params);
@@ -576,7 +576,7 @@ public interface EXT_direct_state_access {
 	@StripPostfix("params")
 	void glGetFloati_vEXT2(@GLenum int pname, @GLuint int index, @OutParameter FloatBuffer params);
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 10.3)")
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	@StripPostfix("params")
 	void glGetDoublei_vEXT(@GLenum int pname, @GLuint int index, @OutParameter @Check("16") DoubleBuffer params);
@@ -587,7 +587,7 @@ public interface EXT_direct_state_access {
 	@StripPostfix("params")
 	void glGetDoublei_vEXT2(@GLenum int pname, @GLuint int index, @OutParameter DoubleBuffer params);
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 10.3)")
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetPointeri_vEXT(@GLenum int pname, @GLuint int index, @Result @GLvoid ByteBuffer params);
@@ -1343,6 +1343,7 @@ public interface EXT_direct_state_access {
 	OpenGL 3.1: New buffer data copy command
 	 */
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL31,GL_ARB_copy_buffer")
 	void glNamedCopyBufferSubDataEXT(@GLuint int readBuffer, @GLuint int writeBuffer, @GLintptr long readoffset, @GLintptr long writeoffset, @GLsizeiptr long size);
 
@@ -1386,44 +1387,55 @@ public interface EXT_direct_state_access {
 	and change the final parameter from "const void *" to "intptr offset"
 	 */
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	@DeprecatedGL
 	void glVertexArrayVertexOffsetEXT(@GLuint int vaobj, @GLuint int buffer, int size, @GLenum int type, @GLsizei int stride, @GLintptr long offset);
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	@DeprecatedGL
 	void glVertexArrayColorOffsetEXT(@GLuint int vaobj, @GLuint int buffer, int size, @GLenum int type, @GLsizei int stride, @GLintptr long offset);
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	@DeprecatedGL
 	void glVertexArrayEdgeFlagOffsetEXT(@GLuint int vaobj, @GLuint int buffer, @GLsizei int stride, @GLintptr long offset);
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	void glVertexArrayIndexOffsetEXT(@GLuint int vaobj, @GLuint int buffer, @GLenum int type, @GLsizei int stride, @GLintptr long offset);
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	@DeprecatedGL
 	void glVertexArrayNormalOffsetEXT(@GLuint int vaobj, @GLuint int buffer, @GLenum int type, @GLsizei int stride, @GLintptr long offset);
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	@DeprecatedGL
 	void glVertexArrayTexCoordOffsetEXT(@GLuint int vaobj, @GLuint int buffer, int size, @GLenum int type, @GLsizei int stride, @GLintptr long offset);
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	@DeprecatedGL
 	void glVertexArrayMultiTexCoordOffsetEXT(@GLuint int vaobj, @GLuint int buffer, @GLenum int texunit, int size, @GLenum int type, @GLsizei int stride, @GLintptr long offset);
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	@DeprecatedGL
 	void glVertexArrayFogCoordOffsetEXT(@GLuint int vaobj, @GLuint int buffer, @GLenum int type, @GLsizei int stride, @GLintptr long offset);
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	@DeprecatedGL
 	void glVertexArraySecondaryColorOffsetEXT(@GLuint int vaobj, @GLuint int buffer, int size, @GLenum int type, @GLsizei int stride, @GLintptr long offset);
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	void glVertexArrayVertexAttribOffsetEXT(@GLuint int vaobj, @GLuint int buffer, @GLuint int index, int size, @GLenum int type, boolean normalized, @GLsizei int stride, @GLintptr long offset);
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	void glVertexArrayVertexAttribIOffsetEXT(@GLuint int vaobj, @GLuint int buffer, @GLuint int index, int size, @GLenum int type, @GLsizei int stride, @GLintptr long offset);
 
@@ -1433,9 +1445,11 @@ public interface EXT_direct_state_access {
 	"uint vaobj" parameter
 	 */
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	void glEnableVertexArrayEXT(@GLuint int vaobj, @GLenum int array);
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	void glDisableVertexArrayEXT(@GLuint int vaobj, @GLenum int array);
 
@@ -1445,9 +1459,11 @@ public interface EXT_direct_state_access {
 	and add an initial "uint vaobj" parameter
 	 */
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	void glEnableVertexArrayAttribEXT(@GLuint int vaobj, @GLuint int index);
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	void glDisableVertexArrayAttribEXT(@GLuint int vaobj, @GLuint int index);
 
@@ -1455,6 +1471,7 @@ public interface EXT_direct_state_access {
 	OpenGL 3.0: New queries for vertex array objects
 	 */
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	@StripPostfix("param")
 	void glGetVertexArrayIntegervEXT(@GLuint int vaobj, @GLenum int pname, @OutParameter @Check("16") IntBuffer param);
@@ -1465,10 +1482,12 @@ public interface EXT_direct_state_access {
 	@StripPostfix("param")
 	void glGetVertexArrayIntegervEXT2(@GLuint int vaobj, @GLenum int pname, @OutParameter IntBuffer param);
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	@StripPostfix("param")
 	void glGetVertexArrayPointervEXT(@GLuint int vaobj, @GLenum int pname, @Result @GLvoid ByteBuffer param);
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	@StripPostfix(value = "param")
 	void glGetVertexArrayIntegeri_vEXT(@GLuint int vaobj, @GLuint int index, @GLenum int pname, @OutParameter @Check("16") IntBuffer param);
@@ -1479,6 +1498,7 @@ public interface EXT_direct_state_access {
 	@StripPostfix(value = "param", postfix = "_v")
 	void glGetVertexArrayIntegeri_vEXT2(@GLuint int vaobj, @GLuint int index, @GLenum int pname, @OutParameter IntBuffer param);
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	@StripPostfix(value = "param")
 	void glGetVertexArrayPointeri_vEXT(@GLuint int vaobj, @GLuint int index, @GLenum int pname, @Result @GLvoid ByteBuffer param);
@@ -1502,12 +1522,14 @@ public interface EXT_direct_state_access {
 	 *
 	 * @return A ByteBuffer representing the mapped buffer memory.
 	 */
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	@CachedResult(isRange = true)
 	@GLvoid
 	@AutoResultSize("length")
 	ByteBuffer glMapNamedBufferRangeEXT(@GLuint int buffer, @GLintptr long offset, @GLsizeiptr long length, @GLbitfield int access);
 
+	@Optional(reason = "AMD does not expose this (last driver checked: 10.5)")
 	@Dependent("OpenGL30")
 	void glFlushMappedNamedBufferRangeEXT(@GLuint int buffer, @GLintptr long offset, @GLsizeiptr long length);
 
