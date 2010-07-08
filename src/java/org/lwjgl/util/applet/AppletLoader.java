@@ -399,16 +399,16 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		Graphics og = offscreen.getGraphics();
 		FontMetrics fm = og.getFontMetrics();
 
-		// set background color
+		// clear background color
 		og.setColor(bgColor);
-		og.fillRect(0, 0, getWidth(), getHeight());
+		og.fillRect(0, 0, offscreen.getWidth(null), offscreen.getHeight(null));
 
 		// get logo position so its in the middle of applet
 		int x = 0, y = 0;
 		
 		if(logo != null && !fatalError) {
-			x = (getWidth() - logo.getWidth(this)) / 2;
-			y = (getHeight() - logo.getHeight(this)) / 2;
+			x = (offscreen.getWidth(null) - logo.getWidth(this)) / 2;
+			y = (offscreen.getHeight(null) - logo.getHeight(this)) / 2;
 		}
 
 		og.setColor(fgColor);
@@ -424,8 +424,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			
 			for(int i=0; i<errorMessage.length; i++) {
 				if(errorMessage[i] != null) {
-					int messageX = (getWidth() - fm.stringWidth(errorMessage[i])) / 2;
-					int messageY = (getHeight() - (fm.getHeight() * errorMessage.length)) / 2;
+					int messageX = (offscreen.getWidth(null) - fm.stringWidth(errorMessage[i])) / 2;
+					int messageY = (offscreen.getHeight(null) - (fm.getHeight() * errorMessage.length)) / 2;
 					
 					og.setColor(errorColor);
 					og.drawString(errorMessage[i], messageX, messageY + i*fm.getHeight());
@@ -438,27 +438,27 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			og.drawImage(logo, x, y, null);
 			
 			// draw message
-			int messageX = (getWidth() - fm.stringWidth(message)) / 2;
+			int messageX = (offscreen.getWidth(null) - fm.stringWidth(message)) / 2;
 			int messageY = y + logo.getHeight(null) + 20;
 			og.drawString(message, messageX, messageY);
 			
 			// draw subtaskmessage, if any
 			if(subtaskMessage.length() > 0) {
-				messageX = (getWidth() - fm.stringWidth(subtaskMessage)) / 2;
+				messageX = (offscreen.getWidth(null) - fm.stringWidth(subtaskMessage)) / 2;
 				og.drawString(subtaskMessage, messageX, messageY+20);
 			}
 
 			// draw loading bar, clipping it depending on percentage done
 			int barSize = (progressbar.getWidth(this) * percentage) / 100;
-			og.clipRect(0, 0, x + barSize, getHeight());
+			og.clipRect(0, 0, x + barSize, offscreen.getHeight(null));
 			og.drawImage(progressbar, x, y, null);
 		}
 		
 		og.dispose();
 
-		// finally draw it all
-		g.drawImage(offscreen, 0, 0, null);
-	}	
+		// finally draw it all centred
+		g.drawImage(offscreen, (getWidth() - offscreen.getWidth(null))/2, (getHeight() - offscreen.getHeight(null))/2, null);
+	}
 
 	/**
 	 * @return string describing the state of the loader
