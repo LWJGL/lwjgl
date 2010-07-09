@@ -53,6 +53,9 @@ import org.lwjgl.opengl.XRandR.Screen;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 final class LinuxDisplay implements DisplayImplementation {
 	/* X11 constants */
@@ -455,7 +458,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native void mapRaised(long display, long window);
 	private static native void reparentWindow(long display, long window, long parent, int x, int y);
 
-	private boolean isAncestorXEmbedded(long window) throws LWJGLException {
+	private static boolean isAncestorXEmbedded(long window) throws LWJGLException {
 		long xembed_atom = internAtom("_XEMBED_INFO", true);
 		if (xembed_atom != None) {
 			long w = window;
@@ -1249,15 +1252,18 @@ final class LinuxDisplay implements DisplayImplementation {
         }
 
 	/**
-	 * Helper class for managing Compiz's workarounds.
+	 * Helper class for managing Compiz's workarounds. We need this to enable Legacy
+	 * Fullscreen Support in Compiz, else we'll have trouble with fullscreen windows
+	 * when Compiz effects are enabled.
+	 *
+	 * Implementation Note: This code is probably too much for an inner class, but
+	 * keeping it here until we're sure we cannot find a better solution.
 	 */
 	private static final class Compiz {
 
-		private static final String LEGACY_FULLSCREEN_SUPPORT = "/org/freedesktop/compiz/workarounds/allscreens/legacy_fullscreen";
+		private static boolean applyFix;
 
-		private static boolean dbusAvailable;
-
-		private static boolean legacyFullscreenSupport;
+		private static Provider provider;
 
 		private Compiz() {
 		}
@@ -1269,24 +1275,110 @@ final class LinuxDisplay implements DisplayImplementation {
 			AccessController.doPrivileged(new PrivilegedAction() {
 				public Object run() {
 					try {
-						legacyFullscreenSupport = getBoolean(LEGACY_FULLSCREEN_SUPPORT);
-						dbusAvailable = true;
+						// Check if Compiz is active
+						if ( !isProcessActive("compiz") )
+							return null;
+
+						provider = null;
+
+						String providerName = null;
+
+						// Check if Dbus is available
+						if ( isProcessActive("dbus-daemon") ) {
+							providerName = "Dbus";
+							provider = new Provider() {
+
+								private static final String KEY = "/org/freedesktop/compiz/workarounds/allscreens/legacy_fullscreen";
+
+								public boolean hasLegacyFullscreenSupport() throws LWJGLException {
+									final List output = Compiz.run(new String[] {
+										"dbus-send", "--print-reply", "--type=method_call", "--dest=org.freedesktop.compiz", KEY, "org.freedesktop.compiz.get"
+									});
+
+									if ( output == null || output.size() < 2 )
+										throw new LWJGLException("Invalid Dbus reply.");
+
+									String line = (String)output.get(0);
+
+									if ( !line.startsWith("method return") )
+										throw new LWJGLException("Invalid Dbus reply.");
+
+									line = ((String)output.get(1)).trim(); // value
+									if ( !line.startsWith("boolean") || line.length() < 12)
+										throw new LWJGLException("Invalid Dbus reply.");
+
+									return "true".equalsIgnoreCase(line.substring("boolean".length() + 1));
+								}
+
+								public void setLegacyFullscreenSupport(final boolean state) throws LWJGLException {
+									if ( Compiz.run(new String[] {
+										"dbus-send", "--type=method_call", "--dest=org.freedesktop.compiz", KEY, "org.freedesktop.compiz.set", "boolean:" + Boolean.toString(state)
+									}) == null )
+										throw new LWJGLException("Failed to apply Compiz LFS workaround.");
+								}
+							};
+						} else {
+							try {
+								// Check if Gconf is available
+								Runtime.getRuntime().exec("gconftool");
+
+								providerName = "gconftool";
+								provider = new Provider() {
+
+									private static final String KEY = "/apps/compiz/plugins/workarounds/allscreens/options/legacy_fullscreen";
+
+									public boolean hasLegacyFullscreenSupport() throws LWJGLException {
+										final List output = Compiz.run(new String[] {
+											"gconftool", "-g", KEY
+										});
+
+										if ( output == null || output.size() == 0 )
+											throw new LWJGLException("Invalid gconftool reply.");
+
+										return Boolean.parseBoolean(((String)output.get(0)).trim());
+									}
+
+									public void setLegacyFullscreenSupport(final boolean state) throws LWJGLException {
+										if ( Compiz.run(new String[] {
+											"gconftool", "-s", KEY, "-s", Boolean.toString(state), "-t", "bool"
+										}) == null )
+											throw new LWJGLException("Failed to apply Compiz LFS workaround.");
+
+										try {
+											// gconftool will not apply the workaround immediately, sleep a bit
+											// to make sure it will be ok when we create the window.
+											Thread.sleep(200); // 100 is too low, 150 works, set to 200 to be safe.
+										} catch (InterruptedException e) {
+											e.printStackTrace();
+										}
+									}
+								};
+							} catch (IOException e) {
+								// Ignore
+							}
+						}
+
+						if ( provider != null && !provider.hasLegacyFullscreenSupport() ) { // No need to do anything is LFS is already enabled.
+							applyFix = true;
+							LWJGLUtil.log("Using " + providerName + " to apply Compiz LFS workaround.");
+						}
 					} catch (LWJGLException e) {
-						LWJGLUtil.log("Compiz Dbus communication failed. Reason: " + e.getMessage());
+						// Ignore
+					} finally {
+						return null;
 					}
-					return null;
 				}
 			});
 		}
 
 		static void setLegacyFullscreenSupport(final boolean enabled) {
-			if ( !dbusAvailable || legacyFullscreenSupport )
+			if ( !applyFix )
 				return;
 
 			AccessController.doPrivileged(new PrivilegedAction() {
 				public Object run() {
 					try {
-						setBoolean(LEGACY_FULLSCREEN_SUPPORT, enabled);
+						provider.setLegacyFullscreenSupport(enabled);
 					} catch (LWJGLException e) {
 						LWJGLUtil.log("Failed to change Compiz Legacy Fullscreen Support. Reason: " + e.getMessage());
 					}
@@ -1295,48 +1387,54 @@ final class LinuxDisplay implements DisplayImplementation {
 			});
 		}
 
-		private static boolean getBoolean(final String option) throws LWJGLException {
+		private static List run(final String[] command) throws LWJGLException {
+			final List output = new ArrayList();
+
 			try {
-				final Process p = Runtime.getRuntime().exec(new String[] {
-					"dbus-send", "--print-reply", "--type=method_call", "--dest=org.freedesktop.compiz", option, "org.freedesktop.compiz.get"
-				});
-				final int exitValue = p.waitFor();
-				if ( exitValue != 0 )
-					throw new LWJGLException("Dbus error.");
+				final Process p = Runtime.getRuntime().exec(command);
+				try {
+					final int exitValue = p.waitFor();
+					if ( exitValue != 0 )
+						return null;
+				} catch (InterruptedException e) {
+					throw new LWJGLException("Process interrupted.", e);
+				}
 
 				final BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-				String reply = br.readLine(); // header
 
-				if ( !reply.startsWith("method return") )
-					throw new LWJGLException("Invalid Dbus reply.");
+				String line;
+				while ( (line = br.readLine()) != null )
+					output.add(line);
 
-				reply = br.readLine().trim(); // value
-				if ( !reply.startsWith("boolean") )
-					throw new LWJGLException("Invalid Dbus reply.");
-
-				return "true".equalsIgnoreCase(reply.substring("boolean".length() + 1));
-			} catch (IOException e) {
-				throw new LWJGLException("Dbus command failed.", e);
-			} catch (InterruptedException e) {
-				throw new LWJGLException("Dbus command failed.", e);
+				br.close();
+			} catch (final IOException e) {
+				throw new LWJGLException("Process failed.", e);
 			}
+
+			return output;
 		}
 
-		private static void setBoolean(final String option, final boolean value) throws LWJGLException {
-			try {
-				final Process p = Runtime.getRuntime().exec(new String[] {
-					"dbus-send", "--type=method_call", "--dest=org.freedesktop.compiz", option, "org.freedesktop.compiz.set", "boolean:" + Boolean.toString(value)
-				});
-				final int exitValue = p.waitFor();
-				if ( exitValue != 0 )
-					throw new LWJGLException("Dbus error.");
-			} catch (IOException e) {
-				throw new LWJGLException("Dbus command failed.", e);
-			} catch (InterruptedException e) {
-				throw new LWJGLException("Dbus command failed.", e);
+		private static boolean isProcessActive(final String processName) throws LWJGLException {
+			final List output = run(new String[] { "ps", "-C", processName });
+			if ( output == null )
+				return false;
+
+			for ( Iterator iter = output.iterator(); iter.hasNext(); ) {
+				final String line = (String)iter.next();
+				if ( line.contains(processName) );
+					return true;
 			}
+
+			return false;
 		}
 
+		private interface Provider {
+
+			boolean hasLegacyFullscreenSupport() throws LWJGLException;
+
+			void setLegacyFullscreenSupport(boolean state) throws LWJGLException;
+
+		}
 	}
 
 }
