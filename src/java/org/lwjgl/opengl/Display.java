@@ -424,12 +424,13 @@ public final class Display {
 			savedTimeLate = timeLate;
 		}
 
-		while ( gapTo > timeNow + savedTimeLate ) {
-			try {
+		try {
+			while ( gapTo > timeNow + savedTimeLate ) {
 				Thread.sleep(1);
-			} catch (InterruptedException e) {
+				timeNow = Sys.getTime();
 			}
-			timeNow = Sys.getTime();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
 		}
 
 		synchronized ( GlobalLock.lock ) {
