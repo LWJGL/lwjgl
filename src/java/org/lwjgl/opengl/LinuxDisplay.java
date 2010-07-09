@@ -1344,12 +1344,14 @@ final class LinuxDisplay implements DisplayImplementation {
 										}) == null )
 											throw new LWJGLException("Failed to apply Compiz LFS workaround.");
 
-										try {
-											// gconftool will not apply the workaround immediately, sleep a bit
-											// to make sure it will be ok when we create the window.
-											Thread.sleep(200); // 100 is too low, 150 works, set to 200 to be safe.
-										} catch (InterruptedException e) {
-											e.printStackTrace();
+										if ( state ) {
+											try {
+												// gconftool will not apply the workaround immediately, sleep a bit
+												// to make sure it will be ok when we create the window.
+												Thread.sleep(200); // 100 is too low, 150 works, set to 200 to be safe.
+											} catch (InterruptedException e) {
+												e.printStackTrace();
+											}
 										}
 									}
 								};
@@ -1358,7 +1360,7 @@ final class LinuxDisplay implements DisplayImplementation {
 							}
 						}
 
-						if ( provider != null && !provider.hasLegacyFullscreenSupport() ) { // No need to do anything is LFS is already enabled.
+						if ( provider != null && !provider.hasLegacyFullscreenSupport() ) { // No need to do anything if LFS is already enabled.
 							applyFix = true;
 							LWJGLUtil.log("Using " + providerName + " to apply Compiz LFS workaround.");
 						}
