@@ -39,6 +39,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
+import java.awt.image.ImageObserver;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -172,13 +173,16 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	protected int		totalSizeExtract; 
 	
 	/** logo to be shown while loading */
-	protected Image		logo;
+	protected Image		logo, logoBuffer;
 
 	/** progressbar to render while loading */
-	protected Image		progressbar;
+	protected Image		progressbar, progressbarBuffer;
 	
 	/** offscreen image used */
 	protected Image 	offscreen;
+	
+	/** set to true while painting is done */
+	protected boolean 	painting;
 	
 	/** background color of applet */
 	protected Color		bgColor 	= Color.white;
@@ -357,6 +361,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
 		progressbar = null;
 		logo 		= null;
+		
+		logoBuffer = null;
+		progressbarBuffer = null;
 	}
 	
 	/**
@@ -393,6 +400,18 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		// create offscreen if missing
 		if (offscreen == null) {
 			offscreen = createImage(getWidth(), getHeight());
+			
+			// create buffers for animated gifs
+			logoBuffer = createImage(logo.getWidth(null), logo.getHeight(null));
+			progressbarBuffer = createImage(logo.getWidth(null), logo.getHeight(null));
+			
+			// add image observer, it will notify when next animated gif frame is ready 
+			offscreen.getGraphics().drawImage(logo, 0, 0, this);
+			offscreen.getGraphics().drawImage(progressbar, 0, 0, this);
+			
+			// in case image is not animated fill image buffers once
+			imageUpdate(logo, ImageObserver.FRAMEBITS, 0, 0, 0, 0);
+			imageUpdate(progressbar, ImageObserver.FRAMEBITS, 0, 0, 0, 0);
 		}
 
 		// draw everything onto an image before drawing to avoid flicker
@@ -407,8 +426,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		int x = 0, y = 0;
 		
 		if(logo != null && !fatalError) {
-			x = (offscreen.getWidth(null) - logo.getWidth(this)) / 2;
-			y = (offscreen.getHeight(null) - logo.getHeight(this)) / 2;
+			x = (offscreen.getWidth(null) - logo.getWidth(null)) / 2;
+			y = (offscreen.getHeight(null) - logo.getHeight(null)) / 2;
 		}
 
 		og.setColor(fgColor);
@@ -433,13 +452,15 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			}
 		} else {
 			og.setColor(fgColor);
-
+			
+			painting = true;
+			
 			// draw logo
-			og.drawImage(logo, x, y, null);
+			og.drawImage(logoBuffer, x, y, this);
 			
 			// draw message
 			int messageX = (offscreen.getWidth(null) - fm.stringWidth(message)) / 2;
-			int messageY = y + logo.getHeight(null) + 20;
+			int messageY = y + logoBuffer.getHeight(null) + 20;
 			og.drawString(message, messageX, messageY);
 			
 			// draw subtaskmessage, if any
@@ -449,15 +470,52 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			}
 
 			// draw loading bar, clipping it depending on percentage done
-			int barSize = (progressbar.getWidth(this) * percentage) / 100;
+			int barSize = (progressbarBuffer.getWidth(null) * percentage) / 100;
 			og.clipRect(0, 0, x + barSize, offscreen.getHeight(null));
-			og.drawImage(progressbar, x, y, null);
+			og.drawImage(progressbarBuffer, x, y, this);
+			
+			painting = false;
 		}
 		
 		og.dispose();
-
-		// finally draw it all centred
+		
+		// finally draw it all
 		g.drawImage(offscreen, (getWidth() - offscreen.getWidth(null))/2, (getHeight() - offscreen.getHeight(null))/2, null);
+	}
+	
+	/**
+	 * When an animated gif frame is ready to be drawn the ImageObserver 
+	 * will call this method.
+	 * 
+	 * The Image frame is copied into a buffer, which is then drawn. 
+	 * This is done to prevent image tearing on gif animations.
+	 */
+	public boolean imageUpdate(Image img, int flag, int x, int y, int width, int height) {
+		
+		// if image frame is ready to be drawn and is currently not being painted
+		if (flag == ImageObserver.FRAMEBITS && !painting) {
+			Image buffer;
+			
+			// select which buffer to fill
+			if (img == logo) buffer = logoBuffer;
+			else buffer = progressbarBuffer;
+			
+			Graphics g = buffer.getGraphics();
+			
+			// clear background on buffer
+			g.setColor(bgColor);
+			g.fillRect(0, 0, buffer.getWidth(null), buffer.getHeight(null));
+			
+			// buffer background is cleared, so draw logo under progressbar
+			if (img == progressbar) g.drawImage(logoBuffer, 0, 0, null);
+			
+			g.drawImage(img, 0, 0, this);
+			g.dispose();
+			
+			repaint();
+		}
+		
+		return true;
 	}
 
 	/**
