@@ -544,7 +544,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			case STATE_DETERMINING_PACKAGES:
 				return "Determining packages to load";
 			case STATE_CHECKING_CACHE:
-				return "Calculate download size and check cache";
+				return "Calculating download size";
 			case STATE_DOWNLOADING:
 				return "Downloading packages";
 			case STATE_EXTRACTING_PACKAGES:
@@ -1286,6 +1286,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	protected void extractNatives(String path) throws Exception {
 
+		// if no new native jar was downloaded, no extracting needed
+		if (fileSizes[fileSizes.length-1] == -2) {
+			return;
+		}
+		
 		state = STATE_EXTRACTING_PACKAGES;
 		
 		int initialPercentage = percentage;
