@@ -1006,7 +1006,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			
 			if (cacheEnabled && lastModified != 0 && 
 					filesLastModified.containsKey(fileName)) {
-				long savedLastModified = (Long)filesLastModified.get(fileName);
+				long savedLastModified = ((Long)filesLastModified.get(fileName)).longValue();
 				
 				// if lastModifed time is the same, don't redownload
 				if (savedLastModified == lastModified) {
@@ -1019,7 +1019,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			}
 			
 			// put key and value in the hashmap
-			filesLastModified.put(fileName, lastModified);
+			filesLastModified.put(fileName, new Long(lastModified));
 			
 			// update progress bar
 			percentage = 5 + (int)(10 * i/(float)urlList.length);
