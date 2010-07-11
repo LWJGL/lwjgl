@@ -48,6 +48,8 @@ import java.io.FileOutputStream;
 import java.io.FilePermission;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -69,6 +71,7 @@ import java.security.PrivilegedExceptionAction;
 import java.security.SecureClassLoader;
 import java.security.cert.Certificate;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.jar.JarEntry;
@@ -107,6 +110,7 @@ import sun.security.util.SecurityConstants;
  * <ul>
  * <li>al_version - [int or float] Version of deployment. If this is specified, the jars will be cached and 
  * reused if the version matches. If version doesn't match all of the files are reloaded.</li>
+ * <li>al_cache - [boolean] Whether to use cache system. If al_version is used then cache is not used. <i>Default: true</i>.</li>
  * <li>al_debug - [boolean] Whether to enable debug mode. <i>Default: false</i>.</li>
  * <li>al_prepend_host - [boolean] Whether to limit caching to this domain, disable if your applet is hosted on multple domains and needs to share the cache. <i>Default: true</i>.</li>
  * <ul>
@@ -220,6 +224,15 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/** whether to prepend host to cache path */
 	protected boolean 	prependHost;
 	
+	/** Used to store file names with lastModified time */
+	protected HashMap 	filesLastModified;
+	
+	/** Sizes of files to download */
+	protected int[] 	fileSizes;
+	
+	/** whether to use caching system, only download files that have changed */
+	protected boolean 	cacheEnabled;
+	
 	/** String to display as a subtask */
 	protected String	subtaskMessage = "";
 
@@ -262,7 +275,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				return;				
 			}
 		}
-
+		
+		// whether to use cache system
+		cacheEnabled	= getBooleanParameter("al_cache", true);
+		
 		// whether to run in debug mode
 		debugMode 		= getBooleanParameter("al_debug", false);
 		
@@ -479,7 +495,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
 		og.dispose();
 		
-		// finally draw it all
+		// finally draw it all centred
 		g.drawImage(offscreen, (getWidth() - offscreen.getWidth(null))/2, (getHeight() - offscreen.getHeight(null))/2, null);
 	}
 	
@@ -528,7 +544,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			case STATE_DETERMINING_PACKAGES:
 				return "Determining packages to load";
 			case STATE_CHECKING_CACHE:
-				return "Checking cache for existing files";
+				return "Calculate download size and check cache";
 			case STATE_DOWNLOADING:
 				return "Downloading packages";
 			case STATE_EXTRACTING_PACKAGES:
@@ -681,10 +697,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
-			dir = new File(dir, "version");
-
-			// if applet already available don't download anything
-			boolean cacheAvailable = false;
+			
+			File versionFile = new File(dir, "version");
+			
+			// if specified applet version already available don't download anything
+			boolean versionAvailable = false;
 
 			// version of applet
 			String version = getParameter("al_version");
@@ -696,10 +713,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				latestVersion = Float.parseFloat(version);
 
 				// if version file exists
-				if (dir.exists()) {
+				if (versionFile.exists()) {
 					// compare to new version
-					if (latestVersion <= readVersionFile(dir)) {
-						cacheAvailable = true;
+					if (latestVersion <= readVersionFile(versionFile)) {
+						versionAvailable = true;
 						percentage = 90;
 						
 						if(debugMode) {
@@ -711,9 +728,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			}
 
 			// if jars not available or need updating download them
-			if (!cacheAvailable) {
+			if (!versionAvailable) {
+				// get jars file sizes and check cache
+				getJarInfo(dir);		// 5-15%
+				
 				// downloads jars from the server
-				downloadJars(path);		// 10-55%
+				downloadJars(path);		// 15-55%
 				
 				// Extract Pack and LZMA files
 				extractJars(path);		// 55-65%
@@ -721,11 +741,14 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				// Extracts Native Files
 				extractNatives(path);	// 65-85%
 
-				// add version information once jars downloaded successfully
+				// save version information once jars downloaded successfully
 				if (version != null) {
 					percentage = 90;
 					writeVersionFile(dir, latestVersion);
 				}
+				
+				// save file names with last modified info once downloaded successfully
+				writeCacheFile(new File(dir, "cache"), filesLastModified);
 			}
 
 			// add the downloaded jars and natives to classpath
@@ -769,6 +792,33 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	protected void writeVersionFile(File file, float version) throws Exception {
 		DataOutputStream dos = new DataOutputStream(new FileOutputStream(file));
 		dos.writeFloat(version);
+		dos.close();
+	}
+	
+	/**
+	 * read the current cache file
+	 * 
+	 * @param file the file to read
+	 * @return the hashmap containing the files names and lastModified times
+	 * @throws Exception if it fails to read hashmap
+	 */
+	protected HashMap readCacheFile(File file) throws Exception {
+		ObjectInputStream dis = new ObjectInputStream(new FileInputStream(file));
+		HashMap hashMap = (HashMap)dis.readObject();
+		dis.close();
+		return hashMap;
+	}
+
+	/**
+	 * write out cache file of applet
+	 * 
+	 * @param file the file to write out to
+	 * @param filesLastModified the hashmap containing files names and lastModified times
+	 * @throws Exception if it fails to write file
+	 */
+	protected void writeCacheFile(File file, HashMap filesLastModified) throws Exception {
+		ObjectOutputStream dos = new ObjectOutputStream(new FileOutputStream(file));
+		dos.writeObject(filesLastModified);
 		dos.close();
 	}
 
@@ -848,7 +898,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * Due to the way applets on plugin1 work, one jvm must
 	 * be used for all applets. We need to use multiple 
 	 * classloaders in the same jvm due to LWJGL's static 
-	 * nature. I order to solver this we simply remove the 
+	 * nature. I order to solve this we simply remove the 
 	 * natives from a previous classloader allowing a new 
 	 * classloader to use those natives in the same jvm.
 	 * 
@@ -913,7 +963,69 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		state = STATE_START_REAL_APPLET;
 		lwjglApplet.start();
 	}
-
+	
+	/**
+	 * This method will get the files sizes of the files to download.
+	 * It wil further get the lastModified time of files
+	 * and save it in a hashmap, if cache is enabled it will mark
+	 * those files that have not changed since last download to not
+	 * redownloaded.
+	 * 
+	 * @param dir - location to read cache file from
+	 * @throws Exception - if fails to get infomation
+	 */
+	protected void getJarInfo(File dir) throws Exception {
+		
+		filesLastModified = new HashMap();
+		
+		// store file sizes and mark which files not to download
+		fileSizes = new int[urlList.length];
+		
+		URLConnection urlconnection;
+		
+		File cacheFile = new File(dir, "cache");
+		
+		// if cache file exists, load it
+		if (cacheFile.exists()) {
+			filesLastModified = readCacheFile(cacheFile);
+		}
+		
+		// calculate total size of jars to download
+		for (int i = 0; i < urlList.length; i++) {
+			urlconnection = urlList[i].openConnection();
+			urlconnection.setDefaultUseCaches(false);
+			if (urlconnection instanceof HttpURLConnection) {
+				((HttpURLConnection) urlconnection).setRequestMethod("HEAD");
+			}
+			
+			fileSizes[i] = urlconnection.getContentLength();
+			
+			long lastModified = urlconnection.getLastModified();
+			String fileName = getFileName(urlList[i]);
+			
+			
+			if (cacheEnabled && lastModified != 0 && 
+					filesLastModified.containsKey(fileName)) {
+				long savedLastModified = (Long)filesLastModified.get(fileName);
+				
+				// if lastModifed time is the same, don't redownload
+				if (savedLastModified == lastModified) {
+					fileSizes[i] = -2; // mark it to not redownload
+				}
+			}
+			
+			if (fileSizes[i] >= 0) {
+				totalSizeDownload += fileSizes[i];
+			}
+			
+			// put key and value in the hashmap
+			filesLastModified.put(fileName, lastModified);
+			
+			// update progress bar
+			percentage = 5 + (int)(10 * i/(float)urlList.length);
+		}
+	}
+	
 	/**
 	 * Will download the jars from the server using the list of urls
 	 * in urlList, while at the same time updating progress bar
@@ -927,25 +1039,14 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		URLConnection urlconnection;
 		
-		// store file sizes, used for download verification
-		int[] fileSizes = new int[urlList.length];
-		
-		// calculate total size of jars to download
-		for (int i = 0; i < urlList.length; i++) {
-			urlconnection = urlList[i].openConnection();
-			urlconnection.setDefaultUseCaches(false);
-			if (urlconnection instanceof HttpURLConnection) {
-				((HttpURLConnection) urlconnection).setRequestMethod("HEAD");
-			}
-			fileSizes[i] = urlconnection.getContentLength();
-			totalSizeDownload += fileSizes[i];
-		}
-		
-		int initialPercentage = percentage = 10;
+		int initialPercentage = percentage = 15;
 
 		// download each jar
 		byte buffer[] = new byte[65536];
 		for (int i = 0; i < urlList.length; i++) {
+			
+			// skip file if marked as -2 (already downloaded and not changed)
+			if (fileSizes[i] == -2) continue;
 			
 			int unsuccessfulAttempts = 0;
 			int maxUnsuccessfulAttempts = 3;
