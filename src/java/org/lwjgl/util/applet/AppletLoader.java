@@ -1251,6 +1251,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		float increment = (float) 10.0 / urlList.length;
 		// extract all lzma and pack.lzma files
 		for (int i = 0; i < urlList.length; i++) {
+			
+			// if file has not changed, skip it
+			if (fileSizes[i] == -2) continue;
+			
 			percentage = 55 + (int) (increment * (i+1));
 			String filename = getFileName(urlList[i]);
 			
