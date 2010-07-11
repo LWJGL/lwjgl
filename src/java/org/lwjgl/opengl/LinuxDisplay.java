@@ -880,12 +880,12 @@ final class LinuxDisplay implements DisplayImplementation {
 				setInputFocusUnsafe(current_window);
 			}
 			else if (xembedded) {
-				setInputFocusUnsafe(0);
+				setInputFocusUnsafe(1);
 			}
 		}
-		else if (parent_focus && !focused) {
-			setInputFocusUnsafe(current_window);
-		}
+		//else if (parent_focus && !focused && !xembedded) {
+		//	setInputFocusUnsafe(current_window);
+		//}
 	}
 
 	private void setFocused(boolean got_focus, int focus_detail) {
