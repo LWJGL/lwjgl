@@ -221,8 +221,9 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extens
 	if (pbuffer) {
 		putAttrib(&attrib_list, WGL_DRAW_TO_PBUFFER_ARB); putAttrib(&attrib_list, TRUE);
 	}
-	if (!getBooleanProperty(env, "org.lwjgl.opengl.Display.allowSoftwareOpenGL"))
+	if (!getBooleanProperty(env, "org.lwjgl.opengl.Display.allowSoftwareOpenGL")) {
 		putAttrib(&attrib_list, WGL_ACCELERATION_ARB); putAttrib(&attrib_list, WGL_FULL_ACCELERATION_ARB);
+	}
 	putAttrib(&attrib_list, WGL_PIXEL_TYPE_ARB); putAttrib(&attrib_list, pixel_type);
 	putAttrib(&attrib_list, WGL_DOUBLE_BUFFER_ARB); putAttrib(&attrib_list, double_buffer ? TRUE : FALSE);
 	putAttrib(&attrib_list, WGL_SUPPORT_OPENGL_ARB); putAttrib(&attrib_list, TRUE);
