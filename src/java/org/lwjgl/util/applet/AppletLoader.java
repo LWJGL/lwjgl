@@ -110,7 +110,7 @@ import sun.security.util.SecurityConstants;
  * <ul>
  * <li>al_version - [int or float] Version of deployment. If this is specified, the jars will be cached and 
  * reused if the version matches. If version doesn't match all of the files are reloaded.</li>
- * <li>al_cache - [boolean] Whether to use cache system. If al_version is used then cache is not used. <i>Default: true</i>.</li>
+ * <li>al_cache - [boolean] Whether to use cache system. <i>Default: true</i>.</li>
  * <li>al_debug - [boolean] Whether to enable debug mode. <i>Default: false</i>.</li>
  * <li>al_prepend_host - [boolean] Whether to limit caching to this domain, disable if your applet is hosted on multple domains and needs to share the cache. <i>Default: true</i>.</li>
  * <ul>
@@ -121,7 +121,6 @@ import sun.security.util.SecurityConstants;
  * <ul>
  * <li>boxbgcolor - [String] any String AWT color ("red", "blue", etc), RGB (0-255) or hex formated color (#RRGGBB) to use as background. <i>Default: #ffffff</i>.</li>
  * <li>boxfgcolor - [String] any String AWT color ("red", "blue", etc), RGB (0-255) or hex formated color (#RRGGBB) to use as foreground. <i>Default: #000000</i>.</li>
- * <li>boxerrorcolor - [String] any String AWT color ("red", "blue", etc), RGB (0-255) or hex formated color (#RRGGBB) to use as foreground color on error. <i>Default: #ff0000</i>.</li>
  * </ul>
  * </p>
  * @author kappaOne
@@ -190,9 +189,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	
 	/** background color of applet */
 	protected Color		bgColor 	= Color.white;
-	
-	/** Color to write errors in */
-	protected Color		errorColor 	= Color.red;
 
 	/** color to write foreground in */
 	protected Color		fgColor 	= Color.black;	
@@ -288,9 +284,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		// get colors of applet
 		bgColor 		= getColor("boxbgcolor", Color.white);
 		setBackground(bgColor);
-
-		fgColor 		= getColor("boxfgcolor", Color.black);
-		errorColor 		= getColor("boxerrorcolor", Color.red);		
+		fgColor 		= getColor("boxfgcolor", Color.black);	
 
 		// load logos
 		logo 			= getImage(getParameter("al_logo"));
@@ -462,7 +456,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 					int messageX = (offscreen.getWidth(null) - fm.stringWidth(errorMessage[i])) / 2;
 					int messageY = (offscreen.getHeight(null) - (fm.getHeight() * errorMessage.length)) / 2;
 					
-					og.setColor(errorColor);
 					og.drawString(errorMessage[i], messageX, messageY + i*fm.getHeight());
 				}
 			}
