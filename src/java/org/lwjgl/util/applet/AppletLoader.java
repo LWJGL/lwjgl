@@ -1535,7 +1535,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	protected void fatalErrorOccured(String error, Exception e) {
 		fatalError = true;
-		fatalErrorDescription = "Fatal error occured (" + state + "): " + error;
+		fatalErrorDescription = "This occurred while '" + getDescriptionForState() + "'";
 		System.out.println(fatalErrorDescription);
 		if(e != null) {
 			System.out.println(generateStacktrace(e));
