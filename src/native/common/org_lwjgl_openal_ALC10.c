@@ -86,7 +86,7 @@ static jstring JNICALL Java_org_lwjgl_openal_ALC10_nalcGetString (JNIEnv *env, j
 	int length;
 	int i=1;
 
-	if(alcString == NULL) {
+	if (alcString == NULL) {
 		return NULL;
 	}
 
@@ -94,14 +94,21 @@ static jstring JNICALL Java_org_lwjgl_openal_ALC10_nalcGetString (JNIEnv *env, j
 	// These are encoded using \0 between elements and a finishing \0\0
 	switch(token) {
 		case 0x1005:	// ALC_DEVICE_SPECIFIER
-		case 0x310:		// ALC_CAPTURE_DEVICE_SPECIFIER
+		case 0x310:	// ALC_CAPTURE_DEVICE_SPECIFIER
+			// If deviceaddress is not 0, OpenAL returns a single device terminated by a
+			// single \0 character, if token is ALC_DEVICE_SPECIFIER or
+			// ALC_CAPTURE_DEVICE_SPECIFIER.
+			if (deviceaddress != 0) {
+				length = strlen(alcString);
+				break;
+			}
 		case 0x1013:	// ALC_ALL_DEVICES_SPECIFIER
 			while (alcString[i - 1] != '\0' || alcString[i] != '\0') { 
 				i++; 
 			}
 			length = i + 1;
 			break;
-		default:
+		default:	// e.g. ALC_DEFAULT_ALL_DEVICES_SPECIFIER
 			length = strlen(alcString);
 	}
 	return NewStringNativeWithLength(env, alcString, length);

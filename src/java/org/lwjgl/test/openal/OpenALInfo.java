@@ -191,7 +191,7 @@ public class OpenALInfo {
         effects.put("Compressor", 			new Integer(EFX10.AL_EFFECT_COMPRESSOR));
         effects.put("Equalizer", 			new Integer(EFX10.AL_EFFECT_EQUALIZER));
 
-        entries = filters.entrySet();
+        entries = effects.entrySet();
         for(Iterator i = entries.iterator(); i.hasNext();) {
         	Map.Entry entry = (Entry) i.next();
         	int value = ((Integer)entry.getValue()).intValue();

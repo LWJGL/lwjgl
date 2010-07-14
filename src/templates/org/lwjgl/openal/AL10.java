@@ -250,35 +250,28 @@ public interface AL10 {
 	int AL_FREQUENCY = 0x2001;
 
 	/**
-	 * Sound buffers: frequency, in units of Hertz [Hz].
-	 * This is the number of samples per second. Half of the
-	 * sample frequency marks the maximum significant
-	 * frequency component.
+	 * Sound buffers: The number of bits per sample for the
+	 * data contained in the buffer.
 	 */
 	int AL_BITS = 0x2002;
 
 	/**
-	 * Sound buffers: frequency, in units of Hertz [Hz].
-	 * This is the number of samples per second. Half of the
-	 * sample frequency marks the maximum significant
-	 * frequency component.
+	 * Sound buffers: The number of channels for the data
+	 * contained in the buffer.
 	 */
 	int AL_CHANNELS = 0x2003;
 
 	/**
-	 * Sound buffers: frequency, in units of Hertz [Hz].
-	 * This is the number of samples per second. Half of the
-	 * sample frequency marks the maximum significant
-	 * frequency component.
+	 * Sound buffers: Size in bytes of the buffer data.
 	 */
 	int AL_SIZE = 0x2004;
 
 	/**
-	 * Sound buffers: frequency, in units of Hertz [Hz].
-	 * This is the number of samples per second. Half of the
-	 * sample frequency marks the maximum significant
-	 * frequency component.
+	 * @deprecated This token is a relict of the early OpenAL days and is
+	 * no longer supported. Neither the OpenAL spec nor OpenAL Soft define
+	 * it.
 	 */
+	@Deprecated
 	int AL_DATA = 0x2005;
 
 	/**

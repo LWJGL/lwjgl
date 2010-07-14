@@ -59,6 +59,9 @@ public final class ALC11 {
 	public static final int ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER		= 0x311;
 	public static final int ALC_CAPTURE_SAMPLES							= 0x312;
 	
+	public static final int ALC_MONO_SOURCES							= 0x1010;
+	public static final int ALC_STEREO_SOURCES							= 0x1011;
+	
 	/**
 	 * The alcCaptureOpenDevice function allows the application to connect to a capture
 	 * device. To obtain a list of all available capture devices, use getCaptureDevices a list of all
