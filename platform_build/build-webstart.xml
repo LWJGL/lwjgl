@@ -54,14 +54,23 @@
 		<jar destfile="${lwjgl.temp}/jnlp/jinput.jar" update="true">
 			<manifest>
 				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
 			</manifest>
 		</jar>
 		
 		<jar destfile="${lwjgl.temp}/jnlp/lwjgl_util.jar" update="true">
 			<manifest>
 				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
 			</manifest>
-		</jar>		
+		</jar>
+		
+		<jar destfile="${lwjgl.temp}/jnlp/lwjgl_test.jar" update="true">
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
+			</manifest>
+		</jar>				
 		
 		<!-- create native jars -->
 		<jar destfile="${lwjgl.temp}/jnlp/native_windows.jar" basedir="${lwjgl.temp}/jnlp/temp/native/windows">
@@ -92,17 +101,19 @@
 		<jar destfile="${lwjgl.temp}/jnlp/media.jar" basedir="${lwjgl.res}">
 			<manifest>
 				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
 			</manifest>		
 		</jar>
 	
 		<!-- sign 'em -->
 		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_util.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/jinput.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_test.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/media.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_solaris.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_linux.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_windows.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/jinput.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/media.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 	</target>
 </project>
