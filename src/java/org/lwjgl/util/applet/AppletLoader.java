@@ -1086,7 +1086,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 						// round to two decimal places
 						downloadSpeed = ((int)(downloadSpeed*100))/100f;
 						// set current speed message
-						downloadSpeedMessage = " @ " + downloadSpeed + " KB/sec";
+						downloadSpeedMessage = " - " + downloadSpeed + " KB/sec";
 						// reset downloaded amount
 						downloadedAmount = 0;
 						// reset start time
