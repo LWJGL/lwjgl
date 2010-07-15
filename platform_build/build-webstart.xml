@@ -44,17 +44,22 @@
 		</move>
 		
 		<!-- update Trusted-Library -->
-		<jar destfile="${lwjgl.temp}/jnlp/jinput.jar" update="true">
+		<jar destfile="${lwjgl.temp}/jnlp/lwjgl.jar" update="true">
 			<manifest>
 				<attribute name="Sealed" value="true"/>
 				<attribute name="Trusted-Library" value="true"/>
 			</manifest>
 		</jar>
 		
+		<jar destfile="${lwjgl.temp}/jnlp/jinput.jar" update="true">
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+			</manifest>
+		</jar>
+		
 		<jar destfile="${lwjgl.temp}/jnlp/lwjgl_util.jar" update="true">
 			<manifest>
 				<attribute name="Sealed" value="true"/>
-				<attribute name="Trusted-Library" value="true"/>
 			</manifest>
 		</jar>		
 		
@@ -62,33 +67,33 @@
 		<jar destfile="${lwjgl.temp}/jnlp/native_windows.jar" basedir="${lwjgl.temp}/jnlp/temp/native/windows">
 			<manifest>
 				<attribute name="Sealed" value="true"/>
-				<attribute name="Trusted-Library" value="true"/>
 			</manifest>		
 		</jar>
 		
 		<jar destfile="${lwjgl.temp}/jnlp/native_linux.jar" basedir="${lwjgl.temp}/jnlp/temp/native/linux">
 			<manifest>
 				<attribute name="Sealed" value="true"/>
-				<attribute name="Trusted-Library" value="true"/>
 			</manifest>		
 		</jar>
 		
 		<jar destfile="${lwjgl.temp}/jnlp/native_macosx.jar" basedir="${lwjgl.temp}/jnlp/temp/native/macosx">
 			<manifest>
 				<attribute name="Sealed" value="true"/>
-				<attribute name="Trusted-Library" value="true"/>
 			</manifest>		
 		</jar>
 		
 		<jar destfile="${lwjgl.temp}/jnlp/native_solaris.jar" basedir="${lwjgl.temp}/jnlp/temp/native/solaris">
 			<manifest>
 				<attribute name="Sealed" value="true"/>
-				<attribute name="Trusted-Library" value="true"/>
 			</manifest>		
 		</jar>
 		
 		<!-- create media jar -->
-		<jar destfile="${lwjgl.temp}/jnlp/media.jar" basedir="${lwjgl.res}"/>	
+		<jar destfile="${lwjgl.temp}/jnlp/media.jar" basedir="${lwjgl.res}">
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+			</manifest>		
+		</jar>
 	
 		<!-- sign 'em -->
 		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
@@ -98,5 +103,6 @@
 		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_windows.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/jinput.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/media.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 	</target>
 </project>

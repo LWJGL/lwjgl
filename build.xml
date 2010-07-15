@@ -124,7 +124,6 @@
 			<fileset refid="lwjgl.fileset" />
 			<manifest>
 				<attribute name="Sealed" value="true"/>
-				<attribute name="Trusted-Library" value="true"/>
 			</manifest>
 		</jar>
 		
@@ -133,7 +132,6 @@
 			<fileset refid="lwjgl_util_applet.fileset" />
 			<manifest>
 				<attribute name="Sealed" value="true"/>
-				<attribute name="Trusted-Library" value="true"/>
 			</manifest>
 		</jar>
 
