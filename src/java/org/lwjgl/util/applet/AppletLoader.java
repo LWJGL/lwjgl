@@ -737,7 +737,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				// save version information once jars downloaded successfully
 				if (version != null) {
 					percentage = 90;
-					writeVersionFile(dir, latestVersion);
+					writeVersionFile(versionFile, latestVersion);
 				}
 				
 				// save file names with last modified info once downloaded successfully
