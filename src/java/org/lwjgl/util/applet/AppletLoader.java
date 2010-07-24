@@ -368,12 +368,19 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		if (lwjglApplet != null) {
 			lwjglApplet.destroy();
 		}
-		
+	}
+	
+	/**
+	 * Clean up resources
+	 */
+	protected void cleanUp() {
 		progressbar = null;
 		logo 		= null;
 		
 		logoBuffer = null;
 		progressbarBuffer = null;
+		
+		offscreen = null;
 	}
 	
 	/**
@@ -500,6 +507,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * This is done to prevent image tearing on gif animations.
 	 */
 	public boolean imageUpdate(Image img, int flag, int x, int y, int width, int height) {
+		
+		// finish with this ImageObserver
+		if (state == STATE_DONE) return false;
 		
 		// if image frame is ready to be drawn and is currently not being painted
 		if (flag == ImageObserver.FRAMEBITS && !painting) {
@@ -750,7 +760,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			// switch to LWJGL Applet
 			switchApplet();
 
-			state = STATE_DONE;		
+			state = STATE_DONE;
+			// clean up resources
+			cleanUp();
 		} catch (AccessControlException ace) {
 			fatalErrorOccured(ace.getMessage(), ace);
 			certificateRefused = true;
