@@ -284,10 +284,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		fgColor 		= getColor("boxfgcolor", Color.black);	
 
 		// load logos, if value is "" then skip
-		if (!getParameter("al_logo").equals("")) {
+		if (getParameter("al_logo").length() > 0) {
 			logo 		= getImage(getParameter("al_logo"));
 		}
-		if (!getParameter("al_progressbar").equals("")) {
+		if (getParameter("al_progressbar").length() > 0) {
 			progressbar = getImage(getParameter("al_progressbar"));
 		}
 		
