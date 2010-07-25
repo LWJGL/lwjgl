@@ -211,9 +211,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/** whether a fatal error occured */
 	protected boolean	fatalError;
 	
-	/** fatal error that occured */
-	protected String	fatalErrorDescription;
-	
 	/** whether we're running in debug mode */
 	protected boolean 	debugMode;
 	
@@ -453,10 +450,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		// if we had a failure of some sort, notify the user
 		if (fatalError) {
 			String[] errorMessage = (certificateRefused) ? certificateRefusedMessage : genericErrorMessage;
-			
-			if (!certificateRefused) {
-				errorMessage[errorMessage.length-1] = fatalErrorDescription;
-			}			
 			
 			for(int i=0; i<errorMessage.length; i++) {
 				if(errorMessage[i] != null) {
@@ -767,7 +760,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			fatalErrorOccured(ace.getMessage(), ace);
 			certificateRefused = true;
 		} catch (Exception e) {
-			fatalErrorOccured(e.getMessage(), e);
+			fatalErrorOccured("This occurred while '" + getDescriptionForState() + "'", e);
 		} finally {
 			loaderThread = null;
 		}
@@ -1547,9 +1540,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	protected void fatalErrorOccured(String error, Exception e) {
 		fatalError = true;
-		fatalErrorDescription = "This occurred while '" + getDescriptionForState() + "'";
-		System.out.println(fatalErrorDescription);
+		genericErrorMessage[genericErrorMessage.length-1] = error;
+		System.out.println(error);
 		if(e != null) {
+			System.out.println(e.getMessage());
 			System.out.println(generateStacktrace(e));
 		}
 		repaint();
