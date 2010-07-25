@@ -283,13 +283,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		setBackground(bgColor);
 		fgColor 		= getColor("boxfgcolor", Color.black);	
 
-		// load logos
-		logo 			= getImage(getParameter("al_logo"));
-		progressbar 	= getImage(getParameter("al_progressbar"));
-		
-		//sanity check
-		if(logo == null || progressbar == null) {
-			fatalErrorOccured("Unable to load logo and progressbar images", null);
+		// load logos, if value is "" then skip
+		if (!getParameter("al_logo").equals("")) {
+			logo 		= getImage(getParameter("al_logo"));
+		}
+		if (!getParameter("al_progressbar").equals("")) {
+			progressbar = getImage(getParameter("al_progressbar"));
 		}
 		
 		// check for lzma support
@@ -460,21 +459,26 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			
 			painting = true;
 			
-			// get logo position so its in the middle of applet
-			int x = 0, y = 0;
+			// get position at the middle of the offscreen buffer
+			int x = offscreen.getWidth(null)/2; 
+			int y = offscreen.getHeight(null)/2;
 			
-			if(logo != null) {
+			/*if(logo != null) {
 				x = (offscreen.getWidth(null) - logo.getWidth(null)) / 2;
 				y = (offscreen.getHeight(null) - logo.getHeight(null)) / 2;
-			}
+			}*/
 			
 			// draw logo
-			if (logo != null) og.drawImage(logoBuffer, x, y, this);
+			if (logo != null) {
+				og.drawImage(logoBuffer, x-logo.getWidth(null)/2, y-logo.getHeight(null)/2, this);
+			}
 			
 			// draw message
 			int messageX = (offscreen.getWidth(null) - fm.stringWidth(message)) / 2;
 			int messageY = y + 20;
-			if (logo != null) messageY += logoBuffer.getHeight(null);
+			
+			if (logo != null) messageY += logo.getHeight(null)/2;
+			else if (progressbar != null) messageY += progressbar.getHeight(null)/2;
 			
 			og.drawString(message, messageX, messageY);
 			
@@ -486,9 +490,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 			// draw loading bar, clipping it depending on percentage done
 			if (progressbar != null) {
-				int barSize = (progressbarBuffer.getWidth(null) * percentage) / 100;
-				og.clipRect(0, 0, x + barSize, offscreen.getHeight(null));
-				og.drawImage(progressbarBuffer, x, y, this);
+				int barSize = (progressbar.getWidth(null) * percentage) / 100;
+				og.clipRect(x-progressbar.getWidth(null)/2, 0, barSize, offscreen.getHeight(null));
+				og.drawImage(progressbarBuffer, x-progressbar.getWidth(null)/2, y-progressbar.getHeight(null)/2, this);
 			}
 			
 			painting = false;
@@ -527,7 +531,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			g.fillRect(0, 0, buffer.getWidth(null), buffer.getHeight(null));
 			
 			// buffer background is cleared, so draw logo under progressbar
-			if (img == progressbar && logo != null) g.drawImage(logoBuffer, 0, 0, null);
+			if (img == progressbar && logo != null) {
+				g.drawImage(logoBuffer, progressbar.getWidth(null)/2-logo.getWidth(null)/2, 
+										progressbar.getHeight(null)/2-logo.getHeight(null)/2, null);
+			}
 			
 			g.drawImage(img, 0, 0, this);
 			g.dispose();
@@ -1453,6 +1460,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		} catch (Exception e) {
 			/* */
 		}
+		
+		// show error as image could not be loaded
+		fatalErrorOccured("Unable to load logo and progressbar images", null);
 		return null;
 	}
 
