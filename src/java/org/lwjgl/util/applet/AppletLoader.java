@@ -463,11 +463,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			int x = offscreen.getWidth(null)/2; 
 			int y = offscreen.getHeight(null)/2;
 			
-			/*if(logo != null) {
-				x = (offscreen.getWidth(null) - logo.getWidth(null)) / 2;
-				y = (offscreen.getHeight(null) - logo.getHeight(null)) / 2;
-			}*/
-			
 			// draw logo
 			if (logo != null) {
 				og.drawImage(logoBuffer, x-logo.getWidth(null)/2, y-logo.getHeight(null)/2, this);
