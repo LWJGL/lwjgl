@@ -405,7 +405,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * @see java.awt.Container#paint(java.awt.Graphics)
 	 */
 	public void paint(Graphics g) {
-		
 		// don't paint loader if applet loaded
 		if(state == STATE_DONE) {
 			return;
@@ -416,16 +415,21 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			offscreen = createImage(getWidth(), getHeight());
 			
 			// create buffers for animated gifs
-			logoBuffer = createImage(logo.getWidth(null), logo.getHeight(null));
-			progressbarBuffer = createImage(logo.getWidth(null), logo.getHeight(null));
+			if (logo != null) {
+				logoBuffer = createImage(logo.getWidth(null), logo.getHeight(null));
+				// add image observer, it will notify when next animated gif frame is ready 
+				offscreen.getGraphics().drawImage(logo, 0, 0, this);
+				// in case image is not animated fill image buffer once
+				imageUpdate(logo, ImageObserver.FRAMEBITS, 0, 0, 0, 0);
+			}
 			
-			// add image observer, it will notify when next animated gif frame is ready 
-			offscreen.getGraphics().drawImage(logo, 0, 0, this);
-			offscreen.getGraphics().drawImage(progressbar, 0, 0, this);
-			
-			// in case image is not animated fill image buffers once
-			imageUpdate(logo, ImageObserver.FRAMEBITS, 0, 0, 0, 0);
-			imageUpdate(progressbar, ImageObserver.FRAMEBITS, 0, 0, 0, 0);
+			if (progressbar != null) {
+				progressbarBuffer = createImage(progressbar.getWidth(null), progressbar.getHeight(null));
+				// add image observer, it will notify when next animated gif frame is ready 
+				offscreen.getGraphics().drawImage(progressbar, 0, 0, this);
+				// in case image is not animated fill image buffer once
+				imageUpdate(progressbar, ImageObserver.FRAMEBITS, 0, 0, 0, 0);
+			}
 		}
 
 		// draw everything onto an image before drawing to avoid flicker
@@ -435,14 +439,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		// clear background color
 		og.setColor(bgColor);
 		og.fillRect(0, 0, offscreen.getWidth(null), offscreen.getHeight(null));
-
-		// get logo position so its in the middle of applet
-		int x = 0, y = 0;
-		
-		if(logo != null && !fatalError) {
-			x = (offscreen.getWidth(null) - logo.getWidth(null)) / 2;
-			y = (offscreen.getHeight(null) - logo.getHeight(null)) / 2;
-		}
 
 		og.setColor(fgColor);
 		String message = getDescriptionForState();
@@ -464,12 +460,22 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			
 			painting = true;
 			
+			// get logo position so its in the middle of applet
+			int x = 0, y = 0;
+			
+			if(logo != null) {
+				x = (offscreen.getWidth(null) - logo.getWidth(null)) / 2;
+				y = (offscreen.getHeight(null) - logo.getHeight(null)) / 2;
+			}
+			
 			// draw logo
-			og.drawImage(logoBuffer, x, y, this);
+			if (logo != null) og.drawImage(logoBuffer, x, y, this);
 			
 			// draw message
 			int messageX = (offscreen.getWidth(null) - fm.stringWidth(message)) / 2;
-			int messageY = y + logoBuffer.getHeight(null) + 20;
+			int messageY = y + 20;
+			if (logo != null) messageY += logoBuffer.getHeight(null);
+			
 			og.drawString(message, messageX, messageY);
 			
 			// draw subtaskmessage, if any
@@ -479,9 +485,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			}
 
 			// draw loading bar, clipping it depending on percentage done
-			int barSize = (progressbarBuffer.getWidth(null) * percentage) / 100;
-			og.clipRect(0, 0, x + barSize, offscreen.getHeight(null));
-			og.drawImage(progressbarBuffer, x, y, this);
+			if (progressbar != null) {
+				int barSize = (progressbarBuffer.getWidth(null) * percentage) / 100;
+				og.clipRect(0, 0, x + barSize, offscreen.getHeight(null));
+				og.drawImage(progressbarBuffer, x, y, this);
+			}
 			
 			painting = false;
 		}
@@ -519,7 +527,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			g.fillRect(0, 0, buffer.getWidth(null), buffer.getHeight(null));
 			
 			// buffer background is cleared, so draw logo under progressbar
-			if (img == progressbar) g.drawImage(logoBuffer, 0, 0, null);
+			if (img == progressbar && logo != null) g.drawImage(logoBuffer, 0, 0, null);
 			
 			g.drawImage(img, 0, 0, this);
 			g.dispose();
@@ -1438,7 +1446,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	        tracker.addImage(image, 0);
 	        tracker.waitForAll();
 	        
-	        return image;
+	        // if no errors return image
+	        if (!tracker.isErrorAny()) {
+	        	return image;
+	        }
 		} catch (Exception e) {
 			/* */
 		}
@@ -1572,5 +1583,4 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		}
 	}	
 	
-
 }
