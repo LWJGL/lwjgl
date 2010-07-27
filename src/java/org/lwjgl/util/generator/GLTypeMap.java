@@ -133,9 +133,9 @@ public class GLTypeMap implements TypeMap {
 			return "s";
 		else if ( annotation_type.equals(GLubyte.class) || annotation_type.equals(GLbyte.class) )
 			return "b";
-		else if ( annotation_type.equals(GLfloat.class) )
+		else if ( annotation_type.equals(GLfloat.class) || annotation_type.equals(GLclampf.class) )
 			return "f";
-		else if ( annotation_type.equals(GLdouble.class) )
+		else if ( annotation_type.equals(GLdouble.class) || annotation_type.equals(GLclampd.class) )
 			return "d";
 		else if ( annotation_type.equals(GLhalf.class) )
 			return "h";

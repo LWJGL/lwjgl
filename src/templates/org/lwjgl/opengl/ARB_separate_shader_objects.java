@@ -1,0 +1,269 @@
+/*
+ * Copyright (c) 2002-2008 LWJGL Project
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
+ *   from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package org.lwjgl.opengl;
+
+import org.lwjgl.util.generator.*;
+
+import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+@Extension(postfix = "")
+public interface ARB_separate_shader_objects {
+
+	/** Accepted by &lt;stages&gt; parameter to UseProgramStages: */
+	int GL_VERTEX_SHADER_BIT = 0x00000001,
+		GL_FRAGMENT_SHADER_BIT = 0x00000002,
+		GL_GEOMETRY_SHADER_BIT = 0x00000004,
+		GL_TESS_CONTROL_SHADER_BIT = 0x00000008,
+		GL_TESS_EVALUATION_SHADER_BIT = 0x00000010,
+		GL_ALL_SHADER_BITS = 0xFFFFFFFF;
+
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of ProgramParameteri and
+	 * GetProgramiv:
+	 */
+	int GL_PROGRAM_SEPARABLE = 0x8258;
+
+	/** Accepted by &lt;type&gt; parameter to GetProgramPipelineiv: */
+	int GL_ACTIVE_PROGRAM = 0x8259;
+
+	/**
+	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
+	 * GetInteger64v, GetFloatv, and GetDoublev:
+	 */
+	int GL_PROGRAM_PIPELINE_BINDING = 0x825A;
+
+	void glUseProgramStages(@GLuint int pipeline, @GLbitfield int stages, @GLuint int program);
+
+	void glActiveShaderProgram(@GLuint int pipeline, @GLuint int program);
+
+	@StripPostfix(value = "strings", postfix = "v")
+	@GLuint
+	int glCreateShaderProgramv(@GLenum int type, @GLsizei int count, @Check @Const @Indirect @GLchar ByteBuffer strings);
+
+	@Alternate("glCreateShaderProgramv")
+	@StripPostfix(value = "string", postfix = "v")
+	@GLuint
+	int glCreateShaderProgramv(@GLenum int type, @Constant("1") @GLsizei int count, @NullTerminated CharSequence string);
+
+	@Alternate("glCreateShaderProgramv")
+	@StripPostfix(value = "strings", postfix = "v")
+	@GLuint
+	int glCreateShaderProgramv(@GLenum int type, @Constant("strings.length") @GLsizei int count,
+	                           @Const @NullTerminated @StringList(value = "count") CharSequence[] strings);
+
+	void glBindProgramPipeline(@GLuint int pipeline);
+
+	void glDeleteProgramPipelines(@AutoSize("pipelines") @GLsizei int n, @Const @GLuint IntBuffer pipelines);
+
+	@Alternate("glDeleteProgramPipelines")
+	void glDeleteProgramPipelines(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, pipeline), 0", keepParam = true) int pipeline);
+
+	void glGenProgramPipelines(@AutoSize("pipelines") @GLsizei int n, @OutParameter @GLuint IntBuffer pipelines);
+
+	@Alternate("glGenProgramPipelines")
+	@GLreturn("pipelines")
+	void glGenProgramPipelines2(@Constant("1") @GLsizei int n, @OutParameter @GLuint IntBuffer pipelines);
+
+	boolean glIsProgramPipeline(@GLuint int pipeline);
+
+	void glProgramParameteri(@GLuint int program, @GLenum int pname, int value);
+
+	@StripPostfix("params")
+	void glGetProgramPipelineiv(@GLuint int pipeline, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
+
+	@Alternate("glGetProgramPipelineiv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetProgramPipelineiv2(@GLuint int pipeline, @GLenum int pname, @OutParameter IntBuffer params);
+
+	void glProgramUniform1i(@GLuint int program, int location, int v0);
+
+	void glProgramUniform2i(@GLuint int program, int location, int v0, int v1);
+
+	void glProgramUniform3i(@GLuint int program, int location, int v0, int v1, int v2);
+
+	void glProgramUniform4i(@GLuint int program, int location, int v0, int v1, int v2, int v3);
+
+	void glProgramUniform1f(@GLuint int program, int location, float v0);
+
+	void glProgramUniform2f(@GLuint int program, int location, float v0, float v1);
+
+	void glProgramUniform3f(@GLuint int program, int location, float v0, float v1, float v2);
+
+	void glProgramUniform4f(@GLuint int program, int location, float v0, float v1, float v2, float v3);
+
+	void glProgramUniform1d(@GLuint int program, int location, double v0);
+
+	void glProgramUniform2d(@GLuint int program, int location, double v0, double v1);
+
+	void glProgramUniform3d(@GLuint int program, int location, double v0, double v1, double v2);
+
+	void glProgramUniform4d(@GLuint int program, int location, double v0, double v1, double v2, double v3);
+
+	@StripPostfix("value")
+	void glProgramUniform1iv(@GLuint int program, int location, @AutoSize("value") @GLsizei int count, @Const IntBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniform2iv(@GLuint int program, int location, @AutoSize(value = "value", expression = " >> 1") @GLsizei int count, @Const IntBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniform3iv(@GLuint int program, int location, @AutoSize(value = "value", expression = " / 3") @GLsizei int count, @Const IntBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniform4iv(@GLuint int program, int location, @AutoSize(value = "value", expression = " >> 2") @GLsizei int count, @Const IntBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniform1fv(@GLuint int program, int location, @AutoSize("value") @GLsizei int count, @Const FloatBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniform2fv(@GLuint int program, int location, @AutoSize(value = "value", expression = " >> 1") @GLsizei int count, @Const FloatBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniform3fv(@GLuint int program, int location, @AutoSize(value = "value", expression = " / 3") @GLsizei int count, @Const FloatBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniform4fv(@GLuint int program, int location, @AutoSize(value = "value", expression = " >> 2") @GLsizei int count, @Const FloatBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniform1dv(@GLuint int program, int location, @AutoSize("value") @GLsizei int count, @Const DoubleBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniform2dv(@GLuint int program, int location, @AutoSize(value = "value", expression = " >> 1") @GLsizei int count, @Const DoubleBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniform3dv(@GLuint int program, int location, @AutoSize(value = "value", expression = " / 3") @GLsizei int count, @Const DoubleBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniform4dv(@GLuint int program, int location, @AutoSize(value = "value", expression = " >> 2") @GLsizei int count, @Const DoubleBuffer value);
+
+	void glProgramUniform1ui(@GLuint int program, int location, int v0);
+
+	void glProgramUniform2ui(@GLuint int program, int location, int v0, int v1);
+
+	void glProgramUniform3ui(@GLuint int program, int location, int v0, int v1, int v2);
+
+	void glProgramUniform4ui(@GLuint int program, int location, int v0, int v1, int v2, int v3);
+
+	@StripPostfix("value")
+	void glProgramUniform1uiv(@GLuint int program, int location, @AutoSize("value") @GLsizei int count, @Const IntBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniform2uiv(@GLuint int program, int location, @AutoSize(value = "value", expression = " >> 1") @GLsizei int count, @Const IntBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniform3uiv(@GLuint int program, int location, @AutoSize(value = "value", expression = " / 3") @GLsizei int count, @Const IntBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniform4uiv(@GLuint int program, int location, @AutoSize(value = "value", expression = " >> 2") @GLsizei int count, @Const IntBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix2fv(@GLuint int program, int location, @AutoSize(value = "value", expression = " >> 2") @GLsizei int count, boolean transpose, @Const FloatBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix3fv(@GLuint int program, int location, @AutoSize(value = "value", expression = " / (3 * 3)") @GLsizei int count, boolean transpose, @Const FloatBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix4fv(@GLuint int program, int location, @AutoSize(value = "value", expression = " >> 4") @GLsizei int count, boolean transpose, @Const FloatBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix2dv(@GLuint int program, int location, @AutoSize(value = "value", expression = " >> 2") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix3dv(@GLuint int program, int location, @AutoSize(value = "value", expression = " / (3 * 3)") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix4dv(@GLuint int program, int location, @AutoSize(value = "value", expression = " >> 4") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix2x3fv(@GLuint int program, int location,
+	                                 @AutoSize(value = "value", expression = " / (2 * 3)") @GLsizei int count, boolean transpose, @Const FloatBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix3x2fv(@GLuint int program, int location,
+	                                 @AutoSize(value = "value", expression = " / (3 * 2)") @GLsizei int count, boolean transpose, @Const FloatBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix2x4fv(@GLuint int program, int location,
+	                                 @AutoSize(value = "value", expression = " >> 3") @GLsizei int count, boolean transpose, @Const FloatBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix4x2fv(@GLuint int program, int location,
+	                                 @AutoSize(value = "value", expression = " >> 3") @GLsizei int count, boolean transpose, @Const FloatBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix3x4fv(@GLuint int program, int location,
+	                                 @AutoSize(value = "value", expression = " / (3 * 4)") @GLsizei int count, boolean transpose, @Const FloatBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix4x3fv(@GLuint int program, int location,
+	                                 @AutoSize(value = "value", expression = " / (4 * 3)") @GLsizei int count, boolean transpose, @Const FloatBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix2x3dv(@GLuint int program, int location,
+	                                 @AutoSize(value = "value", expression = " / (2 * 3)") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix3x2dv(@GLuint int program, int location,
+	                                 @AutoSize(value = "value", expression = " / (3 * 2)") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix2x4dv(@GLuint int program, int location,
+	                                 @AutoSize(value = "value", expression = " >> 3") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix4x2dv(@GLuint int program, int location,
+	                                 @AutoSize(value = "value", expression = " >> 3") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix3x4dv(@GLuint int program, int location,
+	                                 @AutoSize(value = "value", expression = " / (3 * 4)") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
+
+	@StripPostfix("value")
+	void glProgramUniformMatrix4x3dv(@GLuint int program, int location,
+	                                 @AutoSize(value = "value", expression = " / (4 * 3)") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
+
+	void glValidateProgramPipeline(@GLuint int pipeline);
+
+	void glGetProgramPipelineInfoLog(@GLuint int pipeline, @AutoSize("infoLog") @GLsizei int bufSize,
+	                                 @OutParameter @Check(value = "1", canBeNull = true) @GLsizei IntBuffer length,
+	                                 @OutParameter @GLchar ByteBuffer infoLog);
+
+	@Alternate("glGetProgramPipelineInfoLog")
+	@GLreturn(value = "infoLog", maxLength = "bufSize")
+	void glGetProgramPipelineInfoLog2(@GLuint int pipeline, @GLsizei int bufSize,
+	                                  @OutParameter @GLsizei @Constant("infoLog_length, 0") IntBuffer length,
+	                                  @OutParameter @GLchar ByteBuffer infoLog);
+
+}

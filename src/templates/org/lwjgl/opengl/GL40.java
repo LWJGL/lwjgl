@@ -46,16 +46,12 @@ public interface GL40 {
 	// ----------------------[ ARB_draw_buffers_blend ]----------------------
 	// ----------------------------------------------------------------------
 
-	@Optional(reason = "AMD's 4.0 implementation does not expose this (last driver checked: 10.3)")
 	void glBlendEquationi(@GLuint int buf, @GLenum int mode);
 
-	@Optional(reason = "AMD's 4.0 implementation does not expose this (last driver checked: 10.3)")
 	void glBlendEquationSeparatei(@GLuint int buf, @GLenum int modeRGB, @GLenum int modeAlpha);
 
-	@Optional(reason = "AMD's 4.0 implementation does not expose this (last driver checked: 10.3)")
 	void glBlendFunci(@GLuint int buf, @GLenum int src, @GLenum int dst);
 
-	@Optional(reason = "AMD's 4.0 implementation does not expose this (last driver checked: 10.3)")
 	void glBlendFuncSeparatei(@GLuint int buf, @GLenum int srcRGB, @GLenum int dstRGB, @GLenum int srcAlpha, @GLenum int dstAlpha);
 
 	// -----------------------------------------------------------------
@@ -186,7 +182,6 @@ public interface GL40 {
 	 */
 	int GL_MIN_SAMPLE_SHADING_VALUE = 0x8C37;
 
-	@Optional(reason = "AMD's 4.0 implementation does not expose this (last driver checked: 10.3)")
 	void glMinSampleShading(@GLclampf float value);
 
 	// ---------------------------------------------------------------------

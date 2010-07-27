@@ -32,85 +32,112 @@
 package org.lwjgl.opengl;
 
 /**
- * Instances of this class are needed to use the callback functionality of the AMD_debug_output extension.
+ * Instances of this class are needed to use the callback functionality of the ARB_debug_output extension.
  * A debug context must be current before creating instances of this class. Users of this class may provide
  * implementations of the {@code Handler} interface to receive notifications. The same {@code Handler}
  * instance may be used by different contexts but it is not recommended. Handler notifications are synchronized.
  *
  * @author Spasi
  */
-public final class AMDDebugOutputCallback implements PointerWrapper {
+public final class ARBDebugOutputCallback implements PointerWrapper {
 
 	/** Severity levels. */
-	private static final int GL_DEBUG_SEVERITY_HIGH_AMD = 0x9146,
-		GL_DEBUG_SEVERITY_MEDIUM_AMD = 0x9147,
-		GL_DEBUG_SEVERITY_LOW_AMD = 0x9148;
+	private static final int
+		GL_DEBUG_SEVERITY_HIGH_ARB = 0x9146,
+		GL_DEBUG_SEVERITY_MEDIUM_ARB = 0x9147,
+		GL_DEBUG_SEVERITY_LOW_ARB = 0x9148;
 
-	/** Categories */
-	private static final int GL_DEBUG_CATEGORY_API_ERROR_AMD = 0x9149,
-		GL_DEBUG_CATEGORY_WINDOW_SYSTEM_AMD = 0x914A,
-		GL_DEBUG_CATEGORY_DEPRECATION_AMD = 0x914B,
-		GL_DEBUG_CATEGORY_UNDEFINED_BEHAVIOR_AMD = 0x914C,
-		GL_DEBUG_CATEGORY_PERFORMANCE_AMD = 0x914D,
-		GL_DEBUG_CATEGORY_SHADER_COMPILER_AMD = 0x914E,
-		GL_DEBUG_CATEGORY_APPLICATION_AMD = 0x914F,
-		GL_DEBUG_CATEGORY_OTHER_AMD = 0x9150;
+	/** Sources. */
+	private static final int
+		GL_DEBUG_SOURCE_API_ARB = 0x8246,
+		GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB = 0x8247,
+		GL_DEBUG_SOURCE_SHADER_COMPILER_ARB = 0x8248,
+		GL_DEBUG_SOURCE_THIRD_PARTY_ARB = 0x8249,
+		GL_DEBUG_SOURCE_APPLICATION_ARB = 0x824A,
+		GL_DEBUG_SOURCE_OTHER_ARB = 0x824B;
+
+	/** Types. */
+	private static final int
+		GL_DEBUG_TYPE_ERROR_ARB = 0x824C,
+		GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB = 0x824D,
+		GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB = 0x824E,
+		GL_DEBUG_TYPE_PORTABILITY_ARB = 0x824F,
+		GL_DEBUG_TYPE_PERFORMANCE_ARB = 0x8250,
+		GL_DEBUG_TYPE_OTHER_ARB = 0x8251;
 
 	private final long pointer;
 
 	/**
-	 * Creates an AMDDebugOutputCallback with a default callback handler.
+	 * Creates an ARBDebugOutputCallback with a default callback handler.
 	 * The default handler will simply print the message on System.err.
 	 */
-	public AMDDebugOutputCallback() {
+	public ARBDebugOutputCallback() {
 		this(new Handler() {
-			public void handleMessage(final int id, final int category, final int severity, final String message) {
-				System.err.println("[LWJGL] AMD_debug_output message");
+			public void handleMessage(final int source, final int type, final int id, final int severity, final String message) {
+				System.err.println("[LWJGL] ARB_debug_output message");
 				System.err.println("\tID: " + id);
 
 				String description;
-				switch ( category ) {
-					case GL_DEBUG_CATEGORY_API_ERROR_AMD:
-						description = "API ERROR";
+				switch ( source ) {
+					case GL_DEBUG_SOURCE_API_ARB:
+						description = "API";
 						break;
-					case GL_DEBUG_CATEGORY_WINDOW_SYSTEM_AMD:
+					case GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB:
 						description = "WINDOW SYSTEM";
 						break;
-					case GL_DEBUG_CATEGORY_DEPRECATION_AMD:
-						description = "DEPRECATION";
-						break;
-					case GL_DEBUG_CATEGORY_UNDEFINED_BEHAVIOR_AMD:
-						description = "UNDEFINED BEHAVIOR";
-						break;
-					case GL_DEBUG_CATEGORY_PERFORMANCE_AMD:
-						description = "PERFORMANCE";
-						break;
-					case GL_DEBUG_CATEGORY_SHADER_COMPILER_AMD:
+					case GL_DEBUG_SOURCE_SHADER_COMPILER_ARB:
 						description = "SHADER COMPILER";
 						break;
-					case GL_DEBUG_CATEGORY_APPLICATION_AMD:
+					case GL_DEBUG_SOURCE_THIRD_PARTY_ARB:
+						description = "THIRD PARTY";
+						break;
+					case GL_DEBUG_SOURCE_APPLICATION_ARB:
 						description = "APPLICATION";
 						break;
-					case GL_DEBUG_CATEGORY_OTHER_AMD:
+					case GL_DEBUG_SOURCE_OTHER_ARB:
 						description = "OTHER";
 						break;
 					default:
-						description = "Unknown (" + Integer.toHexString(category) + ")";
+						description = "Unknown (" + Integer.toHexString(source) + ")";
 				}
-				System.err.println("\tCategory: " + description);
+				System.err.println("\tSource: " + description);
+
+				switch ( type ) {
+					case GL_DEBUG_TYPE_ERROR_ARB:
+						description = "ERROR";
+						break;
+					case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB:
+						description = "DEPRECATED BEHAVIOR";
+						break;
+					case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB:
+						description = "UNDEFINED BEHAVIOR";
+						break;
+					case GL_DEBUG_TYPE_PORTABILITY_ARB:
+						description = "PORTABILITY";
+						break;
+					case GL_DEBUG_TYPE_PERFORMANCE_ARB:
+						description = "PERFORMANCE";
+						break;
+					case GL_DEBUG_TYPE_OTHER_ARB:
+						description = "OTHER";
+						break;
+					default:
+						description = "Unknown (" + Integer.toHexString(source) + ")";
+				}
+				System.err.println("\tType: " + description);
 
 				switch ( severity ) {
-					case GL_DEBUG_SEVERITY_HIGH_AMD:
+					case GL_DEBUG_SEVERITY_HIGH_ARB:
 						description = "HIGH";
 						break;
-					case GL_DEBUG_SEVERITY_MEDIUM_AMD:
+					case GL_DEBUG_SEVERITY_MEDIUM_ARB:
 						description = "MEDIUM";
 						break;
-					case GL_DEBUG_SEVERITY_LOW_AMD:
+					case GL_DEBUG_SEVERITY_LOW_ARB:
 						description = "LOW";
 						break;
 					default:
-						description = "Unknown (" + Integer.toHexString(category) + ")";
+						description = "Unknown (" + Integer.toHexString(source) + ")";
 				}
 				System.err.println("\tSeverity: " + description);
 
@@ -120,18 +147,18 @@ public final class AMDDebugOutputCallback implements PointerWrapper {
 	}
 
 	/**
-	 * Creates an AMDDebugOutputCallback with the specified callback handlers.
+	 * Creates an ARBDebugOutputCallback with the specified callback handlers.
 	 * The handler's {@code handleMessage} method will be called whenever
 	 * debug output is generated by the GL.
 	 *
 	 * @param handler the callback handler
 	 */
-	public AMDDebugOutputCallback(final Handler handler) {
+	public ARBDebugOutputCallback(final Handler handler) {
 		try {
 			// We have to call registerHandler reflectively because we need this class to compile before we run the Generator.
 			// The registerHandler method depends on org.lwjgl.opengl.Context, if we touched that we would need to compile
 			// the whole library (which is not possible).
-			Class.forName("org.lwjgl.opengl.AMDDebugOutputUtil").getMethod("registerHandler", new Class[] { Handler.class }).invoke(null, new Object[] { handler });
+			Class.forName("org.lwjgl.opengl.ARBDebugOutputUtil").getMethod("registerHandler", new Class[] { Handler.class }).invoke(null, new Object[] { handler });
 		} catch (Exception e) {
 			throw new RuntimeException(e.getCause() != null ? e.getCause() : e);
 		}
@@ -144,18 +171,19 @@ public final class AMDDebugOutputCallback implements PointerWrapper {
 
 	private static native long getFunctionPointer();
 
-	/** Implementations of this interface can be used to receive AMD_debug_output notifications. */
+	/** Implementations of this interface can be used to receive ARB_debug_output notifications. */
 	public interface Handler {
 
 		/**
 		 * This method will be called when an AMD_debug_output message is generated.
 		 *
 		 * @param id       the message ID
-		 * @param category the message category
+		 * @param source   the message source
+		 * @param type     the message type
 		 * @param severity the message severity
 		 * @param message  the string representation of the message.
 		 */
-		void handleMessage(int id, int category, int severity, String message);
+		void handleMessage(int source, int type, int id, int severity, String message);
 
 	}
 

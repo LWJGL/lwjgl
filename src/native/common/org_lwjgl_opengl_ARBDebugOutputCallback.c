@@ -39,38 +39,18 @@
 #include <jni.h>
 #include "common_tools.h"
 #include "extgl.h"
-#include "org_lwjgl_opengl_AMDDebugOutputCallback.h"
+#include "org_lwjgl_opengl_ARBDebugOutputCallback.h"
 
-static jclass debugOutputCallbackClassAMD;
-static jmethodID debugOutputCallbackMethodAMD;
+static jclass debugOutputCallbackClassARB;
+static jmethodID debugOutputCallbackMethodARB;
 
-static void APIENTRY debugOutputCallbackAMD(GLuint id, GLenum category, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam) {
-    /*
-    jclass callback_class;
-	jmethodID callback_method;
-	JNIEnv *env = getThreadEnv();
-	if (env != NULL && !(*env)->ExceptionOccurred(env)) {
-		callback_class = (*env)->FindClass(env, "org/lwjgl/opengl/AMDDebugOutputUtil");
-		if ( callback_class != NULL ) {
-			callback_method = (*env)->GetStaticMethodID(env, callback_class, "messageCallback", "(IIILjava/lang/String;Ljava/nio/ByteBuffer;)V");
-			if ( callback_method != NULL ) {
-				(*env)->CallStaticVoidMethod(env, callback_class, callback_method,
-                            (jint)id,
-				            (jint)category,
-				            (jint)severity,
-                            NewStringNativeWithLength(env, message, length),
-				            NULL
-                );
-			}
-		}
-	}
-	*/
-
-	JNIEnv *env = getThreadEnv();
-	if ( env != NULL && !(*env)->ExceptionOccurred(env) && debugOutputCallbackMethodAMD != NULL ) {
-        (*env)->CallStaticVoidMethod(env, debugOutputCallbackClassAMD, debugOutputCallbackMethodAMD,
+static void APIENTRY debugOutputCallbackARB(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam) {
+    JNIEnv *env = getThreadEnv();
+	if ( env != NULL && !(*env)->ExceptionOccurred(env) && debugOutputCallbackMethodARB != NULL ) {
+        (*env)->CallStaticVoidMethod(env, debugOutputCallbackClassARB, debugOutputCallbackMethodARB,
+                    (jint)source,
+                    (jint)type,
                     (jint)id,
-                    (jint)category,
                     (jint)severity,
                     NewStringNativeWithLength(env, message, length),
                     NULL // Ignoring user param, pointless for our implementation
@@ -78,11 +58,11 @@ static void APIENTRY debugOutputCallbackAMD(GLuint id, GLenum category, GLenum s
     }
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_AMDDebugOutputCallback_getFunctionPointer(JNIEnv *env, jclass clazz) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_ARBDebugOutputCallback_getFunctionPointer(JNIEnv *env, jclass clazz) {
     // Cache the callback class and methodID
-    debugOutputCallbackClassAMD = (*env)->FindClass(env, "org/lwjgl/opengl/AMDDebugOutputUtil");
-    if ( debugOutputCallbackClassAMD != NULL )
-        debugOutputCallbackMethodAMD = (*env)->GetStaticMethodID(env, debugOutputCallbackClassAMD, "messageCallback", "(IIILjava/lang/String;Ljava/nio/ByteBuffer;)V");
+    debugOutputCallbackClassARB = (*env)->FindClass(env, "org/lwjgl/opengl/ARBDebugOutputUtil");
+    if ( debugOutputCallbackClassARB != NULL )
+        debugOutputCallbackMethodARB = (*env)->GetStaticMethodID(env, debugOutputCallbackClassARB, "messageCallback", "(IIIILjava/lang/String;Ljava/nio/ByteBuffer;)V");
 
-    return (jlong)(intptr_t)&debugOutputCallbackAMD;
+    return (jlong)(intptr_t)&debugOutputCallbackARB;
 }

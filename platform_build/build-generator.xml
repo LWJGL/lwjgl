@@ -7,7 +7,7 @@
 			<fileset dir="${lwjgl.src.native}/generated" includes="**"/>
 		</delete>
 	</target>
-	
+
 	<!-- Compiles the Java generator source code -->
 	<target name="generators" description="Compiles the native method generators">
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/util/generator/**.java" source="1.5" target="1.5" taskname="generator">
@@ -17,6 +17,7 @@
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" source="1.4" target="1.4" taskname="generator">
 			<include name="org/lwjgl/opengl/GLSync.java"/>
             <include name="org/lwjgl/opengl/AMDDebugOutputCallback.java"/>
+            <include name="org/lwjgl/opengl/ARBDebugOutputCallback.java"/>
 			<include name="org/lwjgl/opengl/PointerWrapper.java"/>
 		</javac>
 	</target>
@@ -42,7 +43,7 @@
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/openal/AL10.java, org/lwjgl/openal/AL11.java, org/lwjgl/openal/EFX10.java"/>
 		</apply>
 	</target>
-	
+
 	<!-- Generate OpenAL [DEBUG] -->
 	<target name="generate-openal-debug" depends="generators" description="Generates java and native source for AL">
 		<apply executable="apt" parallel="true">
@@ -111,7 +112,7 @@
 			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>
 		</apply>
 	</target>
-	
+
 	<!-- Generate context capabilities -->
 	<target name="generate-opengl-capabilities" depends="generators" description="Generates java and native source for GL">
 		<apply executable="apt" parallel="true">
@@ -125,8 +126,8 @@
 			<arg value="-Acontextspecific"/>
 			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>
 		</apply>
-	</target>	
-	
+	</target>
+
 	<!-- Generate context capabilities [DEBUG] -->
 	<target name="generate-opengl-capabilities-debug" depends="generators" description="Generates java and native source for GL">
 		<apply executable="apt" parallel="true">
@@ -141,5 +142,5 @@
 			<arg value="-Acontextspecific"/>
 			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>
 		</apply>
-	</target>	
+	</target>
 </project>

@@ -215,37 +215,21 @@ public final class GLContext {
 			LWJGLUtil.log("The major and/or minor OpenGL version is malformed: " + e.getMessage());
 		}
 
-		// ----------------------[ 4.X ]----------------------
-		if ( 4 <= majorVersion )
-			supported_extensions.add("OpenGL40");
+		final int[][] GL_VERSIONS = {
+			{ 1, 2, 3, 4, 5 },  // OpenGL 1
+			{ 0, 1 },           // OpenGL 2
+			{ 0, 1, 2, 3 },     // OpenGL 3
+			{ 0, 1 },           // OpenGL 4
+		};
 
-		// ----------------------[ 3.X ]----------------------
-		if ( 3 < majorVersion || (3 == majorVersion && 3 <= minorVersion) )
-			supported_extensions.add("OpenGL33");
-		if ( 3 < majorVersion || (3 == majorVersion && 2 <= minorVersion) )
-			supported_extensions.add("OpenGL32");
-		if ( 3 < majorVersion || (3 == majorVersion && 1 <= minorVersion) )
-			supported_extensions.add("OpenGL31");
-		if ( 3 <= majorVersion )
-			supported_extensions.add("OpenGL30");
-
-		// ----------------------[ 2.X ]----------------------
-		if ( 2 < majorVersion || (2 == majorVersion && 1 <= minorVersion) )
-			supported_extensions.add("OpenGL21");
-		if ( 2 <= majorVersion )
-			supported_extensions.add("OpenGL20");
-
-		// ----------------------[ 1.X ]----------------------
-		if ( 1 < majorVersion || 5 <= minorVersion )
-			supported_extensions.add("OpenGL15");
-		if ( 1 < majorVersion || 4 <= minorVersion )
-			supported_extensions.add("OpenGL14");
-		if ( 1 < majorVersion || 3 <= minorVersion )
-			supported_extensions.add("OpenGL13");
-		if ( 1 < majorVersion || 2 <= minorVersion )
-			supported_extensions.add("OpenGL12");
-		if ( 1 < majorVersion || 1 <= minorVersion )
-			supported_extensions.add("OpenGL11");
+		for ( int major = 1; major <= GL_VERSIONS.length; major++ ) {
+			int[] minors = GL_VERSIONS[major - 1];
+			for ( int i = 0; i < minors.length; i++ ) {
+				int minor = minors[i];
+				if ( major < majorVersion || (major == majorVersion && minor <= minorVersion) )
+					supported_extensions.add("OpenGL" + Integer.toString(major) + Integer.toString(minor));
+			}
+		}
 
 		int profileMask = 0;
 

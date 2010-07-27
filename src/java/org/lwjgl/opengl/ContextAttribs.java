@@ -56,6 +56,13 @@ import java.nio.IntBuffer;
  */
 public final class ContextAttribs {
 
+	// Same values for GLX & WGL
+	private static final int CONTEXT_ROBUST_ACCESS_BIT_ARB = 0x00000004;
+	private static final int CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB = 0x8256;
+	private static final int
+		NO_RESET_NOTIFICATION_ARB = 0x8261,
+		LOSE_CONTEXT_ON_RESET_ARB = 0x8252;
+
 	private int majorVersion;
 	private int minorVersion;
 
@@ -63,9 +70,12 @@ public final class ContextAttribs {
 
 	private boolean debug;
 	private boolean forwardCompatible;
+	private boolean robustAccess;
 
 	private boolean profileCore;
 	private boolean profileCompatibility;
+
+	private boolean loseContextOnReset;
 
 	public ContextAttribs() {
 		this(1, 0);
@@ -82,14 +92,6 @@ public final class ContextAttribs {
 
 		this.majorVersion = majorVersion;
 		this.minorVersion = minorVersion;
-
-		this.layerPlane = 0;
-
-		this.debug = false;
-		this.forwardCompatible = false;
-
-		this.profileCore = false;
-		this.profileCompatibility = false;
 	}
 
 	private ContextAttribs(final ContextAttribs attribs) {
@@ -100,9 +102,12 @@ public final class ContextAttribs {
 
 		this.debug = attribs.debug;
 		this.forwardCompatible = attribs.forwardCompatible;
+		this.robustAccess = attribs.robustAccess;
 
 		this.profileCore = attribs.profileCore;
 		this.profileCompatibility = attribs.profileCompatibility;
+
+		this.loseContextOnReset = attribs.loseContextOnReset;
 	}
 
 	public int getMajorVersion() {
@@ -193,6 +198,24 @@ public final class ContextAttribs {
 		return attribs;
 	}
 
+	/**
+	 * Returns a ContextAttribs instance with CONTEXT_RESET_NOTIFICATION_STRATEGY set
+	 * to LOSE_CONTEXT_ON_RESET if the parameter is true or to NO_RESET_NOTIFICATION
+	 * if the parameter is false.
+	 *
+	 * @param loseContextOnReset
+	 *
+	 * @return the new ContextAttribs
+	 */
+	public ContextAttribs withLoseContextOnReset(final boolean loseContextOnReset) {
+		if ( loseContextOnReset == this.loseContextOnReset )
+			return this;
+
+		final ContextAttribs attribs = new ContextAttribs(this);
+		attribs.loseContextOnReset = loseContextOnReset;
+		return attribs;
+	}
+
 	private static ContextAttribsImplementation getImplementation() {
 		switch ( LWJGLUtil.getPlatform() ) {
 			case LWJGLUtil.PLATFORM_LINUX:
@@ -221,6 +244,8 @@ public final class ContextAttribs {
 			flags |= implementation.getDebugBit();
 		if ( forwardCompatible )
 			flags |= implementation.getForwardCompatibleBit();
+		if ( robustAccess )
+			flags |= CONTEXT_ROBUST_ACCESS_BIT_ARB;
 		if ( 0 < flags )
 			attribCount++;
 
@@ -247,6 +272,8 @@ public final class ContextAttribs {
 			attribs.put(implementation.getFlagsAttrib()).put(flags);
 		if ( 0 < profileMask )
 			attribs.put(implementation.getProfileMaskAttrib()).put(profileMask);
+		if ( loseContextOnReset )
+			attribs.put(CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB).put(LOSE_CONTEXT_ON_RESET_ARB);
 
 		attribs.put(0);
 		attribs.rewind();
@@ -261,6 +288,9 @@ public final class ContextAttribs {
 		sb.append(" - Layer=").append(layerPlane);
 		sb.append(" - Debug=").append(debug);
 		sb.append(" - ForwardCompatible=").append(forwardCompatible);
+		sb.append(" - RobustAccess=").append(robustAccess);
+		if ( robustAccess )
+			sb.append(" (").append(loseContextOnReset ? "LOSE_CONTEXT_ON_RESET" : "NO_RESET_NOTIFICATION");
 		sb.append(" - Profile=");
 		if ( profileCore )
 			sb.append("Core");
