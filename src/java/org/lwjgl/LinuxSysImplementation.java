@@ -39,7 +39,7 @@ package org.lwjgl;
  * $Id$
  */
 final class LinuxSysImplementation extends J2SESysImplementation {
-	private final static int JNI_VERSION = 18;
+	private final static int JNI_VERSION = 19;
 
 	static {
 		java.awt.Toolkit.getDefaultToolkit(); // This will make sure libjawt.so is loaded
