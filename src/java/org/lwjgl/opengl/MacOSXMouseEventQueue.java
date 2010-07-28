@@ -54,9 +54,11 @@ final class MacOSXMouseEventQueue extends MouseEventQueue {
 	}
 
 	public void setGrabbed(boolean grab) {
-		super.setGrabbed(grab);
-		warpCursor();
-		grabMouse(grab);
+		if (is_grabbed != grab) {
+			super.setGrabbed(grab);
+			warpCursor();
+			grabMouse(grab);
+		}
 	}
 	
 	private static synchronized void grabMouse(boolean grab) {
