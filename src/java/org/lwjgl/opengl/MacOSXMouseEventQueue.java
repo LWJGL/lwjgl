@@ -62,11 +62,9 @@ final class MacOSXMouseEventQueue extends MouseEventQueue {
 	}
 	
 	private static synchronized void grabMouse(boolean grab) {
-		if (is_grabbed != grab) {
-			is_grabbed = grab;
-			if (!grab)
-				nGrabMouse(grab);
-		}
+		is_grabbed = grab;
+		if (!grab)
+			nGrabMouse(grab);
 	}
 
 	protected void resetCursorToCenter() {
