@@ -42,7 +42,7 @@ public interface NV_framebuffer_multisample_coverage {
 
 	/** Accepted by the &lt;pname&gt; parameter of GetIntegerv. */
 	int GL_MAX_MULTISAMPLE_COVERAGE_MODES_NV = 0x8E11;
-	int GL_MULITSAMPLE_COVERAGE_MODES_NV = 0x8E12;
+	int GL_MULTISAMPLE_COVERAGE_MODES_NV = 0x8E12;
 
 	void glRenderbufferStorageMultisampleCoverageNV(@GLenum int target, @GLsizei int coverageSamples, @GLsizei int colorSamples,
 	                                                @GLenum int internalformat, @GLsizei int width, @GLsizei int height);
