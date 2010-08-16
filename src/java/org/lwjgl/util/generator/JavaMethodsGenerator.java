@@ -263,7 +263,7 @@ public class JavaMethodsGenerator {
 		if (has_result) {
 			if ( method.getAnnotation(GLreturn.class) == null ) {
 				if ( ByteBuffer.class.equals(Utils.getJavaType(result_type)) )
-					writer.println("\t\treturn " + Utils.RESULT_VAR_NAME + ".order(ByteOrder.nativeOrder());"); // safeNewBuffer returns a direct ByteBuffer with BIG_ENDIAN order.
+					writer.println("\t\treturn " + Utils.RESULT_VAR_NAME + " == null ? null : " + Utils.RESULT_VAR_NAME + ".order(ByteOrder.nativeOrder());"); // safeNewBuffer returns a direct ByteBuffer with BIG_ENDIAN order.
 				else
 					writer.println("\t\treturn " + Utils.RESULT_VAR_NAME + ";");
 			} else
