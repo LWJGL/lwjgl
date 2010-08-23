@@ -1434,7 +1434,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	protected Image getImage(String s) {
 		try {
-			URL url = AppletLoader.class.getResource("/"+s);
+			URL url = ClassLoader.getSystemClassLoader().getResource("/"+s);
 			
 			// if image not found in jar, look outside it
 			if (url == null) {
