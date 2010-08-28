@@ -892,6 +892,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		// Make sure jinput knows about the new path too
 		System.setProperty("net.java.games.input.librarypath", path + "natives");
 		
+		// set the library path, should make it easier when using additional custom natives
+		System.setProperty("java.library.path", path + "natives");
+		
 		// mark natives as loaded
 		natives_loaded = true;
 	}
