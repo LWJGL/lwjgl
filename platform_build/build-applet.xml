@@ -31,121 +31,121 @@
 	<target name="-applet">
 	
 		<!-- Create lwjgl_applet.jar -->
-		<jar destfile="applet/lwjgl_applet.jar" taskname="lwjgl_applet.jar">
+		<jar destfile="applet/basic/lwjgl_applet.jar" taskname="lwjgl_applet.jar">
 			<fileset refid="lwjgl_applet.fileset" />
 		</jar>
 		
 		<!-- create each of the native jars -->
-		<jar destfile="applet/windows_natives.jar" taskname="windows_natives.jar">
+		<jar destfile="applet/basic/windows_natives.jar" taskname="windows_natives.jar">
 			<fileset dir="${lwjgl.lib}/windows">
 				<patternset refid="lwjgl-windows.fileset"/>
 			</fileset>
 		</jar>
-		<signjar jar="applet/windows_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="applet/basic/windows_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		
-		<jar destfile="applet/linux_natives.jar" taskname="linux_natives.jar">
+		<jar destfile="applet/basic/linux_natives.jar" taskname="linux_natives.jar">
 			<fileset dir="${lwjgl.lib}/linux">
 				<patternset refid="lwjgl-linux.fileset"/>
 			</fileset>
 		</jar>
-		<signjar jar="applet/linux_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="applet/basic/linux_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 			
-		<jar destfile="applet/macosx_natives.jar" taskname="macosx_natives.jar">
+		<jar destfile="applet/basic/macosx_natives.jar" taskname="macosx_natives.jar">
 			<fileset dir="${lwjgl.lib}/macosx">
 				<patternset refid="lwjgl-macosx.fileset"/>
 			</fileset>
 		</jar>
-		<signjar jar="applet/macosx_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="applet/basic/macosx_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		
-		<jar destfile="applet/solaris_natives.jar" taskname="solaris_natives.jar">
+		<jar destfile="applet/basic/solaris_natives.jar" taskname="solaris_natives.jar">
 			<fileset dir="${lwjgl.lib}/solaris">
 				<patternset refid="lwjgl-solaris.fileset"/>
 			</fileset>
 		</jar>
-		<signjar jar="applet/solaris_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>		
+		<signjar jar="applet/basic/solaris_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>		
 			
   	<jar destfile="${lwjgl.lib}/lwjgl_util_applet.jar" update="true">
   		<fileset dir="${lwjgl.res}" includes="applet*"/>
   	</jar>
 
-	  	<copy file="${lwjgl.lib}/lwjgl.jar" todir="applet" overwrite="true"/>
-		<copy file="${lwjgl.lib}/lwjgl-debug.jar" todir="applet" overwrite="true"/>
-		<copy file="${lwjgl.lib}/lwjgl_util_applet.jar" todir="applet" overwrite="true"/>
-		<copy file="${lwjgl.lib}/lwjgl_util.jar" todir="applet" overwrite="true"/>
-		<copy file="${lwjgl.lib}/jinput.jar" todir="applet" overwrite="true"/>
-		<copy file="${lwjgl.lib}/lzma.jar" todir="applet" overwrite="true"/>
-		<zip destfile="applet/res.jar">
-		  <zipfileset dir="${lwjgl.res}" includes="Footsteps.wav, ILtest.tga, Missing_you.mod"/>
-		</zip>
-		<signjar jar="applet/lwjgl_util_applet.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
-		<signjar jar="applet/lzma.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+	  	<copy file="${lwjgl.lib}/lwjgl.jar" todir="applet/basic" overwrite="true"/>
+		<copy file="${lwjgl.lib}/lwjgl-debug.jar" todir="applet/basic" overwrite="true"/>
+		<copy file="${lwjgl.lib}/lwjgl_util_applet.jar" todir="applet/basic" overwrite="true"/>
+		<copy file="${lwjgl.lib}/lwjgl_util.jar" todir="applet/basic" overwrite="true"/>
+		<copy file="${lwjgl.lib}/jinput.jar" todir="applet/basic" overwrite="true"/>
+		<copy file="${lwjgl.lib}/lzma.jar" todir="applet/advance" overwrite="true"/>
 		
+		<signjar jar="applet/basic/lwjgl_util_applet.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="applet/advance/lzma.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<copy file="applet/basic/lwjgl_util_applet.jar" todir="applet/advance" overwrite="true"/>
+
 		<!-- LZMA only, for 1.4 only clients -->
-		<antcall target="compress-resource">
-			<param name="input" value="applet/lwjgl.jar"/>
-			<param name="output" value="applet/lwjgl.jar.lzma"/>
+		<!--antcall target="compress-resource">
+			<param name="input" value="applet/basic/lwjgl.jar"/>
+			<param name="output" value="applet/advance/lwjgl.jar.lzma"/>
 		</antcall>
 		<antcall target="compress-resource">
-			<param name="input" value="applet/lwjgl-debug.jar"/>
-			<param name="output" value="applet/lwjgl-debug.jar.lzma"/>
+			<param name="input" value="applet/basic/lwjgl-debug.jar"/>
+			<param name="output" value="applet/advance/lwjgl-debug.jar.lzma"/>
 		</antcall>
 		
 		<antcall target="compress-resource">
-			<param name="input" value="applet/lwjgl_util.jar"/>
-			<param name="output" value="applet/lwjgl_util.jar.lzma"/>
+			<param name="input" value="applet/basic/lwjgl_util.jar"/>
+			<param name="output" value="applet/advance/lwjgl_util.jar.lzma"/>
 		</antcall>
 		<antcall target="compress-resource">
-			<param name="input" value="applet/jinput.jar"/>
-			<param name="output" value="applet/jinput.jar.lzma"/>
+			<param name="input" value="applet/basic/jinput.jar"/>
+			<param name="output" value="applet/advance/jinput.jar.lzma"/>
 		</antcall>
 		<antcall target="compress-resource">
-			<param name="input" value="applet/lwjgl_applet.jar"/>
-			<param name="output" value="applet/lwjgl_applet.jar.lzma"/>
+			<param name="input" value="applet/basic/lwjgl_applet.jar"/>
+			<param name="output" value="applet/advance/lwjgl_applet.jar.lzma"/>
 		</antcall>
 		<antcall target="compress-resource">
-			<param name="input" value="applet/windows_natives.jar"/>
-			<param name="output" value="applet/windows_natives.jar.lzma"/>
-		</antcall>		
+			<param name="input" value="applet/basic/windows_natives.jar"/>
+			<param name="output" value="applet/advance/windows_natives.jar.lzma"/>
+		</antcall -->
+		
 		<antcall target="compress-sign-class">
-			<param name="dir" value="applet/"/>
+			<param name="dir" value="applet/basic/"/>
+			<param name="outputdir" value="applet/advance/"/>
 			<param name="jarfile" value="lwjgl"/>
 		</antcall>
 		<antcall target="compress-sign-class">
-			<param name="dir" value="applet/"/>
+			<param name="dir" value="applet/basic/"/>
+			<param name="outputdir" value="applet/advance/"/>
 			<param name="jarfile" value="lwjgl-debug"/>
 		</antcall>
 		<antcall target="compress-sign-class">
-			<param name="dir" value="applet/"/>
+			<param name="dir" value="applet/basic/"/>
+			<param name="outputdir" value="applet/advance/"/>
 			<param name="jarfile" value="lwjgl_util"/>
 		</antcall>
 		<antcall target="compress-sign-class">
-			<param name="dir" value="applet/"/>
+			<param name="dir" value="applet/basic/"/>
+			<param name="outputdir" value="applet/advance/"/>
 			<param name="jarfile" value="jinput"/>
 		</antcall>
 		<antcall target="compress-sign-class">
-			<param name="dir" value="applet/"/>
+			<param name="dir" value="applet/basic/"/>
+			<param name="outputdir" value="applet/advance/"/>
 			<param name="jarfile" value="lwjgl_applet"/>
 		</antcall>
 		<antcall target="compress-resource">
-			<param name="input" value="applet/windows_natives.jar"/>
-			<param name="output" value="applet/windows_natives.jar.lzma"/>
+			<param name="input" value="applet/basic/windows_natives.jar"/>
+			<param name="output" value="applet/advance/windows_natives.jar.lzma"/>
 		</antcall>
 		<antcall target="compress-resource">
-			<param name="input" value="applet/macosx_natives.jar"/>
-			<param name="output" value="applet/macosx_natives.jar.lzma"/>
+			<param name="input" value="applet/basic/macosx_natives.jar"/>
+			<param name="output" value="applet/advance/macosx_natives.jar.lzma"/>
 		</antcall>
 		<antcall target="compress-resource">
-			<param name="input" value="applet/linux_natives.jar"/>
-			<param name="output" value="applet/linux_natives.jar.lzma"/>
+			<param name="input" value="applet/basic/linux_natives.jar"/>
+			<param name="output" value="applet/advance/linux_natives.jar.lzma"/>
 		</antcall>
 		<antcall target="compress-resource">
-			<param name="input" value="applet/solaris_natives.jar"/>
-			<param name="output" value="applet/solaris_natives.jar.lzma"/>
-		</antcall>		
-		
-		<antcall target="compress-resource">
-			<param name="input" value="applet/res.jar"/>
-			<param name="output" value="applet/res.jar.lzma"/>
+			<param name="input" value="applet/basic/solaris_natives.jar"/>
+			<param name="output" value="applet/advance/solaris_natives.jar.lzma"/>
 		</antcall>
 	</target>
 </project>

@@ -443,11 +443,12 @@
 		</antcall>
 		<antcall target="lzma">
 			<param name="input" value="${dir}${jarfile}.jar.pack"/>
-			<param name="output" value="${dir}${jarfile}.jar.pack.lzma"/>
+			<param name="output" value="${outputdir}${jarfile}.jar.pack.lzma"/>
 		</antcall>
-		<delete file="${dir}${jarfile}-repack.jar"/>
+		<!--delete file="${dir}${jarfile}-repack.jar"/-->
 		<delete file="${dir}${jarfile}.jar.pack"/>
-		<delete file="${dir}${jarfile}.jar"/>
+		<!--delete file="${dir}${jarfile}.jar"/-->
+		<rename src="${dir}${jarfile}-repack.jar" dest="${dir}${jarfile}.jar" replace="yes"/>
 	</target>
 	
 	<target name="compress-resource">
