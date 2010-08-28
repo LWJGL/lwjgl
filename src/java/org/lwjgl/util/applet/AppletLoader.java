@@ -721,7 +721,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				// if version file exists
 				if (versionFile.exists()) {
 					// compare to new version
-					if (latestVersion <= readVersionFile(versionFile)) {
+					if (latestVersion != readVersionFile(versionFile)) {
 						versionAvailable = true;
 						percentage = 90;
 						
@@ -892,7 +892,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		// Make sure jinput knows about the new path too
 		System.setProperty("net.java.games.input.librarypath", path + "natives");
 		
-		// set the library path, should make it easier when using additional custom natives
+		// set the library path, useful for non lwjgl natives
 		System.setProperty("java.library.path", path + "natives");
 		
 		// mark natives as loaded
