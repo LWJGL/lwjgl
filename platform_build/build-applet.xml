@@ -147,9 +147,5 @@
 			<param name="input" value="applet/basic/solaris_natives.jar"/>
 			<param name="output" value="applet/advance/solaris_natives.jar.lzma"/>
 		</antcall>
-		
-		<delete>
-		    <fileset dir="applet" includes="*.jar, *.lzma"/>
-		</delete>
 	</target>
 </project>
