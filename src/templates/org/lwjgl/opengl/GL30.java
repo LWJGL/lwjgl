@@ -412,15 +412,18 @@ public interface GL30 {
 	int GL_TEXTURE_SHARED_SIZE = 0x8C3F;
 
 	// ----------------------------------------------------------------------
-	// ----------------------[ EXT_framebuffer_object ]----------------------
+	// ----------------------[ ARB_framebuffer_object ]----------------------
 	// ----------------------------------------------------------------------
 
 	/**
 	 * Accepted by the &lt;target&gt; parameter of BindFramebuffer,
-	 * CheckFramebufferStatus, FramebufferTexture{1D|2D|3D}, and
-	 * FramebufferRenderbuffer:
+	 * CheckFramebufferStatus, FramebufferTexture{1D|2D|3D},
+	 * FramebufferRenderbuffer, and
+	 * GetFramebufferAttachmentParameteriv:
 	 */
 	int GL_FRAMEBUFFER = 0x8D40;
+	int GL_READ_FRAMEBUFFER = 0x8CA8;
+	int GL_DRAW_FRAMEBUFFER = 0x8CA9;
 
 	/**
 	 * Accepted by the &lt;target&gt; parameter of BindRenderbuffer,
@@ -457,7 +460,18 @@ public interface GL30 {
 	int GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME = 0x8CD1;
 	int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL = 0x8CD2;
 	int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE = 0x8CD3;
-	int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_3D_ZOFFSET = 0x8CD4;
+	int GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING = 0x8210;
+	int GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE = 0x8211;
+	int GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE = 0x8212;
+	int GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE = 0x8213;
+	int GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE = 0x8214;
+	int GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE = 0x8215;
+	int GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE = 0x8216;
+	int GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE = 0x8217;
+
+	/** Returned in &lt;params&gt; by GetFramebufferAttachmentParameteriv: */
+	int GL_FRAMEBUFFER_DEFAULT = 0x8218;
+	int GL_INDEX = 0x8222;
 
 	/**
 	 * Accepted by the &lt;attachment&gt; parameter of
@@ -482,19 +496,22 @@ public interface GL30 {
 	int GL_COLOR_ATTACHMENT15 = 0x8CEF;
 	int GL_DEPTH_ATTACHMENT = 0x8D00;
 	int GL_STENCIL_ATTACHMENT = 0x8D20;
+	int GL_DEPTH_STENCIL_ATTACHMENT = 0x821A;
 
 	/** Returned by CheckFramebufferStatus(): */
 	int GL_FRAMEBUFFER_COMPLETE = 0x8CD5;
 	int GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT = 0x8CD6;
 	int GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT = 0x8CD7;
-	int GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS = 0x8CD9;
-	int GL_FRAMEBUFFER_INCOMPLETE_FORMATS = 0x8CDA;
 	int GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER = 0x8CDB;
 	int GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER = 0x8CDC;
 	int GL_FRAMEBUFFER_UNSUPPORTED = 0x8CDD;
+	int GL_FRAMEBUFFER_UNDEFINED = 0x8219;
 
-	/** Accepted by GetIntegerv(): */
-	int GL_FRAMEBUFFER_BINDING = 0x8CA6;
+	/**
+	 * Accepted by the &lt;pname&gt; parameters of GetIntegerv, GetFloatv,
+	 * and GetDoublev:
+	 */
+	int GL_FRAMEBUFFER_BINDING = 0x8CA6; // alias DRAW_FRAMEBUFFER_BINDING
 	int GL_RENDERBUFFER_BINDING = 0x8CA7;
 	int GL_MAX_COLOR_ATTACHMENTS = 0x8CDF;
 	int GL_MAX_RENDERBUFFER_SIZE = 0x84E8;
@@ -609,15 +626,6 @@ public interface GL30 {
 	// --------------------------------------------------------------------
 	// ----------------------[ EXT_framebuffer_blit ]----------------------
 	// --------------------------------------------------------------------
-
-	/**
-	 * Accepted by the &lt;target&gt; parameter of BindFramebuffer,
-	 * CheckFramebufferStatus, FramebufferTexture{1D|2D|3D},
-	 * FramebufferRenderbuffer, and
-	 * GetFramebufferAttachmentParameteriv.
-	 */
-	int GL_READ_FRAMEBUFFER = 0x8CA8;
-	int GL_DRAW_FRAMEBUFFER = 0x8CA9;
 
 	/** Accepted by the &lt;pname&gt; parameters of GetIntegerv, GetFloatv, and GetDoublev. */
 	int GL_DRAW_FRAMEBUFFER_BINDING = 0x8CA6; // alias FRAMEBUFFER_BINDING
