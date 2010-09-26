@@ -50,7 +50,7 @@
         <include name="org/lwjgl/test/opengl/shaders/*.vp" />
         <include name="org/lwjgl/test/opengl/shaders/*.vsh" />
         <include name="org/lwjgl/test/opengl/shaders/*.fsh" />
-        <include name="org/lwjgl/test/opencl/gl/*.cl />
+        <include name="org/lwjgl/test/opencl/gl/*.cl" />
 	</fileset>
 
 	<!-- Files to include in the lwjgl_util.jar file -->
