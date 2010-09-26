@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -95,7 +97,7 @@ public interface GL15 {
 	void glDeleteBuffers(@AutoSize("buffers") @GLsizei int n, @Const @GLuint IntBuffer buffers);
 
 	@Alternate("glDeleteBuffers")
-	void glDeleteBuffers(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, buffer), 0", keepParam = true) int buffer);
+	void glDeleteBuffers(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, buffer), 0", keepParam = true) int buffer);
 
 	void glGenBuffers(@AutoSize("buffers") @GLsizei int n, @OutParameter @GLuint IntBuffer buffers);
 
@@ -156,7 +158,7 @@ public interface GL15 {
 	 */
 	@CachedResult
 	@GLvoid
-	@AutoResultSize("GLChecks.getBufferObjectSize(caps, target)")
+	@AutoSize("GLChecks.getBufferObjectSize(caps, target)")
 	ByteBuffer glMapBuffer(@GLenum int target, @GLenum int access);
 
 	boolean glUnmapBuffer(@GLenum int target);
@@ -170,7 +172,7 @@ public interface GL15 {
 	void glGetBufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("pointer")
-	@AutoResultSize("GLChecks.getBufferObjectSize(caps, target)")
+	@AutoSize("GLChecks.getBufferObjectSize(caps, target)")
 	void glGetBufferPointerv(@GLenum int target, @GLenum int pname, @OutParameter @Result @GLvoid ByteBuffer pointer);
 
 	// -----------------------------------------------------------------
@@ -203,7 +205,7 @@ public interface GL15 {
 	void glDeleteQueries(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
 
 	@Alternate("glDeleteQueries")
-	void glDeleteQueries(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, id), 0", keepParam = true) int id);
+	void glDeleteQueries(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, id), 0", keepParam = true) int id);
 
 	boolean glIsQuery(@GLuint int id);
 

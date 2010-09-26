@@ -32,11 +32,14 @@
 
 package org.lwjgl.util.generator;
 
+import org.lwjgl.opencl.CLMem;
+
+import java.nio.ByteBuffer;
+
 import com.sun.mirror.type.*;
 import com.sun.mirror.util.*;
 
 /**
- *
  * A TypeVisitor that translates (annotated) TypeMirrors to
  * java types (represented by a Class)
  *
@@ -56,10 +59,42 @@ public class JavaTypeTranslator implements TypeVisitor {
 	}
 
 	public void visitArrayType(ArrayType t) {
-		if ( "java.lang.CharSequence".equals(t.getComponentType().toString()) )
+		final TypeMirror componentType = t.getComponentType();
+		if ( componentType instanceof PrimitiveType ) {
+			type = getPrimitiveArrayClassFromKind(((PrimitiveType)componentType).getKind());
+		} else {
+			try {
+				final Class c = Class.forName(t.getComponentType().toString());
+				if ( CharSequence.class.isAssignableFrom(c) || ByteBuffer.class.isAssignableFrom(c) || org.lwjgl.PointerWrapper.class.isAssignableFrom(c) )
+					type = Class.forName("[L" + t.getComponentType() + ";");
+				else {
+					throw new RuntimeException(t + " is not allowed");
+				}
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		/*
+		final String className = t.getComponentType().toString();
+		if ( "java.lang.CharSequence".equals(className) )
 			type = CharSequence[].class;
+		else if ( "java.nio.ByteBuffer".equals(className) )
+			type = ByteBuffer[].class;
+		else if ( "org.lwjgl.opencl.CLMem".equals(className) )
+			type = CLMem[].class;
 		else
 			throw new RuntimeException(t + " is not allowed");
+			//*/
+		/*
+		try {
+			System.out.println("t = " + t);
+			System.out.println("t.getClass() = " + t.getClass());
+			System.out.println("t.getComponentType() = " + t.getComponentType());
+			type = Class.forName(t.toString());
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}*/
 	}
 
 	public static Class getPrimitiveClassFromKind(PrimitiveType.Kind kind) {
@@ -78,6 +113,27 @@ public class JavaTypeTranslator implements TypeVisitor {
 				return byte.class;
 			case BOOLEAN:
 				return boolean.class;
+			default:
+				throw new RuntimeException(kind + " is not allowed");
+		}
+	}
+
+	private static Class getPrimitiveArrayClassFromKind(PrimitiveType.Kind kind) {
+		switch ( kind ) {
+			case LONG:
+				return long[].class;
+			case INT:
+				return int[].class;
+			case DOUBLE:
+				return double[].class;
+			case FLOAT:
+				return float[].class;
+			case SHORT:
+				return short[].class;
+			case BYTE:
+				return byte[].class;
+			case BOOLEAN:
+				return boolean[].class;
 			default:
 				throw new RuntimeException(kind + " is not allowed");
 		}

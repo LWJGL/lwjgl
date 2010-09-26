@@ -31,8 +31,8 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.GLenum;
-import org.lwjgl.util.generator.GLuint;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 public interface EXT_texture_buffer_object {
 

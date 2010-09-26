@@ -41,6 +41,8 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
+import org.lwjgl.PointerBuffer;
+
 import com.sun.mirror.type.*;
 import com.sun.mirror.util.*;
 
@@ -67,17 +69,33 @@ class SignatureTranslator implements TypeVisitor {
 	}
 
 	public void visitArrayType(ArrayType t) {
-		throw new RuntimeException(t + " is not allowed");
+		final Class type = Utils.getJavaType(t.getComponentType());
+		if ( CharSequence.class.isAssignableFrom(type) )
+			signature.append("Ljava/nio/ByteBuffer;I");
+		else if ( Buffer.class.isAssignableFrom(type) )
+			signature.append("[Ljava/nio/ByteBuffer;");
+		else if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(type) )
+			signature.append("[L" + getNativeNameFromClassName(type.getName()) + ";");
+		else
+			throw new RuntimeException(t + " is not allowed");
 	}
 
 	public void visitClassType(ClassType t) {
-		String type_name = getNativeNameFromClassName(t.getDeclaration().getQualifiedName());
+		Class type = NativeTypeTranslator.getClassFromType(t);
+		String type_name;
+		if ( CharSequence.class.isAssignableFrom(type) || CharSequence[].class.isAssignableFrom(type) || PointerBuffer.class.isAssignableFrom(type) )
+			type_name = ByteBuffer.class.getName();
+		else if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(type) ) {
+			signature.append("J");
+			return;
+		} else
+			type_name = t.getDeclaration().getQualifiedName();
+
 		signature.append("L");
-		signature.append(type_name);
+		signature.append(getNativeNameFromClassName(type_name));
 		signature.append(";");
-		if (add_position_signature && Buffer.class.isAssignableFrom(NativeTypeTranslator.getClassFromType(t))) {
+		if ( add_position_signature && Utils.isAddressableType(type) )
 			signature.append("I");
-		}
 	}
 
 	public void visitDeclaredType(DeclaredType t) {

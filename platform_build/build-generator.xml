@@ -11,21 +11,38 @@
 	<!-- Compiles the Java generator source code -->
 	<target name="generators" description="Compiles the native method generators">
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/util/generator/**.java" source="1.5" target="1.5" taskname="generator">
+            <include name="org/lwjgl/util/generator/openal/**.java"/>
+            <include name="org/lwjgl/util/generator/opengl/**.java"/>
+            <include name="org/lwjgl/util/generator/opencl/**.java"/>
 			<compilerarg value="-Xlint:all"/>
 		</javac>
         <!-- Compile helper classes used by the templates -->
-		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" source="1.4" target="1.4" taskname="generator">
+		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" source="1.5" target="1.5" taskname="generator">
+            <include name="org/lwjgl/PointerWrapper.java"/>
+            <include name="org/lwjgl/PointerBuffer.java"/>
+            <!-- OpenGL -->
 			<include name="org/lwjgl/opengl/GLSync.java"/>
             <include name="org/lwjgl/opengl/AMDDebugOutputCallback.java"/>
             <include name="org/lwjgl/opengl/ARBDebugOutputCallback.java"/>
-			<include name="org/lwjgl/opengl/PointerWrapper.java"/>
+            <!-- OpenCL -->
+            <include name="org/lwjgl/opencl/CLPlatform.java"/>
+            <include name="org/lwjgl/opencl/CLDevice.java"/>
+            <include name="org/lwjgl/opencl/CLContext.java"/>
+            <include name="org/lwjgl/opencl/CLContextCallback.java"/>
+            <include name="org/lwjgl/opencl/CLCommandQueue.java"/>
+            <include name="org/lwjgl/opencl/CLMem.java"/>
+            <include name="org/lwjgl/opencl/CLMemObjectDestructorCallback.java"/>
+            <include name="org/lwjgl/opencl/CLBuildProgramCallback.java"/>
+            <include name="org/lwjgl/opencl/CLNativeKernel.java"/>
+            <include name="org/lwjgl/opencl/CLEventCallback.java"/>
+            <include name="org/lwjgl/opencl/CLFunctionAddress.java"/>
 		</javac>
 	</target>
 
 	<!-- Proxy target to generate it all -->
-	<target name="generate-all" depends="generate-openal, generate-opengl, generate-opengl-capabilities, generate-opengl-references" description="Generates java and native source"/>
+	<target name="generate-all" depends="generate-openal, generate-opengl, generate-opengl-capabilities, generate-opengl-references, generate-opencl, generate-opencl-capabilities" description="Generates java and native source"/>
 
-	<target name="generate-debug" depends="generate-openal-debug, generate-opengl-debug, generate-opengl-capabilities-debug, generate-opengl-references" description="Generates java and native source"/>
+	<target name="generate-debug" depends="generate-openal-debug, generate-opengl-debug, generate-opengl-capabilities-debug, generate-opengl-references, generate-opencl-debug, generate-opencl-capabilities-debug" description="Generates java and native source with debug functionality"/>
 
 	<!-- Generate OpenAL -->
 	<target name="generate-openal" depends="generators" description="Generates java and native source for AL">
@@ -39,7 +56,7 @@
 			<arg path="${lwjgl.src}/generated"/>
 			<arg value="-d"/>
 			<arg path="${lwjgl.src.native}/generated"/>
-			<arg value="-Atypemap=org.lwjgl.util.generator.ALTypeMap"/>
+			<arg value="-Atypemap=org.lwjgl.util.generator.openal.ALTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/openal/AL10.java, org/lwjgl/openal/AL11.java, org/lwjgl/openal/EFX10.java"/>
 		</apply>
 	</target>
@@ -56,7 +73,7 @@
 			<arg path="${lwjgl.src}/generated"/>
 			<arg value="-d"/>
 			<arg path="${lwjgl.src.native}/generated"/>
-			<arg value="-Atypemap=org.lwjgl.util.generator.ALTypeMap"/>
+			<arg value="-Atypemap=org.lwjgl.util.generator.openal.ALTypeMap"/>
 			<arg value="-Ageneratechecks"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/openal/AL10.java, org/lwjgl/openal/AL11.java, org/lwjgl/openal/EFX10.java"/>
 		</apply>
@@ -75,7 +92,7 @@
 			<arg value="-d"/>
 			<arg path="${lwjgl.src.native}/generated"/>
 			<arg value="-Acontextspecific"/>
-			<arg value="-Atypemap=org.lwjgl.util.generator.GLTypeMap"/>
+			<arg value="-Atypemap=org.lwjgl.util.generator.opengl.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>
 		</apply>
 	</target>
@@ -94,17 +111,17 @@
 			<arg path="${lwjgl.src.native}/generated"/>
 			<arg value="-Ageneratechecks"/>
 			<arg value="-Acontextspecific"/>
-			<arg value="-Atypemap=org.lwjgl.util.generator.GLTypeMap"/>
+			<arg value="-Atypemap=org.lwjgl.util.generator.opengl.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>
 		</apply>
 	</target>
 
-	<!-- Generate references -->
+	<!-- Generate OpenGL references -->
 	<target name="generate-opengl-references" depends="generators" description="Generates java and native source for GL">
 		<apply executable="apt" parallel="true">
 			<arg value="-nocompile"/>
 			<arg value="-factory"/>
-			<arg value="org.lwjgl.util.generator.ReferencesGeneratorProcessorFactory"/>
+			<arg value="org.lwjgl.util.generator.opengl.GLReferencesGeneratorProcessorFactory"/>
 			<arg value="-cp"/>
 			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
 			<arg value="-s"/>
@@ -113,12 +130,12 @@
 		</apply>
 	</target>
 
-	<!-- Generate context capabilities -->
+	<!-- Generate OpenGL context capabilities -->
 	<target name="generate-opengl-capabilities" depends="generators" description="Generates java and native source for GL">
 		<apply executable="apt" parallel="true">
 			<arg value="-nocompile"/>
 			<arg value="-factory"/>
-			<arg value="org.lwjgl.util.generator.ContextGeneratorProcessorFactory"/>
+			<arg value="org.lwjgl.util.generator.opengl.GLGeneratorProcessorFactory"/>
 			<arg value="-cp"/>
 			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
 			<arg value="-s"/>
@@ -128,12 +145,12 @@
 		</apply>
 	</target>
 
-	<!-- Generate context capabilities [DEBUG] -->
+	<!-- Generate OpenGL context capabilities [DEBUG] -->
 	<target name="generate-opengl-capabilities-debug" depends="generators" description="Generates java and native source for GL">
 		<apply executable="apt" parallel="true">
 			<arg value="-nocompile"/>
 			<arg value="-factory"/>
-			<arg value="org.lwjgl.util.generator.ContextGeneratorProcessorFactory"/>
+			<arg value="org.lwjgl.util.generator.opengl.GLGeneratorProcessorFactory"/>
 			<arg value="-cp"/>
 			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
 			<arg value="-s"/>
@@ -143,4 +160,72 @@
 			<fileset dir="${lwjgl.src.templates}" includes="${opengl-template-pattern}"/>
 		</apply>
 	</target>
+
+    <!-- Generate OpenCL -->
+    <target name="generate-opencl" depends="generators" description="Generates java and native source for CL">
+        <apply executable="apt" parallel="true">
+            <arg value="-nocompile"/>
+            <arg value="-factory"/>
+            <arg value="org.lwjgl.util.generator.GeneratorProcessorFactory"/>
+            <arg value="-cp"/>
+            <arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+            <arg value="-s"/>
+            <arg path="${lwjgl.src}/generated"/>
+            <arg value="-d"/>
+            <arg path="${lwjgl.src.native}/generated"/>
+            <arg value="-Acontextspecific"/>
+            <arg value="-Atypemap=org.lwjgl.util.generator.opencl.CLTypeMap"/>
+            <fileset dir="${lwjgl.src.templates}" includes="${opencl-template-pattern}"/>
+        </apply>
+    </target>
+
+    <!-- Generate OpenCL [DEBUG] -->
+    <target name="generate-opencl-debug" depends="generators" description="Generates java and native source for CL">
+        <apply executable="apt" parallel="true">
+            <arg value="-nocompile"/>
+            <arg value="-factory"/>
+            <arg value="org.lwjgl.util.generator.GeneratorProcessorFactory"/>
+            <arg value="-cp"/>
+            <arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+            <arg value="-s"/>
+            <arg path="${lwjgl.src}/generated"/>
+            <arg value="-d"/>
+            <arg path="${lwjgl.src.native}/generated"/>
+            <arg value="-Ageneratechecks"/>
+            <arg value="-Acontextspecific"/>
+            <arg value="-Atypemap=org.lwjgl.util.generator.opencl.CLTypeMap"/>
+            <fileset dir="${lwjgl.src.templates}" includes="${opencl-template-pattern}"/>
+        </apply>
+    </target>
+
+    <!-- Generate OpenCL capabilities -->
+    <target name="generate-opencl-capabilities" depends="generators" description="Generates capabilities for CL">
+        <apply executable="apt" parallel="true">
+            <arg value="-nocompile"/>
+            <arg value="-factory"/>
+            <arg value="org.lwjgl.util.generator.opencl.CLGeneratorProcessorFactory"/>
+            <arg value="-cp"/>
+            <arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+            <arg value="-s"/>
+            <arg path="${lwjgl.src}/generated"/>
+            <arg value="-Acontextspecific"/>
+            <fileset dir="${lwjgl.src.templates}" includes="${opencl-template-pattern}"/>
+        </apply>
+    </target>
+
+    <!-- Generate OpenCL capabilities [DEBUG] -->
+    <target name="generate-opencl-capabilities-debug" depends="generators" description="Generates capabilities for CL">
+        <apply executable="apt" parallel="true">
+            <arg value="-nocompile"/>
+            <arg value="-factory"/>
+            <arg value="org.lwjgl.util.generator.opencl.CLGeneratorProcessorFactory"/>
+            <arg value="-cp"/>
+            <arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+            <arg value="-s"/>
+            <arg path="${lwjgl.src}/generated"/>
+            <arg value="-Ageneratechecks"/>
+            <arg value="-Acontextspecific"/>
+            <fileset dir="${lwjgl.src.templates}" includes="${opencl-template-pattern}"/>
+        </apply>
+    </target>
 </project>

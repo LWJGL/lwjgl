@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.GLenum;
+import org.lwjgl.util.generator.opengl.GLenum;
 
 public interface ARB_color_buffer_float {
 

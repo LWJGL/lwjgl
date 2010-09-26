@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.*;
 
@@ -173,8 +174,10 @@ public interface ARB_imaging {
 	@DeprecatedGL
 	void glGetColorTableParameterfv(@GLenum int target, @GLenum int pname, @Check("4") FloatBuffer params);
 
+	@Reuse("GL14")
 	void glBlendEquation(@GLenum int mode);
 
+	@Reuse("GL14")
 	void glBlendColor(@GLclampf float red, @GLclampf float green, @GLclampf float blue, @GLclampf float alpha);
 
 	@DeprecatedGL

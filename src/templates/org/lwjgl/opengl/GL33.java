@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -100,7 +102,7 @@ public interface GL33 {
 	void glDeleteSamplers(@AutoSize("samplers") @GLsizei int count, @Const @GLuint IntBuffer samplers);
 
 	@Alternate("glDeleteSamplers")
-	void glDeleteSamplers(@Constant("1") @GLsizei int count, @Constant(value = "APIUtils.getBufferInt().put(0, sampler), 0", keepParam = true) int sampler);
+	void glDeleteSamplers(@Constant("1") @GLsizei int count, @Constant(value = "APIUtil.getBufferInt().put(0, sampler), 0", keepParam = true) int sampler);
 
 	boolean glIsSampler(@GLuint int sampler);
 

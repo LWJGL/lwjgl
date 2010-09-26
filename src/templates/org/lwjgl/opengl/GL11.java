@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.*;
 
@@ -782,7 +784,7 @@ public interface GL11 {
 	void glDeleteTextures(@AutoSize("textures") @GLsizei int n, @Const @GLuint IntBuffer textures);
 
 	@Alternate("glDeleteTextures")
-	void glDeleteTextures(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, texture), 0", keepParam = true) int texture);
+	void glDeleteTextures(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, texture), 0", keepParam = true) int texture);
 
 	void glCullFace(@GLenum int mode);
 

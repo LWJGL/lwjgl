@@ -56,8 +56,13 @@ public class JNITypeTranslator implements TypeVisitor {
 	}
 
 	public void visitArrayType(ArrayType t) {
-		if ( "java.lang.CharSequence".equals(t.getComponentType().toString()) )
+		final String className = t.getComponentType().toString();
+		if ( "java.lang.CharSequence".equals(className) )
 			signature.append("jobject");
+		else if ( "java.nio.ByteBuffer".equals(className) )
+			signature.append("jobjectArray");
+		else if ( "org.lwjgl.opencl.CLMem".equals(className) )
+			signature.append("jobjectArray");
 		else
 			throw new RuntimeException(t + " is not allowed");
 	}

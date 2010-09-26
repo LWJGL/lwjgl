@@ -32,6 +32,10 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLsizei;
+import org.lwjgl.util.generator.opengl.GLuint;
+import org.lwjgl.util.generator.opengl.GLvoid;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -54,13 +58,16 @@ public interface ARB_get_program_binary {
 	int GL_NUM_PROGRAM_BINARY_FORMATS = 0x87FE,
 		GL_PROGRAM_BINARY_FORMATS = 0x87FF;
 
+	@Reuse("GL41")
 	void glGetProgramBinary(@GLuint int program, @AutoSize("binary") @GLsizei int bufSize,
 	                        @Check(value = "1", canBeNull = true) @GLsizei IntBuffer length,
 	                        @Check("1") @GLenum IntBuffer binaryFormat,
 	                        @OutParameter @GLvoid ByteBuffer binary);
 
+	@Reuse("GL41")
 	void glProgramBinary(@GLuint int program, @GLenum int binaryFormat, @Const @GLvoid ByteBuffer binary, @AutoSize("binary") @GLsizei int length);
 
+	@Reuse("GL41")
 	void glProgramParameteri(@GLuint int program, @GLenum int pname, int value);
 
 }

@@ -31,9 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.GLenum;
-import org.lwjgl.util.generator.GLintptr;
-import org.lwjgl.util.generator.GLsizeiptr;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLintptr;
+import org.lwjgl.util.generator.opengl.GLsizeiptr;
 
 public interface APPLE_flush_buffer_range {
 

@@ -32,6 +32,10 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLreturn;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 import java.nio.IntBuffer;
 
@@ -45,15 +49,20 @@ public interface ARB_transform_feedback3 {
 	int GL_MAX_TRANSFORM_FEEDBACK_BUFFERS = 0x8E70;
 	int GL_MAX_VERTEX_STREAMS = 0x8E71;
 
+	@Reuse("GL40")
 	void glDrawTransformFeedbackStream(@GLenum int mode, @GLuint int id, @GLuint int stream);
 
+	@Reuse("GL40")
 	void glBeginQueryIndexed(@GLenum int target, @GLuint int index, @GLuint int id);
 
+	@Reuse("GL40")
 	void glEndQueryIndexed(@GLenum int target, @GLuint int index);
 
+	@Reuse("GL40")
 	@StripPostfix("params")
 	void glGetQueryIndexediv(@GLenum int target, @GLuint int index, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
+	@Reuse("GL40")
 	@Alternate("glGetQueryIndexediv")
 	@GLreturn("params")
 	@StripPostfix("params")

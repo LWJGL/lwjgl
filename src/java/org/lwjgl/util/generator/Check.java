@@ -41,7 +41,7 @@ package org.lwjgl.util.generator;
 import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 
-@Target(ElementType.PARAMETER)
+@Target({ElementType.PARAMETER, ElementType.METHOD})
 public @interface Check {
 	String value() default "";
 	boolean canBeNull() default false;

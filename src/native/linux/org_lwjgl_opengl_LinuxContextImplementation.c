@@ -106,6 +106,16 @@ static void createContextGLX(JNIEnv *env, X11PeerInfo *peer_info, X11Context *co
 	context_info->context = context;
 }
 
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_getGLXContext(JNIEnv *env, jclass clazz, jobject context_handle) {
+    X11Context *context_info = (*env)->GetDirectBufferAddress(env, context_handle);
+    return (intptr_t)context_info->context;
+}
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_getDisplay(JNIEnv *env, jclass clazz, jobject peer_info_handle) {
+    X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, peer_info_handle);
+    return (intptr_t)peer_info->display;
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nSetSwapInterval
   (JNIEnv *env, jclass clazz, jobject context_handle, jint value)
 {

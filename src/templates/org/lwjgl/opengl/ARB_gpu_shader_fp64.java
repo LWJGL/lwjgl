@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLsizei;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 import java.nio.*;
 
@@ -57,53 +59,71 @@ public interface ARB_gpu_shader_fp64 {
 	int GL_DOUBLE_MAT4x2 = 0x8F4D;
 	int GL_DOUBLE_MAT4x3 = 0x8F4E;
 
+	@Reuse("GL40")
 	void glUniform1d(int location, double x);
 
+	@Reuse("GL40")
 	void glUniform2d(int location, double x, double y);
 
+	@Reuse("GL40")
 	void glUniform3d(int location, double x, double y, double z);
 
+	@Reuse("GL40")
 	void glUniform4d(int location, double x, double y, double z, double w);
 
+	@Reuse("GL40")
 	@StripPostfix("value")
 	void glUniform1dv(int location, @AutoSize("value") @GLsizei int count, @Const DoubleBuffer value);
 
+	@Reuse("GL40")
 	@StripPostfix("value")
 	void glUniform2dv(int location, @AutoSize(value = "value", expression = " >> 1") @GLsizei int count, @Const DoubleBuffer value);
 
+	@Reuse("GL40")
 	@StripPostfix("value")
 	void glUniform3dv(int location, @AutoSize(value = "value", expression = " / 3") @GLsizei int count, @Const DoubleBuffer value);
 
+	@Reuse("GL40")
 	@StripPostfix("value")
 	void glUniform4dv(int location, @AutoSize(value = "value", expression = " >> 2") @GLsizei int count, @Const DoubleBuffer value);
 
+	@Reuse("GL40")
 	@StripPostfix("value")
 	void glUniformMatrix2dv(int location, @AutoSize(value = "value", expression = " >> 2") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
 
+	@Reuse("GL40")
 	@StripPostfix("value")
 	void glUniformMatrix3dv(int location, @AutoSize(value = "value", expression = " / (3 * 3)") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
 
+	@Reuse("GL40")
 	@StripPostfix("value")
 	void glUniformMatrix4dv(int location, @AutoSize(value = "value", expression = " >> 4") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
 
+	@Reuse("GL40")
 	@StripPostfix("value")
 	void glUniformMatrix2x3dv(int location, @AutoSize(value = "value", expression = " / (2 * 3)") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
 
+	@Reuse("GL40")
 	@StripPostfix("value")
 	void glUniformMatrix2x4dv(int location, @AutoSize(value = "value", expression = " >> 3") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
 
+	@Reuse("GL40")
 	@StripPostfix("value")
 	void glUniformMatrix3x2dv(int location, @AutoSize(value = "value", expression = " / (3 * 2)") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
 
+	@Reuse("GL40")
 	@StripPostfix("value")
 	void glUniformMatrix3x4dv(int location, @AutoSize(value = "value", expression = " / (3 * 4)") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
 
+	@Reuse("GL40")
 	@StripPostfix("value")
 	void glUniformMatrix4x2dv(int location, @AutoSize(value = "value", expression = " >> 3") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
 
+	@Reuse("GL40")
 	@StripPostfix("value")
 	void glUniformMatrix4x3dv(int location, @AutoSize(value = "value", expression = " / (4 * 3)") @GLsizei int count, boolean transpose, @Const DoubleBuffer value);
 
+	@Reuse("GL40")
 	@StripPostfix("params")
 	void glGetUniformdv(@GLuint int program, int location, @OutParameter @Check DoubleBuffer params);
 

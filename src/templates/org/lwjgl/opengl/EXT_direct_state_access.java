@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.*;
 
@@ -598,32 +599,39 @@ public interface EXT_direct_state_access {
     TODO: Why 1.2.1 and not EXT_draw_buffers2?
 	 */
 
-	@Dependent("GL_EXT_draw_buffers2")
+	@Reuse("EXTDrawBuffers2")
+	@Dependent("OpenGL13")
 	void glEnableIndexedEXT(@GLenum int cap, @GLuint int index);
 
-	@Dependent("GL_EXT_draw_buffers2")
+	@Reuse("EXTDrawBuffers2")
+	@Dependent("OpenGL13")
 	void glDisableIndexedEXT(@GLenum int cap, @GLuint int index);
 
-	@Dependent("GL_EXT_draw_buffers2")
+	@Reuse("EXTDrawBuffers2")
+	@Dependent("OpenGL13")
 	boolean glIsEnabledIndexedEXT(@GLenum int cap, @GLuint int index);
 
-	@Dependent("GL_EXT_draw_buffers2")
+	@Reuse("EXTDrawBuffers2")
+	@Dependent("OpenGL13")
 	@StripPostfix("params")
 	void glGetIntegerIndexedvEXT(@GLenum int pname, @GLuint int index, @OutParameter @Check("16") IntBuffer params);
 
+	@Reuse("EXTDrawBuffers2")
 	@Alternate("glGetIntegerIndexedvEXT")
 	@GLreturn("params")
-	@Dependent("GL_EXT_draw_buffers2")
+	@Dependent("OpenGL13")
 	@StripPostfix("params")
 	void glGetIntegerIndexedvEXT2(@GLenum int pname, @GLuint int index, @OutParameter IntBuffer params);
 
-	@Dependent("GL_EXT_draw_buffers2")
+	@Reuse("EXTDrawBuffers2")
+	@Dependent("OpenGL13")
 	@StripPostfix("params")
-	void glGetBooleanIndexedvEXT(@GLenum int pname, @GLuint int index, @OutParameter @Check("16") @GLboolean ByteBuffer params);
+	void glGetBooleanIndexedvEXT(@GLenum int pname, @GLuint int index, @OutParameter @Check("4") @GLboolean ByteBuffer params);
 
+	@Reuse("EXTDrawBuffers2")
 	@Alternate("glGetBooleanIndexedvEXT")
 	@GLreturn("params")
-	@Dependent("GL_EXT_draw_buffers2")
+	@Dependent("OpenGL13")
 	@StripPostfix("params")
 	void glGetBooleanIndexedvEXT2(@GLenum int pname, @GLuint int index, @OutParameter @GLboolean ByteBuffer params);
 
@@ -819,13 +827,13 @@ public interface EXT_direct_state_access {
 	                                     @GLint Buffer img);
 
 	@Dependent("OpenGL13")
-	void glGetCompressedTexImage(@GLenum int target, int lod,
-	                             @OutParameter
-	                             @BufferObject(BufferKind.PackPBO)
-	                             @Check
-	                             @GLbyte
-	                             @GLshort
-	                             @GLint Buffer img);
+	void glGetCompressedMultiTexImage(@GLenum int texunit, @GLenum int target, int level,
+	                                  @OutParameter
+	                                  @BufferObject(BufferKind.PackPBO)
+	                                  @Check
+	                                  @GLbyte
+	                                  @GLshort
+	                                  @GLint Buffer img);
 
 	/*
 	OpenGL 1.3: New transpose matrix commands add "Matrix" suffix
@@ -905,7 +913,7 @@ public interface EXT_direct_state_access {
 	@Dependent("OpenGL15")
 	@CachedResult
 	@GLvoid
-	@AutoResultSize("GLChecks.getNamedBufferObjectSize(caps, buffer)")
+	@AutoSize("GLChecks.getNamedBufferObjectSize(caps, buffer)")
 	ByteBuffer glMapNamedBufferEXT(@GLuint int buffer, @GLenum int access);
 
 	@Dependent("OpenGL15")
@@ -923,7 +931,7 @@ public interface EXT_direct_state_access {
 
 	@Dependent("OpenGL15")
 	@StripPostfix("params")
-	@AutoResultSize("GLChecks.getNamedBufferObjectSize(caps, buffer)")
+	@AutoSize("GLChecks.getNamedBufferObjectSize(caps, buffer)")
 	void glGetNamedBufferPointervEXT(@GLuint int buffer, @GLenum int pname, @OutParameter @Result @GLvoid ByteBuffer params);
 
 	@Dependent("OpenGL15")
@@ -1075,7 +1083,7 @@ public interface EXT_direct_state_access {
 	@Alternate("glTextureParameterIivEXT")
 	@Dependent("GL_EXT_texture_integer")
 	@StripPostfix("param")
-	void glTextureParameterIivEXT(@GLuint int texture, @GLenum int target, @GLenum int pname, @Constant(value = "APIUtils.getBufferInt().put(0, param), 0", keepParam = true) int param);
+	void glTextureParameterIivEXT(@GLuint int texture, @GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getBufferInt().put(0, param), 0", keepParam = true) int param);
 
 	@Dependent("GL_EXT_texture_integer")
 	@StripPostfix("params")
@@ -1084,7 +1092,7 @@ public interface EXT_direct_state_access {
 	@Alternate("glTextureParameterIuivEXT")
 	@Dependent("GL_EXT_texture_integer")
 	@StripPostfix("param")
-	void glTextureParameterIuivEXT(@GLuint int texture, @GLenum int target, @GLenum int pname, @Constant(value = "APIUtils.getBufferInt().put(0, param), 0", keepParam = true) @GLuint int param);
+	void glTextureParameterIuivEXT(@GLuint int texture, @GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getBufferInt().put(0, param), 0", keepParam = true) @GLuint int param);
 
 	@Dependent("GL_EXT_texture_integer")
 	@StripPostfix("params")
@@ -1119,7 +1127,7 @@ public interface EXT_direct_state_access {
 	@Alternate("glMultiTexParameterIivEXT")
 	@Dependent("GL_EXT_texture_integer")
 	@StripPostfix("param")
-	void glMultiTexParameterIivEXT(@GLenum int texunit, @GLenum int target, @GLenum int pname, @Constant(value = "APIUtils.getBufferInt().put(0, param), 0", keepParam = true) int param);
+	void glMultiTexParameterIivEXT(@GLenum int texunit, @GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getBufferInt().put(0, param), 0", keepParam = true) int param);
 
 	@Dependent("GL_EXT_texture_integer")
 	@StripPostfix("params")
@@ -1128,7 +1136,7 @@ public interface EXT_direct_state_access {
 	@Alternate("glMultiTexParameterIuivEXT")
 	@Dependent("GL_EXT_texture_integer")
 	@StripPostfix("param")
-	void glMultiTexParameterIuivEXT(@GLenum int texunit, @GLenum int target, @GLenum int pname, @Constant(value = "APIUtils.getBufferInt().put(0, param), 0", keepParam = true) int param);
+	void glMultiTexParameterIuivEXT(@GLenum int texunit, @GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getBufferInt().put(0, param), 0", keepParam = true) int param);
 
 	@Dependent("GL_EXT_texture_integer")
 	@StripPostfix("params")
@@ -1505,7 +1513,7 @@ public interface EXT_direct_state_access {
 	@Dependent("OpenGL30")
 	@CachedResult(isRange = true)
 	@GLvoid
-	@AutoResultSize("length")
+	@AutoSize("length")
 	ByteBuffer glMapNamedBufferRangeEXT(@GLuint int buffer, @GLintptr long offset, @GLsizeiptr long length, @GLbitfield int access);
 
 	@Dependent("OpenGL30")

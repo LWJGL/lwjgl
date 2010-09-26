@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -98,12 +100,12 @@ public interface AMD_performance_monitor {
 	void glDeletePerfMonitorsAMD(@AutoSize("monitors") @GLsizei int n, @GLuint IntBuffer monitors);
 
 	@Alternate("glDeletePerfMonitorsAMD")
-	void glDeletePerfMonitorsAMD(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, monitor), 0", keepParam = true) int monitor);
+	void glDeletePerfMonitorsAMD(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, monitor), 0", keepParam = true) int monitor);
 
 	void glSelectPerfMonitorCountersAMD(@GLuint int monitor, boolean enable, @GLuint int group, @AutoSize("counterList") int numCounters, @GLuint IntBuffer counterList);
 
 	@Alternate("glSelectPerfMonitorCountersAMD")
-	void glSelectPerfMonitorCountersAMD(@GLuint int monitor, boolean enable, @GLuint int group, @Constant("1") int numCounters, @Constant(value = "APIUtils.getBufferInt().put(0, counter), 0", keepParam = true) int counter);
+	void glSelectPerfMonitorCountersAMD(@GLuint int monitor, boolean enable, @GLuint int group, @Constant("1") int numCounters, @Constant(value = "APIUtil.getBufferInt().put(0, counter), 0", keepParam = true) int counter);
 
 	void glBeginPerfMonitorAMD(@GLuint int monitor);
 

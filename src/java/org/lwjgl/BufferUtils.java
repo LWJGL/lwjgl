@@ -121,6 +121,16 @@ public final class BufferUtils {
 	}
 
 	/**
+	 * Construct a PointerBuffer with the specified number
+	 * of elements.
+	 * @param size The size, in memory addresses
+	 * @return a PointerBuffer
+	 */
+	public static PointerBuffer createPointerBuffer(int size) {
+		return PointerBuffer.allocateDirect(size);
+	}
+
+	/**
 	 * @return n, where buffer_element_size=2^n.
 	 */
 	public static int getElementSizeExponent(Buffer buf) {

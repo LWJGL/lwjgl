@@ -2,6 +2,7 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.PointerBuffer;
 
 /**
  * @author Spasi
@@ -70,6 +71,13 @@ abstract class AbstractDrawable implements DrawableLWJGL {
 			} catch (LWJGLException e) {
 				LWJGLUtil.log("Exception occurred while destroying Drawable: " + e);
 			}
+		}
+	}
+
+	public void setCLSharingProperties(final PointerBuffer properties) throws LWJGLException {
+		synchronized ( GlobalLock.lock ) {
+			checkDestroyed();
+			context.setCLSharingProperties(properties);
 		}
 	}
 

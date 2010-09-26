@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.*;
 
@@ -54,7 +55,7 @@ public interface NV_vertex_array_range {
 
 	@PlatformDependent({Platform.WGL, Platform.GLX})
 	@GLvoid
-	@AutoResultSize("size")
+	@AutoSize("size")
 	ByteBuffer glAllocateMemoryNV(int size, float readFrequency, float writeFrequency, float priority);
 
 	@PlatformDependent({Platform.WGL, Platform.GLX})

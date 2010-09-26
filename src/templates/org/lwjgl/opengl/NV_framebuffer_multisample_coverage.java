@@ -31,8 +31,8 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.GLenum;
-import org.lwjgl.util.generator.GLsizei;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLsizei;
 
 public interface NV_framebuffer_multisample_coverage {
 

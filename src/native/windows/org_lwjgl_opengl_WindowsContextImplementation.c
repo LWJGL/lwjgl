@@ -54,13 +54,13 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nCr
 	WindowsContext *context_info;
 	HGLRC context;
 	HGLRC shared_context = NULL;
-	
+
 	// -- We need to create a temporary context to detect the presence of WGL_ARB_create_context
 	HDC saved_current_hdc;
 	HGLRC saved_current_hglrc;
 	WGLExtensions extensions;
 	const int *attribList = attribs == NULL ? NULL : ((const int *)(*env)->GetDirectBufferAddress(env, attribs));
-	
+
 	jobject context_handle = newJavaManagedByteBuffer(env, sizeof(WindowsContext));
 	if (context_handle == NULL) {
 		throwException(env, "Could not create handle buffer");
@@ -118,6 +118,16 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nCr
 	context_info = (WindowsContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	context_info->context = context;
 	return context_handle;
+}
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_getHGLRC(JNIEnv *env, jclass clazz, jobject context_handle) {
+    WindowsContext *context_info = (WindowsContext *)(*env)->GetDirectBufferAddress(env, context_handle);
+    return (intptr_t)context_info->context;
+}
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_getHDC(JNIEnv *env, jclass clazz, jobject peer_info_handle) {
+    WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+    return (intptr_t)peer_info->drawable_hdc;   
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nSwapBuffers

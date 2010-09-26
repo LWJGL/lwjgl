@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLenum;
 
 public interface EXT_stencil_two_side {
 	int GL_STENCIL_TEST_TWO_SIDE_EXT = 0x8910;

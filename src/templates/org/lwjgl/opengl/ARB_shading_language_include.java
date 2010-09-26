@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -60,13 +62,13 @@ public interface ARB_shading_language_include {
 	void glDeleteNamedStringARB(@Constant("name.length()") int namelen, CharSequence name);
 
 	void glCompileShaderIncludeARB(@GLuint int shader, @GLsizei int count,
-	                               @Const @NullTerminated("count") @StringList("count") @GLchar ByteBuffer path,
+	                               @Const @NullTerminated("count") @PointerArray("count") @GLchar ByteBuffer path,
 	                               @Constant("null, 0") @Const IntBuffer length);
 
 	@Alternate(value = "glCompileShaderIncludeARB", nativeAlt = true)
 	void glCompileShaderIncludeARB2(@GLuint int shader, @Constant("path.length") @GLsizei int count,
-	                                @Const @StringList(value = "count", lengths = "length") CharSequence[] path,
-	                                @Constant("APIUtils.getLengths(path), 0") @Const IntBuffer length);
+	                                @Const @PointerArray(value = "count", lengths = "length") CharSequence[] path,
+	                                @Constant("APIUtil.getLengths(path), 0") @Const IntBuffer length);
 
 	boolean glIsNamedStringARB(@AutoSize("name") int namelen, @Const @GLchar ByteBuffer name);
 

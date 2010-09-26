@@ -31,7 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLbitfield;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLint;
 
 public interface EXT_framebuffer_blit {
 

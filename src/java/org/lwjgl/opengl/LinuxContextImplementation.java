@@ -59,6 +59,10 @@ final class LinuxContextImplementation implements ContextImplementation {
 
 	private static native ByteBuffer nCreate(ByteBuffer peer_handle, IntBuffer attribs, ByteBuffer shared_context_handle) throws LWJGLException;
 
+	native long getGLXContext(ByteBuffer context_handle);
+
+	native long getDisplay(ByteBuffer peer_info_handle);
+
 	public void releaseDrawable(ByteBuffer context_handle) throws LWJGLException {
 	}
 

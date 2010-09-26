@@ -32,6 +32,9 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLsizei;
 
 import java.nio.*;
 
@@ -62,5 +65,5 @@ public interface ARB_draw_buffers {
 	void glDrawBuffersARB(@AutoSize("buffers") @GLsizei int size, @Const @GLenum IntBuffer buffers);
 
 	@Alternate("glDrawBuffersARB")
-	void glDrawBuffersARB(@Constant("1") @GLsizei int size, @Constant(value = "APIUtils.getBufferInt().put(0, buffer), 0", keepParam = true) int buffer);
+	void glDrawBuffersARB(@Constant("1") @GLsizei int size, @Constant(value = "APIUtil.getBufferInt().put(0, buffer), 0", keepParam = true) int buffer);
 }

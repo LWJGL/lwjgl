@@ -32,6 +32,10 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLdouble;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLfloat;
+import org.lwjgl.util.generator.opengl.GLsizei;
 
 import java.nio.*;
 

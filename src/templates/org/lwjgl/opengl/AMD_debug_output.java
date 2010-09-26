@@ -32,6 +32,10 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.PointerWrapper;
+import org.lwjgl.util.generator.Alias;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -77,15 +81,16 @@ public interface AMD_debug_output {
 	 * The {@code AMDDebugOutputCallback.Handler} implementation passed to this method will be used for
 	 * AMD_debug_output messages. If callback is null, any previously registered handler for the current
 	 * thread will be unregistered and stop receiving messages.
-	 * <p/>
-	 * The userParam buffer will be passed to the GL, but the current implementation will ignore it and
-	 * never return it to the handler. Instead, users are encouraged to use a custom callback handler
-	 * implentation to store context-specific data.
 	 *
 	 * @param callback  the callback function to use
-	 * @param userParam the user-specified data
 	 */
-	void glDebugMessageCallbackAMD(@GLpointer(value = "GLDEBUGPROCAMD", canBeNull = true) AMDDebugOutputCallback callback, @Check(canBeNull = true) @GLvoid ByteBuffer userParam);
+	@Code(
+		// Create a GlobalRef to the callback object and register it with the current context.
+		javaBeforeNative = "\t\tlong userParam = callback == null ? 0 : CallbackUtil.createGlobalRef(callback.getHandler());\n" +
+		                   "\t\tCallbackUtil.registerContextCallbackAMD(userParam);"
+	)
+	void glDebugMessageCallbackAMD(@PointerWrapper(value = "GLDEBUGPROCAMD", canBeNull = true) AMDDebugOutputCallback callback,
+	                               @Constant("userParam") @PointerWrapper("GLvoid *") long userParam);
 
 	@GLuint
 	int glGetDebugMessageLogAMD(@GLuint int count,

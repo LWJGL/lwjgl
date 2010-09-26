@@ -33,7 +33,9 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.Sys;
+import org.lwjgl.opencl.KHRGLSharing;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -52,10 +54,10 @@ import java.nio.IntBuffer;
 final class Context {
 
 	/** The platform specific implementation of context methods */
-	private final static ContextImplementation implementation;
+	private static final ContextImplementation implementation;
 
 	/** The current Context */
-	private final static ThreadLocal current_context_local = new ThreadLocal();
+	private static final ThreadLocal current_context_local = new ThreadLocal();
 
 	/** Handle to the native GL rendering context */
 	private final ByteBuffer handle;
@@ -206,6 +208,7 @@ final class Context {
 			try {
 				releaseDrawable();
 				implementation.destroy(peer_info, handle);
+				CallbackUtil.unregisterCallbacks(this);
 				destroyed = true;
 				thread = null;
 				GLContext.unloadOpenGLLibrary();
@@ -254,6 +257,28 @@ final class Context {
 		checkDestroy();
 		if ( was_current && error != GL11.GL_NO_ERROR )
 			throw new OpenGLException(error);
+	}
+
+	public synchronized void setCLSharingProperties(final PointerBuffer properties) throws LWJGLException {
+		final ByteBuffer peer_handle = peer_info.lockAndGetHandle();
+		try {
+			switch ( LWJGLUtil.getPlatform() ) {
+				case LWJGLUtil.PLATFORM_WINDOWS:
+					final WindowsContextImplementation implWindows = (WindowsContextImplementation)implementation;
+					properties.put(KHRGLSharing.CL_GL_CONTEXT_KHR).put(implWindows.getHGLRC(handle));
+					properties.put(KHRGLSharing.CL_WGL_HDC_KHR).put(implWindows.getHDC(peer_handle));
+					break;
+				case LWJGLUtil.PLATFORM_LINUX:
+					final LinuxContextImplementation implLinux = (LinuxContextImplementation)implementation;
+					properties.put(KHRGLSharing.CL_GL_CONTEXT_KHR).put(implLinux.getGLXContext(handle));
+					properties.put(KHRGLSharing.CL_GLX_DISPLAY_KHR).put(implLinux.getDisplay(peer_handle));
+					break;
+				default:
+					throw new UnsupportedOperationException("CL/GL context sharing is not supposed on this platform.");
+			}
+		} finally {
+			peer_info.unlock();
+		}
 	}
 
 }

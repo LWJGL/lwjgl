@@ -44,6 +44,7 @@ package org.lwjgl.util.generator;
 import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 
-@Target(ElementType.ANNOTATION_TYPE)
+@Target({ElementType.ANNOTATION_TYPE, ElementType.PARAMETER})
 public @interface NativeType {
+	String value() default "";
 }

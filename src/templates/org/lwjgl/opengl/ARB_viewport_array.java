@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
@@ -71,55 +73,74 @@ public interface ARB_viewport_array {
 		GL_PROVOKING_VERTEX = 0x8E4F,
 		GL_UNDEFINED_VERTEX = 0x8260;
 
+	@Reuse("GL41")
 	@StripPostfix("v")
 	void glViewportArrayv(@GLuint int first, @AutoSize(value = "v", expression = " >> 2") @GLsizei int count, @Const FloatBuffer v);
 
+	@Reuse("GL41")
 	void glViewportIndexedf(@GLuint int index, float x, float y, float w, float h);
 
+	@Reuse("GL41")
 	@StripPostfix("v")
 	void glViewportIndexedfv(@GLuint int index, @Check("4") @Const FloatBuffer v);
 
+	@Reuse("GL41")
 	@StripPostfix("v")
 	void glScissorArrayv(@GLuint int first, @AutoSize(value = "v", expression = " >> 2") @GLsizei int count, @Const IntBuffer v);
 
+	@Reuse("GL41")
 	void glScissorIndexed(@GLuint int index, int left, int bottom, @GLsizei int width, @GLsizei int height);
 
+	@Reuse("GL41")
 	@StripPostfix("v")
 	void glScissorIndexedv(@GLuint int index, @Check("4") @Const IntBuffer v);
 
+	@Reuse("GL41")
 	@StripPostfix("v")
 	void glDepthRangeArrayv(@GLuint int first, @AutoSize(value = "v", expression = " >> 1") @GLsizei int count, @Const @GLclampd DoubleBuffer v);
 
+	@Reuse("GL41")
 	void glDepthRangeIndexed(@GLuint int index, @GLclampd double n, @GLclampd double f);
 
+	@Reuse("GL41")
 	@StripPostfix("data")
 	void glGetFloati_v(@GLenum int target, @GLuint int index, @Check @OutParameter FloatBuffer data);
 
+	@Reuse("GL41")
 	@Alternate("glGetFloati_v")
 	@GLreturn("data")
 	@StripPostfix("data")
 	void glGetFloati_v2(@GLenum int target, @GLuint int index, @OutParameter FloatBuffer data);
 
+	@Reuse("GL41")
 	@StripPostfix("data")
 	void glGetDoublei_v(@GLenum int target, @GLuint int index, @Check @OutParameter DoubleBuffer data);
 
+	@Reuse("GL41")
 	@Alternate("glGetDoublei_v")
 	@GLreturn("data")
 	@StripPostfix("data")
 	void glGetDoublei_v2(@GLenum int target, @GLuint int index, @OutParameter DoubleBuffer data);
 
+	// TODO: It's glGetIntegerIndexedvEXT in EXT_draw_buffers2, spec typo?
+	//@Reuse(extension = "EXT_draw_buffers2", className = "EXTDrawBuffers2")
 	@StripPostfix(value = "v", extension = "EXT")
 	void glGetIntegerIndexedivEXT(@GLenum int target, @GLuint int index, @Check @OutParameter IntBuffer v);
 
+	// TODO: It's glGetIntegerIndexedvEXT in EXT_draw_buffers2, spec typo?
+	//@Reuse(extension = "EXT_draw_buffers2", className = "EXTDrawBuffers2")
 	@Alternate("glGetIntegerIndexedivEXT")
 	@GLreturn("v")
 	@StripPostfix(value = "v", extension = "EXT")
 	void glGetIntegerIndexedivEXT2(@GLenum int target, @GLuint int index, @OutParameter IntBuffer v);
 
+	@Reuse("EXTDrawBuffers2")
 	void glEnableIndexedEXT(@GLenum int target, @GLuint int index);
 
+	@Reuse("EXTDrawBuffers2")
 	void glDisableIndexedEXT(@GLenum int target, @GLuint int index);
 
+	@Reuse("EXTDrawBuffers2")
 	boolean glIsEnabledIndexedEXT(@GLenum int target, @GLuint int index);
 
 }

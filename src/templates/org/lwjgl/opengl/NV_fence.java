@@ -32,6 +32,11 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLreturn;
+import org.lwjgl.util.generator.opengl.GLsizei;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 import java.nio.*;
 
@@ -49,7 +54,7 @@ public interface NV_fence {
 	void glDeleteFencesNV(@AutoSize("piFences") @GLsizei int n, @Const @GLuint IntBuffer piFences);
 
 	@Alternate("glDeleteFencesNV")
-	void glDeleteFencesNV(@Constant("1") @GLsizei int n, @Const @GLuint @Constant(value = "APIUtils.getBufferInt().put(0, fence), 0", keepParam = true) int fence);
+	void glDeleteFencesNV(@Constant("1") @GLsizei int n, @Const @GLuint @Constant(value = "APIUtil.getBufferInt().put(0, fence), 0", keepParam = true) int fence);
 
 	void glSetFenceNV(@GLuint int fence, @GLenum int condition);
 

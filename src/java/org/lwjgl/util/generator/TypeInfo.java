@@ -41,9 +41,12 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
+import org.lwjgl.util.generator.opengl.GLvoid;
+
 import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
 
+import java.lang.annotation.Annotation;
 import java.util.*;
 import java.nio.*;
 
@@ -94,6 +97,9 @@ public class TypeInfo {
 				break;
 			case BYTE:
 				type = byte.class;
+				break;
+			case BOOLEAN:
+				type = boolean.class;
 				break;
 			default:
 				throw new RuntimeException(kind + " is not allowed");
@@ -151,7 +157,7 @@ public class TypeInfo {
 		for (AnnotationMirror annotation : annotations) {
 			NativeType native_type_annotation = NativeTypeTranslator.getAnnotation(annotation, NativeType.class);
 			if (native_type_annotation != null) {
-				Class annotation_type = NativeTypeTranslator.getClassFromType(annotation.getAnnotationType());
+				Class<? extends Annotation> annotation_type = NativeTypeTranslator.getClassFromType(annotation.getAnnotationType());
 				Signedness signedness = type_map.getSignednessFromType(annotation_type);
 				Class inverse_type = type_map.getInverseType(annotation_type);
 				String auto_type = type_map.getAutoTypeFromAnnotation(annotation);

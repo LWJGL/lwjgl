@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.Buffer;
 

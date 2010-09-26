@@ -32,6 +32,11 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLreturn;
+import org.lwjgl.util.generator.opengl.GLsizei;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 import java.nio.IntBuffer;
 
@@ -63,7 +68,7 @@ public interface ARB_occlusion_query {
 	void glDeleteQueriesARB(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
 
 	@Alternate("glDeleteQueriesARB")
-	void glDeleteQueriesARB(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, id), 0", keepParam = true) int id);
+	void glDeleteQueriesARB(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, id), 0", keepParam = true) int id);
 
 	boolean glIsQueryARB(@GLuint int id);
 

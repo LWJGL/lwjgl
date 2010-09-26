@@ -31,8 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.GLenum;
-import org.lwjgl.util.generator.GLuint;
+import org.lwjgl.util.generator.Reuse;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 public interface NV_geometry_program4 {
 
@@ -49,10 +50,13 @@ public interface NV_geometry_program4 {
 
 	void glProgramVertexLimitNV(@GLenum int target, int limit);
 
+	@Reuse("EXTGeometryShader4")
 	void glFramebufferTextureEXT(@GLenum int target, @GLenum int attachment, @GLuint int texture, int level);
 
+	@Reuse("EXTGeometryShader4")
 	void glFramebufferTextureLayerEXT(@GLenum int target, @GLenum int attachment, @GLuint int texture, int level, int layer);
 
+	@Reuse("EXTGeometryShader4")
 	void glFramebufferTextureFaceEXT(@GLenum int target, @GLenum int attachment, @GLuint int texture, int level, @GLenum int face);
 
 }

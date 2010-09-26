@@ -31,9 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.GLbitfield;
-import org.lwjgl.util.generator.GLenum;
-import org.lwjgl.util.generator.GLuint;
+import org.lwjgl.util.generator.opengl.GLbitfield;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 public interface EXT_shader_image_load_store {
 

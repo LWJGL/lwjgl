@@ -31,9 +31,10 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.GLenum;
-import org.lwjgl.util.generator.GLintptr;
-import org.lwjgl.util.generator.GLsizeiptr;
+import org.lwjgl.util.generator.Reuse;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLintptr;
+import org.lwjgl.util.generator.opengl.GLsizeiptr;
 
 public interface ARB_copy_buffer {
 
@@ -47,6 +48,7 @@ public interface ARB_copy_buffer {
 	int GL_COPY_READ_BUFFER = 0x8F36;
 	int GL_COPY_WRITE_BUFFER = 0x8F37;
 
+	@Reuse("GL31")
 	void glCopyBufferSubData(@GLenum int readTarget, @GLenum int writeTarget,
 	                         @GLintptr long readOffset, @GLintptr long writeOffset,
 	                         @GLsizeiptr long size);

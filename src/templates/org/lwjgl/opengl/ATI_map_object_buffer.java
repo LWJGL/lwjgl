@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLuint;
+import org.lwjgl.util.generator.opengl.GLvoid;
 
 import java.nio.*;
 
@@ -62,7 +64,7 @@ public interface ATI_map_object_buffer {
 	 */
 	@CachedResult
 	@GLvoid
-	@AutoResultSize("GLChecks.getBufferObjectSizeATI(caps, buffer)")
+	@AutoSize("GLChecks.getBufferObjectSizeATI(caps, buffer)")
 	ByteBuffer glMapObjectBufferATI(@GLuint int buffer);
 
 	void glUnmapObjectBufferATI(@GLuint int buffer);

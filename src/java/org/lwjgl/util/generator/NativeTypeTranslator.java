@@ -42,22 +42,21 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-import org.lwjgl.opengl.PointerWrapper;
-
-import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
-
-import java.util.Collection;
-import java.util.ArrayList;
-
-import java.nio.*;
+import org.lwjgl.PointerBuffer;
 
 import java.lang.annotation.Annotation;
+import java.nio.*;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import com.sun.mirror.declaration.AnnotationMirror;
+import com.sun.mirror.declaration.Declaration;
+import com.sun.mirror.type.*;
+import com.sun.mirror.util.TypeVisitor;
 
 /**
  * $Id$
- *
+ * <p/>
  * A TypeVisitor that translates (annotated) TypeMirrors to
  * native types
  *
@@ -65,6 +64,7 @@ import java.lang.annotation.Annotation;
  * @version $Revision$
  */
 public class NativeTypeTranslator implements TypeVisitor {
+
 	private Collection<Class> native_types;
 	private boolean is_indirect;
 	private final Declaration declaration;
@@ -76,26 +76,32 @@ public class NativeTypeTranslator implements TypeVisitor {
 	}
 
 	public String getSignature() {
+		return getSignature(false);
+	}
+
+	public String getSignature(final boolean skipConst) {
 		StringBuilder signature = new StringBuilder();
-		if (declaration.getAnnotation(Const.class) != null)
+		if ( !skipConst && declaration.getAnnotation(Const.class) != null )
 			signature.append("const ");
 
-		if ( declaration.getAnnotation(GLpointer.class) != null ) {
-			signature.append(declaration.getAnnotation(GLpointer.class).value());
+		if ( declaration.getAnnotation(PointerWrapper.class) != null ) {
+			signature.append(declaration.getAnnotation(PointerWrapper.class).value());
+		} else if ( declaration.getAnnotation(NativeType.class) != null ) {
+			signature.append(declaration.getAnnotation(NativeType.class).value());
 		} else {
 			// Use the name of the native type annotation as the C type name
 			signature.append(getAnnotationType().getSimpleName());
 		}
 
-		if (is_indirect)
+		if ( is_indirect )
 			signature.append(" *");
 		return signature.toString();
 	}
 
 	public Class getAnnotationType() {
-		if (native_types.size() != 1)
+		if ( native_types.size() != 1 )
 			throw new RuntimeException("Expected only one native type for declaration " + declaration +
-					", but got " + native_types.size());
+			                           ", but got " + native_types.size());
 		return native_types.iterator().next();
 	}
 
@@ -104,34 +110,43 @@ public class NativeTypeTranslator implements TypeVisitor {
 	}
 
 	public void visitArrayType(ArrayType t) {
-		if ( "java.lang.CharSequence".equals(t.getComponentType().toString()) ) {
+		final Class<?> type = Utils.getJavaType(t).getComponentType();
+
+		if ( CharSequence.class.isAssignableFrom(type) ) {
 			is_indirect = true;
 			native_types = new ArrayList<Class>();
-			native_types.add(GLchar.class);
+			native_types.add(type_map.getStringArrayType());
+		} else if ( Buffer.class.isAssignableFrom(type) ) {
+			is_indirect = true;
+			native_types = new ArrayList<Class>();
+			native_types.add(type_map.getByteBufferArrayType());
+		} else if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(type) ) {
+			is_indirect = false;
 		} else
 			throw new RuntimeException(t + " is not allowed");
 	}
 
 	public static PrimitiveType.Kind getPrimitiveKindFromBufferClass(Class c) {
-		if (IntBuffer.class.equals(c))
+		if ( IntBuffer.class.equals(c) )
 			return PrimitiveType.Kind.INT;
-		else if (DoubleBuffer.class.equals(c))
+		else if ( DoubleBuffer.class.equals(c) )
 			return PrimitiveType.Kind.DOUBLE;
-		else if (ShortBuffer.class.equals(c))
+		else if ( ShortBuffer.class.equals(c) )
 			return PrimitiveType.Kind.SHORT;
-		else if (ByteBuffer.class.equals(c))
+		else if ( ByteBuffer.class.equals(c) || PointerBuffer.class.equals(c) )
 			return PrimitiveType.Kind.BYTE;
-		else if (FloatBuffer.class.equals(c))
+		else if ( FloatBuffer.class.equals(c) )
 			return PrimitiveType.Kind.FLOAT;
-		else if (LongBuffer.class.equals(c))
+		else if ( LongBuffer.class.equals(c) )
 			return PrimitiveType.Kind.LONG;
 		else
 			throw new RuntimeException(c + " is not allowed");
 	}
 
-	public static Class<?> getClassFromType(DeclaredType t) {
+	@SuppressWarnings("unchecked")
+	public static Class<? extends Annotation> getClassFromType(DeclaredType t) {
 		try {
-			return Class.forName(t.getDeclaration().getQualifiedName());
+			return (Class<? extends Annotation>)Class.forName(t.getDeclaration().getQualifiedName());
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
@@ -139,7 +154,7 @@ public class NativeTypeTranslator implements TypeVisitor {
 
 	private void getNativeTypeFromAnnotatedPrimitiveType(PrimitiveType.Kind kind) {
 		native_types = translateAnnotations();
-		if (native_types.size() == 0)
+		if ( native_types.size() == 0 )
 			native_types.add(type_map.getNativeTypeFromPrimitiveType(kind));
 	}
 
@@ -147,18 +162,21 @@ public class NativeTypeTranslator implements TypeVisitor {
 		is_indirect = true;
 
 		Class<?> c = getClassFromType(t);
-		if (String.class.equals(c)) {
+		if ( String.class.equals(c) ) {
 			native_types = new ArrayList<Class>();
 			native_types.add(type_map.getStringElementType());
-		} else if (Buffer.class.equals(c)) {
+		} else if ( Buffer.class.equals(c) ) {
 			native_types = new ArrayList<Class>();
 			native_types.add(type_map.getVoidType());
-		} else if (Buffer.class.isAssignableFrom(c)) {
+		} else if ( Buffer.class.isAssignableFrom(c) ) {
 			PrimitiveType.Kind kind = getPrimitiveKindFromBufferClass(c);
 			getNativeTypeFromAnnotatedPrimitiveType(kind);
-		} else if ( PointerWrapper.class.isAssignableFrom(c) ) {
+		} else if ( PointerBuffer.class.isAssignableFrom(c) ) {
 			native_types = new ArrayList<Class>();
-			native_types.add(GLpointer.class);
+			native_types.add(PointerBuffer.class);
+		} else if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(c) ) {
+			native_types = new ArrayList<Class>();
+			native_types.add(PointerWrapper.class);
 
 			is_indirect = false;
 		} else
@@ -182,13 +200,14 @@ public class NativeTypeTranslator implements TypeVisitor {
 	}
 
 	// Check if the annotation is itself annotated with a certain annotation type
+
 	public static <T extends Annotation> T getAnnotation(AnnotationMirror annotation, Class<T> type) {
 		return annotation.getAnnotationType().getDeclaration().getAnnotation(type);
 	}
 
 	private static Class translateAnnotation(AnnotationMirror annotation) {
 		NativeType native_type = getAnnotation(annotation, NativeType.class);
-		if (native_type != null) {
+		if ( native_type != null ) {
 			return getClassFromType(annotation.getAnnotationType());
 		} else
 			return null;
@@ -196,9 +215,9 @@ public class NativeTypeTranslator implements TypeVisitor {
 
 	private Collection<Class> translateAnnotations() {
 		Collection<Class> result = new ArrayList<Class>();
-		for (AnnotationMirror annotation : Utils.getSortedAnnotations(declaration.getAnnotationMirrors())) {
+		for ( AnnotationMirror annotation : Utils.getSortedAnnotations(declaration.getAnnotationMirrors()) ) {
 			Class translated_result = translateAnnotation(annotation);
-			if (translated_result != null) {
+			if ( translated_result != null ) {
 				result.add(translated_result);
 			}
 		}
@@ -219,7 +238,7 @@ public class NativeTypeTranslator implements TypeVisitor {
 
 	public void visitVoidType(VoidType t) {
 		native_types = translateAnnotations();
-		if (native_types.size() == 0)
+		if ( native_types.size() == 0 )
 			native_types.add(void.class);
 	}
 

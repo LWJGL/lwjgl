@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 import java.nio.IntBuffer;
 
@@ -47,135 +49,173 @@ public interface ARB_vertex_type_2_10_10_10_rev {
 	int GL_UNSIGNED_INT_2_10_10_10_REV = GL12.GL_UNSIGNED_INT_2_10_10_10_REV;
 	int GL_INT_2_10_10_10_REV = 0x8D9F;
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glVertexP2ui(@GLenum int type, @GLuint int value);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glVertexP3ui(@GLenum int type, @GLuint int value);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glVertexP4ui(@GLenum int type, @GLuint int value);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("value")
 	void glVertexP2uiv(@GLenum int type, @Check("2") @Const @GLuint IntBuffer value);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("value")
 	void glVertexP3uiv(@GLenum int type, @Check("3") @Const @GLuint IntBuffer value);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("value")
 	void glVertexP4uiv(@GLenum int type, @Check("4") @Const @GLuint IntBuffer value);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glTexCoordP1ui(@GLenum int type, @GLuint int coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glTexCoordP2ui(@GLenum int type, @GLuint int coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glTexCoordP3ui(@GLenum int type, @GLuint int coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glTexCoordP4ui(@GLenum int type, @GLuint int coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("coords")
 	void glTexCoordP1uiv(@GLenum int type, @Check("1") @Const @GLuint IntBuffer coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("coords")
 	void glTexCoordP2uiv(@GLenum int type, @Check("2") @Const @GLuint IntBuffer coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("coords")
 	void glTexCoordP3uiv(@GLenum int type, @Check("3") @Const @GLuint IntBuffer coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("coords")
 	void glTexCoordP4uiv(@GLenum int type, @Check("4") @Const @GLuint IntBuffer coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glMultiTexCoordP1ui(@GLenum int texture, @GLenum int type, @GLuint int coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glMultiTexCoordP2ui(@GLenum int texture, @GLenum int type, @GLuint int coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glMultiTexCoordP3ui(@GLenum int texture, @GLenum int type, @GLuint int coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glMultiTexCoordP4ui(@GLenum int texture, @GLenum int type, @GLuint int coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("coords")
 	void glMultiTexCoordP1uiv(@GLenum int texture, @GLenum int type, @Check("1") @Const @GLuint IntBuffer coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("coords")
 	void glMultiTexCoordP2uiv(@GLenum int texture, @GLenum int type, @Check("2") @Const @GLuint IntBuffer coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("coords")
 	void glMultiTexCoordP3uiv(@GLenum int texture, @GLenum int type, @Check("3") @Const @GLuint IntBuffer coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("coords")
 	void glMultiTexCoordP4uiv(@GLenum int texture, @GLenum int type, @Check("4") @Const @GLuint IntBuffer coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glNormalP3ui(@GLenum int type, @GLuint int coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("coords")
 	void glNormalP3uiv(@GLenum int type, @Check("3") @Const @GLuint IntBuffer coords);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glColorP3ui(@GLenum int type, @GLuint int color);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glColorP4ui(@GLenum int type, @GLuint int color);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("color")
 	void glColorP3uiv(@GLenum int type, @Check("3") @Const @GLuint IntBuffer color);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("color")
 	void glColorP4uiv(@GLenum int type, @Check("4") @Const @GLuint IntBuffer color);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glSecondaryColorP3ui(@GLenum int type, @GLuint int color);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("color")
 	void glSecondaryColorP3uiv(@GLenum int type, @Check("3") @Const @GLuint IntBuffer color);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glVertexAttribP1ui(@GLuint int index, @GLenum int type, boolean normalized, @GLuint int value);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glVertexAttribP2ui(@GLuint int index, @GLenum int type, boolean normalized, @GLuint int value);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glVertexAttribP3ui(@GLuint int index, @GLenum int type, boolean normalized, @GLuint int value);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	void glVertexAttribP4ui(@GLuint int index, @GLenum int type, boolean normalized, @GLuint int value);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("value")
 	void glVertexAttribP1uiv(@GLuint int index, @GLenum int type, boolean normalized, @Check("1") @Const @GLuint IntBuffer value);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("value")
 	void glVertexAttribP2uiv(@GLuint int index, @GLenum int type, boolean normalized, @Check("2") @Const @GLuint IntBuffer value);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("value")
 	void glVertexAttribP3uiv(@GLuint int index, @GLenum int type, boolean normalized, @Check("3") @Const @GLuint IntBuffer value);
 
+	@Reuse("GL33")
 	@NoErrorCheck
 	@StripPostfix("value")
 	void glVertexAttribP4uiv(@GLuint int index, @GLenum int type, boolean normalized, @Check("4") @Const @GLuint IntBuffer value);

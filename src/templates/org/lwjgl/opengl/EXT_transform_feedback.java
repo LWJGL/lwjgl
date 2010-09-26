@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -102,12 +104,12 @@ public interface EXT_transform_feedback {
 	void glEndTransformFeedbackEXT();
 
 	void glTransformFeedbackVaryingsEXT(@GLuint int program, @GLsizei int count,
-	                                    @Const @NullTerminated("count") @GLchar @StringList("count") ByteBuffer varyings,
+	                                    @Const @NullTerminated("count") @GLchar @PointerArray("count") ByteBuffer varyings,
 	                                    @GLenum int bufferMode);
 
 	@Alternate("glTransformFeedbackVaryingsEXT")
 	void glTransformFeedbackVaryingsEXT(@GLuint int program, @Constant("varyings.length") @GLsizei int count,
-	                                    @Const @NullTerminated @StringList("count") CharSequence[] varyings,
+	                                    @Const @NullTerminated @PointerArray("count") CharSequence[] varyings,
 	                                    @GLenum int bufferMode);
 
 	void glGetTransformFeedbackVaryingEXT(@GLuint int program, @GLuint int index, @AutoSize("name") @GLsizei int bufSize,

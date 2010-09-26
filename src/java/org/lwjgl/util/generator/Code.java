@@ -38,10 +38,22 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 public @interface Code {
-	String value();
+
+	String value() default ""; // Java, before everything
+
+	boolean tryBlock() default false; // Add a try/finally block around the native call and return statement
+
+	String javaBeforeNative() default ""; // Before the native call
+	String javaAfterNative() default ""; // After the native call
+	String javaFinally() default ""; // In the finally block
+
+	String nativeAfterVars() default ""; // After variable declaration
+	String nativeBeforeCall() default ""; // Before the API call
+	String nativeAfterCall() default ""; // After the API call
+
 }

@@ -31,7 +31,8 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLsizei;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 public interface EXT_stencil_clear_tag {
 

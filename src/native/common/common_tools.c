@@ -1,35 +1,35 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /**
  * $Id$
  *
@@ -44,6 +44,9 @@
 
 static bool debug = false;
 static JavaVM *jvm;
+
+static jmethodID mByteBuffer_asReadOnlyBuffer;
+static jmethodID mPointerWrapper_getPointer;
 
 void initAttribList(attrib_list_t *list) {
 	list->current_index = 0;
@@ -175,41 +178,41 @@ void throwException(JNIEnv * env, const char * err) {
 }
 
 // retrieves the locale-specific C string
-char * GetStringNativeChars(JNIEnv *env, jstring jstr) { 
-  jbyteArray bytes = 0; 
-  jthrowable exc; 
-  char *result = 0; 
+char * GetStringNativeChars(JNIEnv *env, jstring jstr) {
+  jbyteArray bytes = 0;
+  jthrowable exc;
+  char *result = 0;
   jclass jcls_str;
   jmethodID MID_String_getBytes;
 
-  /* out of memory error? */ 
-  if ((*env)->EnsureLocalCapacity(env, 2) < 0) { 
-    return 0; 
-  } 
+  /* out of memory error? */
+  if ((*env)->EnsureLocalCapacity(env, 2) < 0) {
+    return 0;
+  }
 
   // aquire getBytes method
-  jcls_str = (*env)->FindClass(env, "java/lang/String"); 
-  MID_String_getBytes = (*env)->GetMethodID(env, jcls_str, "getBytes", "()[B"); 
+  jcls_str = (*env)->FindClass(env, "java/lang/String");
+  MID_String_getBytes = (*env)->GetMethodID(env, jcls_str, "getBytes", "()[B");
 
   // get the bytes
-  bytes = (jbyteArray) (*env)->CallObjectMethod(env, jstr, MID_String_getBytes); 
-  exc = (*env)->ExceptionOccurred(env); 
+  bytes = (jbyteArray) (*env)->CallObjectMethod(env, jstr, MID_String_getBytes);
+  exc = (*env)->ExceptionOccurred(env);
 
   // if no exception occured while getting bytes - continue
-  if (!exc) { 
-    jint len = (*env)->GetArrayLength(env, bytes); 
-    result = (char *) malloc(len + 1); 
-    if (result == 0) { 
-      throwGeneralException(env, "java/lang/OutOfMemoryError", NULL); 
-      (*env)->DeleteLocalRef(env, bytes); 
-      return 0; 
-    } 
-    (*env)->GetByteArrayRegion(env, bytes, 0, len, (jbyte *) result); 
-    result[len] = 0; /* NULL-terminate */ 
-  } else { 
-    (*env)->DeleteLocalRef(env, exc); 
-  } 
-  (*env)->DeleteLocalRef(env, bytes); 
+  if (!exc) {
+    jint len = (*env)->GetArrayLength(env, bytes);
+    result = (char *) malloc(len + 1);
+    if (result == 0) {
+      throwGeneralException(env, "java/lang/OutOfMemoryError", NULL);
+      (*env)->DeleteLocalRef(env, bytes);
+      return 0;
+    }
+    (*env)->GetByteArrayRegion(env, bytes, 0, len, (jbyte *) result);
+    result[len] = 0; /* NULL-terminate */
+  } else {
+    (*env)->DeleteLocalRef(env, exc);
+  }
+  (*env)->DeleteLocalRef(env, bytes);
   return (char*) result;
 }
 
@@ -224,36 +227,36 @@ jstring NewStringNativeUnsigned(JNIEnv *env, const unsigned char *ustr) {
 }
 
 // creates locale specific string
-jstring NewStringNativeWithLength(JNIEnv *env, const char *str, int length) { 
+jstring NewStringNativeWithLength(JNIEnv *env, const char *str, int length) {
   jclass jcls_str;
   jmethodID jmethod_str;
-  jstring result; 
+  jstring result;
   jbyteArray bytes;
-  if (str==NULL) { 
-    return NULL; 
-  } 
-  
-  jcls_str = (*env)->FindClass(env,"java/lang/String"); 
+  if (str==NULL) {
+    return NULL;
+  }
+
+  jcls_str = (*env)->FindClass(env,"java/lang/String");
   if (jcls_str == NULL)
 	  return NULL;
-  jmethod_str = (*env)->GetMethodID(env,jcls_str, "<init>", "([B)V"); 
+  jmethod_str = (*env)->GetMethodID(env,jcls_str, "<init>", "([B)V");
   if (jmethod_str == NULL)
 	  return NULL;
 
-  bytes = 0; 
+  bytes = 0;
 
-  if ((*env)->EnsureLocalCapacity(env,2) < 0) { 
-    return NULL; /* out of memory error */ 
-  } 
+  if ((*env)->EnsureLocalCapacity(env,2) < 0) {
+    return NULL; /* out of memory error */
+  }
 
-  bytes = (*env)->NewByteArray(env,length); 
-  if (bytes != NULL) { 
-    (*env)->SetByteArrayRegion(env,bytes, 0, length, (jbyte *)str); 
-    result = (jstring)(*env)->NewObject(env,jcls_str, jmethod_str, bytes); 
-    (*env)->DeleteLocalRef(env,bytes); 
-    return result; 
-  } /* else fall through */ 
-  return NULL; 
+  bytes = (*env)->NewByteArray(env,length);
+  if (bytes != NULL) {
+    (*env)->SetByteArrayRegion(env,bytes, 0, length, (jbyte *)str);
+    result = (jstring)(*env)->NewObject(env,jcls_str, jmethod_str, bytes);
+    (*env)->DeleteLocalRef(env,bytes);
+    return result;
+  } /* else fall through */
+  return NULL;
 }
 
 bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFunction *functions) {
@@ -270,6 +273,11 @@ bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFu
 		}
 	}
 	return true;
+}
+
+jobject NewReadOnlyDirectByteBuffer(JNIEnv* env, const void* address, jlong capacity) {
+    jobject buffer = (*env)->NewDirectByteBuffer(env, (void *)address, capacity);
+    return (*env)->CallObjectMethod(env, buffer, mByteBuffer_asReadOnlyBuffer);
 }
 
 jobject newJavaManagedByteBuffer(JNIEnv *env, const int size) {
@@ -327,15 +335,40 @@ bool getBooleanProperty(JNIEnv *env, const char* propertyName) {
   return (*env)->CallStaticBooleanMethod(env, org_lwjgl_LWJGLUtil_class, getBoolean, property) ? true : false;
 }
 
+jlong getPointerWrapperAddress(JNIEnv *env, jobject wrapper) {
+    return (*env)->CallLongMethod(env, wrapper, mPointerWrapper_getPointer);
+}
+
 JNIEnv *getThreadEnv() {
 	JNIEnv *env;
 	(*jvm)->GetEnv(jvm, (void *)&env, JNI_VERSION_1_4);
 	return env;
 }
 
+JNIEnv *attachCurrentThread() {
+    JNIEnv *env;
+    (*jvm)->AttachCurrentThread(jvm, (void **)&env, NULL);
+    return env;
+}
+
+void detachCurrentThread() {
+    (*jvm)->DetachCurrentThread(jvm);
+}
+
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
-  jvm = vm;
-  return JNI_VERSION_1_4;
+    JNIEnv *env;
+    jclass clazz;
+
+    jvm = vm;
+    env = getThreadEnv();
+
+    clazz = (*env)->FindClass(env, "java/nio/ByteBuffer");
+    mByteBuffer_asReadOnlyBuffer = (*env)->GetMethodID(env, clazz, "asReadOnlyBuffer", "()Ljava/nio/ByteBuffer;");
+
+    clazz = (*env)->FindClass(env, "org/lwjgl/PointerWrapper");
+    mPointerWrapper_getPointer = (*env)->GetMethodID(env, clazz, "getPointer", "()J");
+
+    return JNI_VERSION_1_4;
 }
 
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {

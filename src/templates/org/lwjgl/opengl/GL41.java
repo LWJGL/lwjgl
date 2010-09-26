@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.*;
 
@@ -153,14 +154,14 @@ public interface GL41 {
 	@StripPostfix(value = "strings", postfix = "v")
 	@GLuint
 	int glCreateShaderProgramv(@GLenum int type, @Constant("strings.length") @GLsizei int count,
-	                           @Const @NullTerminated @StringList(value = "count") CharSequence[] strings);
+	                           @Const @NullTerminated @PointerArray(value = "count") CharSequence[] strings);
 
 	void glBindProgramPipeline(@GLuint int pipeline);
 
 	void glDeleteProgramPipelines(@AutoSize("pipelines") @GLsizei int n, @Const @GLuint IntBuffer pipelines);
 
 	@Alternate("glDeleteProgramPipelines")
-	void glDeleteProgramPipelines(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, pipeline), 0", keepParam = true) int pipeline);
+	void glDeleteProgramPipelines(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, pipeline), 0", keepParam = true) int pipeline);
 
 	void glGenProgramPipelines(@AutoSize("pipelines") @GLsizei int n, @OutParameter @GLuint IntBuffer pipelines);
 

@@ -34,19 +34,12 @@ package org.lwjgl.openal;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.util.generator.ALenum;
-import org.lwjgl.util.generator.ALsizei;
-import org.lwjgl.util.generator.ALuint;
-import org.lwjgl.util.generator.ALvoid;
+import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.openal.ALenum;
+import org.lwjgl.util.generator.openal.ALsizei;
+import org.lwjgl.util.generator.openal.ALuint;
+import org.lwjgl.util.generator.openal.ALvoid;
 import org.lwjgl.util.generator.Alternate;
-import org.lwjgl.util.generator.AutoSize;
-import org.lwjgl.util.generator.Check;
-import org.lwjgl.util.generator.Const;
-import org.lwjgl.util.generator.Constant;
-import org.lwjgl.util.generator.Indirect;
-import org.lwjgl.util.generator.OutParameter;
-import org.lwjgl.util.generator.Result;
-import org.lwjgl.util.generator.StripPostfix;
 
 /**
  * Implementation of the OpenAL extension ALC_EXT_EFX (version 1.0). Contains necessary fields,

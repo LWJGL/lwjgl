@@ -32,6 +32,10 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLint64EXT;
+import org.lwjgl.util.generator.opengl.GLsizei;
+import org.lwjgl.util.generator.opengl.GLuint;
+import org.lwjgl.util.generator.opengl.GLuint64EXT;
 
 import java.nio.LongBuffer;
 
@@ -84,16 +88,16 @@ public interface NV_gpu_shader5 {
 	void glUniform4i64NV(int location, @GLint64EXT long x, @GLint64EXT long y, @GLint64EXT long z, @GLint64EXT long w);
 
 	@StripPostfix("value")
-	void glUniform1i64vNV(int location, @GLsizei int count, @Const @GLint64EXT @Check("1") LongBuffer value);
+	void glUniform1i64vNV(int location, @AutoSize("value") @GLsizei int count, @Const @GLint64EXT LongBuffer value);
 
 	@StripPostfix("value")
-	void glUniform2i64vNV(int location, @GLsizei int count, @Const @GLint64EXT @Check("2") LongBuffer value);
+	void glUniform2i64vNV(int location, @AutoSize(value = "value", expression = " >> 1") @GLsizei int count, @Const @GLint64EXT LongBuffer value);
 
 	@StripPostfix("value")
-	void glUniform3i64vNV(int location, @GLsizei int count, @Const @GLint64EXT @Check("3") LongBuffer value);
+	void glUniform3i64vNV(int location, @AutoSize(value = "value", expression = " / 3") @GLsizei int count, @Const @GLint64EXT LongBuffer value);
 
 	@StripPostfix("value")
-	void glUniform4i64vNV(int location, @GLsizei int count, @Const @GLint64EXT @Check("4") LongBuffer value);
+	void glUniform4i64vNV(int location, @AutoSize(value = "value", expression = " >> 2") @GLsizei int count, @Const @GLint64EXT LongBuffer value);
 
 	void glUniform1ui64NV(int location, @GLuint64EXT long x);
 
@@ -104,22 +108,22 @@ public interface NV_gpu_shader5 {
 	void glUniform4ui64NV(int location, @GLuint64EXT long x, @GLuint64EXT long y, @GLuint64EXT long z, @GLuint64EXT long w);
 
 	@StripPostfix("value")
-	void glUniform1ui64vNV(int location, @GLsizei int count, @Const @GLuint64EXT @Check("1") LongBuffer value);
+	void glUniform1ui64vNV(int location, @AutoSize("value") @GLsizei int count, @Const @GLuint64EXT LongBuffer value);
 
 	@StripPostfix("value")
-	void glUniform2ui64vNV(int location, @GLsizei int count, @Const @GLuint64EXT @Check("2") LongBuffer value);
+	void glUniform2ui64vNV(int location, @AutoSize(value = "value", expression = " >> 1") @GLsizei int count, @Const @GLuint64EXT LongBuffer value);
 
 	@StripPostfix("value")
-	void glUniform3ui64vNV(int location, @GLsizei int count, @Const @GLuint64EXT @Check("3") LongBuffer value);
+	void glUniform3ui64vNV(int location, @AutoSize(value = "value", expression = " / 3") @GLsizei int count, @Const @GLuint64EXT LongBuffer value);
 
 	@StripPostfix("value")
-	void glUniform4ui64vNV(int location, @GLsizei int count, @Const @GLuint64EXT @Check("4") LongBuffer value);
+	void glUniform4ui64vNV(int location, @AutoSize(value = "value", expression = " >> 2") @GLsizei int count, @Const @GLuint64EXT LongBuffer value);
 
 	@StripPostfix("params")
-	void glGetUniformi64vNV(@GLuint int program, int location, @GLint64EXT @Check LongBuffer params);
+	void glGetUniformi64vNV(@GLuint int program, int location, @OutParameter @Check("1") @GLint64EXT LongBuffer params);
 
 	@StripPostfix("params")
-	void glGetUniformui64vNV(@GLuint int program, int location, @GLuint64EXT @Check LongBuffer params);
+	void glGetUniformui64vNV(@GLuint int program, int location, @OutParameter @Check("1") @GLuint64EXT LongBuffer params);
 
 	// -------------
 
@@ -137,19 +141,19 @@ public interface NV_gpu_shader5 {
 
 	@Dependent("EXT_direct_state_access")
 	@StripPostfix("value")
-	void glProgramUniform1i64vNV(@GLuint int program, int location, @GLsizei int count, @Const @GLint64EXT @Check("1") LongBuffer value);
+	void glProgramUniform1i64vNV(@GLuint int program, int location, @AutoSize("value") @GLsizei int count, @Const @GLint64EXT LongBuffer value);
 
 	@Dependent("EXT_direct_state_access")
 	@StripPostfix("value")
-	void glProgramUniform2i64vNV(@GLuint int program, int location, @GLsizei int count, @Const @GLint64EXT @Check("2") LongBuffer value);
+	void glProgramUniform2i64vNV(@GLuint int program, int location, @AutoSize(value = "value", expression = " >> 1") @GLsizei int count, @Const @GLint64EXT LongBuffer value);
 
 	@Dependent("EXT_direct_state_access")
 	@StripPostfix("value")
-	void glProgramUniform3i64vNV(@GLuint int program, int location, @GLsizei int count, @Const @GLint64EXT @Check("3") LongBuffer value);
+	void glProgramUniform3i64vNV(@GLuint int program, int location, @AutoSize(value = "value", expression = " / 3") @GLsizei int count, @Const @GLint64EXT LongBuffer value);
 
 	@Dependent("EXT_direct_state_access")
 	@StripPostfix("value")
-	void glProgramUniform4i64vNV(@GLuint int program, int location, @GLsizei int count, @Const @GLint64EXT @Check("4") LongBuffer value);
+	void glProgramUniform4i64vNV(@GLuint int program, int location, @AutoSize(value = "value", expression = " >> 2") @GLsizei int count, @Const @GLint64EXT LongBuffer value);
 
 	@Dependent("EXT_direct_state_access")
 	void glProgramUniform1ui64NV(@GLuint int program, int location, @GLuint64EXT long x);
@@ -165,18 +169,18 @@ public interface NV_gpu_shader5 {
 
 	@Dependent("EXT_direct_state_access")
 	@StripPostfix("value")
-	void glProgramUniform1ui64vNV(@GLuint int program, int location, @GLsizei int count, @Const @GLuint64EXT @Check("1") LongBuffer value);
+	void glProgramUniform1ui64vNV(@GLuint int program, int location, @AutoSize("value") @GLsizei int count, @Const @GLuint64EXT LongBuffer value);
 
 	@Dependent("EXT_direct_state_access")
 	@StripPostfix("value")
-	void glProgramUniform2ui64vNV(@GLuint int program, int location, @GLsizei int count, @Const @GLuint64EXT @Check("2") LongBuffer value);
+	void glProgramUniform2ui64vNV(@GLuint int program, int location, @AutoSize(value = "value", expression = " >> 1") @GLsizei int count, @Const @GLuint64EXT LongBuffer value);
 
 	@Dependent("EXT_direct_state_access")
 	@StripPostfix("value")
-	void glProgramUniform3ui64vNV(@GLuint int program, int location, @GLsizei int count, @Const @GLuint64EXT @Check("3") LongBuffer value);
+	void glProgramUniform3ui64vNV(@GLuint int program, int location, @AutoSize(value = "value", expression = " / 3") @GLsizei int count, @Const @GLuint64EXT LongBuffer value);
 
 	@Dependent("EXT_direct_state_access")
 	@StripPostfix("value")
-	void glProgramUniform4ui64vNV(@GLuint int program, int location, @GLsizei int count, @Const @GLuint64EXT @Check("4") LongBuffer value);
+	void glProgramUniform4ui64vNV(@GLuint int program, int location, @AutoSize(value = "value", expression = " >> 2") @GLsizei int count, @Const @GLuint64EXT LongBuffer value);
 
 }

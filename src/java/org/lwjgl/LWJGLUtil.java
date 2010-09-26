@@ -59,9 +59,9 @@ public class LWJGLUtil {
 	public static final String PLATFORM_LINUX_NAME 		= "linux";
 	public static final String PLATFORM_MACOSX_NAME 	= "macosx";
 	public static final String PLATFORM_WINDOWS_NAME	= "windows";
-	
+
 	/** LWJGL Logo - 16 by 16 pixels */
-	public static final ByteBuffer	LWJGLIcon16x16		= BufferUtils.createByteBuffer(16 * 16 * 4).put(new byte[] { 
+	public static final ByteBuffer	LWJGLIcon16x16		= BufferUtils.createByteBuffer(16 * 16 * 4).put(new byte[] {
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -62, -41, -24, -1, 116, -92, -53, -1, 80, -117,
 			-67, -1, 84, -114, -65, -1, -122, -81, -46, -1, -25, -17, -10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -106,7 +106,7 @@ public class LWJGLUtil {
 	});
 
 	/** LWJGL Logo - 32 by 32 pixels */
-	public static final ByteBuffer	LWJGLIcon32x32		= BufferUtils.createByteBuffer(32 * 32 * 4).put(new byte[] { 
+	public static final ByteBuffer	LWJGLIcon32x32		= BufferUtils.createByteBuffer(32 * 32 * 4).put(new byte[] {
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -6, -4, -3, -1, -53, -35,
@@ -269,11 +269,23 @@ public class LWJGLUtil {
 
 	public static final boolean CHECKS = !getPrivilegedBoolean("org.lwjgl.util.NoChecks");
 
+	private static final int PLATFORM;
+
 	static {
 		LWJGLIcon16x16.flip();
 		LWJGLIcon32x32.flip();
+
+		final String osName = getPrivilegedProperty("os.name");
+		if ( osName.startsWith("Windows") )
+			PLATFORM = PLATFORM_WINDOWS;
+		else if ( osName.startsWith("Linux") || osName.startsWith("FreeBSD") || osName.startsWith("SunOS") )
+			PLATFORM = PLATFORM_LINUX;
+		else if ( osName.startsWith("Mac OS X") )
+			PLATFORM = PLATFORM_MACOSX;
+		else
+			throw new LinkageError("Unknown platform: " + osName);
 	}
-	
+
 	/**
 	 * @see #PLATFORM_WINDOWS
 	 * @see #PLATFORM_LINUX
@@ -281,19 +293,9 @@ public class LWJGLUtil {
 	 * @return the current platform type
 	 */
 	public static int getPlatform() {
-		String osName = getPrivilegedProperty("os.name");
-
-		if (osName.startsWith("Windows")) {
-			return PLATFORM_WINDOWS;
-		} else if (osName.startsWith("Linux") || osName.startsWith("FreeBSD") || osName.startsWith("SunOS")) {
-			return PLATFORM_LINUX;
-		} else if (osName.startsWith("Mac OS X")) {
-			return PLATFORM_MACOSX;
-		} else {
-			throw new LinkageError("Unknown platform: " + osName);
-		}
+		return PLATFORM;
 	}
-	
+
 
 	/**
 	 * @see #PLATFORM_WINDOWS_NAME
@@ -312,7 +314,7 @@ public class LWJGLUtil {
 			default:
 				return "unknown";
 		}
-	}	
+	}
 
 	/**
 	 * Locates the paths required by a library.
@@ -357,7 +359,7 @@ public class LWJGLUtil {
 			String alternative_path = getPrivilegedProperty("org.lwjgl.librarypath");
 			if (alternative_path != null) {
 				possible_paths.add(alternative_path + File.separator + platform_lib_name);
-			}		
+			}
 
 			// Add all possible paths from java.library.path
 			String java_library_path = getPrivilegedProperty("java.library.path");
@@ -449,16 +451,16 @@ public class LWJGLUtil {
 	 */
 	private static boolean getPrivilegedBoolean(final String property_name) {
 		Boolean value = (Boolean)AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {	
+			public Object run() {
 				return new Boolean(Boolean.getBoolean(property_name));
 			}
 		});
 		return value.booleanValue();
-	}	
-	
+	}
+
 	/**
 	 * Prints the given message to System.err if DEBUG is true.
-	 * 
+	 *
 	 * @param msg Message to print
 	 */
 	public static void log(String msg) {
@@ -466,7 +468,7 @@ public class LWJGLUtil {
 			System.err.println(msg);
 		}
 	}
-	
+
 	/**
 	 * Method to determine if the current system is running a version of
 	 * Mac OS X better than the given version. This is only useful for Mac OS X
@@ -489,5 +491,5 @@ public class LWJGLUtil {
 		}
 		return major > major_required || (major == major_required && minor >= minor_required);
 	}
-	
+
 }

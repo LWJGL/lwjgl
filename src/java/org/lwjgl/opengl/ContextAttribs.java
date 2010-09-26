@@ -57,6 +57,8 @@ import java.nio.IntBuffer;
 public final class ContextAttribs {
 
 	// Same values for GLX & WGL
+	private static final int CONTEXT_ES2_PROFILE_BIT_EXT = 0x00000004;
+
 	private static final int CONTEXT_ROBUST_ACCESS_BIT_ARB = 0x00000004;
 	private static final int CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB = 0x8256;
 	private static final int
@@ -74,6 +76,7 @@ public final class ContextAttribs {
 
 	private boolean profileCore;
 	private boolean profileCompatibility;
+	private boolean profileES;
 
 	private boolean loseContextOnReset;
 
@@ -106,6 +109,7 @@ public final class ContextAttribs {
 
 		this.profileCore = attribs.profileCore;
 		this.profileCompatibility = attribs.profileCompatibility;
+		this.profileES = attribs.profileES;
 
 		this.loseContextOnReset = attribs.loseContextOnReset;
 	}
@@ -136,6 +140,10 @@ public final class ContextAttribs {
 
 	public boolean isProfileCompatibility() {
 		return profileCompatibility;
+	}
+
+	public boolean isProfileES() {
+		return profileES;
 	}
 
 	public ContextAttribs withLayer(final int layerPlane) {
@@ -198,6 +206,19 @@ public final class ContextAttribs {
 		return attribs;
 	}
 
+	public ContextAttribs withProfileES(final boolean profileES) {
+		if ( !(majorVersion == 2 && minorVersion == 0) )
+			throw new IllegalArgumentException("The OpenGL ES profiles is only supported for OpenGL version 2.0.");
+
+		if ( profileES == this.profileES )
+			return this;
+
+		final ContextAttribs attribs = new ContextAttribs(this);
+		attribs.profileES = profileES;
+
+		return attribs;
+	}
+
 	/**
 	 * Returns a ContextAttribs instance with CONTEXT_RESET_NOTIFICATION_STRATEGY set
 	 * to LOSE_CONTEXT_ON_RESET if the parameter is true or to NO_RESET_NOTIFICATION
@@ -254,6 +275,8 @@ public final class ContextAttribs {
 			profileMask |= implementation.getProfileCoreBit();
 		else if ( profileCompatibility )
 			profileMask |= implementation.getProfileCompatibilityBit();
+		else if ( profileES )
+			profileMask |= CONTEXT_ES2_PROFILE_BIT_EXT;
 		if ( 0 < profileMask )
 			attribCount++;
 

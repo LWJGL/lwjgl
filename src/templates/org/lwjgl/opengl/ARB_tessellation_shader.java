@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLenum;
 
 import java.nio.FloatBuffer;
 
@@ -114,8 +115,10 @@ public interface ARB_tessellation_shader {
 	int GL_TESS_EVALUATION_SHADER = 0x8E87;
 	int GL_TESS_CONTROL_SHADER = 0x8E88;
 
+	@Reuse("GL40")
 	void glPatchParameteri(@GLenum int pname, int value);
 
+	@Reuse("GL40")
 	@StripPostfix("values")
 	void glPatchParameterfv(@GLenum int pname, @Check("4") @Const FloatBuffer values);
 

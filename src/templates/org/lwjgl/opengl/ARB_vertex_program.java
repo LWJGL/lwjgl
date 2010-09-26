@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.*;
 
@@ -79,45 +80,59 @@ public interface ARB_vertex_program extends ARB_program {
 	 */
 	int GL_MAX_VERTEX_ATTRIBS_ARB = 0x8869;
 
+	@Reuse("ARBVertexShader")
 	@NoErrorCheck
 	void glVertexAttrib1sARB(@GLuint int index, short x);
 
+	@Reuse("ARBVertexShader")
 	@NoErrorCheck
 	void glVertexAttrib1fARB(@GLuint int index, float x);
 
+	@Reuse("ARBVertexShader")
 	@NoErrorCheck
 	void glVertexAttrib1dARB(@GLuint int index, double x);
 
+	@Reuse("ARBVertexShader")
 	@NoErrorCheck
 	void glVertexAttrib2sARB(@GLuint int index, short x, short y);
 
+	@Reuse("ARBVertexShader")
 	@NoErrorCheck
 	void glVertexAttrib2fARB(@GLuint int index, float x, float y);
 
+	@Reuse("ARBVertexShader")
 	@NoErrorCheck
 	void glVertexAttrib2dARB(@GLuint int index, double x, double y);
 
+	@Reuse("ARBVertexShader")
 	@NoErrorCheck
 	void glVertexAttrib3sARB(@GLuint int index, short x, short y, short z);
 
+	@Reuse("ARBVertexShader")
 	@NoErrorCheck
 	void glVertexAttrib3fARB(@GLuint int index, float x, float y, float z);
 
+	@Reuse("ARBVertexShader")
 	@NoErrorCheck
 	void glVertexAttrib3dARB(@GLuint int index, double x, double y, double z);
 
+	@Reuse("ARBVertexShader")
 	@NoErrorCheck
 	void glVertexAttrib4sARB(@GLuint int index, short x, short y, short z, short w);
 
+	@Reuse("ARBVertexShader")
 	@NoErrorCheck
 	void glVertexAttrib4fARB(@GLuint int index, float x, float y, float z, float w);
 
+	@Reuse("ARBVertexShader")
 	@NoErrorCheck
 	void glVertexAttrib4dARB(@GLuint int index, double x, double y, double z, double w);
 
+	@Reuse("ARBVertexShader")
 	@NoErrorCheck
 	void glVertexAttrib4NubARB(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
 
+	@Reuse("ARBVertexShader")
 	void glVertexAttribPointerARB(@GLuint int index, int size, @AutoType("buffer") @GLenum int type, boolean normalized, @GLsizei int stride,
 	                              @CachedReference(index = "index", name = "glVertexAttribPointer_buffer")
 	                              @BufferObject(BufferKind.ArrayVBO)
@@ -132,19 +147,25 @@ public interface ARB_vertex_program extends ARB_program {
 	                              @GLfloat
 	                              @GLdouble Buffer buffer);
 
+	@Reuse("ARBVertexShader")
 	void glEnableVertexAttribArrayARB(@GLuint int index);
 
+	@Reuse("ARBVertexShader")
 	void glDisableVertexAttribArrayARB(@GLuint int index);
 
+	@Reuse("ARBVertexShader")
 	@StripPostfix("params")
 	void glGetVertexAttribfvARB(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") FloatBuffer params);
 
+	@Reuse("ARBVertexShader")
 	@StripPostfix("params")
 	void glGetVertexAttribdvARB(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") DoubleBuffer params);
 
+	@Reuse("ARBVertexShader")
 	@StripPostfix("params")
 	void glGetVertexAttribivARB(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
+	@Reuse("ARBVertexShader")
 	@StripPostfix("result")
 	void glGetVertexAttribPointervARB(@GLuint int index, @GLenum int pname, @Result @GLvoid ByteBuffer result);
 }

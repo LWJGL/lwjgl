@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.ByteBuffer;
 
@@ -59,11 +60,13 @@ public interface ARB_map_buffer_range {
 	 *
 	 * @return A ByteBuffer representing the mapped buffer memory.
 	 */
+	@Reuse("GL30")
 	@CachedResult(isRange = true)
 	@GLvoid
-	@AutoResultSize("length")
+	@AutoSize("length")
 	ByteBuffer glMapBufferRange(@GLenum int target, @GLintptr long offset, @GLsizeiptr long length, @GLbitfield int access);
 
+	@Reuse("GL30")
 	void glFlushMappedBufferRange(@GLenum int target, @GLintptr long offset, @GLsizeiptr long length);
 
 }

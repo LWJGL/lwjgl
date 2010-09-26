@@ -32,11 +32,13 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.Buffer;
 
 public interface ARB_draw_elements_base_vertex {
 
+	@Reuse("GL32")
 	void glDrawElementsBaseVertex(@GLenum int mode, @AutoSize("indices") @GLsizei int count, @AutoType("indices") @GLenum int type,
 	                              @BufferObject(BufferKind.ElementVBO)
 	                              @Const
@@ -44,6 +46,7 @@ public interface ARB_draw_elements_base_vertex {
 	                              @GLushort
 	                              @GLuint Buffer indices, int basevertex);
 
+	@Reuse("GL32")
 	void glDrawRangeElementsBaseVertex(@GLenum int mode, @GLuint int start, @GLuint int end, @AutoSize("indices") @GLsizei int count, @AutoType("indices") @GLenum int type,
 	                                   @BufferObject(BufferKind.ElementVBO)
 	                                   @Const
@@ -51,6 +54,7 @@ public interface ARB_draw_elements_base_vertex {
 	                                   @GLushort
 	                                   @GLuint Buffer indices, int basevertex);
 
+	@Reuse("GL32")
 	void glDrawElementsInstancedBaseVertex(@GLenum int mode, @AutoSize("indices") @GLsizei int count, @AutoType("indices") @GLenum int type,
 	                                       @BufferObject(BufferKind.ElementVBO)
 	                                       @Const

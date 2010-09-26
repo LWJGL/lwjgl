@@ -32,6 +32,11 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLreturn;
+import org.lwjgl.util.generator.opengl.GLsizei;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 import java.nio.IntBuffer;
 
@@ -54,7 +59,7 @@ public interface NV_transform_feedback2 {
 	void glDeleteTransformFeedbacksNV(@AutoSize("ids") @GLsizei int n, @Const @GLuint IntBuffer ids);
 
 	@Alternate("glDeleteTransformFeedbacksNV")
-	void glDeleteTransformFeedbacksNV(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, id), 0", keepParam = true) int id);
+	void glDeleteTransformFeedbacksNV(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, id), 0", keepParam = true) int id);
 
 	void glGenTransformFeedbacksNV(@AutoSize("ids") @GLsizei int n, @OutParameter @GLuint IntBuffer ids);
 

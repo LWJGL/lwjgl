@@ -37,6 +37,7 @@ import java.nio.FloatBuffer;
 import java.nio.DoubleBuffer;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.openal.*;
 
 /**
  * <br>
@@ -492,7 +493,7 @@ public interface AL10 {
 	@StripPostfix("data")
 	@ALvoid
 	void alGetFloatv(@ALenum int pname, @OutParameter @Check("1") FloatBuffer data);
-	
+
 	/**
 	 * Like OpenGL, AL uses a simplified interface for querying global state.
 	 *

@@ -32,6 +32,10 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.GLreturn;
+import org.lwjgl.util.generator.opengl.GLsizei;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 import java.nio.IntBuffer;
 
@@ -48,7 +52,7 @@ public interface APPLE_vertex_array_object {
 	void glDeleteVertexArraysAPPLE(@AutoSize("arrays") @GLsizei int n, @Const @GLuint IntBuffer arrays);
 
 	@Alternate("glDeleteVertexArraysAPPLE")
-	void glDeleteVertexArraysAPPLE(@Constant("1") @GLsizei int n, @Const @GLuint @Constant(value = "APIUtils.getBufferInt().put(0, array), 0", keepParam = true) int array);
+	void glDeleteVertexArraysAPPLE(@Constant("1") @GLsizei int n, @Const @GLuint @Constant(value = "APIUtil.getBufferInt().put(0, array), 0", keepParam = true) int array);
 
 	void glGenVertexArraysAPPLE(@AutoSize("arrays") @GLsizei int n, @OutParameter @GLuint IntBuffer arrays);
 

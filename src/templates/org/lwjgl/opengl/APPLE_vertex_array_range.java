@@ -32,9 +32,9 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.AutoSize;
-import org.lwjgl.util.generator.GLenum;
-import org.lwjgl.util.generator.GLsizei;
-import org.lwjgl.util.generator.GLvoid;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLsizei;
+import org.lwjgl.util.generator.opengl.GLvoid;
 
 import java.nio.ByteBuffer;
 

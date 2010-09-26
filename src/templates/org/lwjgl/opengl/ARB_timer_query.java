@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.LongBuffer;
 
@@ -51,19 +53,24 @@ public interface ARB_timer_query {
 	 */
 	int GL_TIMESTAMP = 0x8E28;
 
+	@Reuse("GL33")
 	void glQueryCounter(@GLuint int id, @GLenum int target);
 
+	@Reuse("GL33")
 	@StripPostfix("params")
 	void glGetQueryObjecti64v(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") @GLint64 LongBuffer params);
 
+	@Reuse("GL33")
 	@Alternate("glGetQueryObjecti64v")
 	@GLreturn("params")
 	@StripPostfix("params")
 	void glGetQueryObjecti64v2(@GLuint int id, @GLenum int pname, @OutParameter @GLint64 LongBuffer params);
 
+	@Reuse("GL33")
 	@StripPostfix("params")
 	void glGetQueryObjectui64v(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") @GLuint64 LongBuffer params);
 
+	@Reuse("GL33")
 	@Alternate("glGetQueryObjectui64v")
 	@GLreturn("params")
 	@StripPostfix("params")

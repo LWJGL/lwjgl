@@ -32,6 +32,10 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLbitfield;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLsizei;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 import java.nio.FloatBuffer;
 
@@ -95,17 +99,21 @@ public interface ARB_texture_multisample {
 	int GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY = 0x910C;
 	int GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY = 0x910D;
 
+	@Reuse("GL32")
 	void glTexImage2DMultisample(@GLenum int target, @GLsizei int samples, int internalformat,
 	                             @GLsizei int width, @GLsizei int height,
 	                             boolean fixedsamplelocations);
 
+	@Reuse("GL32")
 	void glTexImage3DMultisample(@GLenum int target, @GLsizei int samples, int internalformat,
 	                             @GLsizei int width, @GLsizei int height, @GLsizei int depth,
 	                             boolean fixedsamplelocations);
 
+	@Reuse("GL32")
 	@StripPostfix("val")
 	void glGetMultisamplefv(@GLenum int pname, @GLuint int index, @OutParameter @Check("2") FloatBuffer val);
 
+	@Reuse("GL32")
 	void glSampleMaski(@GLuint int index, @GLbitfield int mask);
 
 }

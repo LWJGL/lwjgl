@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -64,17 +65,22 @@ public interface ARB_ES2_compatibility {
 		GL_MEDIUM_INT = 0x8DF4,
 		GL_HIGH_INT = 0x8DF5;
 
+	@Reuse("GL41")
 	void glReleaseShaderCompiler();
 
+	@Reuse("GL41")
 	void glShaderBinary(@AutoSize("shaders") @GLsizei int count, @Const @GLuint IntBuffer shaders,
 	                    @GLenum int binaryformat, @Const @GLvoid ByteBuffer binary, @AutoSize("binary") @GLsizei int length);
 
+	@Reuse("GL41")
 	void glGetShaderPrecisionFormat(@GLenum int shadertype, @GLenum int precisiontype,
 	                                @OutParameter @Check("2") IntBuffer range,
 	                                @OutParameter @Check("1") IntBuffer precision);
 
+	@Reuse("GL41")
 	void glDepthRangef(@GLclampf float n, @GLclampf float f);
 
+	@Reuse("GL41")
 	void glClearDepthf(@GLclampf float d);
 
 }

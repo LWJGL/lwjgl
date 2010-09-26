@@ -32,6 +32,9 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.PointerWrapper;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
@@ -70,35 +73,44 @@ public interface ARB_sync {
 	int GL_CONDITION_SATISFIED = 0x911C;
 	int GL_WAIT_FAILED = 0x911D;
 
-	@GLpointer("GLsync")
+	@Reuse("GL32")
+	@PointerWrapper("GLsync")
 	GLSync glFenceSync(@GLenum int condition, @GLbitfield int flags);
 
-	boolean glIsSync(@GLpointer("GLsync") GLSync sync);
+	@Reuse("GL32")
+	boolean glIsSync(@PointerWrapper("GLsync") GLSync sync);
 
-	void glDeleteSync(@GLpointer("GLsync") GLSync sync);
+	@Reuse("GL32")
+	void glDeleteSync(@PointerWrapper("GLsync") GLSync sync);
 
+	@Reuse("GL32")
 	@GLenum
-	int glClientWaitSync(@GLpointer("GLsync") GLSync sync, @GLbitfield int flags, @GLuint64 long timeout);
+	int glClientWaitSync(@PointerWrapper("GLsync") GLSync sync, @GLbitfield int flags, @GLuint64 long timeout);
 
-	void glWaitSync(@GLpointer("GLsync") GLSync sync, @GLbitfield int flags, @GLuint64 long timeout);
+	@Reuse("GL32")
+	void glWaitSync(@PointerWrapper("GLsync") GLSync sync, @GLbitfield int flags, @GLuint64 long timeout);
 
+	@Reuse("GL32")
 	@StripPostfix(value = "params", postfix = "64")
 	void glGetInteger64v(@GLenum int pname, @OutParameter @Check("1") @GLint64 LongBuffer params);
 
+	@Reuse("GL32")
 	@Alternate("glGetInteger64v")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "64")
 	void glGetInteger64v2(@GLenum int pname, @OutParameter @GLint64 LongBuffer params);
 
+	@Reuse("GL32")
 	@StripPostfix("values")
-	void glGetSynciv(@GLpointer("GLsync") GLSync sync, @GLenum int pname, @AutoSize("values") @GLsizei int bufSize,
+	void glGetSynciv(@PointerWrapper("GLsync") GLSync sync, @GLenum int pname, @AutoSize("values") @GLsizei int bufSize,
 	                 @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
 	                 @OutParameter IntBuffer values);
 
+	@Reuse("GL32")
 	@Alternate("glGetSynciv")
 	@GLreturn("values")
 	@StripPostfix("values")
-	void glGetSynciv2(@GLpointer("GLsync") GLSync sync, @GLenum int pname, @Constant("1") @GLsizei int bufSize,
+	void glGetSynciv2(@PointerWrapper("GLsync") GLSync sync, @GLenum int pname, @Constant("1") @GLsizei int bufSize,
 	                  @OutParameter @GLsizei @Constant("null, 0") IntBuffer length,
 	                  @OutParameter IntBuffer values);
 }

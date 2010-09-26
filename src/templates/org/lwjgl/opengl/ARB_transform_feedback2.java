@@ -32,6 +32,11 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLreturn;
+import org.lwjgl.util.generator.opengl.GLsizei;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 import java.nio.IntBuffer;
 
@@ -48,25 +53,34 @@ public interface ARB_transform_feedback2 {
 	int GL_TRANSFORM_FEEDBACK_BUFFER_ACTIVE = 0x8E24;
 	int GL_TRANSFORM_FEEDBACK_BINDING = 0x8E25;
 
+	@Reuse("GL40")
 	void glBindTransformFeedback(@GLenum int target, @GLuint int id);
 
+	@Reuse("GL40")
 	void glDeleteTransformFeedbacks(@AutoSize("ids") @GLsizei int n, @Const @GLuint IntBuffer ids);
 
+	@Reuse("GL40")
 	@Alternate("glDeleteTransformFeedbacks")
-	void glDeleteTransformFeedbacks(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, id), 0", keepParam = true) int id);
+	void glDeleteTransformFeedbacks(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, id), 0", keepParam = true) int id);
 
+	@Reuse("GL40")
 	void glGenTransformFeedbacks(@AutoSize("ids") @GLsizei int n, @OutParameter @GLuint IntBuffer ids);
 
+	@Reuse("GL40")
 	@Alternate("glGenTransformFeedbacks")
 	@GLreturn("ids")
 	void glGenTransformFeedbacks2(@Constant("1") @GLsizei int n, @OutParameter @GLuint IntBuffer ids);
 
+	@Reuse("GL40")
 	boolean glIsTransformFeedback(@GLuint int id);
 
+	@Reuse("GL40")
 	void glPauseTransformFeedback();
 
+	@Reuse("GL40")
 	void glResumeTransformFeedback();
 
+	@Reuse("GL40")
 	void glDrawTransformFeedback(@GLenum int mode, @GLuint int id);
 
 }

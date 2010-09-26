@@ -37,11 +37,10 @@ import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
 import com.sun.mirror.util.*;
 
+import java.io.*;
+import java.lang.annotation.Annotation;
+import java.nio.channels.FileChannel;
 import java.util.*;
-
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.File;
 
 import java.nio.*;
 
@@ -68,11 +67,6 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		this.generatorLM = generatorLM;
 	}
 
-	private void validateMethods(InterfaceDeclaration d) {
-		for (MethodDeclaration method : d.getMethods())
-			validateMethod(method);
-	}
-
 	private void validateMethod(MethodDeclaration method) {
 		if (method.isVarArgs())
 			throw new RuntimeException("Method " + method.getSimpleName() + " is variadic");
@@ -96,13 +90,13 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		if (method.getAnnotation(CachedResult.class) != null) {
 			if (Utils.getNIOBufferType(Utils.getMethodReturnType(method)) == null)
 				throw new RuntimeException(method + " return type is not a Buffer, but is annotated with CachedResult");
-			if (method.getAnnotation(AutoResultSize.class) == null)
-				throw new RuntimeException(method + " is annotated with CachedResult but misses an AutoResultSize annotation");
+			if (method.getAnnotation(AutoSize.class) == null)
+				throw new RuntimeException(method + " is annotated with CachedResult but misses an AutoSize annotation");
 		}
 		validateTypes(method, method.getAnnotationMirrors(), method.getReturnType());
 	}
 
-	private void validateType(MethodDeclaration method, Class annotation_type, Class type) {
+	private void validateType(MethodDeclaration method, Class<?extends Annotation> annotation_type, Class type) {
 		Class[] valid_types = type_map.getValidAnnotationTypes(type);
 		for (int i = 0; i < valid_types.length; i++)
 			if (valid_types[i].equals(annotation_type))
@@ -115,7 +109,11 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		for (AnnotationMirror annotation : annotations) {
 			NativeType native_type_annotation = NativeTypeTranslator.getAnnotation(annotation, NativeType.class);
 			if (native_type_annotation != null) {
-				Class annotation_type = NativeTypeTranslator.getClassFromType(annotation.getAnnotationType());
+				Class<? extends Annotation> annotation_type = NativeTypeTranslator.getClassFromType(annotation.getAnnotationType());
+					/*System.out.println("\nYO:");
+					System.out.println("annotation = " + annotation);
+					System.out.println("native_type_annotation = " + native_type_annotation);
+					System.out.println("annotation_type = " + annotation_type);*/
 				Class type = Utils.getJavaType(type_mirror);
 				if (Buffer.class.equals(type))
 					continue;
@@ -172,7 +170,9 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 	}
 
 	private static void generateMethodNativePointers(PrintWriter writer, MethodDeclaration method) {
-		writer.println("static " + Utils.getTypedefName(method) + " " + method.getSimpleName() + ";");
+		if ( method.getAnnotation(Extern.class) == null )
+			writer.print("static ");
+		writer.println(Utils.getTypedefName(method) + " " + method.getSimpleName() + ";");
 	}
 
 	private void generateJavaSource(InterfaceDeclaration d, PrintWriter java_writer) throws IOException {
@@ -182,9 +182,15 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		java_writer.println();
 		java_writer.println("import org.lwjgl.*;");
 		java_writer.println("import java.nio.*;");
+		Imports imports = d.getAnnotation(Imports.class);
+		if ( imports != null ) {
+			for ( String i : imports.value() )
+				java_writer.println("import " + i + ";");
+		}
 		java_writer.println();
 		Utils.printDocComment(java_writer, d);
-		java_writer.print("public ");
+		if ( d.getAnnotation(Private.class) == null )
+			java_writer.print("public ");
 		boolean is_final = Utils.isFinal(d);
 		if (is_final)
 			java_writer.write("final ");
@@ -223,8 +229,10 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		native_writer.println("#include <jni.h>");
 		type_map.printNativeIncludes(native_writer);
 		native_writer.println();
+		//if ( d.getAnnotation(NoTypeDefs.class) == null ) {
 		TypedefsGenerator.generateNativeTypedefs(type_map, native_writer, d.getMethods());
 		native_writer.println();
+		//}
 		if (!context_specific) {
 			generateMethodsNativePointers(native_writer, d.getMethods());
 			native_writer.println();
@@ -247,29 +255,98 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 	}
 
 	public void visitInterfaceDeclaration(InterfaceDeclaration d) {
-		File input = d.getPosition().file();
-		File output = new File(env.getOptions().get("-s") + '/' + d.getPackage().getQualifiedName().replace('.', '/'), Utils.getSimpleClassName(d) + ".java");
+		final File input = d.getPosition().file();
+		final File outputJava = new File(env.getOptions().get("-s") + '/' + d.getPackage().getQualifiedName().replace('.', '/'), Utils.getSimpleClassName(d) + ".java");
 
 		PrintWriter java_writer = null;
 
 		try {
-			// Skip this class if the output exists and the input has not been modified.
-			if ( output.exists() && Math.max(input.lastModified(), generatorLM) < output.lastModified() )
+			final Collection<? extends MethodDeclaration> methods = d.getMethods();
+			if ( methods.size() == 0 && d.getFields().size() == 0 )
 				return;
 
-			if (d.getMethods().size() > 0 || d.getFields().size() > 0) {
-				validateMethods(d);
-				java_writer = env.getFiler().createTextFile(Filer.Location.SOURCE_TREE, d.getPackage().getQualifiedName(), new File(Utils.getSimpleClassName(d) + ".java"), null);
-				generateJavaSource(d, java_writer);
+			// Skip this class if the output exists and the input has not been modified.
+			if ( outputJava.exists() && Math.max(input.lastModified(), generatorLM) < outputJava.lastModified() )
+				return;
+
+			for ( final MethodDeclaration method : methods )
+				validateMethod(method);
+			java_writer = env.getFiler().createTextFile(Filer.Location.SOURCE_TREE, d.getPackage().getQualifiedName(), new File(Utils.getSimpleClassName(d) + ".java"), null);
+			generateJavaSource(d, java_writer);
+
+			if ( methods.size() > 0 ) {
+				boolean hasNative = false;
+				for ( final MethodDeclaration method : methods ) {
+					Alternate alt_annotation = method.getAnnotation(Alternate.class);
+					if ( (alt_annotation == null || alt_annotation.nativeAlt()) && method.getAnnotation(Reuse.class) == null ) {
+						hasNative = true;
+						break;
+					}
+				}
+				if ( !hasNative )
+					return;
+
+				final String outputPath = env.getOptions().get("-d") + '/' + Utils.getNativeQualifiedName(Utils.getQualifiedClassName(d));
+				final File outputNative = new File(outputPath + ".c");
+				final File outputBackup = new File(outputPath + "_backup.c");
+
+				// If the native file exists, rename.
+				final ByteBuffer nativeBefore;
+				if ( outputNative.exists() ) {
+					nativeBefore = readFile(outputNative);
+					outputNative.renameTo(outputBackup);
+				} else
+					nativeBefore = null;
+
+				try {
+					generateNativeSource(d);
+
+					// If the native file did exist, compare with the new file. If they're the same,
+					// reset the last modified time to avoid ridiculous C compilation times.
+					if ( nativeBefore != null && outputNative.length() == nativeBefore.capacity() ) {
+						final ByteBuffer nativeAfter = readFile(outputNative);
+						boolean same = true;
+						for ( int i = nativeBefore.position(); i < nativeBefore.limit(); i++ ) {
+							if ( nativeBefore.get(i) != nativeAfter.get(i) ) {
+								same = false;
+								break;
+							}
+						}
+
+						if ( same ) {
+							outputNative.delete();
+							outputBackup.renameTo(outputNative);
+						}
+					}
+				} finally {
+					if ( outputBackup.exists() )
+						outputBackup.delete();
+				}
 			}
-			if (d.getMethods().size() > 0)
-				generateNativeSource(d);
 		} catch (Exception e) {
 			// If anything goes wrong mid-gen, delete output to allow regen next time we run.
 			if ( java_writer != null ) java_writer.close();
-			if ( output.exists() ) output.delete();
+			if ( outputJava.exists() ) outputJava.delete();
 
 			throw new RuntimeException(e);
 		}
 	}
+
+	private static ByteBuffer readFile(final File file) throws IOException {
+		final FileChannel channel = new FileInputStream(file).getChannel();
+
+		final long bytesTotal = channel.size();
+		final ByteBuffer buffer = ByteBuffer.allocateDirect((int)bytesTotal);
+
+		long bytesRead = 0;
+		do {
+			bytesRead += channel.read(buffer);
+		} while ( bytesRead < bytesTotal );
+		buffer.flip();
+
+		channel.close();
+
+		return buffer;
+	}
+
 }

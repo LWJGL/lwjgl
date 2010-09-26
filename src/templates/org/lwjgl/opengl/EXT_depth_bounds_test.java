@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLclampd;
 
 public interface EXT_depth_bounds_test {
 

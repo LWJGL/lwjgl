@@ -32,6 +32,10 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLchar;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLsizei;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -103,7 +107,20 @@ public interface ARB_debug_output {
 	@Alternate("glDebugMessageInsertARB")
 	void glDebugMessageInsertARB(@GLenum int source, @GLenum int type, @GLuint int id, @GLenum int severity, @Constant("buf.length()") @GLsizei int length, CharSequence buf);
 
-	void glDebugMessageCallbackARB(@GLpointer(value = "GLDEBUGPROCARB", canBeNull = true) ARBDebugOutputCallback callback, @Check(canBeNull = true) @GLvoid ByteBuffer userParam);
+	/**
+	 * The {@code ARBDebugOutputCallback.Handler} implementation passed to this method will be used for
+	 * ARB_debug_output messages. If callback is null, any previously registered handler for the current
+	 * thread will be unregistered and stop receiving messages.
+	 *
+	 * @param callback the callback function to use
+	 */
+	@Code(
+		// Create a GlobalRef to the callback object and register it with the current context.
+		javaBeforeNative = "\t\tlong userParam = callback == null ? 0 : CallbackUtil.createGlobalRef(callback.getHandler());\n" +
+		                   "\t\tCallbackUtil.registerContextCallbackARB(userParam);"
+	)
+	void glDebugMessageCallbackARB(@PointerWrapper(value = "GLDEBUGPROCARB", canBeNull = true) ARBDebugOutputCallback callback,
+	                               @Constant("userParam") @PointerWrapper("GLvoid *") long userParam);
 
 	@GLuint
 	int glGetDebugMessageLogARB(@GLuint int count,

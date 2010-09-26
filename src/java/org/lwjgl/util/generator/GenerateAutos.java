@@ -43,4 +43,6 @@ import java.lang.annotation.ElementType;
 
 @Target(ElementType.METHOD)
 public @interface GenerateAutos {
+	/** If true, a size variable will be generated. */
+	String[] sizeVariables() default {};
 }

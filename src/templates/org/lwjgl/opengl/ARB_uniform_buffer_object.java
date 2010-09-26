@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -98,21 +100,25 @@ public interface ARB_uniform_buffer_object {
 	/** Returned by GetActiveUniformsivARB and GetUniformBlockIndexARB */
 	int GL_INVALID_INDEX = 0xFFFFFFFF;
 
+	@Reuse("GL31")
 	void glGetUniformIndices(@GLuint int program, @AutoSize("uniformIndices") @GLsizei int uniformCount,
-	                         @Const @NullTerminated("uniformIndices.remaining()") @GLchar @StringList("uniformCount") ByteBuffer uniformNames,
+	                         @Const @NullTerminated("uniformIndices.remaining()") @GLchar @PointerArray("uniformCount") ByteBuffer uniformNames,
 	                         @OutParameter @GLuint IntBuffer uniformIndices);
 
+	@Reuse("GL31")
 	@Alternate(value = "glGetUniformIndices")
 	void glGetUniformIndices(@GLuint int program, @Constant("uniformNames.length") @GLsizei int uniformCount,
-	                         @Const @NullTerminated @StringList("uniformCount") CharSequence[] uniformNames,
+	                         @Const @NullTerminated @PointerArray("uniformCount") CharSequence[] uniformNames,
 	                         @OutParameter @Check("uniformNames.length") @GLuint IntBuffer uniformIndices);
 
+	@Reuse("GL31")
 	@StripPostfix("params")
 	void glGetActiveUniformsiv(@GLuint int program, @AutoSize("uniformIndices") @GLsizei int uniformCount,
 	                           @Const @GLuint IntBuffer uniformIndices,
 	                           @GLenum int pname,
 	                           @OutParameter @Check("uniformIndices.remaining()") @GLint IntBuffer params);
 
+	@Reuse("GL31")
 	@Alternate("glGetActiveUniformsiv")
 	@GLreturn("params")
 	@StripPostfix("params")
@@ -121,55 +127,68 @@ public interface ARB_uniform_buffer_object {
 	                           @GLenum int pname,
 	                           @OutParameter @GLint IntBuffer params);
 
+	@Reuse("GL31")
 	void glGetActiveUniformName(@GLuint int program, @GLuint int uniformIndex, @AutoSize("uniformName") @GLsizei int bufSize,
 	                            @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
 	                            @OutParameter @GLchar ByteBuffer uniformName);
 
+	@Reuse("GL31")
 	@Alternate("glGetActiveUniformName")
 	@GLreturn(value = "uniformName", maxLength = "bufSize")
 	void glGetActiveUniformName2(@GLuint int program, @GLuint int uniformIndex, @GLsizei int bufSize,
 	                             @OutParameter @GLsizei @Constant("uniformName_length, 0") IntBuffer length,
 	                             @OutParameter @GLchar ByteBuffer uniformName);
 
+	@Reuse("GL31")
 	@GLuint
 	int glGetUniformBlockIndex(@GLuint int program, @Const @NullTerminated @GLchar ByteBuffer uniformBlockName);
 
+	@Reuse("GL31")
 	@Alternate("glGetUniformBlockIndex")
 	@GLuint
 	int glGetUniformBlockIndex(@GLuint int program, @NullTerminated CharSequence uniformBlockName);
 
+	@Reuse("GL31")
 	@StripPostfix("params")
 	void glGetActiveUniformBlockiv(@GLuint int program, @GLuint int uniformBlockIndex, @GLenum int pname,
 	                               @OutParameter @Check(value = "16") @GLint IntBuffer params);
 
+	@Reuse("GL31")
 	@Alternate("glGetActiveUniformBlockiv")
 	@GLreturn("params")
 	@StripPostfix("params")
 	void glGetActiveUniformBlockiv2(@GLuint int program, @GLuint int uniformBlockIndex, @GLenum int pname,
 	                                @OutParameter @GLint IntBuffer params);
 
+	@Reuse("GL31")
 	void glGetActiveUniformBlockName(@GLuint int program, @GLuint int uniformBlockIndex, @AutoSize("uniformBlockName") @GLsizei int bufSize,
 	                                 @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
 	                                 @OutParameter @GLchar ByteBuffer uniformBlockName);
 
+	@Reuse("GL31")
 	@Alternate("glGetActiveUniformBlockName")
 	@GLreturn(value = "uniformBlockName", maxLength = "bufSize")
 	void glGetActiveUniformBlockName2(@GLuint int program, @GLuint int uniformBlockIndex, @GLsizei int bufSize,
 	                                  @OutParameter @GLsizei @Constant("uniformBlockName_length, 0") IntBuffer length,
 	                                  @OutParameter @GLchar ByteBuffer uniformBlockName);
 
+	@Reuse("GL30")
 	void glBindBufferRange(@GLenum int target, @GLuint int index, @GLuint int buffer, @GLintptr long offset, @GLsizeiptr long size);
 
+	@Reuse("GL30")
 	void glBindBufferBase(@GLenum int target, @GLuint int index, @GLuint int buffer);
 
+	@Reuse("GL30")
 	@StripPostfix(value = "data", extension = "")
 	void glGetIntegeri_v(@GLenum int value, @GLuint int index, @OutParameter @Check("4") IntBuffer data);
 
+	@Reuse("GL30")
 	@Alternate("glGetIntegeri_v")
 	@GLreturn("data")
 	@StripPostfix("data")
 	void glGetIntegeri_v2(@GLenum int value, @GLuint int index, @OutParameter IntBuffer data);
 
+	@Reuse("GL31")
 	void glUniformBlockBinding(@GLuint int program, @GLuint int uniformBlockIndex, @GLuint int uniformBlockBinding);
 
 }

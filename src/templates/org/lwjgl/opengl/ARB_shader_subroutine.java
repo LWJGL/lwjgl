@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -59,55 +61,68 @@ public interface ARB_shader_subroutine {
 	int GL_UNIFORM_SIZE = GL31.GL_UNIFORM_SIZE;
 	int GL_UNIFORM_NAME_LENGTH = GL31.GL_UNIFORM_NAME_LENGTH;
 
+	@Reuse("GL40")
 	int glGetSubroutineUniformLocation(@GLuint int program, @GLenum int shadertype, @Const @NullTerminated ByteBuffer name);
 
+	@Reuse("GL40")
 	@GLuint
 	int glGetSubroutineIndex(@GLuint int program, @GLenum int shadertype, @Const @NullTerminated ByteBuffer name);
 
+	@Reuse("GL40")
 	@StripPostfix("values")
 	void glGetActiveSubroutineUniformiv(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLenum int pname,
 	                                    @Check("1") @OutParameter IntBuffer values);
 
+	@Reuse("GL40")
 	@Alternate("glGetActiveSubroutineUniformiv")
 	@GLreturn("values")
 	@StripPostfix("values")
 	void glGetActiveSubroutineUniformiv2(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLenum int pname,
 	                                     @OutParameter IntBuffer values);
 
+	@Reuse("GL40")
 	void glGetActiveSubroutineUniformName(@GLuint int program, @GLenum int shadertype, @GLuint int index, @AutoSize("name") @GLsizei int bufsize,
 	                                      @OutParameter @Check(value = "1", canBeNull = true) @GLsizei IntBuffer length,
 	                                      @OutParameter ByteBuffer name);
 
+	@Reuse("GL40")
 	@Alternate("glGetActiveSubroutineUniformName")
 	@GLreturn(value = "name", maxLength = "bufsize")
 	void glGetActiveSubroutineUniformName2(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLsizei int bufsize,
 	                                       @OutParameter @Constant("name_length, 0") @GLsizei IntBuffer length,
 	                                       @OutParameter @GLchar ByteBuffer name);
 
+	@Reuse("GL40")
 	void glGetActiveSubroutineName(@GLuint int program, @GLenum int shadertype, @GLuint int index, @AutoSize("name") @GLsizei int bufsize,
 	                               @OutParameter @Check(value = "1", canBeNull = true) @GLsizei IntBuffer length,
 	                               @OutParameter ByteBuffer name);
 
+	@Reuse("GL40")
 	@Alternate("glGetActiveSubroutineName")
 	@GLreturn(value = "name", maxLength = "bufsize")
 	void glGetActiveSubroutineName2(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLsizei int bufsize,
 	                                @OutParameter @Constant("name_length, 0") @GLsizei IntBuffer length,
 	                                @OutParameter @GLchar ByteBuffer name);
 
+	@Reuse("GL40")
 	@StripPostfix("indices")
 	void glUniformSubroutinesuiv(@GLenum int shadertype, @AutoSize("indices") @GLsizei int count, @Const @GLuint IntBuffer indices);
 
+	@Reuse("GL40")
 	@StripPostfix("params")
 	void glGetUniformSubroutineuiv(@GLenum int shadertype, int location, @Check("1") @OutParameter @GLuint IntBuffer params);
 
+	@Reuse("GL40")
 	@Alternate("glGetUniformSubroutineuiv")
 	@GLreturn("params")
 	@StripPostfix("params")
 	void glGetUniformSubroutineuiv2(@GLenum int shadertype, int location, @OutParameter @GLuint IntBuffer params);
 
+	@Reuse("GL40")
 	@StripPostfix("values")
 	void glGetProgramStageiv(@GLuint int program, @GLenum int shadertype, @GLenum int pname, @Check("1") @OutParameter IntBuffer values);
 
+	@Reuse("GL40")
 	@Alternate("glGetProgramStageiv")
 	@GLreturn("values")
 	@StripPostfix("values")

@@ -56,17 +56,18 @@ public final class Sys {
 	/** Current version of library */
 	private static final String VERSION = "2.6";
 
-	/** The implementation instance to delegate platform specific behavior to */
-	private final static SysImplementation implementation;
+	private static final String POSTFIX64BIT = "64";
 
-	private final static String POSTFIX64BIT = "64";
-  
+	/** The implementation instance to delegate platform specific behavior to */
+	private static final SysImplementation implementation;
+	private static final boolean is64Bit;
+
 	private static void doLoadLibrary(final String lib_name) {
 		AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
 				String library_path = System.getProperty("org.lwjgl.librarypath");
 				if (library_path != null) {
-					System.load(library_path + File.separator + 
+					System.load(library_path + File.separator +
 						System.mapLibraryName(lib_name));
 				} else {
 					System.loadLibrary(lib_name);
@@ -76,14 +77,15 @@ public final class Sys {
 		});
 	}
 
-	private static void loadLibrary(final String lib_name) {
+	private static boolean loadLibrary(final String lib_name) {
 		try {
 			doLoadLibrary(lib_name);
+			return false;
 		} catch (UnsatisfiedLinkError e) {
 			if (implementation.has64Bit()) {
 				try {
 					doLoadLibrary(lib_name + POSTFIX64BIT);
-					return;
+					return true;
 				} catch (UnsatisfiedLinkError e2) {
 					LWJGLUtil.log("Failed to load 64 bit library: " + e2.getMessage());
 				}
@@ -91,12 +93,12 @@ public final class Sys {
 			// Throw original error
 			throw e;
 		}
-	}	
+	}
 
 	static {
 		implementation = createImplementation();
-		loadLibrary(JNI_LIBRARY_NAME);
-		
+		is64Bit = loadLibrary(JNI_LIBRARY_NAME);
+
 		int native_jni_version = implementation.getJNIVersion();
 		int required_version = implementation.getRequiredJNIVersion();
 		if (native_jni_version != required_version)
@@ -130,11 +132,16 @@ public final class Sys {
 	public static String getVersion() {
 		return VERSION;
 	}
-	
+
 	/**
 	 * Initialization. This is just a dummy method to trigger the static constructor.
 	 */
 	public static void initialize() {
+	}
+
+	/** Returns true if a 64bit implementation was loaded. */
+	public static boolean is64Bit() {
+		return is64Bit;
 	}
 
 	/**

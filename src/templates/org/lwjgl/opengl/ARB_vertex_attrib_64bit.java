@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.Buffer;
 import java.nio.DoubleBuffer;
@@ -54,31 +55,41 @@ public interface ARB_vertex_attrib_64bit {
 	int GL_DOUBLE_MAT4x2 = 0x8F4D;
 	int GL_DOUBLE_MAT4x3 = 0x8F4E;
 
+	@Reuse("GL41")
 	void glVertexAttribL1d(@GLuint int index, double x);
 
+	@Reuse("GL41")
 	void glVertexAttribL2d(@GLuint int index, double x, double y);
 
+	@Reuse("GL41")
 	void glVertexAttribL3d(@GLuint int index, double x, double y, double z);
 
+	@Reuse("GL41")
 	void glVertexAttribL4d(@GLuint int index, double x, double y, double z, double w);
 
+	@Reuse("GL41")
 	@StripPostfix("v")
 	void glVertexAttribL1dv(@GLuint int index, @Const @Check("1") DoubleBuffer v);
 
+	@Reuse("GL41")
 	@StripPostfix("v")
 	void glVertexAttribL2dv(@GLuint int index, @Const @Check("2") DoubleBuffer v);
 
+	@Reuse("GL41")
 	@StripPostfix("v")
 	void glVertexAttribL3dv(@GLuint int index, @Const @Check("3") DoubleBuffer v);
 
+	@Reuse("GL41")
 	@StripPostfix("v")
 	void glVertexAttribL4dv(@GLuint int index, @Const @Check("4") DoubleBuffer v);
 
+	@Reuse("GL41")
 	void glVertexAttribLPointer(@GLuint int index, int size, @Constant("GL11.GL_DOUBLE") @GLenum int type, @GLsizei int stride,
 	                               @CachedReference(index = "index", name = "glVertexAttribPointer_buffer")
 	                               @BufferObject(BufferKind.ArrayVBO)
 	                               @Check @Const @GLdouble Buffer pointer);
 
+	@Reuse("GL41")
 	@StripPostfix("params")
 	void glGetVertexAttribLdv(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") DoubleBuffer params);
 

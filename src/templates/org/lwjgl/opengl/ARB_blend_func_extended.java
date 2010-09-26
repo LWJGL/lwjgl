@@ -32,6 +32,9 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.GLchar;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 import java.nio.ByteBuffer;
 
@@ -53,13 +56,17 @@ public interface ARB_blend_func_extended {
 	 */
 	int GL_MAX_DUAL_SOURCE_DRAW_BUFFERS = 0x88FC;
 
+	@Reuse("GL33")
 	void glBindFragDataLocationIndexed(@GLuint int program, @GLuint int colorNumber, @GLuint int index, @NullTerminated @Const @GLchar ByteBuffer name);
 
+	@Reuse("GL33")
 	@Alternate("glBindFragDataLocationIndexed")
 	void glBindFragDataLocationIndexed(@GLuint int program, @GLuint int colorNumber, @GLuint int index, @NullTerminated CharSequence name);
 
+	@Reuse("GL33")
 	int glGetFragDataIndex(@GLuint int program, @NullTerminated @Const @GLchar ByteBuffer name);
 
+	@Reuse("GL33")
 	@Alternate("glGetFragDataIndex")
 	int glGetFragDataIndex(@GLuint int program, @NullTerminated CharSequence name);
 

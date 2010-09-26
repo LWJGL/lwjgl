@@ -31,19 +31,17 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.PointerWrapperAbstract;
+
 /**
+ * This class is a wrapper around a GLsync pointer.
+ *
  * @author spasi <spasi@users.sourceforge.net>
  */
-public final class GLSync implements PointerWrapper {
-
-	private final long sync;
+public final class GLSync extends PointerWrapperAbstract {
 
 	GLSync(final long sync) {
-		this.sync = sync;
-	}
-
-	public long getPointer() {
-		return sync;
+		super(sync);
 	}
 
 }

@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.GLclampf;
+import org.lwjgl.util.generator.opengl.GLclampf;
 
 public interface ARB_sample_shading {
 

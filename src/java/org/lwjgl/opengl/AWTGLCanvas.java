@@ -33,6 +33,7 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.Sys;
 
 import java.awt.*;
@@ -255,6 +256,14 @@ public class AWTGLCanvas extends Canvas implements DrawableLWJGL, ComponentListe
 			} catch (LWJGLException e) {
 				throw new RuntimeException(e);
 			}
+		}
+	}
+
+	public final void setCLSharingProperties(final PointerBuffer properties) throws LWJGLException {
+		synchronized ( SYNC_LOCK ) {
+			if ( context == null )
+				throw new IllegalStateException("Canvas not yet displayable");
+			context.setCLSharingProperties(properties);
 		}
 	}
 

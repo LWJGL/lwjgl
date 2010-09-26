@@ -33,8 +33,8 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.Check;
 import org.lwjgl.util.generator.Const;
-import org.lwjgl.util.generator.GLenum;
-import org.lwjgl.util.generator.GLuint;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;

@@ -41,6 +41,8 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
+import org.lwjgl.opencl.CLMem;
+
 import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
 
@@ -52,7 +54,8 @@ public class RegisterStubsGenerator {
 		Iterator<? extends MethodDeclaration> it = d.getMethods().iterator();
 		while (it.hasNext()) {
 			MethodDeclaration method = it.next();
-			if ( method.getAnnotation(Alternate.class) != null )
+			Alternate alt_annotation = method.getAnnotation(Alternate.class);
+			if ( (alt_annotation != null && (!alt_annotation.nativeAlt() || alt_annotation.skipNative())) || method.getAnnotation(Reuse.class) != null )
 				continue;
 			EnumSet<Platform> platforms;
 			PlatformDependent platform_annotation = method.getAnnotation(PlatformDependent.class);
@@ -83,20 +86,30 @@ public class RegisterStubsGenerator {
 		Collection<ParameterDeclaration> params = method.getParameters();
 		String signature = "(";
 		for (ParameterDeclaration param : params) {
-			if (param.getAnnotation(Result.class) != null)
+			if ( param.getAnnotation(Helper.class) != null || param.getAnnotation(Result.class) != null )
 				continue;
-			if (mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null) {
+			
+			final Constant constant_annotation = param.getAnnotation(Constant.class);
+			if ( constant_annotation != null && constant_annotation.isNative() )
+				continue;
+
+			if (mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null)
 				signature += "I";
-			} else {
+			else
 				signature += getTypeSignature(param.getType(), true);
-			}
 		}
-		TypeMirror result_type = Utils.getMethodReturnType(method);
-		if (Utils.getNIOBufferType(result_type) != null)
-			signature += "I";
+
+		final TypeMirror result_type = Utils.getMethodReturnType(method);
+		final CachedResult cached_result_annotation = method.getAnnotation(CachedResult.class);
+		final AutoSize auto_size_annotation = method.getAnnotation(AutoSize.class);
+
+		if ( Utils.getNIOBufferType(result_type) != null && (auto_size_annotation == null || !auto_size_annotation.isNative()) )
+			signature += "J";
+
 		String result_type_signature = getTypeSignature(result_type, false);
-		if (method.getAnnotation(CachedResult.class) != null)
+		if ( cached_result_annotation != null )
 			signature += result_type_signature;
+
 		signature += ")";
 		signature += result_type_signature;
 		return signature;
@@ -110,8 +123,11 @@ public class RegisterStubsGenerator {
 		writer.print(Utils.getQualifiedNativeMethodName(Utils.getQualifiedClassName(d), method, generate_error_checks, context_specific));
 		if (mode == Mode.BUFFEROBJECT)
 			writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
-		String opengl_handle_name = method.getSimpleName().replaceFirst("gl", platform.getPrefix());
-		writer.print(", \"" + opengl_handle_name + "\", (void *)&" + method.getSimpleName() + "}");
+
+		final Alternate alt_annotation = method.getAnnotation(Alternate.class);
+		final String methodName = alt_annotation == null ? method.getSimpleName() : alt_annotation.value();
+		String opengl_handle_name = methodName.replaceFirst("gl", platform.getPrefix());
+		writer.print(", \"" + opengl_handle_name + "\", (void *)&" + methodName + "}");
 		if (has_more)
 			writer.println(",");
 	}

@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -67,7 +69,7 @@ public interface NV_program {
 	void glDeleteProgramsNV(@AutoSize("programs") @GLsizei int n, @Const @GLuint IntBuffer programs);
 
 	@Alternate("glDeleteProgramsNV")
-	void glDeleteProgramsNV(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, program), 0", keepParam = true) int program);
+	void glDeleteProgramsNV(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, program), 0", keepParam = true) int program);
 
 	void glGenProgramsNV(@AutoSize("programs") @GLsizei int n, @OutParameter @GLuint IntBuffer programs);
 
@@ -99,6 +101,6 @@ public interface NV_program {
 	void glRequestResidentProgramsNV(@AutoSize("programIDs") @GLsizei int n, @GLuint IntBuffer programIDs);
 
 	@Alternate("glRequestResidentProgramsNV")
-	void glRequestResidentProgramsNV(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, programID), 0", keepParam = true) int programID);
+	void glRequestResidentProgramsNV(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, programID), 0", keepParam = true) int programID);
 }
 

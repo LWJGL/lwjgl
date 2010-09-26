@@ -32,7 +32,7 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.AutoSize;
-import org.lwjgl.util.generator.GLsizei;
+import org.lwjgl.util.generator.opengl.GLsizei;
 import org.lwjgl.util.generator.StripPostfix;
 
 import java.nio.FloatBuffer;

@@ -55,6 +55,10 @@ final class WindowsContextImplementation implements ContextImplementation {
 
 	private static native ByteBuffer nCreate(ByteBuffer peer_handle, IntBuffer attribs_handle, ByteBuffer shared_context_handle) throws LWJGLException;
 
+	native long getHGLRC(ByteBuffer context_handle);
+
+	native long getHDC(ByteBuffer peer_info_handle);
+
 	public void swapBuffers() throws LWJGLException {
 		Context current_context = Context.getCurrentContext();
 		if ( current_context == null )

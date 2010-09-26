@@ -32,19 +32,19 @@
 		<mkdir dir="${lwjgl.temp}/native/macosx" 	taskname="initialiazing temp/macosx folder" />
 		<mkdir dir="${lwjgl.temp}/native/solaris" taskname="initialiazing temp/solaris folder" />
 	</target>
-	
+
 	<!-- Cleans up any files created during the execution of this script -->
-	<target name="clean" description="Cleans the diectories controlled by this ant script" depends="clean-generated">
+	<target name="clean" description="Cleans the directories controlled by this ant script" depends="clean-generated">
 		<delete dir="${lwjgl.temp}" quiet="true" failonerror="false" taskname="cleaning temp folder" />
 		<delete dir="${lwjgl.docs}/javadoc" quiet="true" failonerror="false" taskname="cleaning javadoc folder" />
 		<delete dir="${lwjgl.bin}" quiet="true" failonerror="false" taskname="cleaning bin folder" />
 	</target>
-	
+
 	<!-- Creates a distribution of LWJGL -->
 	<target name="release" description="Creates a distribution of LWJGL using supplied native binaries">
 		<!-- Warn user -->
 		<echo message="Before running the release target, please manually compile all platforms and place required files in ${lwjgl.lib}/windows, ${lwjgl.lib}/linux and ${lwjgl.lib}/macosx${line.separator}Missing files will result in a successfull built, but with incomplete release zips"/>
-  	<input 
+  	<input
   		message="All data in the ${lwjgl.dist} folder will be deleted. Continue? "
     	validargs="yes,no"
     	addproperty="do.delete"
@@ -53,7 +53,7 @@
     	<equals arg1="no" arg2="${do.delete}"/>
   	</condition>
   	<fail if="do.abort">Build aborted by user.</fail>
-  	
+
   	<!-- prepare -->
   	<delete dir="${lwjgl.dist}" quiet="true" failonerror="false" />
   	<antcall target="clean" />
@@ -72,19 +72,19 @@
 	<antcall target="-jars_NoDEP" />
  	<antcall target="javadoc" />
 	<antcall target="applet-release" />
-  	
+
   	<!-- copy resources to res folder -->
  	<copy todir="${lwjgl.temp}/res">
     	<fileset dir="res"/>
   	</copy>
-  	
+
   	<!-- copy docs -->
  		<copy todir="${lwjgl.temp}/doc">
     	<fileset dir="${lwjgl.docs}">
     		<patternset refid="lwjgl-docs.fileset" />
     	</fileset>
   	</copy>
-		
+
 		<!-- create distribution from files in libs/ and temp/ -->
 		<antcall target="-distribution_javadoc" />
 		<antcall target="-distribution_source" />
@@ -105,7 +105,7 @@
 			</fileset>
 		</move>
 	</target>
-	
+
 	<!-- Packages the java files -->
 	<target name="-createdebugjars">
 		<!-- Create lwjgl.jar -->
@@ -116,7 +116,7 @@
 			</manifest>
 		</jar>
 	</target>
-	
+
 	<!-- Packages the java files -->
 	<target name="-createjars">
 		<!-- Create lwjgl.jar -->
@@ -126,7 +126,7 @@
 				<attribute name="Sealed" value="true"/>
 			</manifest>
 		</jar>
-		
+
 		<!-- Create lwjgl_util_applet.jar -->
 		<jar destfile="${lwjgl.temp}/jar/lwjgl_util_applet.jar" taskname="lwjgl_util_applet.jar">
 			<fileset refid="lwjgl_util_applet.fileset" />
@@ -151,7 +151,7 @@
 	<target name="-distribute">
 		<delete>
 			<fileset dir="${lwjgl.temp}/native/" includes="**/*"/>
-		</delete>	
+		</delete>
 
 		<copy todir="${lwjgl.temp}/jar">
 			<fileset dir="${lwjgl.lib}/" includes="*.jar"/>
@@ -175,20 +175,20 @@
 			<fileset dir="${lwjgl.lib}/solaris">
 				<patternset refid="lwjgl-solaris.fileset" />
 			</fileset>
-		</copy>		
-		
+		</copy>
+
 		<!-- create base package -->
 		<zip destfile="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip">
 			<zipfileset dir="${lwjgl.temp}" prefix="lwjgl-${lwjgl.version}/">
 				<patternset refid="lwjgl_base"/>
-			</zipfileset>			
+			</zipfileset>
 		</zip>
-		
+
 		<!-- create applet package -->
 		<zip destfile="${lwjgl.dist}/lwjgl_applet-${lwjgl.version}.zip">
 			<zipfileset dir="." prefix="lwjgl_applet-${lwjgl.version}/">
 				<patternset refid="lwjgl_applet"/>
-			</zipfileset>			
+			</zipfileset>
 		</zip>
 	</target>
 
@@ -196,14 +196,14 @@
 	<target name="-distribution_javadoc">
 		<zip destfile="${lwjgl.dist}/lwjgl-docs-${lwjgl.version}.zip" basedir="${lwjgl.docs}" includes="javadoc/**" />
 	</target>
-	
+
 	<!-- Creates a versioned distribution of the source code -->
 	<target name="-distribution_source">
 		<zip destfile="${lwjgl.dist}/lwjgl-source-${lwjgl.version}.zip">
 			<fileset refid="lwjgl.source.fileset" />
 		</zip>
-	</target>	
-	
+	</target>
+
 	<!-- Generates the native headers from source files -->
 	<target name="headers" description="invokes javah on java classes" depends="compile">
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/linux" force="yes">
@@ -251,17 +251,18 @@
 			<class name="org.lwjgl.openal.AL" />
 			<class name="org.lwjgl.opengl.GLContext" />
 			<class name="org.lwjgl.opengl.Pbuffer" />
-			<class name="org.lwjgl.opengl.AMDDebugOutputCallback" />
-			<class name="org.lwjgl.opengl.ARBDebugOutputCallback" />
+			<class name="org.lwjgl.opengl.CallbackUtil" />
+            <class name="org.lwjgl.opencl.CL" />
+            <class name="org.lwjgl.opencl.CallbackUtil" />
 		</javah>
 	</target>
-	
+
 	<target name="touch-version">
 		<touch file="${lwjgl.src.native}/windows/org_lwjgl_opengl_Display.c"/>
 		<touch file="${lwjgl.src.native}/linux/org_lwjgl_opengl_Display.c"/>
 		<touch file="${lwjgl.src.native}/macosx/org_lwjgl_opengl_Display.m"/>
 	</target>
-	
+
 	<target name="version-mismatch">
 		<loadfile srcfile="${lwjgl.src}/java/org/lwjgl/WindowsSysImplementation.java" property="lwjgl.java.windows.version">
 			<filterchain>
@@ -276,7 +277,7 @@
 	    		<containsstring contains="JNI_VERSION ="/>
 				</tokenfilter>
 			</filterchain>
-		</loadfile>			
+		</loadfile>
 		<loadfile srcfile="${lwjgl.src}/java/org/lwjgl/MacOSXSysImplementation.java" property="lwjgl.java.macosx.version">
 			<filterchain>
 				<tokenfilter>
@@ -297,7 +298,7 @@
 	    		<containsstring contains="#define org_lwjgl_LinuxSysImplementation_JNI_VERSION"/>
 				</tokenfilter>
 			</filterchain>
-		</loadfile>				
+		</loadfile>
 		<loadfile srcfile="${lwjgl.src.native}/macosx/org_lwjgl_MacOSXSysImplementation.h" property="lwjgl.native.macosx.version">
 			<filterchain>
 				<tokenfilter>
@@ -307,14 +308,14 @@
 		</loadfile>
 		<echo>
 			lwjgl.java.windows.version = ${lwjgl.java.windows.version}
-			lwjgl.native.windows.version = ${lwjgl.native.windows.version}			
+			lwjgl.native.windows.version = ${lwjgl.native.windows.version}
 			lwjgl.java.linux.version = ${lwjgl.java.linux.version}
-			lwjgl.native.linux.version = ${lwjgl.native.linux.version}			
+			lwjgl.native.linux.version = ${lwjgl.native.linux.version}
 			lwjgl.java.macosx.version = ${lwjgl.java.macosx.version}
-			lwjgl.native.macosx.version = ${lwjgl.native.macosx.version}			
+			lwjgl.native.macosx.version = ${lwjgl.native.macosx.version}
 		</echo>
 	</target>
-	
+
 	<macrodef name="version-check">
 	  <attribute name="platform"/>
 	  <sequential>
@@ -325,7 +326,7 @@
 	        <pathelement path="${java.class.path}"/>
 	      </classpath>
 	    </java>
-	    
+
 	    <fail message="Unable to load native library: ${nativetest.err}">
 	     <condition>
 	       <not>
@@ -333,27 +334,28 @@
 	       </not>
 	     </condition>
 	   </fail>
-	   
+
 	   <echo message="Successfully executed NativeTest"/>
 		</sequential>
 	</macrodef>
-	
+
 	<!-- Compiles the Java source code -->
 	<target name="compile" description="Compiles the java source code" depends="-initialize">
-		<javac debug="yes" destdir="${lwjgl.bin}" source="1.4" target="1.4" classpath="${lwjgl.lib}/jinput.jar:${lwjgl.lib}/AppleJavaExtensions.jar" taskname="core">
+		<javac debug="yes" destdir="${lwjgl.bin}" source="1.5" target="1.5" classpath="${lwjgl.lib}/jinput.jar:${lwjgl.lib}/AppleJavaExtensions.jar" taskname="core">
 			<src path="${lwjgl.src}/java/"/>
 			<src path="${lwjgl.src}/generated/"/>
 			<include name="org/lwjgl/*.java"/>
 			<include name="org/lwjgl/input/**"/>
 			<include name="org/lwjgl/opengl/**"/>
 			<include name="org/lwjgl/openal/**"/>
+            <include name="org/lwjgl/opencl/**"/>
 			<include name="org/lwjgl/util/**"/>
 			<exclude name="org/lwjgl/util/generator/**"/>
 		</javac>
-		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/test/**" source="1.4" target="1.4" taskname="test" />
-		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/examples/**" source="1.4" target="1.4" taskname="examples" />
-	</target>	
-	
+		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/test/**" source="1.5" target="1.5" taskname="test" />
+		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/examples/**" source="1.5" target="1.5" taskname="examples" />
+	</target>
+
 	<target name="compile_native" depends="headers, touch-version, version-mismatch" description="Compiles the native files">
 		<condition property="lwjgl.platform.windows">
 			<os family="windows" />
@@ -374,7 +376,7 @@
 			<os name="Mac OS X" />
 		</condition>
 		<antcall target="-compile_native_macosx" />
-	</target>	
+	</target>
 
 	<!-- Compiles LWJGL on Win32 platforms  -->
 	<target name="-compile_native_win32" if="lwjgl.platform.windows">
@@ -410,7 +412,7 @@
 		<copy file="${lwjgl.bin}/lwjgl/liblwjgl.jnilib" todir="${lwjgl.lib}/macosx"/>
 		<version-check platform="macosx"/>
 	</target>
-	
+
 	<target name="repack200" description="Pack200-repack a jar file">
 		<pack200 src="${input}" destfile="${output}" repack="true"/>
 	</target>
@@ -430,7 +432,7 @@
     	<arg value="${output}"/>
    	</java>
 	</target>
-	
+
 	<target name="compress-sign-class">
 		<antcall target="repack200">
 			<param name="input" value="${dir}${jarfile}.jar"/>
@@ -450,14 +452,14 @@
 		<!--delete file="${dir}${jarfile}.jar"/-->
 		<rename src="${dir}${jarfile}-repack.jar" dest="${dir}${jarfile}.jar" replace="yes"/>
 	</target>
-	
+
 	<target name="compress-resource">
 		<antcall target="lzma">
 			<param name="input" value="${input}"/>
 			<param name="output" value="${output}"/>
 		</antcall>
 	</target>
-	
+
 	<target name="applettest" depends="applet">
 		<exec executable="appletviewer">
 			<arg value="-J-Djava.security.policy=applet/appletviewer.policy"/>
@@ -487,8 +489,8 @@
 			<sysproperty key="java.library.path" value="${native_path_expanded}"/>
 			<arg line="${args}"/>
 		</java>
-	</target>	
-	
+	</target>
+
 	<!-- Creates the Javadoc -->
 	<target name="javadoc" description="Creates javadoc from java source code">
 		<javadoc destdir="${lwjgl.docs}/javadoc" classpath="${lwjgl.lib}/jinput.jar" author="true" version="true" use="true" source="1.4" windowtitle="LWJGL API" useexternalfile="true">

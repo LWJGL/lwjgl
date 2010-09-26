@@ -46,6 +46,7 @@ import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
 import com.sun.mirror.util.*;
 
+import java.lang.annotation.Annotation;
 import java.nio.*;
 
 public class PostfixTranslator implements TypeVisitor {
@@ -108,7 +109,7 @@ public class PostfixTranslator implements TypeVisitor {
 	private boolean translateAnnotation(AnnotationMirror annotation) {
 		NativeType native_type = NativeTypeTranslator.getAnnotation(annotation, NativeType.class);
 		if (native_type != null) {
-			Class annotation_class = NativeTypeTranslator.getClassFromType(annotation.getAnnotationType());
+			Class<? extends Annotation> annotation_class = NativeTypeTranslator.getClassFromType(annotation.getAnnotationType());
 			signature.append(type_map.translateAnnotation(annotation_class));
 			return true;
 		} else

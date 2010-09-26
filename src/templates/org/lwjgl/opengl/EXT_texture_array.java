@@ -31,8 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.GLenum;
-import org.lwjgl.util.generator.GLuint;
+import org.lwjgl.util.generator.Reuse;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 public interface EXT_texture_array {
 
@@ -83,6 +84,7 @@ public interface EXT_texture_array {
 	int GL_SAMPLER_1D_ARRAY_SHADOW_EXT = 0x8DC3;
 	int GL_SAMPLER_2D_ARRAY_SHADOW_EXT = 0x8DC4;
 
+	@Reuse("EXTGeometryShader4")
 	void glFramebufferTextureLayerEXT(@GLenum int target, @GLenum int attachment, @GLuint int texture, int level, int layer);
 
 }

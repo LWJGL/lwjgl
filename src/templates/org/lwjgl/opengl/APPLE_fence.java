@@ -32,6 +32,11 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLreturn;
+import org.lwjgl.util.generator.opengl.GLsizei;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 import java.nio.IntBuffer;
 
@@ -50,7 +55,7 @@ public interface APPLE_fence {
 	void glDeleteFencesAPPLE(@AutoSize("fences") @GLsizei int n, @Const @GLuint IntBuffer fences);
 
 	@Alternate("glDeleteFencesAPPLE")
-	void glDeleteFencesAPPLE(@Constant("1") @GLsizei int n, @Const @GLuint @Constant(value = "APIUtils.getBufferInt().put(0, fence), 0", keepParam = true) int fence);
+	void glDeleteFencesAPPLE(@Constant("1") @GLsizei int n, @Const @GLuint @Constant(value = "APIUtil.getBufferInt().put(0, fence), 0", keepParam = true) int fence);
 
 	void glSetFenceAPPLE(@GLuint int fence);
 

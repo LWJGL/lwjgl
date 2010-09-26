@@ -46,4 +46,6 @@ public @interface Constant {
 	String value();
 	/** If true, the original parameter will not be removed from the method. */
 	boolean keepParam() default false;
+	/** If true, this is a native code constant. */
+	boolean isNative() default false;
 }

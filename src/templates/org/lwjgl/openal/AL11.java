@@ -31,13 +31,13 @@
  */
 package org.lwjgl.openal;
 
-import java.nio.Buffer;
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
-import java.nio.DoubleBuffer;
 
-import org.lwjgl.openal.AL10;
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.openal.ALenum;
+import org.lwjgl.util.generator.openal.ALuint;
+import org.lwjgl.util.generator.openal.ALvoid;
 
 /**
  * <br>
@@ -52,33 +52,33 @@ public interface AL11 {
 
 	/** Source buffer position information in seconds */
 	public static final int AL_SEC_OFFSET 							= 0x1024;
-	
+
 	/** Source buffer position information in samples */
 	public static final int AL_SAMPLE_OFFSET						= 0x1025;
-	
+
 	/** Source buffer position information in bytes */
 	public static final int AL_BYTE_OFFSET							= 0x1026;
 
 	/** Type of source: Buffer has been attached using AL_BUFFER */
 	public static final int AL_STATIC								= 0x1028;
-	
+
 	/** Type of source: if one or more Buffers have been attached using alSourceQueueBuffers */
 	public static final int AL_STREAMING							= 0x1029;
-	
+
 	/** Type of source: when it has the NULL buffer attached */
 	public static final int AL_UNDETERMINED							= 0x1030;
 
 	/** @see AL10#AL_INVALID_OPERATION */
 	public static final int AL_ILLEGAL_COMMAND						= 0xA004;
-	
+
 	/** Speed of Sound in units per second */
 	public static final int AL_SPEED_OF_SOUND						= 0xC003;
-	
+
 	public static final int AL_LINEAR_DISTANCE						= 0xD003;
 	public static final int AL_LINEAR_DISTANCE_CLAMPED				= 0xD004;
 	public static final int AL_EXPONENT_DISTANCE					= 0xD005;
 	public static final int AL_EXPONENT_DISTANCE_CLAMPED			= 0xD006;
-	
+
 	/**
 	 * Listener attributes are changed using the Listener group of commands.
 	 *
@@ -89,7 +89,7 @@ public interface AL11 {
 	 */
 	@ALvoid
 	void alListener3i(@ALenum int pname, int v1, int v2, int v3);
-	
+
 	/**
 	 * Listener state is maintained inside the AL implementation and can be queried in
 	 * full.
@@ -101,7 +101,7 @@ public interface AL11 {
 	@StripPostfix("intdata")
 	@ALvoid
 	void alGetListeneriv(@ALenum int pname, @OutParameter @Check("1") FloatBuffer intdata);
-	
+
 	/**
 	 * Specifies the position and other properties as taken into account during
 	 * sound processing.
@@ -114,7 +114,7 @@ public interface AL11 {
 	 */
 	@ALvoid
 	void alSource3i(@ALuint int source, @ALenum int pname, int v1, int v2, int v3);
-	
+
 	/**
 	 * Specifies the position and other properties as taken into account during
 	 * sound processing.
@@ -127,7 +127,7 @@ public interface AL11 {
 	@StripPostfix("value")
 	@ALvoid
 	void alSourceiv(@ALuint int source, @ALenum int pname, @Check("1") @Const IntBuffer value);
-	
+
 	/**
 	 * This function sets a floating point property of a buffer.
 	 * <i>note: There are no relevant buffer properties defined in OpenAL 1.1 which can be affected by
@@ -138,8 +138,8 @@ public interface AL11 {
 	 * @param value value of property
 	 */
 	@ALvoid
-	void alBufferf(@ALuint int buffer, @ALenum int pname, float value);	
-	
+	void alBufferf(@ALuint int buffer, @ALenum int pname, float value);
+
 	/**
 	 * This function sets a floating point property of a buffer.
 	 * <i>note: There are no relevant buffer properties defined in OpenAL 1.1 which can be affected by
@@ -153,7 +153,7 @@ public interface AL11 {
 	 */
 	@ALvoid
 	void alBuffer3f(@ALuint int buffer, @ALenum int pname, float v1, float v2, float v3);
-	
+
 	/**
 	 * This function sets a floating point property of a buffer.
 	 * <i>note: There are no relevant buffer properties defined in OpenAL 1.1 which can be affected by
@@ -167,7 +167,7 @@ public interface AL11 {
 	@StripPostfix("value")
 	@ALvoid
 	void alBufferfv(@ALuint int buffer, @ALenum int pname, @Check("1") @Const FloatBuffer value);
-	
+
 	/**
 	 * This function sets an integer property of a buffer.
 	 * <i>note: There are no relevant buffer properties defined in OpenAL 1.1 which can be affected by
@@ -178,8 +178,8 @@ public interface AL11 {
 	 * @param value value of property
 	 */
 	@ALvoid
-	void alBufferi(@ALuint int buffer, @ALenum int pname, int value);	
-	
+	void alBufferi(@ALuint int buffer, @ALenum int pname, int value);
+
 	/**
 	 * This function sets an integer property of a buffer.
 	 * <i>note: There are no relevant buffer properties defined in OpenAL 1.1 which can be affected by
@@ -193,7 +193,7 @@ public interface AL11 {
 	 */
 	@ALvoid
 	void alBuffer3i(@ALuint int buffer, @ALenum int pname, int v1, int v2, int v3);
-	
+
 	/**
 	 * This function sets an integer property of a buffer.
 	 * <i>note: There are no relevant buffer properties defined in OpenAL 1.1 which can be affected by
@@ -207,22 +207,22 @@ public interface AL11 {
 	@StripPostfix("value")
 	@ALvoid
 	void alBufferiv(@ALuint int buffer, @ALenum int pname, @Check("1") @Const IntBuffer value);
-	
+
 	/**
 	 * This function retrieves an integer property of a buffer.
 	 * <i>note: There are no relevant buffer properties defined in OpenAL 1.1 which can be affected by
 	 * this call, but this function may be used by OpenAL extensions.</i>
-	 * 
+	 *
 	 * @param buffer Buffer to get property from
 	 * @param pname name of property
 	 * @return int
 	 */
 	@ALvoid
 	void alGetBufferi(@ALuint int buffer, @ALenum int pname, @Result int value);
-	
+
 	/**
 	 * This function retrieves an integer property of a buffer.
-	 * 
+	 *
 	 * @param buffer Buffer to get property from
 	 * @param pname name of property
 	 */
@@ -235,7 +235,7 @@ public interface AL11 {
 	 * This function retrieves a floating point property of a buffer.
 	 * <i>note: There are no relevant buffer properties defined in OpenAL 1.1 which can be affected by
 	 * this call, but this function may be used by OpenAL extensions.</i>
-	 * 
+	 *
 	 * @param buffer Buffer to get property from
 	 * @param pname name of property
 	 * @return floating point property
@@ -247,7 +247,7 @@ public interface AL11 {
 	 * This function retrieves a floating point property of a buffer.
 	 * <i>note: There are no relevant buffer properties defined in OpenAL 1.1 which can be affected by
 	 * this call, but this function may be used by OpenAL extensions.</i>
-	 * 
+	 *
 	 * @param buffer Buffer to get property from
 	 * @param pname name of property
 	 */
@@ -255,7 +255,7 @@ public interface AL11 {
 	@StripPostfix("values")
 	@ALvoid
 	void alGetBufferfv(@ALuint int buffer, @ALenum int pname, @OutParameter @Check("1") FloatBuffer values);
-	
+
 	/**
 	 * <p>
 	 * AL_SPEED_OF_SOUND allows the application to change the reference (propagation)
@@ -274,5 +274,5 @@ public interface AL11 {
 	 * @param value distance model to be set
 	 */
 	@ALvoid
-	void alSpeedOfSound(float value);	
+	void alSpeedOfSound(float value);
 }

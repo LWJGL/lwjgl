@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.LongBuffer;
 
@@ -90,6 +92,7 @@ public interface NV_shader_buffer_load {
 	@StripPostfix("value")
 	void glUniformui64vNV(int location, @AutoSize("value") @GLsizei int count, @Const @GLuint64EXT LongBuffer value);
 
+	@Reuse("NVGpuShader5")
 	@StripPostfix("params")
 	void glGetUniformui64vNV(@GLuint int program, int location, @OutParameter @Check("1") @GLuint64EXT LongBuffer params);
 

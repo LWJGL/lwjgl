@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.*;
 
@@ -294,7 +296,7 @@ public interface GL30 {
 	 */
 	@CachedResult(isRange = true)
 	@GLvoid
-	@AutoResultSize("length")
+	@AutoSize("length")
 	ByteBuffer glMapBufferRange(@GLenum int target, @GLintptr long offset, @GLsizeiptr long length, @GLbitfield int access);
 
 	void glFlushMappedBufferRange(@GLenum int target, @GLintptr long offset, @GLsizeiptr long length);
@@ -526,7 +528,7 @@ public interface GL30 {
 	void glDeleteRenderbuffers(@AutoSize("renderbuffers") int n, @Const @GLuint IntBuffer renderbuffers);
 
 	@Alternate("glDeleteRenderbuffers")
-	void glDeleteRenderbuffers(@Constant("1") int n, @Constant(value = "APIUtils.getBufferInt().put(0, renderbuffer), 0", keepParam = true) int renderbuffer);
+	void glDeleteRenderbuffers(@Constant("1") int n, @Constant(value = "APIUtil.getBufferInt().put(0, renderbuffer), 0", keepParam = true) int renderbuffer);
 
 	void glGenRenderbuffers(@AutoSize("renderbuffers") int n, @OutParameter @GLuint IntBuffer renderbuffers);
 
@@ -551,7 +553,7 @@ public interface GL30 {
 	void glDeleteFramebuffers(@AutoSize("framebuffers") int n, @Const @GLuint IntBuffer framebuffers);
 
 	@Alternate("glDeleteFramebuffers")
-	void glDeleteFramebuffers(@Constant("1") int n, @Constant(value = "APIUtils.getBufferInt().put(0, framebuffer), 0", keepParam = true) int framebuffer);
+	void glDeleteFramebuffers(@Constant("1") int n, @Constant(value = "APIUtil.getBufferInt().put(0, framebuffer), 0", keepParam = true) int framebuffer);
 
 	void glGenFramebuffers(@AutoSize("framebuffers") int n, @OutParameter @GLuint IntBuffer framebuffers);
 
@@ -710,14 +712,14 @@ public interface GL30 {
 
 	@Alternate("glTexParameterIiv")
 	@StripPostfix(value = "param", postfix = "v")
-	void glTexParameterIiv(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtils.getBufferInt().put(0, param), 0", keepParam = true) int param);
+	void glTexParameterIiv(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getBufferInt().put(0, param), 0", keepParam = true) int param);
 
 	@StripPostfix("params")
 	void glTexParameterIuiv(@GLenum int target, @GLenum int pname, @Check("4") @GLuint IntBuffer params);
 
 	@Alternate("glTexParameterIuiv")
 	@StripPostfix(value = "param", postfix = "v")
-	void glTexParameterIuiv(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtils.getBufferInt().put(0, param), 0", keepParam = true) int param);
+	void glTexParameterIuiv(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getBufferInt().put(0, param), 0", keepParam = true) int param);
 
 	@StripPostfix("params")
 	void glGetTexParameterIiv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
@@ -977,12 +979,12 @@ public interface GL30 {
 	void glEndTransformFeedback();
 
 	void glTransformFeedbackVaryings(@GLuint int program, @GLsizei int count,
-	                                 @Const @NullTerminated("count") @GLchar @StringList("count") ByteBuffer varyings,
+	                                 @Const @NullTerminated("count") @GLchar @PointerArray("count") ByteBuffer varyings,
 	                                 @GLenum int bufferMode);
 
 	@Alternate("glTransformFeedbackVaryings")
 	void glTransformFeedbackVaryings(@GLuint int program, @Constant("varyings.length") @GLsizei int count,
-	                                 @Const @NullTerminated @StringList("count") CharSequence[] varyings,
+	                                 @Const @NullTerminated @PointerArray("count") CharSequence[] varyings,
 	                                 @GLenum int bufferMode);
 
 	void glGetTransformFeedbackVarying(@GLuint int program, @GLuint int index, @AutoSize("name") @GLsizei int bufSize,
@@ -1014,7 +1016,7 @@ public interface GL30 {
 	void glDeleteVertexArrays(@AutoSize("arrays") @GLsizei int n, @Const @GLuint IntBuffer arrays);
 
 	@Alternate("glDeleteVertexArrays")
-	void glDeleteVertexArrays(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, array), 0", keepParam = true) int array);
+	void glDeleteVertexArrays(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, array), 0", keepParam = true) int array);
 
 	void glGenVertexArrays(@AutoSize("arrays") @GLsizei int n, @OutParameter @GLuint IntBuffer arrays);
 

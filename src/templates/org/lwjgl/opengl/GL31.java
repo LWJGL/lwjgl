@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -232,12 +234,12 @@ public interface GL31 {
 	int GL_INVALID_INDEX = 0xFFFFFFFF;
 
 	void glGetUniformIndices(@GLuint int program, @AutoSize("uniformIndices") @GLsizei int uniformCount,
-	                         @Const @NullTerminated("uniformIndices.remaining()") @GLchar @StringList("uniformCount") ByteBuffer uniformNames,
+	                         @Const @NullTerminated("uniformIndices.remaining()") @GLchar @PointerArray("uniformCount") ByteBuffer uniformNames,
 	                         @OutParameter @GLuint IntBuffer uniformIndices);
 
 	@Alternate("glGetUniformIndices")
 	void glGetUniformIndices(@GLuint int program, @Constant("uniformNames.length") @GLsizei int uniformCount,
-	                         @Const @NullTerminated @StringList("uniformCount") CharSequence[] uniformNames,
+	                         @Const @NullTerminated @PointerArray("uniformCount") CharSequence[] uniformNames,
 	                         @OutParameter @Check("uniformNames.length") @GLuint IntBuffer uniformIndices);
 
 	@StripPostfix("params")

@@ -51,11 +51,12 @@ public class TypedefsGenerator {
 	private static void generateNativeTypedefs(TypeMap type_map, PrintWriter writer, MethodDeclaration method) {
 		TypeMirror return_type = method.getReturnType();
 		writer.print("typedef ");
+		writer.print(type_map.getTypedefPostfix());
 		NativeTypeTranslator translator = new NativeTypeTranslator(type_map, method);
 		return_type.accept(translator);
 		writer.print(translator.getSignature());
 		writer.print(" (");
-		writer.print(type_map.getTypedefPrefix());
+		writer.print(type_map.getFunctionPrefix());
 		writer.print(" *" + Utils.getTypedefName(method) + ") (");
 		generateNativeTypedefsParameters(type_map, writer, method.getParameters());
 		writer.println(");");
@@ -63,11 +64,17 @@ public class TypedefsGenerator {
 
 	private static void generateNativeTypedefsParameters(TypeMap type_map, PrintWriter writer, Collection<ParameterDeclaration> params) {
 		if (params.size() > 0) {
-			Iterator<ParameterDeclaration> it = params.iterator();
-			generateNativeTypedefsParameter(type_map, writer, it.next());
-			while (it.hasNext()) {
-				writer.print(", ");
-				generateNativeTypedefsParameter(type_map, writer, it.next());
+			boolean first = true;
+			for ( ParameterDeclaration param : params ) {
+				if ( param.getAnnotation(Helper.class) != null )
+					continue;
+
+				if ( first )
+					first = false;
+				else
+					writer.print(", ");
+
+				generateNativeTypedefsParameter(type_map, writer, param);
 			}
 		}
 	}
@@ -76,14 +83,14 @@ public class TypedefsGenerator {
 		NativeTypeTranslator translator = new NativeTypeTranslator(type_map, param);
 		param.getType().accept(translator);
 		writer.print(translator.getSignature());
-		if (param.getAnnotation(Result.class) != null || param.getAnnotation(Indirect.class) != null || param.getAnnotation(StringList.class) != null)
+		if (param.getAnnotation(Result.class) != null || param.getAnnotation(Indirect.class) != null || param.getAnnotation(PointerArray.class) != null)
 			writer.print("*");
 		writer.print(" " + param.getSimpleName());
 	}
 
 	public static void generateNativeTypedefs(TypeMap type_map, PrintWriter writer, Collection<? extends MethodDeclaration> methods) {
 		for (MethodDeclaration method : methods) {
-			if ( method.getAnnotation(Alternate.class) == null )
+			if ( method.getAnnotation(Alternate.class) == null && method.getAnnotation(Reuse.class) == null )
 				generateNativeTypedefs(type_map, writer, method);
 		}
 	}

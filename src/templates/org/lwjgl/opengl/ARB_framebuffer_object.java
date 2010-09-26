@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.IntBuffer;
 
@@ -184,84 +186,110 @@ public interface ARB_framebuffer_object {
 	/** Accepted by the &lt;value&gt; parameter of GetTexLevelParameter: */
 	int GL_TEXTURE_STENCIL_SIZE = 0x88F1;
 
+	@Reuse("GL30")
 	boolean glIsRenderbuffer(@GLuint int renderbuffer);
 
+	@Reuse("GL30")
 	void glBindRenderbuffer(@GLenum int target, @GLuint int renderbuffer);
 
+	@Reuse("GL30")
 	void glDeleteRenderbuffers(@AutoSize("renderbuffers") @GLsizei int n, @Const @GLuint IntBuffer renderbuffers);
 
+	@Reuse("GL30")
 	@Alternate("glDeleteRenderbuffers")
-	void glDeleteRenderbuffers(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, renderbuffer), 0", keepParam = true) int renderbuffer);
+	void glDeleteRenderbuffers(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, renderbuffer), 0", keepParam = true) int renderbuffer);
 
+	@Reuse("GL30")
 	void glGenRenderbuffers(@AutoSize("renderbuffers") @GLsizei int n, @OutParameter @GLuint IntBuffer renderbuffers);
 
+	@Reuse("GL30")
 	@Alternate("glGenRenderbuffers")
 	@GLreturn("renderbuffers")
 	void glGenRenderbuffers2(@Constant("1") @GLsizei int n, @OutParameter @GLuint IntBuffer renderbuffers);
 
+	@Reuse("GL30")
 	void glRenderbufferStorage(@GLenum int target, @GLenum int internalformat,
 	                           @GLsizei int width, @GLsizei int height);
 
+	@Reuse("GL30")
 	void glRenderbufferStorageMultisample(@GLenum int target, @GLsizei int samples,
 	                                      @GLenum int internalformat,
 	                                      @GLsizei int width, @GLsizei int height);
 
+	@Reuse("GL30")
 	@StripPostfix("params")
 	void glGetRenderbufferParameteriv(@GLenum int target, @GLenum int pname, @Check("4") @OutParameter IntBuffer params);
 
+	@Reuse("GL30")
 	@Alternate("glGetRenderbufferParameteriv")
 	@GLreturn("params")
 	@StripPostfix("params")
 	void glGetRenderbufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
+	@Reuse("GL30")
 	boolean glIsFramebuffer(@GLuint int framebuffer);
 
+	@Reuse("GL30")
 	void glBindFramebuffer(@GLenum int target, @GLuint int framebuffer);
 
+	@Reuse("GL30")
 	void glDeleteFramebuffers(@AutoSize("framebuffers") @GLsizei int n, @Const @GLuint IntBuffer framebuffers);
 
+	@Reuse("GL30")
 	@Alternate("glDeleteFramebuffers")
-	void glDeleteFramebuffers(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, framebuffer), 0", keepParam = true) int framebuffer);
+	void glDeleteFramebuffers(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, framebuffer), 0", keepParam = true) int framebuffer);
 
+	@Reuse("GL30")
 	void glGenFramebuffers(@AutoSize("framebuffers") @GLsizei int n, @OutParameter @GLuint IntBuffer framebuffers);
 
+	@Reuse("GL30")
 	@Alternate("glGenFramebuffers")
 	@GLreturn("framebuffers")
 	void glGenFramebuffers2(@Constant("1") @GLsizei int n, @OutParameter @GLuint IntBuffer framebuffers);
 
+	@Reuse("GL30")
 	@GLenum
 	int glCheckFramebufferStatus(@GLenum int target);
 
+	@Reuse("GL30")
 	void glFramebufferTexture1D(@GLenum int target, @GLenum int attachment,
 	                            @GLenum int textarget, @GLuint int texture, int level);
 
+	@Reuse("GL30")
 	void glFramebufferTexture2D(@GLenum int target, @GLenum int attachment,
 	                            @GLenum int textarget, @GLuint int texture, int level);
 
+	@Reuse("GL30")
 	void glFramebufferTexture3D(@GLenum int target, @GLenum int attachment,
 	                            @GLenum int textarget, @GLuint int texture,
 	                            int level, int layer);
 
+	@Reuse("GL30")
 	void glFramebufferTextureLayer(@GLenum int target, @GLenum int attachment,
 	                               @GLuint int texture, int level, int layer);
 
+	@Reuse("GL30")
 	void glFramebufferRenderbuffer(@GLenum int target, @GLenum int attachment,
 	                               @GLenum int renderbuffertarget, @GLuint int renderbuffer);
 
+	@Reuse("GL30")
 	@StripPostfix("params")
 	void glGetFramebufferAttachmentParameteriv(@GLenum int target, @GLenum int attachment,
 	                                           @GLenum int pname, @Check("4") @OutParameter IntBuffer params);
 
+	@Reuse("GL30")
 	@Alternate("glGetFramebufferAttachmentParameteriv")
 	@GLreturn("params")
 	@StripPostfix("params")
 	void glGetFramebufferAttachmentParameteriv2(@GLenum int target, @GLenum int attachment,
 	                                            @GLenum int pname, @OutParameter IntBuffer params);
 
+	@Reuse("GL30")
 	void glBlitFramebuffer(int srcX0, int srcY0, int srcX1, int srcY1,
 	                       int dstX0, int dstY0, int dstX1, int dstY1,
 	                       @GLbitfield int mask, @GLenum int filter);
 
+	@Reuse("GL30")
 	void glGenerateMipmap(@GLenum int target);
 
 }

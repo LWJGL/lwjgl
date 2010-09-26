@@ -31,7 +31,8 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.GLenum;
+import org.lwjgl.util.generator.Reuse;
+import org.lwjgl.util.generator.opengl.GLenum;
 
 public interface ARB_provoking_vertex {
 
@@ -46,6 +47,7 @@ public interface ARB_provoking_vertex {
 	int GL_PROVOKING_VERTEX = 0x8E4F;
 	int GL_QUADS_FOLLOW_PROVOKING_VERTEX_CONVENTION = 0x8E4C;
 
+	@Reuse("GL32")
 	void glProvokingVertex(@GLenum int mode);
 
 }

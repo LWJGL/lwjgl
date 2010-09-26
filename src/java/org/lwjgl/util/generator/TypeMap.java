@@ -45,19 +45,25 @@ import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
 
 import java.io.*;
+import java.lang.annotation.Annotation;
 
 public interface TypeMap {
-	String getErrorCheckMethodName();
+	void printCapabilitiesInit(PrintWriter writer);
+	String getCapabilities();
+	void printErrorCheckMethod(PrintWriter writer, MethodDeclaration method, String tabs);
 	String getRegisterNativesFunctionName();
-	PrimitiveType.Kind getPrimitiveTypeFromNativeType(Class native_type);
-	String getTypedefPrefix();
+	PrimitiveType.Kind getPrimitiveTypeFromNativeType(Class<? extends Annotation> native_type);
+	String getTypedefPostfix();
+	String getFunctionPrefix();
 	void printNativeIncludes(PrintWriter writer);
-	Class getStringElementType();
+	Class<? extends Annotation> getStringElementType();
+	Class<? extends Annotation> getStringArrayType();
+	Class<? extends Annotation> getByteBufferArrayType();
 	Class[] getValidAnnotationTypes(Class type);
-	Class getVoidType();
-	String translateAnnotation(Class annotation_type);
+	Class<? extends Annotation> getVoidType();
+	String translateAnnotation(Class<? extends Annotation> annotation_type);
 	Class getNativeTypeFromPrimitiveType(PrimitiveType.Kind kind);
 	String getAutoTypeFromAnnotation(AnnotationMirror annotation);
-	Class getInverseType(Class type);
-	Signedness getSignednessFromType(Class type);
+	Class<? extends Annotation> getInverseType(Class<? extends Annotation> type);
+	Signedness getSignednessFromType(Class<? extends Annotation> type);
 }

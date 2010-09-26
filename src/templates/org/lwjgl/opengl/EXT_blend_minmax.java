@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLenum;
 
 public interface EXT_blend_minmax {
 

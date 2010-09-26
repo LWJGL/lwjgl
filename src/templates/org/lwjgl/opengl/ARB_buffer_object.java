@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -69,7 +71,7 @@ public interface ARB_buffer_object {
 	void glDeleteBuffersARB(@AutoSize("buffers") @GLsizei int n, @Const @GLuint IntBuffer buffers);
 
 	@Alternate("glDeleteBuffersARB")
-	void glDeleteBuffersARB(@Constant("1") @GLsizei int n, @Constant(value = "APIUtils.getBufferInt().put(0, buffer), 0", keepParam = true) int buffer);
+	void glDeleteBuffersARB(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, buffer), 0", keepParam = true) int buffer);
 
 	void glGenBuffersARB(@AutoSize("buffers") @GLsizei int n, @OutParameter @GLuint IntBuffer buffers);
 
@@ -131,7 +133,7 @@ public interface ARB_buffer_object {
 	 */
 	@CachedResult
 	@GLvoid
-	@AutoResultSize("GLChecks.getBufferObjectSizeARB(caps, target)")
+	@AutoSize("GLChecks.getBufferObjectSizeARB(caps, target)")
 	ByteBuffer glMapBufferARB(@GLenum int target, @GLenum int access);
 
 	boolean glUnmapBufferARB(@GLenum int target);
@@ -145,6 +147,6 @@ public interface ARB_buffer_object {
 	void glGetBufferParameterivARB2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("pointer")
-	@AutoResultSize("GLChecks.getBufferObjectSizeARB(caps, target)")
+	@AutoSize("GLChecks.getBufferObjectSizeARB(caps, target)")
 	void glGetBufferPointervARB(@GLenum int target, @GLenum int pname, @Result @GLvoid ByteBuffer pointer);
 }

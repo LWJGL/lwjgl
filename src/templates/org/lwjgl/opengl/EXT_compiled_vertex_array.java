@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLsizei;
 
 public interface EXT_compiled_vertex_array {
 	int GL_ARRAY_ELEMENT_LOCK_FIRST_EXT = 0x81A8;

@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.GLuint;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 public interface ARB_instanced_arrays {
 

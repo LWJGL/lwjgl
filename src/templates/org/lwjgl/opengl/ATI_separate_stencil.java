@@ -31,7 +31,8 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 public interface ATI_separate_stencil {
 	int GL_STENCIL_BACK_FUNC_ATI = 0x8800;

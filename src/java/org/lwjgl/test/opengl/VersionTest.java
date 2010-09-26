@@ -81,6 +81,8 @@ public final class VersionTest {
 					ca = ca.withProfileCore(true);
 				else if ( "compatibility".equalsIgnoreCase(args[i]) )
 					ca = ca.withProfileCompatibility(true);
+				else if ( "es".equalsIgnoreCase(args[i]) )
+					ca = ca.withProfileES(true);
 				else
 					argsError("Unknown argument: \'" + args[i] + "\'");
 			}
@@ -236,6 +238,7 @@ public final class VersionTest {
 		System.out.println("majorVersion\t- Minor OpenGL version.");
 		System.out.println("core\t- Sets the Core Profile bit (optional, requires 3.2+).");
 		System.out.println("compatibility\t- Sets the Compatibility Profile bit (optional, requires 3.2+).");
+		System.out.println("ws\t- Sets the OpenGL ES Profile bit (optional, requires 2.0).");
 		System.out.println("layer\t- Layer plane (optional).");
 		System.out.println("debug\t- Enables debug mode (optional).");
 		System.out.println("fc\t- Enables forward compatibility mode (optional, requires 3.0+).");

@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -107,8 +109,8 @@ public interface ARB_shader_objects {
 
 	@Alternate(value = "glShaderSourceARB", nativeAlt = true)
 	void glShaderSourceARB3(@GLhandleARB int shader, @Constant("strings.length") @GLsizei int count,
-	                        @Const @StringList(value = "count", lengths = "length") CharSequence[] strings,
-	                        @Constant("APIUtils.getLengths(strings), 0") @Const IntBuffer length);
+	                        @Const @PointerArray(value = "count", lengths = "length") CharSequence[] strings,
+	                        @Constant("APIUtil.getLengths(strings), 0") @Const IntBuffer length);
 
 	void glCompileShaderARB(@GLhandleARB int shaderObj);
 
@@ -232,7 +234,7 @@ public interface ARB_shader_objects {
 	@Alternate(value = "glGetActiveUniformARB", javaAlt = true)
 	@GLreturn(value = "name", maxLength = "maxLength")
 	void glGetActiveUniformARB(@GLhandleARB int programObj, @GLuint int index, @GLsizei int maxLength,
-	                           @OutParameter @GLsizei @Constant("name_length, 0, APIUtils.getBufferInt(), 0, APIUtils.getBufferInt(), 1") IntBuffer length,
+	                           @OutParameter @GLsizei @Constant("name_length, 0, APIUtil.getBufferInt(), 0, APIUtil.getBufferInt(), 1") IntBuffer length,
 	                           @OutParameter @GLcharARB ByteBuffer name);
 
 	/** Overloads glGetActiveUniformARB. This version returns only the uniform size. */
@@ -242,7 +244,7 @@ public interface ARB_shader_objects {
 	                               @OutParameter @GLsizei @Constant("null, 0") IntBuffer length,
 	                               @OutParameter IntBuffer size,
 	                               @OutParameter @GLenum @Constant("size, 1") IntBuffer type, // Reuse size buffer and ignore
-	                               @OutParameter @GLcharARB @Constant("APIUtils.getBufferByte(0), 0") ByteBuffer name);
+	                               @OutParameter @GLcharARB @Constant("APIUtil.getBufferByte(0), 0") ByteBuffer name);
 
 	/** Overloads glGetActiveUniformARB. This version returns only the uniform type. */
 	@Alternate(value = "glGetActiveUniformARB", javaAlt = true)
@@ -251,7 +253,7 @@ public interface ARB_shader_objects {
 	                               @OutParameter @GLsizei @Constant("null, 0") IntBuffer length,
 	                               @OutParameter @Constant("type, 1") IntBuffer size, // Reuse type buffer and ignore
 	                               @OutParameter @GLenum IntBuffer type,
-	                               @OutParameter @GLcharARB @Constant("APIUtils.getBufferByte(0), 0") ByteBuffer name);
+	                               @OutParameter @GLcharARB @Constant("APIUtil.getBufferByte(0), 0") ByteBuffer name);
 
 	@StripPostfix("params")
 	void glGetUniformfvARB(@GLhandleARB int programObj, int location, @OutParameter @Check FloatBuffer params);

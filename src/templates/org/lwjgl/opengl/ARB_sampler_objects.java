@@ -32,6 +32,11 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLreturn;
+import org.lwjgl.util.generator.opengl.GLsizei;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -45,64 +50,84 @@ public interface ARB_sampler_objects {
 	 */
 	int GL_SAMPLER_BINDING = 0x8919;
 
+	@Reuse("GL33")
 	void glGenSamplers(@AutoSize("samplers") @GLsizei int count, @OutParameter @GLuint IntBuffer samplers);
 
+	@Reuse("GL33")
 	@Alternate("glGenSamplers")
 	@GLreturn("samplers")
 	void glGenSamplers2(@Constant("1") @GLsizei int count, @OutParameter @GLuint IntBuffer samplers);
 
+	@Reuse("GL33")
 	void glDeleteSamplers(@AutoSize("samplers") @GLsizei int count, @Const @GLuint IntBuffer samplers);
 
+	@Reuse("GL33")
 	@Alternate("glDeleteSamplers")
-	void glDeleteSamplers(@Constant("1") @GLsizei int count, @Constant(value = "APIUtils.getBufferInt().put(0, sampler), 0", keepParam = true) int sampler);
+	void glDeleteSamplers(@Constant("1") @GLsizei int count, @Constant(value = "APIUtil.getBufferInt().put(0, sampler), 0", keepParam = true) int sampler);
 
+	@Reuse("GL33")
 	boolean glIsSampler(@GLuint int sampler);
 
+	@Reuse("GL33")
 	void glBindSampler(@GLenum int unit, @GLuint int sampler);
 
+	@Reuse("GL33")
 	void glSamplerParameteri(@GLuint int sampler, @GLenum int pname, int param);
 
+	@Reuse("GL33")
 	void glSamplerParameterf(@GLuint int sampler, @GLenum int pname, float param);
 
+	@Reuse("GL33")
 	@StripPostfix("params")
 	void glSamplerParameteriv(@GLuint int sampler, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
+	@Reuse("GL33")
 	@StripPostfix("params")
 	void glSamplerParameterfv(@GLuint int sampler, @GLenum int pname, @Check("4") @Const FloatBuffer params);
 
+	@Reuse("GL33")
 	@StripPostfix("params")
 	void glSamplerParameterIiv(@GLuint int sampler, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
+	@Reuse("GL33")
 	@StripPostfix("params")
 	void glSamplerParameterIuiv(@GLuint int sampler, @GLenum int pname, @Check("4") @Const @GLuint IntBuffer params);
 
+	@Reuse("GL33")
 	@StripPostfix("params")
 	void glGetSamplerParameteriv(@GLuint int sampler, @GLenum int pname, @Check("4") @OutParameter IntBuffer params);
 
+	@Reuse("GL33")
 	@Alternate("glGetSamplerParameteriv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
 	void glGetSamplerParameteriv2(@GLuint int sampler, @GLenum int pname, @OutParameter IntBuffer params);
 
+	@Reuse("GL33")
 	@StripPostfix("params")
 	void glGetSamplerParameterfv(@GLuint int sampler, @GLenum int pname, @Check("4") @OutParameter FloatBuffer params);
 
+	@Reuse("GL33")
 	@Alternate("glGetSamplerParameterfv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
 	void glGetSamplerParameterfv2(@GLuint int sampler, @GLenum int pname, @OutParameter FloatBuffer params);
 
+	@Reuse("GL33")
 	@StripPostfix("params")
 	void glGetSamplerParameterIiv(@GLuint int sampler, @GLenum int pname, @Check("4") @OutParameter IntBuffer params);
 
+	@Reuse("GL33")
 	@Alternate("glGetSamplerParameterIiv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
 	void glGetSamplerParameterIiv2(@GLuint int sampler, @GLenum int pname, @OutParameter IntBuffer params);
 
+	@Reuse("GL33")
 	@StripPostfix("params")
 	void glGetSamplerParameterIuiv(@GLuint int sampler, @GLenum int pname, @Check("4") @OutParameter IntBuffer params);
 
+	@Reuse("GL33")
 	@Alternate("glGetSamplerParameterIuiv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")

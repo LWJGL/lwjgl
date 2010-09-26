@@ -40,6 +40,12 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.util.generator.opengl.GLboolean;
+import org.lwjgl.util.generator.opengl.GLchar;
+import org.lwjgl.util.generator.opengl.GLcharARB;
+import org.lwjgl.util.generator.opengl.GLreturn;
+
 import java.io.PrintWriter;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -75,11 +81,19 @@ public class Utils {
 	}
 
 	public static String getFunctionAddressName(InterfaceDeclaration interface_decl, MethodDeclaration method, boolean forceAlt) {
-		Alternate alt_annotation = method.getAnnotation(Alternate.class);
+		final Alternate alt_annotation = method.getAnnotation(Alternate.class);
+
+		/* Removed prefix so that we can identify reusable entry points, removed postfix because it's not needed and looks nicer.
+		String interfaceName = interface_decl.getSimpleName(); // If we add this back, we need to fix @Reuse (add a param for the template name)
 		if ( alt_annotation == null || (alt_annotation.nativeAlt() && !forceAlt) )
-			return interface_decl.getSimpleName() + "_" + method.getSimpleName() + FUNCTION_POINTER_POSTFIX;
+			return interfaceName + "_" + method.getSimpleName() + FUNCTION_POINTER_POSTFIX;
 		else
-			return interface_decl.getSimpleName() + "_" + alt_annotation.value() + FUNCTION_POINTER_POSTFIX;
+			return interfaceName + "_" + alt_annotation.value() + FUNCTION_POINTER_POSTFIX;
+		*/
+		if ( alt_annotation == null || (alt_annotation.nativeAlt() && !forceAlt) )
+			return method.getSimpleName();
+		else
+			return alt_annotation.value();
 	}
 
 	public static boolean isFinal(InterfaceDeclaration d) {
@@ -115,7 +129,15 @@ public class Utils {
 	}
 
 	public static boolean isAddressableType(Class type) {
-		return Buffer.class.isAssignableFrom(type) || String.class.equals(type) || CharSequence.class.equals(type) || CharSequence[].class.equals(type);
+		if ( type.isArray() ) {
+			final Class component_type = type.getComponentType();
+			return isAddressableTypeImpl(component_type) || org.lwjgl.PointerWrapper.class.isAssignableFrom(component_type);
+		}
+		return isAddressableTypeImpl(type);
+	}
+
+	private static boolean isAddressableTypeImpl(Class type) {
+		return Buffer.class.isAssignableFrom(type) || PointerBuffer.class.isAssignableFrom(type) || CharSequence.class.isAssignableFrom(type);
 	}
 
 	public static Class getJavaType(TypeMirror type_mirror) {
@@ -149,11 +171,23 @@ public class Utils {
 	public static void printDocComment(PrintWriter writer, Declaration decl) {
 		String doc_comment = decl.getDocComment();
 		if (doc_comment != null) {
-			String tab = decl instanceof InterfaceDeclaration ? "" : "\t";
+			final String tab = decl instanceof InterfaceDeclaration ? "" : "\t";
 			writer.println(tab + "/**");
-			StringTokenizer doc_lines = new StringTokenizer(doc_comment, "\n");
-			while (doc_lines.hasMoreTokens())
-				writer.println(tab + " * " + doc_lines.nextToken());
+
+			final StringTokenizer doc_lines = new StringTokenizer(doc_comment, "\n", true);
+			boolean lastWasNL = false;
+			while (doc_lines.hasMoreTokens()) {
+				final String t = doc_lines.nextToken();
+				if ( "\n".equals(t) ) {
+					if ( lastWasNL )
+						writer.println(tab + " *");
+					lastWasNL = true;
+				} else {
+					writer.println(tab + " * " + t);
+					lastWasNL = false;
+				}
+			}
+
 			writer.println(tab + " */");
 		} else if ( (decl instanceof MethodDeclaration) && decl.getAnnotation(Alternate.class) != null )
 			writer.println("\t/** Overloads " + decl.getAnnotation(Alternate.class).value() + " */");
@@ -241,7 +275,7 @@ public class Utils {
 	}
 
 	public static boolean needResultSize(MethodDeclaration method) {
-		return getNIOBufferType(getMethodReturnType(method)) != null && method.getAnnotation(AutoResultSize.class) == null;
+		return getNIOBufferType(getMethodReturnType(method)) != null && method.getAnnotation(AutoSize.class) == null;
 	}
 
 	public static void printExtraCallArguments(PrintWriter writer, MethodDeclaration method, String size_parameter_name) {
@@ -289,7 +323,7 @@ public class Utils {
 		Class<?> param_type = getJavaType(t);
 		if (Buffer.class.isAssignableFrom(param_type))
 			return param_type;
-		else if ( param_type == CharSequence.class || param_type == CharSequence[].class )
+		else if ( param_type == CharSequence.class || param_type == CharSequence[].class || param_type == PointerBuffer.class )
 			return ByteBuffer.class;
 		else
 			return null;
@@ -337,9 +371,9 @@ public class Utils {
 
 			} else if ( type.equals(CharSequence[].class) ) {
 				if ( offset == null )
-					offset = "APIUtils.getTotalLength(" + p.getSimpleName() + ")";
+					offset = "APIUtil.getTotalLength(" + p.getSimpleName() + ")";
 				else
-					offset += " + APIUtils.getTotalLength(" + p.getSimpleName() + ")";
+					offset += " + APIUtil.getTotalLength(" + p.getSimpleName() + ")";
 				if ( p.getAnnotation(NullTerminated.class) != null ) offset += " + " + p.getSimpleName() + ".length";
 			}
 
@@ -352,10 +386,10 @@ public class Utils {
 
 		if ( "String".equals(return_type) ) {
 			if ( !return_annotation.forceMaxLength() ) {
-				writer.println("IntBuffer " + return_annotation.value() + "_length = APIUtils.getLengths();");
+				writer.println("IntBuffer " + return_annotation.value() + "_length = APIUtil.getLengths();");
 				writer.print("\t\t");
 			}
-			writer.print("ByteBuffer " + return_annotation.value() + " = APIUtils.getBufferByte(" + return_annotation.maxLength());
+			writer.print("ByteBuffer " + return_annotation.value() + " = APIUtil.getBufferByte(" + return_annotation.maxLength());
 			/*
 				Params that use the return buffer will advance its position while filling it. When we return, the position will be
 				at the right spot for grabbing the returned string bytes. We only have to make sure that the original buffer was
@@ -367,13 +401,18 @@ public class Utils {
 			writer.println(");");
 		} else {
 			final String buffer_type = "Boolean".equals(return_type) ? "Byte" : return_type;
-			writer.print(buffer_type + "Buffer " + return_annotation.value() + " = APIUtils.getBuffer" + buffer_type + "(");
+			writer.print(buffer_type + "Buffer " + return_annotation.value() + " = APIUtil.getBuffer" + buffer_type + "(");
 			if ( "Byte".equals(buffer_type) )
 				writer.print('1');
 			writer.println(");");
 		}
 
-		writer.print("\t\t");
+		final Code code_annotation = method.getAnnotation(Code.class);
+		if ( code_annotation != null && code_annotation.tryBlock() ) {
+			writer.println("\t\ttry {");
+			writer.print("\t\t\t");
+		} else
+			writer.print("\t\t");
 	}
 
 	static void printGLReturnPost(PrintWriter writer, MethodDeclaration method, GLreturn return_annotation) {
@@ -389,7 +428,7 @@ public class Utils {
 			else
 				writer.print(return_annotation.value() + "_length.get(0)");
 			writer.println(");");
-			writer.println("\t\treturn APIUtils.getString(" + return_annotation.value() + ");");
+			writer.println("\t\treturn APIUtil.getString(" + return_annotation.value() + ");");
 		} else {
 			writer.print("\t\treturn " + return_annotation.value() + ".get(0)");
 			if ( "Boolean".equals(return_type) )

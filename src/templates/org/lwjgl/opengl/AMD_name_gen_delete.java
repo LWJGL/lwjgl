@@ -32,6 +32,11 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.GLenum;
+import org.lwjgl.util.generator.opengl.GLreturn;
+import org.lwjgl.util.generator.opengl.GLsizei;
+import org.lwjgl.util.generator.opengl.GLuint;
 
 import java.nio.IntBuffer;
 
@@ -53,7 +58,7 @@ public interface AMD_name_gen_delete {
 	void glDeleteNamesAMD(@GLenum int identifier, @AutoSize("names") @GLsizei int num, @Const @GLuint IntBuffer names);
 
 	@Alternate("glDeleteNamesAMD")
-	void glDeleteNamesAMD(@GLenum int identifier, @Constant("1") @GLsizei int num, @Constant(value = "APIUtils.getBufferInt().put(0, name), 0", keepParam = true) int name);
+	void glDeleteNamesAMD(@GLenum int identifier, @Constant("1") @GLsizei int num, @Constant(value = "APIUtil.getBufferInt().put(0, name), 0", keepParam = true) int name);
 
 	boolean glIsNameAMD(@GLenum int identifier, @GLuint int name);
 

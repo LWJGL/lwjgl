@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -75,17 +77,21 @@ public interface NV_explicit_multisample {
 	int GL_INT_SAMPLER_RENDERBUFFER_NV = 0x8E57;
 	int GL_UNSIGNED_INT_SAMPLER_RENDERBUFFER_NV = 0x8E58;
 
+	@Reuse("EXTDrawBuffers2")
 	@StripPostfix(value = "data", extension = "EXT")
-	void glGetBooleanIndexedvEXT(@GLenum int pname, @GLuint int index, @OutParameter @Check("16") @GLboolean ByteBuffer data);
+	void glGetBooleanIndexedvEXT(@GLenum int pname, @GLuint int index, @OutParameter @Check("4") @GLboolean ByteBuffer data);
 
+	@Reuse("EXTDrawBuffers2")
 	@Alternate("glGetBooleanIndexedvEXT")
 	@GLreturn("data")
 	@StripPostfix(value = "data", extension = "EXT")
 	void glGetBooleanIndexedvEXT2(@GLenum int pname, @GLuint int index, @OutParameter @GLboolean ByteBuffer data);
 
+	@Reuse("EXTDrawBuffers2")
 	@StripPostfix(value = "data", extension = "EXT")
 	void glGetIntegerIndexedvEXT(@GLenum int pname, @GLuint int index, @OutParameter @Check("16") IntBuffer data);
 
+	@Reuse("EXTDrawBuffers2")
 	@Alternate("glGetIntegerIndexedvEXT")
 	@GLreturn("data")
 	@StripPostfix(value = "data", extension = "EXT")

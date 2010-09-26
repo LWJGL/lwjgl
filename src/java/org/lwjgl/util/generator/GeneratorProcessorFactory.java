@@ -32,29 +32,32 @@
 
 package org.lwjgl.util.generator;
 
-import com.sun.mirror.apt.*;
-import com.sun.mirror.declaration.*;
-
 import java.io.File;
 import java.io.FileFilter;
-import java.util.Collection;
-import java.util.Set;
-import java.util.Map;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import static java.util.Collections.*;
+import com.sun.mirror.apt.*;
+import com.sun.mirror.declaration.AnnotationTypeDeclaration;
+import com.sun.mirror.declaration.TypeDeclaration;
+
 import static com.sun.mirror.util.DeclarationVisitors.*;
+import static java.util.Collections.*;
 
 /**
- *
  * Generator tool for creating the java classes and native code
  * from an annotated template java interface.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
- * $Id$
+ *          $Id$
  */
 public class GeneratorProcessorFactory implements AnnotationProcessorFactory, RoundCompleteListener {
+
 	private static boolean first_round = true;
 
 	// Process any set of annotations
@@ -78,7 +81,7 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 
 	public AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds, AnnotationProcessorEnvironment env) {
 		// Only process the initial types, not the generated ones
-		if (first_round) {
+		if ( first_round ) {
 			env.addListener(this);
 			return new GeneratorProcessor(env);
 		} else
@@ -86,6 +89,7 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 	}
 
 	private static class GeneratorProcessor implements AnnotationProcessor {
+
 		private final AnnotationProcessorEnvironment env;
 
 		GeneratorProcessor(AnnotationProcessorEnvironment env) {
@@ -97,22 +101,22 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 			String typemap_classname = null;
 			boolean generate_error_checks = options.containsKey("-Ageneratechecks");
 			boolean context_specific = options.containsKey("-Acontextspecific");
-			for (String k : options.keySet()) {
+			for ( String k : options.keySet() ) {
 				int delimiter = k.indexOf('=');
-				if (delimiter != -1) {
-					if (k.startsWith("-Atypemap")) {
+				if ( delimiter != -1 ) {
+					if ( k.startsWith("-Atypemap") ) {
 						typemap_classname = k.substring(delimiter + 1);
 					}
 				}
 			}
-			if (typemap_classname == null)
+			if ( typemap_classname == null )
 				throw new RuntimeException("No TypeMap class name specified with -Atypemap=<class-name>");
 
 			TypeDeclaration lastFile = null;
 			try {
 				long generatorLM = getGeneratorLastModified();
 				TypeMap type_map = (TypeMap)(Class.forName(typemap_classname).newInstance());
-				for (TypeDeclaration typedecl : env.getSpecifiedTypeDeclarations()) {
+				for ( TypeDeclaration typedecl : env.getSpecifiedTypeDeclarations() ) {
 					lastFile = typedecl;
 					typedecl.accept(getDeclarationScanner(new GeneratorVisitor(env, type_map, generate_error_checks, context_specific, generatorLM), NO_OP));
 				}
@@ -130,7 +134,16 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 		 * @return time of the latest change
 		 */
 		private static long getGeneratorLastModified() {
-			final File pck = new File(System.getProperty("user.dir") + "/bin/org/lwjgl/util/generator");
+			long lastModified = getDirectoryLastModified("/bin/org/lwjgl/util/generator");
+			lastModified = Math.max(lastModified, getDirectoryLastModified("/bin/org/lwjgl/util/generator/openal"));
+			lastModified = Math.max(lastModified, getDirectoryLastModified("/bin/org/lwjgl/util/generator/opengl"));
+			lastModified = Math.max(lastModified, getDirectoryLastModified("/bin/org/lwjgl/util/generator/opencl"));
+
+			return lastModified;
+		}
+
+		private static long getDirectoryLastModified(final String path) {
+			final File pck = new File(System.getProperty("user.dir") + path);
 			if ( !pck.exists() || !pck.isDirectory() )
 				return Long.MAX_VALUE;
 
