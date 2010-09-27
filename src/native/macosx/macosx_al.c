@@ -52,7 +52,7 @@
 static const struct mach_header* handleOAL = NULL;
 static CFBundleRef openal_bundle = NULL;
 
-void *NativeGetFunctionPointer(const char *function) {
+void *extal_NativeGetFunctionPointer(const char *function) {
 	void *address = NULL;
 	if (handleOAL != NULL) {
 		char *mac_symbol_name = (char *)malloc((strlen(function) + 2)*sizeof(char));
