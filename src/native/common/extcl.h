@@ -55,8 +55,12 @@ typedef GLsync              cl_GLsync;
 
 // -----------------[ Callback function typedefs ]-----------------
 
+#ifndef CL_CALLBACK
+    #define CL_CALLBACK
+#endif
+
 // TODO: This is a bug in current CL implementations (AMD's only?), remove when fixed. (used for cl_native_kernel_func)
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(_WIN64)
     #define CL_USER_FUNC_CALLBACK   __cdecl
 #else
     #define CL_USER_FUNC_CALLBACK   CL_CALLBACK
