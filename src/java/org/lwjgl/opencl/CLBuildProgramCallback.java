@@ -31,8 +31,6 @@
  */
 package org.lwjgl.opencl;
 
-import org.lwjgl.PointerWrapperAbstract;
-
 /**
  * Instances of this class can be used to receive OpenCL program build notifications.
  *

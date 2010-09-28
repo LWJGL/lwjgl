@@ -98,8 +98,8 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 
 	private void validateType(MethodDeclaration method, Class<?extends Annotation> annotation_type, Class type) {
 		Class[] valid_types = type_map.getValidAnnotationTypes(type);
-		for (int i = 0; i < valid_types.length; i++)
-			if (valid_types[i].equals(annotation_type))
+		for ( Class valid_type : valid_types )
+			if ( valid_type.equals(annotation_type) )
 				return;
 		throw new RuntimeException(type + " is annotated with invalid native type " + annotation_type +
 				" in method " + method);

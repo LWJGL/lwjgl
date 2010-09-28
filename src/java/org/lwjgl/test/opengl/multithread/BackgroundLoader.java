@@ -40,11 +40,12 @@ package org.lwjgl.test.opengl.multithread;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Drawable;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Color;
 import org.lwjgl.util.ReadableColor;
 
 import java.nio.ByteBuffer;
+
+import static org.lwjgl.opengl.GL11.*;
 
 abstract class BackgroundLoader {
 
@@ -97,14 +98,14 @@ abstract class BackgroundLoader {
 					// Create a "dummy" texture while we wait for texture IO
 					createCheckerTexture(Color.RED, Color.WHITE, 2);
 
-					texID = GL11.glGenTextures();
-					GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
-					GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, WIDTH, HEIGHT, 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, texture);
+					texID = glGenTextures();
+					glBindTexture(GL_TEXTURE_2D, texID);
+					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WIDTH, HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, texture);
 
-					GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-					GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-					GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+					glBindTexture(GL_TEXTURE_2D, 0);
 				}
 
 				System.out.println("** Dummy texture created **");
@@ -128,13 +129,13 @@ abstract class BackgroundLoader {
 					else
 						createGradientTexture(Color.GREEN, Color.YELLOW);
 
-					GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
-					GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, WIDTH, HEIGHT, 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, texture);
+					glBindTexture(GL_TEXTURE_2D, texID);
+					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WIDTH, HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, texture);
 
-					GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-					GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-					GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+					glBindTexture(GL_TEXTURE_2D, 0);
 
 					System.out.println("** Created new gradient texture **");
 

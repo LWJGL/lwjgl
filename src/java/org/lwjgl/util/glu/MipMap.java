@@ -34,7 +34,9 @@ package org.lwjgl.util.glu;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.*;
 
 /**
  * MipMap.java
@@ -60,13 +62,13 @@ public class MipMap extends Util {
 	public static int gluBuild2DMipmaps(final int target,
 	                                    final int components, final int width, final int height,
 	                                    final int format, final int type, final ByteBuffer data) {
-		if ( width < 1 || height < 1 ) return GLU.GLU_INVALID_VALUE;
+		if ( width < 1 || height < 1 ) return GLU_INVALID_VALUE;
 
 		final int bpp = bytesPerPixel(format, type);
 		if ( bpp == 0 )
-			return GLU.GLU_INVALID_ENUM;
+			return GLU_INVALID_ENUM;
 
-		final int maxSize = glGetIntegerv(GL11.GL_MAX_TEXTURE_SIZE);
+		final int maxSize = glGetIntegerv(GL_MAX_TEXTURE_SIZE);
 
 		int w = nearestPower(width);
 		if ( w > maxSize )
@@ -80,10 +82,10 @@ public class MipMap extends Util {
 		PixelStoreState pss = new PixelStoreState();
 
 		// set pixel packing
-		GL11.glPixelStorei(GL11.GL_PACK_ROW_LENGTH, 0);
-		GL11.glPixelStorei(GL11.GL_PACK_ALIGNMENT, 1);
-		GL11.glPixelStorei(GL11.GL_PACK_SKIP_ROWS, 0);
-		GL11.glPixelStorei(GL11.GL_PACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_PACK_ROW_LENGTH, 0);
+		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+		glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+		glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
 
 		ByteBuffer image;
 		int retVal = 0;
@@ -99,10 +101,10 @@ public class MipMap extends Util {
 			}
 
 			/* set pixel unpacking */
-			GL11.glPixelStorei(GL11.GL_UNPACK_ROW_LENGTH, 0);
-			GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-			GL11.glPixelStorei(GL11.GL_UNPACK_SKIP_ROWS, 0);
-			GL11.glPixelStorei(GL11.GL_UNPACK_SKIP_PIXELS, 0);
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		} else {
 			image = data;
 		}
@@ -114,13 +116,13 @@ public class MipMap extends Util {
 		while ( !done ) {
 			if (image != data) {
 				/* set pixel unpacking */
-				GL11.glPixelStorei(GL11.GL_UNPACK_ROW_LENGTH, 0);
-				GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-				GL11.glPixelStorei(GL11.GL_UNPACK_SKIP_ROWS, 0);
-				GL11.glPixelStorei(GL11.GL_UNPACK_SKIP_PIXELS, 0);
-			} 			
-			
-			GL11.glTexImage2D(target, level, components, w, h, 0, format, type, image);
+				glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+				glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+				glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+				glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+			}
+
+			glTexImage2D(target, level, components, w, h, 0, format, type, image);
 
 			if ( w == 1 && h == 1 )
 				break;
@@ -177,7 +179,7 @@ public class MipMap extends Util {
 
 		final int components = compPerPix(format);
 		if ( components == -1 )
-			return GLU.GLU_INVALID_ENUM;
+			return GLU_INVALID_ENUM;
 
 		int i, j, k;
 		float[] tempIn, tempOut;
@@ -191,26 +193,26 @@ public class MipMap extends Util {
 
 		// Determine bytes per input type
 		switch ( typein ) {
-			case GL11.GL_UNSIGNED_BYTE:
+			case GL_UNSIGNED_BYTE:
 				sizein = 1;
 				break;
-			case GL11.GL_FLOAT:
+			case GL_FLOAT:
 				sizein = 4;
-				break;				
+				break;
 			default:
-				return GL11.GL_INVALID_ENUM;
+				return GL_INVALID_ENUM;
 		}
 
 		// Determine bytes per output type
 		switch ( typeOut ) {
-			case GL11.GL_UNSIGNED_BYTE:
+			case GL_UNSIGNED_BYTE:
 				sizeout = 1;
 				break;
-			case GL11.GL_FLOAT:
+			case GL_FLOAT:
 				sizeout = 4;
-				break;				
+				break;
 			default:
-				return GL11.GL_INVALID_ENUM;
+				return GL_INVALID_ENUM;
 		}
 
 		// Get glPixelStore state
@@ -228,7 +230,7 @@ public class MipMap extends Util {
 			rowstride = pss.unpackAlignment / sizein * ceil(components * rowlen * sizein, pss.unpackAlignment);
 
 		switch ( typein ) {
-			case GL11.GL_UNSIGNED_BYTE:
+			case GL_UNSIGNED_BYTE:
 				k = 0;
 				dataIn.rewind();
 				for ( i = 0; i < heightIn; i++ ) {
@@ -238,7 +240,7 @@ public class MipMap extends Util {
 					}
 				}
 				break;
-			case GL11.GL_FLOAT:
+			case GL_FLOAT:
 				k = 0;
 				dataIn.rewind();
 				for ( i = 0; i < heightIn; i++ )
@@ -250,9 +252,9 @@ public class MipMap extends Util {
 						fptr += 4;
 					}
 				}
-				break;				
+				break;
 			default:
-				return GLU.GLU_INVALID_ENUM;
+				return GLU_INVALID_ENUM;
 		}
 
 		// Do scaling
@@ -321,7 +323,7 @@ public class MipMap extends Util {
 			rowstride = pss.packAlignment / sizeout * ceil(components * rowlen * sizeout, pss.packAlignment);
 
 		switch ( typeOut ) {
-			case GL11.GL_UNSIGNED_BYTE:
+			case GL_UNSIGNED_BYTE:
 				k = 0;
 				for ( i = 0; i < heightOut; i++ ) {
 					int ubptr = i * rowstride + pss.packSkipRows * rowstride + pss.packSkipPixels * components;
@@ -331,19 +333,19 @@ public class MipMap extends Util {
 					}
 				}
 				break;
-			case GL11.GL_FLOAT:
+			case GL_FLOAT:
 				k = 0;
 				for ( i = 0; i < heightOut; i++ ) {
 					int fptr = 4 * (i * rowstride + pss.unpackSkipRows * rowstride + pss.unpackSkipPixels * components);
-					
+
 					for ( j = 0; j < widthOut * components; j++ ) {
 						dataOut.putFloat(fptr, tempOut[k++]);
 						fptr += 4;
 					}
 				}
-				break;				
+				break;
 			default:
-				return GLU.GLU_INVALID_ENUM;
+				return GLU_INVALID_ENUM;
 		}
 
 		return 0;

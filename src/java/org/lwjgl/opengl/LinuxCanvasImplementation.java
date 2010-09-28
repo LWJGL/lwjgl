@@ -50,13 +50,13 @@ import org.lwjgl.LWJGLUtil;
 final class LinuxCanvasImplementation implements AWTCanvasImplementation {
 	static int getScreenFromDevice(final GraphicsDevice device) throws LWJGLException {
 		try {
-			Method getScreen_method = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
-				public Object run() throws Exception {
-					return device.getClass().getMethod("getScreen", null);
+			Method getScreen_method = AccessController.doPrivileged(new PrivilegedExceptionAction<Method>() {
+				public Method run() throws Exception {
+					return device.getClass().getMethod("getScreen");
 				}
 			});
-			Integer screen = (Integer)getScreen_method.invoke(device, null);
-			return screen.intValue();
+			Integer screen = (Integer)getScreen_method.invoke(device);
+			return screen;
 		} catch (Exception e) {
 			throw new LWJGLException(e);
 		}
@@ -64,13 +64,13 @@ final class LinuxCanvasImplementation implements AWTCanvasImplementation {
 
 	private static int getVisualIDFromConfiguration(final GraphicsConfiguration configuration) throws LWJGLException {
 		try {
-			Method getVisual_method = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
-				public Object run() throws Exception {
-					return configuration.getClass().getMethod("getVisual", null);
+			Method getVisual_method = AccessController.doPrivileged(new PrivilegedExceptionAction<Method>() {
+				public Method run() throws Exception {
+					return configuration.getClass().getMethod("getVisual");
 				}
 			});
-			Integer visual = (Integer)getVisual_method.invoke(configuration, null);
-			return visual.intValue();
+			Integer visual = (Integer)getVisual_method.invoke(configuration);
+			return visual;
 		} catch (Exception e) {
 			throw new LWJGLException(e);
 		}
@@ -90,10 +90,10 @@ final class LinuxCanvasImplementation implements AWTCanvasImplementation {
 			int screen = getScreenFromDevice(device);
 			int visual_id_matching_format = findVisualIDFromFormat(screen, pixel_format);
 			GraphicsConfiguration[] configurations = device.getConfigurations();
-			for (int i = 0; i < configurations.length; i++) {
-				int visual_id = getVisualIDFromConfiguration(configurations[i]);
-				if (visual_id == visual_id_matching_format)
-					return configurations[i];
+			for ( GraphicsConfiguration configuration : configurations ) {
+				int visual_id = getVisualIDFromConfiguration(configuration);
+				if ( visual_id == visual_id_matching_format )
+					return configuration;
 			}
 		} catch (LWJGLException e) {
 			LWJGLUtil.log("Got exception while trying to determine configuration: " + e);

@@ -34,39 +34,39 @@ package org.lwjgl.util.glu;
 
 public interface GLUtessellator {
 
-	public abstract void gluDeleteTess();
+	void gluDeleteTess();
 
-	public abstract void gluTessProperty(int which, double value);
+	void gluTessProperty(int which, double value);
 
 	/* Returns tessellator property */
-	public abstract void gluGetTessProperty(int which, double[] value,
+	void gluGetTessProperty(int which, double[] value,
 			int value_offset); /* gluGetTessProperty() */
 
-	public abstract void gluTessNormal(double x, double y, double z);
+	void gluTessNormal(double x, double y, double z);
 
-	public abstract void gluTessCallback(int which,
+	void gluTessCallback(int which,
 			GLUtessellatorCallback aCallback);
 
-	public abstract void gluTessVertex(double[] coords, int coords_offset,
+	void gluTessVertex(double[] coords, int coords_offset,
 			Object vertexData);
 
-	public abstract void gluTessBeginPolygon(Object data);
+	void gluTessBeginPolygon(Object data);
 
-	public abstract void gluTessBeginContour();
+	void gluTessBeginContour();
 
-	public abstract void gluTessEndContour();
+	void gluTessEndContour();
 
-	public abstract void gluTessEndPolygon();
+	void gluTessEndPolygon();
 
 	/*******************************************************/
 
 	/* Obsolete calls -- for backward compatibility */
 
-	public abstract void gluBeginPolygon();
+	void gluBeginPolygon();
 
 	/*ARGSUSED*/
-	public abstract void gluNextContour(int type);
+	void gluNextContour(int type);
 
-	public abstract void gluEndPolygon();
+	void gluEndPolygon();
 
 }

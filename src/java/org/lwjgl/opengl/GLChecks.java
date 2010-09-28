@@ -32,10 +32,17 @@
 package org.lwjgl.opengl;
 
 import java.nio.Buffer;
-import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLUtil;
+
+import static org.lwjgl.opengl.ARBBufferObject.*;
+import static org.lwjgl.opengl.ATIVertexArrayObject.*;
+import static org.lwjgl.opengl.EXTAbgr.*;
+import static org.lwjgl.opengl.EXTBgra.*;
+import static org.lwjgl.opengl.EXTDirectStateAccess.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
 
 /**
  * A class to check buffer boundaries in GL methods. Many GL
@@ -61,19 +68,19 @@ class GLChecks {
 	}
 
 	static int getBufferObjectSize(ContextCapabilities caps, int buffer_enum) {
-		return GL15.glGetBufferParameter(buffer_enum, GL15.GL_BUFFER_SIZE);
+		return glGetBufferParameter(buffer_enum, GL_BUFFER_SIZE);
 	}
 
 	static int getBufferObjectSizeARB(ContextCapabilities caps, int buffer_enum) {
-		return ARBBufferObject.glGetBufferParameterARB(buffer_enum, ARBBufferObject.GL_BUFFER_SIZE_ARB);
+		return glGetBufferParameterARB(buffer_enum, GL_BUFFER_SIZE_ARB);
 	}
 
 	static int getBufferObjectSizeATI(ContextCapabilities caps, int buffer) {
-		return ATIVertexArrayObject.glGetObjectBufferATI(buffer, ATIVertexArrayObject.GL_OBJECT_BUFFER_SIZE_ATI);
+		return glGetObjectBufferATI(buffer, GL_OBJECT_BUFFER_SIZE_ATI);
 	}
 
 	static int getNamedBufferObjectSize(ContextCapabilities caps, int buffer) {
-		return EXTDirectStateAccess.glGetNamedBufferParameterEXT(buffer, GL15.GL_BUFFER_SIZE);
+		return glGetNamedBufferParameterEXT(buffer, GL_BUFFER_SIZE);
 	}
 
 	/** Helper method to ensure that array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
@@ -193,17 +200,17 @@ class GLChecks {
 	private static int calculateBytesPerPixel(int format, int type) {
 		int bpe;
 		switch ( type ) {
-			case GL11.GL_UNSIGNED_BYTE:
-			case GL11.GL_BYTE:
+			case GL_UNSIGNED_BYTE:
+			case GL_BYTE:
 				bpe = 1;
 				break;
-			case GL11.GL_UNSIGNED_SHORT:
-			case GL11.GL_SHORT:
+			case GL_UNSIGNED_SHORT:
+			case GL_SHORT:
 				bpe = 2;
 				break;
-			case GL11.GL_UNSIGNED_INT:
-			case GL11.GL_INT:
-			case GL11.GL_FLOAT:
+			case GL_UNSIGNED_INT:
+			case GL_INT:
+			case GL_FLOAT:
 				bpe = 4;
 				break;
 			default :
@@ -213,21 +220,21 @@ class GLChecks {
 		}
 		int epp;
 		switch ( format ) {
-			case GL11.GL_LUMINANCE:
-			case GL11.GL_ALPHA:
+			case GL_LUMINANCE:
+			case GL_ALPHA:
 				epp = 1;
 				break;
 
-			case GL11.GL_LUMINANCE_ALPHA:
+			case GL_LUMINANCE_ALPHA:
 				epp = 2;
 				break;
-			case GL11.GL_RGB:
-			case EXTBgra.GL_BGR_EXT:
+			case GL_RGB:
+			case GL_BGR_EXT:
 				epp = 3;
 				break;
-			case GL11.GL_RGBA:
-			case EXTAbgr.GL_ABGR_EXT:
-			case EXTBgra.GL_BGRA_EXT:
+			case GL_RGBA:
+			case GL_ABGR_EXT:
+			case GL_BGRA_EXT:
 				epp = 4;
 				break;
 			default :

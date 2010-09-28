@@ -70,5 +70,3 @@ typedef cl_bitfield         cl_mem_migration_flags_ext;
 // -----------------[ Convenience typedefs ]-----------------
 
 typedef void                cl_void;
-//typedef char                cl_char;
-//typedef unsigned char       cl_uchar;

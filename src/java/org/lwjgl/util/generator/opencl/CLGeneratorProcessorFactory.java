@@ -122,8 +122,6 @@ public class CLGeneratorProcessorFactory implements AnnotationProcessorFactory, 
 			writer.println();
 			writer.println("package org.lwjgl.opencl;");
 			writer.println();
-			writer.println("import java.util.*;");
-			writer.println();
 		}
 
 		private void generateCLCapabilitiesSource() throws IOException {
@@ -146,8 +144,6 @@ public class CLGeneratorProcessorFactory implements AnnotationProcessorFactory, 
 
 			CLCapabilitiesGenerator.generateCapabilitiesGetters(writer);
 
-			CLCapabilitiesGenerator.generateExtensionSupported(writer);
-
 			for ( final TypeDeclaration template : templates )
 				CLCapabilitiesGenerator.generateExtensionChecks(writer, (InterfaceDeclaration)template);
 
@@ -158,6 +154,8 @@ public class CLGeneratorProcessorFactory implements AnnotationProcessorFactory, 
 		private void generateCLPDCapabilitiesSource(final Class<? extends Annotation> capsType, final String capsName, final Class<? extends PointerWrapper> objectType, final String objectName) throws IOException {
 			final PrintWriter writer = env.getFiler().createTextFile(Filer.Location.SOURCE_TREE, "org.lwjgl.opencl", new File(capsName + ".java"), null);
 			printHeader(writer);
+			writer.println("import java.util.*;");
+			writer.println();
 
 			CLPDCapabilitiesGenerator.generateClassPrologue(writer, capsName);
 
@@ -173,7 +171,7 @@ public class CLGeneratorProcessorFactory implements AnnotationProcessorFactory, 
 
 			CLPDCapabilitiesGenerator.generateGetters(writer);
 
-			CLPDCapabilitiesGenerator.generateToString(writer, templates, capsType, capsName, objectType, objectName);
+			CLPDCapabilitiesGenerator.generateToString(writer, templates, capsType);
 
 			writer.println("}");
 			writer.close();

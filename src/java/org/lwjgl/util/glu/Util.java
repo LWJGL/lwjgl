@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -34,8 +34,9 @@ package org.lwjgl.util.glu;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.*;
 
 /**
  * Util.java
@@ -110,22 +111,22 @@ public class Util {
 	protected static int compPerPix(int format) {
 		/* Determine number of components per pixel */
 		switch ( format ) {
-			case GL11.GL_COLOR_INDEX:
-			case GL11.GL_STENCIL_INDEX:
-			case GL11.GL_DEPTH_COMPONENT:
-			case GL11.GL_RED:
-			case GL11.GL_GREEN:
-			case GL11.GL_BLUE:
-			case GL11.GL_ALPHA:
-			case GL11.GL_LUMINANCE:
+			case GL_COLOR_INDEX:
+			case GL_STENCIL_INDEX:
+			case GL_DEPTH_COMPONENT:
+			case GL_RED:
+			case GL_GREEN:
+			case GL_BLUE:
+			case GL_ALPHA:
+			case GL_LUMINANCE:
 				return 1;
-			case GL11.GL_LUMINANCE_ALPHA:
+			case GL_LUMINANCE_ALPHA:
 				return 2;
-			case GL11.GL_RGB:
-			case GL12.GL_BGR:
+			case GL_RGB:
+			case GL_BGR:
 				return 3;
-			case GL11.GL_RGBA:
-			case GL12.GL_BGRA:
+			case GL_RGBA:
+			case GL_BGRA:
 				return 4;
 			default :
 				return -1;
@@ -173,25 +174,25 @@ public class Util {
 		int n, m;
 
 		switch ( format ) {
-			case GL11.GL_COLOR_INDEX:
-			case GL11.GL_STENCIL_INDEX:
-			case GL11.GL_DEPTH_COMPONENT:
-			case GL11.GL_RED:
-			case GL11.GL_GREEN:
-			case GL11.GL_BLUE:
-			case GL11.GL_ALPHA:
-			case GL11.GL_LUMINANCE:
+			case GL_COLOR_INDEX:
+			case GL_STENCIL_INDEX:
+			case GL_DEPTH_COMPONENT:
+			case GL_RED:
+			case GL_GREEN:
+			case GL_BLUE:
+			case GL_ALPHA:
+			case GL_LUMINANCE:
 				n = 1;
 				break;
-			case GL11.GL_LUMINANCE_ALPHA:
+			case GL_LUMINANCE_ALPHA:
 				n = 2;
 				break;
-			case GL11.GL_RGB:
-			case GL12.GL_BGR:
+			case GL_RGB:
+			case GL_BGR:
 				n = 3;
 				break;
-			case GL11.GL_RGBA:
-			case GL12.GL_BGRA:
+			case GL_RGBA:
+			case GL_BGRA:
 				n = 4;
 				break;
 			default :
@@ -199,28 +200,28 @@ public class Util {
 		}
 
 		switch ( type ) {
-			case GL11.GL_UNSIGNED_BYTE:
+			case GL_UNSIGNED_BYTE:
 				m = 1;
 				break;
-			case GL11.GL_BYTE:
+			case GL_BYTE:
 				m = 1;
 				break;
-			case GL11.GL_BITMAP:
+			case GL_BITMAP:
 				m = 1;
 				break;
-			case GL11.GL_UNSIGNED_SHORT:
+			case GL_UNSIGNED_SHORT:
 				m = 2;
 				break;
-			case GL11.GL_SHORT:
+			case GL_SHORT:
 				m = 2;
 				break;
-			case GL11.GL_UNSIGNED_INT:
+			case GL_UNSIGNED_INT:
 				m = 4;
 				break;
-			case GL11.GL_INT:
+			case GL_INT:
 				m = 4;
 				break;
-			case GL11.GL_FLOAT:
+			case GL_FLOAT:
 				m = 4;
 				break;
 			default :
@@ -239,7 +240,7 @@ public class Util {
 	 */
 	protected static int glGetIntegerv(int what) {
 		scratch.rewind();
-		GL11.glGetInteger(what, scratch);
+		glGetInteger(what, scratch);
 		return scratch.get();
 	}
 

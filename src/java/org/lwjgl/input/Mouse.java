@@ -103,7 +103,7 @@ public class Mouse {
 	private static String[]		buttonName;
 
 	/** hashmap of button names, for fast lookup */
-	private static final Map	buttonMap									= new HashMap(16);
+	private static final Map<String, Integer>	buttonMap									= new HashMap<String, Integer>(16);
 
 	/** Lazy initialization */
 	private static boolean		initialized;
@@ -135,9 +135,9 @@ public class Mouse {
 	private static boolean		isGrabbed;
 
 	private static InputImplementation implementation;
-  
+
 	/** Whether we need cursor animation emulation */
-	private static final boolean emulateCursorAnimation = 	LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_WINDOWS || 
+	private static final boolean emulateCursorAnimation = 	LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_WINDOWS ||
 								LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_MACOSX;
 
         private static final boolean allowNegativeMouseCoords = getPrivilegedBoolean("org.lwjgl.input.Mouse.allowNegativeMouseCoords");
@@ -213,7 +213,7 @@ public class Mouse {
 			}
 		}
 	}
-	
+
 	/**
 	 * Static initialization
 	 */
@@ -224,7 +224,7 @@ public class Mouse {
 		buttonName = new String[16];
 		for (int i = 0; i < 16; i++) {
 			buttonName[i] = "BUTTON" + i;
-			buttonMap.put(buttonName[i], new Integer(i));
+			buttonMap.put(buttonName[i], i);
 		}
 
 		initialized = true;
@@ -308,7 +308,7 @@ public class Mouse {
 	 * Polls the mouse for its current state. Access the polled values using the
 	 * get<value> methods.
 	 * By using this method, it is possible to "miss" mouse click events if you don't
-	 * poll fast enough. 
+	 * poll fast enough.
 	 *
 	 * To use buffered values, you have to call <code>next</code> for each event you
 	 * want to read. You can query which button caused the event by using
@@ -401,11 +401,11 @@ public class Mouse {
 	 */
 	public static int getButtonIndex(String buttonName) {
 		synchronized (OpenGLPackageAccess.global_lock) {
-			Integer ret = (Integer) buttonMap.get(buttonName);
+			Integer ret = buttonMap.get(buttonName);
 			if (ret == null)
 				return -1;
 			else
-				return ret.intValue();
+				return ret;
 		}
 	}
 
@@ -626,13 +626,13 @@ public class Mouse {
 					// store location mouse was grabbed
 					grab_x = x;
 					grab_y = y;
-				}				
+				}
 				else if (!grab && grabbed) {
 					// move mouse back to location it was grabbed before ungrabbing
 					if ((Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) != 0)
 						implementation.setCursorPosition(grab_x, grab_y);
 				}
-				
+
 				implementation.grabMouse(grab);
 				// Get latest values from native side
 				poll();
@@ -663,12 +663,12 @@ public class Mouse {
 
         /** Gets a boolean property as a privileged action. */
 	static boolean getPrivilegedBoolean(final String property_name) {
-		Boolean value = (Boolean)AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				return new Boolean(Boolean.getBoolean(property_name));
+		Boolean value = AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
+			public Boolean run() {
+				return Boolean.getBoolean(property_name);
 			}
 		});
-		return value.booleanValue();
+		return value;
 	}
 
         /**

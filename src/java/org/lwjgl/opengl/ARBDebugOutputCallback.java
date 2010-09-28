@@ -67,6 +67,19 @@ public final class ARBDebugOutputCallback extends PointerWrapperAbstract {
 		GL_DEBUG_TYPE_PERFORMANCE_ARB = 0x8250,
 		GL_DEBUG_TYPE_OTHER_ARB = 0x8251;
 
+	private static final long CALLBACK_POINTER;
+
+	static {
+		long pointer = 0;
+		try {
+			// Call reflectively so that we can compile this class for the Generator.
+			pointer = (Long)Class.forName("org.lwjgl.opengl.CallbackUtil").getDeclaredMethod("getDebugOutputCallbackARB").invoke(null);
+		} catch (Exception e) {
+			// ignore
+		}
+		CALLBACK_POINTER = pointer;
+	}
+
 	private final Handler handler;
 
 	/**
@@ -156,22 +169,13 @@ public final class ARBDebugOutputCallback extends PointerWrapperAbstract {
 	 * @param handler the callback handler
 	 */
 	public ARBDebugOutputCallback(final Handler handler) {
-		super(getFunctionPointer());
+		super(CALLBACK_POINTER);
 
 		this.handler = handler;
 	}
 
 	Handler getHandler() {
 		return handler;
-	}
-
-	private static long getFunctionPointer() {
-		try {
-			// Call reflectively so that we can compile this class for the Generator.
-			return ((Long)Class.forName("org.lwjgl.opengl.CallbackUtil").getDeclaredMethod("getDebugOutputCallbackARB", null).invoke(null, null)).longValue();
-		} catch (Exception e) {
-			throw new RuntimeException(e.getCause() != null ? e.getCause() : e);
-		}
 	}
 
 	/** Implementations of this interface can be used to receive ARB_debug_output notifications. */

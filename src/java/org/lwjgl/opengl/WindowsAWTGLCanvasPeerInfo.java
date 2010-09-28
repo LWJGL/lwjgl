@@ -47,7 +47,7 @@ final class WindowsAWTGLCanvasPeerInfo extends WindowsPeerInfo {
 	private final Canvas component;
 	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
 	private final PixelFormat pixel_format;
-	private boolean has_pixel_format= false;
+	private boolean has_pixel_format;
 
 	WindowsAWTGLCanvasPeerInfo(Canvas component, PixelFormat pixel_format) {
 		this.component = component;

@@ -49,14 +49,14 @@ final class LinuxMouse {
 	private static final int WHEEL_SCALE = 120;
 
 	/* X11 constants */
-	private final static int Button1 = 1;
-	private final static int Button2 = 2;
-	private final static int Button3 = 3;
-	private final static int Button4 = 4;
-	private final static int Button5 = 5;
+	private static final int Button1 = 1;
+	private static final int Button2 = 2;
+	private static final int Button3 = 3;
+	private static final int Button4 = 4;
+	private static final int Button5 = 5;
 
-	private final static int ButtonPress = 4;
-	private final static int ButtonRelease = 5;
+	private static final int ButtonPress = 4;
+	private static final int ButtonRelease = 5;
 
 	private final long display;
 	private final long window;

@@ -338,7 +338,7 @@ public class LWJGLUtil {
 	 */
 	public static String[] getLibraryPaths(String libname, String[] platform_lib_names, ClassLoader classloader) {
 		// need to pass path of possible locations of library to native side
-		List possible_paths = new ArrayList();
+		List<String> possible_paths = new ArrayList<String>();
 
 		String classloader_path = getPathFromClassLoader(libname, classloader);
 		if (classloader_path != null) {
@@ -346,18 +346,17 @@ public class LWJGLUtil {
 			possible_paths.add(classloader_path);
 		}
 
-		for (int i = 0; i < platform_lib_names.length; i++) {
-			String platform_lib_name = platform_lib_names[i];
+		for ( String platform_lib_name : platform_lib_names ) {
 			String lwjgl_classloader_path = getPathFromClassLoader("lwjgl", classloader);
-			if (lwjgl_classloader_path != null) {
+			if ( lwjgl_classloader_path != null ) {
 				log("getPathFromClassLoader: Path found: " + lwjgl_classloader_path);
 				possible_paths.add(lwjgl_classloader_path.substring(0, lwjgl_classloader_path.lastIndexOf(File.separator))
-						+ File.separator + platform_lib_name);
+				                   + File.separator + platform_lib_name);
 			}
 
 			// add Installer path
 			String alternative_path = getPrivilegedProperty("org.lwjgl.librarypath");
-			if (alternative_path != null) {
+			if ( alternative_path != null ) {
 				possible_paths.add(alternative_path + File.separator + platform_lib_name);
 			}
 
@@ -365,7 +364,7 @@ public class LWJGLUtil {
 			String java_library_path = getPrivilegedProperty("java.library.path");
 
 			StringTokenizer st = new StringTokenizer(java_library_path, File.pathSeparator);
-			while (st.hasMoreTokens()) {
+			while ( st.hasMoreTokens() ) {
 				String path = st.nextToken();
 				possible_paths.add(path + File.separator + platform_lib_name);
 			}
@@ -379,15 +378,13 @@ public class LWJGLUtil {
 		}
 
 		//create needed string array
-		String[] paths = new String[possible_paths.size()];
-		possible_paths.toArray(paths);
-		return paths;
+		return possible_paths.toArray(new String[possible_paths.size()]);
 	}
 
 	static void execPrivileged(final String[] cmd_array) throws Exception {
 		try {
-			Process process = (Process)AccessController.doPrivileged(new PrivilegedExceptionAction() {
-				public Object run() throws Exception {
+			Process process = AccessController.doPrivileged(new PrivilegedExceptionAction<Process>() {
+				public Process run() throws Exception {
 					return Runtime.getRuntime().exec(cmd_array);
 				}
 			});
@@ -401,8 +398,8 @@ public class LWJGLUtil {
 	}
 
 	private static String getPrivilegedProperty(final String property_name) {
-		return (String)AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
+		return AccessController.doPrivileged(new PrivilegedAction<String>() {
+			public String run() {
 				return System.getProperty(property_name);
 			}
 		});
@@ -422,16 +419,15 @@ public class LWJGLUtil {
 	private static String getPathFromClassLoader(final String libname, final ClassLoader classloader) {
 		try {
 			log("getPathFromClassLoader: searching for: " + libname);
-			Class c = classloader.getClass();
+			Class<?> c = classloader.getClass();
 			while (c != null) {
-				final Class clazz = c;
+				final Class<?> clazz = c;
 				try {
-					return (String)AccessController.doPrivileged(new PrivilegedExceptionAction() {
-						public Object run() throws Exception {
-							Method findLibrary = clazz.getDeclaredMethod("findLibrary", new Class[]{String.class});
+					return AccessController.doPrivileged(new PrivilegedExceptionAction<String>() {
+						public String run() throws Exception {
+							Method findLibrary = clazz.getDeclaredMethod("findLibrary", String.class);
 							findLibrary.setAccessible(true);
-							Object[] arguments = new Object[] {libname};
-							String path = (String)findLibrary.invoke(classloader, arguments);
+							String path = (String)findLibrary.invoke(classloader, libname);
 							return path;
 						}
 					});
@@ -450,12 +446,12 @@ public class LWJGLUtil {
 	 * Gets a boolean property as a privileged action.
 	 */
 	private static boolean getPrivilegedBoolean(final String property_name) {
-		Boolean value = (Boolean)AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				return new Boolean(Boolean.getBoolean(property_name));
+		Boolean value = AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
+			public Boolean run() {
+				return Boolean.getBoolean(property_name);
 			}
 		});
-		return value.booleanValue();
+		return value;
 	}
 
 	/**

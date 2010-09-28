@@ -31,6 +31,8 @@
  */
 package org.lwjgl.opencl;
 
+import java.nio.ByteBuffer;
+
 /**
  * This class is a wrapper around a cl_mem pointer.
  *
@@ -38,12 +40,155 @@ package org.lwjgl.opencl;
  */
 public final class CLMem extends CLObjectChild<CLContext> {
 
+	private static final CLMemUtil util = (CLMemUtil)CLPlatform.getInfoUtilInstance(CLMem.class, "CL_MEM_UTIL");
+
 	CLMem(final long pointer, final CLContext context) {
 		super(pointer, context);
 		if ( isValid() )
 			context.getCLMemRegistry().registerObject(this);
 	}
 
+	// ---------------[ UTILITY METHODS ]---------------
+
+	/**
+	 * Returns the integer value of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public int getInfoInt(int param_name) {
+		return util.getInfoInt(this, param_name);
+	}
+
+	/**
+	 * Returns the size_t value of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public long getInfoSize(int param_name) {
+		return util.getInfoSize(this, param_name);
+	}
+
+	/**
+	 * Returns the long value of the specified parameter. Can be used
+	 * for both cl_ulong and cl_bitfield parameters.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public long getInfoLong(int param_name) {
+		return util.getInfoLong(this, param_name);
+	}
+
+	/**
+	 * Returns a direct ByteBuffer instance that points to the host
+	 * memory that backs this CLMem object. Applicable only to CLMem
+	 * objects that were created with the CL_MEM_USE_HOST_PTR flag.
+	 *
+	 * @return the host memory ByteBuffer
+	 */
+	public ByteBuffer getInfoHostBuffer() {
+		return util.getInfoHostBuffer(this);
+	}
+
+	// clGetImageInfo methods
+
+	/**
+	 * Returns the size_t value of the specified parameter. Applicable to image objects only.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public long getImageInfoSize(int param_name) {
+		return util.getImageInfoSize(this, param_name);
+	}
+
+	/**
+	 * Returns the image channel order. Applicable to image objects only.
+	 *
+	 * @return the parameter value
+	 */
+	public int getImageChannelOrder() {
+		return util.getImageInfoFormat(this, 0);
+	}
+
+	/**
+	 * Returns the image channel type. Applicable to image objects only.
+	 *
+	 * @return the parameter value
+	 */
+	public int getImageChannelType() {
+		return util.getImageInfoFormat(this, 1);
+	}
+
+	// clGetGLObjectInfo methods
+
+	/**
+	 * Returns the GL object type. Applicable to CLMem objects
+	 * that have been created GL objects only.
+	 *
+	 * @return the parameter value
+	 */
+	public int getGLObjectType() {
+		return util.getGLObjectType(this);
+	}
+
+	/**
+	 * Returns the GL object name. Applicable to CLMem objects
+	 * that have been created GL objects only.
+	 *
+	 * @return the parameter value
+	 */
+	public int getGLObjectName() {
+		return util.getGLObjectName(this);
+	}
+
+	// clGetGLTextureInfo methods
+
+	/**
+	 * Returns the int value of the specified parameter. Applicable to CLMem objects
+	 * that have been created by GL textures only.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public int getGLTextureInfoInt(int param_name) {
+		return util.getGLTextureInfoInt(this, param_name);
+	}
+
+	/** CLMem utility methods interface. */
+	interface CLMemUtil extends InfoUtil<CLMem> {
+
+		ByteBuffer getInfoHostBuffer(CLMem mem);
+
+		long getImageInfoSize(CLMem mem, int param_name);
+
+		int getImageInfoFormat(CLMem mem, int index);
+
+		int getGLObjectType(CLMem mem);
+
+		int getGLObjectName(CLMem mem);
+
+		int getGLTextureInfoInt(CLMem mem, int param_name);
+
+	}
+
+	// -------[ IMPLEMENTATION STUFF BELOW ]-------
+
+	/**
+	 * Sub-buffer factory. clCreateSubBuffer may return an existing CLMem.
+	 *
+	 * @param pointer the sub-buffer id
+	 * @param context the context in which the sub-buffer was created
+	 *
+	 * @return the CLMem that represents the sub-buffer
+	 */
 	static CLMem create(final long pointer, final CLContext context) {
 		CLMem clMem = context.getCLMemRegistry().getObject(pointer);
 		if ( clMem == null )

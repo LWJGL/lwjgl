@@ -128,7 +128,7 @@ public final class DisplayMode {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		StringBuffer sb = new StringBuffer(32);
+		StringBuilder sb = new StringBuilder(32);
 		sb.append(width);
 		sb.append(" x ");
 		sb.append(height);

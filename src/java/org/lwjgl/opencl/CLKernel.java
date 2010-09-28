@@ -40,13 +40,202 @@ import org.lwjgl.PointerWrapper;
  */
 public final class CLKernel extends CLObjectChild<CLProgram> {
 
-	private static final CLKernelImpl impl = (CLKernelImpl)CLPlatform.getClassInstance("org.lwjgl.opencl.CLKernelImpl");
+	private static final CLKernelUtil util = (CLKernelUtil)CLPlatform.getInfoUtilInstance(CLKernel.class, "CL_KERNEL_UTIL");
 
 	CLKernel(final long pointer, final CLProgram program) {
 		super(pointer, program);
 		if ( isValid() )
 			program.getCLKernelRegistry().registerObject(this);
 	}
+
+	// ---------------[ UTILITY METHODS ]---------------
+
+	// clSetKernelArg methods
+
+	/**
+	 * Sets a kernel argument at the specified index to the specified
+	 * byte value.
+	 *
+	 * @param index the argument index
+	 * @param value the argument value
+	 *
+	 * @return this CLKernel object
+	 */
+	public CLKernel setArg(final int index, final byte value) {
+		util.setArg(this, index, value);
+		return this;
+	}
+
+	/**
+	 * Sets a kernel argument at the specified index to the specified
+	 * byte value.
+	 *
+	 * @param index the argument index
+	 * @param value the argument value
+	 *
+	 * @return this CLKernel object
+	 */
+	public CLKernel setArg(final int index, final short value) {
+		util.setArg(this, index, value);
+		return this;
+	}
+
+	/**
+	 * Sets a kernel argument at the specified index to the specified
+	 * int value.
+	 *
+	 * @param index the argument index
+	 * @param value the argument value
+	 *
+	 * @return this CLKernel object
+	 */
+	public CLKernel setArg(final int index, final int value) {
+		util.setArg(this, index, value);
+		return this;
+	}
+
+	/**
+	 * Sets a kernel argument at the specified index to the specified
+	 * long value.
+	 *
+	 * @param index the argument index
+	 * @param value the argument value
+	 *
+	 * @return this CLKernel object
+	 */
+	public CLKernel setArg(final int index, final long value) {
+		util.setArg(this, index, value);
+		return this;
+	}
+
+	/**
+	 * Sets a kernel argument at the specified index to the specified
+	 * float value.
+	 *
+	 * @param index the argument index
+	 * @param value the argument value
+	 *
+	 * @return this CLKernel object
+	 */
+	public CLKernel setArg(final int index, final float value) {
+		util.setArg(this, index, value);
+		return this;
+	}
+
+	/**
+	 * Sets a kernel argument at the specified index to the specified
+	 * double value.
+	 *
+	 * @param index the argument index
+	 * @param value the argument value
+	 *
+	 * @return this CLKernel object
+	 */
+	public CLKernel setArg(final int index, final double value) {
+		util.setArg(this, index, value);
+		return this;
+	}
+
+	/**
+	 * Sets a kernel argument at the specified index to the specified
+	 * pointer value.
+	 *
+	 * @param index the argument index
+	 * @param value the argument value
+	 *
+	 * @return this CLKernel object
+	 */
+	public CLKernel setArg(final int index, final PointerWrapper value) {
+		util.setArg(this, index, value);
+		return this;
+	}
+
+	// clGetKernelInfo methods
+
+	/**
+	 * Returns the String value of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public String getInfoString(final int param_name) {
+		return util.getInfoString(this, param_name);
+	}
+
+	/**
+	 * Returns the integer value of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public int getInfoInt(final int param_name) {
+		return util.getInfoInt(this, param_name);
+	}
+
+	// clGetKernelWorkGroupInfo methods
+
+	/**
+	 * Returns the size_t value of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public long getWorkGroupInfoSize(final CLDevice device, int param_name) {
+		return util.getWorkGroupInfoSize(this, device, param_name);
+	}
+
+	/**
+	 * Returns an array of size_t values of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter values
+	 */
+	public long[] getWorkGroupInfoSizeArray(final CLDevice device, int param_name) {
+		return util.getWorkGroupInfoSizeArray(this, device, param_name);
+	}
+
+	/**
+	 * Returns the long value of the specified parameter. Can be used
+	 * for both cl_ulong and cl_bitfield parameters.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public long getWorkGroupInfoLong(final CLDevice device, int param_name) {
+		return util.getWorkGroupInfoLong(this, device, param_name);
+	}
+
+	/** CLKernel utility methods interface. */
+	interface CLKernelUtil extends InfoUtil<CLKernel> {
+
+		void setArg(CLKernel kernel, int index, byte value);
+
+		void setArg(CLKernel kernel, int index, short value);
+
+		void setArg(CLKernel kernel, int index, int value);
+
+		void setArg(CLKernel kernel, int index, long value);
+
+		void setArg(CLKernel kernel, int index, float value);
+
+		void setArg(CLKernel kernel, int index, double value);
+
+		void setArg(CLKernel kernel, int index, PointerWrapper pointer);
+
+		long getWorkGroupInfoSize(CLKernel kernel, CLDevice device, int param_name);
+
+		long[] getWorkGroupInfoSizeArray(CLKernel kernel, CLDevice device, int param_name);
+
+		long getWorkGroupInfoLong(CLKernel kernel, CLDevice device, int param_name);
+
+	}
+
+	// -------[ IMPLEMENTATION STUFF BELOW ]-------
 
 	int release() {
 		try {
@@ -55,59 +244,6 @@ public final class CLKernel extends CLObjectChild<CLProgram> {
 			if ( !isValid() )
 				getParent().getCLKernelRegistry().unregisterObject(this);
 		}
-	}
-
-	public CLKernel setArg(final int index, final byte value) {
-		impl.setArg(this, index, value);
-		return this;
-	}
-
-	public CLKernel setArg(final int index, final short value) {
-		impl.setArg(this, index, value);
-		return this;
-	}
-
-	public CLKernel setArg(final int index, final int value) {
-		impl.setArg(this, index, value);
-		return this;
-	}
-
-	public CLKernel setArg(final int index, final long value) {
-		impl.setArg(this, index, value);
-		return this;
-	}
-
-	public CLKernel setArg(final int index, final float value) {
-		impl.setArg(this, index, value);
-		return this;
-	}
-
-	public CLKernel setArg(final int index, final double value) {
-		impl.setArg(this, index, value);
-		return this;
-	}
-
-	public CLKernel setArg(final int index, final PointerWrapper value) {
-		impl.setArg(this, index, value);
-		return this;
-	}
-
-	interface CLKernelImpl {
-
-		void setArg(CLKernel clKernel, int index, byte value);
-
-		void setArg(CLKernel clKernel, int index, short value);
-
-		void setArg(CLKernel clKernel, int index, int value);
-
-		void setArg(CLKernel clKernel, int index, long value);
-
-		void setArg(CLKernel clKernel, int index, float value);
-
-		void setArg(CLKernel clKernel, int index, double value);
-
-		void setArg(CLKernel clKernel, int index, PointerWrapper pointer);
-
 	}
 
 }

@@ -70,7 +70,7 @@ public final class Util {
 		String errname = CL_ERROR_TOKENS.get(errcode);
 		if ( errname == null )
 			errname = "UNKNOWN";
-		throw new OpenCLException("Error Code: " + errname + " (0x" + Integer.toHexString(errcode).toUpperCase() + ")");
+		throw new OpenCLException("Error Code: " + errname + " (" + APIUtil.toHexString(errcode) + ")");
 	}
 
 }

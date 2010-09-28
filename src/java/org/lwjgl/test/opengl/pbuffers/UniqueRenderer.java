@@ -33,9 +33,10 @@ package org.lwjgl.test.opengl.pbuffers;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Pbuffer;
 import org.lwjgl.opengl.PixelFormat;
+
+import static org.lwjgl.opengl.GL11.*;
 
 final class UniqueRenderer extends TextureRenderer {
 
@@ -53,7 +54,7 @@ final class UniqueRenderer extends TextureRenderer {
 			pbuffer.makeCurrent();
 
 			PbufferTest.initGLState(width, height, 0.5f);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
+			glBindTexture(GL_TEXTURE_2D, texID);
 
 			Display.makeCurrent();
 		} catch (LWJGLException e) {
@@ -66,7 +67,7 @@ final class UniqueRenderer extends TextureRenderer {
 
 	public void updateTexture() {
 		// Copy the pbuffer contents to the texture.
-		GL11.glCopyTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, 0, 0, width, height, 0);
+		glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, width, height, 0);
 	}
 
 }

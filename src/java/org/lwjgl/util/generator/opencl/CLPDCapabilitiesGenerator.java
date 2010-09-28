@@ -81,7 +81,6 @@ public class CLPDCapabilitiesGenerator {
 	                                final Class<? extends PointerWrapper> objectType, final String objectName) {
 		writer.println("\tpublic " + capsName + "(final " + objectType.getSimpleName() + ' ' + objectName + ") {");
 
-		final String methodName = Character.toUpperCase(objectName.charAt(0)) + objectName.substring(1);
 		writer.println("\t\tfinal String extensionList = " + objectName + ".getInfoString(CL10.CL_" + objectName.toUpperCase() + "_EXTENSIONS);\n" +
 		               "\t\tfinal String version = " + objectName + ".getInfoString(CL10.CL_" + objectName.toUpperCase() + "_VERSION);\n" +
 		               "\t\tif ( !version.startsWith(\"OpenCL \") )\n" +
@@ -107,9 +106,11 @@ public class CLPDCapabilitiesGenerator {
 			if ( t.getAnnotation(capsType) == null )
 				continue;
 
-			writer.print("\t\t" + CLGeneratorProcessorFactory.getExtensionName(t.getSimpleName()) + " = extensions.contains(\"" + CLGeneratorProcessorFactory.getExtensionName(t.getSimpleName()).toLowerCase() + "\")");
+			final String extName = CLGeneratorProcessorFactory.getExtensionName(t.getSimpleName());
+
+			writer.print("\t\t" + extName + " = extensions.contains(\"" + extName.toLowerCase() + "\")");
 			if ( !t.getMethods().isEmpty() )
-				writer.print(" && CLCapabilities.is" + t.getSimpleName() + "Supported()");
+				writer.print(" && CLCapabilities." + extName);
 			writer.println(";");
 		}
 
@@ -126,7 +127,7 @@ public class CLPDCapabilitiesGenerator {
 		writer.println("\t}\n");
 	}
 
-	public static void generateToString(final PrintWriter writer, final Collection<TypeDeclaration> templates, final Class<? extends Annotation> capsType, final String capsName, final Class<? extends PointerWrapper> objectType, final String objectName) {
+	public static void generateToString(final PrintWriter writer, final Collection<TypeDeclaration> templates, final Class<? extends Annotation> capsType) {
 		writer.println("\tpublic String toString() {");
 		writer.println("\t\tfinal StringBuilder buf = new StringBuilder();\n");
 

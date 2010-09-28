@@ -95,7 +95,7 @@ class PriorityQHeap extends PriorityQ {
     PriorityQ.Leq leq;
 
 /* really __gl_pqHeapNewPriorityQ */
-    public PriorityQHeap(PriorityQ.Leq leq) {
+PriorityQHeap(PriorityQ.Leq leq) {
         size = 0;
         max = PriorityQ.INIT_SIZE;
         nodes = new PriorityQ.PQnode[PriorityQ.INIT_SIZE + 1];

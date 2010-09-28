@@ -31,47 +31,40 @@
  */
 package org.lwjgl.opencl;
 
-import org.lwjgl.PointerBuffer;
-import org.lwjgl.PointerWrapper;
-
-import static org.lwjgl.opencl.CL10.*;
-
 /**
- * Implementation of CLKernel helper methods.
+ * Base class for all retainable OpenCL objects.
  *
  * @author Spasi
  */
-final class CLKernelImpl implements CLKernel.CLKernelImpl {
+abstract class CLObjectRetainable extends CLObject {
 
-	CLKernelImpl() {
+	private int refCount;
+
+	protected CLObjectRetainable(final long pointer) {
+		super(pointer);
+
+		if ( super.isValid() )
+			this.refCount = 1;
 	}
 
-	public void setArg(final CLKernel clKernel, final int index, final byte value) {
-		clSetKernelArg(clKernel, index, 1, APIUtil.getBufferByte(1).put(0, value));
+	public final int getReferenceCount() {
+		return refCount;
 	}
 
-	public void setArg(final CLKernel clKernel, final int index, final short value) {
-		clSetKernelArg(clKernel, index, 2, APIUtil.getBufferShort().put(0, value));
+	public final boolean isValid() {
+		return refCount > 0;
 	}
 
-	public void setArg(final CLKernel clKernel, final int index, final int value) {
-		clSetKernelArg(clKernel, index, 4, APIUtil.getBufferInt().put(0, value));
+	int retain() {
+		checkValid();
+		//System.out.println(getClass().getSimpleName() + " REF COUNT: " + pointer + " - " + (refCount + 1));
+		return ++refCount;
 	}
 
-	public void setArg(final CLKernel clKernel, final int index, final long value) {
-		clSetKernelArg(clKernel, index, 8, APIUtil.getBufferLong().put(0, value));
-	}
-
-	public void setArg(final CLKernel clKernel, final int index, final float value) {
-		clSetKernelArg(clKernel, index, 4, APIUtil.getBufferFloat().put(0, value));
-	}
-
-	public void setArg(final CLKernel clKernel, final int index, final double value) {
-		clSetKernelArg(clKernel, index, 8, APIUtil.getBufferDouble().put(0, value));
-	}
-
-	public void setArg(final CLKernel clKernel, final int index, final PointerWrapper pointer) {
-		clSetKernelArg(clKernel, index, PointerBuffer.getPointerSize(), APIUtil.getBufferPointer().put(0, pointer).getBuffer());
+	int release() {
+		checkValid();
+		//System.out.println(getClass().getSimpleName() + " REF COUNT: " + pointer + " - " + (refCount - 1));
+		return --refCount;
 	}
 
 }

@@ -49,8 +49,6 @@ import com.sun.mirror.declaration.TypeDeclaration;
  */
 public class CLCapabilitiesGenerator {
 
-	private static final String SUPPORTED_EXTS = "supported_extensions";
-
 	static void generateClassPrologue(final PrintWriter writer) {
 		writer.println("public final class " + CLGeneratorProcessorFactory.CLCAPS_CLASS_NAME + " {");
 		writer.println();
@@ -60,14 +58,15 @@ public class CLCapabilitiesGenerator {
 		final Alias alias_annotation = d.getAnnotation(Alias.class);
 		final boolean aliased = alias_annotation != null && alias_annotation.postfix().length() > 0;
 
-		boolean first = true;
+		boolean foundNative = false;
 		for ( final MethodDeclaration method : d.getMethods() ) {
 			if ( method.getAnnotation(Alternate.class) != null || method.getAnnotation(Reuse.class) != null )
 				continue;
 
-			if ( first ) {
-				writer.println("\t// " + d.getSimpleName());
-				first = false;
+			if ( !foundNative ) {
+				//writer.println("\t// " + d.getSimpleName());
+				writer.println("\tstatic final boolean " + CLGeneratorProcessorFactory.getExtensionName(d.getSimpleName()) + ";");
+				foundNative = true;
 			}
 			writer.print("\tstatic final long " + Utils.getFunctionAddressName(d, method) + " = CL.getFunctionAddress(");
 
@@ -76,11 +75,12 @@ public class CLCapabilitiesGenerator {
 			else
 				writer.println("\"" + Utils.getFunctionAddressName(d, method) + "\");");
 		}
+
+		if ( foundNative )
+			writer.println();
 	}
 
 	static void generateConstructor(final PrintWriter writer, final Collection<TypeDeclaration> interface_decls) {
-		writer.println("\tprivate static final Set<String> " + SUPPORTED_EXTS + " = new HashSet<String>();");
-		writer.println();
 		writer.println("\tprivate " + CLGeneratorProcessorFactory.CLCAPS_CLASS_NAME + "() {}");
 		writer.println();
 		writer.println("\tstatic {");
@@ -89,17 +89,12 @@ public class CLCapabilitiesGenerator {
 			if ( d.getMethods().isEmpty() )
 				continue;
 
-			writer.println("\t\tif ( " + getExtensionSupportedName(d.getSimpleName()) + "() )");
-			writer.println("\t\t\t" + SUPPORTED_EXTS + ".add(\"" + CLGeneratorProcessorFactory.getExtensionName(d.getSimpleName()) + "\");");
+			//writer.println("\t\tif ( " + getExtensionSupportedName(d.getSimpleName()) + "() )");
+			//writer.println("\t\t\t" + SUPPORTED_EXTS + ".add(\"" + CLGeneratorProcessorFactory.getExtensionName(d.getSimpleName()) + "\");");
+			writer.println("\t\t" + CLGeneratorProcessorFactory.getExtensionName(d.getSimpleName()) + " = " + getExtensionSupportedName(d.getSimpleName()) + "();");
 		}
 
 		writer.println("\t}\n");
-	}
-
-	static void generateExtensionSupported(final PrintWriter writer) {
-		writer.println("\tstatic boolean isExtensionSupported(final String name) {\n" +
-		               "\t\treturn " + SUPPORTED_EXTS + ".contains(name);\n" +
-		               "\t}\n");
 	}
 
 	static void generateExtensionChecks(final PrintWriter writer, final InterfaceDeclaration d) {
@@ -107,7 +102,7 @@ public class CLCapabilitiesGenerator {
 		if ( !methods.hasNext() )
 			return;
 
-		writer.println("\tstatic boolean " + getExtensionSupportedName(d.getSimpleName()) + "() {");
+		writer.println("\tprivate static boolean " + getExtensionSupportedName(d.getSimpleName()) + "() {");
 		writer.println("\t\treturn ");
 
 		boolean first = true;
@@ -141,11 +136,23 @@ public class CLCapabilitiesGenerator {
 
 	public static void generateCapabilitiesGetters(final PrintWriter writer) {
 		writer.println("\tpublic static CLPlatformCapabilities getPlatformCapabilities(final CLPlatform platform) {\n" +
-		               "\t\treturn CLPlatformImpl.getCapabilities(platform);\n" +
+		               "\t\tplatform.checkValid();\n" +
+		               "\n" +
+		               "\t\tCLPlatformCapabilities caps = (CLPlatformCapabilities)platform.getCapabilities();\n" +
+		               "\t\tif ( caps == null )\n" +
+		               "\t\t\tplatform.setCapabilities(caps = new CLPlatformCapabilities(platform));\n" +
+		               "\n" +
+		               "\t\treturn caps;\n" +
 		               "\t}\n");
 
 		writer.println("\tpublic static CLDeviceCapabilities getDeviceCapabilities(final CLDevice device) {\n" +
-		               "\t\treturn CLDeviceImpl.getCapabilities(device);\n" +
+		               "\t\tdevice.checkValid();\n" +
+		               "\n" +
+		               "\t\tCLDeviceCapabilities caps = (CLDeviceCapabilities)device.getCapabilities();\n" +
+		               "\t\tif ( caps == null )\n" +
+		               "\t\t\tdevice.setCapabilities(caps = new CLDeviceCapabilities(device));\n" +
+		               "\n" +
+		               "\t\treturn caps;\n" +
 		               "\t}\n");
 
 	}

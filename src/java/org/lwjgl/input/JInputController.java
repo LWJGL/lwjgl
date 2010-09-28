@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -34,13 +34,15 @@ package org.lwjgl.input;
 import java.util.ArrayList;
 
 import net.java.games.input.Component;
+import net.java.games.input.Component.Identifier.Axis;
+import net.java.games.input.Component.Identifier.Button;
 import net.java.games.input.Event;
 import net.java.games.input.EventQueue;
 
 /**
  * A wrapper round a JInput controller that attempts to make the interface
  * more useable.
- * 
+ *
  * @author Kevin Glass
  */
 class JInputController implements Controller {
@@ -49,11 +51,11 @@ class JInputController implements Controller {
 	/** The index that has been assigned to this controller */
 	private int index;
 	/** The Buttons that have been detected on the JInput controller */
-	private ArrayList buttons = new ArrayList();
+	private ArrayList<Component> buttons = new ArrayList<Component>();
 	/** The Axes that have been detected on the JInput controller */
-	private ArrayList axes = new ArrayList();
+	private ArrayList<Component> axes = new ArrayList<Component>();
 	/** The POVs that have been detected on the JInput controller */
-	private ArrayList pov = new ArrayList();
+	private ArrayList<Component> pov = new ArrayList<Component>();
 	/** The state of the buttons last check */
 	private boolean[] buttonState;
 	/** The values that were read from the pov last check */
@@ -76,72 +78,72 @@ class JInputController implements Controller {
 	private int ryaxis = -1;
 	/** The index of the RZ axis or -1 if no RZ axis is defined */
 	private int rzaxis = -1;
-	
+
 	/**
 	 * Create a new controller that wraps round a JInput controller and hopefully
 	 * makes it easier to use.
-	 * 
+	 *
 	 * @param index The index this controller has been assigned to
 	 * @param target The target JInput controller this class is wrapping
 	 */
-	public JInputController(int index,net.java.games.input.Controller target) {
+	JInputController(int index,net.java.games.input.Controller target) {
 		this.target = target;
 		this.index = index;
-		
+
 		Component[] sourceAxes = target.getComponents();
-		
-		for (int i=0;i<sourceAxes.length;i++) {
-			if (sourceAxes[i].getIdentifier() instanceof Component.Identifier.Button) {
-				buttons.add(sourceAxes[i]);		
-			} else if (sourceAxes[i].getIdentifier().equals(Component.Identifier.Axis.POV)) {
-				pov.add(sourceAxes[i]);
+
+		for ( Component sourceAxis : sourceAxes ) {
+			if ( sourceAxis.getIdentifier() instanceof Button ) {
+				buttons.add(sourceAxis);
+			} else if ( sourceAxis.getIdentifier().equals(Axis.POV) ) {
+				pov.add(sourceAxis);
 			} else {
-				axes.add(sourceAxes[i]);
+				axes.add(sourceAxis);
 			}
 		}
-		
+
 		buttonState = new boolean[buttons.size()];
 		povValues = new float[pov.size()];
 		axesValue = new float[axes.size()];
 		int buttonsCount = 0;
 		int axesCount = 0;
-		
+
 		// initialise the state
-		for (int i=0;i<sourceAxes.length;i++) {
-			if (sourceAxes[i].getIdentifier() instanceof Component.Identifier.Button) {
-				buttonState[buttonsCount] = sourceAxes[i].getPollData() != 0;
+		for ( Component sourceAxis : sourceAxes ) {
+			if ( sourceAxis.getIdentifier() instanceof Button ) {
+				buttonState[buttonsCount] = sourceAxis.getPollData() != 0;
 				buttonsCount++;
-			} else if (sourceAxes[i].getIdentifier().equals(Component.Identifier.Axis.POV)) {
+			} else if ( sourceAxis.getIdentifier().equals(Axis.POV) ) {
 				// no account for POV yet
 				// pov.add(sourceAxes[i]);
 			} else {
-				axesValue[axesCount] = sourceAxes[i].getPollData();
-				if (sourceAxes[i].getIdentifier().equals(Component.Identifier.Axis.X)) {
+				axesValue[axesCount] = sourceAxis.getPollData();
+				if ( sourceAxis.getIdentifier().equals(Axis.X) ) {
 					xaxis = axesCount;
 				}
-				if (sourceAxes[i].getIdentifier().equals(Component.Identifier.Axis.Y)) {
+				if ( sourceAxis.getIdentifier().equals(Axis.Y) ) {
 					yaxis = axesCount;
 				}
-				if (sourceAxes[i].getIdentifier().equals(Component.Identifier.Axis.Z)) {
+				if ( sourceAxis.getIdentifier().equals(Axis.Z) ) {
 					zaxis = axesCount;
 				}
-				if (sourceAxes[i].getIdentifier().equals(Component.Identifier.Axis.RX)) {
+				if ( sourceAxis.getIdentifier().equals(Axis.RX) ) {
 					rxaxis = axesCount;
 				}
-				if (sourceAxes[i].getIdentifier().equals(Component.Identifier.Axis.RY)) {
+				if ( sourceAxis.getIdentifier().equals(Axis.RY) ) {
 					ryaxis = axesCount;
 				}
-				if (sourceAxes[i].getIdentifier().equals(Component.Identifier.Axis.RZ)) {
+				if ( sourceAxis.getIdentifier().equals(Axis.RZ) ) {
 					rzaxis = axesCount;
 				}
-				
+
 				axesCount++;
 			}
 		}
-		
+
 		axesMax = new float[axes.size()];
 		deadZones = new float[axes.size()];
-		
+
 		for (int i=0;i<axesMax.length;i++) {
 			axesMax[i] = 1.0f;
 			deadZones[i] = 0.05f;
@@ -174,9 +176,7 @@ class JInputController implements Controller {
 	 * @see org.lwjgl.input.Controller#getButtonName(int)
 	 */
 	public String getButtonName(int index) {
-		Component button = (Component) buttons.get(index);
-		
-		return button.getName();
+		return buttons.get(index).getName();
 	}
 
 	/*
@@ -191,10 +191,10 @@ class JInputController implements Controller {
 	 */
 	public void poll() {
 		target.poll();
-		
+
 		Event event = new Event();
 		EventQueue queue = target.getEventQueue();
-		
+
 		while (queue.getNextEvent(event)) {
 			// handle button event
 			if (buttons.contains(event.getComponent())) {
@@ -205,7 +205,7 @@ class JInputController implements Controller {
 				// fire button pressed event
 				Controllers.addEvent(new ControllerEvent(this,event.getNanos(),ControllerEvent.BUTTON,buttonIndex,false,false));
 			}
-			
+
 			// handle pov events
 			if (pov.contains(event.getComponent())) {
 				Component povComponent = event.getComponent();
@@ -221,13 +221,13 @@ class JInputController implements Controller {
 					Controllers.addEvent(new ControllerEvent(this,event.getNanos(),ControllerEvent.POVY,0,false,false));
 				}
 			}
-			
+
 			// handle axis updates
 			if (axes.contains(event.getComponent())) {
 				Component axis = event.getComponent();
 				int axisIndex = axes.indexOf(axis);
 				float value = axis.getPollData();
-				
+
 				// fixed dead zone since most axis don't report it :(
 				if (Math.abs(value) < deadZones[axisIndex]) {
 					value = 0;
@@ -238,7 +238,7 @@ class JInputController implements Controller {
 				if (Math.abs(value) > axesMax[axisIndex]) {
 					axesMax[axisIndex] = Math.abs(value);
 				}
-				
+
 				// normalize the value based on maximum value read in the past
 				value /= axesMax[axisIndex];
 				// fire event
@@ -260,9 +260,7 @@ class JInputController implements Controller {
 	 * @see org.lwjgl.input.Controller#getAxisName(int)
 	 */
 	public String getAxisName(int index) {
-		Component axis = (Component) axes.get(index);
-		
-		return axis.getName();
+		return axes.get(index).getName();
 	}
 
 	/*
@@ -279,7 +277,7 @@ class JInputController implements Controller {
 		if (xaxis == -1) {
 			return 0;
 		}
-		
+
 		return getAxisValue(xaxis);
 	}
 
@@ -290,7 +288,7 @@ class JInputController implements Controller {
 		if (yaxis == -1) {
 			return 0;
 		}
-		
+
 		return getAxisValue(yaxis);
 	}
 
@@ -301,7 +299,7 @@ class JInputController implements Controller {
 		if (xaxis == -1) {
 			return 0;
 		}
-		
+
 		return getDeadZone(xaxis);
 	}
 
@@ -312,7 +310,7 @@ class JInputController implements Controller {
 		if (yaxis == -1) {
 			return 0;
 		}
-		
+
 		return getDeadZone(yaxis);
 	}
 
@@ -351,7 +349,7 @@ class JInputController implements Controller {
 		if (zaxis == -1) {
 			return 0;
 		}
-		
+
 		return getAxisValue(zaxis);
 	}
 
@@ -362,7 +360,7 @@ class JInputController implements Controller {
 		if (zaxis == -1) {
 			return 0;
 		}
-		
+
 		return getDeadZone(zaxis);
 	}
 
@@ -380,7 +378,7 @@ class JInputController implements Controller {
 		if (rxaxis == -1) {
 			return 0;
 		}
-		
+
 		return getAxisValue(rxaxis);
 	}
 
@@ -391,7 +389,7 @@ class JInputController implements Controller {
 		if (rxaxis == -1) {
 			return 0;
 		}
-		
+
 		return getDeadZone(rxaxis);
 	}
 
@@ -409,7 +407,7 @@ class JInputController implements Controller {
 		if (ryaxis == -1) {
 			return 0;
 		}
-		
+
 		return getAxisValue(ryaxis);
 	}
 
@@ -420,7 +418,7 @@ class JInputController implements Controller {
 		if (ryaxis == -1) {
 			return 0;
 		}
-		
+
 		return getDeadZone(ryaxis);
 	}
 
@@ -438,7 +436,7 @@ class JInputController implements Controller {
 		if (rzaxis == -1) {
 			return 0;
 		}
-		
+
 		return getAxisValue(rzaxis);
 	}
 
@@ -449,7 +447,7 @@ class JInputController implements Controller {
 		if (rzaxis == -1) {
 			return 0;
 		}
-		
+
 		return getDeadZone(rzaxis);
 	}
 
@@ -467,20 +465,20 @@ class JInputController implements Controller {
 		if (pov.size() == 0) {
 			return 0;
 		}
-		
+
 		float value = povValues[0];
-		
-		if ((value == Component.POV.DOWN_LEFT) || 
+
+		if ((value == Component.POV.DOWN_LEFT) ||
 		    (value == Component.POV.UP_LEFT) ||
 		    (value == Component.POV.LEFT)) {
 			return -1;
 		}
-		if ((value == Component.POV.DOWN_RIGHT) || 
+		if ((value == Component.POV.DOWN_RIGHT) ||
 		    (value == Component.POV.UP_RIGHT) ||
 		    (value == Component.POV.RIGHT)) {
 			return 1;
 		}
-		
+
 		return 0;
 	}
 
@@ -491,22 +489,22 @@ class JInputController implements Controller {
 		if (pov.size() == 0) {
 			return 0;
 		}
-		
+
 		float value = povValues[0];
-		
-		if ((value == Component.POV.DOWN_LEFT) || 
+
+		if ((value == Component.POV.DOWN_LEFT) ||
 		    (value == Component.POV.DOWN_RIGHT) ||
 		    (value == Component.POV.DOWN)) {
 			return 1;
 		}
-		if ((value == Component.POV.UP_LEFT) || 
+		if ((value == Component.POV.UP_LEFT) ||
 		    (value == Component.POV.UP_RIGHT) ||
 		    (value == Component.POV.UP)) {
 			return -1;
 		}
-		
+
 		return 0;
 	}
-	
-	
+
+
 }

@@ -91,13 +91,13 @@ public interface ARB_sync {
 	void glWaitSync(@PointerWrapper("GLsync") GLSync sync, @GLbitfield int flags, @GLuint64 long timeout);
 
 	@Reuse("GL32")
-	@StripPostfix(value = "params", postfix = "64")
+	@StripPostfix("params")
 	void glGetInteger64v(@GLenum int pname, @OutParameter @Check("1") @GLint64 LongBuffer params);
 
 	@Reuse("GL32")
 	@Alternate("glGetInteger64v")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "64")
+	@StripPostfix("params")
 	void glGetInteger64v2(@GLenum int pname, @OutParameter @GLint64 LongBuffer params);
 
 	@Reuse("GL32")

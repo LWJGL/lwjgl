@@ -31,13 +31,14 @@
  */
 package org.lwjgl.test.glu.tessellation;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLUtessellatorCallbackAdapter;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class TessCallback extends GLUtessellatorCallbackAdapter {
 
 	public void begin(int type) {
-		GL11.glBegin(type);
+		glBegin(type);
 	}
 
 	public void combine(double[] coords, Object[] data, float[] weight, Object[] outData) {
@@ -49,7 +50,7 @@ public class TessCallback extends GLUtessellatorCallbackAdapter {
 			combined[3] = 1;
 			combined[4] = 1;
 			combined[5] = 1;
-			
+
 			outData[i] = new VertexData(combined);
 		}
 //		vertex[0] = coords[0];
@@ -66,15 +67,15 @@ public class TessCallback extends GLUtessellatorCallbackAdapter {
 //
 //		*dataOut = vertex;
 	}
-	
+
 	public void end() {
-		GL11.glEnd();
+		glEnd();
 	}
 
 	public void vertex(Object vertexData) {
 		VertexData vertex = (VertexData) vertexData;
 
-		GL11.glVertex3d(vertex.data[0], vertex.data[1], vertex.data[2]);
-		GL11.glColor3d(vertex.data[3], vertex.data[4], vertex.data[5]);
+		glVertex3d(vertex.data[0], vertex.data[1], vertex.data[2]);
+		glColor3d(vertex.data[3], vertex.data[4], vertex.data[5]);
 	}
 }

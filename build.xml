@@ -16,74 +16,88 @@
 	<!-- Initialize build			 																							-->
 	<!-- ================================================================== -->
 	<target name="-initialize">
-		<mkdir dir="${lwjgl.bin}" 								taskname="initialiazing bin folder" />
-		<mkdir dir="${lwjgl.bin}/lwjgl" 					taskname="initialiazing bin folder" />
-		<mkdir dir="${lwjgl.lib}" 								taskname="initialiazing lib folder" />
-		<mkdir dir="${lwjgl.dist}" 								taskname="initialiazing dist folder" />
-		<mkdir dir="${lwjgl.docs}/javadoc" 				taskname="initialiazing docs folder" />
-		<mkdir dir="${lwjgl.res}" 								taskname="initialiazing res folder" />
-		<mkdir dir="${lwjgl.temp}" 								taskname="initialiazing temp folder" />
-		<mkdir dir="${lwjgl.temp}/jar" 						taskname="initialiazing temp/jar folder" />
-		<mkdir dir="${lwjgl.temp}/doc" 						taskname="initialiazing temp/doc folder" />
-		<mkdir dir="${lwjgl.temp}/res" 						taskname="initialiazing temp/res folder" />
-		<mkdir dir="${lwjgl.temp}/native" 				taskname="initialiazing temp/native folder" />
-		<mkdir dir="${lwjgl.temp}/native/windows" 	taskname="initialiazing temp/windows folder" />
-		<mkdir dir="${lwjgl.temp}/native/linux" 	taskname="initialiazing temp/linux folder" />
-		<mkdir dir="${lwjgl.temp}/native/macosx" 	taskname="initialiazing temp/macosx folder" />
-		<mkdir dir="${lwjgl.temp}/native/solaris" taskname="initialiazing temp/solaris folder" />
+		<mkdir dir="${lwjgl.bin}"                   taskname="initialiazing bin folder" />
+		<mkdir dir="${lwjgl.bin}/lwjgl"             taskname="initialiazing native bin folder" />
+		<mkdir dir="${lwjgl.lib}"                   taskname="initialiazing lib folder" />
+		<mkdir dir="${lwjgl.dist}"                  taskname="initialiazing dist folder" />
+		<mkdir dir="${lwjgl.docs}/javadoc"          taskname="initialiazing docs folder" />
+		<mkdir dir="${lwjgl.res}"                   taskname="initialiazing res folder" />
+		<mkdir dir="${lwjgl.temp}"                  taskname="initialiazing temp folder" />
+		<mkdir dir="${lwjgl.temp}/jar"              taskname="initialiazing temp/jar folder" />
+		<mkdir dir="${lwjgl.temp}/doc"              taskname="initialiazing temp/doc folder" />
+		<mkdir dir="${lwjgl.temp}/res"              taskname="initialiazing temp/res folder" />
+		<mkdir dir="${lwjgl.temp}/native"           taskname="initialiazing temp/native folder" />
+		<mkdir dir="${lwjgl.temp}/native/windows"   taskname="initialiazing temp/windows folder" />
+		<mkdir dir="${lwjgl.temp}/native/linux"     taskname="initialiazing temp/linux folder" />
+		<mkdir dir="${lwjgl.temp}/native/macosx"    taskname="initialiazing temp/macosx folder" />
+		<mkdir dir="${lwjgl.temp}/native/solaris"   taskname="initialiazing temp/solaris folder" />
 	</target>
 
 	<!-- Cleans up any files created during the execution of this script -->
 	<target name="clean" description="Cleans the directories controlled by this ant script" depends="clean-generated">
 		<delete dir="${lwjgl.temp}" quiet="true" failonerror="false" taskname="cleaning temp folder" />
 		<delete dir="${lwjgl.docs}/javadoc" quiet="true" failonerror="false" taskname="cleaning javadoc folder" />
-		<delete dir="${lwjgl.bin}" quiet="true" failonerror="false" taskname="cleaning bin folder" />
+        <!-- Delete java classes only to avoid unnecessary native recompilation -->
+		<delete dir="${lwjgl.bin}/org" quiet="true" failonerror="false" taskname="cleaning bin folder" />
 	</target>
+
+    <!-- Useful when we need to force native recompilation -->
+    <target name="clean-native" description="Cleans bin folder's native directory" depends="clean-generated-native">
+        <delete dir="${lwjgl.bin}/lwjgl" quiet="true" failonerror="false" taskname="cleaning native bin folder" />
+        <mkdir dir="${lwjgl.bin}/lwjgl" taskname="initialiazing native bin folder" />
+    </target>
+
+    <target name="clean-all" depends="clean, clean-generated-native" description="Cleans all directories controlled by this ant script">
+        <delete dir="${lwjgl.bin}/lwjgl" quiet="true" failonerror="false" taskname="cleaning native bin folder" />
+    </target>
 
 	<!-- Creates a distribution of LWJGL -->
 	<target name="release" description="Creates a distribution of LWJGL using supplied native binaries">
 		<!-- Warn user -->
 		<echo message="Before running the release target, please manually compile all platforms and place required files in ${lwjgl.lib}/windows, ${lwjgl.lib}/linux and ${lwjgl.lib}/macosx${line.separator}Missing files will result in a successfull built, but with incomplete release zips"/>
-  	<input
-  		message="All data in the ${lwjgl.dist} folder will be deleted. Continue? "
-    	validargs="yes,no"
-    	addproperty="do.delete"
-  	/>
-  	<condition property="do.abort">
-    	<equals arg1="no" arg2="${do.delete}"/>
-  	</condition>
-  	<fail if="do.abort">Build aborted by user.</fail>
+        <input
+            message="All data in the ${lwjgl.dist} folder will be deleted. Continue? "
+            validargs="yes,no"
+            addproperty="do.delete"
+        />
+        <condition property="do.abort">
+            <equals arg1="no" arg2="${do.delete}"/>
+        </condition>
+        <fail if="do.abort">Build aborted by user.</fail>
 
-  	<!-- prepare -->
-  	<delete dir="${lwjgl.dist}" quiet="true" failonerror="false" />
-  	<antcall target="clean" />
-  	<antcall target="-initialize" />
+        <!-- prepare -->
+        <delete dir="${lwjgl.dist}" quiet="true" failonerror="false" />
+        <antcall target="clean" />
+        <antcall target="-initialize" />
 
-  	<!-- compile and create jars -->
-	<antcall target="generate-debug"/>
-	<antcall target="compile" />
-  	<antcall target="-createdebugjars" />
+        <!-- compile and create debug jars -->
+        <antcall target="generate-debug" />
+        <antcall target="compile" />
+        <antcall target="-createdebugjars" />
+
 		<!-- Generator will skip all templates if we don't clean -->
-		<delete dir="${lwjgl.bin}" quiet="true" failonerror="false" taskname="cleaning bin folder" />
-		<mkdir dir="${lwjgl.bin}" taskname="initialiazing bin folder" />
-	<antcall target="generate-all"/>
-  	<antcall target="compile" />
-  	<antcall target="-createjars" />
-	<antcall target="-jars_NoDEP" />
- 	<antcall target="javadoc" />
-	<antcall target="applet-release" />
+		<delete dir="${lwjgl.bin}/org" quiet="true" failonerror="false" taskname="cleaning bin folder" />
 
-  	<!-- copy resources to res folder -->
- 	<copy todir="${lwjgl.temp}/res">
-    	<fileset dir="res"/>
-  	</copy>
+        <!-- compile and create jars -->
+        <antcall target="generate-all" />
+        <antcall target="compile" />
+        <antcall target="-createjars" />
 
-  	<!-- copy docs -->
+        <antcall target="-jars_NoDEP" />
+        <antcall target="javadoc" />
+        <antcall target="applet-release" />
+
+        <!-- copy resources to res folder -->
+        <copy todir="${lwjgl.temp}/res">
+            <fileset dir="res"/>
+        </copy>
+
+  	    <!-- copy docs -->
  		<copy todir="${lwjgl.temp}/doc">
     	<fileset dir="${lwjgl.docs}">
     		<patternset refid="lwjgl-docs.fileset" />
     	</fileset>
-  	</copy>
+      	</copy>
 
 		<!-- create distribution from files in libs/ and temp/ -->
 		<antcall target="-distribution_javadoc" />
@@ -219,7 +233,7 @@
 			<class name="org.lwjgl.opengl.LinuxContextImplementation" />
 			<class name="org.lwjgl.opengl.LinuxCanvasImplementation" />
 		</javah>
-		
+
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/windows" force="yes">
 			<class name="org.lwjgl.opengl.WindowsKeyboard" />
 			<class name="org.lwjgl.opengl.WindowsPbufferPeerInfo" />
@@ -231,7 +245,7 @@
 			<class name="org.lwjgl.opengl.WindowsDisplayPeerInfo" />
 			<class name="org.lwjgl.opengl.WindowsContextImplementation" />
 		</javah>
-		
+
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/macosx" force="yes">
 			<class name="org.lwjgl.MacOSXSysImplementation" />
 			<class name="org.lwjgl.opengl.MacOSXMouseEventQueue" />
@@ -241,7 +255,7 @@
 			<class name="org.lwjgl.opengl.MacOSXDisplay" />
 			<class name="org.lwjgl.opengl.MacOSXContextImplementation" />
 		</javah>
-		
+
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}" force="yes">
 			<class name="org.lwjgl.opengl.AWTSurfaceLock" />
 			<class name="org.lwjgl.DefaultSysImplementation" />
@@ -342,6 +356,7 @@
 	<!-- Compiles the Java source code -->
 	<target name="compile" description="Compiles the java source code" depends="-initialize">
 		<javac debug="yes" destdir="${lwjgl.bin}" source="1.5" target="1.5" classpath="${lwjgl.lib}/jinput.jar:${lwjgl.lib}/AppleJavaExtensions.jar" taskname="core">
+            <!--<compilerarg value="-Xlint:unchecked"/>-->
 			<src path="${lwjgl.src}/java/"/>
 			<src path="${lwjgl.src}/generated/"/>
 			<include name="org/lwjgl/*.java"/>
@@ -493,7 +508,7 @@
 
 	<!-- Creates the Javadoc -->
 	<target name="javadoc" description="Creates javadoc from java source code">
-		<javadoc destdir="${lwjgl.docs}/javadoc" classpath="${lwjgl.lib}/jinput.jar" author="true" version="true" use="true" source="1.4" windowtitle="LWJGL API" useexternalfile="true">
+		<javadoc destdir="${lwjgl.docs}/javadoc" classpath="${lwjgl.lib}/jinput.jar" author="true" version="true" use="true" source="1.5" windowtitle="LWJGL API" useexternalfile="true">
 			<fileset refid="lwjgl.javadoc.fileset" />
 			<doctitle><![CDATA[<h1>Lightweight Java Game Toolkit</h1>]]></doctitle>
 			<bottom><![CDATA[<i>Copyright &#169; 2002-2009 lwjgl.org. All Rights Reserved.</i>]]></bottom>

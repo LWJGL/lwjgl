@@ -56,7 +56,7 @@ import org.lwjgl.LWJGLException;
 final class MacOSXFrame extends Frame implements WindowListener, ComponentListener {
 
 	private static final long serialVersionUID = -5823294716668988777L;
-	
+
 	private final MacOSXGLCanvas canvas;
 	private boolean close_requested;
 
@@ -78,7 +78,7 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 		setUndecorated(fullscreen || undecorated);
 		if ( fullscreen ) {
 			try {
-				AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() {
 					public Object run() throws Exception {
 						getDevice().setFullScreenWindow(MacOSXFrame.this);
 						getDevice().setDisplayMode(requested_mode);
@@ -110,7 +110,7 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 		Insets insets = getInsets();
 		setBounds(x, y, width + insets.left + insets.right, height + insets.top + insets.bottom);
 	}
-	
+
 	public Rectangle syncGetBounds() {
 		synchronized ( this ) {
 			return bounds;

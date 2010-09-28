@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -41,33 +41,33 @@ import org.lwjgl.LWJGLUtil;
 
 /**
  * <p>
- * The ALC11 class implements features in OpenAL 1.1, specifically 
+ * The ALC11 class implements features in OpenAL 1.1, specifically
  * ALC methods and properties.
  * </p>
- * 
+ *
  * @author Brian Matzon <brian@matzon.dk>
  * @see ALC10
  * @version $Revision: 2286 $
  * $Id: ALC.java 2286 2006-03-23 19:32:21 +0000 (to, 23 mar 2006) matzon $
  */
 public final class ALC11 {
-	
+
 	public static final int ALC_DEFAULT_ALL_DEVICES_SPECIFIER			= 0x1012;
 	public static final int ALC_ALL_DEVICES_SPECIFIER					= 0x1013;
-	
+
 	public static final int ALC_CAPTURE_DEVICE_SPECIFIER				= 0x310;
 	public static final int ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER		= 0x311;
 	public static final int ALC_CAPTURE_SAMPLES							= 0x312;
-	
+
 	public static final int ALC_MONO_SOURCES							= 0x1010;
 	public static final int ALC_STEREO_SOURCES							= 0x1011;
-	
+
 	/**
 	 * The alcCaptureOpenDevice function allows the application to connect to a capture
 	 * device. To obtain a list of all available capture devices, use getCaptureDevices a list of all
 	 * capture devices will be returned. Retrieving ALC_CAPTURE_DEVICE_SPECIFIER with a valid capture device specified will result
 	 * in the name of that device being returned as a single string.
-	 * 
+	 *
 	 * If the function returns null, then no sound driver/device has been found, or the
 	 * requested format could not be fulfilled.
 	 * The "deviceName" argument is a string that requests a certain device or
@@ -82,9 +82,9 @@ public final class ALC11 {
 	 * implementation will set up a buffer of at least the requested size.
 	 * Specifying a compressed or extension-supplied format may result in failure, even if the
 	 * extension is supplied for rendering.
-	 * 
+	 *
 	 * <i>LWJGL SPECIFIC: the actual created device is managed internally in lwjgl</i>
-	 * 
+	 *
 	 * @param devicename Name of device to open for capture
 	 * @param frequency Frequency of samples to capture
 	 * @param format Format of samples to capture
@@ -96,18 +96,18 @@ public final class ALC11 {
 		if(device_address != 0) {
 			ALCdevice device = new ALCdevice(device_address);
 			synchronized (ALC10.devices) {
-				ALC10.devices.put(new Long(device_address), device);
+				ALC10.devices.put(device_address, device);
 			}
 			return device;
 		}
 		return null;
 	}
 	static native long nalcCaptureOpenDevice( String devicename, int frequency, int format, int buffersize);
-	
+
 	/**
 	 * The alcCaptureCloseDevice function allows the application to disconnect from a capture
 	 * device.
-	 * 
+	 *
 	 * The return code will be true or false, indicating success or failure. If
 	 * the device is null or invalid, an ALC_INVALID_DEVICE error will be generated.
 	 * Once closed, a capture device is invalid.
@@ -126,7 +126,7 @@ public final class ALC11 {
 	/**
 	 * Once a capture device has been opened via alcCaptureOpenDevice, it is made to start
 	 * recording audio via the alcCaptureStart entry point:
-	 * 
+	 *
 	 * Once started, the device will record audio to an internal ring buffer, the size of which was
 	 * specified when opening the device.
 	 * The application may query the capture device to discover how much data is currently
@@ -137,7 +137,7 @@ public final class ALC11 {
 		nalcCaptureStart(ALC10.getDevice(device));
 	}
 	static native void nalcCaptureStart(long device);
-	
+
 	/**
 	 * If the application doesn't need to capture more audio for an amount of time, they can halt
 	 * the device without closing it via the alcCaptureStop entry point.
@@ -153,11 +153,11 @@ public final class ALC11 {
 	/**
 	 * When the application feels there are enough samples available to process, it can obtain
 	 * them from the AL via the alcCaptureSamples entry point.
-	 * 
+	 *
 	 * The "buffer" argument specifies an application-allocated buffer that can contain at least
 	 * "samples" sample frames. The implementation may defer conversion and resampling until
 	 * this point. Requesting more sample frames than are currently available is an error.
-	 * 
+	 *
 	 * @param buffer Buffer to store samples in
 	 * @param samples Number of samples to request
 	 */
@@ -165,9 +165,9 @@ public final class ALC11 {
 		nalcCaptureSamples(ALC10.getDevice(device), buffer, buffer.position(), samples);
 	}
 	static native void nalcCaptureSamples(long device, ByteBuffer buffer, int position, int samples );
-	
+
 	static native void initNativeStubs() throws LWJGLException;
-	
+
 	/**
 	 * Initializes ALC11, including any extensions
 	 * @return true if initialization was successfull
@@ -178,18 +178,18 @@ public final class ALC11 {
 			ALC10.alcGetInteger(AL.getDevice(), ALC10.ALC_MAJOR_VERSION, ib);
 			ib.position(1);
 			ALC10.alcGetInteger(AL.getDevice(), ALC10.ALC_MINOR_VERSION, ib);
-			
+
 			int major = ib.get(0);
 			int minor = ib.get(1);
-	
-			// checking for version 1.x+ 
+
+			// checking for version 1.x+
 			if(major >= 1) {
-				
+
 				// checking for version 1.1+
 				if(major > 1 || minor >= 1) {
 					ALC11.initNativeStubs();
                                         AL11.initNativeStubs();
-				}		
+				}
 			}
 		} catch (LWJGLException le) {
 			LWJGLUtil.log("failed to initialize ALC11: " + le);

@@ -51,7 +51,7 @@ final class WindowsCanvasImplementation implements AWTCanvasImplementation {
 	static {
 		// Make sure the awt stuff is properly initialised (the jawt library in particular)
 		Toolkit.getDefaultToolkit();
-		AccessController.doPrivileged(new PrivilegedAction() {
+		AccessController.doPrivileged(new PrivilegedAction<Object>() {
 			public Object run() {
 				try {
 					System.loadLibrary("jawt");

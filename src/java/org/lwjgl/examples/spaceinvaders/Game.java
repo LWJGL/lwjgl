@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -39,32 +39,33 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * The main hook of our game. This class with both act as a manager
- * for the display and central mediator for the game logic. 
- * 
+ * for the display and central mediator for the game logic.
+ *
  * Display management will consist of a loop that cycles round all
  * entities in the game asking them to move and then drawing them
  * in the appropriate place. With the help of an inner class it
  * will also allow the player to control the main ship.
- * 
+ *
  * As a mediator it will be informed when entities within our game
  * detect events (e.g. alient killed, played died) and will take
  * appropriate game actions.
- * 
+ *
  * <p>
  * NOTE:<br>
  * This game is a LWJGLized implementation of the Space Invaders game by Kevin
- * Glass. The original implementation is renderer agnostic and supports other 
+ * Glass. The original implementation is renderer agnostic and supports other
  * OpenGL implementations as well as Java2D. This version has been made specific
- * for LWJGL, and has added input control as well as sound (which the original doesn't, 
+ * for LWJGL, and has added input control as well as sound (which the original doesn't,
  * at the time of writing).
  * You can find the original article here:<br>
  * <a href="http://www.cokeandcode.com/" target="_blank">http://www.cokeandcode.com</a>
  * </p>
- * 
+ *
  * @author Kevin Glass
  * @author Brian Matzon
  */
@@ -83,10 +84,10 @@ public class Game {
 	private TextureLoader	textureLoader;
 
 	/** The list of all the entities that exist in our game */
-	private ArrayList			entities							= new ArrayList();
+	private ArrayList<Entity>			entities							= new ArrayList<Entity>();
 
 	/** The list of entities that need to be removed from the game this loop */
-	private ArrayList			removeList						= new ArrayList();
+	private ArrayList<Entity>			removeList						= new ArrayList<Entity>();
 
 	/** The entity representing the player */
 	private ShipEntity		ship;
@@ -113,7 +114,7 @@ public class Game {
 	private float					moveSpeed							= 300;
 
 	/** The time at which last fired a shot */
-	private long					lastFire							= 0;
+	private long					lastFire;
 
 	/** The interval between our players shot (ms) */
 	private long					firingInterval				= 500;
@@ -125,16 +126,16 @@ public class Game {
 	private boolean				waitingForKeyPress		= true;
 
 	/** True if game logic needs to be applied this loop, normally as a result of a game event */
-	private boolean				logicRequiredThisLoop	= false;
+	private boolean				logicRequiredThisLoop;
 
 	/** The time at which the last rendering looped started from the point of view of the game logic */
 	private long					lastLoopTime					= getTime();
 
 	/** True if the fire key has been released */
-	private boolean				fireHasBeenReleased		= false;
+	private boolean				fireHasBeenReleased;
 
 	/** The time since the last record of fps */
-	private long					lastFpsTime						= 0;
+	private long					lastFpsTime;
 
 	/** The recorded fps */
 	private int						fps;
@@ -167,15 +168,14 @@ public class Game {
 
   /** Mouse movement on x axis */
 	private int	mouseX;
-	
+
 	/** Is this an application or applet */
-	private static boolean isApplication = false;
+	private static boolean isApplication;
 
 	/**
 	 * Construct our game and set it running.
 	 * @param fullscreen
-	 * 
-	 * @param renderingType The type of rendering to use (should be one of the contansts from ResourceFactory)
+	 *
 	 */
 	public Game(boolean fullscreen) {
 		this.fullscreen = fullscreen;
@@ -184,7 +184,7 @@ public class Game {
 
 	/**
 	 * Get the high resolution time in milliseconds
-	 * 
+	 *
 	 * @return The high resolution time in milliseconds
 	 */
 	public static long getTime() {
@@ -196,8 +196,8 @@ public class Game {
 	}
 
 	/**
-	 * Sleep for a fixed number of milliseconds. 
-	 * 
+	 * Sleep for a fixed number of milliseconds.
+	 *
 	 * @param duration The amount of time in milliseconds to sleep for
 	 */
 	public static void sleep(long duration) {
@@ -217,25 +217,25 @@ public class Game {
 			Display.setTitle(WINDOW_TITLE);
 			Display.setFullscreen(fullscreen);
 			Display.create();
-	      
+
 			// grab the mouse, dont want that hideous cursor when we're playing!
-			if (isApplication) {	
+			if (isApplication) {
 				Mouse.setGrabbed(true);
 			}
 
 			// enable textures since we're going to use these for our sprites
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			glEnable(GL_TEXTURE_2D);
 
 			// disable the OpenGL depth test since we're rendering 2D graphics
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
+			glDisable(GL_DEPTH_TEST);
 
-			GL11.glMatrixMode(GL11.GL_PROJECTION);
-			GL11.glLoadIdentity();
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
 
-			GL11.glOrtho(0, width, height, 0, -1, 1);
-			GL11.glMatrixMode(GL11.GL_MODELVIEW);
-			GL11.glLoadIdentity();
-			GL11.glViewport(0, 0, width, height);
+			glOrtho(0, width, height, 0, -1, 1);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glViewport(0, 0, width, height);
 
 			textureLoader = new TextureLoader();
 
@@ -289,7 +289,7 @@ public class Game {
           "height=" + height,
           "freq=" + 60,
           "bpp=" + org.lwjgl.opengl.Display.getDisplayMode().getBitsPerPixel()
-         }); 
+         });
       return true;
     } catch (Exception e) {
       e.printStackTrace();
@@ -341,7 +341,7 @@ public class Game {
 	/**
 	 * Remove an entity from the game. The entity removed will
 	 * no longer move or be drawn.
-	 * 
+	 *
 	 * @param entity The entity that should be removed
 	 */
 	public void removeEntity(Entity entity) {
@@ -349,7 +349,7 @@ public class Game {
 	}
 
 	/**
-	 * Notification that the player has died. 
+	 * Notification that the player has died.
 	 */
 	public void notifyDeath() {
 		if (!waitingForKeyPress) {
@@ -382,10 +382,8 @@ public class Game {
 
 		// if there are still some aliens left then they all need to get faster, so
 		// speed up all the existing aliens
-		for (int i = 0; i < entities.size(); i++) {
-			Entity entity = (Entity) entities.get(i);
-
-			if (entity instanceof AlienEntity) {
+		for ( Entity entity : entities ) {
+			if ( entity instanceof AlienEntity ) {
 				// speed up by 2%
 				entity.setHorizontalMovement(entity.getHorizontalMovement() * 1.02f);
 			}
@@ -396,7 +394,7 @@ public class Game {
 
 	/**
 	 * Attempt to fire a shot from the player. Its called "try"
-	 * since we must first check that the player can fire at this 
+	 * since we must first check that the player can fire at this
 	 * point, i.e. has he/she waited long enough between shots
 	 */
 	public void tryToFire() {
@@ -421,9 +419,9 @@ public class Game {
 	private void gameLoop() {
 		while (Game.gameRunning) {
 			// clear screen
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-			GL11.glMatrixMode(GL11.GL_MODELVIEW);
-			GL11.glLoadIdentity();
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
 
 			// let subsystem paint
 			frameRendering();
@@ -431,7 +429,7 @@ public class Game {
 			// update window contents
 			Display.update();
 		}
-		
+
 		// clean up
 		soundManager.destroy();
 		Display.destroy();
@@ -462,25 +460,23 @@ public class Game {
 
 		// cycle round asking each entity to move itself
 		if (!waitingForKeyPress && !soundManager.isPlayingSound()) {
-			for (int i = 0; i < entities.size(); i++) {
-				Entity entity = (Entity) entities.get(i);
+			for ( Entity entity : entities ) {
 				entity.move(delta);
 			}
 		}
 
 		// cycle round drawing all the entities we have in the game
-		for (int i = 0; i < entities.size(); i++) {
-			Entity entity = (Entity) entities.get(i);
+		for ( Entity entity : entities ) {
 			entity.draw();
 		}
 
 		// brute force collisions, compare every entity against
-		// every other entity. If any of them collide notify 
+		// every other entity. If any of them collide notify
 		// both entities that the collision has occured
 		for (int p = 0; p < entities.size(); p++) {
 			for (int s = p + 1; s < entities.size(); s++) {
-				Entity me = (Entity) entities.get(p);
-				Entity him = (Entity) entities.get(s);
+				Entity me = entities.get(p);
+				Entity him = entities.get(s);
 
 				if (me.collidesWith(him)) {
 					me.collidedWith(him);
@@ -497,21 +493,20 @@ public class Game {
 		// be resolved, cycle round every entity requesting that
 		// their personal logic should be considered.
 		if (logicRequiredThisLoop) {
-			for (int i = 0; i < entities.size(); i++) {
-				Entity entity = (Entity) entities.get(i);
+			for ( Entity entity : entities ) {
 				entity.doLogic();
 			}
 
 			logicRequiredThisLoop = false;
 		}
 
-		// if we're waiting for an "any key" press then draw the 
-		// current message 
+		// if we're waiting for an "any key" press then draw the
+		// current message
 		if (waitingForKeyPress) {
 			message.draw(325, 250);
 		}
 
-		// resolve the movemfent of the ship. First assume the ship 
+		// resolve the movemfent of the ship. First assume the ship
 		// isn't moving. If either cursor key is pressed then
 		// update the movement appropraitely
 		ship.setHorizontalMovement(0);
@@ -557,23 +552,23 @@ public class Game {
 	}
 
 	/**
-	 * @param key_left
+	 * @param direction
 	 * @return
 	 */
 	private boolean hasInput(int direction) {
     switch(direction) {
     	case Keyboard.KEY_LEFT:
-        return 
+        return
           Keyboard.isKeyDown(Keyboard.KEY_LEFT) ||
           mouseX < 0;
-      
+
       case Keyboard.KEY_RIGHT:
-        return 
+        return
           Keyboard.isKeyDown(Keyboard.KEY_RIGHT) ||
           mouseX > 0;
-      
+
       case Keyboard.KEY_SPACE:
-        return 
+        return
           Keyboard.isKeyDown(Keyboard.KEY_SPACE) ||
           Mouse.isButtonDown(0);
     }
@@ -584,18 +579,18 @@ public class Game {
 	 * The entry point into the game. We'll simply create an
 	 * instance of class which will start the display and game
 	 * loop.
-	 * 
+	 *
 	 * @param argv The arguments that are passed into our game
 	 */
 	public static void main(String argv[]) {
 		isApplication = true;
 		System.out.println("Use -fullscreen for fullscreen mode");
-		new Game((argv.length > 0 && argv[0].equalsIgnoreCase("-fullscreen"))).execute();
+		new Game((argv.length > 0 && "-fullscreen".equalsIgnoreCase(argv[0]))).execute();
 		System.exit(0);
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void execute() {
 		gameLoop();
@@ -604,7 +599,7 @@ public class Game {
 	/**
 	 * Create or get a sprite which displays the image that is pointed
 	 * to in the classpath by "ref"
-	 * 
+	 *
 	 * @param ref A reference to the image to load
 	 * @return A sprite that can be drawn onto the current graphics context.
 	 */

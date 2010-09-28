@@ -157,7 +157,7 @@ public class BufferChecks {
 	}
 
 	public static void checkArray(Object[] array) {
-		if ( LWJGLUtil.CHECKS && array == null )
+		if ( LWJGLUtil.CHECKS && (array == null || array.length == 0) )
 			throw new IllegalArgumentException("Invalid array");
 	}
 

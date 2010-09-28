@@ -51,10 +51,11 @@ import java.util.Hashtable;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.ARBTransposeMatrix;
 import org.lwjgl.opengl.AWTGLCanvas;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
+
+import static org.lwjgl.opengl.ARBTransposeMatrix.*;
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * <p>
@@ -72,13 +73,13 @@ public class DemoBox extends Frame {
 	private Panel						selectionPanel;
 
 	/** Hashtable of demos */
-	private Hashtable				selectableDemos;
+	private Hashtable<String, Demo>				selectableDemos;
 
 	/**
 	 * Creates a new demo box instance
 	 */
 	public DemoBox() {
-		selectableDemos = new Hashtable();
+		selectableDemos = new Hashtable<String, Demo>();
 		selectableDemos.put("default", new NullDemoBox());
 		selectableDemos.put("clear_color", new ClearColorDemoBox());
 		selectableDemos.put("gears", new GearsDemoBox());
@@ -160,7 +161,7 @@ public class DemoBox extends Frame {
 		//demoSelected(demos.getSelectedItem());
 		return true;
 	}
-	
+
 	public void updateFPS(float fps) {
 		if(fps != -1) {
 			setTitle("LWJGL - Demo Box (FPS: " + fps + ")");
@@ -182,7 +183,7 @@ public class DemoBox extends Frame {
 	 */
 	protected void demoSelected(String demo) {
 		System.out.println("Selecting demo: " + demo);
-		demoCanvas.setActiveDemo((Demo) selectableDemos.get(demo));
+		demoCanvas.setActiveDemo(selectableDemos.get(demo));
 	}
 
 	/**
@@ -199,20 +200,20 @@ public class DemoBox extends Frame {
 	 * Interface for a demo
 	 */
 	public interface Demo {
-		public boolean isInitialized();
-		public boolean initialize();
-		public void render();
-		public void destroy();
+		boolean isInitialized();
+		boolean initialize();
+		void render();
+		void destroy();
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private class DemoBoxGLCanvas extends AWTGLCanvas implements Runnable {
 
 		/** Parent demo box */
 		DemoBox parent;
-		
+
 		/** Currently active demo */
 		Demo						activeDemo;
 
@@ -221,15 +222,15 @@ public class DemoBox extends Frame {
 
 		/** Render thread */
 		private Thread	renderThread;
-		
-		public DemoBoxGLCanvas(DemoBox parent) throws LWJGLException {
+
+		private DemoBoxGLCanvas(DemoBox parent) throws LWJGLException {
 			super();
-			this.parent = parent;			
+			this.parent = parent;
 		}
 
 		// FPS
-		long startTime = 0;
-		long fps = 0;			
+		long startTime;
+		long fps;
 
 		protected void paintGL() {
 			synchronized (this) {
@@ -243,20 +244,20 @@ public class DemoBox extends Frame {
 						parent.updateFPS(-1);
 					}
 				}
-				
+
 				if (activeDemo != null) {
-					
+
 					if(!activeDemo.isInitialized()) {
 						activeDemo.initialize();
 					}
-					
+
 					activeDemo.render();
 					try {
 						swapBuffers();
 					} catch (LWJGLException le) {
 						le.printStackTrace();
 					}
-					
+
 					if (startTime > System.currentTimeMillis()) {
 						fps++;
 					} else {
@@ -264,7 +265,7 @@ public class DemoBox extends Frame {
 						startTime = System.currentTimeMillis() + 5000;
 						parent.updateFPS((fps / (timeUsed / 1000f)));
 						fps = 0;
-					}					
+					}
 				}
 			}
 		}
@@ -295,7 +296,7 @@ public class DemoBox extends Frame {
 			}
 		}
 
-		public DemoBoxGLCanvas() throws LWJGLException {
+		private DemoBoxGLCanvas() throws LWJGLException {
 			super();
 		}
 
@@ -330,13 +331,13 @@ public class DemoBox extends Frame {
 	// Demo box demo
 	// ========================================================
 	public class ClearColorDemoBox implements Demo {
-		
+
 		private boolean initialized;
 
 		int		direction	= 1;
 
 		float	color;
-		
+
 		public boolean isInitialized() {
 			return initialized;
 		}
@@ -346,8 +347,8 @@ public class DemoBox extends Frame {
 		}
 
 		public void render() {
-			GL11.glClearColor(color, color, color, 1f);
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+			glClearColor(color, color, color, 1f);
+			glClear(GL_COLOR_BUFFER_BIT);
 
 			color += direction * .05f;
 
@@ -370,20 +371,20 @@ public class DemoBox extends Frame {
 	// Demo box demo
 	// ========================================================
 	public class NullDemoBox implements Demo {
-		
+
 		private boolean initialized;
-		
+
 		public boolean isInitialized() {
 			return initialized;
 		}
 
 		public boolean initialize() {
-			GL11.glClearColor(0, 0, 0, 1f);
+			glClearColor(0, 0, 0, 1f);
 			return true;
 		}
 
 		public void render() {
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT);
 		}
 
 		public void destroy() {
@@ -391,18 +392,18 @@ public class DemoBox extends Frame {
 		}
 	}
 	// --------------------------------------------------------
-	
+
 	// Demo box demo
 	// ========================================================
 	public class GearsDemoBox implements Demo {
-		
+
 		private boolean initialized;
-		
+
 		private float	view_rotx	= 20.0f;
 
 		private float	view_roty	= 30.0f;
 
-		private float	view_rotz	= 0.0f;
+		private float	view_rotz;
 
 		private int		gear1;
 
@@ -410,8 +411,8 @@ public class DemoBox extends Frame {
 
 		private int		gear3;
 
-		private float	angle			= 0.0f;		
-		
+		private float	angle;
+
 		public boolean isInitialized() {
 			return initialized;
 		}
@@ -426,93 +427,93 @@ public class DemoBox extends Frame {
 			red.flip();
 			green.flip();
 			blue.flip();
-			
-			GL11.glClearColor(0, 0, 0, 1f);
 
-			GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, pos);
-			GL11.glEnable(GL11.GL_CULL_FACE);
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_LIGHT0);
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			glClearColor(0, 0, 0, 1f);
+
+			glLight(GL_LIGHT0, GL_POSITION, pos);
+			glEnable(GL_CULL_FACE);
+			glEnable(GL_LIGHTING);
+			glEnable(GL_LIGHT0);
+			glEnable(GL_DEPTH_TEST);
 
 			/* make the gears */
-			gear1 = GL11.glGenLists(1);
-			GL11.glNewList(gear1, GL11.GL_COMPILE);
-			GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE, red);
+			gear1 = glGenLists(1);
+			glNewList(gear1, GL_COMPILE);
+			glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, red);
 			gear(1.0f, 4.0f, 1.0f, 20, 0.7f);
-			GL11.glEndList();
+			glEndList();
 
-			gear2 = GL11.glGenLists(1);
-			GL11.glNewList(gear2, GL11.GL_COMPILE);
-			GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE, green);
+			gear2 = glGenLists(1);
+			glNewList(gear2, GL_COMPILE);
+			glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, green);
 			gear(0.5f, 2.0f, 2.0f, 10, 0.7f);
-			GL11.glEndList();
+			glEndList();
 
-			gear3 = GL11.glGenLists(1);
-			GL11.glNewList(gear3, GL11.GL_COMPILE);
-			GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE, blue);
+			gear3 = glGenLists(1);
+			glNewList(gear3, GL_COMPILE);
+			glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, blue);
 			gear(1.3f, 2.0f, 0.5f, 10, 0.7f);
-			GL11.glEndList();
+			glEndList();
 
-			GL11.glEnable(GL11.GL_NORMALIZE);
+			glEnable(GL_NORMALIZE);
 
-			GL11.glMatrixMode(GL11.GL_PROJECTION);
+			glMatrixMode(GL_PROJECTION);
 
-			System.err.println("GL_VENDOR: " + GL11.glGetString(GL11.GL_VENDOR));
-			System.err.println("GL_RENDERER: " + GL11.glGetString(GL11.GL_RENDERER));
-			System.err.println("GL_VERSION: " + GL11.glGetString(GL11.GL_VERSION));
+			System.err.println("GL_VENDOR: " + glGetString(GL_VENDOR));
+			System.err.println("GL_RENDERER: " + glGetString(GL_RENDERER));
+			System.err.println("GL_VERSION: " + glGetString(GL_VERSION));
 			System.err.println();
 			System.err.println("glLoadTransposeMatrixfARB() supported: " + GLContext.getCapabilities().GL_ARB_transpose_matrix);
 			if (!GLContext.getCapabilities().GL_ARB_transpose_matrix) {
 				// --- not using extensions
-				GL11.glLoadIdentity();
+				glLoadIdentity();
 			} else {
 				// --- using extensions
 				final FloatBuffer identityTranspose = BufferUtils.createFloatBuffer(16).put(
 																																										new float[] { 1, 0, 0, 0, 0, 1, 0, 0,
 																																												0, 0, 1, 0, 0, 0, 0, 1});
 				identityTranspose.flip();
-				ARBTransposeMatrix.glLoadTransposeMatrixARB(identityTranspose);
+				glLoadTransposeMatrixARB(identityTranspose);
 			}
 
 			float h = (float) 300 / (float) 300;
-			GL11.glFrustum(-1.0f, 1.0f, -h, h, 5.0f, 60.0f);
-			GL11.glMatrixMode(GL11.GL_MODELVIEW);
-			GL11.glLoadIdentity();
-			GL11.glTranslatef(0.0f, 0.0f, -40.0f);
+			glFrustum(-1.0f, 1.0f, -h, h, 5.0f, 60.0f);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glTranslatef(0.0f, 0.0f, -40.0f);
 			return initialized = true;
 		}
 
 		public void render() {
 			angle += 2.0f;
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			GL11.glPushMatrix();
-			GL11.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
-			GL11.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
-			GL11.glRotatef(view_rotz, 0.0f, 0.0f, 1.0f);
+			glPushMatrix();
+			glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
+			glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
+			glRotatef(view_rotz, 0.0f, 0.0f, 1.0f);
 
-			GL11.glPushMatrix();
-			GL11.glTranslatef(-3.0f, -2.0f, 0.0f);
-			GL11.glRotatef(angle, 0.0f, 0.0f, 1.0f);
-			GL11.glCallList(gear1);
-			GL11.glPopMatrix();
+			glPushMatrix();
+			glTranslatef(-3.0f, -2.0f, 0.0f);
+			glRotatef(angle, 0.0f, 0.0f, 1.0f);
+			glCallList(gear1);
+			glPopMatrix();
 
-			GL11.glPushMatrix();
-			GL11.glTranslatef(3.1f, -2.0f, 0.0f);
-			GL11.glRotatef(-2.0f * angle - 9.0f, 0.0f, 0.0f, 1.0f);
-			GL11.glCallList(gear2);
-			GL11.glPopMatrix();
+			glPushMatrix();
+			glTranslatef(3.1f, -2.0f, 0.0f);
+			glRotatef(-2.0f * angle - 9.0f, 0.0f, 0.0f, 1.0f);
+			glCallList(gear2);
+			glPopMatrix();
 
-			GL11.glPushMatrix();
-			GL11.glTranslatef(-3.1f, 4.2f, 0.0f);
-			GL11.glRotatef(-2.0f * angle - 25.0f, 0.0f, 0.0f, 1.0f);
-			GL11.glCallList(gear3);
-			GL11.glPopMatrix();
+			glPushMatrix();
+			glTranslatef(-3.1f, 4.2f, 0.0f);
+			glRotatef(-2.0f * angle - 25.0f, 0.0f, 0.0f, 1.0f);
+			glCallList(gear3);
+			glPopMatrix();
 
-			GL11.glPopMatrix();
+			glPopMatrix();
 		}
-		
+
 		/**
 		 * Draw a gear wheel.  You'll probably want to call this function when
 		 * building a display list since we do a lot of trig here.
@@ -535,104 +536,104 @@ public class DemoBox extends Frame {
 
 			da = 2.0f * (float) Math.PI / teeth / 4.0f;
 
-			GL11.glShadeModel(GL11.GL_FLAT);
+			glShadeModel(GL_FLAT);
 
-			GL11.glNormal3f(0.0f, 0.0f, 1.0f);
+			glNormal3f(0.0f, 0.0f, 1.0f);
 
 			/* draw front face */
-			GL11.glBegin(GL11.GL_QUAD_STRIP);
+			glBegin(GL_QUAD_STRIP);
 			for (i = 0; i <= teeth; i++) {
 				angle = i * 2.0f * (float) Math.PI / teeth;
-				GL11.glVertex3f(r0 * (float) Math.cos(angle), r0 * (float) Math.sin(angle), width * 0.5f);
-				GL11.glVertex3f(r1 * (float) Math.cos(angle), r1 * (float) Math.sin(angle), width * 0.5f);
+				glVertex3f(r0 * (float) Math.cos(angle), r0 * (float) Math.sin(angle), width * 0.5f);
+				glVertex3f(r1 * (float) Math.cos(angle), r1 * (float) Math.sin(angle), width * 0.5f);
 				if (i < teeth) {
-					GL11.glVertex3f(r0 * (float) Math.cos(angle), r0 * (float) Math.sin(angle), width * 0.5f);
-					GL11.glVertex3f(r1 * (float) Math.cos(angle + 3.0f * da), r1 * (float) Math.sin(angle + 3.0f * da),
+					glVertex3f(r0 * (float) Math.cos(angle), r0 * (float) Math.sin(angle), width * 0.5f);
+					glVertex3f(r1 * (float) Math.cos(angle + 3.0f * da), r1 * (float) Math.sin(angle + 3.0f * da),
 													width * 0.5f);
 				}
 			}
-			GL11.glEnd();
+			glEnd();
 
 			/* draw front sides of teeth */
-			GL11.glBegin(GL11.GL_QUADS);
+			glBegin(GL_QUADS);
 			for (i = 0; i < teeth; i++) {
 				angle = i * 2.0f * (float) Math.PI / teeth;
-				GL11.glVertex3f(r1 * (float) Math.cos(angle), r1 * (float) Math.sin(angle), width * 0.5f);
-				GL11.glVertex3f(r2 * (float) Math.cos(angle + da), r2 * (float) Math.sin(angle + da), width * 0.5f);
-				GL11.glVertex3f(r2 * (float) Math.cos(angle + 2.0f * da), r2 * (float) Math.sin(angle + 2.0f * da), width * 0.5f);
-				GL11.glVertex3f(r1 * (float) Math.cos(angle + 3.0f * da), r1 * (float) Math.sin(angle + 3.0f * da), width * 0.5f);
+				glVertex3f(r1 * (float) Math.cos(angle), r1 * (float) Math.sin(angle), width * 0.5f);
+				glVertex3f(r2 * (float) Math.cos(angle + da), r2 * (float) Math.sin(angle + da), width * 0.5f);
+				glVertex3f(r2 * (float) Math.cos(angle + 2.0f * da), r2 * (float) Math.sin(angle + 2.0f * da), width * 0.5f);
+				glVertex3f(r1 * (float) Math.cos(angle + 3.0f * da), r1 * (float) Math.sin(angle + 3.0f * da), width * 0.5f);
 			}
-			GL11.glEnd();
+			glEnd();
 
 			/* draw back face */
-			GL11.glBegin(GL11.GL_QUAD_STRIP);
+			glBegin(GL_QUAD_STRIP);
 			for (i = 0; i <= teeth; i++) {
 				angle = i * 2.0f * (float) Math.PI / teeth;
-				GL11.glVertex3f(r1 * (float) Math.cos(angle), r1 * (float) Math.sin(angle), -width * 0.5f);
-				GL11.glVertex3f(r0 * (float) Math.cos(angle), r0 * (float) Math.sin(angle), -width * 0.5f);
-				GL11.glVertex3f(r1 * (float) Math.cos(angle + 3 * da), r1 * (float) Math.sin(angle + 3 * da), -width * 0.5f);
-				GL11.glVertex3f(r0 * (float) Math.cos(angle), r0 * (float) Math.sin(angle), -width * 0.5f);
+				glVertex3f(r1 * (float) Math.cos(angle), r1 * (float) Math.sin(angle), -width * 0.5f);
+				glVertex3f(r0 * (float) Math.cos(angle), r0 * (float) Math.sin(angle), -width * 0.5f);
+				glVertex3f(r1 * (float) Math.cos(angle + 3 * da), r1 * (float) Math.sin(angle + 3 * da), -width * 0.5f);
+				glVertex3f(r0 * (float) Math.cos(angle), r0 * (float) Math.sin(angle), -width * 0.5f);
 			}
-			GL11.glEnd();
+			glEnd();
 
 			/* draw back sides of teeth */
-			GL11.glBegin(GL11.GL_QUADS);
+			glBegin(GL_QUADS);
 			for (i = 0; i < teeth; i++) {
 				angle = i * 2.0f * (float) Math.PI / teeth;
-				GL11.glVertex3f(r1 * (float) Math.cos(angle + 3 * da), r1 * (float) Math.sin(angle + 3 * da), -width * 0.5f);
-				GL11.glVertex3f(r2 * (float) Math.cos(angle + 2 * da), r2 * (float) Math.sin(angle + 2 * da), -width * 0.5f);
-				GL11.glVertex3f(r2 * (float) Math.cos(angle + da), r2 * (float) Math.sin(angle + da), -width * 0.5f);
-				GL11.glVertex3f(r1 * (float) Math.cos(angle), r1 * (float) Math.sin(angle), -width * 0.5f);
+				glVertex3f(r1 * (float) Math.cos(angle + 3 * da), r1 * (float) Math.sin(angle + 3 * da), -width * 0.5f);
+				glVertex3f(r2 * (float) Math.cos(angle + 2 * da), r2 * (float) Math.sin(angle + 2 * da), -width * 0.5f);
+				glVertex3f(r2 * (float) Math.cos(angle + da), r2 * (float) Math.sin(angle + da), -width * 0.5f);
+				glVertex3f(r1 * (float) Math.cos(angle), r1 * (float) Math.sin(angle), -width * 0.5f);
 			}
-			GL11.glEnd();
+			glEnd();
 
 			/* draw outward faces of teeth */
-			GL11.glBegin(GL11.GL_QUAD_STRIP);
+			glBegin(GL_QUAD_STRIP);
 			for (i = 0; i < teeth; i++) {
 				angle = i * 2.0f * (float) Math.PI / teeth;
-				GL11.glVertex3f(r1 * (float) Math.cos(angle), r1 * (float) Math.sin(angle), width * 0.5f);
-				GL11.glVertex3f(r1 * (float) Math.cos(angle), r1 * (float) Math.sin(angle), -width * 0.5f);
+				glVertex3f(r1 * (float) Math.cos(angle), r1 * (float) Math.sin(angle), width * 0.5f);
+				glVertex3f(r1 * (float) Math.cos(angle), r1 * (float) Math.sin(angle), -width * 0.5f);
 				u = r2 * (float) Math.cos(angle + da) - r1 * (float) Math.cos(angle);
 				v = r2 * (float) Math.sin(angle + da) - r1 * (float) Math.sin(angle);
 				len = (float) Math.sqrt(u * u + v * v);
 				u /= len;
 				v /= len;
-				GL11.glNormal3f(v, -u, 0.0f);
-				GL11.glVertex3f(r2 * (float) Math.cos(angle + da), r2 * (float) Math.sin(angle + da), width * 0.5f);
-				GL11.glVertex3f(r2 * (float) Math.cos(angle + da), r2 * (float) Math.sin(angle + da), -width * 0.5f);
-				GL11.glNormal3f((float) Math.cos(angle), (float) Math.sin(angle), 0.0f);
-				GL11.glVertex3f(r2 * (float) Math.cos(angle + 2 * da), r2 * (float) Math.sin(angle + 2 * da), width * 0.5f);
-				GL11.glVertex3f(r2 * (float) Math.cos(angle + 2 * da), r2 * (float) Math.sin(angle + 2 * da), -width * 0.5f);
+				glNormal3f(v, -u, 0.0f);
+				glVertex3f(r2 * (float) Math.cos(angle + da), r2 * (float) Math.sin(angle + da), width * 0.5f);
+				glVertex3f(r2 * (float) Math.cos(angle + da), r2 * (float) Math.sin(angle + da), -width * 0.5f);
+				glNormal3f((float) Math.cos(angle), (float) Math.sin(angle), 0.0f);
+				glVertex3f(r2 * (float) Math.cos(angle + 2 * da), r2 * (float) Math.sin(angle + 2 * da), width * 0.5f);
+				glVertex3f(r2 * (float) Math.cos(angle + 2 * da), r2 * (float) Math.sin(angle + 2 * da), -width * 0.5f);
 				u = r1 * (float) Math.cos(angle + 3 * da) - r2 * (float) Math.cos(angle + 2 * da);
 				v = r1 * (float) Math.sin(angle + 3 * da) - r2 * (float) Math.sin(angle + 2 * da);
-				GL11.glNormal3f(v, -u, 0.0f);
-				GL11.glVertex3f(r1 * (float) Math.cos(angle + 3 * da), r1 * (float) Math.sin(angle + 3 * da), width * 0.5f);
-				GL11.glVertex3f(r1 * (float) Math.cos(angle + 3 * da), r1 * (float) Math.sin(angle + 3 * da), -width * 0.5f);
-				GL11.glNormal3f((float) Math.cos(angle), (float) Math.sin(angle), 0.0f);
+				glNormal3f(v, -u, 0.0f);
+				glVertex3f(r1 * (float) Math.cos(angle + 3 * da), r1 * (float) Math.sin(angle + 3 * da), width * 0.5f);
+				glVertex3f(r1 * (float) Math.cos(angle + 3 * da), r1 * (float) Math.sin(angle + 3 * da), -width * 0.5f);
+				glNormal3f((float) Math.cos(angle), (float) Math.sin(angle), 0.0f);
 			}
-			GL11.glVertex3f(r1 * (float) Math.cos(0), r1 * (float) Math.sin(0), width * 0.5f);
-			GL11.glVertex3f(r1 * (float) Math.cos(0), r1 * (float) Math.sin(0), -width * 0.5f);
-			GL11.glEnd();
+			glVertex3f(r1 * (float) Math.cos(0), r1 * (float) Math.sin(0), width * 0.5f);
+			glVertex3f(r1 * (float) Math.cos(0), r1 * (float) Math.sin(0), -width * 0.5f);
+			glEnd();
 
-			GL11.glShadeModel(GL11.GL_SMOOTH);
+			glShadeModel(GL_SMOOTH);
 
 			/* draw inside radius cylinder */
-			GL11.glBegin(GL11.GL_QUAD_STRIP);
+			glBegin(GL_QUAD_STRIP);
 			for (i = 0; i <= teeth; i++) {
 				angle = i * 2.0f * (float) Math.PI / teeth;
-				GL11.glNormal3f(-(float) Math.cos(angle), -(float) Math.sin(angle), 0.0f);
-				GL11.glVertex3f(r0 * (float) Math.cos(angle), r0 * (float) Math.sin(angle), -width * 0.5f);
-				GL11.glVertex3f(r0 * (float) Math.cos(angle), r0 * (float) Math.sin(angle), width * 0.5f);
+				glNormal3f(-(float) Math.cos(angle), -(float) Math.sin(angle), 0.0f);
+				glVertex3f(r0 * (float) Math.cos(angle), r0 * (float) Math.sin(angle), -width * 0.5f);
+				glVertex3f(r0 * (float) Math.cos(angle), r0 * (float) Math.sin(angle), width * 0.5f);
 			}
-			GL11.glEnd();
-		}			
+			glEnd();
+		}
 
 		public void destroy() {
-			GL11.glDeleteLists(gear1, 1);
-			GL11.glDeleteLists(gear2, 1);
-			GL11.glDeleteLists(gear3, 1);
+			glDeleteLists(gear1, 1);
+			glDeleteLists(gear2, 1);
+			glDeleteLists(gear3, 1);
 			initialized = false;
 		}
 	}
-	// --------------------------------------------------------	
+	// --------------------------------------------------------
 }

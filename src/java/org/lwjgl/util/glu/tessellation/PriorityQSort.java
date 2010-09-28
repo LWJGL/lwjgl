@@ -93,7 +93,7 @@ class PriorityQSort extends PriorityQ {
     boolean initialized;
     PriorityQ.Leq leq;
 
-    public PriorityQSort(PriorityQ.Leq leq) {
+    PriorityQSort(PriorityQ.Leq leq) {
         heap = new PriorityQHeap(leq);
 
         keys = new Object[PriorityQ.INIT_SIZE];

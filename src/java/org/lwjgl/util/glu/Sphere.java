@@ -1,38 +1,38 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.lwjgl.util.glu;
 
-
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.*;
 
 /**
  * Sphere.java
@@ -75,34 +75,34 @@ public class Sphere extends Quadric {
 		boolean normals;
 		float nsign;
 
-		normals = super.normals != GLU.GLU_NONE;
+		normals = super.normals != GLU_NONE;
 
-		if (super.orientation == GLU.GLU_INSIDE) {
+		if (super.orientation == GLU_INSIDE) {
 			nsign = -1.0f;
 		} else {
 			nsign = 1.0f;
 		}
 
-		drho = GLU.PI / stacks;
-		dtheta = 2.0f * GLU.PI / slices;
+		drho = PI / stacks;
+		dtheta = 2.0f * PI / slices;
 
-		if (super.drawStyle == GLU.GLU_FILL) {
+		if (super.drawStyle == GLU_FILL) {
 			if (!super.textureFlag) {
 				// draw +Z end as a triangle fan
-				GL11.glBegin(GL11.GL_TRIANGLE_FAN);
-				GL11.glNormal3f(0.0f, 0.0f, 1.0f);
-				GL11.glVertex3f(0.0f, 0.0f, nsign * radius);
+				glBegin(GL_TRIANGLE_FAN);
+				glNormal3f(0.0f, 0.0f, 1.0f);
+				glVertex3f(0.0f, 0.0f, nsign * radius);
 				for (j = 0; j <= slices; j++) {
 					theta = (j == slices) ? 0.0f : j * dtheta;
 					x = -sin(theta) * sin(drho);
 					y = cos(theta) * sin(drho);
 					z = nsign * cos(drho);
 					if (normals) {
-						GL11.glNormal3f(x * nsign, y * nsign, z * nsign);
+						glNormal3f(x * nsign, y * nsign, z * nsign);
 					}
-					GL11.glVertex3f(x * radius, y * radius, z * radius);
+					glVertex3f(x * radius, y * radius, z * radius);
 				}
-				GL11.glEnd();
+				glEnd();
 			}
 
 			ds = 1.0f / slices;
@@ -119,7 +119,7 @@ public class Sphere extends Quadric {
 			// draw intermediate stacks as quad strips
 			for (i = imin; i < imax; i++) {
 				rho = i * drho;
-				GL11.glBegin(GL11.GL_QUAD_STRIP);
+				glBegin(GL_QUAD_STRIP);
 				s = 0.0f;
 				for (j = 0; j <= slices; j++) {
 					theta = (j == slices) ? 0.0f : j * dtheta;
@@ -127,30 +127,30 @@ public class Sphere extends Quadric {
 					y = cos(theta) * sin(rho);
 					z = nsign * cos(rho);
 					if (normals) {
-						GL11.glNormal3f(x * nsign, y * nsign, z * nsign);
+						glNormal3f(x * nsign, y * nsign, z * nsign);
 					}
 					TXTR_COORD(s, t);
-					GL11.glVertex3f(x * radius, y * radius, z * radius);
+					glVertex3f(x * radius, y * radius, z * radius);
 					x = -sin(theta) * sin(rho + drho);
 					y = cos(theta) * sin(rho + drho);
 					z = nsign * cos(rho + drho);
 					if (normals) {
-						GL11.glNormal3f(x * nsign, y * nsign, z * nsign);
+						glNormal3f(x * nsign, y * nsign, z * nsign);
 					}
 					TXTR_COORD(s, t - dt);
 					s += ds;
-					GL11.glVertex3f(x * radius, y * radius, z * radius);
+					glVertex3f(x * radius, y * radius, z * radius);
 				}
-				GL11.glEnd();
+				glEnd();
 				t -= dt;
 			}
 
 			if (!super.textureFlag) {
 				// draw -Z end as a triangle fan
-				GL11.glBegin(GL11.GL_TRIANGLE_FAN);
-				GL11.glNormal3f(0.0f, 0.0f, -1.0f);
-				GL11.glVertex3f(0.0f, 0.0f, -radius * nsign);
-				rho = GLU.PI - drho;
+				glBegin(GL_TRIANGLE_FAN);
+				glNormal3f(0.0f, 0.0f, -1.0f);
+				glVertex3f(0.0f, 0.0f, -radius * nsign);
+				rho = PI - drho;
 				s = 1.0f;
 				for (j = slices; j >= 0; j--) {
 					theta = (j == slices) ? 0.0f : j * dtheta;
@@ -158,56 +158,56 @@ public class Sphere extends Quadric {
 					y = cos(theta) * sin(rho);
 					z = nsign * cos(rho);
 					if (normals)
-						GL11.glNormal3f(x * nsign, y * nsign, z * nsign);
+						glNormal3f(x * nsign, y * nsign, z * nsign);
 					s -= ds;
-					GL11.glVertex3f(x * radius, y * radius, z * radius);
+					glVertex3f(x * radius, y * radius, z * radius);
 				}
-				GL11.glEnd();
+				glEnd();
 			}
 		} else if (
-			super.drawStyle == GLU.GLU_LINE
-				|| super.drawStyle == GLU.GLU_SILHOUETTE) {
+			super.drawStyle == GLU_LINE
+				|| super.drawStyle == GLU_SILHOUETTE) {
 			// draw stack lines
 			for (i = 1;
 				i < stacks;
 				i++) { // stack line at i==stacks-1 was missing here
 				rho = i * drho;
-				GL11.glBegin(GL11.GL_LINE_LOOP);
+				glBegin(GL_LINE_LOOP);
 				for (j = 0; j < slices; j++) {
 					theta = j * dtheta;
 					x = cos(theta) * sin(rho);
 					y = sin(theta) * sin(rho);
 					z = cos(rho);
 					if (normals)
-						GL11.glNormal3f(x * nsign, y * nsign, z * nsign);
-					GL11.glVertex3f(x * radius, y * radius, z * radius);
+						glNormal3f(x * nsign, y * nsign, z * nsign);
+					glVertex3f(x * radius, y * radius, z * radius);
 				}
-				GL11.glEnd();
+				glEnd();
 			}
 			// draw slice lines
 			for (j = 0; j < slices; j++) {
 				theta = j * dtheta;
-				GL11.glBegin(GL11.GL_LINE_STRIP);
+				glBegin(GL_LINE_STRIP);
 				for (i = 0; i <= stacks; i++) {
 					rho = i * drho;
 					x = cos(theta) * sin(rho);
 					y = sin(theta) * sin(rho);
 					z = cos(rho);
 					if (normals)
-						GL11.glNormal3f(x * nsign, y * nsign, z * nsign);
-					GL11.glVertex3f(x * radius, y * radius, z * radius);
+						glNormal3f(x * nsign, y * nsign, z * nsign);
+					glVertex3f(x * radius, y * radius, z * radius);
 				}
-				GL11.glEnd();
+				glEnd();
 			}
-		} else if (super.drawStyle == GLU.GLU_POINT) {
+		} else if (super.drawStyle == GLU_POINT) {
 			// top and bottom-most points
-			GL11.glBegin(GL11.GL_POINTS);
+			glBegin(GL_POINTS);
 			if (normals)
-				GL11.glNormal3f(0.0f, 0.0f, nsign);
-			GL11.glVertex3f(0.0f, 0.0f, radius);
+				glNormal3f(0.0f, 0.0f, nsign);
+			glVertex3f(0.0f, 0.0f, radius);
 			if (normals)
-				GL11.glNormal3f(0.0f, 0.0f, -nsign);
-			GL11.glVertex3f(0.0f, 0.0f, -radius);
+				glNormal3f(0.0f, 0.0f, -nsign);
+			glVertex3f(0.0f, 0.0f, -radius);
 
 			// loop over stacks
 			for (i = 1; i < stacks - 1; i++) {
@@ -218,11 +218,11 @@ public class Sphere extends Quadric {
 					y = sin(theta) * sin(rho);
 					z = cos(rho);
 					if (normals)
-						GL11.glNormal3f(x * nsign, y * nsign, z * nsign);
-					GL11.glVertex3f(x * radius, y * radius, z * radius);
+						glNormal3f(x * nsign, y * nsign, z * nsign);
+					glVertex3f(x * radius, y * radius, z * radius);
 				}
 			}
-			GL11.glEnd();
+			glEnd();
 		}
 	}
 

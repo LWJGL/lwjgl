@@ -36,6 +36,9 @@ import org.lwjgl.PointerBuffer;
 
 import java.nio.ByteBuffer;
 
+import static org.lwjgl.opencl.CL10.*;
+import static org.lwjgl.opencl.CL11.*;
+
 /**
  * Utility class that provides runtime checks for OpenCL method calls.
  * TODO: Revisit this when Java 7.0 is released, there will be new Buffer API with 64bit indices/sizes.
@@ -202,25 +205,25 @@ final class CLChecks {
 	 */
 	private static int getChannelCount(final int channelOrder) {
 		switch ( channelOrder ) {
-			case CL10.CL_R:
-			case CL10.CL_A:
-			case CL10.CL_INTENSITY:
-			case CL10.CL_LUMINANCE:
-			case CL11.CL_Rx:
+			case CL_R:
+			case CL_A:
+			case CL_INTENSITY:
+			case CL_LUMINANCE:
+			case CL_Rx:
 				return 1;
-			case CL10.CL_RG:
-			case CL10.CL_RA:
-			case CL11.CL_RGx:
+			case CL_RG:
+			case CL_RA:
+			case CL_RGx:
 				return 2;
-			case CL10.CL_RGB:
-			case CL11.CL_RGBx:
+			case CL_RGB:
+			case CL_RGBx:
 				return 3;
-			case CL10.CL_RGBA:
-			case CL10.CL_BGRA:
-			case CL10.CL_ARGB:
+			case CL_RGBA:
+			case CL_BGRA:
+			case CL_ARGB:
 				return 4;
 			default:
-				throw new IllegalArgumentException("Invalid cl_channel_order specified: 0x" + Integer.toHexString(channelOrder).toUpperCase());
+				throw new IllegalArgumentException("Invalid cl_channel_order specified: " + APIUtil.toHexString(channelOrder));
 		}
 	}
 
@@ -233,26 +236,26 @@ final class CLChecks {
 	 */
 	private static int getChannelSize(final int channelType) {
 		switch ( channelType ) {
-			case CL10.CL_SNORM_INT8:
-			case CL10.CL_UNORM_INT8:
-			case CL10.CL_SIGNED_INT8:
-			case CL10.CL_UNSIGNED_INT8:
+			case CL_SNORM_INT8:
+			case CL_UNORM_INT8:
+			case CL_SIGNED_INT8:
+			case CL_UNSIGNED_INT8:
 				return 1;
-			case CL10.CL_SNORM_INT16:
-			case CL10.CL_UNORM_INT16:
-			case CL10.CL_UNORM_SHORT_565:
-			case CL10.CL_UNORM_SHORT_555:
-			case CL10.CL_SIGNED_INT16:
-			case CL10.CL_UNSIGNED_INT16:
-			case CL10.CL_HALF_FLOAT:
+			case CL_SNORM_INT16:
+			case CL_UNORM_INT16:
+			case CL_UNORM_SHORT_565:
+			case CL_UNORM_SHORT_555:
+			case CL_SIGNED_INT16:
+			case CL_UNSIGNED_INT16:
+			case CL_HALF_FLOAT:
 				return 2;
-			case CL10.CL_UNORM_INT_101010:
-			case CL10.CL_SIGNED_INT32:
-			case CL10.CL_UNSIGNED_INT32:
-			case CL10.CL_FLOAT:
+			case CL_UNORM_INT_101010:
+			case CL_SIGNED_INT32:
+			case CL_UNSIGNED_INT32:
+			case CL_FLOAT:
 				return 4;
 			default:
-				throw new IllegalArgumentException("Invalid cl_channel_type specified: 0x" + Integer.toHexString(channelType).toUpperCase());
+				throw new IllegalArgumentException("Invalid cl_channel_type specified: " + APIUtil.toHexString(channelType));
 		}
 	}
 

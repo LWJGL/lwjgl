@@ -38,11 +38,40 @@ package org.lwjgl.opencl;
  */
 public final class CLSampler extends CLObjectChild<CLContext> {
 
+	private static final InfoUtil<CLSampler> util = CLPlatform.getInfoUtilInstance(CLSampler.class, "CL_SAMPLER_UTIL");
+
 	CLSampler(final long pointer, final CLContext context) {
 		super(pointer, context);
 		if ( isValid() )
 			context.getCLSamplerRegistry().registerObject(this);
 	}
+
+	// ---------------[ UTILITY METHODS ]---------------
+
+	/**
+	 * Returns the integer value of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public int getInfoInt(int param_name) {
+		return util.getInfoInt(this, param_name);
+	}
+
+	/**
+	 * Returns the long value of the specified parameter. Can be used
+	 * for both cl_ulong and cl_bitfield parameters.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public long getInfoLong(int param_name) {
+		return util.getInfoLong(this, param_name);
+	}
+
+	// -------[ IMPLEMENTATION STUFF BELOW ]-------
 
 	int release() {
 		try {

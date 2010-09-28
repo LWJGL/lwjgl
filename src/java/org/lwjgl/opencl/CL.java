@@ -35,6 +35,8 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 
+import java.nio.ByteBuffer;
+
 /**
  * LWJGL users must use this class to initialize OpenCL
  * before using any other class in the org.lwjgl.opencl package.
@@ -99,13 +101,13 @@ public final class CL {
 
 		final String[] oclPaths = LWJGLUtil.getLibraryPaths(libname, library_names, CL.class.getClassLoader());
 		LWJGLUtil.log("Found " + oclPaths.length + " OpenCL paths");
-		for ( int i = 0; i < oclPaths.length; i++ ) {
+		for ( String oclPath : oclPaths ) {
 			try {
-				nCreate(oclPaths[i]);
+				nCreate(oclPath);
 				created = true;
 				break;
 			} catch (LWJGLException e) {
-				LWJGLUtil.log("Failed to load " + oclPaths[i] + ": " + e.getMessage());
+				LWJGLUtil.log("Failed to load " + oclPath + ": " + e.getMessage());
 			}
 		}
 
@@ -118,7 +120,7 @@ public final class CL {
 		if ( !created )
 			throw new LWJGLException("Could not locate OpenCL library.");
 
-		if ( !CLCapabilities.isExtensionSupported("OpenCL10") )
+		if ( !CLCapabilities.OpenCL10 )
 			throw new RuntimeException("OpenCL 1.0 not supported.");
 	}
 
@@ -133,8 +135,8 @@ public final class CL {
 	 * @return the function pointer address
 	 */
 	static long getFunctionAddress(String[] aliases) {
-		for ( int i = 0; i < aliases.length; i++ ) {
-			long address = getFunctionAddress(aliases[i]);
+		for ( String aliase : aliases ) {
+			long address = getFunctionAddress(aliase);
 			if ( address != 0 )
 				return address;
 		}
@@ -142,6 +144,8 @@ public final class CL {
 	}
 
 	static native long getFunctionAddress(String name);
+
+	static native ByteBuffer getHostBuffer(final long address, final int size);
 
 	private static native void resetNativeStubs(Class clazz);
 

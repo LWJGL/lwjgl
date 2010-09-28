@@ -40,14 +40,15 @@ import org.lwjgl.PointerBuffer;
  */
 public final class CLDevice extends CLObjectChild<CLDevice> {
 
-	private static final CLDeviceImpl impl = (CLDeviceImpl)CLPlatform.getClassInstance("org.lwjgl.opencl.CLDeviceImpl");
+	private static final InfoUtil<CLDevice> util = CLPlatform.getInfoUtilInstance(CLDevice.class, "CL_DEVICE_UTIL");
 
+	private final CLPlatform platform;
 	private final CLObjectRegistry<CLDevice> subCLDevices;
 
 	private Object caps;
 
-	public CLDevice(final long pointer) {
-		this(pointer, null);
+	CLDevice(final long pointer, final CLPlatform platform) {
+		this(pointer, null, platform);
 	}
 
 	/**
@@ -57,22 +58,27 @@ public final class CLDevice extends CLObjectChild<CLDevice> {
 	 * @param parent  the parent CLDevice
 	 */
 	CLDevice(final long pointer, final CLDevice parent) {
+		this(pointer, parent, parent.getPlatform());
+	}
+
+	CLDevice(final long pointer, final CLDevice parent, final CLPlatform platform) {
 		super(pointer, parent);
 
 		if ( isValid() ) {
-			subCLDevices = new CLObjectRegistry<CLDevice>();
+			this.platform = platform;
+			platform.getCLDeviceRegistry().registerObject(this);
+
+			this.subCLDevices = new CLObjectRegistry<CLDevice>();
 			if ( parent != null )
 				parent.subCLDevices.registerObject(this);
-		} else
-			subCLDevices = null;
+		} else {
+			this.platform = null;
+			this.subCLDevices = null;
+		}
 	}
 
-	void setCapabilities(final Object caps) {
-		this.caps = caps;
-	}
-
-	Object getCapabilities() {
-		return caps;
+	public CLPlatform getPlatform() {
+		return platform;
 	}
 
 	/**
@@ -83,6 +89,85 @@ public final class CLDevice extends CLObjectChild<CLDevice> {
 	 * @return the CLDevice object
 	 */
 	public CLDevice getSubCLDevice(final long id) { return subCLDevices.getObject(id); }
+
+	// ---------------[ UTILITY METHODS ]---------------
+
+	/**
+	 * Returns the value of the specified String parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public String getInfoString(int param_name) {
+		return util.getInfoString(this, param_name);
+	}
+
+	/**
+	 * Returns the integer value of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public int getInfoInt(int param_name) {
+		return util.getInfoInt(this, param_name);
+	}
+
+	/**
+	 * Returns the boolean value of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public boolean getInfoBoolean(int param_name) {
+		return util.getInfoInt(this, param_name) != 0;
+	}
+
+	/**
+	 * Returns the size_t value of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public long getInfoSize(int param_name) {
+		return util.getInfoSize(this, param_name);
+	}
+
+	/**
+	 * Returns an array of size_t values of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter values
+	 */
+	public long[] getInfoSizeArray(int param_name) {
+		return util.getInfoSizeArray(this, param_name);
+	}
+
+	/**
+	 * Returns the long value of the specified parameter. Can be used
+	 * for both cl_ulong and cl_bitfield parameters.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public long getInfoLong(int param_name) {
+		return util.getInfoLong(this, param_name);
+	}
+
+	// -------[ IMPLEMENTATION STUFF BELOW ]-------
+
+	void setCapabilities(final Object caps) {
+		this.caps = caps;
+	}
+
+	Object getCapabilities() {
+		return caps;
+	}
 
 	int retain() {
 		if ( getParent() == null )
@@ -116,76 +201,6 @@ public final class CLDevice extends CLObjectChild<CLDevice> {
 			if ( pointer != 0 )
 				new CLDevice(pointer, this);
 		}
-	}
-
-	// ---------------[ HELPER METHODS ]---------------
-
-	/**
-	 * Returns the value of the specified String parameter.
-	 *
-	 * @param param_name the parameter
-	 *
-	 * @return the parameter value
-	 */
-	public String getInfoString(int param_name) {
-		return impl.getInfoString(this, param_name);
-	}
-
-	/**
-	 * Returns the integer value of the specified parameter.
-	 *
-	 * @param param_name the parameter
-	 *
-	 * @return the parameter value
-	 */
-	public int getInfoInt(int param_name) {
-		return impl.getInfoInt(this, param_name);
-	}
-
-	/**
-	 * Returns the boolean value of the specified parameter.
-	 *
-	 * @param param_name the parameter
-	 *
-	 * @return the parameter value
-	 */
-	public boolean getInfoBoolean(int param_name) {
-		return impl.getInfoInt(this, param_name) != 0;
-	}
-
-	/**
-	 * Returns the size_t value of the specified parameter.
-	 *
-	 * @param param_name the parameter
-	 *
-	 * @return the parameter value
-	 */
-	public long getInfoSize(int param_name) {
-		return impl.getInfoSize(this, param_name);
-	}
-
-	/**
-	 * Returns the long value of the specified parameter. Can be used
-	 * for both cl_ulong and cl_bitfield parameters.
-	 *
-	 * @param param_name the parameter
-	 *
-	 * @return the parameter value
-	 */
-	public long getInfoLong(int param_name) {
-		return impl.getInfoLong(this, param_name);
-	}
-
-	/** CLDevice helper methods implementation interface. */
-	interface CLDeviceImpl {
-
-		String getInfoString(CLDevice device, int param_name);
-
-		int getInfoInt(CLDevice device, int param_name);
-
-		long getInfoSize(CLDevice device, int param_name);
-
-		long getInfoLong(CLDevice device, int param_name);
 	}
 
 }

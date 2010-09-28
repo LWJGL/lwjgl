@@ -84,7 +84,7 @@
 */
 package org.lwjgl.util.glu.tessellation;
 
-import org.lwjgl.util.glu.GLU;
+import static org.lwjgl.util.glu.GLU.*;
 
 class Sweep {
     private Sweep() {
@@ -270,15 +270,15 @@ class Sweep {
 
     static boolean IsWindingInside(GLUtessellatorImpl tess, int n) {
         switch (tess.windingRule) {
-            case GLU.GLU_TESS_WINDING_ODD:
+            case GLU_TESS_WINDING_ODD:
                 return (n & 1) != 0;
-            case GLU.GLU_TESS_WINDING_NONZERO:
+            case GLU_TESS_WINDING_NONZERO:
                 return (n != 0);
-            case GLU.GLU_TESS_WINDING_POSITIVE:
+            case GLU_TESS_WINDING_POSITIVE:
                 return (n > 0);
-            case GLU.GLU_TESS_WINDING_NEGATIVE:
+            case GLU_TESS_WINDING_NEGATIVE:
                 return (n < 0);
-            case GLU.GLU_TESS_WINDING_ABS_GEQ_TWO:
+            case GLU_TESS_WINDING_ABS_GEQ_TWO:
                 return (n >= 2) || (n <= -2);
         }
         /*LINTED*/
@@ -457,7 +457,7 @@ class Sweep {
                  * but the user has not provided the callback necessary to handle
                  * generated intersection points.
                  */
-                tess.callErrorOrErrorData(GLU.GLU_TESS_NEED_COMBINE_CALLBACK);
+                tess.callErrorOrErrorData(GLU_TESS_NEED_COMBINE_CALLBACK);
                 tess.fatalError = true;
             }
         }
@@ -1143,7 +1143,7 @@ class Sweep {
  * input contour and the maximum tolerance of 1.0, no merging will be
  * done with coordinates larger than 3 * GLU_TESS_MAX_COORD).
  */
-    private static final double SENTINEL_COORD = (4.0 * GLU.GLU_TESS_MAX_COORD);
+    private static final double SENTINEL_COORD = (4.0 * GLU_TESS_MAX_COORD);
 
     static void AddSentinel(GLUtessellatorImpl tess, double t)
 /*

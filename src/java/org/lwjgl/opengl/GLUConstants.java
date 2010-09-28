@@ -31,6 +31,8 @@
  */
 package org.lwjgl.opengl;
 
+import static org.lwjgl.opengl.GL11.*;
+
 /**
  * <p/>
  * GLU constants.
@@ -52,7 +54,7 @@ public interface GLUConstants {
 	int GLU_EXTENSIONS = 100801;
 
 	/* Boolean */
-	int GLU_TRUE = GL11.GL_TRUE;
-	int GLU_FALSE = GL11.GL_FALSE;
+	int GLU_TRUE = GL_TRUE;
+	int GLU_FALSE = GL_FALSE;
 
 }

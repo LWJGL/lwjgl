@@ -46,8 +46,10 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.*;
-import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Sphere;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.*;
 
 public final class ShadersTest {
 
@@ -94,7 +96,7 @@ public final class ShadersTest {
 
 				handleIO();
 
-				GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 				if ( shader != null )
 					shader.render();
@@ -102,8 +104,8 @@ public final class ShadersTest {
 					renderObject();
 
 				// Restore camera position.
-				GL11.glPopMatrix();
-				GL11.glPushMatrix();
+				glPopMatrix();
+				glPushMatrix();
 			}
 
 			Display.update();
@@ -178,65 +180,65 @@ public final class ShadersTest {
 			argsError();
 		}
 
-		GL11.glViewport(0, 0, displayMode.getWidth(), displayMode.getHeight());
+		glViewport(0, 0, displayMode.getWidth(), displayMode.getHeight());
 
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GLU.gluPerspective(45, displayMode.getWidth() / (float)displayMode.getHeight(), 1.0f, 10.0f);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(45, displayMode.getWidth() / (float)displayMode.getHeight(), 1.0f, 10.0f);
 
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 
 		// Setup camera position.
-		GL11.glTranslatef(0.0f, 0.0f, -4.0f);
-		GL11.glRotatef(15.0f, 1.0f, 0.0f, 0.0f);
-		GL11.glPushMatrix();
+		glTranslatef(0.0f, 0.0f, -4.0f);
+		glRotatef(15.0f, 1.0f, 0.0f, 0.0f);
+		glPushMatrix();
 
-		GL11.glClearDepth(1.0f);
-		GL11.glDepthFunc(GL11.GL_LEQUAL);
+		glClearDepth(1.0f);
+		glDepthFunc(GL_LEQUAL);
 
-		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
+		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-		GL11.glFrontFace(GL11.GL_CCW);
-		GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_FILL);
+		glFrontFace(GL_CCW);
+		glPolygonMode(GL_FRONT, GL_FILL);
 
-		GL11.glCullFace(GL11.GL_BACK);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		glEnable(GL_CULL_FACE);
 
-		GL11.glAlphaFunc(GL11.GL_NOTEQUAL, 0.0f);
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		glAlphaFunc(GL_NOTEQUAL, 0.0f);
+		glEnable(GL_ALPHA_TEST);
 
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glEnable(GL11.GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
 
 		// Setup lighting for when we have fixed function fragment rendering.
-		GL11.glShadeModel(GL11.GL_SMOOTH);
+		glShadeModel(GL_SMOOTH);
 
 		if ( shader == null ) {
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_LIGHT0);
+			glEnable(GL_LIGHTING);
+			glEnable(GL_LIGHT0);
 		}
 
 		vectorBuffer.clear();
 		vectorBuffer.put(1.0f).put(1.0f).put(1.0f).put(1.0f);
 		vectorBuffer.clear();
-		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_DIFFUSE, vectorBuffer);
+		glLight(GL_LIGHT0, GL_DIFFUSE, vectorBuffer);
 
 		vectorBuffer.put(1.0f).put(1.0f).put(1.0f).put(1.0f);
 		vectorBuffer.clear();
-		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_AMBIENT, vectorBuffer);
+		glLight(GL_LIGHT0, GL_AMBIENT, vectorBuffer);
 
 		vectorBuffer.put(1.0f).put(1.0f).put(0.5f).put(1.0f);
 		vectorBuffer.clear();
-		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_SPECULAR, vectorBuffer);
+		glLight(GL_LIGHT0, GL_SPECULAR, vectorBuffer);
 
 		vectorBuffer.put(-1.0f / 3.0f).put(1.0f / 3.0f).put(1.0f / 3.0f).put(0.0f); // Infinite
 		vectorBuffer.clear();
-		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, vectorBuffer);
+		glLight(GL_LIGHT0, GL_POSITION, vectorBuffer);
 
 		vectorBuffer.put(0.2f).put(0.2f).put(0.2f).put(1.0f);
 		vectorBuffer.clear();
-		GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, vectorBuffer);
+		glLightModel(GL_LIGHT_MODEL_AMBIENT, vectorBuffer);
 
 		sphere = new Sphere();
 	}
@@ -283,15 +285,14 @@ public final class ShadersTest {
 	}
 
 	static void renderObject() {
-		GL11.glColor3b((byte)255, (byte)255, (byte)255);
+		glColor3b((byte)255, (byte)255, (byte)255);
 		sphere.draw(1.0f, 32, 32);
 	}
 
 	private static DisplayMode chooseMode(DisplayMode[] modes, int width, int height) {
 		DisplayMode bestMode = null;
 
-		for ( int i = 0; i < modes.length; i++ ) {
-			DisplayMode mode = modes[i];
+		for ( DisplayMode mode : modes ) {
 			if ( mode.getWidth() == width && mode.getHeight() == height && mode.getFrequency() <= 85 ) {
 				if ( bestMode == null || (mode.getBitsPerPixel() >= bestMode.getBitsPerPixel() && mode.getFrequency() > bestMode.getFrequency()) )
 					bestMode = mode;

@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -61,12 +61,12 @@ public class Cursor {
 
 	/** First element to display */
 	private final CursorElement[] cursors;
-	
+
 	/** Index into list of cursors */
-	private int index = 0;
+	private int index;
 
 	private boolean destroyed;
-	
+
 	/**
 	 * Constructs a new Cursor, with the given parameters. Mouse must have been created before you can create
 	 * Cursor objects. Cursor images are in ARGB format, but only one bit transparancy is guaranteed to be supported.
@@ -81,7 +81,7 @@ public class Cursor {
 	 * @param images A buffer containing the images. The origin is at the lower left corner, like OpenGL.
 	 * @param delays An int buffer of animation frame delays, if numImages is greater than 1, else null
 	 * @throws LWJGLException if the cursor could not be created for any reason
-	 */	
+	 */
 	public Cursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			if ((getCapabilities() & CURSOR_ONE_BIT_TRANSPARENCY) == 0)
@@ -100,8 +100,8 @@ public class Cursor {
 
 			Sys.initialize();
 
-			// Hmm 
-			yHotspot = height - 1 - yHotspot;		
+			// Hmm
+			yHotspot = height - 1 - yHotspot;
 
 			// create cursor (or cursors if multiple images supplied)
 			cursors = createCursors(width, height, xHotspot, yHotspot, numImages, images, delays);
@@ -162,14 +162,14 @@ public class Cursor {
 		// create copy and flip images to match ogl
 		IntBuffer images_copy = BufferUtils.createIntBuffer(images.remaining());
 		flipImages(width, height, numImages, images, images_copy);
-		
+
 		// Win32 doesn't (afaik) allow for animation based cursors, except when they're
 		// in the .ani format, which we don't support.
 		// The cursor animation was therefor developed using java side time tracking.
 		// unfortunately X flickers when changing cursor. We therefore check for either
 		// Win32 or X and do accordingly. This hasn't been implemented on Mac, but we
 		// might want to split it into a X/Win/Mac cursor if it gets too cluttered
-		
+
 		CursorElement[] cursors;
 		switch (LWJGLUtil.getPlatform()) {
 			case LWJGLUtil.PLATFORM_MACOSX:
@@ -178,7 +178,7 @@ public class Cursor {
 				// create our cursor elements
 				cursors = new CursorElement[numImages];
 				for(int i=0; i<numImages; i++) {
-					
+
 					// iterate through the images, and make sure that the pixels are either 0xffxxxxxx or 0x00000000
 					int size = width * height;
 					for(int j=0; j<size; j++) {
@@ -188,7 +188,7 @@ public class Cursor {
 							images_copy.put(index, 0);
 						}
 					}
-					
+
 					Object handle = Mouse.getImplementation().createCursor(width, height, xHotspot, yHotspot, 1, images_copy, null);
 					long delay = (delays != null) ? delays.get(i) : 0;
 					long timeout = System.currentTimeMillis();
@@ -208,13 +208,13 @@ public class Cursor {
 				throw new RuntimeException("Unknown OS");
 		}
 		return cursors;
-	} 
-	
+	}
+
 	/**
 	 * Flips the images so they're oriented according to opengl
-	 * 
+	 *
 	 * @param width Width of image
-	 * @param height Height of images 
+	 * @param height Height of images
 	 * @param numImages How many images to flip
 	 * @param images Source images
 	 * @param images_copy Destination images
@@ -228,7 +228,7 @@ public class Cursor {
 
 	/**
 	 * @param width Width of image
-	 * @param height Height of images 
+	 * @param height Height of images
 	 * @param start_index index into source buffer to copy to
 	 * @param images Source images
 	 * @param images_copy Destination images
@@ -245,8 +245,8 @@ public class Cursor {
 				images_copy.put(index2, temp_pixel);
 			}
 		}
-	}	
-	
+	}
+
 	/**
 	 * Gets the native handle associated with the cursor object.
 	 */
@@ -254,12 +254,12 @@ public class Cursor {
 		checkValid();
 		return cursors[index].cursorHandle;
 	}
-	
+
 	private void checkValid() {
 		if (destroyed)
 			throw new IllegalStateException("The cursor is destroyed");
 	}
-			
+
 	/**
 	 * Destroy the native cursor. If the cursor is current,
 	 * the current native cursor is set to null (the default
@@ -276,8 +276,8 @@ public class Cursor {
 					// ignore
 				}
 			}
-			for(int i=0; i<cursors.length; i++) {
-				Mouse.getImplementation().destroyCursor(cursors[i].cursorHandle);
+			for ( CursorElement cursor : cursors ) {
+				Mouse.getImplementation().destroyCursor(cursor.cursorHandle);
 			}
 			destroyed = true;
 		}
@@ -300,24 +300,24 @@ public class Cursor {
 		return cursors.length > 1 && cursors[index].timeout < System.currentTimeMillis();
 	}
 
-	/** 
-	 * Changes to the next cursor 
+	/**
+	 * Changes to the next cursor
 	 */
 	protected void nextCursor() {
 		checkValid();
 		index = ++index % cursors.length;
 	}
-	
+
 	/**
 	 * A single cursor element, used when animating
 	 */
 	private static class CursorElement {
 		/** Handle to cursor */
 		final Object cursorHandle;
-		
+
 		/** How long a delay this element should have */
 		final long delay;
-		
+
 		/** Absolute time this element times out */
 		long timeout;
 

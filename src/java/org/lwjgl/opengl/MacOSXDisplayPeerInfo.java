@@ -42,7 +42,7 @@ import org.lwjgl.LWJGLException;
  * $Id$
  */
 final class MacOSXDisplayPeerInfo extends MacOSXCanvasPeerInfo {
-	private boolean locked = false;
+	private boolean locked;
 
 	MacOSXDisplayPeerInfo(PixelFormat pixel_format, boolean support_pbuffer) throws LWJGLException {
 		super(pixel_format, support_pbuffer);

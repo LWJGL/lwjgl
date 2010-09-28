@@ -38,6 +38,8 @@ package org.lwjgl.opencl;
  */
 public final class CLEvent extends CLObjectChild<CLContext> {
 
+	private static final CLEventUtil util = (CLEventUtil)CLPlatform.getInfoUtilInstance(CLEvent.class, "CL_EVENT_UTIL");
+
 	private final CLCommandQueue queue;
 
 	CLEvent(final long pointer, final CLContext context) {
@@ -69,6 +71,42 @@ public final class CLEvent extends CLObjectChild<CLContext> {
 	public CLCommandQueue getCLCommandQueue() {
 		return queue;
 	}
+
+	// ---------------[ UTILITY METHODS ]---------------
+
+	/**
+	 * Returns the integer value of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public int getInfoInt(final int param_name) {
+		return util.getInfoInt(this, param_name);
+	}
+
+	// clGetEventProfilingInfo methods
+
+	/**
+	 * Returns the long value of the specified parameter. Can be used
+	 * for both cl_ulong and cl_bitfield parameters.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public long getProfilingInfoLong(int param_name) {
+		return util.getProfilingInfoLong(this, param_name);
+	}
+
+	/** CLEvent utility methods interface. */
+	interface CLEventUtil extends InfoUtil<CLEvent> {
+
+		long getProfilingInfoLong(CLEvent event, int param_name);
+
+	}
+
+	// -------[ IMPLEMENTATION STUFF BELOW ]-------
 
 	int release() {
 		try {

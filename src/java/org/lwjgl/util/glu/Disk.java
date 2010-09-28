@@ -1,42 +1,43 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.lwjgl.util.glu;
 
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.*;
 
 /**
  * Disk.java
- * 
- * 
+ *
+ *
  * Created 23-dec-2003
  * @author Erik Duijs
  */
@@ -72,20 +73,20 @@ public class Disk extends Quadric {
 	   float da, dr;
 
 	   /* Normal vectors */
-	   if (super.normals != GLU.GLU_NONE) {
-	      if (super.orientation == GLU.GLU_OUTSIDE) {
-		 GL11.glNormal3f(0.0f, 0.0f, +1.0f);
+	   if (super.normals != GLU_NONE) {
+	      if (super.orientation == GLU_OUTSIDE) {
+		 glNormal3f(0.0f, 0.0f, +1.0f);
 	      }
 	      else {
-		 GL11.glNormal3f(0.0f, 0.0f, -1.0f);
+		 glNormal3f(0.0f, 0.0f, -1.0f);
 	      }
 	   }
-	
-	   da = 2.0f * GLU.PI / slices;
+
+	   da = 2.0f * PI / slices;
 	   dr = (outerRadius - innerRadius) /  loops;
-	
+
 	   switch (super.drawStyle) {
-	   case GLU.GLU_FILL:
+	   case GLU_FILL:
 	      {
 		 /* texture of a gluDisk is a cut out of the texture unit square
 		  * x, y in [-outerRadius, +outerRadius]; s, t in [0, 1]
@@ -97,9 +98,9 @@ public class Disk extends Quadric {
 		 int l;
 		 for (l = 0; l < loops; l++) {
 		    float r2 = r1 + dr;
-		    if (super.orientation == GLU.GLU_OUTSIDE) {
+		    if (super.orientation == GLU_OUTSIDE) {
 		       int s;
-		       GL11.glBegin(GL11.GL_QUAD_STRIP);
+		       glBegin(GL_QUAD_STRIP);
 		       for (s = 0; s <= slices; s++) {
 			  float a;
 			  if (s == slices)
@@ -109,15 +110,15 @@ public class Disk extends Quadric {
 			  sa = sin(a);
 			  ca = cos(a);
 			  TXTR_COORD(0.5f + sa * r2 / dtc, 0.5f + ca * r2 / dtc);
-			  GL11.glVertex2f(r2 * sa, r2 * ca);
+			  glVertex2f(r2 * sa, r2 * ca);
 			  TXTR_COORD(0.5f + sa * r1 / dtc, 0.5f + ca * r1 / dtc);
-			  GL11.glVertex2f(r1 * sa, r1 * ca);
+			  glVertex2f(r1 * sa, r1 * ca);
 		       }
-		       GL11.glEnd();
+		       glEnd();
 		    }
 		    else {
 		       int s;
-		       GL11.glBegin(GL11.GL_QUAD_STRIP);
+		       glBegin(GL_QUAD_STRIP);
 		       for (s = slices; s >= 0; s--) {
 			  float a;
 			  if (s == slices)
@@ -127,47 +128,47 @@ public class Disk extends Quadric {
 			  sa = sin(a);
 			  ca = cos(a);
 			  TXTR_COORD(0.5f - sa * r2 / dtc, 0.5f + ca * r2 / dtc);
-			  GL11.glVertex2f(r2 * sa, r2 * ca);
+			  glVertex2f(r2 * sa, r2 * ca);
 			  TXTR_COORD(0.5f - sa * r1 / dtc, 0.5f + ca * r1 / dtc);
-			  GL11.glVertex2f(r1 * sa, r1 * ca);
+			  glVertex2f(r1 * sa, r1 * ca);
 		       }
-		       GL11.glEnd();
+		       glEnd();
 		    }
 		    r1 = r2;
 		 }
 		 break;
 	      }
-	   case GLU.GLU_LINE:
+	   case GLU_LINE:
 	      {
 		 int l, s;
 		 /* draw loops */
 		 for (l = 0; l <= loops; l++) {
 		    float r = innerRadius + l * dr;
-		    GL11.glBegin(GL11.GL_LINE_LOOP);
+		    glBegin(GL_LINE_LOOP);
 		    for (s = 0; s < slices; s++) {
 		       float a = s * da;
-		       GL11.glVertex2f(r * sin(a), r * cos(a));
+		       glVertex2f(r * sin(a), r * cos(a));
 		    }
-		    GL11.glEnd();
+		    glEnd();
 		 }
 		 /* draw spokes */
 		 for (s = 0; s < slices; s++) {
 		    float a = s * da;
 		    float x = sin(a);
 		    float y = cos(a);
-		    GL11.glBegin(GL11.GL_LINE_STRIP);
+		    glBegin(GL_LINE_STRIP);
 		    for (l = 0; l <= loops; l++) {
 		       float r = innerRadius + l * dr;
-		       GL11.glVertex2f(r * x, r * y);
+		       glVertex2f(r * x, r * y);
 		    }
-		    GL11.glEnd();
+		    glEnd();
 		 }
 		 break;
 	      }
-	   case GLU.GLU_POINT:
+	   case GLU_POINT:
 	      {
 		 int s;
-		 GL11.glBegin(GL11.GL_POINTS);
+		 glBegin(GL_POINTS);
 		 for (s = 0; s < slices; s++) {
 		    float a = s * da;
 		    float x = sin(a);
@@ -175,33 +176,33 @@ public class Disk extends Quadric {
 		    int l;
 		    for (l = 0; l <= loops; l++) {
 		       float r = innerRadius * l * dr;
-		       GL11.glVertex2f(r * x, r * y);
+		       glVertex2f(r * x, r * y);
 		    }
 		 }
-		 GL11.glEnd();
+		 glEnd();
 		 break;
 	      }
-	   case GLU.GLU_SILHOUETTE:
+	   case GLU_SILHOUETTE:
 	      {
 		 if (innerRadius != 0.0) {
 		    float a;
-		    GL11.glBegin(GL11.GL_LINE_LOOP);
-		    for (a = 0.0f; a < 2.0 * GLU.PI; a += da) {
+		    glBegin(GL_LINE_LOOP);
+		    for (a = 0.0f; a < 2.0 * PI; a += da) {
 		       float x = innerRadius * sin(a);
 		       float y = innerRadius * cos(a);
-		       GL11.glVertex2f(x, y);
+		       glVertex2f(x, y);
 		    }
-		    GL11.glEnd();
+		    glEnd();
 		 }
 		 {
 		    float a;
-		    GL11.glBegin(GL11.GL_LINE_LOOP);
-		    for (a = 0; a < 2.0f * GLU.PI; a += da) {
+		    glBegin(GL_LINE_LOOP);
+		    for (a = 0; a < 2.0f * PI; a += da) {
 		       float x = outerRadius * sin(a);
 		       float y = outerRadius * cos(a);
-		       GL11.glVertex2f(x, y);
+		       glVertex2f(x, y);
 		    }
-		    GL11.glEnd();
+		    glEnd();
 		 }
 		 break;
 	      }

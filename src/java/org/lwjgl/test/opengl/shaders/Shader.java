@@ -38,14 +38,16 @@
 package org.lwjgl.test.opengl.shaders;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.ARBProgram;
-import org.lwjgl.opengl.ARBShaderObjects;
-import org.lwjgl.opengl.GL11;
 
 import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+
+import static org.lwjgl.opengl.ARBProgram.*;
+import static org.lwjgl.opengl.ARBShaderObjects.*;
+import static org.lwjgl.opengl.GL11.*;
 
 abstract class Shader {
 
@@ -62,13 +64,11 @@ abstract class Shader {
 		String shader = null;
 
 		try {
-			ClassLoader loader = ShadersTest.class.getClassLoader();
-			InputStream inputStream = loader.getResourceAsStream("org/lwjgl/test/opengl/shaders/" + file);
+			InputStream source = ShadersTest.class.getResourceAsStream(file);
+			if ( source == null ) // dev-mode
+				source = new FileInputStream("src/java/org/lwjgl/test/opengl/shaders/" + file);
 
-			if ( inputStream == null )
-				ShadersTest.kill("A shader source file could not be found: " + file);
-
-			BufferedInputStream stream = new BufferedInputStream(inputStream);
+			BufferedInputStream stream = new BufferedInputStream(source);
 
 			byte character;
 			while ( (character = (byte)stream.read()) != -1 )
@@ -91,8 +91,8 @@ abstract class Shader {
 	}
 
 	protected static void checkProgramError(String programFile, String programSource) {
-		if ( GL11.glGetError() == GL11.GL_INVALID_OPERATION ) {
-			final int errorPos = GL11.glGetInteger(ARBProgram.GL_PROGRAM_ERROR_POSITION_ARB);
+		if ( glGetError() == GL_INVALID_OPERATION ) {
+			final int errorPos = glGetInteger(GL_PROGRAM_ERROR_POSITION_ARB);
 			int lineStart = 0;
 			int lineEnd = -1;
 			for ( int i = 0; i < programSource.length(); i++ ) {
@@ -111,12 +111,12 @@ abstract class Shader {
 
 			ShadersTest.kill("Low-level program error in file: " + programFile
 			                 + "\n\tError line: " + programSource.substring(lineStart, lineEnd)
-			                 + "\n\tError message: " + GL11.glGetString(ARBProgram.GL_PROGRAM_ERROR_STRING_ARB));
+			                 + "\n\tError message: " + glGetString(GL_PROGRAM_ERROR_STRING_ARB));
 		}
 	}
 
 	protected static int getUniformLocation(int ID, String name) {
-		final int location = ARBShaderObjects.glGetUniformLocationARB(ID, name);
+		final int location = glGetUniformLocationARB(ID, name);
 
 		if ( location == -1 )
 			throw new IllegalArgumentException("The uniform \"" + name + "\" does not exist in the Shader Program.");
@@ -125,24 +125,24 @@ abstract class Shader {
 	}
 
 	protected static void printShaderObjectInfoLog(String file, int ID) {
-		final int logLength = ARBShaderObjects.glGetObjectParameteriARB(ID, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB);
+		final int logLength = glGetObjectParameteriARB(ID, GL_OBJECT_INFO_LOG_LENGTH_ARB);
 		if ( logLength <= 1 )
 			return;
 
 		System.out.println("\nInfo Log of Shader Object: " + file);
 		System.out.println("--------------------------");
-		System.out.println(ARBShaderObjects.glGetInfoLogARB(ID, logLength));
+		System.out.println(glGetInfoLogARB(ID, logLength));
 
 	}
 
 	protected static void printShaderProgramInfoLog(int ID) {
-		final int logLength = ARBShaderObjects.glGetObjectParameteriARB(ID, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB);
+		final int logLength = glGetObjectParameteriARB(ID, GL_OBJECT_INFO_LOG_LENGTH_ARB);
 		if ( logLength <= 1 )
 			return;
 
 		System.out.println("\nShader Program Info Log: ");
 		System.out.println("--------------------------");
-		System.out.println(ARBShaderObjects.glGetInfoLogARB(ID, logLength));
+		System.out.println(glGetInfoLogARB(ID, logLength));
 	}
 
 }

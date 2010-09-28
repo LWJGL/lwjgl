@@ -48,13 +48,14 @@ import java.nio.FloatBuffer;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.ARBBufferObject;
-import org.lwjgl.opengl.ARBVertexBufferObject;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
-import org.lwjgl.util.glu.GLU;
+
+import static org.lwjgl.opengl.ARBBufferObject.*;
+import static org.lwjgl.opengl.ARBVertexBufferObject.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.*;
 
 public final class VBOTest {
 
@@ -103,8 +104,8 @@ public final class VBOTest {
 	private static float angle;
 	private static int buffer_id;
 	private static FloatBuffer vertices;
-	private static ByteBuffer mapped_buffer = null;
-	private static FloatBuffer mapped_float_buffer = null;
+	private static ByteBuffer mapped_buffer;
+	private static FloatBuffer mapped_float_buffer;
 
 	public static void main(String[] arguments) {
 		try {
@@ -156,12 +157,12 @@ public final class VBOTest {
 	 * All rendering is done in here
 	 */
 	private static void render() {
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-		GL11.glPushMatrix();
-		GL11.glTranslatef(Display.getDisplayMode().getWidth() / 2, Display.getDisplayMode().getHeight() / 2, 0.0f);
-		GL11.glRotatef(angle, 0, 0, 1.0f);
-		ByteBuffer new_mapped_buffer = ARBBufferObject.glMapBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB,
-		                                                              ARBBufferObject.GL_WRITE_ONLY_ARB,
+		glClear(GL_COLOR_BUFFER_BIT);
+		glPushMatrix();
+		glTranslatef(Display.getDisplayMode().getWidth() / 2, Display.getDisplayMode().getHeight() / 2, 0.0f);
+		glRotatef(angle, 0, 0, 1.0f);
+		ByteBuffer new_mapped_buffer = glMapBufferARB(GL_ARRAY_BUFFER_ARB,
+		                                                              GL_WRITE_ONLY_ARB,
 		                                                              mapped_buffer);
 		if ( new_mapped_buffer != mapped_buffer )
 			mapped_float_buffer = new_mapped_buffer.order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -169,9 +170,9 @@ public final class VBOTest {
 		mapped_float_buffer.rewind();
 		vertices.rewind();
 		mapped_float_buffer.put(vertices);
-		if ( ARBBufferObject.glUnmapBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB) )
-			GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
-		GL11.glPopMatrix();
+		if ( glUnmapBufferARB(GL_ARRAY_BUFFER_ARB) )
+			glDrawArrays(GL_QUADS, 0, 4);
+		glPopMatrix();
 	}
 
 	/**
@@ -180,30 +181,30 @@ public final class VBOTest {
 	private static void init() throws Exception {
 		System.out.println("Timer resolution: " + Sys.getTimerResolution());
 		// Go into orthographic projection mode.
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GLU.gluOrtho2D(0, Display.getDisplayMode().getWidth(), 0, Display.getDisplayMode().getHeight());
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
-		GL11.glViewport(0, 0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluOrtho2D(0, Display.getDisplayMode().getWidth(), 0, Display.getDisplayMode().getHeight());
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glViewport(0, 0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
 		if ( !GLContext.getCapabilities().GL_ARB_vertex_buffer_object ) {
 			System.out.println("ARB VBO not supported!");
 			System.exit(1);
 		}
-		buffer_id = ARBBufferObject.glGenBuffersARB();
-		ARBBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, buffer_id);
+		buffer_id = glGenBuffersARB();
+		glBindBufferARB(GL_ARRAY_BUFFER_ARB, buffer_id);
 		vertices = ByteBuffer.allocateDirect(2 * 4 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		vertices.put(-50).put(-50).put(50).put(-50).put(50).put(50).put(-50).put(50);
-		ARBBufferObject.glBufferDataARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, 2 * 4 * 4, ARBBufferObject.GL_STREAM_DRAW_ARB);
-		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-		GL11.glVertexPointer(2, GL11.GL_FLOAT, 0, 0);
+		glBufferDataARB(GL_ARRAY_BUFFER_ARB, 2 * 4 * 4, GL_STREAM_DRAW_ARB);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(2, GL_FLOAT, 0, 0);
 	}
 
 	/**
 	 * Cleanup
 	 */
 	private static void cleanup() {
-		ARBBufferObject.glDeleteBuffersARB(buffer_id);
+		glDeleteBuffersARB(buffer_id);
 		Display.destroy();
 	}
 }

@@ -49,6 +49,7 @@ public interface KHR_icd {
 	/** Returned by clGetPlatformIDs when no platforms are found */
 	int CL_PLATFORM_NOT_FOUND_KHR = -1001;
 
+	@Optional(reason = "AMD Stream does not expose this (version tested: 2.2)")
 	@cl_int
 	int clIcdGetPlatformIDsKHR(@AutoSize(value = "platforms", canBeNull = true) @cl_uint int num_entries,
 	                           @OutParameter @Check(canBeNull = true) @NativeType("cl_platform_id") PointerBuffer platforms,

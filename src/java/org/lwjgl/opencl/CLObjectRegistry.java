@@ -1,12 +1,14 @@
 package org.lwjgl.opencl;
 
+import org.lwjgl.LWJGLUtil;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * A CLContextObject container.
+ * A CLObjectChild container.
  *
  * @author Spasi
  */
@@ -37,8 +39,10 @@ class CLObjectRegistry<T extends CLObjectChild> {
 		final Map<Long, T> map = getMap();
 		final Long key = object.getPointer();
 
-		if ( !map.containsKey(key) )
-			getMap().put(object.getPointer(), object);
+		if ( LWJGLUtil.DEBUG && map.containsKey(key) )
+			throw new IllegalStateException("Duplicate object found: " + object.getClass() + " - " + key);
+
+		getMap().put(object.getPointer(), object);
 	}
 
 	void unregisterObject(final T object) {

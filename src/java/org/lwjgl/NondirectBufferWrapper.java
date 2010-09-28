@@ -49,16 +49,16 @@ import java.nio.ByteOrder;
  * $Id: BufferChecks.java 2762 2007-04-11 16:13:05Z elias_naur $
  */
 public final class NondirectBufferWrapper {
-	private final static int INITIAL_BUFFER_SIZE = 1;
+	private static final int INITIAL_BUFFER_SIZE = 1;
 
-	private final static ThreadLocal thread_buffer = new ThreadLocal() {
-		protected Object initialValue() {
+	private static final ThreadLocal<CachedBuffers> thread_buffer = new ThreadLocal<CachedBuffers>() {
+		protected CachedBuffers initialValue() {
 			return new CachedBuffers(INITIAL_BUFFER_SIZE);
 		}
 	};
 
 	private static CachedBuffers getCachedBuffers(int minimum_byte_size) {
-		CachedBuffers buffers = (CachedBuffers)thread_buffer.get();
+		CachedBuffers buffers = thread_buffer.get();
 		int current_byte_size = buffers.byte_buffer.capacity();
 		if (minimum_byte_size > current_byte_size) {
 			buffers = new CachedBuffers(minimum_byte_size);
@@ -378,7 +378,7 @@ public final class NondirectBufferWrapper {
 		return direct_buffer;
 	}
 
-	private final static class CachedBuffers {
+	private static final class CachedBuffers {
 		private final ByteBuffer byte_buffer;
 		private final ShortBuffer short_buffer_big;
 		private final IntBuffer int_buffer_big;

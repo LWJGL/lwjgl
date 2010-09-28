@@ -58,6 +58,19 @@ public final class AMDDebugOutputCallback extends PointerWrapperAbstract {
 		GL_DEBUG_CATEGORY_APPLICATION_AMD = 0x914F,
 		GL_DEBUG_CATEGORY_OTHER_AMD = 0x9150;
 
+	private static final long CALLBACK_POINTER;
+
+	static {
+		long pointer = 0;
+		try {
+			// Call reflectively so that we can compile this class for the Generator.
+			pointer = (Long)Class.forName("org.lwjgl.opengl.CallbackUtil").getDeclaredMethod("getDebugOutputCallbackAMD").invoke(null);
+		} catch (Exception e) {
+			// ignore
+		}
+		CALLBACK_POINTER = pointer;
+	}
+
 	private final Handler handler;
 
 	/**
@@ -129,22 +142,13 @@ public final class AMDDebugOutputCallback extends PointerWrapperAbstract {
 	 * @param handler the callback handler
 	 */
 	public AMDDebugOutputCallback(final Handler handler) {
-		super(getFunctionPointer());
+		super(CALLBACK_POINTER);
 
 		this.handler = handler;
 	}
 
 	Handler getHandler() {
 		return handler;
-	}
-
-	private static long getFunctionPointer() {
-		try {
-			// Call reflectively so that we can compile this class for the Generator.
-			return ((Long)Class.forName("org.lwjgl.opengl.CallbackUtil").getDeclaredMethod("getDebugOutputCallbackAMD", null).invoke(null, null)).longValue();
-		} catch (Exception e) {
-			throw new RuntimeException(e.getCause() != null ? e.getCause() : e);
-		}
 	}
 
 	/** Implementations of this interface can be used to receive AMD_debug_output notifications. */

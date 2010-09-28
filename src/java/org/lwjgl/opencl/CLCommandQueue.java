@@ -40,6 +40,8 @@ import org.lwjgl.PointerBuffer;
  */
 public final class CLCommandQueue extends CLObjectChild<CLContext> {
 
+	private static final InfoUtil<CLCommandQueue> util = CLPlatform.getInfoUtilInstance(CLCommandQueue.class, "CL_COMMAND_QUEUE_UTIL");
+
 	private final CLDevice device;
 
 	private final CLObjectRegistry<CLEvent> clEvents;
@@ -69,6 +71,19 @@ public final class CLCommandQueue extends CLObjectChild<CLContext> {
 	 */
 	public CLEvent getCLEvent(final long id) {
 		return clEvents.getObject(id);
+	}
+
+	// ---------------[ UTILITY METHODS ]---------------
+
+	/**
+	 * Returns the integer value of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public int getInfoInt(int param_name) {
+		return util.getInfoInt(this, param_name);
 	}
 
 	// -------[ IMPLEMENTATION STUFF BELOW ]-------

@@ -70,7 +70,7 @@ public class NativeMethodStubsGenerator {
 
 	private static void generateParameters(PrintWriter writer, Collection<ParameterDeclaration> params, Mode mode) {
 		for (ParameterDeclaration param : params) {
-			if ( param.getAnnotation(Helper.class) != null || param.getAnnotation(Result.class) != null )
+			if ( param.getAnnotation(Result.class) != null || (param.getAnnotation(Helper.class) != null && !param.getAnnotation(Helper.class).passToNative()) )
 				continue;
 			final Constant constant_annotation = param.getAnnotation(Constant.class);
 			if ( constant_annotation == null || !constant_annotation.isNative() )

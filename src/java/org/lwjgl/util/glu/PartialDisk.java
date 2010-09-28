@@ -1,44 +1,45 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.lwjgl.util.glu;
 
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.*;
 
 /**
  * PartialDisk.java
- * 
- * 
+ *
+ *
  * Created 23-dec-2003
- * 
+ *
  * @author Erik Duijs
  */
 public class PartialDisk extends Quadric {
@@ -58,18 +59,18 @@ public class PartialDisk extends Quadric {
 	 * through startAngle + sweepAngle is included (where 0 degrees is along
 	 * the +y axis, 90 degrees along the +x axis, 180 along the -y axis, and
 	 * 270 along the -x axis).
-	 * 
+	 *
 	 * The partial disk has a radius of outerRadius, and contains a concentric
 	 * circular hole with a radius of innerRadius. If innerRadius is zero, then
 	 * no hole is generated. The partial disk is subdivided around the z axis
 	 * into slices (like pizza slices), and also about the z axis into rings
 	 * (as specified by slices and loops, respectively).
-	 * 
+	 *
 	 * With respect to orientation, the +z side of the partial disk is
 	 * considered to be outside (see gluQuadricOrientation). This means that if
 	 * the orientation is set to GLU.GLU_OUTSIDE, then any normals generated point
 	 * along the +z axis. Otherwise, they point along the -z axis.
-	 * 
+	 *
 	 * If texturing is turned on (with gluQuadricTexture), texture coordinates
 	 * are generated linearly such that where r=outerRadius, the value at (r, 0, 0)
 	 * is (1, 0.5), at (0, r, 0) it is (0.5, 1), at (-r, 0, 0) it is (0, 0.5),
@@ -127,9 +128,9 @@ public class PartialDisk extends Quadric {
 
 		/* Cache is the vertex locations cache */
 
-		angleOffset = startAngle / 180.0f * GLU.PI;
+		angleOffset = startAngle / 180.0f * PI;
 		for (i = 0; i <= slices; i++) {
-			angle = angleOffset + ((GLU.PI * sweepAngle) / 180.0f) * i / slices;
+			angle = angleOffset + ((PI * sweepAngle) / 180.0f) * i / slices;
 			sinCache[i] = sin(angle);
 			cosCache[i] = cos(angle);
 		}
@@ -140,54 +141,54 @@ public class PartialDisk extends Quadric {
 		}
 
 		switch (super.normals) {
-			case GLU.GLU_FLAT :
-			case GLU.GLU_SMOOTH :
-				if (super.orientation == GLU.GLU_OUTSIDE) {
-					GL11.glNormal3f(0.0f, 0.0f, 1.0f);
+			case GLU_FLAT :
+			case GLU_SMOOTH :
+				if (super.orientation == GLU_OUTSIDE) {
+					glNormal3f(0.0f, 0.0f, 1.0f);
 				} else {
-					GL11.glNormal3f(0.0f, 0.0f, -1.0f);
+					glNormal3f(0.0f, 0.0f, -1.0f);
 				}
 				break;
 			default :
-			case GLU.GLU_NONE :
+			case GLU_NONE :
 				break;
 		}
 
 		switch (super.drawStyle) {
-			case GLU.GLU_FILL :
+			case GLU_FILL :
 				if (innerRadius == .0f) {
 					finish = loops - 1;
 					/* Triangle strip for inner polygons */
-					GL11.glBegin(GL11.GL_TRIANGLE_FAN);
+					glBegin(GL_TRIANGLE_FAN);
 					if (super.textureFlag) {
-						GL11.glTexCoord2f(0.5f, 0.5f);
+						glTexCoord2f(0.5f, 0.5f);
 					}
-					GL11.glVertex3f(0.0f, 0.0f, 0.0f);
+					glVertex3f(0.0f, 0.0f, 0.0f);
 					radiusLow = outerRadius - deltaRadius * ((float) (loops - 1) / loops);
 					if (super.textureFlag) {
 						texLow = radiusLow / outerRadius / 2;
 					}
 
-					if (super.orientation == GLU.GLU_OUTSIDE) {
+					if (super.orientation == GLU_OUTSIDE) {
 						for (i = slices; i >= 0; i--) {
 							if (super.textureFlag) {
-								GL11.glTexCoord2f(
+								glTexCoord2f(
 									texLow * sinCache[i] + 0.5f,
 									texLow * cosCache[i] + 0.5f);
 							}
-							GL11.glVertex3f(radiusLow * sinCache[i], radiusLow * cosCache[i], 0.0f);
+							glVertex3f(radiusLow * sinCache[i], radiusLow * cosCache[i], 0.0f);
 						}
 					} else {
 						for (i = 0; i <= slices; i++) {
 							if (super.textureFlag) {
-								GL11.glTexCoord2f(
+								glTexCoord2f(
 									texLow * sinCache[i] + 0.5f,
 									texLow * cosCache[i] + 0.5f);
 							}
-							GL11.glVertex3f(radiusLow * sinCache[i], radiusLow * cosCache[i], 0.0f);
+							glVertex3f(radiusLow * sinCache[i], radiusLow * cosCache[i], 0.0f);
 						}
 					}
-					GL11.glEnd();
+					glEnd();
 				} else {
 					finish = loops;
 				}
@@ -199,49 +200,49 @@ public class PartialDisk extends Quadric {
 						texHigh = radiusHigh / outerRadius / 2;
 					}
 
-					GL11.glBegin(GL11.GL_QUAD_STRIP);
+					glBegin(GL_QUAD_STRIP);
 					for (i = 0; i <= slices; i++) {
-						if (super.orientation == GLU.GLU_OUTSIDE) {
+						if (super.orientation == GLU_OUTSIDE) {
 							if (super.textureFlag) {
-								GL11.glTexCoord2f(
+								glTexCoord2f(
 									texLow * sinCache[i] + 0.5f,
 									texLow * cosCache[i] + 0.5f);
 							}
-							GL11.glVertex3f(radiusLow * sinCache[i], radiusLow * cosCache[i], 0.0f);
+							glVertex3f(radiusLow * sinCache[i], radiusLow * cosCache[i], 0.0f);
 
 							if (super.textureFlag) {
-								GL11.glTexCoord2f(
+								glTexCoord2f(
 									texHigh * sinCache[i] + 0.5f,
 									texHigh * cosCache[i] + 0.5f);
 							}
-							GL11.glVertex3f(
+							glVertex3f(
 								radiusHigh * sinCache[i],
 								radiusHigh * cosCache[i],
 								0.0f);
 						} else {
 							if (super.textureFlag) {
-								GL11.glTexCoord2f(
+								glTexCoord2f(
 									texHigh * sinCache[i] + 0.5f,
 									texHigh * cosCache[i] + 0.5f);
 							}
-							GL11.glVertex3f(
+							glVertex3f(
 								radiusHigh * sinCache[i],
 								radiusHigh * cosCache[i],
 								0.0f);
 
 							if (super.textureFlag) {
-								GL11.glTexCoord2f(
+								glTexCoord2f(
 									texLow * sinCache[i] + 0.5f,
 									texLow * cosCache[i] + 0.5f);
 							}
-							GL11.glVertex3f(radiusLow * sinCache[i], radiusLow * cosCache[i], 0.0f);
+							glVertex3f(radiusLow * sinCache[i], radiusLow * cosCache[i], 0.0f);
 						}
 					}
-					GL11.glEnd();
+					glEnd();
 				}
 				break;
-			case GLU.GLU_POINT :
-				GL11.glBegin(GL11.GL_POINTS);
+			case GLU_POINT :
+				glBegin(GL_POINTS);
 				for (i = 0; i < slices2; i++) {
 					sintemp = sinCache[i];
 					costemp = cosCache[i];
@@ -251,26 +252,26 @@ public class PartialDisk extends Quadric {
 						if (super.textureFlag) {
 							texLow = radiusLow / outerRadius / 2;
 
-							GL11.glTexCoord2f(
+							glTexCoord2f(
 								texLow * sinCache[i] + 0.5f,
 								texLow * cosCache[i] + 0.5f);
 						}
-						GL11.glVertex3f(radiusLow * sintemp, radiusLow * costemp, 0.0f);
+						glVertex3f(radiusLow * sintemp, radiusLow * costemp, 0.0f);
 					}
 				}
-				GL11.glEnd();
+				glEnd();
 				break;
-			case GLU.GLU_LINE :
+			case GLU_LINE :
 				if (innerRadius == outerRadius) {
-					GL11.glBegin(GL11.GL_LINE_STRIP);
+					glBegin(GL_LINE_STRIP);
 
 					for (i = 0; i <= slices; i++) {
 						if (super.textureFlag) {
-							GL11.glTexCoord2f(sinCache[i] / 2 + 0.5f, cosCache[i] / 2 + 0.5f);
+							glTexCoord2f(sinCache[i] / 2 + 0.5f, cosCache[i] / 2 + 0.5f);
 						}
-						GL11.glVertex3f(innerRadius * sinCache[i], innerRadius * cosCache[i], 0.0f);
+						glVertex3f(innerRadius * sinCache[i], innerRadius * cosCache[i], 0.0f);
 					}
-					GL11.glEnd();
+					glEnd();
 					break;
 				}
 				for (j = 0; j <= loops; j++) {
@@ -279,21 +280,21 @@ public class PartialDisk extends Quadric {
 						texLow = radiusLow / outerRadius / 2;
 					}
 
-					GL11.glBegin(GL11.GL_LINE_STRIP);
+					glBegin(GL_LINE_STRIP);
 					for (i = 0; i <= slices; i++) {
 						if (super.textureFlag) {
-							GL11.glTexCoord2f(
+							glTexCoord2f(
 								texLow * sinCache[i] + 0.5f,
 								texLow * cosCache[i] + 0.5f);
 						}
-						GL11.glVertex3f(radiusLow * sinCache[i], radiusLow * cosCache[i], 0.0f);
+						glVertex3f(radiusLow * sinCache[i], radiusLow * cosCache[i], 0.0f);
 					}
-					GL11.glEnd();
+					glEnd();
 				}
 				for (i = 0; i < slices2; i++) {
 					sintemp = sinCache[i];
 					costemp = cosCache[i];
-					GL11.glBegin(GL11.GL_LINE_STRIP);
+					glBegin(GL_LINE_STRIP);
 					for (j = 0; j <= loops; j++) {
 						radiusLow = outerRadius - deltaRadius * ((float) j / loops);
 						if (super.textureFlag) {
@@ -301,33 +302,33 @@ public class PartialDisk extends Quadric {
 						}
 
 						if (super.textureFlag) {
-							GL11.glTexCoord2f(
+							glTexCoord2f(
 								texLow * sinCache[i] + 0.5f,
 								texLow * cosCache[i] + 0.5f);
 						}
-						GL11.glVertex3f(radiusLow * sintemp, radiusLow * costemp, 0.0f);
+						glVertex3f(radiusLow * sintemp, radiusLow * costemp, 0.0f);
 					}
-					GL11.glEnd();
+					glEnd();
 				}
 				break;
-			case GLU.GLU_SILHOUETTE :
+			case GLU_SILHOUETTE :
 				if (sweepAngle < 360.0f) {
 					for (i = 0; i <= slices; i += slices) {
 						sintemp = sinCache[i];
 						costemp = cosCache[i];
-						GL11.glBegin(GL11.GL_LINE_STRIP);
+						glBegin(GL_LINE_STRIP);
 						for (j = 0; j <= loops; j++) {
 							radiusLow = outerRadius - deltaRadius * ((float) j / loops);
 
 							if (super.textureFlag) {
 								texLow = radiusLow / outerRadius / 2;
-								GL11.glTexCoord2f(
+								glTexCoord2f(
 									texLow * sinCache[i] + 0.5f,
 									texLow * cosCache[i] + 0.5f);
 							}
-							GL11.glVertex3f(radiusLow * sintemp, radiusLow * costemp, 0.0f);
+							glVertex3f(radiusLow * sintemp, radiusLow * costemp, 0.0f);
 						}
-						GL11.glEnd();
+						glEnd();
 					}
 				}
 				for (j = 0; j <= loops; j += loops) {
@@ -336,16 +337,16 @@ public class PartialDisk extends Quadric {
 						texLow = radiusLow / outerRadius / 2;
 					}
 
-					GL11.glBegin(GL11.GL_LINE_STRIP);
+					glBegin(GL_LINE_STRIP);
 					for (i = 0; i <= slices; i++) {
 						if (super.textureFlag) {
-							GL11.glTexCoord2f(
+							glTexCoord2f(
 								texLow * sinCache[i] + 0.5f,
 								texLow * cosCache[i] + 0.5f);
 						}
-						GL11.glVertex3f(radiusLow * sinCache[i], radiusLow * cosCache[i], 0.0f);
+						glVertex3f(radiusLow * sinCache[i], radiusLow * cosCache[i], 0.0f);
 					}
-					GL11.glEnd();
+					glEnd();
 					if (innerRadius == outerRadius)
 						break;
 				}

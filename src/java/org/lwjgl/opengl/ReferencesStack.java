@@ -31,6 +31,8 @@
  */
 package org.lwjgl.opengl;
 
+import static org.lwjgl.opengl.GL11.*;
+
 class ReferencesStack {
 	private References[] references_stack;
 	private int stack_pos;
@@ -44,7 +46,7 @@ class ReferencesStack {
 		if (pos == references_stack.length) {
 			growStack();
 		}
-		references_stack[pos].copy(references_stack[pos - 1], GL11.GL_ALL_CLIENT_ATTRIB_BITS);
+		references_stack[pos].copy(references_stack[pos - 1], GL_ALL_CLIENT_ATTRIB_BITS);
 	}
 
 	public References popState(int mask) {

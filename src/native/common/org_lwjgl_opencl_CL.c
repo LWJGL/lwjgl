@@ -34,6 +34,14 @@
 #include "org_lwjgl_opencl_CL.h"
 #include "extcl.h"
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opencl_CL_nCreate(JNIEnv *env, jclass clazz, jstring oclPath) {
+	extcl_LoadLibrary(env, oclPath);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opencl_CL_nDestroy(JNIEnv *env, jclass clazz) {
+	extcl_UnloadLibrary();
+}
+
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opencl_CL_getFunctionAddress(JNIEnv *env, jclass clazz, jstring function_name) {
 	jlong address_jlong;
 	char *function_name_pointer = GetStringNativeChars(env, function_name);
@@ -43,12 +51,8 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opencl_CL_getFunctionAddress(JNIEnv *env,
 	return address_jlong;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opencl_CL_nCreate(JNIEnv *env, jclass clazz, jstring oclPath) {
-	extcl_LoadLibrary(env, oclPath);
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opencl_CL_nDestroy(JNIEnv *env, jclass clazz) {
-	extcl_UnloadLibrary();
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opencl_CL_getHostBuffer(JNIEnv *env, jclass clazz, jlong address, jint size) {
+    return safeNewBuffer(env, (void *)(intptr_t)address, size);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opencl_CL_resetNativeStubs(JNIEnv *env, jclass clazz, jclass cl_class) {

@@ -49,13 +49,14 @@ import java.nio.IntBuffer;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.ARBBufferObject;
-import org.lwjgl.opengl.ARBVertexBufferObject;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
-import org.lwjgl.util.glu.GLU;
+
+import static org.lwjgl.opengl.ARBBufferObject.*;
+import static org.lwjgl.opengl.ARBVertexBufferObject.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.*;
 
 public final class VBOIndexTest {
 
@@ -105,11 +106,11 @@ public final class VBOIndexTest {
 	private static int buffer_id;
 	private static int indices_buffer_id;
 	private static FloatBuffer vertices;
-	private static ByteBuffer mapped_buffer = null;
-	private static FloatBuffer mapped_float_buffer = null;
+	private static ByteBuffer mapped_buffer;
+	private static FloatBuffer mapped_float_buffer;
 	private static IntBuffer indices;
-	private static ByteBuffer mapped_indices_buffer = null;
-	private static IntBuffer mapped_indices_int_buffer = null;
+	private static ByteBuffer mapped_indices_buffer;
+	private static IntBuffer mapped_indices_int_buffer;
 
 	public static void main(String[] arguments) {
 		try {
@@ -161,21 +162,21 @@ public final class VBOIndexTest {
 	 * All rendering is done in here
 	 */
 	private static void render() {
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-		GL11.glPushMatrix();
-		GL11.glTranslatef(Display.getDisplayMode().getWidth() / 2, Display.getDisplayMode().getHeight() / 2, 0.0f);
-		GL11.glRotatef(angle, 0, 0, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glPushMatrix();
+		glTranslatef(Display.getDisplayMode().getWidth() / 2, Display.getDisplayMode().getHeight() / 2, 0.0f);
+		glRotatef(angle, 0, 0, 1.0f);
 
 
-		ByteBuffer new_mapped_buffer = ARBBufferObject.glMapBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB,
-		                                                              ARBBufferObject.GL_WRITE_ONLY_ARB,
+		ByteBuffer new_mapped_buffer = glMapBufferARB(GL_ARRAY_BUFFER_ARB,
+		                                                              GL_WRITE_ONLY_ARB,
 		                                                              mapped_buffer);
 		if ( new_mapped_buffer != mapped_buffer )
 			mapped_float_buffer = new_mapped_buffer.order(ByteOrder.nativeOrder()).asFloatBuffer();
 		mapped_buffer = new_mapped_buffer;
 
-		new_mapped_buffer = ARBBufferObject.glMapBufferARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB,
-		                                                   ARBBufferObject.GL_WRITE_ONLY_ARB,
+		new_mapped_buffer = glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
+		                                                   GL_WRITE_ONLY_ARB,
 		                                                   mapped_indices_buffer);
 		if ( new_mapped_buffer != mapped_indices_buffer )
 			mapped_indices_int_buffer = new_mapped_buffer.order(ByteOrder.nativeOrder()).asIntBuffer();
@@ -188,11 +189,11 @@ public final class VBOIndexTest {
 		mapped_indices_int_buffer.rewind();
 		indices.rewind();
 		mapped_indices_int_buffer.put(indices);
-		if ( ARBBufferObject.glUnmapBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB) &&
-		     ARBBufferObject.glUnmapBufferARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB) ) {
-			GL11.glDrawElements(GL11.GL_QUADS, 4, GL11.GL_UNSIGNED_INT, 0);
+		if ( glUnmapBufferARB(GL_ARRAY_BUFFER_ARB) &&
+		     glUnmapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB) ) {
+			glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, 0);
 		}
-		GL11.glPopMatrix();
+		glPopMatrix();
 	}
 
 	/**
@@ -202,32 +203,32 @@ public final class VBOIndexTest {
 
 		System.out.println("Timer resolution: " + Sys.getTimerResolution());
 		// Go into orthographic projection mode.
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GLU.gluOrtho2D(0, Display.getDisplayMode().getWidth(), 0, Display.getDisplayMode().getHeight());
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
-		GL11.glViewport(0, 0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluOrtho2D(0, Display.getDisplayMode().getWidth(), 0, Display.getDisplayMode().getHeight());
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glViewport(0, 0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
 		if ( !GLContext.getCapabilities().GL_ARB_vertex_buffer_object ) {
 			System.out.println("ARB VBO not supported!");
 			System.exit(1);
 		}
 		IntBuffer int_buffer = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder()).asIntBuffer();
-		ARBBufferObject.glGenBuffersARB(int_buffer);
+		glGenBuffersARB(int_buffer);
 		buffer_id = int_buffer.get(0);
 		indices_buffer_id = int_buffer.get(1);
-		ARBBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, buffer_id);
-		ARBBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB, indices_buffer_id);
+		glBindBufferARB(GL_ARRAY_BUFFER_ARB, buffer_id);
+		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, indices_buffer_id);
 		vertices = ByteBuffer.allocateDirect(2 * 4 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		vertices.put(-50).put(-50).put(50).put(-50).put(50).put(50).put(-50).put(50);
 		vertices.rewind();
 		indices = ByteBuffer.allocateDirect(4 * 4).order(ByteOrder.nativeOrder()).asIntBuffer();
 		indices.put(0).put(1).put(2).put(3);
 		indices.rewind();
-		ARBBufferObject.glBufferDataARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, 2 * 4 * 4, ARBBufferObject.GL_STREAM_DRAW_ARB);
-		ARBBufferObject.glBufferDataARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB, 4 * 4, ARBBufferObject.GL_STREAM_DRAW_ARB);
-		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-		GL11.glVertexPointer(2, GL11.GL_FLOAT, 0, 0);
+		glBufferDataARB(GL_ARRAY_BUFFER_ARB, 2 * 4 * 4, GL_STREAM_DRAW_ARB);
+		glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 4 * 4, GL_STREAM_DRAW_ARB);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(2, GL_FLOAT, 0, 0);
 	}
 
 	/**
@@ -237,7 +238,7 @@ public final class VBOIndexTest {
 		IntBuffer int_buffer = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder()).asIntBuffer();
 		int_buffer.put(0, buffer_id);
 		int_buffer.put(1, indices_buffer_id);
-		ARBBufferObject.glDeleteBuffersARB(int_buffer);
+		glDeleteBuffersARB(int_buffer);
 		Display.destroy();
 	}
 }

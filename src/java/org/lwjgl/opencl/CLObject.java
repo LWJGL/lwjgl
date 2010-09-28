@@ -31,58 +31,21 @@
  */
 package org.lwjgl.opencl;
 
-import org.lwjgl.LWJGLUtil;
 import org.lwjgl.PointerWrapperAbstract;
 
 /**
- * Base class for all retainable OpenCL objects.
+ * Base class for all OpenCL objects.
  *
  * @author Spasi
  */
 abstract class CLObject extends PointerWrapperAbstract {
 
-	private int refCount;
-
-	CLObject(final long pointer) {
+	protected CLObject(final long pointer) {
 		super(pointer);
-
-		if ( pointer != 0 )
-			this.refCount = 1;
-	}
-
-	public final int getReferenceCount() {
-		return refCount;
-	}
-
-	public final boolean isValid() {
-		return refCount > 0;
-	}
-
-	public final long getPointer() {
-		checkValid();
-		return super.getPointer();
 	}
 
 	final long getPointerUnsafe() {
-		return super.getPointer();
-	}
-
-	int retain() {
-		checkValid();
-		//System.out.println(getClass().getSimpleName() + " REF COUNT: " + pointer + " - " + (refCount + 1));
-		return ++refCount;
-	}
-
-	int release() {
-		checkValid();
-		//System.out.println(getClass().getSimpleName() + " REF COUNT: " + pointer + " - " + (refCount - 1));
-		return --refCount;
-	}
-
-	final void checkValid() {
-		checkNull();
-		if ( LWJGLUtil.DEBUG && refCount == 0 )
-			throw new IllegalStateException("This CL object is invalid.");
+		return pointer;
 	}
 
 }

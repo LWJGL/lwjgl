@@ -58,6 +58,8 @@ import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
 
+import static org.lwjgl.opengl.GL11.*;
+
 final class MacOSXDisplay implements DisplayImplementation {
 	private static final int PBUFFER_HANDLE_SIZE = 24;
 	private static final int GAMMA_LENGTH = 256;
@@ -75,7 +77,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	MacOSXDisplay() {
 		try {
-			AccessController.doPrivileged(new PrivilegedExceptionAction() {
+			AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() {
 				public Object run() throws Exception {
 					Application.getApplication().addApplicationListener(new ApplicationAdapter() {
 						public void handleQuit(ApplicationEvent event) {
@@ -126,7 +128,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 			canvas_listener = null;
 		}
 		if (frame != null) {
-			AccessController.doPrivileged(new PrivilegedAction() {
+			AccessController.doPrivileged(new PrivilegedAction<Object>() {
 				public Object run() {
 					if (MacOSXFrame.getDevice().getFullScreenWindow() == frame)
 						MacOSXFrame.getDevice().setFullScreenWindow(null);
@@ -154,18 +156,19 @@ final class MacOSXDisplay implements DisplayImplementation {
 		return null;
 	}
 
-	private boolean equals(java.awt.DisplayMode awt_mode, DisplayMode mode) {
+	private static boolean equals(java.awt.DisplayMode awt_mode, DisplayMode mode) {
 		return awt_mode.getWidth() == mode.getWidth() && awt_mode.getHeight() == mode.getHeight()
 			&& awt_mode.getBitDepth() == mode.getBitsPerPixel() && awt_mode.getRefreshRate() == mode.getFrequency();
 	}
 
 	public void switchDisplayMode(DisplayMode mode) throws LWJGLException {
 		java.awt.DisplayMode[] awt_modes = MacOSXFrame.getDevice().getDisplayModes();
-		for (int i = 0; i < awt_modes.length; i++)
-			if (equals(awt_modes[i], mode)) {
-				requested_mode = awt_modes[i];
+		for ( java.awt.DisplayMode awt_mode : awt_modes ) {
+			if (equals(awt_mode, mode)) {
+				requested_mode = awt_mode;
 				return;
 			}
+		}
 		throw new LWJGLException(mode + " is not supported");
 	}
 
@@ -178,7 +181,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	private native void restoreGamma();
 
-	private DisplayMode createLWJGLDisplayMode(java.awt.DisplayMode awt_mode) {
+	private static DisplayMode createLWJGLDisplayMode(java.awt.DisplayMode awt_mode) {
 		int bit_depth;
 		int refresh_rate;
 		int awt_bit_depth = awt_mode.getBitDepth();
@@ -200,17 +203,15 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public DisplayMode[] getAvailableDisplayModes() throws LWJGLException {
 		java.awt.DisplayMode[] awt_modes = MacOSXFrame.getDevice().getDisplayModes();
-		List modes = new ArrayList();
-		for (int i = 0; i < awt_modes.length; i++)
-			if (awt_modes[i].getBitDepth() >= 16)
-				modes.add(createLWJGLDisplayMode(awt_modes[i]));
-		DisplayMode[] mode_list = new DisplayMode[modes.size()];
-		modes.toArray(mode_list);
-		return mode_list;
+		List<DisplayMode> modes = new ArrayList<DisplayMode>();
+		for ( java.awt.DisplayMode awt_mode : awt_modes )
+			if ( awt_mode.getBitDepth() >= 16 )
+				modes.add(createLWJGLDisplayMode(awt_mode));
+		return modes.toArray(new DisplayMode[modes.size()]);
 	}
 
 	public void setTitle(String title) {
-		if (frame != null) 
+		if (frame != null)
 			frame.setTitle(title);
 	}
 
@@ -247,7 +248,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		}
 	}
 
-	private final static IntBuffer current_viewport = BufferUtils.createIntBuffer(16);
+	private static final IntBuffer current_viewport = BufferUtils.createIntBuffer(16);
 	public void update() {
 		boolean should_update = canvas_listener.syncShouldUpdateContext();
 		/*
@@ -282,8 +283,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 		if (should_update) {
 			drawable.context.update();
 			/* This is necessary to make sure the context won't "forget" about the view size */
-			GL11.glGetInteger(GL11.GL_VIEWPORT, current_viewport);
-			GL11.glViewport(current_viewport.get(0), current_viewport.get(1), current_viewport.get(2), current_viewport.get(3));
+			glGetInteger(GL_VIEWPORT, current_viewport);
+			glViewport(current_viewport.get(0), current_viewport.get(1), current_viewport.get(2), current_viewport.get(3));
 		}
 		if (frame != null && mouse_queue != null) {
 			if (frame.syncShouldReleaseCursor())
@@ -432,7 +433,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public boolean isBufferLost(PeerInfo handle) {
 		return false;
 	}
-	
+
 	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs) throws LWJGLException {
@@ -466,30 +467,30 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public int setIcon(ByteBuffer[] icons) {
 /*		int size = 0;
 		int biggest = -1;
-		
+
 		for (int i=0;i<icons.length;i++) {
 			if (icons[i].remaining() > size) {
 				biggest = i;
 				size = icons[i].remaining();
 			}
 		}
-		
+
 		if (biggest == -1) {
 			return 0;
 		}
-		
+
 		int width;
 		int height;
-		
+
 		IntBuffer biggest_icon = icons[biggest].asIntBuffer();
 		int[] imageData = new int[biggest_icon.remaining()];
 		width = height = (int) Math.sqrt(imageData.length);
 		biggest_icon.get(imageData);
-		
+
 		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		img.setRGB(0, 0, width, height, imageData, 0, width);
 		frame.setIconImage(img);
-		
+
 		return 1;*/
 		// Don't use any icon, since Mac OS X windows don't have window icons
 		return 0;

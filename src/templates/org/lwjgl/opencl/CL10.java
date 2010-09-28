@@ -358,6 +358,10 @@ public interface CL10 {
 
 	/* Platform API */
 
+	@Code(
+		javaBeforeNative = "\t\tif ( num_platforms == null ) num_platforms = APIUtil.getBufferInt();",
+		javaAfterNative = "\t\tif ( __result == CL_SUCCESS && platforms != null ) CLPlatform.registerCLPlatforms(platforms, num_platforms);"
+	)
 	@cl_int
 	int clGetPlatformIDs(@AutoSize(value = "platforms", canBeNull = true) @cl_uint int num_entries,
 	                     @OutParameter @Check(canBeNull = true) @NativeType("cl_platform_id") PointerBuffer platforms,
@@ -370,8 +374,13 @@ public interface CL10 {
 	                      @OutParameter @Check(canBeNull = true) @cl_void ByteBuffer param_value,
 	                      @OutParameter @Check(value = "1", canBeNull = true) @NativeType("size_t") PointerBuffer param_value_size_ret);
 
+	@Code(
+		javaBeforeNative = "\t\telse\n" +
+		                   "\t\t\tnum_devices = APIUtil.getBufferInt();",
+		javaAfterNative = "\t\tif ( __result == CL_SUCCESS && devices != null ) platform.registerCLDevices(devices, num_devices);"
+	)
 	@cl_int
-	int clGetDeviceIDs(@PointerWrapper(value = "cl_platform_id", canBeNull = true) CLPlatform platform,
+	int clGetDeviceIDs(@PointerWrapper("cl_platform_id") CLPlatform platform,
 	                   @NativeType("cl_device_type") long device_type,
 	                   @AutoSize(value = "devices", canBeNull = true) @cl_uint int num_entries,
 	                   @OutParameter @Check(canBeNull = true) @NativeType("cl_device_id") PointerBuffer devices,
@@ -384,6 +393,7 @@ public interface CL10 {
 	                    @OutParameter @Check(canBeNull = true) @cl_void ByteBuffer param_value,
 	                    @OutParameter @Check(value = "1", canBeNull = true) @NativeType("size_t") PointerBuffer param_value_size_ret);
 
+	/** LWJGL requires CL_CONTEXT_PLATFORM to be present in the cl_context_properties buffer. */
 	@Code(
 		tryBlock = true,
 		// Create a GlobalRef to the callback object.
@@ -392,14 +402,15 @@ public interface CL10 {
 		javaFinally = "\t\t\tCallbackUtil.registerCallback(__result, user_data);"
 	)
 	@Check(value = "errcode_ret", canBeNull = true)
-	@PointerWrapper("cl_context")
-	CLContext clCreateContext(@NullTerminated @Check(canBeNull = true) @Const @NativeType("cl_context_properties") PointerBuffer properties,
+	@PointerWrapper(value = "cl_context", params = "APIUtil.getCLPlatform(properties)")
+	CLContext clCreateContext(@NullTerminated @Check("3") @Const @NativeType("cl_context_properties") PointerBuffer properties,
 	                          @AutoSize("devices") @cl_uint int num_devices,
 	                          @Check("1") @Const @NativeType("cl_device_id") PointerBuffer devices,
 	                          @PointerWrapper(value = "cl_create_context_callback", canBeNull = true) CLContextCallback pfn_notify,
 	                          @Constant("user_data") @PointerWrapper("void *") long user_data,
 	                          @OutParameter @Check(value = "1", canBeNull = true) @cl_int IntBuffer errcode_ret);
 
+	/** LWJGL requires CL_CONTEXT_PLATFORM to be present in the cl_context_properties buffer. */
 	@Alternate("clCreateContext")
 	@Code(
 		tryBlock = true,
@@ -409,14 +420,15 @@ public interface CL10 {
 		javaFinally = "\t\t\tCallbackUtil.registerCallback(__result, user_data);"
 	)
 	@Check(value = "errcode_ret", canBeNull = true)
-	@PointerWrapper("cl_context")
-	CLContext clCreateContext(@NullTerminated @Check(canBeNull = true) @Const @NativeType("cl_context_properties") PointerBuffer properties,
+	@PointerWrapper(value = "cl_context", params = "APIUtil.getCLPlatform(properties)")
+	CLContext clCreateContext(@NullTerminated @Check("3") @Const @NativeType("cl_context_properties") PointerBuffer properties,
 	                          @Constant("1") @cl_uint int num_devices,
 	                          @Constant(value = "APIUtil.getBufferPointer().put(0, device).getBuffer(), 0", keepParam = true) CLDevice device,
 	                          @PointerWrapper(value = "cl_create_context_callback", canBeNull = true) CLContextCallback pfn_notify,
 	                          @Constant("user_data") @PointerWrapper("void *") long user_data,
 	                          @OutParameter @Check(value = "1", canBeNull = true) @cl_int IntBuffer errcode_ret);
 
+	/** LWJGL requires CL_CONTEXT_PLATFORM to be present in the cl_context_properties buffer. */
 	@Code(
 		tryBlock = true,
 		// Create a GlobalRef to the callback object.
@@ -425,8 +437,8 @@ public interface CL10 {
 		javaFinally = "\t\t\tCallbackUtil.registerCallback(__result, user_data);"
 	)
 	@Check(value = "errcode_ret", canBeNull = true)
-	@PointerWrapper("cl_context")
-	CLContext clCreateContextFromType(@NullTerminated @Check(canBeNull = true) @Const @NativeType("cl_context_properties") PointerBuffer properties,
+	@PointerWrapper(value = "cl_context", params = "APIUtil.getCLPlatform(properties)")
+	CLContext clCreateContextFromType(@NullTerminated @Check("3") @Const @NativeType("cl_context_properties") PointerBuffer properties,
 	                                  @NativeType("cl_device_type") long device_type,
 	                                  @PointerWrapper(value = "cl_create_context_callback", canBeNull = true) CLContextCallback pfn_notify,
 	                                  @Constant("user_data") @PointerWrapper("void *") long user_data,
@@ -443,6 +455,10 @@ public interface CL10 {
 	@cl_int
 	int clReleaseContext(@PointerWrapper("cl_context") CLContext context);
 
+	@Code(
+		javaBeforeNative = "\t\tif ( param_name == CL_CONTEXT_DEVICES && param_value_size_ret == null ) param_value_size_ret = APIUtil.getBufferPointer();",
+		javaAfterNative = "\t\tif ( param_name == CL_CONTEXT_DEVICES && __result == CL_SUCCESS && param_value != null ) context.getParent().registerCLDevices(param_value, param_value_size_ret);"
+	)
 	@cl_int
 	int clGetContextInfo(@PointerWrapper("cl_context") CLContext context,
 	                     @NativeType("cl_context_info") int param_name,
@@ -883,6 +899,47 @@ public interface CL10 {
 	                     @OutParameter @Check(canBeNull = true) @cl_void ByteBuffer param_value,
 	                     @OutParameter @Check(value = "1", canBeNull = true) @NativeType("size_t") PointerBuffer param_value_size_ret);
 
+	/**
+	 * This method can be used to get program binaries. The binary for each device (in the
+	 * order returned by <code>CL_PROGRAM_DEVICES</code>) will be written sequentially to
+	 * the <code>param_value</code> buffer. The buffer size must be big enough to hold
+	 * all the binaries, as returned by <code>CL_PROGRAM_BINARY_SIZES</code>.
+	 *
+	 * @param program              the program
+	 * @param param_value          the buffers where the binaries will be written to.
+	 * @param param_value_size_ret optional size result
+	 *
+	 * @return the error code
+	 */
+	@Alternate(value = "clGetProgramInfo", nativeAlt = true)
+	@cl_int
+	int clGetProgramInfo2(@PointerWrapper("cl_program") CLProgram program,
+	                      @Constant("CL_PROGRAM_BINARIES") @NativeType("cl_program_info") int param_name,
+	                      @Constant("sizes.remaining() * PointerBuffer.getPointerSize()") @size_t long param_value_size,
+	                      @Helper(passToNative = true) @Check("1") @Const @NativeType("size_t") PointerBuffer sizes,
+	                      @OutParameter @Check("APIUtil.getSize(sizes)") @PointerArray(value = "param_value_size", lengths = "sizes") @NativeType("cl_uchar") ByteBuffer param_value,
+	                      @OutParameter @Check(value = "1", canBeNull = true) @NativeType("size_t") PointerBuffer param_value_size_ret);
+
+	/**
+	 * This method can be used to get program binaries. The binary for each device (in the
+	 * order returned by <code>CL_PROGRAM_DEVICES</code>) will be written to the corresponding
+	 * slot of the <code>param_value</code> array. The size of each buffer must be big enough to
+	 * hold the corresponding binary, as returned by <code>CL_PROGRAM_BINARY_SIZES</code>.
+	 *
+	 * @param program              the program
+	 * @param param_value          the buffers where the binaries will be written to.
+	 * @param param_value_size_ret optional size result
+	 *
+	 * @return the error code
+	 */
+	@Alternate(value = "clGetProgramInfo", nativeAlt = true)
+	@cl_int
+	int clGetProgramInfo3(@PointerWrapper("cl_program") CLProgram program,
+	                      @Constant("CL_PROGRAM_BINARIES") @NativeType("cl_program_info") int param_name,
+	                      @Constant("param_value.length * PointerBuffer.getPointerSize()") @size_t long param_value_size,
+	                      @PointerArray("param_value_size") @NativeType("cl_uchar") ByteBuffer[] param_value,
+	                      @OutParameter @Check(value = "1", canBeNull = true) @NativeType("size_t") PointerBuffer param_value_size_ret);
+
 	@cl_int
 	int clGetProgramBuildInfo(@PointerWrapper("cl_program") CLProgram program,
 	                          @PointerWrapper("cl_device_id") CLDevice device,
@@ -950,7 +1007,7 @@ public interface CL10 {
 
 	@cl_int
 	int clGetKernelWorkGroupInfo(@PointerWrapper("cl_kernel") CLKernel kernel,
-	                             @PointerWrapper(value = "cl_device_id", canBeNull = true) CLKernel device,
+	                             @PointerWrapper(value = "cl_device_id", canBeNull = true) CLDevice device,
 	                             @NativeType("cl_kernel_work_group_info") int param_name,
 	                             @AutoSize(value = "param_value", canBeNull = true) @size_t long param_value_size,
 	                             @OutParameter @Check(canBeNull = true) @cl_void ByteBuffer param_value,
@@ -1023,7 +1080,13 @@ public interface CL10 {
 	                          @OutParameter @Check(value = "1", canBeNull = true) @NativeType("cl_event") PointerBuffer event);
 
 	@cl_int
-	int clWaitForEvents(@AutoSize("event_list") @cl_uint int num_events, @Check("1") @Const @NativeType("cl_event") PointerBuffer event_list);
+	int clWaitForEvents(@AutoSize("event_list") @cl_uint int num_events,
+	                    @Check("1") @Const @NativeType("cl_event") PointerBuffer event_list);
+
+	@Alternate("clWaitForEvents")
+	@cl_int
+	int clWaitForEvents(@Constant("1") @cl_uint int num_events,
+	                    @Constant(value = "APIUtil.getBufferPointer().put(0, event).getBuffer(), 0", keepParam = true) CLEvent event);
 
 	@cl_int
 	int clGetEventInfo(@PointerWrapper("cl_event") CLEvent event,

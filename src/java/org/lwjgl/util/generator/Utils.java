@@ -169,10 +169,21 @@ public class Utils {
 	}
 
 	public static void printDocComment(PrintWriter writer, Declaration decl) {
+		final String overloadsComment;
+		if ( (decl instanceof MethodDeclaration) && decl.getAnnotation(Alternate.class) != null )
+			overloadsComment = "Overloads " + decl.getAnnotation(Alternate.class).value() + ".";
+		else
+			overloadsComment = null;
+
 		String doc_comment = decl.getDocComment();
 		if (doc_comment != null) {
 			final String tab = decl instanceof InterfaceDeclaration ? "" : "\t";
 			writer.println(tab + "/**");
+
+			if ( overloadsComment != null ) {
+				writer.println("\t * " + overloadsComment);
+				writer.println("\t * <p>");
+			}
 
 			final StringTokenizer doc_lines = new StringTokenizer(doc_comment, "\n", true);
 			boolean lastWasNL = false;
@@ -180,7 +191,7 @@ public class Utils {
 				final String t = doc_lines.nextToken();
 				if ( "\n".equals(t) ) {
 					if ( lastWasNL )
-						writer.println(tab + " *");
+						writer.println(tab + " * <p>");
 					lastWasNL = true;
 				} else {
 					writer.println(tab + " * " + t);
@@ -189,8 +200,8 @@ public class Utils {
 			}
 
 			writer.println(tab + " */");
-		} else if ( (decl instanceof MethodDeclaration) && decl.getAnnotation(Alternate.class) != null )
-			writer.println("\t/** Overloads " + decl.getAnnotation(Alternate.class).value() + " */");
+		} else if ( overloadsComment != null )
+			writer.println("\t/** " + overloadsComment + " */");
 	}
 
 	public static AnnotationMirror getParameterAutoAnnotation(ParameterDeclaration param) {

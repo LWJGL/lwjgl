@@ -38,9 +38,9 @@
 
 package org.lwjgl.test.opengl.shaders;
 
-import org.lwjgl.opengl.ARBShaderObjects;
-import org.lwjgl.opengl.ARBVertexShader;
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.ARBShaderObjects.*;
+import static org.lwjgl.opengl.ARBVertexShader.*;
+import static org.lwjgl.opengl.GL11.*;
 
 final class ShaderVSH extends Shader {
 
@@ -56,43 +56,43 @@ final class ShaderVSH extends Shader {
 		file = shaderFile;
 		source = getShaderText(shaderFile);
 
-		shaderID = ARBShaderObjects.glCreateShaderObjectARB(ARBVertexShader.GL_VERTEX_SHADER_ARB);
-		ARBShaderObjects.glShaderSourceARB(shaderID, source);
-		ARBShaderObjects.glCompileShaderARB(shaderID);
+		shaderID = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
+		glShaderSourceARB(shaderID, source);
+		glCompileShaderARB(shaderID);
 
 		printShaderObjectInfoLog(file, shaderID);
 
-		if ( ARBShaderObjects.glGetObjectParameteriARB(shaderID, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE )
+		if ( glGetObjectParameteriARB(shaderID, GL_OBJECT_COMPILE_STATUS_ARB) == GL_FALSE )
 			ShadersTest.kill("A compilation error occured in a vertex shader.");
 
-		programID = ARBShaderObjects.glCreateProgramObjectARB();
+		programID = glCreateProgramObjectARB();
 
-		ARBShaderObjects.glAttachObjectARB(programID, shaderID);
-		ARBShaderObjects.glLinkProgramARB(programID);
+		glAttachObjectARB(programID, shaderID);
+		glLinkProgramARB(programID);
 
 		printShaderProgramInfoLog(programID);
 
-		if ( ARBShaderObjects.glGetObjectParameteriARB(programID, ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL11.GL_FALSE )
+		if ( glGetObjectParameteriARB(programID, GL_OBJECT_LINK_STATUS_ARB) == GL_FALSE )
 			ShadersTest.kill("A linking error occured in a shader program.");
 
 		uniformLocation = getUniformLocation(programID, "UNIFORMS");
 	}
 
 	void render() {
-		ARBShaderObjects.glUseProgramObjectARB(programID);
+		glUseProgramObjectARB(programID);
 
-		ARBShaderObjects.glUniform2fARB(uniformLocation, ShadersTest.getSin(), ShadersTest.getSpecularity() * 8.0f);
+		glUniform2fARB(uniformLocation, ShadersTest.getSin(), ShadersTest.getSpecularity() * 8.0f);
 
 		ShadersTest.renderObject();
 
-		ARBShaderObjects.glUseProgramObjectARB(0);
+		glUseProgramObjectARB(0);
 	}
 
 	void cleanup() {
-		ARBShaderObjects.glDetachObjectARB(programID, shaderID);
+		glDetachObjectARB(programID, shaderID);
 
-		ARBShaderObjects.glDeleteObjectARB(shaderID);
-		ARBShaderObjects.glDeleteObjectARB(programID);
+		glDeleteObjectARB(shaderID);
+		glDeleteObjectARB(programID);
 	}
 
 }

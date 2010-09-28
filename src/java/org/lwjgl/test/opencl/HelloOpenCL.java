@@ -62,6 +62,7 @@ public class HelloOpenCL {
 				printPlatformInfo(platform, "CL_PLATFORM_VERSION", CL_PLATFORM_VERSION);
 				printPlatformInfo(platform, "CL_PLATFORM_NAME", CL_PLATFORM_NAME);
 				printPlatformInfo(platform, "CL_PLATFORM_VENDOR", CL_PLATFORM_VENDOR);
+				printPlatformInfo(platform, "CL_PLATFORM_EXTENSIONS", CL_PLATFORM_EXTENSIONS);
 				System.out.println("");
 
 				final PointerBuffer ctxProps = BufferUtils.createPointerBuffer(3);

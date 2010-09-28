@@ -62,6 +62,8 @@ import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import static org.lwjgl.opengl.GL11.*;
+
 public final class Display {
 
 	private static final Thread shutdown_hook = new Thread() {
@@ -114,9 +116,9 @@ public final class Display {
 	private static boolean parent_resized;
 
 	/** Initial Background Color of Display */
-	private static float r = 0, g = 0, b = 0;
+	private static float r, g, b;
 
-	private static ComponentListener component_listener = new ComponentAdapter() {
+	private static final ComponentListener component_listener = new ComponentAdapter() {
 		public void componentResized(ComponentEvent e) {
 			synchronized ( GlobalLock.lock ) {
 				parent_resized = true;
@@ -201,7 +203,7 @@ public final class Display {
 			}
 
 			// We'll use a HashSet to filter out the duplicated modes
-			HashSet modes = new HashSet(unfilteredModes.length);
+			HashSet<DisplayMode> modes = new HashSet<DisplayMode>(unfilteredModes.length);
 
 			modes.addAll(Arrays.asList(unfilteredModes));
 			DisplayMode[] filteredModes = new DisplayMode[modes.size()];
@@ -638,7 +640,7 @@ public final class Display {
 	 * Swap the display buffers. This method is called from update(), and should normally not be called by
 	 * the application.
 	 *
-	 * @throws OpenGLException if an OpenGL error has occured since the last call to GL11.glGetError()
+	 * @throws OpenGLException if an OpenGL error has occured since the last call to glGetError()
 	 */
 	public static void swapBuffers() throws LWJGLException {
 		synchronized ( GlobalLock.lock ) {
@@ -731,7 +733,7 @@ public final class Display {
 	}
 
 	private static void removeShutdownHook() {
-		AccessController.doPrivileged(new PrivilegedAction() {
+		AccessController.doPrivileged(new PrivilegedAction<Object>() {
 			public Object run() {
 				Runtime.getRuntime().removeShutdownHook(shutdown_hook);
 				return null;
@@ -740,7 +742,7 @@ public final class Display {
 	}
 
 	private static void registerShutdownHook() {
-		AccessController.doPrivileged(new PrivilegedAction() {
+		AccessController.doPrivileged(new PrivilegedAction<Object>() {
 			public Object run() {
 				Runtime.getRuntime().addShutdownHook(shutdown_hook);
 				return null;
@@ -903,9 +905,9 @@ public final class Display {
 
 	private static void initContext() {
 		// set background clear color
-		GL11.glClearColor(r, g, b, 1.0f);
+		glClearColor(r, g, b, 1.0f);
 		// Clear window to avoid the desktop "showing through"
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
 		update();
 	}
 
@@ -915,12 +917,11 @@ public final class Display {
 
 	/** Gets a boolean property as a privileged action. */
 	static boolean getPrivilegedBoolean(final String property_name) {
-		Boolean value = (Boolean)AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				return new Boolean(Boolean.getBoolean(property_name));
+		return AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
+			public Boolean run() {
+				return Boolean.getBoolean(property_name);
 			}
 		});
-		return value.booleanValue();
 	}
 
 	private static void initControls() {

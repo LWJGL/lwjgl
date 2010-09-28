@@ -44,16 +44,30 @@ public abstract class PointerWrapperAbstract implements PointerWrapper {
 		this.pointer = pointer;
 	}
 
-	public final boolean isNull() {
-		return pointer == 0;
+	/**
+	 * Returns true if this object represents a valid pointer.
+	 * The pointer might be invalid because it is NULL or because
+	 * some other action has deleted the object that this pointer
+	 * represents.
+	 *
+	 * @return true if the pointer is valid
+	 */
+	public boolean isValid() {
+		return pointer != 0;
 	}
 
-	public final void checkNull() {
-		if ( LWJGLUtil.DEBUG && pointer == 0 )
-			throw new IllegalStateException("This pointer is null.");
+	/**
+	 * Checks if the pointer is valid and throws an IllegalStateException if
+	 * it is not. This method is a NO-OP, unless the org.lwjgl.util.Debug
+	 * property has been set to true.
+	 */
+	public final void checkValid() {
+		if ( LWJGLUtil.DEBUG && !isValid() )
+			throw new IllegalStateException("This pointer is not valid.");
 	}
 
-	public long getPointer() {
+	public final long getPointer() {
+		checkValid();
 		return pointer;
 	}
 
@@ -72,4 +86,7 @@ public abstract class PointerWrapperAbstract implements PointerWrapper {
 		return (int)(pointer ^ (pointer >>> 32));
 	}
 
+	public String toString() {
+		return getClass().getSimpleName() + " pointer (0x" + Long.toHexString(pointer) + ")";
+	}
 }

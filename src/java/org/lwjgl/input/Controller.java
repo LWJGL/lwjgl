@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -35,239 +35,239 @@ package org.lwjgl.input;
  * A game controller of some sort that will provide input. The controller
  * presents buttons and axes. Buttons are either pressed or not pressed. Axis
  * provide analogue values.
- * 
+ *
  * @author Kevin Glass
  */
 public interface Controller {
 	/**
 	 * Get the name assigned to this controller.
-	 * 
+	 *
 	 * @return The name assigned to this controller
 	 */
-	public String getName();
+	String getName();
 
 	/**
 	 * Get the index of this controller in the collection
-	 * 
+	 *
 	 * @return The index of this controller in the collection
 	 */
-	public int getIndex();
-	
+	int getIndex();
+
 	/**
 	 * Retrieve the number of buttons available on this controller
-	 * 
+	 *
 	 * @return The number of butotns available on this controller
 	 */
-	public int getButtonCount();
-	
+	int getButtonCount();
+
 	/**
-	 * Get the name of the specified button. Be warned, often this is 
+	 * Get the name of the specified button. Be warned, often this is
 	 * as exciting as "Button X"
-	 * 
+	 *
 	 * @param index The index of the button whose name should be retrieved
 	 * @return The name of the button requested
 	 */
-	public String getButtonName(int index);
-	
+	String getButtonName(int index);
+
 	/**
 	 * Check if a button is currently pressed
-	 * 
+	 *
 	 * @param index The button to check
 	 * @return True if the button is currently pressed
 	 */
-	public boolean isButtonPressed(int index);
-	
+	boolean isButtonPressed(int index);
+
 	/**
 	 * Poll the controller for new data. This will also update
 	 * events
 	 */
-	public void poll();
-	
-	/** 
+	void poll();
+
+	/**
 	 * Get the X-Axis value of the POV on this controller
-	 * 
+	 *
 	 * @return The X-Axis value of the POV on this controller
 	 */
-	public float getPovX();
-	
-	/** 
+	float getPovX();
+
+	/**
 	 * Get the Y-Axis value of the POV on this controller
-	 * 
+	 *
 	 * @return The Y-Axis value of the POV on this controller
 	 */
-	public float getPovY();
-	
+	float getPovY();
+
 	/**
 	 * Get the dead zone for a specified axis
-	 * 
+	 *
 	 * @param index The index of the axis for which to retrieve the dead zone
 	 * @return The dead zone for the specified axis
 	 */
-	public float getDeadZone(int index);
-	
+	float getDeadZone(int index);
+
 	/**
 	 * Set the dead zone for the specified axis
-	 * 
+	 *
 	 * @param index The index of hte axis for which to set the dead zone
 	 * @param zone The dead zone to use for the specified axis
 	 */
-	public void setDeadZone(int index,float zone);
-	
+	void setDeadZone(int index,float zone);
+
 	/**
-	 * Retrieve the number of axes available on this controller. 
-	 * 
+	 * Retrieve the number of axes available on this controller.
+	 *
 	 * @return The number of axes available on this controller.
 	 */
-	public int getAxisCount();
-	
+	int getAxisCount();
+
 	/**
 	 * Get the name that's given to the specified axis
-	 * 
+	 *
 	 * @param index The index of the axis whose name should be retrieved
 	 * @return The name of the specified axis.
 	 */
-	public String getAxisName(int index);
-	
+	String getAxisName(int index);
+
 	/**
 	 * Retrieve the value thats currently available on a specified axis. The
 	 * value will always be between 1.0 and -1.0 and will calibrate as values
 	 * are passed read. It may be useful to get the player to wiggle the joystick
-	 * from side to side to get the calibration right. 
-	 * 
+	 * from side to side to get the calibration right.
+	 *
 	 * @param index The index of axis to be read
 	 * @return The value from the specified axis.
 	 */
-	public float getAxisValue(int index);
-	
-	/**
-	 * Get the value from the X axis if there is one. If no X axis is 
-	 * defined a zero value will be returned.
-	 * 
-	 * @return The value from the X axis
-	 */
-	public float getXAxisValue();
-	
-	/**
-	 * Get the dead zone for the X axis.
-	 * 
-	 * @return The dead zone for the X axis
-	 */
-	public float getXAxisDeadZone();
-	
-	/**
-	 * Set the dead zone for the X axis
-	 * 
-	 * @param zone The dead zone to use for the X axis
-	 */
-	public void setXAxisDeadZone(float zone);
+	float getAxisValue(int index);
 
 	/**
-	 * Get the value from the Y axis if there is one. If no Y axis is 
+	 * Get the value from the X axis if there is one. If no X axis is
 	 * defined a zero value will be returned.
-	 * 
+	 *
+	 * @return The value from the X axis
+	 */
+	float getXAxisValue();
+
+	/**
+	 * Get the dead zone for the X axis.
+	 *
+	 * @return The dead zone for the X axis
+	 */
+	float getXAxisDeadZone();
+
+	/**
+	 * Set the dead zone for the X axis
+	 *
+	 * @param zone The dead zone to use for the X axis
+	 */
+	void setXAxisDeadZone(float zone);
+
+	/**
+	 * Get the value from the Y axis if there is one. If no Y axis is
+	 * defined a zero value will be returned.
+	 *
 	 * @return The value from the Y axis
 	 */
-	public float getYAxisValue();
-	
+	float getYAxisValue();
+
 	/**
 	 * Get the dead zone for the Y axis.
-	 * 
+	 *
 	 * @return The dead zone for the Y axis
 	 */
-	public float getYAxisDeadZone();
+	float getYAxisDeadZone();
 
 	/**
 	 * Set the dead zone for the Y axis
-	 * 
+	 *
 	 * @param zone The dead zone to use for the Y axis
 	 */
-	public void setYAxisDeadZone(float zone);
-	
+	void setYAxisDeadZone(float zone);
+
 	/**
-	 * Get the value from the Z axis if there is one. If no Z axis is 
+	 * Get the value from the Z axis if there is one. If no Z axis is
 	 * defined a zero value will be returned.
-	 * 
+	 *
 	 * @return The value from the Z axis
 	 */
-	public float getZAxisValue();
-	
+	float getZAxisValue();
+
 	/**
 	 * Get the dead zone for the Z axis.
-	 * 
+	 *
 	 * @return The dead zone for the Z axis
 	 */
-	public float getZAxisDeadZone();
+	float getZAxisDeadZone();
 
 	/**
 	 * Set the dead zone for the Z axis
-	 * 
+	 *
 	 * @param zone The dead zone to use for the Z axis
 	 */
-	public void setZAxisDeadZone(float zone);
-	
+	void setZAxisDeadZone(float zone);
+
 	/**
-	 * Get the value from the RX axis if there is one. If no RX axis is 
+	 * Get the value from the RX axis if there is one. If no RX axis is
 	 * defined a zero value will be returned.
-	 * 
+	 *
 	 * @return The value from the RX axis
 	 */
-	public float getRXAxisValue();
-	
+	float getRXAxisValue();
+
 	/**
 	 * Get the dead zone for the RX axis.
-	 * 
+	 *
 	 * @return The dead zone for the RX axis
 	 */
-	public float getRXAxisDeadZone();
+	float getRXAxisDeadZone();
 
 	/**
 	 * Set the dead zone for the RX axis
-	 * 
+	 *
 	 * @param zone The dead zone to use for the RX axis
 	 */
-	public void setRXAxisDeadZone(float zone);
-	
+	void setRXAxisDeadZone(float zone);
+
 	/**
-	 * Get the value from the RY axis if there is one. If no RY axis is 
+	 * Get the value from the RY axis if there is one. If no RY axis is
 	 * defined a zero value will be returned.
-	 * 
+	 *
 	 * @return The value from the RY axis
 	 */
-	public float getRYAxisValue();
-	
+	float getRYAxisValue();
+
 	/**
 	 * Get the dead zone for the RY axis.
-	 * 
+	 *
 	 * @return The dead zone for the RY axis
 	 */
-	public float getRYAxisDeadZone();
+	float getRYAxisDeadZone();
 
 	/**
 	 * Set the dead zone for the RY axis
-	 * 
+	 *
 	 * @param zone The dead zone to use for the RY axis
 	 */
-	public void setRYAxisDeadZone(float zone);
-	
+	void setRYAxisDeadZone(float zone);
+
 	/**
-	 * Get the value from the RZ axis if there is one. If no RZ axis is 
+	 * Get the value from the RZ axis if there is one. If no RZ axis is
 	 * defined a zero value will be returned.
-	 * 
+	 *
 	 * @return The value from the RZ axis
 	 */
-	public float getRZAxisValue();
-	
+	float getRZAxisValue();
+
 	/**
 	 * Get the dead zone for the RZ axis.
-	 * 
+	 *
 	 * @return The dead zone for the RZ axis
 	 */
-	public float getRZAxisDeadZone();
+	float getRZAxisDeadZone();
 
 	/**
 	 * Set the dead zone for the RZ axis
-	 * 
+	 *
 	 * @param zone The dead zone to use for the RZ axis
 	 */
-	public void setRZAxisDeadZone(float zone);
+	void setRZAxisDeadZone(float zone);
 }

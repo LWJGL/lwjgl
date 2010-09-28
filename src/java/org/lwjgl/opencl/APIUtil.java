@@ -42,6 +42,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.*;
 
+import static org.lwjgl.opencl.CL10.*;
+
 /**
  * Utility class for OpenCL API calls.
  * TODO: Remove useless stuff
@@ -80,28 +82,6 @@ final class APIUtil {
 	};
 
 	private static final CharsetEncoder encoder = Charset.forName("US-ASCII").newEncoder();
-
-	private static final ObjectDestructor<CLDevice> DESTRUCTOR_CLSubDevice = new ObjectDestructor<CLDevice>() {
-		public void release(final CLDevice object) { EXTDeviceFission.clReleaseDeviceEXT(object); }
-	};
-	private static final ObjectDestructor<CLMem> DESTRUCTOR_CLMem = new ObjectDestructor<CLMem>() {
-		public void release(final CLMem object) { CL10.clReleaseMemObject(object); }
-	};
-	private static final ObjectDestructor<CLCommandQueue> DESTRUCTOR_CLCommandQueue = new ObjectDestructor<CLCommandQueue>() {
-		public void release(final CLCommandQueue object) { CL10.clReleaseCommandQueue(object); }
-	};
-	private static final ObjectDestructor<CLSampler> DESTRUCTOR_CLSampler = new ObjectDestructor<CLSampler>() {
-		public void release(final CLSampler object) { CL10.clReleaseSampler(object); }
-	};
-	private static final ObjectDestructor<CLProgram> DESTRUCTOR_CLProgram = new ObjectDestructor<CLProgram>() {
-		public void release(final CLProgram object) { CL10.clReleaseProgram(object); }
-	};
-	private static final ObjectDestructor<CLKernel> DESTRUCTOR_CLKernel = new ObjectDestructor<CLKernel>() {
-		public void release(final CLKernel object) { CL10.clReleaseKernel(object); }
-	};
-	private static final ObjectDestructor<CLEvent> DESTRUCTOR_CLEvent = new ObjectDestructor<CLEvent>() {
-		public void release(final CLEvent object) { CL10.clReleaseEvent(object); }
-	};
 
 	private APIUtil() {
 	}
@@ -285,8 +265,8 @@ final class APIUtil {
 
 	static int getTotalLength(final CharSequence[] strings) {
 		int length = 0;
-		for ( int i = 0; i < strings.length; i++ )
-			length += strings[i].length();
+		for ( CharSequence string : strings )
+			length += string.length();
 
 		return length;
 	}
@@ -302,8 +282,8 @@ final class APIUtil {
 		final ByteBuffer buffer = getBufferByte(getTotalLength(strings));
 
 		final InfiniteCharSequence infiniteSeq = getInfiniteSeq();
-		for ( int i = 0; i < strings.length; i++ ) {
-			infiniteSeq.setString(strings[i]);
+		for ( CharSequence string : strings ) {
+			infiniteSeq.setString(string);
 			encoder.encode(infiniteSeq.buffer, buffer, true);
 		}
 		infiniteSeq.clear();
@@ -323,8 +303,8 @@ final class APIUtil {
 		final ByteBuffer buffer = getBufferByte(getTotalLength(strings) + strings.length);
 
 		final InfiniteCharSequence infiniteSeq = getInfiniteSeq();
-		for ( int i = 0; i < strings.length; i++ ) {
-			infiniteSeq.setString(strings[i]);
+		for ( CharSequence string : strings ) {
+			infiniteSeq.setString(string);
 			encoder.encode(infiniteSeq.buffer, buffer, true);
 			buffer.put((byte)0);
 		}
@@ -344,8 +324,8 @@ final class APIUtil {
 	static PointerBuffer getLengths(final CharSequence[] strings) {
 		PointerBuffer buffer = getLengths(strings.length);
 
-		for ( int i = 0; i < strings.length; i++ )
-			buffer.put(strings[i].length());
+		for ( CharSequence string : strings )
+			buffer.put(string.length());
 
 		buffer.flip();
 		return buffer;
@@ -359,13 +339,13 @@ final class APIUtil {
 	 * @return the buffer lengths in a PointerBuffer
 	 */
 	static PointerBuffer getLengths(final ByteBuffer[] buffers) {
-		PointerBuffer buffer = getLengths(buffers.length);
+		PointerBuffer lengths = getLengths(buffers.length);
 
-		for ( int i = 0; i < buffers.length; i++ )
-			buffer.put(buffers[i].remaining());
+		for ( ByteBuffer buffer : buffers )
+			lengths.put(buffer.remaining());
 
-		buffer.flip();
-		return buffer;
+		lengths.flip();
+		return lengths;
 	}
 
 	static int getSize(final PointerBuffer lengths) {
@@ -374,6 +354,10 @@ final class APIUtil {
 			size += lengths.get(i);
 
 		return (int)size;
+	}
+
+	static String toHexString(final int value) {
+		return "0x" + Integer.toHexString(value).toUpperCase();
 	}
 
 	static void getClassTokens(final Class[] tokenClasses, final Map<Integer, String> target, final TokenFilter filter) {
@@ -393,7 +377,7 @@ final class APIUtil {
 							continue;
 
 						if ( target.containsKey(value) ) // Print colliding tokens in their hex representation.
-							target.put(value, "0x" + Integer.toHexString(value).toUpperCase());
+							target.put(value, toHexString(value));
 						else
 							target.put(value, field.getName());
 					} catch (IllegalAccessException e) {
@@ -402,108 +386,6 @@ final class APIUtil {
 				}
 			}
 		}
-	}
-
-	static ByteBuffer getNativeKernelArgs(final long user_func_ref, final CLMem[] clMems, final long[] sizes) {
-		final ByteBuffer args = getBufferByte(8 + 4 + (clMems == null ? 0 : clMems.length * (4 + PointerBuffer.getPointerSize())));
-
-		args.putLong(0, user_func_ref);
-		if ( clMems == null )
-			args.putInt(8, 0);
-		else {
-			args.putInt(8, clMems.length);
-			int byteIndex = 12;
-			for ( int i = 0; i < clMems.length; i++ ) {
-				if ( LWJGLUtil.DEBUG && !clMems[i].isValid() )
-					throw new IllegalArgumentException("An invalid CLMem object was specified.");
-				args.putInt(byteIndex, (int)sizes[i]); // CLMem size
-				byteIndex += (4 + PointerBuffer.getPointerSize()); // Skip size and make room for the pointer
-			}
-		}
-
-		return args;
-	}
-
-	/**
-	 * Releases all sub-devices created from the specified CLDevice.
-	 *
-	 * @param device the CLDevice to clear
-	 */
-	static void releaseObjects(final CLDevice device) {
-		// Release objects only if we're about to hit 0.
-		if ( device.getReferenceCount() > 1 )
-			return;
-
-		releaseObjects(device.getSubCLDeviceRegistry(), DESTRUCTOR_CLSubDevice);
-	}
-
-	/**
-	 * Releases all objects contained in the specified CLContext.
-	 *
-	 * @param context the CLContext to clear
-	 */
-	static void releaseObjects(final CLContext context) {
-		// Release objects only if we're about to hit 0.
-		if ( context.getReferenceCount() > 1 )
-			return;
-
-		releaseObjects(context.getCLEventRegistry(), DESTRUCTOR_CLEvent);
-		releaseObjects(context.getCLProgramRegistry(), DESTRUCTOR_CLProgram);
-		releaseObjects(context.getCLSamplerRegistry(), DESTRUCTOR_CLSampler);
-		releaseObjects(context.getCLMemRegistry(), DESTRUCTOR_CLMem);
-		releaseObjects(context.getCLCommandQueueRegistry(), DESTRUCTOR_CLCommandQueue);
-	}
-
-	/**
-	 * Releases all objects contained in the specified CLProgram.
-	 *
-	 * @param program the CLProgram to clear
-	 */
-	static void releaseObjects(final CLProgram program) {
-		// Release objects only if we're about to hit 0.
-		if ( program.getReferenceCount() > 1 )
-			return;
-
-		releaseObjects(program.getCLKernelRegistry(), DESTRUCTOR_CLKernel);
-	}
-
-	/**
-	 * Releases all objects contained in the specified CLCommandQueue.
-	 *
-	 * @param queue the CLCommandQueue to clear
-	 */
-	static void releaseObjects(final CLCommandQueue queue) {
-		// Release objects only if we're about to hit 0.
-		if ( queue.getReferenceCount() > 1 )
-			return;
-
-		releaseObjects(queue.getCLEventRegistry(), DESTRUCTOR_CLEvent);
-	}
-
-	static Set<String> getExtensions(final String extensionList) {
-		final Set<String> extensions = new HashSet<String>();
-
-		final StringTokenizer tokenizer = new StringTokenizer(extensionList);
-		while ( tokenizer.hasMoreTokens() )
-			extensions.add(tokenizer.nextToken());
-
-		return extensions;
-	}
-
-	private static <T extends CLObjectChild> void releaseObjects(final CLObjectRegistry<T> registry, final ObjectDestructor<T> destructor) {
-		if ( registry.isEmpty() )
-			return;
-
-		for ( final T object : registry.getAll() ) {
-			while ( object.isValid() )
-				destructor.release(object);
-		}
-	}
-
-	private interface ObjectDestructor<T extends CLObjectChild> {
-
-		void release(T object);
-
 	}
 
 	/**
@@ -574,6 +456,163 @@ final class APIUtil {
 
 		/** Should return true if the specified Field passes the filter. */
 		boolean accept(Field field, int value);
+
+	}
+
+	/* ------------------------------------------------------------------------
+	---------------------------------------------------------------------------
+					OPENCL API UTILITIES BELOW
+	---------------------------------------------------------------------------
+	------------------------------------------------------------------------ */
+
+	static Set<String> getExtensions(final String extensionList) {
+		final Set<String> extensions = new HashSet<String>();
+
+		final StringTokenizer tokenizer = new StringTokenizer(extensionList);
+		while ( tokenizer.hasMoreTokens() )
+			extensions.add(tokenizer.nextToken());
+
+		return extensions;
+	}
+
+	static CLPlatform getCLPlatform(final PointerBuffer properties) {
+		long platformID = 0;
+
+		final int keys = properties.remaining() / 2;
+		for ( int k = 0; k < keys; k++ ) {
+			final long key = properties.get(k << 1);
+			if ( key == 0 )
+				break;
+
+			if ( key == 0x1084 ) { // CL_CONTEXT_PLATFORM
+				platformID = properties.get((k << 1) + 1);
+				break;
+			}
+		}
+
+		if ( platformID == 0 )
+			throw new IllegalArgumentException("Could not find CL_CONTEXT_PLATFORM in cl_context_properties.");
+
+		final CLPlatform platform = CLPlatform.getCLPlatform(platformID);
+		if ( platform == null )
+			throw new IllegalStateException("Could not find a valid CLPlatform. Make sure clGetPlatformIDs has been used before creating a CLContext.");
+
+		return platform;
+	}
+
+	static ByteBuffer getNativeKernelArgs(final long user_func_ref, final CLMem[] clMems, final long[] sizes) {
+		final ByteBuffer args = getBufferByte(8 + 4 + (clMems == null ? 0 : clMems.length * (4 + PointerBuffer.getPointerSize())));
+
+		args.putLong(0, user_func_ref);
+		if ( clMems == null )
+			args.putInt(8, 0);
+		else {
+			args.putInt(8, clMems.length);
+			int byteIndex = 12;
+			for ( int i = 0; i < clMems.length; i++ ) {
+				if ( LWJGLUtil.DEBUG && !clMems[i].isValid() )
+					throw new IllegalArgumentException("An invalid CLMem object was specified.");
+				args.putInt(byteIndex, (int)sizes[i]); // CLMem size
+				byteIndex += (4 + PointerBuffer.getPointerSize()); // Skip size and make room for the pointer
+			}
+		}
+
+		return args;
+	}
+
+	// ------------------------------------------------------------------------------------
+
+	/**
+	 * Releases all sub-devices created from the specified CLDevice.
+	 *
+	 * @param device the CLDevice to clear
+	 */
+	static void releaseObjects(final CLDevice device) {
+		// Release objects only if we're about to hit 0.
+		if ( device.getReferenceCount() > 1 )
+			return;
+
+		releaseObjects(device.getSubCLDeviceRegistry(), DESTRUCTOR_CLSubDevice);
+	}
+
+	/**
+	 * Releases all objects contained in the specified CLContext.
+	 *
+	 * @param context the CLContext to clear
+	 */
+	static void releaseObjects(final CLContext context) {
+		// Release objects only if we're about to hit 0.
+		if ( context.getReferenceCount() > 1 )
+			return;
+
+		releaseObjects(context.getCLEventRegistry(), DESTRUCTOR_CLEvent);
+		releaseObjects(context.getCLProgramRegistry(), DESTRUCTOR_CLProgram);
+		releaseObjects(context.getCLSamplerRegistry(), DESTRUCTOR_CLSampler);
+		releaseObjects(context.getCLMemRegistry(), DESTRUCTOR_CLMem);
+		releaseObjects(context.getCLCommandQueueRegistry(), DESTRUCTOR_CLCommandQueue);
+	}
+
+	/**
+	 * Releases all objects contained in the specified CLProgram.
+	 *
+	 * @param program the CLProgram to clear
+	 */
+	static void releaseObjects(final CLProgram program) {
+		// Release objects only if we're about to hit 0.
+		if ( program.getReferenceCount() > 1 )
+			return;
+
+		releaseObjects(program.getCLKernelRegistry(), DESTRUCTOR_CLKernel);
+	}
+
+	/**
+	 * Releases all objects contained in the specified CLCommandQueue.
+	 *
+	 * @param queue the CLCommandQueue to clear
+	 */
+	static void releaseObjects(final CLCommandQueue queue) {
+		// Release objects only if we're about to hit 0.
+		if ( queue.getReferenceCount() > 1 )
+			return;
+
+		releaseObjects(queue.getCLEventRegistry(), DESTRUCTOR_CLEvent);
+	}
+
+	private static <T extends CLObjectChild> void releaseObjects(final CLObjectRegistry<T> registry, final ObjectDestructor<T> destructor) {
+		if ( registry.isEmpty() )
+			return;
+
+		for ( final T object : registry.getAll() ) {
+			while ( object.isValid() )
+				destructor.release(object);
+		}
+	}
+
+	private static final ObjectDestructor<CLDevice> DESTRUCTOR_CLSubDevice = new ObjectDestructor<CLDevice>() {
+		public void release(final CLDevice object) { EXTDeviceFission.clReleaseDeviceEXT(object); }
+	};
+	private static final ObjectDestructor<CLMem> DESTRUCTOR_CLMem = new ObjectDestructor<CLMem>() {
+		public void release(final CLMem object) { CL10.clReleaseMemObject(object); }
+	};
+	private static final ObjectDestructor<CLCommandQueue> DESTRUCTOR_CLCommandQueue = new ObjectDestructor<CLCommandQueue>() {
+		public void release(final CLCommandQueue object) { CL10.clReleaseCommandQueue(object); }
+	};
+	private static final ObjectDestructor<CLSampler> DESTRUCTOR_CLSampler = new ObjectDestructor<CLSampler>() {
+		public void release(final CLSampler object) { CL10.clReleaseSampler(object); }
+	};
+	private static final ObjectDestructor<CLProgram> DESTRUCTOR_CLProgram = new ObjectDestructor<CLProgram>() {
+		public void release(final CLProgram object) { CL10.clReleaseProgram(object); }
+	};
+	private static final ObjectDestructor<CLKernel> DESTRUCTOR_CLKernel = new ObjectDestructor<CLKernel>() {
+		public void release(final CLKernel object) { CL10.clReleaseKernel(object); }
+	};
+	private static final ObjectDestructor<CLEvent> DESTRUCTOR_CLEvent = new ObjectDestructor<CLEvent>() {
+		public void release(final CLEvent object) { CL10.clReleaseEvent(object); }
+	};
+
+	private interface ObjectDestructor<T extends CLObjectChild> {
+
+		void release(T object);
 
 	}
 

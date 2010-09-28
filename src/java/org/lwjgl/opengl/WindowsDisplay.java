@@ -51,87 +51,87 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 final class WindowsDisplay implements DisplayImplementation {
-	private final static int GAMMA_LENGTH = 256;
-	
-	private final static int WM_CANCELMODE                    = 0x001F;
-	private final static int WM_MOUSEMOVE                     = 0x0200;
-	private final static int WM_LBUTTONDOWN                   = 0x0201;
-	private final static int WM_LBUTTONUP                     = 0x0202;
-	private final static int WM_LBUTTONDBLCLK                 = 0x0203;
-	private final static int WM_RBUTTONDOWN                   = 0x0204;
-	private final static int WM_RBUTTONUP                     = 0x0205;
-	private final static int WM_RBUTTONDBLCLK                 = 0x0206;
-	private final static int WM_MBUTTONDOWN                   = 0x0207;
-	private final static int WM_MBUTTONUP                     = 0x0208;
-	private final static int WM_MBUTTONDBLCLK                 = 0x0209;
-	private final static int WM_MOUSEWHEEL                    = 0x020A;
-	private final static int WM_CAPTURECHANGED                = 0x0215;
-        private final static int WM_MOUSELEAVE                    = 0x02A3;
-	private final static int WM_KEYDOWN						  = 256;
-	private final static int WM_KEYUP						  = 257;
-	private final static int WM_SYSKEYUP					  = 261;
-	private final static int WM_SYSKEYDOWN					  = 260;
-	private final static int WM_SYSCHAR                          = 262;
-	private final static int WM_CHAR                          = 258;
-	private final static int WM_SETICON						  = 0x0080;
+	private static final int GAMMA_LENGTH = 256;
 
-	private final static int WM_QUIT						  = 0x0012;
-	private final static int WM_SYSCOMMAND					  = 0x0112;
-	private final static int WM_PAINT 						  = 0x000F;
-	private final static int WM_KILLFOCUS                     = 8;
-	private final static int WM_SETFOCUS                      = 7;
+	private static final int WM_CANCELMODE                    = 0x001F;
+	private static final int WM_MOUSEMOVE                     = 0x0200;
+	private static final int WM_LBUTTONDOWN                   = 0x0201;
+	private static final int WM_LBUTTONUP                     = 0x0202;
+	private static final int WM_LBUTTONDBLCLK                 = 0x0203;
+	private static final int WM_RBUTTONDOWN                   = 0x0204;
+	private static final int WM_RBUTTONUP                     = 0x0205;
+	private static final int WM_RBUTTONDBLCLK                 = 0x0206;
+	private static final int WM_MBUTTONDOWN                   = 0x0207;
+	private static final int WM_MBUTTONUP                     = 0x0208;
+	private static final int WM_MBUTTONDBLCLK                 = 0x0209;
+	private static final int WM_MOUSEWHEEL                    = 0x020A;
+	private static final int WM_CAPTURECHANGED                = 0x0215;
+        private static final int WM_MOUSELEAVE                    = 0x02A3;
+	private static final int WM_KEYDOWN						  = 256;
+	private static final int WM_KEYUP						  = 257;
+	private static final int WM_SYSKEYUP					  = 261;
+	private static final int WM_SYSKEYDOWN					  = 260;
+	private static final int WM_SYSCHAR                          = 262;
+	private static final int WM_CHAR                          = 258;
+	private static final int WM_SETICON						  = 0x0080;
 
-	private final static int SC_SIZE          = 0xF000;
-	private final static int SC_MOVE          = 0xF010;
-	private final static int SC_MINIMIZE      = 0xF020;
-	private final static int SC_MAXIMIZE      = 0xF030;
-	private final static int SC_NEXTWINDOW    = 0xF040;
-	private final static int SC_PREVWINDOW    = 0xF050;
-	private final static int SC_CLOSE         = 0xF060;
-	private final static int SC_VSCROLL       = 0xF070;
-	private final static int SC_HSCROLL       = 0xF080;
-	private final static int SC_MOUSEMENU     = 0xF090;
-	private final static int SC_KEYMENU       = 0xF100;
-	private final static int SC_ARRANGE       = 0xF110;
-	private final static int SC_RESTORE       = 0xF120;
-	private final static int SC_TASKLIST      = 0xF130;
-	private final static int SC_SCREENSAVE    = 0xF140;
-	private final static int SC_HOTKEY        = 0xF150;
-	private final static int SC_DEFAULT       = 0xF160;
-	private final static int SC_MONITORPOWER  = 0xF170;
-	private final static int SC_CONTEXTHELP   = 0xF180;
-	private final static int SC_SEPARATOR     = 0xF00F;
+	private static final int WM_QUIT						  = 0x0012;
+	private static final int WM_SYSCOMMAND					  = 0x0112;
+	private static final int WM_PAINT 						  = 0x000F;
+	private static final int WM_KILLFOCUS                     = 8;
+	private static final int WM_SETFOCUS                      = 7;
 
-	final static int SM_CXCURSOR      = 13;
-	final static int SM_CYCURSOR      = 14;
-	final static int SM_CMOUSEBUTTONS      = 43;
-	final static int SM_MOUSEWHEELPRESENT = 75;
+	private static final int SC_SIZE          = 0xF000;
+	private static final int SC_MOVE          = 0xF010;
+	private static final int SC_MINIMIZE      = 0xF020;
+	private static final int SC_MAXIMIZE      = 0xF030;
+	private static final int SC_NEXTWINDOW    = 0xF040;
+	private static final int SC_PREVWINDOW    = 0xF050;
+	private static final int SC_CLOSE         = 0xF060;
+	private static final int SC_VSCROLL       = 0xF070;
+	private static final int SC_HSCROLL       = 0xF080;
+	private static final int SC_MOUSEMENU     = 0xF090;
+	private static final int SC_KEYMENU       = 0xF100;
+	private static final int SC_ARRANGE       = 0xF110;
+	private static final int SC_RESTORE       = 0xF120;
+	private static final int SC_TASKLIST      = 0xF130;
+	private static final int SC_SCREENSAVE    = 0xF140;
+	private static final int SC_HOTKEY        = 0xF150;
+	private static final int SC_DEFAULT       = 0xF160;
+	private static final int SC_MONITORPOWER  = 0xF170;
+	private static final int SC_CONTEXTHELP   = 0xF180;
+	private static final int SC_SEPARATOR     = 0xF00F;
 
-	private final static int SIZE_RESTORED        = 0;
-	private final static int SIZE_MINIMIZED       = 1;
-	private final static int SIZE_MAXIMIZED       = 2;
-	private final static int WM_SIZE          = 0x0005;
-	private final static int WM_ACTIVATE          = 0x0006;
-	private final static int     WA_INACTIVE      = 0;
-	private final static int     WA_ACTIVE        = 1;
-	private final static int     WA_CLICKACTIVE   = 2;
-	private final static int SW_SHOWMINNOACTIVE   = 7;
-	private final static int SW_SHOWDEFAULT       = 10;
-	private final static int SW_RESTORE           = 9;
+	static final int SM_CXCURSOR      = 13;
+	static final int SM_CYCURSOR      = 14;
+	static final int SM_CMOUSEBUTTONS      = 43;
+	static final int SM_MOUSEWHEELPRESENT = 75;
 
-	private final static int ICON_SMALL           = 0;
-	private final static int ICON_BIG           = 1;
+	private static final int SIZE_RESTORED        = 0;
+	private static final int SIZE_MINIMIZED       = 1;
+	private static final int SIZE_MAXIMIZED       = 2;
+	private static final int WM_SIZE          = 0x0005;
+	private static final int WM_ACTIVATE          = 0x0006;
+	private static final int     WA_INACTIVE      = 0;
+	private static final int     WA_ACTIVE        = 1;
+	private static final int     WA_CLICKACTIVE   = 2;
+	private static final int SW_SHOWMINNOACTIVE   = 7;
+	private static final int SW_SHOWDEFAULT       = 10;
+	private static final int SW_RESTORE           = 9;
 
-	private final static IntBuffer rect_buffer = BufferUtils.createIntBuffer(4);
-	private final static Rect rect = new Rect();
-	private final static Rect rect2 = new Rect();
+	private static final int ICON_SMALL           = 0;
+	private static final int ICON_BIG           = 1;
+
+	private static final IntBuffer rect_buffer = BufferUtils.createIntBuffer(4);
+	private static final Rect rect = new Rect();
+	private static final Rect rect2 = new Rect();
 	private static WindowsDisplay current_display;
 
 	private static boolean cursor_clipped;
 	private WindowsDisplayPeerInfo peer_info;
 	private Object current_cursor;
 	private Canvas parent;
-	private static boolean hasParent = false;
+	private static boolean hasParent;
 
 	private WindowsKeyboard keyboard;
 	private WindowsMouse mouse;
@@ -156,8 +156,8 @@ final class WindowsDisplay implements DisplayImplementation {
 	private long large_icon;
 
 	private int captureMouse = -1;
-        private boolean trackingMouse = false;
-        private boolean mouseInside = false;
+        private boolean trackingMouse;
+        private boolean mouseInside;
 
 	WindowsDisplay() {
 		current_display = this;
@@ -378,7 +378,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		String driver = getAdapter();
 		if (driver != null) {
 			String[] drivers = driver.split(",");
-			if(drivers.length>0) {				
+			if(drivers.length>0) {
 				WindowsFileVersion version = nGetVersion(drivers[0] + ".dll");
 				if (version != null)
 					return version.toString();
@@ -664,19 +664,19 @@ final class WindowsDisplay implements DisplayImplementation {
 
 		int small_icon_size = 16;
 		int large_icon_size = 32;
-		for (int i=0;i<icons.length;i++) {
-			int size = icons[i].limit() / 4;
+		for ( ByteBuffer icon : icons ) {
+			int size = icon.limit() / 4;
 
-			if ((((int) Math.sqrt(size)) == small_icon_size) && (!done_small)) {
+			if ( (((int)Math.sqrt(size)) == small_icon_size) && (!done_small) ) {
 				freeSmallIcon();
-				small_icon = createIcon(small_icon_size, small_icon_size, icons[i].asIntBuffer());
+				small_icon = createIcon(small_icon_size, small_icon_size, icon.asIntBuffer());
 				sendMessage(hwnd, WM_SETICON, ICON_SMALL, small_icon);
 				used++;
 				done_small = true;
 			}
-			if ((((int) Math.sqrt(size)) == large_icon_size) && (!done_large)) {
+			if ( (((int)Math.sqrt(size)) == large_icon_size) && (!done_large) ) {
 				freeLargeIcon();
-				large_icon = createIcon(large_icon_size, large_icon_size, icons[i].asIntBuffer());
+				large_icon = createIcon(large_icon_size, large_icon_size, icon.asIntBuffer());
 				sendMessage(hwnd, WM_SETICON, ICON_BIG, large_icon);
 				used++;
 				done_large = true;
@@ -692,20 +692,20 @@ final class WindowsDisplay implements DisplayImplementation {
 	private void handleMouseButton(int button, int state, long millis) {
 		if (mouse != null) {
 			mouse.handleMouseButton((byte)button, (byte)state, millis);
-			
+
 			// need to capture?
 			if (captureMouse == -1 && button != -1 && state == 1) {
 				captureMouse = button;
 				nSetCapture(hwnd);
 			}
-			
+
 			// done with capture?
 			if(captureMouse != -1 && button == captureMouse && state == 0) {
 				captureMouse = -1;
 				nReleaseCapture();
 			}
 		}
-		
+
 		if (parent != null && !isFocused) {
 			setFocus(getHwnd());
 		}
@@ -720,10 +720,10 @@ final class WindowsDisplay implements DisplayImplementation {
 			mouse.handleMouseMoved(x, y, millis, shouldGrab());
 		}
 	}
-	
+
 	private static native long nSetCapture(long hwnd);
 	private static native boolean nReleaseCapture();
-	
+
 	private void handleMouseScrolled(int amount, long millis) {
 		if (mouse != null)
 			mouse.handleMouseScrolled(amount, millis);
@@ -747,7 +747,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		int scan_code = (int)((lParam >>> 16) & 0xFF);
 		if (keyboard != null) {
 			keyboard.handleKey((int)wParam, scan_code, extended != 0, state, millis, repeat);
-			
+
 			if(captureMouse != -1 && keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 				nReleaseCapture();
 				captureMouse = -1;
@@ -869,7 +869,7 @@ final class WindowsDisplay implements DisplayImplementation {
 					// Set key state to pressed
 					long fake_lparam = lParam & ~(1 << 31);
 					// Set key previous state to released
-					fake_lparam = fake_lparam & ~(1 << 30);
+					fake_lparam &= ~(1 << 30);
 					handleKeyButton(wParam, fake_lparam, millis);
 				}
 				/* Fall through */
@@ -923,7 +923,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	public int getHeight() {
 		return Display.getDisplayMode().getHeight();
 	}
-	
+
 	private int firstMouseButtonDown() {
 		for(int i=0; i<Mouse.getButtonCount(); i++) {
 			if(Mouse.isButtonDown(i)) {

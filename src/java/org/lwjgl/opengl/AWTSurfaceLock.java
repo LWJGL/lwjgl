@@ -48,11 +48,11 @@ import org.lwjgl.LWJGLUtil;
  */
 final class AWTSurfaceLock {
 
-	private final static int	WAIT_DELAY_MILLIS	= 100;
+	private static final int	WAIT_DELAY_MILLIS	= 100;
 
 	private final ByteBuffer	lock_buffer;
 
-	private boolean				firstLockSucceeded	= false;
+	private boolean				firstLockSucceeded;
 
 	AWTSurfaceLock() {
 		lock_buffer = createHandle();
@@ -83,13 +83,11 @@ final class AWTSurfaceLock {
 			return lockAndInitHandle(lock_buffer, component);
 		else
 			try {
-				final Object result = AccessController.doPrivileged(new PrivilegedExceptionAction() {
-
-					public Object run() throws LWJGLException {
-						return Boolean.valueOf(lockAndInitHandle(lock_buffer, component));
+				firstLockSucceeded = AccessController.doPrivileged(new PrivilegedExceptionAction<Boolean>() {
+					public Boolean run() throws LWJGLException {
+						return lockAndInitHandle(lock_buffer, component);
 					}
 				});
-				firstLockSucceeded = ((Boolean) result).booleanValue();
 				return firstLockSucceeded;
 			} catch (PrivilegedActionException e) {
 				throw (LWJGLException) e.getException();

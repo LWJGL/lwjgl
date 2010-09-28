@@ -99,7 +99,7 @@ class GLUhalfEdge {
     public int winding;	/* change in winding number when crossing */
     public boolean first;
 
-    public GLUhalfEdge(boolean first) {
+    GLUhalfEdge(boolean first) {
         this.first = first;
     }
 }

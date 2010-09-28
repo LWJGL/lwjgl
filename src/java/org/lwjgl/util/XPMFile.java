@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -46,7 +46,7 @@ import java.util.StringTokenizer;
  * <p>
  * NOTE: This simple XPM reader does not support extensions nor hotspots
  * </p>
- * 
+ *
  * @author Brian Matzon <brian@matzon.dk>
  * @author Jos Hirth
  * @version $Revision$
@@ -56,15 +56,15 @@ import java.util.StringTokenizer;
 public class XPMFile {
 
 	/** Array of bytes (RGBA) */
-	private byte bytes[] = null;
+	private byte bytes[];
 
-	private final static int WIDTH = 0;
+	private static final int WIDTH = 0;
 
-	private final static int HEIGHT = 1;
+	private static final int HEIGHT = 1;
 
-	private final static int NUMBER_OF_COLORS = 2;
+	private static final int NUMBER_OF_COLORS = 2;
 
-	private final static int CHARACTERS_PER_PIXEL = 3;
+	private static final int CHARACTERS_PER_PIXEL = 3;
 
 	private static int[] format = new int[4];
 
@@ -76,7 +76,7 @@ public class XPMFile {
 
 	/**
 	 * Loads the XPM file
-	 * 
+	 *
 	 * @param file
 	 *            path to file
 	 * @return XPMFile loaded, or exception
@@ -89,7 +89,7 @@ public class XPMFile {
 
 	/**
 	 * Loads the XPM file
-	 * 
+	 *
 	 * @param is
 	 *            InputStream to read file from
 	 * @return XPMFile loaded, or exception
@@ -128,14 +128,14 @@ public class XPMFile {
 		try {
 			LineNumberReader reader = new LineNumberReader(
 					new InputStreamReader(is));
-			HashMap colors = new HashMap();
+			HashMap<String, Integer> colors = new HashMap<String, Integer>();
 
 			format = parseFormat(nextLineOfInterest(reader));
 
 			// setup color mapping
 			for (int i = 0; i < format[NUMBER_OF_COLORS]; i++) {
 				Object[] colorDefinition = parseColor(nextLineOfInterest(reader));
-				colors.put(colorDefinition[0], colorDefinition[1]);
+				colors.put((String)colorDefinition[0], (Integer)colorDefinition[1]);
 			}
 
 			// read actual image (convert to RGBA)
@@ -151,14 +151,14 @@ public class XPMFile {
 
 	/**
 	 * Finds the next interesting line of text.
-	 * 
+	 *
 	 * @param reader
 	 *            The LineNumberReader to read from
 	 * @return The next interesting String (with stripped quotes)
 	 * @throws IOException
 	 *             If any IO exceptions occurs while reading file
 	 */
-	private String nextLineOfInterest(LineNumberReader reader)
+	private static String nextLineOfInterest(LineNumberReader reader)
 			throws IOException {
 		String ret;
 		do {
@@ -170,12 +170,12 @@ public class XPMFile {
 
 	/**
 	 * Parses the format of the xpm file given a format string
-	 * 
+	 *
 	 * @param format
 	 *            String to parse
 	 * @return Array specifying width, height, colors, characters per pixel
 	 */
-	private int[] parseFormat(String format) {
+	private static int[] parseFormat(String format) {
 		// format should look like this:
 		// 16 16 122 2
 
@@ -192,12 +192,12 @@ public class XPMFile {
 	/**
 	 * Given a line defining a color/pixel, parses this into an array containing
 	 * a key and a color
-	 * 
+	 *
 	 * @param line
 	 *            Line to parse
 	 * @return Array containing a key (String) and a color (Integer)
 	 */
-	private Object[] parseColor(String line) {
+	private static Object[] parseColor(String line) {
 		// line should look like this:
 		// # c #0A0A0A
 
@@ -211,12 +211,12 @@ public class XPMFile {
 		String color = line.substring(format[CHARACTERS_PER_PIXEL] + 4);
 
 		// we always assume type is color, and supplied as #<r><g><b>
-		return new Object[] { key, new Integer(Integer.parseInt(color, 16)) };
+		return new Object[] { key, Integer.parseInt(color, 16) };
 	}
 
 	/**
 	 * Parses an Image line into its byte values
-	 * 
+	 *
 	 * @param line
 	 *            Line of chars to parse
 	 * @param format
@@ -226,7 +226,7 @@ public class XPMFile {
 	 * @param index
 	 *            current index into lines, we've reached
 	 */
-	private void parseImageLine(String line, int[] format, HashMap colors,
+	private void parseImageLine(String line, int[] format, HashMap<String, Integer> colors,
 			int index) {
 		// offset for next line
 		int offset = index * 4 * format[WIDTH];
@@ -238,10 +238,10 @@ public class XPMFile {
 					.substring(
 							i * format[CHARACTERS_PER_PIXEL],
 							(i * format[CHARACTERS_PER_PIXEL] + format[CHARACTERS_PER_PIXEL]));
-			Integer color = (Integer) colors.get(key);
-			bytes[offset + (i * 4)] = (byte) ((color.intValue() & 0x00ff0000) >> 16);
-			bytes[offset + ((i * 4) + 1)] = (byte) ((color.intValue() & 0x0000ff00) >> 8);
-			bytes[offset + ((i * 4) + 2)] = (byte) ((color.intValue() & 0x000000ff) >> 0); // looks
+			int color = colors.get(key);
+			bytes[offset + (i * 4)] = (byte) ((color & 0x00ff0000) >> 16);
+			bytes[offset + ((i * 4) + 1)] = (byte) ((color & 0x0000ff00) >> 8);
+			bytes[offset + ((i * 4) + 2)] = (byte) ((color & 0x000000ff) >> 0); // looks
 			// better
 			// :)
 			bytes[offset + ((i * 4) + 3)] = (byte) 0xff; // always 0xff alpha

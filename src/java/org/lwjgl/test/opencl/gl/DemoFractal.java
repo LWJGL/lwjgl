@@ -38,9 +38,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opencl.*;
 import org.lwjgl.opencl.api.Filter;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.Drawable;
+import org.lwjgl.opengl.*;
 import org.lwjgl.util.Color;
 import org.lwjgl.util.ReadableColor;
 
@@ -51,6 +49,9 @@ import java.util.List;
 import static java.lang.Math.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opencl.CL10GL.*;
+import static org.lwjgl.opencl.KHRGLEvent.*;
+import static org.lwjgl.opengl.ARBCLEvent.*;
+import static org.lwjgl.opengl.ARBSync.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -133,8 +134,8 @@ public class DemoFractal {
 
 	private final PointerBuffer kernel2DGlobalWorkSize;
 
-	private int width = 0;
-	private int height = 0;
+	private int width;
+	private int height;
 
 	private double minX = -2f;
 	private double minY = -1.2f;
@@ -160,6 +161,18 @@ public class DemoFractal {
 	private boolean rebuild;
 
 	private boolean run = true;
+
+	// EVENT SYNCING
+
+	private final PointerBuffer syncBuffer = BufferUtils.createPointerBuffer(1);
+
+	private boolean syncGLtoCL; // true if we can make GL wait on events generated from CL queues.
+	private CLEvent[] clEvents;
+	private GLSync[] clSyncs;
+
+	private boolean syncCLtoGL; // true if we can make CL wait on sync objects generated from GL.
+	private GLSync glSync;
+	private CLEvent glEvent;
 
 	public DemoFractal(int width, int height) {
 		kernel2DGlobalWorkSize = BufferUtils.createPointerBuffer(2);
@@ -294,10 +307,10 @@ public class DemoFractal {
 
 	public void init() {
 		try {
+			CL.create();
 			Display.setDisplayMode(new DisplayMode(width, height));
 			Display.setTitle("OpenCL Fractal Demo");
 			Display.create();
-			CL.create();
 		} catch (LWJGLException e) {
 			throw new RuntimeException(e);
 		}
@@ -342,7 +355,7 @@ public class DemoFractal {
 		if ( devices == null ) {
 			devices = platform.getDevices(CL_DEVICE_TYPE_CPU, glSharingFilter);
 			if ( devices == null )
-				throw new RuntimeException("No OpenCL devices found.");
+				throw new RuntimeException("No OpenCL devices found with KHR_gl_sharing support.");
 		}
 
 		// Create the context
@@ -371,13 +384,13 @@ public class DemoFractal {
 		for ( int i = 0; i < slices; i++ ) {
 			colorMapBuffer[i] = BufferUtils.createIntBuffer(32 * 2);
 			colorMap[i] = clCreateBuffer(clContext, CL_MEM_READ_ONLY, colorMapBuffer[i].capacity() * 4, null);
-			colorMap[i].checkNull();
+			colorMap[i].checkValid();
 
 			initColorMap(colorMapBuffer[i], 32, Color.BLUE, Color.GREEN, Color.RED);
 
 			// create command queue and upload color map buffer on each used device
 			queues[i] = clCreateCommandQueue(clContext, devices.get(i), CL_QUEUE_PROFILING_ENABLE, null);
-			queues[i].checkNull();
+			queues[i].checkValid();
 			clEnqueueWriteBuffer(queues[i], colorMap[i], CL_TRUE, 0, colorMapBuffer[i], null, null); // blocking upload
 
 		}
@@ -399,6 +412,39 @@ public class DemoFractal {
 		programs = new CLProgram[all64bit ? 1 : slices];
 
 		buildPrograms();
+
+		final ContextCapabilities caps = GLContext.getCapabilities();
+
+		System.out.println("OpenGL caps.OpenGL32 = " + caps.OpenGL32);
+		System.out.println("OpenGL caps.GL_ARB_sync = " + caps.GL_ARB_sync);
+		System.out.println("OpenGL caps.GL_ARB_cl_event = " + caps.GL_ARB_cl_event);
+		for ( int i = 0; i < devices.size(); i++ ) {
+			System.out.println("Device #" + (i + 1) + " supports KHR_gl_event = " + CLCapabilities.getDeviceCapabilities(devices.get(i)).CL_KHR_gl_event);
+		}
+
+		// Detect GLtoCL synchronization method
+		syncGLtoCL = caps.GL_ARB_cl_event; // GL3.2 or ARB_sync implied
+		if ( syncGLtoCL ) {
+			clEvents = new CLEvent[slices];
+			clSyncs = new GLSync[slices];
+			System.out.println("GL to CL sync: Using OpenCL events");
+		} else
+			System.out.println("GL to CL sync: Using clFinish");
+
+		// Detect CLtoGL synchronization method
+		syncCLtoGL = caps.OpenGL32 || caps.GL_ARB_sync;
+		if ( syncCLtoGL ) {
+			for ( CLDevice device : devices ) {
+				if ( !CLCapabilities.getDeviceCapabilities(device).CL_KHR_gl_event ) {
+					syncCLtoGL = false;
+					break;
+				}
+			}
+		}
+		if ( syncCLtoGL ) {
+			System.out.println("CL to GL sync: Using OpenGL sync objects");
+		} else
+			System.out.println("CL to GL sync: Using glFinish");
 	}
 
 	private void createPrograms() throws IOException {
@@ -531,7 +577,6 @@ public class DemoFractal {
 			// init kernel with constants
 			kernels[i] = clCreateKernel(programs[min(i, programs.length)], "mandelbrot", null);
 		}
-
 	}
 
 	// init kernels with constants
@@ -549,8 +594,14 @@ public class DemoFractal {
 	// rendering cycle
 
 	public void display() {
-		// make sure GL does not use our objects before we start computeing
-		glFinish();
+		// TODO: Need to clean-up events, test when ARB_cl_events & KHR_gl_event are implemented.
+
+		// make sure GL does not use our objects before we start computing
+		if ( syncCLtoGL ) {
+			for ( final CLCommandQueue queue : queues )
+				clEnqueueWaitForEvents(queue, glEvent);
+		} else
+			glFinish();
 
 		if ( !buffersInitialized ) {
 			initPBO();
@@ -597,20 +648,29 @@ public class DemoFractal {
 			                       null,
 			                       null, null);
 
-			clEnqueueReleaseGLObjects(queues[i], pboBuffers[i], null, null);
+			clEnqueueReleaseGLObjects(queues[i], pboBuffers[i], null, syncBuffer);
+			if ( syncGLtoCL ) {
+				clEvents[i] = queues[i].getCLEvent(syncBuffer.get(0));
+				clSyncs[i] = glCreateSyncFromCLeventARB(queues[i].getParent(), clEvents[i], 0);
+			}
 		}
 
 		// block until done (important: finish before doing further gl work)
-		for ( int i = 0; i < slices; i++ ) {
-			clFinish(queues[i]);
+		if ( !syncGLtoCL ) {
+			for ( int i = 0; i < slices; i++ )
+				clFinish(queues[i]);
 		}
-
 	}
 
 	// OpenGL
 
 	private void render() {
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		if ( syncGLtoCL ) {
+			for ( int i = 0; i < slices; i++ )
+				glWaitSync(clSyncs[i], 0, 0);
+		}
 
 		//draw slices
 		int sliceWidth = width / slices;
@@ -625,6 +685,12 @@ public class DemoFractal {
 
 		}
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+		if ( syncCLtoGL ) {
+			glSync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+			glEvent = clCreateEventFromGLsyncKHR(clContext, glSync, null);
+
+		}
 
 		//draw info text
 		/*
@@ -645,20 +711,6 @@ public class DemoFractal {
 
 		textRenderer.endRendering();
 		*/
-	}
-
-	public void reshape(int x, int y, int width, int height) {
-		if ( this.width == width && this.height == height )
-			return;
-
-		this.width = width;
-		this.height = height;
-
-		initPBO();
-		setKernelConstants();
-
-		initView(width, height);
-
 	}
 
 	private static boolean isDoubleFPAvailable(CLDevice device) {

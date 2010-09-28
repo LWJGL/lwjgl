@@ -1,35 +1,38 @@
-/* 
+/*
  * Copyright (c) 2002-2010 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.lwjgl.openal;
+
+import static org.lwjgl.openal.AL10.*;
+import static org.lwjgl.openal.EFX10.*;
 
 /**
  * Utility class for the OpenAL extension ALC_EXT_EFX. Provides functions to check for the extension
@@ -62,7 +65,7 @@ public final class EFXUtil {
         if (!AL.isCreated()) {
             throw new OpenALException("OpenAL has not been created.");
         }
-        return ALC10.alcIsExtensionPresent(AL.getDevice(), EFX10.ALC_EXT_EFX_NAME);
+        return ALC10.alcIsExtensionPresent(AL.getDevice(), ALC_EXT_EFX_NAME);
     }
 
     /**
@@ -78,20 +81,20 @@ public final class EFXUtil {
     public static boolean isEffectSupported(final int effectType) {
         // Make sure type is a real effect.
         switch (effectType) {
-            case EFX10.AL_EFFECT_NULL:
-            case EFX10.AL_EFFECT_EAXREVERB:
-            case EFX10.AL_EFFECT_REVERB:
-            case EFX10.AL_EFFECT_CHORUS:
-            case EFX10.AL_EFFECT_DISTORTION:
-            case EFX10.AL_EFFECT_ECHO:
-            case EFX10.AL_EFFECT_FLANGER:
-            case EFX10.AL_EFFECT_FREQUENCY_SHIFTER:
-            case EFX10.AL_EFFECT_VOCAL_MORPHER:
-            case EFX10.AL_EFFECT_PITCH_SHIFTER:
-            case EFX10.AL_EFFECT_RING_MODULATOR:
-            case EFX10.AL_EFFECT_AUTOWAH:
-            case EFX10.AL_EFFECT_COMPRESSOR:
-            case EFX10.AL_EFFECT_EQUALIZER:
+            case AL_EFFECT_NULL:
+            case AL_EFFECT_EAXREVERB:
+            case AL_EFFECT_REVERB:
+            case AL_EFFECT_CHORUS:
+            case AL_EFFECT_DISTORTION:
+            case AL_EFFECT_ECHO:
+            case AL_EFFECT_FLANGER:
+            case AL_EFFECT_FREQUENCY_SHIFTER:
+            case AL_EFFECT_VOCAL_MORPHER:
+            case AL_EFFECT_PITCH_SHIFTER:
+            case AL_EFFECT_RING_MODULATOR:
+            case AL_EFFECT_AUTOWAH:
+            case AL_EFFECT_COMPRESSOR:
+            case AL_EFFECT_EQUALIZER:
                 break;
             default:
                 throw new IllegalArgumentException("Unknown or invalid effect type: " + effectType);
@@ -113,10 +116,10 @@ public final class EFXUtil {
     public static boolean isFilterSupported(final int filterType) {
         // Make sure type is a real filter.
         switch (filterType) {
-            case EFX10.AL_FILTER_NULL:
-            case EFX10.AL_FILTER_LOWPASS:
-            case EFX10.AL_FILTER_HIGHPASS:
-            case EFX10.AL_FILTER_BANDPASS:
+            case AL_FILTER_NULL:
+            case AL_FILTER_LOWPASS:
+            case AL_FILTER_HIGHPASS:
+            case AL_FILTER_BANDPASS:
                 break;
             default:
                 throw new IllegalArgumentException("Unknown or invalid filter type: " + filterType);
@@ -148,54 +151,54 @@ public final class EFXUtil {
         if (isEfxSupported()) {
 
             // Try to create object in order to check AL's response.
-            AL10.alGetError();
+            alGetError();
             int genError;
             int testObject = 0;
             try {
                 switch (objectType) { // Create object based on type
                     case EFFECT:
-                        testObject = EFX10.alGenEffects();
+                        testObject = alGenEffects();
                         break;
                     case FILTER:
-                        testObject = EFX10.alGenFilters();
+                        testObject = alGenFilters();
                         break;
                     default:
                         throw new IllegalArgumentException("Invalid objectType: " + objectType);
                 }
-                genError = AL10.alGetError();
+                genError = alGetError();
             } catch (final OpenALException debugBuildException) {
                 // Hack because OpenALException hides the original error code (short of parsing the
                 // error message String which would break if it gets changed).
                 if (debugBuildException.getMessage().contains("AL_OUT_OF_MEMORY")) {
-                    genError = AL10.AL_OUT_OF_MEMORY;
+                    genError = AL_OUT_OF_MEMORY;
                 } else {
-                    genError = AL10.AL_INVALID_OPERATION;
+                    genError = AL_INVALID_OPERATION;
                 }
             }
 
-            if (genError == AL10.AL_NO_ERROR) {
+            if (genError == AL_NO_ERROR) {
                 // Successfully created, now try to set type.
-                AL10.alGetError();
+                alGetError();
                 int setError;
                 try {
                     switch (objectType) { // Set based on object type
                         case EFFECT:
-                            EFX10.alEffecti(testObject, EFX10.AL_EFFECT_TYPE, typeValue);
+                            alEffecti(testObject, AL_EFFECT_TYPE, typeValue);
                             break;
                         case FILTER:
-                            EFX10.alFilteri(testObject, EFX10.AL_FILTER_TYPE, typeValue);
+                            alFilteri(testObject, AL_FILTER_TYPE, typeValue);
                             break;
                         default:
                             throw new IllegalArgumentException("Invalid objectType: " + objectType);
                     }
-                    setError = AL10.alGetError();
+                    setError = alGetError();
                 } catch (final OpenALException debugBuildException) {
                     // Hack because OpenALException hides the original error code (short of parsing
                     // the error message String which would break when it gets changed).
-                    setError = AL10.AL_INVALID_VALUE;
+                    setError = AL_INVALID_VALUE;
                 }
 
-                if (setError == AL10.AL_NO_ERROR) {
+                if (setError == AL_NO_ERROR) {
                     supported = true;
                 }
 
@@ -203,10 +206,10 @@ public final class EFXUtil {
                 try {
                     switch (objectType) { // Set based on object type
                         case EFFECT:
-                            EFX10.alDeleteEffects(testObject);
+                            alDeleteEffects(testObject);
                             break;
                         case FILTER:
-                            EFX10.alDeleteFilters(testObject);
+                            alDeleteFilters(testObject);
                             break;
                         default:
                             throw new IllegalArgumentException("Invalid objectType: " + objectType);
@@ -215,7 +218,7 @@ public final class EFXUtil {
                     // Don't care about cleanup errors.
                 }
 
-            } else if (genError == AL10.AL_OUT_OF_MEMORY) {
+            } else if (genError == AL_OUT_OF_MEMORY) {
                 throw new OpenALException(genError);
             }
         }

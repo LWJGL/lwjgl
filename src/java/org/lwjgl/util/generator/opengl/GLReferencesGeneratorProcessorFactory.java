@@ -68,8 +68,8 @@ import com.sun.mirror.util.DeclarationFilter;
  * $Id: ReferencesGeneratorProcessorFactory.java 3237 2009-09-08 15:07:15Z spasi $
  */
 public class GLReferencesGeneratorProcessorFactory implements AnnotationProcessorFactory, RoundCompleteListener {
-	private final static String REFERENCES_CLASS_NAME = "References";
-	private final static String REFERENCES_PARAMETER_NAME = "references";
+	private static final String REFERENCES_CLASS_NAME = "References";
+	private static final String REFERENCES_PARAMETER_NAME = "references";
 
 	private static boolean first_round = true;
 

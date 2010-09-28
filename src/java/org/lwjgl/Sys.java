@@ -63,7 +63,7 @@ public final class Sys {
 	private static final boolean is64Bit;
 
 	private static void doLoadLibrary(final String lib_name) {
-		AccessController.doPrivileged(new PrivilegedAction() {
+		AccessController.doPrivileged(new PrivilegedAction<Object>() {
 			public Object run() {
 				String library_path = System.getProperty("org.lwjgl.librarypath");
 				if (library_path != null) {
@@ -215,22 +215,22 @@ public final class Sys {
 		// Attempt to use Webstart if we have it available
 		try {
 			// Lookup the javax.jnlp.BasicService object
-			final Class serviceManagerClass = Class.forName("javax.jnlp.ServiceManager");
-			Method lookupMethod = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
-				public Object run() throws Exception {
-					return serviceManagerClass.getMethod("lookup", new Class[] {String.class});
+			final Class<?> serviceManagerClass = Class.forName("javax.jnlp.ServiceManager");
+			Method lookupMethod = AccessController.doPrivileged(new PrivilegedExceptionAction<Method>() {
+				public Method run() throws Exception {
+					return serviceManagerClass.getMethod("lookup", String.class);
 				}
 			});
 			Object basicService = lookupMethod.invoke(serviceManagerClass, new Object[] {"javax.jnlp.BasicService"});
-			final Class basicServiceClass = Class.forName("javax.jnlp.BasicService");
-			Method showDocumentMethod = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
-				public Object run() throws Exception {
-					return basicServiceClass.getMethod("showDocument", new Class[] {URL.class});
+			final Class<?> basicServiceClass = Class.forName("javax.jnlp.BasicService");
+			Method showDocumentMethod = AccessController.doPrivileged(new PrivilegedExceptionAction<Method>() {
+				public Method run() throws Exception {
+					return basicServiceClass.getMethod("showDocument", URL.class);
 				}
 			});
 			try {
-				Boolean ret = (Boolean) showDocumentMethod.invoke(basicService, new Object[] {new URL(url)});
-				return ret.booleanValue();
+				Boolean ret = (Boolean)showDocumentMethod.invoke(basicService, new URL(url));
+				return ret;
 			} catch (MalformedURLException e) {
 				e.printStackTrace(System.err);
 				return false;

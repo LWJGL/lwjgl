@@ -84,8 +84,8 @@
 */
 package org.lwjgl.util.glu.tessellation;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.*;
 
 class Render {
     private static final boolean USE_OPTIMIZED_CODE_PATH = false;
@@ -102,10 +102,10 @@ class Render {
  * primitive is able to use the most triangles.
  */
     private static class FaceCount {
-        public FaceCount() {
+        private FaceCount() {
         }
 
-        public FaceCount(long size, GLUhalfEdge eStart, renderCallBack render) {
+        private FaceCount(long size, GLUhalfEdge eStart, renderCallBack render) {
             this.size = size;
             this.eStart = eStart;
             this.render = render;
@@ -116,7 +116,7 @@ class Render {
         renderCallBack render;
     };
 
-    private static interface renderCallBack {
+    private interface renderCallBack {
         void render(GLUtessellatorImpl tess, GLUhalfEdge e, long size);
     }
 
@@ -166,7 +166,7 @@ class Render {
          */
         GLUhalfEdge e = fOrig.anEdge;
         FaceCount max = new FaceCount();
-        FaceCount newFace = new FaceCount();
+        FaceCount newFace;
 
         max.size = 1;
         max.eStart = e;
@@ -329,7 +329,7 @@ class Render {
         int newState;
         int edgeState = -1;	/* force edge state output for first vertex */
 
-        tess.callBeginOrBeginData(GL11.GL_TRIANGLES);
+        tess.callBeginOrBeginData(GL_TRIANGLES);
 
         for (; f != null; f = f.trail) {
             /* Loop once for each edge (there will always be 3 edges) */
@@ -360,7 +360,7 @@ class Render {
              * edge "e".  The fan *should* contain exactly "size" triangles
              * (otherwise we've goofed up somewhere).
              */
-            tess.callBeginOrBeginData(GL11.GL_TRIANGLE_FAN);
+            tess.callBeginOrBeginData(GL_TRIANGLE_FAN);
             tess.callVertexOrVertexData( e.Org.data);
             tess.callVertexOrVertexData( e.Sym.Org.data);
 
@@ -382,7 +382,7 @@ class Render {
              * edge "e".  The strip *should* contain exactly "size" triangles
              * (otherwise we've goofed up somewhere).
              */
-            tess.callBeginOrBeginData(GL11.GL_TRIANGLE_STRIP);
+            tess.callBeginOrBeginData(GL_TRIANGLE_STRIP);
             tess.callVertexOrVertexData( e.Org.data);
             tess.callVertexOrVertexData( e.Sym.Org.data);
 
@@ -416,7 +416,7 @@ class Render {
 
         for (f = mesh.fHead.next; f != mesh.fHead; f = f.next) {
             if (f.inside) {
-                tess.callBeginOrBeginData(GL11.GL_LINE_LOOP);
+                tess.callBeginOrBeginData(GL_LINE_LOOP);
                 e = f.anEdge;
                 do {
                     tess.callVertexOrVertexData( e.Org.data);
@@ -555,22 +555,22 @@ class Render {
         } else {
             /* Make sure we do the right thing for each winding rule */
             switch (tess.windingRule) {
-                case GLU.GLU_TESS_WINDING_ODD:
-                case GLU.GLU_TESS_WINDING_NONZERO:
+                case GLU_TESS_WINDING_ODD:
+                case GLU_TESS_WINDING_NONZERO:
                     break;
-                case GLU.GLU_TESS_WINDING_POSITIVE:
+                case GLU_TESS_WINDING_POSITIVE:
                     if (sign < 0) return true;
                     break;
-                case GLU.GLU_TESS_WINDING_NEGATIVE:
+                case GLU_TESS_WINDING_NEGATIVE:
                     if (sign > 0) return true;
                     break;
-                case GLU.GLU_TESS_WINDING_ABS_GEQ_TWO:
+                case GLU_TESS_WINDING_ABS_GEQ_TWO:
                     return true;
             }
 
-            tess.callBeginOrBeginData( tess.boundaryOnly ? GL11.GL_LINE_LOOP
-                    : (tess.cacheCount > 3) ? GL11.GL_TRIANGLE_FAN
-                    : GL11.GL_TRIANGLES);
+            tess.callBeginOrBeginData( tess.boundaryOnly ? GL_LINE_LOOP
+                    : (tess.cacheCount > 3) ? GL_TRIANGLE_FAN
+                    : GL_TRIANGLES);
 
             tess.callVertexOrVertexData( v[0].data);
             if (sign > 0) {

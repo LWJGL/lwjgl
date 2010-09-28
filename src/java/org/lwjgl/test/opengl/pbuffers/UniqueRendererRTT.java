@@ -33,10 +33,11 @@ package org.lwjgl.test.opengl.pbuffers;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Pbuffer;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.opengl.RenderTexture;
+
+import static org.lwjgl.opengl.GL11.*;
 
 final class UniqueRendererRTT extends TextureRenderer {
 
@@ -56,7 +57,7 @@ final class UniqueRendererRTT extends TextureRenderer {
 			pbuffer.makeCurrent();
 
 			PbufferTest.initGLState(width, height, 0.5f);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
+			glBindTexture(GL_TEXTURE_2D, texID);
 
 			Display.makeCurrent();
 		} catch (LWJGLException e) {

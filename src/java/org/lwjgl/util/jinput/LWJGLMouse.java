@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -44,19 +44,19 @@ import net.java.games.input.Rumbler;
  * @author elias
  */
 final class LWJGLMouse extends Mouse {
-	private final static int EVENT_X = 1;
-	private final static int EVENT_Y = 2;
-	private final static int EVENT_WHEEL = 3;
-	private final static int EVENT_BUTTON = 4;
-	private final static int EVENT_DONE = 5;
+	private static final int EVENT_X = 1;
+	private static final int EVENT_Y = 2;
+	private static final int EVENT_WHEEL = 3;
+	private static final int EVENT_BUTTON = 4;
+	private static final int EVENT_DONE = 5;
 
 	private int event_state = EVENT_DONE;
-	
-    protected LWJGLMouse() {
+
+    LWJGLMouse() {
         super("LWJGLMouse", createComponents(), new Controller[]{}, new Rumbler[]{});
     }
 
-	private final static Component[] createComponents() {
+	private static Component[] createComponents() {
 		return new Component[]{new Axis(Component.Identifier.Axis.X),
 			new Axis(Component.Identifier.Axis.Y),
 			new Axis(Component.Identifier.Axis.Z),
@@ -65,7 +65,7 @@ final class LWJGLMouse extends Mouse {
 			new Button(Component.Identifier.Button.RIGHT)};
 	}
 
-	public final synchronized void pollDevice() throws IOException {
+	public synchronized void pollDevice() throws IOException {
 		if (!org.lwjgl.input.Mouse.isCreated())
 			return;
 		org.lwjgl.input.Mouse.poll();
@@ -73,7 +73,7 @@ final class LWJGLMouse extends Mouse {
 			setButtonState(i);
 	}
 
-	private final Button map(int lwjgl_button) {
+	private Button map(int lwjgl_button) {
 		switch (lwjgl_button) {
 			case 0:
 				return (Button)getLeft();
@@ -86,13 +86,13 @@ final class LWJGLMouse extends Mouse {
 		}
 	}
 
-	private final void setButtonState(int lwjgl_button) {
+	private void setButtonState(int lwjgl_button) {
 		Button button = map(lwjgl_button);
 		if (button != null)
 			button.setValue(org.lwjgl.input.Mouse.isButtonDown(lwjgl_button) ? 1 : 0);
 	}
 
-	protected final synchronized boolean getNextDeviceEvent(Event event) throws IOException {
+	protected synchronized boolean getNextDeviceEvent(Event event) throws IOException {
 		if (!org.lwjgl.input.Mouse.isCreated())
 			return false;
 		while (true) {
@@ -147,44 +147,44 @@ final class LWJGLMouse extends Mouse {
 		}
 	}
 
-	final static class Axis extends AbstractComponent {
-		public Axis(Component.Identifier.Axis axis_id) {
+	static final class Axis extends AbstractComponent {
+		Axis(Component.Identifier.Axis axis_id) {
 			super(axis_id.getName(), axis_id);
 		}
 
-		public final boolean isRelative() {
+		public boolean isRelative() {
 			return true;
 		}
 
-		protected final float poll() throws IOException {
+		protected float poll() throws IOException {
 			return 0;
 		}
 
-		public final boolean isAnalog() {
+		public boolean isAnalog() {
 			return true;
 		}
 	}
 
-	final static class Button extends AbstractComponent {
+	static final class Button extends AbstractComponent {
 		private float value;
-		
-		public Button(Component.Identifier.Button button_id) {
+
+		Button(Component.Identifier.Button button_id) {
 			super(button_id.getName(), button_id);
 		}
 
-		protected final void setValue(float value) {
+		void setValue(float value) {
 			this.value = value;
 		}
 
-		protected final float poll() throws IOException {
+		protected float poll() throws IOException {
 			return value;
 		}
 
-		public final boolean isRelative() {
+		public boolean isRelative() {
 			return false;
 		}
 
-		public final boolean isAnalog() {
+		public boolean isAnalog() {
 			return false;
 		}
 	}

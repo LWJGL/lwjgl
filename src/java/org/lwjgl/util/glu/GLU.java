@@ -35,9 +35,10 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Util;
 import org.lwjgl.util.glu.tessellation.GLUtessellatorImpl;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * GLU.java
@@ -266,7 +267,7 @@ public class GLU {
 			float bottom,
 			float top) {
 
-		GL11.glOrtho(left, right, bottom, top, -1.0, 1.0);
+		glOrtho(left, right, bottom, top, -1.0, 1.0);
 	}
 
 	/**
@@ -412,17 +413,17 @@ public class GLU {
 
 	public static String gluErrorString(int error_code) {
 		switch (error_code) {
-			case GLU.GLU_INVALID_ENUM:
+			case GLU_INVALID_ENUM:
 				return "Invalid enum (glu)";
-			case GLU.GLU_INVALID_VALUE:
+			case GLU_INVALID_VALUE:
 				return "Invalid value (glu)";
-			case GLU.GLU_OUT_OF_MEMORY:
+			case GLU_OUT_OF_MEMORY:
 				return "Out of memory (glu)";
 			default:
 				return Util.translateGLErrorString(error_code);
 		}
 	}
-	
+
 	public static GLUtessellator gluNewTess() {
 		return new GLUtessellatorImpl();
 	}

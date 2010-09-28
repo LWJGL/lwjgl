@@ -33,7 +33,7 @@ package org.lwjgl.opencl;
 
 import org.lwjgl.PointerBuffer;
 
-import java.io.Serializable;
+import java.nio.ByteBuffer;
 
 /**
  * This class is a wrapper around a cl_program pointer.
@@ -41,6 +41,8 @@ import java.io.Serializable;
  * @author Spasi
  */
 public final class CLProgram extends CLObjectChild<CLContext> {
+
+	private static final CLProgramUtil util = (CLProgramUtil)CLPlatform.getInfoUtilInstance(CLProgram.class, "CL_PROGRAM_UTIL");
 
 	private final CLObjectRegistry<CLKernel> clKernels;
 
@@ -63,6 +65,119 @@ public final class CLProgram extends CLObjectChild<CLContext> {
 	 */
 	public CLKernel getCLKernel(final long id) {
 		return clKernels.getObject(id);
+	}
+
+	// ---------------[ UTILITY METHODS ]---------------
+
+	/**
+	 * Returns the String value of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public String getInfoString(final int param_name) {
+		return util.getInfoString(this, param_name);
+	}
+
+	/**
+	 * Returns the integer value of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public int getInfoInt(final int param_name) {
+		return util.getInfoInt(this, param_name);
+	}
+
+	/**
+	 * Returns an array of size_t values of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter values
+	 */
+	public long[] getInfoSizeArray(final int param_name) {
+		return util.getInfoSizeArray(this, param_name);
+	}
+
+	/**
+	 * Returns an array of CLDevices associated with this program.
+	 *
+	 * @return the array of devices
+	 */
+	public CLDevice[] getInfoDevices() {
+		return util.getInfoDevices(this);
+	}
+
+	/**
+	 * Returns the program binaries for all devices associated with program,
+	 * written sequentially in the target ByteBuffer. If the <code>target</code>
+	 * parameter is null, a new ByteBuffer will be allocated. If not, the
+	 * target ByteBuffer must be big enough to hold the program binaries, as
+	 * returned by CL_PROGRAM_BINARY_SIZES.
+	 *
+	 * @param target the target ByteBuffer array.
+	 *
+	 * @return the array of devices
+	 */
+	public ByteBuffer getInfoBinaries(final ByteBuffer target) {
+		return util.getInfoBinaries(this, target);
+	}
+
+	/**
+	 * Returns the program binaries for all devices associated with program,
+	 * as a ByteBuffer array. If the <code>target</code> parameter is null,
+	 * a new ByteBuffer array will be allocated. If not, the target ByteBuffers
+	 * must be big enough to hold the program binaries, as returned by
+	 * CL_PROGRAM_BINARY_SIZES.
+	 *
+	 * @param target the target ByteBuffer array.
+	 *
+	 * @return the array of devices
+	 */
+	public ByteBuffer[] getInfoBinaries(final ByteBuffer[] target) {
+		return util.getInfoBinaries(this, target);
+	}
+
+	// clGetProgramBuildInfo methods
+
+	/**
+	 * Returns the String value of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public String getBuildInfoString(final CLDevice device, final int param_name) {
+		return util.getBuildInfoString(this, device, param_name);
+	}
+
+	/**
+	 * Returns the integer value of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public int getBuildInfoInt(final CLDevice device, final int param_name) {
+		return util.getBuildInfoInt(this, device, param_name);
+	}
+
+	/** CLProgram utility methods interface. */
+	interface CLProgramUtil extends InfoUtil<CLProgram> {
+
+		CLDevice[] getInfoDevices(CLProgram program);
+
+		ByteBuffer getInfoBinaries(CLProgram program, ByteBuffer target);
+
+		ByteBuffer[] getInfoBinaries(CLProgram program, ByteBuffer[] target);
+
+		String getBuildInfoString(CLProgram program, final CLDevice device, int param_name);
+
+		int getBuildInfoInt(CLProgram program, final CLDevice device, int param_name);
+
 	}
 
 	// -------[ IMPLEMENTATION STUFF BELOW ]-------

@@ -38,10 +38,10 @@
 
 package org.lwjgl.test.opengl.shaders;
 
-import org.lwjgl.opengl.ARBFragmentShader;
-import org.lwjgl.opengl.ARBShaderObjects;
-import org.lwjgl.opengl.ARBVertexShader;
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.ARBFragmentShader.*;
+import static org.lwjgl.opengl.ARBShaderObjects.*;
+import static org.lwjgl.opengl.ARBVertexShader.*;
+import static org.lwjgl.opengl.GL11.*;
 
 final class ShaderFSH extends Shader {
 
@@ -64,64 +64,64 @@ final class ShaderFSH extends Shader {
 		this.vshFile = vshFile;
 		vshSource = getShaderText(vshFile);
 
-		vshID = ARBShaderObjects.glCreateShaderObjectARB(ARBVertexShader.GL_VERTEX_SHADER_ARB);
-		ARBShaderObjects.glShaderSourceARB(vshID, vshSource);
-		ARBShaderObjects.glCompileShaderARB(vshID);
+		vshID = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
+		glShaderSourceARB(vshID, vshSource);
+		glCompileShaderARB(vshID);
 
 		printShaderObjectInfoLog(this.vshFile, vshID);
 
-		if ( ARBShaderObjects.glGetObjectParameteriARB(vshID, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE )
+		if ( glGetObjectParameteriARB(vshID, GL_OBJECT_COMPILE_STATUS_ARB) == GL_FALSE )
 			ShadersTest.kill("A compilation error occured in a vertex shader.");
 
 		// Initialize the fragment shader.
 		this.fshFile = fshFile;
 		fshSource = getShaderText(fshFile);
 
-		fshID = ARBShaderObjects.glCreateShaderObjectARB(ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
-		ARBShaderObjects.glShaderSourceARB(fshID, fshSource);
-		ARBShaderObjects.glCompileShaderARB(fshID);
+		fshID = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
+		glShaderSourceARB(fshID, fshSource);
+		glCompileShaderARB(fshID);
 
 		printShaderObjectInfoLog(this.fshFile, fshID);
 
-		if ( ARBShaderObjects.glGetObjectParameteriARB(fshID, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE )
+		if ( glGetObjectParameteriARB(fshID, GL_OBJECT_COMPILE_STATUS_ARB) == GL_FALSE )
 			ShadersTest.kill("A compilation error occured in a fragment shader.");
 
 		// Initialize the shader program.
-		programID = ARBShaderObjects.glCreateProgramObjectARB();
+		programID = glCreateProgramObjectARB();
 
-		ARBShaderObjects.glAttachObjectARB(programID, vshID);
-		ARBShaderObjects.glAttachObjectARB(programID, fshID);
+		glAttachObjectARB(programID, vshID);
+		glAttachObjectARB(programID, fshID);
 
-		ARBShaderObjects.glLinkProgramARB(programID);
+		glLinkProgramARB(programID);
 
 		printShaderProgramInfoLog(programID);
 
-		if ( ARBShaderObjects.glGetObjectParameteriARB(programID, ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL11.GL_FALSE )
+		if ( glGetObjectParameteriARB(programID, GL_OBJECT_LINK_STATUS_ARB) == GL_FALSE )
 			ShadersTest.kill("A linking error occured in a shader program.");
 
 		uniformLocation = getUniformLocation(programID, "UNIFORMS");
 	}
 
 	void render() {
-		ARBShaderObjects.glUseProgramObjectARB(programID);
+		glUseProgramObjectARB(programID);
 
-		ARBShaderObjects.glUniform4fARB(uniformLocation,
-		                                ShadersTest.getSin(), ShadersTest.getSpecularity() * 8.0f,
-		                                -ShadersTest.getDisplayWidth() * 0.5f, -ShadersTest.getDisplayHeight() * 0.5f);
+		glUniform4fARB(uniformLocation,
+		               ShadersTest.getSin(), ShadersTest.getSpecularity() * 8.0f,
+		               -ShadersTest.getDisplayWidth() * 0.5f, -ShadersTest.getDisplayHeight() * 0.5f);
 
 		ShadersTest.renderObject();
 
-		ARBShaderObjects.glUseProgramObjectARB(0);
+		glUseProgramObjectARB(0);
 	}
 
 	void cleanup() {
-		ARBShaderObjects.glDetachObjectARB(programID, vshID);
-		ARBShaderObjects.glDetachObjectARB(programID, fshID);
+		glDetachObjectARB(programID, vshID);
+		glDetachObjectARB(programID, fshID);
 
-		ARBShaderObjects.glDeleteObjectARB(vshID);
-		ARBShaderObjects.glDeleteObjectARB(fshID);
+		glDeleteObjectARB(vshID);
+		glDeleteObjectARB(fshID);
 
-		ARBShaderObjects.glDeleteObjectARB(programID);
+		glDeleteObjectARB(programID);
 	}
 
 }

@@ -87,12 +87,11 @@ final class AWTUtil {
 
 	public static Robot createRobot(final Component component) {
 		try {
-			Robot robot = (Robot)AccessController.doPrivileged(new PrivilegedExceptionAction() {
-				public Object run() throws Exception {
+			return AccessController.doPrivileged(new PrivilegedExceptionAction<Robot>() {
+				public Robot run() throws Exception {
 					return new Robot(component.getGraphicsConfiguration().getDevice());
 				}
 			});
-			return robot;
 		} catch (PrivilegedActionException e) {
 			LWJGLUtil.log("Got exception while creating robot: " + e.getCause());
 			return null;
@@ -112,8 +111,8 @@ final class AWTUtil {
 		try {
 			final GraphicsConfiguration config = component.getGraphicsConfiguration();
 			if (config != null) {
-				PointerInfo pointer_info = (PointerInfo)AccessController.doPrivileged(new PrivilegedExceptionAction() {
-					public Object run() throws Exception {
+				PointerInfo pointer_info = AccessController.doPrivileged(new PrivilegedExceptionAction<PointerInfo>() {
+					public PointerInfo run() throws Exception {
 						return MouseInfo.getPointerInfo();
 					}
 				});

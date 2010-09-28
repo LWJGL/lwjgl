@@ -32,6 +32,7 @@
 package org.lwjgl.opencl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,7 +40,9 @@ import java.util.Map;
  *
  * @author Spasi
  */
-public final class CLContext extends CLObject {
+public final class CLContext extends CLObjectChild<CLPlatform> {
+
+	private static final CLContextUtil util = (CLContextUtil)CLPlatform.getInfoUtilInstance(CLContext.class, "CL_CONTEXT_UTIL");
 
 	private final CLObjectRegistry<CLCommandQueue> clCommandQueues;
 	private final CLObjectRegistry<CLMem> clMems;
@@ -48,13 +51,16 @@ public final class CLContext extends CLObject {
 	private final CLObjectRegistry<CLEvent> clEvents;
 
 	/** Global registry for build callbacks. */
-	static Map<Long, CLProgram> clProgramsGlobal = new HashMap<Long, CLProgram>();
+	static final Map<Long, CLProgram> clProgramsGlobal = new HashMap<Long, CLProgram>();
 
 	/** Global registry for event callbacks. */
-	static Map<Long, CLEvent> clEventsGlobal = new HashMap<Long, CLEvent>();
+	static final Map<Long, CLEvent> clEventsGlobal = new HashMap<Long, CLEvent>();
 
-	CLContext(final long pointer) {
-		super(pointer);
+	CLContext(final long pointer, final CLPlatform platform) {
+		super(pointer, platform);
+
+		// We do not need to register the context with the platform,
+		// there is no API that returns cl_context, except clCreateContext.
 
 		if ( isValid() ) {
 			clCommandQueues = new CLObjectRegistry<CLCommandQueue>();
@@ -115,6 +121,35 @@ public final class CLContext extends CLObject {
 	 * @return the CLEvent object
 	 */
 	public CLEvent getCLEvent(final long id) { return clEvents.getObject(id); }
+
+	// ---------------[ UTILITY METHODS ]---------------
+
+	/**
+	 * Returns the integer value of the specified parameter.
+	 *
+	 * @param param_name the parameter
+	 *
+	 * @return the parameter value
+	 */
+	public int getInfoInt(int param_name) {
+		return util.getInfoInt(this, param_name);
+	}
+
+	/**
+	 * Returns the list of devices in context.
+	 *
+	 * @return the list of devices
+	 */
+	public List<CLDevice> getInfoDevices() {
+		return util.getInfoDevices(this);
+	}
+
+	/** CLContext utility methods interface. */
+	interface CLContextUtil extends InfoUtil<CLContext> {
+
+		List<CLDevice> getInfoDevices(CLContext context);
+
+	}
 
 	// -------[ IMPLEMENTATION STUFF BELOW ]-------
 

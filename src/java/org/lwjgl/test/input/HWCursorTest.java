@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -40,8 +40,9 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.*;
 
 /**
  *
@@ -52,26 +53,26 @@ import org.lwjgl.util.glu.GLU;
  * $Id$
  */
 public class HWCursorTest {
-	
+
 	/** The native cursor */
-	private static Cursor[] cursor = null;
-	
+	private static Cursor[] cursors;
+
 	/** The mouse cursor position */
 	private static int mouse_x;
 	private static int mouse_y;
-	private static int mouse_btn = 0;
-	
+	private static int mouse_btn;
+
 	/**
 	 * Executes the test
 	 */
 	public void execute() {
 		initialize();
-		
+
 		mainLoop();
-		
+
 		cleanup();
 	}
-	
+
 	/**
 	 * Sets the display mode for fullscreen mode
 	 */
@@ -85,15 +86,15 @@ public class HWCursorTest {
 					"height=" + 480,
 					"freq=" + 60,
 					"bpp=" + org.lwjgl.opengl.Display.getDisplayMode().getBitsPerPixel()
-			}); 
+			});
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return false;
-	}  
-	
+	}
+
 	/**
 	 * Initializes the test
 	 */
@@ -102,32 +103,32 @@ public class HWCursorTest {
 			// start of in windowed mode
 			setDisplayMode();
 			Display.create();
-			
+
 			glInit();
-			
+
 			initNativeCursors();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
       System.exit(-1);
 		}
 	}
-	
+
 	private static void initNativeCursors() throws Exception {
 		if ((Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) == 0) {
 			System.out.println("No HW cursor support!");
 			System.exit(0);
 		}
-		
-		cursor = new Cursor[3];
-		
+
+		cursors = new Cursor[3];
+
 		int cursorImageCount = 1;
 		int cursorWidth = Math.min(64, Cursor.getMaxCursorSize());
 		int cursorHeight = cursorWidth;
 		IntBuffer cursorImages;
 		IntBuffer cursorDelays;
-		
-		
+
+
 		// Create a single cursor
 		// ==================================
 		cursorImages = ByteBuffer.allocateDirect(cursorWidth*cursorHeight*cursorImageCount*4).order(ByteOrder.nativeOrder()).asIntBuffer();
@@ -138,32 +139,32 @@ public class HWCursorTest {
 			}
 		}
 		cursorImages.flip();
-		cursor[0] = new Cursor(cursorWidth, cursorHeight, cursorWidth/2, cursorHeight/2, cursorImageCount, cursorImages, cursorDelays);
+		cursors[0] = new Cursor(cursorWidth, cursorHeight, cursorWidth/2, cursorHeight/2, cursorImageCount, cursorImages, cursorDelays);
 		// ----------------------------------
-		
+
 		// Create 3 piece animation
 		// ==================================
 		cursorImageCount = 3;
 		cursorImages = ByteBuffer.allocateDirect(cursorWidth*cursorHeight*cursorImageCount*4).order(ByteOrder.nativeOrder()).asIntBuffer();
 		cursorDelays = ByteBuffer.allocateDirect(cursorImageCount*4).order(ByteOrder.nativeOrder()).asIntBuffer();
 		for(int i=0; i<cursorImageCount; i++) {
-			
-			// make a colored square with a chocolate center 
+
+			// make a colored square with a chocolate center
 			int offColor = 0x00000000;
 			int onColor = 0xffff0000;
-			
+
 			// change color according to cursor
 			if(i == 1) {
 				onColor = 0xff00ff00;
 			} else if (i == 2) {
 				onColor = 0xff0000ff;
 			}
-			
+
 			// calculate size of center
 			int centerSize  = (cursorWidth / 5) * (i + 1);
 			int centerLeft  = cursorWidth / 2 - centerSize / 2;
 			int centerRight = cursorWidth / 2 + centerSize / 2;
-			
+
 			// go!
 			for(int j=0; j<cursorWidth; j++) {
 				for(int l=0; l<cursorHeight; l++) {
@@ -178,24 +179,24 @@ public class HWCursorTest {
 		cursorDelays.put(2000).put(2000).put(2000);
 		cursorDelays.flip();
 		cursorImages.flip();
-		
-		cursor[1] = new Cursor(cursorWidth, cursorHeight, cursorWidth/2, cursorHeight/2, cursorImageCount, cursorImages, cursorDelays);
+
+		cursors[1] = new Cursor(cursorWidth, cursorHeight, cursorWidth/2, cursorHeight/2, cursorImageCount, cursorImages, cursorDelays);
 		// ----------------------------------
-		
-		
+
+
 		// Create a 20 piece animation
 		// ==================================
 		cursorImageCount = 20;
 		cursorImages = ByteBuffer.allocateDirect(cursorWidth*cursorHeight*cursorImageCount*4).order(ByteOrder.nativeOrder()).asIntBuffer();
 		cursorDelays = ByteBuffer.allocateDirect(cursorImageCount*4).order(ByteOrder.nativeOrder()).asIntBuffer();
 		cursorDelays.put(
-										 new int[] { 
+										 new int[] {
 										 		100, 100, 100, 100, 100,
 												100, 100, 100, 100, 100,
 												100, 100, 100, 100, 100,
 												100, 100, 100, 100, 100
 										 });
-		
+
 		float step = 0xffffffff / 20.0f;
 		for(int i=0; i<cursorImageCount; i++) {
 			for(int j=0; j<cursorWidth; j++) {
@@ -207,12 +208,12 @@ public class HWCursorTest {
 		}
 		cursorImages.flip();
 		cursorDelays.flip();
-		cursor[2] = new Cursor(cursorWidth, cursorHeight, cursorWidth/2, cursorHeight/2, cursorImageCount, cursorImages, cursorDelays);      
+		cursors[2] = new Cursor(cursorWidth, cursorHeight, cursorWidth/2, cursorHeight/2, cursorImageCount, cursorImages, cursorDelays);
 		// ----------------------------------
-		
-		Mouse.setNativeCursor(cursor[0]);
+
+		Mouse.setNativeCursor(cursors[0]);
 	}
-	
+
 	/**
 	 * Runs the main loop of the "test"
 	 */
@@ -221,20 +222,20 @@ public class HWCursorTest {
 				&& !Display.isCloseRequested()) {
 			// allow subsystem to get a chance to run too
 			Display.update();
-			
+
 			if (Display.isVisible()) {
 				// check keyboard input
 				processKeyboard();
 				processMouse();
-				
+
 				render();
 			} else {
-				
+
 				// no need to render/paint if nothing has changed (ie. window dragged over)
 				if (Display.isDirty()) {
 					render();
 				}
-				
+
 				// don't waste cpu time, sleep more
 				try {
 					Thread.sleep(100);
@@ -243,35 +244,35 @@ public class HWCursorTest {
 			}
 		}
 	}
-	
+
 	/**
 	 * Performs the logic
 	 */
 	private void render() {
 		//clear background
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-		
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		// draw white quad
-		GL11.glPushMatrix();
+		glPushMatrix();
 		{
-			GL11.glTranslatef(mouse_x, mouse_y, 0);
-			GL11.glColor3f(1.0f, 1.0f, 1.0f);
-			GL11.glBegin(GL11.GL_QUADS);
+			glTranslatef(mouse_x, mouse_y, 0);
+			glColor3f(1.0f, 1.0f, 1.0f);
+			glBegin(GL_QUADS);
 			{
-				GL11.glColor3f(1.0f, 0.0f, 0.0f); GL11.glVertex2i(-50, -50);
-				GL11.glColor3f(0.0f, 1.0f, 0.0f); GL11.glVertex2i(50, -50);
-				GL11.glColor3f(0.0f, 0.0f, 1.0f); GL11.glVertex2i(50, 50);
-				GL11.glColor3f(1.0f, 0.0f, 1.0f); GL11.glVertex2i(-50, 50);
+				glColor3f(1.0f, 0.0f, 0.0f); glVertex2i(-50, -50);
+				glColor3f(0.0f, 1.0f, 0.0f); glVertex2i(50, -50);
+				glColor3f(0.0f, 0.0f, 1.0f); glVertex2i(50, 50);
+				glColor3f(1.0f, 0.0f, 1.0f); glVertex2i(-50, 50);
 			}
-			GL11.glEnd();
+			glEnd();
 		}
-		GL11.glPopMatrix();
+		glPopMatrix();
 	}
-	
+
 	private void processMouse() {
 		mouse_x = Mouse.getX();
 		mouse_y = Mouse.getY();
-		
+
 		while(Mouse.next()) {
 			int button = Mouse.getEventButton();
 			if(button >= 0 && button < 3 && Mouse.getEventButtonState()) {
@@ -280,14 +281,14 @@ public class HWCursorTest {
 			}
 		}
 	}
-	
+
 	/**
 	 * Processes keyboard input
 	 */
 	private void processKeyboard() {
 		//check for fullscreen key
 		if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
-			
+
 			try {
 				try {
 					Mouse.setNativeCursor(null);
@@ -295,19 +296,19 @@ public class HWCursorTest {
 					e.printStackTrace();
 					System.exit(1);
 				}
-				for(int i=0; i<cursor.length; i++) {
-					cursor[i].destroy();
+				for ( Cursor aCursor : cursors ) {
+					aCursor.destroy();
 				}
 				Display.setFullscreen(true);
-				
+
 				glInit();
-				
+
 				initNativeCursors();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		//check for window key
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
 			try {
@@ -317,18 +318,18 @@ public class HWCursorTest {
 					e.printStackTrace();
 					System.exit(1);
 				}
-				for(int i=0; i<cursor.length; i++) {
-					cursor[i].destroy();
+				for ( Cursor cursor : cursors ) {
+					cursor.destroy();
 				}
 				Display.setFullscreen(false);
 				glInit();
-				
+
 				initNativeCursors();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		if (Keyboard.isKeyDown(Keyboard.KEY_M)) {
 			try {
 				Mouse.setNativeCursor(null);
@@ -336,21 +337,21 @@ public class HWCursorTest {
 				e.printStackTrace();
 			}
 		}
-		
+
 		if (Keyboard.isKeyDown(Keyboard.KEY_N)) {
 			switchCursor();
 		}
-		
+
 		while(Keyboard.next()) {
 			if(Keyboard.getEventKey() == Keyboard.KEY_SPACE && Keyboard.getEventKeyState()) {
 				Mouse.setGrabbed(!Mouse.isGrabbed());
-			}    
+			}
 		}
 	}
 
 	private void switchCursor() {
 		try {
-			Mouse.setNativeCursor(cursor[mouse_btn]);
+			Mouse.setNativeCursor(cursors[mouse_btn]);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -366,31 +367,31 @@ public class HWCursorTest {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		for(int i=0; i<cursor.length; i++) {
-			cursor[i].destroy();
+		for ( Cursor cursor : cursors ) {
+			cursor.destroy();
 		}
 		Display.destroy();
 	}
-	
+
 	/**
 	 * Initializes OGL
 	 */
 	private void glInit() {
 		// Go into orthographic projection mode.
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GLU.gluOrtho2D(0, Display.getDisplayMode().getWidth(), 0, Display.getDisplayMode().getHeight());
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
-		GL11.glViewport(0, 0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
-		
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluOrtho2D(0, Display.getDisplayMode().getWidth(), 0, Display.getDisplayMode().getHeight());
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glViewport(0, 0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
+
 		//set clear color to black
-		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
 		//sync frame (only works on windows)
 		Display.setVSyncEnabled(true);
 	}
-	
+
 	/**
 	 * Test entry point
 	 */

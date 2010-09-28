@@ -45,12 +45,12 @@ import org.lwjgl.opengl.Display;
  * $Id$
  */
 final class WindowsSysImplementation extends DefaultSysImplementation {
-	private final static int JNI_VERSION = 23; 
+	private static final int JNI_VERSION = 23;
 
 	static {
 		Sys.initialize();
 	}
-	
+
 	public int getRequiredJNIVersion() {
 		return JNI_VERSION;
 	}
@@ -64,7 +64,7 @@ final class WindowsSysImplementation extends DefaultSysImplementation {
 	}
 	private static native long nGetTime();
 
-	public final boolean has64Bit() {
+	public boolean has64Bit() {
 		return true;
 	}
 
@@ -75,19 +75,17 @@ final class WindowsSysImplementation extends DefaultSysImplementation {
 		 * public
 		 */
 		try {
-			Long hwnd_obj = (Long)AccessController.doPrivileged(new PrivilegedExceptionAction() {
-				public Object run() throws Exception {
-					Method getImplementation_method = Display.class.getDeclaredMethod("getImplementation", null);
+			return AccessController.doPrivileged(new PrivilegedExceptionAction<Long>() {
+				public Long run() throws Exception {
+					Method getImplementation_method = Display.class.getDeclaredMethod("getImplementation");
 					getImplementation_method.setAccessible(true);
-					Object display_impl = getImplementation_method.invoke(null, null);
-					Class WindowsDisplay_class = Class.forName("org.lwjgl.opengl.WindowsDisplay");
-					Method getHwnd_method = WindowsDisplay_class.getDeclaredMethod("getHwnd", null);
+					Object display_impl = getImplementation_method.invoke(null);
+					Class<?> WindowsDisplay_class = Class.forName("org.lwjgl.opengl.WindowsDisplay");
+					Method getHwnd_method = WindowsDisplay_class.getDeclaredMethod("getHwnd");
 					getHwnd_method.setAccessible(true);
-					Long hwnd = (Long)getHwnd_method.invoke(display_impl, null);
-					return hwnd;
+					return (Long)getHwnd_method.invoke(display_impl);
 				}
 			});
-			return hwnd_obj.longValue();
 		} catch (PrivilegedActionException e) {
 			throw new Error(e);
 		}

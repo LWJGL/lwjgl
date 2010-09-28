@@ -217,25 +217,25 @@ public class Keyboard {
 
 	/** Key names */
 	private static final String[] keyName = new String[255];
-	private static final Map keyMap = new HashMap(253);
+	private static final Map<String, Integer> keyMap = new HashMap<String, Integer>(253);
 	private static int counter;
 
 	static {
 		// Use reflection to find out key names
-		Field[] field = Keyboard.class.getFields();
+		Field[] fields = Keyboard.class.getFields();
 		try {
-			for (int i = 0; i < field.length; i++) {
-				if (Modifier.isStatic(field[i].getModifiers())
-					&& Modifier.isPublic(field[i].getModifiers())
-					&& Modifier.isFinal(field[i].getModifiers())
-					&& field[i].getType().equals(int.class)
-					&& field[i].getName().startsWith("KEY_")) {
+			for ( Field field : fields ) {
+				if ( Modifier.isStatic(field.getModifiers())
+				     && Modifier.isPublic(field.getModifiers())
+				     && Modifier.isFinal(field.getModifiers())
+				     && field.getType().equals(int.class)
+				     && field.getName().startsWith("KEY_") ) {
 
-					int key = field[i].getInt(null);
-					String name = field[i].getName().substring(4);
+					int key = field.getInt(null);
+					String name = field.getName().substring(4);
 					keyName[key] = name;
-					keyMap.put(name, new Integer(key));
-					counter ++;
+					keyMap.put(name, key);
+					counter++;
 				}
 
 			}
@@ -355,7 +355,7 @@ public class Keyboard {
 	 * Polls the keyboard for its current state. Access the polled values using the
 	 * <code>isKeyDown</code> method.
 	 * By using this method, it is possible to "miss" keyboard keys if you don't
-	 * poll fast enough. 
+	 * poll fast enough.
 	 *
 	 * To use buffered values, you have to call <code>next</code> for each event you
 	 * want to read. You can query which key caused the event by using
@@ -426,11 +426,11 @@ public class Keyboard {
 	 * @param keyName The key name
 	 */
 	public static synchronized int getKeyIndex(String keyName) {
-		Integer ret = (Integer) keyMap.get(keyName);
+		Integer ret = keyMap.get(keyName);
 		if (ret == null)
 			return KEY_NONE;
 		else
-			return ret.intValue();
+			return ret;
 	}
 
 	/**
@@ -531,7 +531,7 @@ public class Keyboard {
    * Please note that the key code returned is NOT valid against the
    * current keyboard layout. To get the actual character pressed call
    * getEventCharacter
-   * 
+   *
 	 * @return The key from the current event
 	 */
 	public static int getEventKey() {
@@ -576,7 +576,7 @@ public class Keyboard {
 		}
 	}
 
-	private final static class KeyEvent {
+	private static final class KeyEvent {
 		/** The current keyboard character being examined */
 		private int character;
 

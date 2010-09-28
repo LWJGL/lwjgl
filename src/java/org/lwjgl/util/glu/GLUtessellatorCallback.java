@@ -112,7 +112,7 @@ public interface GLUtessellatorCallback {
    * @see #end     end
    * @see #begin   begin
    */
-  public void begin(int type);
+  void begin(int type);
 
   /**
    * The same as the {@link #begin begin} callback method except that
@@ -131,7 +131,7 @@ public interface GLUtessellatorCallback {
    * @see #endData endData
    * @see #begin   begin
    */
-  public void beginData(int type, Object polygonData);
+  void beginData(int type, Object polygonData);
 
 
   /**
@@ -158,7 +158,7 @@ public interface GLUtessellatorCallback {
    * @see GLU#gluTessCallback gluTessCallback
    * @see #edgeFlagData edgeFlagData
    */
-  public void edgeFlag(boolean boundaryEdge);
+  void edgeFlag(boolean boundaryEdge);
 
 
   /**
@@ -175,7 +175,7 @@ public interface GLUtessellatorCallback {
    * @see GLU#gluTessCallback            gluTessCallback
    * @see #edgeFlag edgeFlag
    */
-  public void edgeFlagData(boolean boundaryEdge, Object polygonData);
+  void edgeFlagData(boolean boundaryEdge, Object polygonData);
 
 
   /**
@@ -195,7 +195,7 @@ public interface GLUtessellatorCallback {
    * @see GLU#gluTessCallback              gluTessCallback
    * @see #vertexData vertexData
    */
-  public void vertex(Object vertexData);
+  void vertex(Object vertexData);
 
 
   /**
@@ -213,7 +213,7 @@ public interface GLUtessellatorCallback {
    * @see GLU#gluTessCallback          gluTessCallback
    * @see #vertex vertex
    */
-  public void vertexData(Object vertexData, Object polygonData);
+  void vertexData(Object vertexData, Object polygonData);
 
 
   /**
@@ -225,7 +225,7 @@ public interface GLUtessellatorCallback {
    * @see #begin   begin
    * @see #endData endData
    */
-  public void end();
+  void end();
 
 
   /**
@@ -241,7 +241,7 @@ public interface GLUtessellatorCallback {
    * @see #beginData beginData
    * @see #end       end
    */
-  public void endData(Object polygonData);
+  void endData(Object polygonData);
 
 
   /**
@@ -308,8 +308,8 @@ public interface GLUtessellatorCallback {
    * @see GLU#gluTessCallback               gluTessCallback
    * @see #combineData combineData
    */
-  public void combine(double[] coords, Object[] data,
-                      float[] weight, Object[] outData);
+  void combine(double[] coords, Object[] data,
+               float[] weight, Object[] outData);
 
 
   /**
@@ -332,9 +332,9 @@ public interface GLUtessellatorCallback {
    * @see GLU#gluTessCallback           gluTessCallback
    * @see #combine combine
    */
-  public void combineData(double[] coords, Object[] data,
-                          float[] weight, Object[] outData,
-                          Object polygonData);
+  void combineData(double[] coords, Object[] data,
+                   float[] weight, Object[] outData,
+                   Object polygonData);
 
 
   /**
@@ -365,7 +365,7 @@ public interface GLUtessellatorCallback {
    * @see GLU#gluTessCallback             gluTessCallback
    * @see #errorData errorData
    */
-  public void error(int errnum);
+  void error(int errnum);
 
 
   /**
@@ -382,7 +382,7 @@ public interface GLUtessellatorCallback {
    * @see GLU#gluTessCallback         gluTessCallback
    * @see #error error
    */
-  public void errorData(int errnum, Object polygonData);
+  void errorData(int errnum, Object polygonData);
 
   //void mesh(com.sun.opengl.impl.tessellator.GLUmesh mesh);
 }

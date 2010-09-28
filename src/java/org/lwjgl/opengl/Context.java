@@ -40,6 +40,8 @@ import org.lwjgl.opencl.KHRGLSharing;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import static org.lwjgl.opengl.GL11.*;
+
 /**
  * <p/>
  * Context encapsulates an OpenGL context.
@@ -57,7 +59,7 @@ final class Context {
 	private static final ContextImplementation implementation;
 
 	/** The current Context */
-	private static final ThreadLocal current_context_local = new ThreadLocal();
+	private static final ThreadLocal<Context> current_context_local = new ThreadLocal<Context>();
 
 	/** Handle to the native GL rendering context */
 	private final ByteBuffer handle;
@@ -101,7 +103,7 @@ final class Context {
 	}
 
 	static Context getCurrentContext() {
-		return (Context)current_context_local.get();
+		return current_context_local.get();
 	}
 
 	/** Create a context with the specified peer info and shared context */
@@ -248,14 +250,14 @@ final class Context {
 			return;
 		destroy_requested = true;
 		boolean was_current = isCurrent();
-		int error = GL11.GL_NO_ERROR;
+		int error = GL_NO_ERROR;
 		if ( was_current ) {
 			if ( GLContext.getCapabilities() != null && GLContext.getCapabilities().OpenGL11 )
-				error = GL11.glGetError();
+				error = glGetError();
 			releaseCurrentContext();
 		}
 		checkDestroy();
-		if ( was_current && error != GL11.GL_NO_ERROR )
+		if ( was_current && error != GL_NO_ERROR )
 			throw new OpenGLException(error);
 	}
 

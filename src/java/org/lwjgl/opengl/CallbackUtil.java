@@ -42,9 +42,9 @@ import java.util.Map;
 final class CallbackUtil {
 
 	/** Context -> Long */
-	private static final Map contextUserParamsARB = new HashMap();
+	private static final Map<Context, Long> contextUserParamsARB = new HashMap<Context, Long>();
 	/** Context -> Long */
-	private static final Map contextUserParamsAMD = new HashMap();
+	private static final Map<Context, Long> contextUserParamsAMD = new HashMap<Context, Long>();
 
 	private CallbackUtil() {}
 
@@ -84,19 +84,19 @@ final class CallbackUtil {
 	 *
 	 * @param userParam the global reference pointer
 	 */
-	private static void registerContextCallback(final long userParam, final Map contextUserData) {
+	private static void registerContextCallback(final long userParam, final Map<Context, Long> contextUserData) {
 		Context context = Context.getCurrentContext();
 		if ( context == null ) {
 			deleteGlobalRef(userParam);
 			throw new IllegalStateException("No context is current.");
 		}
 
-		final Long userParam_old = (Long)contextUserData.remove(context);
+		final Long userParam_old = contextUserData.remove(context);
 		if ( userParam_old != null )
-			deleteGlobalRef(userParam_old.longValue());
+			deleteGlobalRef(userParam_old);
 
 		if ( userParam != 0 )
-			contextUserData.put(context, new Long(userParam));
+			contextUserData.put(context, userParam);
 	}
 
 	/**
@@ -105,13 +105,13 @@ final class CallbackUtil {
 	 * @param context the Context to unregister
 	 */
 	static void unregisterCallbacks(final Context context) {
-		Long userParam = (Long)contextUserParamsARB.remove(context);
+		Long userParam = contextUserParamsARB.remove(context);
 		if ( userParam != null )
-			deleteGlobalRef(userParam.longValue());
+			deleteGlobalRef(userParam);
 
-		userParam = (Long)contextUserParamsAMD.remove(context);
+		userParam = contextUserParamsAMD.remove(context);
 		if ( userParam != null )
-			deleteGlobalRef(userParam.longValue());
+			deleteGlobalRef(userParam);
 	}
 
 	// --------- [ ARB_debug_output ] ---------

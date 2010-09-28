@@ -156,7 +156,7 @@ public class GLGeneratorProcessorFactory implements AnnotationProcessorFactory, 
 			for (TypeDeclaration typedecl : interface_decls) {
 				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
 				String simple_name = interface_decl.getSimpleName();
-				if (simple_name.equals("GL11"))
+				if ( "GL11".equals(simple_name) )
 					continue;
 				GLCapabilitiesGenerator.generateInitStubs(writer, interface_decl, context_specific);
 			}

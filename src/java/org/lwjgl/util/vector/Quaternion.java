@@ -1,40 +1,40 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.lwjgl.util.vector;
 
 /**
- * 
+ *
  * Quaternions for LWJGL!
- * 
+ *
  * @author fbi
  * @version $Revision$
  * $Id$
@@ -57,7 +57,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/**
 	 * C'tor
-	 * 
+	 *
 	 * @param src
 	 */
 	public Quaternion(ReadableVector4f src) {
@@ -66,7 +66,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/**
 	 * C'tor
-	 * 
+	 *
 	 */
 	public Quaternion(float x, float y, float z, float w) {
 		set(x, y, z, w);
@@ -74,7 +74,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.lwjgl.util.vector.WritableVector2f#set(float, float)
 	 */
 	public void set(float x, float y) {
@@ -84,7 +84,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.lwjgl.util.vector.WritableVector3f#set(float, float, float)
 	 */
 	public void set(float x, float y, float z) {
@@ -95,7 +95,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.lwjgl.util.vector.WritableVector4f#set(float, float, float,
 	 *      float)
 	 */
@@ -108,7 +108,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/**
 	 * Load from another Vector4f
-	 * 
+	 *
 	 * @param src
 	 *            The source vector
 	 * @return this
@@ -128,7 +128,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	public Quaternion setIdentity() {
 		return setIdentity(this);
 	}
-	
+
 	/**
 	 * Set the given quaternion to the multiplication identity.
 	 * @param q The quaternion
@@ -151,7 +151,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/**
 	 * Normalise the source quaternion and place the result in another quaternion.
-	 * 
+	 *
 	 * @param src
 	 *            The source quaternion
 	 * @param dest
@@ -172,7 +172,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/**
 	 * Normalise this quaternion and place the result in another quaternion.
-	 * 
+	 *
 	 * @param dest
 	 *            The destination quaternion, or null if a new quaternion is to be
 	 *            created
@@ -184,7 +184,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/**
 	 * The dot product of two quaternions
-	 * 
+	 *
 	 * @param left
 	 *            The LHS quat
 	 * @param right
@@ -198,7 +198,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/**
 	 * Calculate the conjugate of this quaternion and put it into the given one
-	 * 
+	 *
 	 * @param dest
 	 *            The quaternion which should be set to the conjugate of this
 	 *            quaternion
@@ -209,7 +209,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/**
 	 * Calculate the conjugate of this quaternion and put it into the given one
-	 * 
+	 *
 	 * @param src
 	 *            The source quaternion
 	 * @param dest
@@ -248,13 +248,13 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.lwjgl.vector.Vector#scale(float)
 	 */
 	public Vector scale(float scale) {
 		return scale(scale, this, this);
 	}
-	
+
 	/**
 	 * Scale the source quaternion by scale and put the result in the destination
 	 * @param scale The amount to scale by
@@ -300,7 +300,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/**
 	 * Set X
-	 * 
+	 *
 	 * @param x
 	 */
 	public final void setX(float x) {
@@ -309,7 +309,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/**
 	 * Set Y
-	 * 
+	 *
 	 * @param y
 	 */
 	public final void setY(float y) {
@@ -318,7 +318,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/**
 	 * Set Z
-	 * 
+	 *
 	 * @param z
 	 */
 	public void setZ(float z) {
@@ -327,7 +327,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/*
 	 * (Overrides)
-	 * 
+	 *
 	 * @see org.lwjgl.vector.ReadableVector3f#getZ()
 	 */
 	public float getZ() {
@@ -336,7 +336,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/**
 	 * Set W
-	 * 
+	 *
 	 * @param w
 	 */
 	public void setW(float w) {
@@ -345,7 +345,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 
 	/*
 	 * (Overrides)
-	 * 
+	 *
 	 * @see org.lwjgl.vector.ReadableVector3f#getW()
 	 */
 	public float getW() {
@@ -360,7 +360,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 * Sets the value of this quaternion to the quaternion product of
 	 * quaternions left and right (this = left * right). Note that this is safe
 	 * for aliasing (e.g. this can be left or right).
-	 * 
+	 *
 	 * @param left
 	 *            the first quaternion
 	 * @param right
@@ -380,11 +380,11 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	}
 
 	/**
-	 * 
+	 *
 	 * Multiplies quaternion left by the inverse of quaternion right and places
 	 * the value into this quaternion. The value of both argument quaternions is
 	 * preservered (this = left * right^-1).
-	 * 
+	 *
 	 * @param left
 	 *            the left quaternion
 	 * @param right
@@ -415,7 +415,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	/**
 	 * Sets the value of this quaternion to the equivalent rotation of the
 	 * Axis-Angle argument.
-	 * 
+	 *
 	 * @param a1
 	 *            the axis-angle: (x,y,z) is the axis and w is the angle
 	 */
@@ -435,7 +435,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	/**
 	 * Sets the value of this quaternion using the rotational component of the
 	 * passed matrix.
-	 * 
+	 *
 	 * @param m
 	 *            The matrix
 	 * @return this
@@ -447,14 +447,14 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	/**
 	 * Sets the value of the source quaternion using the rotational component of the
 	 * passed matrix.
-	 * 
+	 *
 	 * @param m
 	 *            The source matrix
 	 * @param q
 	 *            The destination quaternion, or null if a new quaternion is to be created
 	 * @return q
 	 */
-	public final static Quaternion setFromMatrix(Matrix4f m, Quaternion q) {
+	public static Quaternion setFromMatrix(Matrix4f m, Quaternion q) {
 		return q.setFromMat(m.m00, m.m01, m.m02, m.m10, m.m11, m.m12, m.m20,
 				m.m21, m.m22);
 	}
@@ -462,7 +462,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	/**
 	 * Sets the value of this quaternion using the rotational component of the
 	 * passed matrix.
-	 * 
+	 *
 	 * @param m
 	 *            The source matrix
 	 */
@@ -473,14 +473,14 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	/**
 	 * Sets the value of the source quaternion using the rotational component of the
 	 * passed matrix.
-	 * 
+	 *
 	 * @param m
 	 *            The source matrix
 	 * @param q
 	 *            The destination quaternion, or null if a new quaternion is to be created
 	 * @return q
 	 */
-	public static final Quaternion setFromMatrix(Matrix3f m, Quaternion q) {
+	public static Quaternion setFromMatrix(Matrix3f m, Quaternion q) {
 		return q.setFromMat(m.m00, m.m01, m.m02, m.m10, m.m11, m.m12, m.m20,
 				m.m21, m.m22);
 	}

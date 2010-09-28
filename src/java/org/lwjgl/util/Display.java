@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -47,13 +47,13 @@ import org.lwjgl.opengl.DisplayMode;
  * $Id$
  */
 public final class Display {
-	
+
 	private static final boolean DEBUG = false;
-	
+
 	/**
 	 * Determine the available display modes that match the specified minimum and maximum criteria.
 	 * If any given criterium is specified as -1 then it is ignored.
-	 * 
+	 *
 	 * @param minWidth the minimum display resolution in pixels
 	 * @param minHeight the minimum display resolution in pixels
 	 * @param maxWidth the maximum display resolution in pixels
@@ -69,15 +69,15 @@ public final class Display {
 	{
 		// First get the available display modes
 		DisplayMode[] modes = org.lwjgl.opengl.Display.getAvailableDisplayModes();
-		
+
 		if (LWJGLUtil.DEBUG || DEBUG) {
 			System.out.println("Available screen modes:");
-			for (int i = 0; i < modes.length; i ++) {
-				System.out.println(modes[i]);
+			for ( DisplayMode mode : modes ) {
+				System.out.println(mode);
 			}
 		}
-		
-		ArrayList matches = new ArrayList(modes.length);
+
+		ArrayList<DisplayMode> matches = new ArrayList<DisplayMode>(modes.length);
 
 		for (int i = 0; i < modes.length; i ++) {
 			assert modes[i] != null : ""+i+" "+modes.length;
@@ -103,19 +103,19 @@ public final class Display {
 			}
 			matches.add(modes[i]);
 		}
-		
+
 		DisplayMode[] ret = new DisplayMode[matches.size()];
 		matches.toArray(ret);
 		if (LWJGLUtil.DEBUG && DEBUG) {
 			System.out.println("Filtered screen modes:");
-			for (int i = 0; i < ret.length; i ++) {
-				System.out.println(ret[i]);
+			for ( DisplayMode mode : ret ) {
+				System.out.println(mode);
 			}
 		}
-		
+
 		return ret;
 	}
-	
+
 	/**
 	 * Create the display by choosing from a list of display modes based on an order of preference.
 	 * You must supply a list of allowable display modes, probably by calling getAvailableDisplayModes(),
@@ -130,7 +130,7 @@ public final class Display {
 	 * @see org.lwjgl.opengl.DisplayMode
 	 */
 	public static DisplayMode setDisplayMode(DisplayMode[] dm, final String[] param) throws Exception {
-		
+
 		class FieldAccessor {
 			final String fieldName;
 			final int order;
@@ -158,89 +158,86 @@ public final class Display {
 				throw new IllegalArgumentException("Unknown field "+fieldName);
 			}
 		}
-		
-		class Sorter implements Comparator {
-			
-			final FieldAccessor[] field;
-			
+
+		class Sorter implements Comparator<DisplayMode> {
+
+			final FieldAccessor[] accessors;
+
 			Sorter() {
-				field = new FieldAccessor[param.length];
-				for (int i = 0; i < field.length; i ++) {
+				accessors = new FieldAccessor[param.length];
+				for (int i = 0; i < accessors.length; i ++) {
 					int idx = param[i].indexOf('=');
 					if (idx > 0) {
-						field[i] = new FieldAccessor(param[i].substring(0, idx), 0, Integer.parseInt(param[i].substring(idx + 1, param[i].length())), true);
+						accessors[i] = new FieldAccessor(param[i].substring(0, idx), 0, Integer.parseInt(param[i].substring(idx + 1, param[i].length())), true);
 					} else if (param[i].charAt(0) == '-') {
-						field[i] = new FieldAccessor(param[i].substring(1), -1, 0, false);
+						accessors[i] = new FieldAccessor(param[i].substring(1), -1, 0, false);
 					} else {
-						field[i] = new FieldAccessor(param[i], 1, 0, false);
+						accessors[i] = new FieldAccessor(param[i], 1, 0, false);
 					}
 				}
 			}
-			
+
 			/**
 			 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 			 */
-			public int compare(Object o1, Object o2) {
-				DisplayMode dm1 = (DisplayMode) o1;
-				DisplayMode dm2 = (DisplayMode) o2;
-				
-				for (int i = 0; i < field.length; i ++) {
-					int f1 = field[i].getInt(dm1);
-					int f2 = field[i].getInt(dm2);
-					
-					if (field[i].usePreferred && f1 != f2) {
-						if (f1 == field[i].preferred)
+			public int compare(DisplayMode dm1, DisplayMode dm2) {
+				for ( FieldAccessor accessor : accessors ) {
+					int f1 = accessor.getInt(dm1);
+					int f2 = accessor.getInt(dm2);
+
+					if ( accessor.usePreferred && f1 != f2 ) {
+						if ( f1 == accessor.preferred )
 							return -1;
-						else if (f2 == field[i].preferred)
+						else if ( f2 == accessor.preferred )
 							return 1;
 						else {
 							// Score according to the difference between the values
-							int absf1 = Math.abs(f1 - field[i].preferred);
-							int absf2 = Math.abs(f2 - field[i].preferred);
-							if (absf1 < absf2)
+							int absf1 = Math.abs(f1 - accessor.preferred);
+							int absf2 = Math.abs(f2 - accessor.preferred);
+							if ( absf1 < absf2 )
 								return -1;
-							else if (absf1 > absf2)
+							else if ( absf1 > absf2 )
 								return 1;
 							else
 								continue;
 						}
-					} else if (f1 < f2)
-						return field[i].order;
-					else if (f1 == f2)
+					} else if ( f1 < f2 )
+						return accessor.order;
+					else if ( f1 == f2 )
 						continue;
 					else
-						return -field[i].order;
+						return -accessor.order;
 				}
-				
+
 				return 0;
 			}
 		}
-		
+
 		// Sort the display modes
 		Arrays.sort(dm, new Sorter());
-		
+
 		// Try them out in the appropriate order
 		if (LWJGLUtil.DEBUG || DEBUG) {
 			System.out.println("Sorted display modes:");
-			for (int i = 0; i < dm.length; i ++) {
-				System.out.println(dm[i]);
+			for ( DisplayMode aDm : dm ) {
+				System.out.println(aDm);
 			}
 		}
-		for (int i = 0; i < dm.length; i ++) {
+		for ( DisplayMode aDm : dm ) {
 			try {
-				if (LWJGLUtil.DEBUG || DEBUG)
-					System.out.println("Attempting to set displaymode: "+dm[i]);
-				org.lwjgl.opengl.Display.setDisplayMode(dm[i]);
-				return dm[i];
+				if ( LWJGLUtil.DEBUG || DEBUG )
+					System.out.println("Attempting to set displaymode: " + aDm);
+				org.lwjgl.opengl.Display.setDisplayMode(aDm);
+				return aDm;
 			} catch (Exception e) {
-				if (LWJGLUtil.DEBUG || DEBUG) {
-					System.out.println("Failed to set display mode to "+dm[i]);
+				if ( LWJGLUtil.DEBUG || DEBUG ) {
+					System.out.println("Failed to set display mode to " + aDm);
 					e.printStackTrace();
 				}
 			}
 		}
-		
+
 		throw new Exception("Failed to set display mode.");
 	}
-	
+
 }

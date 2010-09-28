@@ -55,7 +55,7 @@ abstract class PeerInfo {
 		doLockAndInitHandle();
 	}
 
-	public synchronized final void unlock() throws LWJGLException {
+	public final synchronized void unlock() throws LWJGLException {
 		if (lock_count <= 0)
 			throw new IllegalStateException("PeerInfo not locked!");
 		if (Thread.currentThread() != locking_thread)
@@ -71,7 +71,7 @@ abstract class PeerInfo {
 	protected abstract void doLockAndInitHandle() throws LWJGLException;
 	protected abstract void doUnlock() throws LWJGLException;
 
-	public synchronized final ByteBuffer lockAndGetHandle() throws LWJGLException {
+	public final synchronized ByteBuffer lockAndGetHandle() throws LWJGLException {
 		Thread this_thread = Thread.currentThread();
 		while (locking_thread != null && locking_thread != this_thread) {
 			try {

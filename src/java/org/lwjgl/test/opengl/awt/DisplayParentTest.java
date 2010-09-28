@@ -41,8 +41,9 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.*;
 
 /**
  * <p>
@@ -53,7 +54,7 @@ import org.lwjgl.util.glu.GLU;
  * $Id$
  */
 public class DisplayParentTest extends Frame {
-	boolean killswitch = false;
+	boolean killswitch;
 	public DisplayParentTest() throws LWJGLException {
 		setTitle("LWJGL Display Parent Test");
 		setSize(640, 320);
@@ -85,23 +86,23 @@ public class DisplayParentTest extends Frame {
 				width = Display.getDisplayMode().getWidth();
 				height = Display.getDisplayMode().getHeight();
 			}
-			
+
 			if(width < 1 || height < 1) {
 				continue;
 			}
-			
-			GL11.glViewport(0, 0, width, height);
-			GL11.glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-			GL11.glMatrixMode(GL11.GL_PROJECTION);
-			GL11.glLoadIdentity();
-			GLU.gluOrtho2D(0.0f, (float) width, 0.0f, (float) height);
-			GL11.glMatrixMode(GL11.GL_MODELVIEW);
-			GL11.glPushMatrix();
-			GL11.glTranslatef(width / 2.0f, height / 2.0f, 0.0f);
-			GL11.glRotatef(2*angle, 0f, 0f, -1.0f);
-			GL11.glRectf(-50.0f, -50.0f, 50.0f, 50.0f);
-			GL11.glPopMatrix();
+
+			glViewport(0, 0, width, height);
+			glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			gluOrtho2D(0.0f, (float) width, 0.0f, (float) height);
+			glMatrixMode(GL_MODELVIEW);
+			glPushMatrix();
+			glTranslatef(width / 2.0f, height / 2.0f, 0.0f);
+			glRotatef(2*angle, 0f, 0f, -1.0f);
+			glRectf(-50.0f, -50.0f, 50.0f, 50.0f);
+			glPopMatrix();
 			Display.update();
 			while(Keyboard.next()) {
 				// closing on ESCAPE

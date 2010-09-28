@@ -54,32 +54,31 @@ import org.lwjgl.opengl.XRandR.Screen;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 final class LinuxDisplay implements DisplayImplementation {
 	/* X11 constants */
-	public final static int CurrentTime = 0;
-	public final static int GrabSuccess = 0;
-	public final static int AutoRepeatModeOff  = 0;
-	public final static int AutoRepeatModeOn = 1;
-	public final static int AutoRepeatModeDefault = 2;
-	public final static int None = 0;
+	public static final int CurrentTime = 0;
+	public static final int GrabSuccess = 0;
+	public static final int AutoRepeatModeOff  = 0;
+	public static final int AutoRepeatModeOn = 1;
+	public static final int AutoRepeatModeDefault = 2;
+	public static final int None = 0;
 
-	private final static int KeyPressMask = 1 << 0;
-	private final static int KeyReleaseMask = 1 << 1;
-	private final static int ButtonPressMask = 1 << 2;
-	private final static int ButtonReleaseMask = 1 << 3;
+	private static final int KeyPressMask = 1 << 0;
+	private static final int KeyReleaseMask = 1 << 1;
+	private static final int ButtonPressMask = 1 << 2;
+	private static final int ButtonReleaseMask = 1 << 3;
 
-	private final static int NotifyAncestor = 0;
-	private final static int NotifyNonlinear = 3;
-	private final static int NotifyPointer = 5;
-	private final static int NotifyPointerRoot = 6;
-	private final static int NotifyDetailNone = 7;
+	private static final int NotifyAncestor = 0;
+	private static final int NotifyNonlinear = 3;
+	private static final int NotifyPointer = 5;
+	private static final int NotifyPointerRoot = 6;
+	private static final int NotifyDetailNone = 7;
 
-	private final static int SetModeInsert = 0;
-	private final static int SaveSetRoot = 1;
-	private final static int SaveSetUnmap = 1;
+	private static final int SetModeInsert = 0;
+	private static final int SaveSetRoot = 1;
+	private static final int SaveSetUnmap = 1;
 
 	/** Window mode enum */
 	private static final int FULLSCREEN_LEGACY = 1;
@@ -99,7 +98,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static long current_window;
 	private static long saved_error_handler;
 
-	private static int display_connection_usage_count = 0;
+	private static int display_connection_usage_count;
 
 	/** Event buffer */
 	private final LinuxEvent event_buffer = new LinuxEvent();
@@ -120,7 +119,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	/** Saved mode to restore with */
 	private DisplayMode saved_mode;
 	private DisplayMode current_mode;
-	
+
 	private Screen[] savedXrandrConfig;
 
 	private boolean keyboard_grabbed;
@@ -369,7 +368,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	static native int nUngrabPointer(long display);
 
-	private boolean isFullscreen() {
+	private static boolean isFullscreen() {
 		return current_window_mode == FULLSCREEN_LEGACY || current_window_mode == FULLSCREEN_NETWM;
 	}
 
@@ -397,7 +396,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native void nDefineCursor(long display, long window, long cursor_handle);
 
-	private boolean isLegacyFullscreen() {
+	private static boolean isLegacyFullscreen() {
 		return current_window_mode == FULLSCREEN_LEGACY;
 	}
 
@@ -544,7 +543,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		try {
 			if( current_displaymode_extension == XRANDR && savedXrandrConfig.length > 0 )
 			{
-				AccessController.doPrivileged(new PrivilegedAction() {
+				AccessController.doPrivileged(new PrivilegedAction<Object>() {
 					public Object run() {
 						XRandR.setConfiguration( savedXrandrConfig );
 						return null;
@@ -607,7 +606,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 
-	private void setGammaRampOnTmpDisplay(ByteBuffer native_gamma) throws LWJGLException {
+	private static void setGammaRampOnTmpDisplay(ByteBuffer native_gamma) throws LWJGLException {
 		incDisplay();
 		try {
 			nSetGammaRamp(getDisplay(), getDefaultScreen(), native_gamma);
@@ -644,8 +643,8 @@ final class LinuxDisplay implements DisplayImplementation {
 				throw new LWJGLException("No modes available");
 			switch (current_displaymode_extension) {
 				case XRANDR:
-					savedXrandrConfig = (Screen[])AccessController.doPrivileged(new PrivilegedAction() {
-						public Object run() {
+					savedXrandrConfig = AccessController.doPrivileged(new PrivilegedAction<Screen[]>() {
+						public Screen[] run() {
 							return XRandR.getConfiguration();
 						}
 					});
@@ -872,10 +871,10 @@ final class LinuxDisplay implements DisplayImplementation {
 
 	private void checkInput() {
 		if (parent == null) return;
-		
+
 		if (parent_focus != parent.hasFocus()) {
 			parent_focus = parent.hasFocus();
-			
+
 			if (parent_focus) {
 				setInputFocusUnsafe(current_window);
 			}
@@ -892,7 +891,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		if (focused == got_focus || focus_detail == NotifyDetailNone || focus_detail == NotifyPointer || focus_detail == NotifyPointerRoot)
 			return;
 		focused = got_focus;
-		
+
 		if (focused) {
 			acquireInput();
 		}
@@ -902,7 +901,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	static native long nGetInputFocus(long display);
 
-	private void setInputFocusUnsafe(long window) {
+	private static void setInputFocusUnsafe(long window) {
 		try {
 			setInputFocus(getDisplay(), window, CurrentTime);
 			sync(getDisplay(), false);
@@ -923,7 +922,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			try {
 				if( current_displaymode_extension == XRANDR && savedXrandrConfig.length > 0 )
 				{
-					AccessController.doPrivileged(new PrivilegedAction() {
+					AccessController.doPrivileged(new PrivilegedAction<Object>() {
 						public Object run() {
 							XRandR.setConfiguration( savedXrandrConfig );
 							return null;
@@ -1088,7 +1087,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			incDisplay();
 			try {
 				long cursor = nCreateCursor(getDisplay(), width, height, xHotspot, yHotspot, numImages, images, images.position(), delays, delays != null ? delays.position() : -1);
-				return new Long(cursor);
+				return cursor;
 			} catch (LWJGLException e) {
 				decDisplay();
 				throw e;
@@ -1099,7 +1098,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 
 	private static long getCursorHandle(Object cursor_handle) {
-		return cursor_handle != null ? ((Long)cursor_handle).longValue() : None;
+		return cursor_handle != null ? (Long)cursor_handle : None;
 	}
 
 	public void destroyCursor(Object cursorHandle) {
@@ -1215,12 +1214,12 @@ final class LinuxDisplay implements DisplayImplementation {
 		try {
 			incDisplay();
 			try {
-				for (int i=0;i<icons.length;i++) {
-					int size = icons[i].limit() / 4;
+				for ( ByteBuffer icon : icons ) {
+					int size = icon.limit() / 4;
 					int dimension = (int)Math.sqrt(size);
-					if (dimension > 0) {
-						ByteBuffer icon_rgb = convertIcon(icons[i], dimension, dimension);
-						ByteBuffer icon_mask = convertIconMask(icons[i], dimension, dimension);
+					if ( dimension > 0 ) {
+						ByteBuffer icon_rgb = convertIcon(icon, dimension, dimension);
+						ByteBuffer icon_mask = convertIconMask(icon, dimension, dimension);
 						nSetWindowIcon(getDisplay(), getWindow(), icon_rgb, icon_rgb.capacity(), icon_mask, icon_mask.capacity(), dimension, dimension);
 						return 1;
 					}
@@ -1272,7 +1271,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			if ( Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.nocompiz_lfs") )
 				return;
 
-			AccessController.doPrivileged(new PrivilegedAction() {
+			AccessController.doPrivileged(new PrivilegedAction<Object>() {
 				public Object run() {
 					try {
 						// Check if Compiz is active
@@ -1291,9 +1290,9 @@ final class LinuxDisplay implements DisplayImplementation {
 								private static final String KEY = "/org/freedesktop/compiz/workarounds/allscreens/legacy_fullscreen";
 
 								public boolean hasLegacyFullscreenSupport() throws LWJGLException {
-									final List output = Compiz.run(new String[] {
+									final List output = Compiz.run(
 										"dbus-send", "--print-reply", "--type=method_call", "--dest=org.freedesktop.compiz", KEY, "org.freedesktop.compiz.get"
-									});
+									);
 
 									if ( output == null || output.size() < 2 )
 										throw new LWJGLException("Invalid Dbus reply.");
@@ -1311,9 +1310,9 @@ final class LinuxDisplay implements DisplayImplementation {
 								}
 
 								public void setLegacyFullscreenSupport(final boolean state) throws LWJGLException {
-									if ( Compiz.run(new String[] {
+									if ( Compiz.run(
 										"dbus-send", "--type=method_call", "--dest=org.freedesktop.compiz", KEY, "org.freedesktop.compiz.set", "boolean:" + Boolean.toString(state)
-									}) == null )
+									) == null )
 										throw new LWJGLException("Failed to apply Compiz LFS workaround.");
 								}
 							};
@@ -1377,7 +1376,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			if ( !applyFix )
 				return;
 
-			AccessController.doPrivileged(new PrivilegedAction() {
+			AccessController.doPrivileged(new PrivilegedAction<Object>() {
 				public Object run() {
 					try {
 						provider.setLegacyFullscreenSupport(enabled);
@@ -1389,8 +1388,8 @@ final class LinuxDisplay implements DisplayImplementation {
 			});
 		}
 
-		private static List run(final String[] command) throws LWJGLException {
-			final List output = new ArrayList();
+		private static List<String> run(final String... command) throws LWJGLException {
+			final List<String> output = new ArrayList<String>();
 
 			try {
 				final Process p = Runtime.getRuntime().exec(command);
@@ -1417,13 +1416,12 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 
 		private static boolean isProcessActive(final String processName) throws LWJGLException {
-			final List output = run(new String[] { "ps", "-C", processName });
+			final List<String> output = run(new String[] { "ps", "-C", processName });
 			if ( output == null )
 				return false;
 
-			for ( Iterator iter = output.iterator(); iter.hasNext(); ) {
-				final String line = (String)iter.next();
-				if ( line.contains(processName) );
+			for ( final String line : output ) {
+				if ( line.contains(processName) )
 					return true;
 			}
 

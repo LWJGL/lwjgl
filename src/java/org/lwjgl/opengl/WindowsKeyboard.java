@@ -44,9 +44,9 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 
 final class WindowsKeyboard {
-	private final static int MAPVK_VK_TO_VSC = 0;
+	private static final int MAPVK_VK_TO_VSC = 0;
 
-	private final static int BUFFER_SIZE = 50;
+	private static final int BUFFER_SIZE = 50;
 
 	private final long hwnd;
 	private final ByteBuffer keyboard_state;

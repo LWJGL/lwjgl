@@ -116,7 +116,7 @@ public class JavaMethodsGenerator {
 	private static boolean generateParametersJava(PrintWriter writer, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, boolean native_stub, final boolean printTypes, Mode mode) {
 		boolean first_parameter = true;
 		for (ParameterDeclaration param : method.getParameters()) {
-			if ( native_stub && param.getAnnotation(Helper.class) != null )
+			if ( native_stub && (param.getAnnotation(Helper.class) != null && !param.getAnnotation(Helper.class).passToNative()) )
 				continue;
 			final Constant constant_annotation = param.getAnnotation(Constant.class);
 			if ( constant_annotation != null && constant_annotation.isNative() )
@@ -555,7 +555,7 @@ public class JavaMethodsGenerator {
 	private static boolean printMethodCallArguments(PrintWriter writer, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, Mode mode) {
 		boolean first_parameter = true;
 		for ( ParameterDeclaration param : method.getParameters() ) {
-			if ( param.getAnnotation(Result.class) != null || param.getAnnotation(Helper.class) != null )
+			if ( param.getAnnotation(Result.class) != null || (param.getAnnotation(Helper.class) != null && !param.getAnnotation(Helper.class).passToNative()) )
 				continue;
 
 			final Constant constant_annotation = param.getAnnotation(Constant.class);

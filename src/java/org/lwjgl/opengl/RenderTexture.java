@@ -35,6 +35,8 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 
+import static org.lwjgl.opengl.GL11.*;
+
 /** This class represents the state necessary for render-to-texture. */
 public final class RenderTexture {
 
@@ -214,13 +216,13 @@ public final class RenderTexture {
 
 		if ( useRGB ) {
 			pixelFormatCaps.put(isRectangle ? WGL_BIND_TO_TEXTURE_RECTANGLE_RGB_NV : WGL_BIND_TO_TEXTURE_RGB_ARB);
-			pixelFormatCaps.put(GL11.GL_TRUE);
+			pixelFormatCaps.put(GL_TRUE);
 
 			pBufferAttribs.put(WGL_TEXTURE_FORMAT_ARB);
 			pBufferAttribs.put(WGL_TEXTURE_RGB_ARB);
 		} else if ( useRGBA ) {
 			pixelFormatCaps.put(isRectangle ? WGL_BIND_TO_TEXTURE_RECTANGLE_RGBA_NV : WGL_BIND_TO_TEXTURE_RGBA_ARB);
-			pixelFormatCaps.put(GL11.GL_TRUE);
+			pixelFormatCaps.put(GL_TRUE);
 
 			pBufferAttribs.put(WGL_TEXTURE_FORMAT_ARB);
 			pBufferAttribs.put(WGL_TEXTURE_RGBA_ARB);
@@ -228,7 +230,7 @@ public final class RenderTexture {
 
 		if ( useDepth ) {
 			pixelFormatCaps.put(isRectangle ? WGL_BIND_TO_TEXTURE_RECTANGLE_DEPTH_NV : WGL_BIND_TO_TEXTURE_DEPTH_NV);
-			pixelFormatCaps.put(GL11.GL_TRUE);
+			pixelFormatCaps.put(GL_TRUE);
 
 			pBufferAttribs.put(WGL_DEPTH_TEXTURE_FORMAT_NV);
 			pBufferAttribs.put(WGL_TEXTURE_DEPTH_COMPONENT_NV);

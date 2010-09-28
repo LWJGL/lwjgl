@@ -38,11 +38,11 @@ import org.lwjgl.LWJGLUtil;
  *
  * @author Spasi
  */
-abstract class CLObjectChild<P extends CLObject> extends CLObject {
+abstract class CLObjectChild<P extends CLObject> extends CLObjectRetainable {
 
 	private final P parent;
 
-	CLObjectChild(final long pointer, final P parent) {
+	protected CLObjectChild(final long pointer, final P parent) {
 		super(pointer);
 
 		if ( LWJGLUtil.DEBUG && parent != null && !parent.isValid() )

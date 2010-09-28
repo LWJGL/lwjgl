@@ -37,6 +37,9 @@ import org.lwjgl.opengl.*;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL32.*;
+
 /**
  * Tests the ARB_create_context extension through the use of the ContextAttribs class.
  *
@@ -112,11 +115,11 @@ public final class VersionTest {
 
 		System.out.println("Requested " + ca);
 
-		final String version = GL11.glGetString(GL11.GL_VERSION);
+		final String version = glGetString(GL_VERSION);
 
 		boolean deprecated = false;
 		try {
-			GL11.glVertex3f(0.0f, 0.0f, 0.0f);
+			glVertex3f(0.0f, 0.0f, 0.0f);
 			deprecated = true;
 		} catch (Throwable t) {}
 
@@ -129,10 +132,10 @@ public final class VersionTest {
 		final boolean coreProfile;
 
 		if ( 3 < majorVersion || (majorVersion == 3 && 2 <= minorVersion) ) {
-			final int profileMask = GL11.glGetInteger(GL32.GL_CONTEXT_PROFILE_MASK);
+			final int profileMask = glGetInteger(GL_CONTEXT_PROFILE_MASK);
 
-			compatibilityProfile = (profileMask & GL32.GL_CONTEXT_COMPATIBILITY_PROFILE_BIT) != 0;
-			coreProfile = (profileMask & GL32.GL_CONTEXT_CORE_PROFILE_BIT) != 0;
+			compatibilityProfile = (profileMask & GL_CONTEXT_COMPATIBILITY_PROFILE_BIT) != 0;
+			coreProfile = (profileMask & GL_CONTEXT_CORE_PROFILE_BIT) != 0;
 		} else {
 			compatibilityProfile = false;
 			coreProfile = false;
@@ -215,8 +218,7 @@ public final class VersionTest {
 	private static DisplayMode chooseMode(DisplayMode[] modes, int width, int height) {
 		DisplayMode bestMode = null;
 
-		for ( int i = 0; i < modes.length; i++ ) {
-			DisplayMode mode = modes[i];
+		for ( DisplayMode mode : modes ) {
 			if ( mode.getWidth() == width && mode.getHeight() == height && mode.getFrequency() <= 85 ) {
 				if ( bestMode == null || (mode.getBitsPerPixel() >= bestMode.getBitsPerPixel() && mode.getFrequency() > bestMode.getFrequency()) )
 					bestMode = mode;

@@ -49,7 +49,7 @@ public class PointerBuffer implements Comparable {
 		boolean is64 = false;
 		try {
 			Method m = Class.forName("org.lwjgl.Sys").getDeclaredMethod("is64Bit", (Class[])null);
-			is64 = ((Boolean)m.invoke(null, (Object[])null)).booleanValue();
+			is64 = (Boolean)m.invoke(null, (Object[])null);
 		} catch (Throwable t) {
 			// ignore
 		} finally {
@@ -63,10 +63,22 @@ public class PointerBuffer implements Comparable {
 	protected final IntBuffer view32;
 	protected final LongBuffer view64;
 
+	/**
+	 * Creates a new PointerBuffer with the specified capacity.
+	 *
+	 * @param capacity the PointerBuffer size, in number of pointers
+	 */
 	public PointerBuffer(final int capacity) {
 		this(BufferUtils.createByteBuffer(capacity * getPointerSize()));
 	}
 
+	/**
+	 * Creates a new PointerBuffer using the specified ByteBuffer as its pointer
+	 * data source. This is useful for users that do their own memory management
+	 * over a big ByteBuffer, instead of allocating many small ones.
+	 *
+	 * @param source the source buffer
+	 */
 	public PointerBuffer(final ByteBuffer source) {
 		if ( !source.isDirect() )
 			throw new IllegalArgumentException("ByteBuffer is not direct");
@@ -89,6 +101,11 @@ public class PointerBuffer implements Comparable {
 	 */
 	public ByteBuffer getBuffer() {
 		return pointers;
+	}
+
+	/** Returns true if the underlying architecture is 64bit. */
+	public static boolean is64Bit() {
+		return is64Bit;
 	}
 
 	/**
@@ -769,7 +786,7 @@ public class PointerBuffer implements Comparable {
 	 * @return A summary string
 	 */
 	public String toString() {
-		StringBuffer sb = new StringBuffer(48);
+		StringBuilder sb = new StringBuilder(48);
 		sb.append(getClass().getName());
 		sb.append("[pos=");
 		sb.append(position());

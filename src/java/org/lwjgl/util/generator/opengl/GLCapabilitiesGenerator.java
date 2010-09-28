@@ -73,7 +73,7 @@ public class GLCapabilitiesGenerator {
 
 	public static void generateInitializerPrologue(PrintWriter writer) {
 		writer.println("\t" + Utils.CONTEXT_CAPS_CLASS_NAME + "(boolean forwardCompatible) throws LWJGLException {");
-		writer.println("\t\tSet " + CACHED_EXTS_VAR_NAME + " = " + ALL_INIT_METHOD_NAME + "(forwardCompatible);");
+		writer.println("\t\tSet<String> " + CACHED_EXTS_VAR_NAME + " = " + ALL_INIT_METHOD_NAME + "(forwardCompatible);");
 	}
 
 	private static String translateFieldName(String interface_name) {
@@ -124,7 +124,7 @@ public class GLCapabilitiesGenerator {
 	}
 
 	public static void generateInitStubsPrologue(PrintWriter writer, boolean context_specific) {
-		writer.println("\tprivate Set " + ALL_INIT_METHOD_NAME + "(boolean forwardCompatible) throws LWJGLException {");
+		writer.println("\tprivate Set<String> " + ALL_INIT_METHOD_NAME + "(boolean forwardCompatible) throws LWJGLException {");
 
 		// Load the basic pointers we need to detect OpenGL version and supported extensions.
 		writer.println("\t\tglGetError = GLContext.getFunctionAddress(\"glGetError\");");
@@ -137,7 +137,7 @@ public class GLCapabilitiesGenerator {
 
 		// Get the supported extensions set.
 		writer.println("\t\tGLContext.setCapabilities(this);");
-		writer.println("\t\tSet " + CACHED_EXTS_VAR_NAME + " = new HashSet(256);");
+		writer.println("\t\tSet<String> " + CACHED_EXTS_VAR_NAME + " = new HashSet<String>(256);");
 		writer.println("\t\tint " + PROFILE_MASK_VAR_NAME + " = GLContext.getSupportedExtensions(" + CACHED_EXTS_VAR_NAME + ");");
 
 		// Force forward compatible mode when OpenGL version is 3.1 or higher and ARB_compatibility is not available.
@@ -230,7 +230,7 @@ public class GLCapabilitiesGenerator {
 		if ( dependent != null ) {
 			if ( deprecated )
 				writer.print(",");
-			writer.print("Set supported_extensions");
+			writer.print("Set<String> supported_extensions");
 		}
 
 		Alias alias_annotation = d.getAnnotation(Alias.class);
@@ -313,7 +313,7 @@ public class GLCapabilitiesGenerator {
 		for ( final MethodDeclaration method : d.getMethods() ) {
 			if ( method.getAnnotation(Alternate.class) != null || method.getAnnotation(Reuse.class) != null )
 				continue;
-			
+
 			if ( first ) {
 				writer.println("\t// " + d.getSimpleName());
 				first = false;

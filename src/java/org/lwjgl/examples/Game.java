@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -35,7 +35,8 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  *
@@ -46,24 +47,24 @@ import org.lwjgl.opengl.GL11;
  * $Id$
  */
 public class Game {
-	
+
 	/** Game title */
 	public static final String GAME_TITLE = "My Game";
-	
+
 	/** Desired frame time */
 	private static final int FRAMERATE = 60;
-	
+
 	/** Exit the game */
 	private static boolean finished;
-  
+
   /** A rotating square! */
   private static float  angle;
-	
+
 	/**
 	 * No constructor needed - this class is static
 	 */
 	private Game() {}
-	
+
 	/**
 	 * Application init
 	 * @param args Commandline args
@@ -78,10 +79,10 @@ public class Game {
 		} finally {
 			cleanup();
 		}
-		
+
 		System.exit(0);
 	}
-	
+
 	/**
 	 * Initialise the game
 	 * @throws Exception if init fails
@@ -94,25 +95,25 @@ public class Game {
 
     // Enable vsync if we can
     Display.setVSyncEnabled(true);
-		
+
     Display.create();
-		
+
 		// Start up the sound system
 		AL.create();
-		
+
 		// TODO: Load in your textures etc here
-		
+
 		// Put the window into orthographic projection mode with 1:1 pixel ratio.
 		// We haven't used GLU here to do this to avoid an unnecessary dependency.
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GL11.glOrtho(0.0, Display.getDisplayMode().getWidth(), 0.0, Display.getDisplayMode().getHeight(), -1.0, 1.0);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
-		GL11.glViewport(0, 0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
-		
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0.0, Display.getDisplayMode().getWidth(), 0.0, Display.getDisplayMode().getHeight(), -1.0, 1.0);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glViewport(0, 0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
+
 	}
-	
+
 	/**
 	 * Runs the game (the "main loop")
 	 */
@@ -120,7 +121,7 @@ public class Game {
 		while (!finished) {
 			// Always call Window.update(), all the time
 			Display.update();
-			
+
 			if (Display.isCloseRequested()) {
 				// Check for O/S close requests
 				finished = true;
@@ -144,7 +145,7 @@ public class Game {
 			}
 		}
 	}
-	
+
 	/**
 	 * Do any game-specific cleanup
 	 */
@@ -153,11 +154,11 @@ public class Game {
 
 		// Stop the sound
 		AL.destroy();
-		
+
 		// Close the window
 		Display.destroy();
 	}
-	
+
 	/**
 	 * Do all calculations, handle input, etc.
 	 */
@@ -170,24 +171,24 @@ public class Game {
     // TODO: all your game logic goes here.
     angle += 2.0f % 360;
 	}
-	
+
 	/**
 	 * Render the current frame
 	 */
 	private static void render() {
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     // TODO: all your rendering goes here
-    GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-    GL11.glPushMatrix();
-    GL11.glTranslatef(Display.getDisplayMode().getWidth() / 2, Display.getDisplayMode().getHeight() / 2, 0.0f);
-    GL11.glRotatef(angle, 0, 0, 1.0f);
-    GL11.glBegin(GL11.GL_QUADS);
-    GL11.glVertex2i(-50, -50);
-    GL11.glVertex2i(50, -50);
-    GL11.glVertex2i(50, 50);
-    GL11.glVertex2i(-50, 50);
-    GL11.glEnd();
-    GL11.glPopMatrix();
+    glClear(GL_COLOR_BUFFER_BIT);
+    glPushMatrix();
+    glTranslatef(Display.getDisplayMode().getWidth() / 2, Display.getDisplayMode().getHeight() / 2, 0.0f);
+    glRotatef(angle, 0, 0, 1.0f);
+    glBegin(GL_QUADS);
+    glVertex2i(-50, -50);
+    glVertex2i(50, -50);
+    glVertex2i(50, 50);
+    glVertex2i(-50, 50);
+    glEnd();
+    glPopMatrix();
 	}
 }

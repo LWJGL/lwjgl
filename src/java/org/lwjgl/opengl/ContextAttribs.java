@@ -304,7 +304,7 @@ public final class ContextAttribs {
 	}
 
 	public String toString() {
-		StringBuffer sb = new StringBuffer(32);
+		StringBuilder sb = new StringBuilder(32);
 
 		sb.append("ContextAttribs:");
 		sb.append(" Version=").append(majorVersion).append('.').append(minorVersion);

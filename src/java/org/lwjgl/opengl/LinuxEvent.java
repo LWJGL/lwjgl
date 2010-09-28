@@ -41,17 +41,17 @@ import java.nio.ByteBuffer;
  * $Id: LinuxPeerInfo.java 2286 2006-03-23 19:32:21Z matzon $
  */
 final class LinuxEvent {
-	public final static int FocusIn         = 9;
-	public final static int FocusOut        = 10;
-	public final static int KeyPress        = 2;
-	public final static int KeyRelease      = 3;
-	public final static int ButtonPress     = 4;
-	public final static int ButtonRelease      = 5;
-	public final static int MotionNotify       = 6;
-	public final static int UnmapNotify     = 18;
-	public final static int MapNotify       = 19;
-	public final static int Expose          = 12;
-	public final static int ClientMessage       = 33;
+	public static final int FocusIn         = 9;
+	public static final int FocusOut        = 10;
+	public static final int KeyPress        = 2;
+	public static final int KeyRelease      = 3;
+	public static final int ButtonPress     = 4;
+	public static final int ButtonRelease      = 5;
+	public static final int MotionNotify       = 6;
+	public static final int UnmapNotify     = 18;
+	public static final int MapNotify       = 19;
+	public static final int Expose          = 12;
+	public static final int ClientMessage       = 33;
 
 	private final ByteBuffer event_buffer;
 

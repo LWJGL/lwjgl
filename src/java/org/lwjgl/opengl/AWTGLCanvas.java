@@ -55,7 +55,7 @@ public class AWTGLCanvas extends Canvas implements DrawableLWJGL, ComponentListe
 
 	private static final long serialVersionUID = 1L;
 
-	private final static AWTCanvasImplementation implementation;
+	private static final AWTCanvasImplementation implementation;
 	private boolean update_context;
 	private Object SYNC_LOCK = new Object();
 

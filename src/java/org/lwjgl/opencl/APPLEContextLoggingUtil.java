@@ -53,7 +53,7 @@ public final class APPLEContextLoggingUtil {
 	public static final CLContextCallback STD_ERR_CALLBACK;
 
 	static {
-		if ( CLCapabilities.isExtensionSupported("CL_APPLE_ContextLoggingFunctions") ) {
+		if ( CLCapabilities.CL_APPLE_ContextLoggingFunctions ) {
 			SYSTEM_LOG_CALLBACK = new CLContextCallback(CallbackUtil.getLogMessageToSystemLogAPPLE()) {
 				protected void handleMessage(final String errinfo, final ByteBuffer private_info) { throw new UnsupportedOperationException(); }
 			};

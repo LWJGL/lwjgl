@@ -42,6 +42,14 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opencl_CL_getFunctionAddress
 
 /*
  * Class:     org_lwjgl_opencl_CL
+ * Method:    getHostBuffer
+ * Signature: (JI)Ljava/nio/ByteBuffer;
+ */
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opencl_CL_getHostBuffer
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     org_lwjgl_opencl_CL
  * Method:    resetNativeStubs
  * Signature: (Ljava/lang/Class;)V
  */

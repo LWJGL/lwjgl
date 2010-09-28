@@ -39,9 +39,10 @@
 package org.lwjgl.test.opengl.shaders;
 
 import org.lwjgl.opengl.ARBFragmentProgram;
-import org.lwjgl.opengl.ARBProgram;
 import org.lwjgl.opengl.ARBVertexProgram;
-import org.lwjgl.opengl.GL11;
+
+import static org.lwjgl.opengl.ARBProgram.*;
+import static org.lwjgl.opengl.GL11.*;
 
 final class ShaderFP extends Shader {
 
@@ -60,10 +61,10 @@ final class ShaderFP extends Shader {
 		vpFile = vpShaderFile;
 		vpSource = getShaderText(vpShaderFile);
 
-		vpID = ARBProgram.glGenProgramsARB();
+		vpID = glGenProgramsARB();
 
-		ARBProgram.glBindProgramARB(ARBVertexProgram.GL_VERTEX_PROGRAM_ARB, vpID);
-		ARBProgram.glProgramStringARB(ARBVertexProgram.GL_VERTEX_PROGRAM_ARB, ARBProgram.GL_PROGRAM_FORMAT_ASCII_ARB, vpSource);
+		glBindProgramARB(ARBVertexProgram.GL_VERTEX_PROGRAM_ARB, vpID);
+		glProgramStringARB(ARBVertexProgram.GL_VERTEX_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, vpSource);
 
 		checkProgramError(vpFile, vpSource);
 
@@ -71,37 +72,37 @@ final class ShaderFP extends Shader {
 		fpFile = fpShaderFile;
 		fpSource = getShaderText(fpShaderFile);
 
-		fpID = ARBProgram.glGenProgramsARB();
+		fpID = glGenProgramsARB();
 
-		ARBProgram.glBindProgramARB(ARBFragmentProgram.GL_FRAGMENT_PROGRAM_ARB, fpID);
-		ARBProgram.glProgramStringARB(ARBFragmentProgram.GL_FRAGMENT_PROGRAM_ARB, ARBProgram.GL_PROGRAM_FORMAT_ASCII_ARB, fpSource);
+		glBindProgramARB(ARBFragmentProgram.GL_FRAGMENT_PROGRAM_ARB, fpID);
+		glProgramStringARB(ARBFragmentProgram.GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, fpSource);
 
 		checkProgramError(fpFile, fpSource);
 	}
 
 	void render() {
-		GL11.glEnable(ARBVertexProgram.GL_VERTEX_PROGRAM_ARB);
-		ARBProgram.glBindProgramARB(ARBVertexProgram.GL_VERTEX_PROGRAM_ARB, vpID);
+		glEnable(ARBVertexProgram.GL_VERTEX_PROGRAM_ARB);
+		glBindProgramARB(ARBVertexProgram.GL_VERTEX_PROGRAM_ARB, vpID);
 
-		GL11.glEnable(ARBFragmentProgram.GL_FRAGMENT_PROGRAM_ARB);
-		ARBProgram.glBindProgramARB(ARBFragmentProgram.GL_FRAGMENT_PROGRAM_ARB, fpID);
+		glEnable(ARBFragmentProgram.GL_FRAGMENT_PROGRAM_ARB);
+		glBindProgramARB(ARBFragmentProgram.GL_FRAGMENT_PROGRAM_ARB, fpID);
 
-		ARBProgram.glProgramLocalParameter4fARB(ARBVertexProgram.GL_VERTEX_PROGRAM_ARB, 0,
-		                                        ShadersTest.getSin(), ShadersTest.getSpecularity() * 8.0f, 0.0f, 0.0f);
+		glProgramLocalParameter4fARB(ARBVertexProgram.GL_VERTEX_PROGRAM_ARB, 0,
+		                             ShadersTest.getSin(), ShadersTest.getSpecularity() * 8.0f, 0.0f, 0.0f);
 
-		ARBProgram.glProgramLocalParameter4fARB(ARBFragmentProgram.GL_FRAGMENT_PROGRAM_ARB, 0,
-		                                        ShadersTest.getSin(), ShadersTest.getSpecularity() * 8.0f,
-		                                        -ShadersTest.getDisplayWidth() * 0.5f, -ShadersTest.getDisplayHeight() * 0.5f);
+		glProgramLocalParameter4fARB(ARBFragmentProgram.GL_FRAGMENT_PROGRAM_ARB, 0,
+		                             ShadersTest.getSin(), ShadersTest.getSpecularity() * 8.0f,
+		                             -ShadersTest.getDisplayWidth() * 0.5f, -ShadersTest.getDisplayHeight() * 0.5f);
 
 		ShadersTest.renderObject();
 
-		GL11.glDisable(ARBVertexProgram.GL_VERTEX_PROGRAM_ARB);
-		GL11.glDisable(ARBFragmentProgram.GL_FRAGMENT_PROGRAM_ARB);
+		glDisable(ARBVertexProgram.GL_VERTEX_PROGRAM_ARB);
+		glDisable(ARBFragmentProgram.GL_FRAGMENT_PROGRAM_ARB);
 	}
 
 	void cleanup() {
-		ARBProgram.glDeleteProgramsARB(vpID);
-		ARBProgram.glDeleteProgramsARB(fpID);
+		glDeleteProgramsARB(vpID);
+		glDeleteProgramsARB(fpID);
 	}
 
 }

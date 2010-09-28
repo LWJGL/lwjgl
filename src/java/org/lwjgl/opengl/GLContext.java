@@ -31,17 +31,19 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 
 import java.lang.reflect.Method;
-import java.nio.IntBuffer;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
 import java.util.*;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL32.*;
 
 /**
  * <p/>
@@ -60,7 +62,7 @@ import java.util.*;
 public final class GLContext {
 
 	/** Maps threads to their current context's ContextCapabilities, if any */
-	private final static ThreadLocal current_capabilities = new ThreadLocal();
+	private static final ThreadLocal<ContextCapabilities> current_capabilities = new ThreadLocal<ContextCapabilities>();
 
 	/**
 	 * The getCapabilities() method is a potential hot spot in any LWJGL application, since
@@ -92,13 +94,13 @@ public final class GLContext {
 	 * Simple lock-free cache of CapabilitesEntryCache to avoid allocating more than one
 	 * cache entry per thread
 	 */
-	private final static ThreadLocal thread_cache_entries = new ThreadLocal();
+	private static final ThreadLocal<CapabilitiesCacheEntry> thread_cache_entries = new ThreadLocal<CapabilitiesCacheEntry>();
 
 	/**
 	 * The weak mapping from context Object instances to ContextCapabilities. Used
 	 * to avoid recreating a ContextCapabilities every time a context is made current.
 	 */
-	private final static Map capability_cache = new WeakHashMap();
+	private static final Map<Object, ContextCapabilities> capability_cache = new WeakHashMap<Object, ContextCapabilities>();
 
 	/** Reference count of the native opengl implementation library */
 	private static int gl_ref_count;
@@ -127,7 +129,7 @@ public final class GLContext {
 	}
 
 	private static ContextCapabilities getThreadLocalCapabilities() {
-		return ((ContextCapabilities)current_capabilities.get());
+		return current_capabilities.get();
 	}
 
 	/**
@@ -139,7 +141,7 @@ public final class GLContext {
 	static void setCapabilities(ContextCapabilities capabilities) {
 		current_capabilities.set(capabilities);
 
-		CapabilitiesCacheEntry thread_cache_entry = (CapabilitiesCacheEntry)thread_cache_entries.get();
+		CapabilitiesCacheEntry thread_cache_entry = thread_cache_entries.get();
 		if ( thread_cache_entry == null ) {
 			thread_cache_entry = new CapabilitiesCacheEntry();
 			thread_cache_entries.set(thread_cache_entry);
@@ -155,8 +157,8 @@ public final class GLContext {
 	 * with a name dependent on the current platform
 	 */
 	static long getPlatformSpecificFunctionAddress(String function_prefix, String[] os_prefixes, String[] os_function_prefixes, String function) {
-		String os_name = (String)AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
+		String os_name = AccessController.doPrivileged(new PrivilegedAction<String>() {
+			public String run() {
 				return System.getProperty("os.name");
 			}
 		});
@@ -177,8 +179,8 @@ public final class GLContext {
 	 * @return the function pointer address
 	 */
 	static long getFunctionAddress(String[] aliases) {
-		for ( int i = 0; i < aliases.length; i++ ) {
-			long address = getFunctionAddress(aliases[i]);
+		for ( String alias : aliases ) {
+			long address = getFunctionAddress(alias);
 			if ( address != 0 )
 				return address;
 		}
@@ -195,10 +197,10 @@ public final class GLContext {
 	 *
 	 * @return the context profile mask, will be 0 for any version < 3.2
 	 */
-	static int getSupportedExtensions(final Set supported_extensions) {
+	static int getSupportedExtensions(final Set<String> supported_extensions) {
 		// Detect OpenGL version first
 
-		final String version = GL11.glGetString(GL11.GL_VERSION);
+		final String version = glGetString(GL_VERSION);
 		if ( version == null )
 			throw new IllegalStateException("glGetString(GL_VERSION) returned null - possibly caused by missing current context.");
 
@@ -224,8 +226,7 @@ public final class GLContext {
 
 		for ( int major = 1; major <= GL_VERSIONS.length; major++ ) {
 			int[] minors = GL_VERSIONS[major - 1];
-			for ( int i = 0; i < minors.length; i++ ) {
-				int minor = minors[i];
+			for ( int minor : minors ) {
 				if ( major < majorVersion || (major == majorVersion && minor <= minorVersion) )
 					supported_extensions.add("OpenGL" + Integer.toString(major) + Integer.toString(minor));
 			}
@@ -235,7 +236,7 @@ public final class GLContext {
 
 		if ( majorVersion < 3 ) {
 			// Parse EXTENSIONS string
-			final String extensions_string = GL11.glGetString(GL11.GL_EXTENSIONS);
+			final String extensions_string = glGetString(GL_EXTENSIONS);
 			if ( extensions_string == null )
 				throw new IllegalStateException("glGetString(GL_EXTENSIONS) returned null - is there a context current?");
 
@@ -244,24 +245,20 @@ public final class GLContext {
 				supported_extensions.add(tokenizer.nextToken());
 		} else {
 			// Use forward compatible indexed EXTENSIONS
-			final IntBuffer buffer = BufferUtils.createIntBuffer(16);
-			GL11.glGetInteger(GL30.GL_NUM_EXTENSIONS, buffer);
-			final int extensionCount = buffer.get(0);
+			final int extensionCount = glGetInteger(GL_NUM_EXTENSIONS);
 
 			for ( int i = 0; i < extensionCount; i++ )
-				supported_extensions.add(GL30.glGetStringi(GL11.GL_EXTENSIONS, i));
+				supported_extensions.add(glGetStringi(GL_EXTENSIONS, i));
 
 			// Get the context profile mask for versions >= 3.2
 			if ( 3 < majorVersion || 2 <= minorVersion ) {
 				Util.checkGLError(); // Make sure we have no errors up to this point
 
-				GL11.glGetInteger(GL32.GL_CONTEXT_PROFILE_MASK, buffer);
-
 				try {
+					profileMask = glGetInteger(GL_CONTEXT_PROFILE_MASK);
 					// Retrieving GL_CONTEXT_PROFILE_MASK may generate an INVALID_OPERATION error on certain implementations, ignore.
 					// Happens on pre10.1 ATI drivers, when ContextAttribs.withProfileCompatibility is not used
 					Util.checkGLError();
-					profileMask = buffer.get(0);
 				} catch (OpenGLException e) {
 					LWJGLUtil.log("Failed to retrieve CONTEXT_PROFILE_MASK");
 				}
@@ -275,14 +272,14 @@ public final class GLContext {
 	 * Helper method to ContextCapabilities. It will try to initialize the native stubs,
 	 * and remove the given extension name from the extension set if the initialization fails.
 	 */
-	static void initNativeStubs(final Class extension_class, Set supported_extensions, String ext_name) {
+	static void initNativeStubs(final Class<?> extension_class, Set supported_extensions, String ext_name) {
 		resetNativeStubs(extension_class);
 		if ( supported_extensions.contains(ext_name) ) {
 			try {
-				AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() {
 					public Object run() throws Exception {
-						Method init_stubs_method = extension_class.getDeclaredMethod("initNativeStubs", null);
-						init_stubs_method.invoke(null, null);
+						Method init_stubs_method = extension_class.getDeclaredMethod("initNativeStubs");
+						init_stubs_method.invoke(null);
 						return null;
 					}
 				});
@@ -341,7 +338,7 @@ public final class GLContext {
 			did_auto_load = true;
 		}
 		try {
-			ContextCapabilities capabilities = (ContextCapabilities)capability_cache.get(context);
+			ContextCapabilities capabilities = capability_cache.get(context);
 			if ( capabilities == null ) {
 				/*
 				 * The capabilities object registers itself as current. This behaviour is caused
@@ -385,7 +382,7 @@ public final class GLContext {
 	/** Native method to clear native stub bindings */
 	static native void resetNativeStubs(Class clazz);
 
-	private final static class CapabilitiesCacheEntry {
+	private static final class CapabilitiesCacheEntry {
 
 		Thread owner;
 		ContextCapabilities capabilities;

@@ -40,15 +40,15 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 
 final class WindowsRegistry {
-	final static int HKEY_CLASSES_ROOT = 1;
-	final static int HKEY_CURRENT_USER = 2;
-	final static int HKEY_LOCAL_MACHINE = 3;
-	final static int HKEY_USERS = 4;
+	static final int HKEY_CLASSES_ROOT = 1;
+	static final int HKEY_CURRENT_USER = 2;
+	static final int HKEY_LOCAL_MACHINE = 3;
+	static final int HKEY_USERS = 4;
 
 	static {
 		Sys.initialize();
 	}
-	
+
 	/**
 	 * Query the registry value specified by the root key, subkey, value tuple
 	 */
@@ -64,6 +64,6 @@ final class WindowsRegistry {
 		}
 		return nQueryRegistrationKey(root_key, subkey, value);
 	}
-	
+
 	private static native String nQueryRegistrationKey(int root_key, String subkey, String value) throws LWJGLException;
 }

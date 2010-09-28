@@ -37,6 +37,9 @@ import org.lwjgl.opengl.*;
 
 import java.util.Random;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL32.*;
+
 /** @author spasi <spasi@users.sourceforge.net> */
 public final class SyncTest {
 
@@ -85,7 +88,7 @@ public final class SyncTest {
 
 		System.out.println("\n---------\n");
 
-		final String version = GL11.glGetString(GL11.GL_VERSION);
+		final String version = glGetString(GL_VERSION);
 
 		System.out.println("GL Version: " + version);
 		System.out.println("ARB_sync: " + GLContext.getCapabilities().GL_ARB_sync);
@@ -99,39 +102,39 @@ public final class SyncTest {
 
 		Random rand = new Random(System.currentTimeMillis());
 		for ( int i = 0; i < clears; i++ ) {
-			GL11.glClearColor(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f);
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+			glClearColor(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
 		}
 
-		GLSync sync = GL32.glFenceSync(GL32.GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+		GLSync sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
 
 		System.out.println("\nWaiting on fence...");
 		long time = Sys.getTime();
-		int status = GL32.glClientWaitSync(sync, 0, timeout < 0 ? GL32.GL_TIMEOUT_IGNORED : timeout * 1000 * 1000);
+		int status = glClientWaitSync(sync, 0, timeout < 0 ? GL_TIMEOUT_IGNORED : timeout * 1000 * 1000);
 		System.out.println("\nFence sync complete after: " + ((Sys.getTime() - time) / (double)Sys.getTimerResolution()) + " seconds.");
 		System.out.print("\nWait Status: ");
 		switch ( status ) {
-			case GL32.GL_ALREADY_SIGNALED:
+			case GL_ALREADY_SIGNALED:
 				System.out.println("ALREADY_SIGNALED");
 				break;
-			case GL32.GL_CONDITION_SATISFIED:
+			case GL_CONDITION_SATISFIED:
 				System.out.println("CONDITION_SATISFIED");
 				break;
-			case GL32.GL_TIMEOUT_EXPIRED:
+			case GL_TIMEOUT_EXPIRED:
 				System.out.println("TIMEOUT_EXPIRED");
 				break;
-			case GL32.GL_WAIT_FAILED:
+			case GL_WAIT_FAILED:
 				System.out.println("WAIT_FAILED");
 				break;
 			default:
 				System.out.println("Unexpected wait status: 0x" + Integer.toHexString(status));
 		}
 
-		System.out.println("Sync Status: " + (GL32.glGetSync(sync, GL32.GL_SYNC_STATUS) == GL32.GL_UNSIGNALED ? "UNSIGNALED" : "SIGNALED"));
+		System.out.println("Sync Status: " + (glGetSync(sync, GL_SYNC_STATUS) == GL_UNSIGNALED ? "UNSIGNALED" : "SIGNALED"));
 
-		GL32.glDeleteSync(sync);
+		glDeleteSync(sync);
 
-		int error = GL11.glGetError();
+		int error = glGetError();
 		if ( error != 0 )
 			System.out.println("\nTest failed with OpenGL error: " + error);
 		else
@@ -141,8 +144,7 @@ public final class SyncTest {
 	private static DisplayMode chooseMode(DisplayMode[] modes, int width, int height) {
 		DisplayMode bestMode = null;
 
-		for ( int i = 0; i < modes.length; i++ ) {
-			DisplayMode mode = modes[i];
+		for ( DisplayMode mode : modes ) {
 			if ( mode.getWidth() == width && mode.getHeight() == height && mode.getFrequency() <= 85 ) {
 				if ( bestMode == null || (mode.getBitsPerPixel() >= bestMode.getBitsPerPixel() && mode.getFrequency() > bestMode.getFrequency()) )
 					bestMode = mode;

@@ -33,32 +33,33 @@ package org.lwjgl.test.glu.tessellation;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.GLUtessellator;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.*;
 
 public class TessellationTest {
 	private GLUtessellator tesselator;
-	
+
 	void init()
 	{
-		// Create a new tessellation object 
-		tesselator = GLU.gluNewTess();
-	
+		// Create a new tessellation object
+		tesselator = gluNewTess();
+
 		// Set callback functions
 		TessCallback callback = new TessCallback();
-		tesselator.gluTessCallback(GLU.GLU_TESS_VERTEX, callback);
-		tesselator.gluTessCallback(GLU.GLU_TESS_BEGIN, callback);
-		tesselator.gluTessCallback(GLU.GLU_TESS_END, callback);
-		tesselator.gluTessCallback(GLU.GLU_TESS_COMBINE, callback);
+		tesselator.gluTessCallback(GLU_TESS_VERTEX, callback);
+		tesselator.gluTessCallback(GLU_TESS_BEGIN, callback);
+		tesselator.gluTessCallback(GLU_TESS_END, callback);
+		tesselator.gluTessCallback(GLU_TESS_COMBINE, callback);
 	}
 
 	void setWindingRule(int windingRule)
 	{
 		// Set the winding rule
-		tesselator.gluTessProperty(GLU.GLU_TESS_WINDING_RULE, windingRule); 
+		tesselator.gluTessProperty(GLU_TESS_WINDING_RULE, windingRule);
 	}
-	 
+
 	void renderContour(double obj_data[][], int num_vertices)
 	{
 		for (int x = 0; x < num_vertices; x++) //loop through the vertices
@@ -66,7 +67,7 @@ public class TessellationTest {
 			tesselator.gluTessVertex(obj_data[x], 0, new VertexData(obj_data[x])); //store the vertex
 		}
 	}
-	
+
 	void beginPolygon()
 	{
 		tesselator.gluTessBeginPolygon(null);
@@ -76,7 +77,7 @@ public class TessellationTest {
 	{
 		tesselator.gluTessEndPolygon();
 	}
-	
+
 	void beginContour()
 	{
 		tesselator.gluTessBeginContour();
@@ -86,7 +87,7 @@ public class TessellationTest {
 	{
 		tesselator.gluTessEndContour();
 	}
-	
+
 	void end()
 	{
 		tesselator.gluDeleteTess();
@@ -95,47 +96,47 @@ public class TessellationTest {
 	private void createDisplay() throws LWJGLException {
 		int width = 300;
 		int height = 300;
-		
+
 		Display.setDisplayMode(new DisplayMode(width,height));
 		Display.create();
 		Display.setVSyncEnabled(true);
 
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glShadeModel(GL11.GL_SMOOTH);        
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glDisable(GL11.GL_LIGHTING);                    
-        
-		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);                
-        GL11.glClearDepth(1);                                       
-        
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        
-        GL11.glViewport(0,0,width,height);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		glEnable(GL_TEXTURE_2D);
+		glShadeModel(GL_SMOOTH);
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_LIGHTING);
 
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GL11.glOrtho(0, width, height, 0, 1, -1);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClearDepth(1);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        glViewport(0,0,width,height);
+		glMatrixMode(GL_MODELVIEW);
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, width, height, 0, 1, -1);
+		glMatrixMode(GL_MODELVIEW);
 	}
-	
+
 	private void loop() {
 		while (true) {
 			render();
 			Display.update();
 			Display.sync(100);
-			
+
 			if (Display.isCloseRequested()) {
 				System.exit(0);
 			}
 		}
 	}
-	
+
 	private void render() {
-		GL11.glTranslatef(150,125,0);
-		
-		GL11.glScalef(50,50,1);
+		glTranslatef(150,125,0);
+
+		glScalef(50,50,1);
 		// first polygon: a star-5 vertices and color information
 		double star[][] = { {0.6f,  -0.1f, 0f, 1.0f, 1.0f, 1.0f},
                 {1.35f, 1.4f, 0f, 1.0f, 1.0f, 1.0f},
@@ -148,16 +149,16 @@ public class TessellationTest {
 		                {1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f},
 		                {1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f},
 		                {0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f} };
-		
+
 		//second polygon: a triangle-3 vertices; second contour
 		double tri[][] = {{0.3f, 0.3f, 0.0f, 0.0f, 0.0f, 0.0f},
 		               {0.7f, 0.3f, 0.0f, 0.0f, 0.0f, 0.0f},
 		               {0.5f, 0.7f, 0.0f, 0.0f, 0.0f, 0.0f} };
 
 		// render the first polygon: the textured star
-		
+
 		// set winding rule to positive
-		setWindingRule(GLU.GLU_TESS_WINDING_POSITIVE);
+		setWindingRule(GLU_TESS_WINDING_POSITIVE);
 		beginPolygon();
 		beginContour();
 		renderContour(star, 5);
@@ -166,9 +167,9 @@ public class TessellationTest {
 
 		// render the second polygon: triangle cut out of a quad
 
-		GL11.glTranslatef(-2,0,0);
+		glTranslatef(-2,0,0);
 		// set winding rule to odd
-		setWindingRule(GLU.GLU_TESS_WINDING_ODD);
+		setWindingRule(GLU_TESS_WINDING_ODD);
 		// begin the new polygon
 		beginPolygon();
 		beginContour();
@@ -181,13 +182,13 @@ public class TessellationTest {
 		// delete the tess object
 		end();
 	}
-	
+
 	private void start() throws LWJGLException {
 		createDisplay();
 		init();
 		loop();
 	}
-	
+
 	public static void main(String[] argv) throws LWJGLException {
 		TessellationTest test = new TessellationTest();
 		test.start();

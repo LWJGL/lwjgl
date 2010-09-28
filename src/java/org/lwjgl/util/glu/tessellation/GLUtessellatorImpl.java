@@ -84,10 +84,11 @@
 */
 package org.lwjgl.util.glu.tessellation;
 
-import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.GLUtessellator;
 import org.lwjgl.util.glu.GLUtessellatorCallback;
 import org.lwjgl.util.glu.GLUtessellatorCallbackAdapter;
+
+import static org.lwjgl.util.glu.GLU.*;
 
 public class GLUtessellatorImpl implements GLUtessellator {
     public static final int TESS_MAX_CACHE = 100;
@@ -163,7 +164,7 @@ public class GLUtessellatorImpl implements GLUtessellator {
         normal[2] = 0;
 
         relTolerance = GLU_TESS_DEFAULT_TOLERANCE;
-        windingRule = GLU.GLU_TESS_WINDING_ODD;
+        windingRule = GLU_TESS_WINDING_ODD;
         flagBoundary = false;
         boundaryOnly = false;
 
@@ -189,7 +190,7 @@ public class GLUtessellatorImpl implements GLUtessellator {
         }
     }
 
-    static public GLUtessellator gluNewTess()
+    public static GLUtessellator gluNewTess()
     {
         return new GLUtessellatorImpl();
     }
@@ -217,18 +218,18 @@ public class GLUtessellatorImpl implements GLUtessellator {
              */
             if (state < newState) {
                 if (state == TessState.T_DORMANT) {
-                    callErrorOrErrorData(GLU.GLU_TESS_MISSING_BEGIN_POLYGON);
+                    callErrorOrErrorData(GLU_TESS_MISSING_BEGIN_POLYGON);
                     gluTessBeginPolygon(null);
                 } else if (state == TessState.T_IN_POLYGON) {
-                    callErrorOrErrorData(GLU.GLU_TESS_MISSING_BEGIN_CONTOUR);
+                    callErrorOrErrorData(GLU_TESS_MISSING_BEGIN_CONTOUR);
                     gluTessBeginContour();
                 }
             } else {
                 if (state == TessState.T_IN_CONTOUR) {
-                    callErrorOrErrorData(GLU.GLU_TESS_MISSING_END_CONTOUR);
+                    callErrorOrErrorData(GLU_TESS_MISSING_END_CONTOUR);
                     gluTessEndContour();
                 } else if (state == TessState.T_IN_POLYGON) {
-                    callErrorOrErrorData(GLU.GLU_TESS_MISSING_END_POLYGON);
+                    callErrorOrErrorData(GLU_TESS_MISSING_END_POLYGON);
                     /* gluTessEndPolygon( tess ) is too much work! */
                     makeDormant();
                 }
@@ -242,61 +243,61 @@ public class GLUtessellatorImpl implements GLUtessellator {
 
     public void gluTessProperty(int which, double value) {
         switch (which) {
-            case GLU.GLU_TESS_TOLERANCE:
+            case GLU_TESS_TOLERANCE:
                 if (value < 0.0 || value > 1.0) break;
                 relTolerance = value;
                 return;
 
-            case GLU.GLU_TESS_WINDING_RULE:
+            case GLU_TESS_WINDING_RULE:
                 int windingRule = (int) value;
                 if (windingRule != value) break;	/* not an integer */
 
                 switch (windingRule) {
-                    case GLU.GLU_TESS_WINDING_ODD:
-                    case GLU.GLU_TESS_WINDING_NONZERO:
-                    case GLU.GLU_TESS_WINDING_POSITIVE:
-                    case GLU.GLU_TESS_WINDING_NEGATIVE:
-                    case GLU.GLU_TESS_WINDING_ABS_GEQ_TWO:
+                    case GLU_TESS_WINDING_ODD:
+                    case GLU_TESS_WINDING_NONZERO:
+                    case GLU_TESS_WINDING_POSITIVE:
+                    case GLU_TESS_WINDING_NEGATIVE:
+                    case GLU_TESS_WINDING_ABS_GEQ_TWO:
                         this.windingRule = windingRule;
                         return;
                     default:
                         break;
                 }
 
-            case GLU.GLU_TESS_BOUNDARY_ONLY:
+            case GLU_TESS_BOUNDARY_ONLY:
                 boundaryOnly = (value != 0);
                 return;
 
             default:
-                callErrorOrErrorData(GLU.GLU_INVALID_ENUM);
+                callErrorOrErrorData(GLU_INVALID_ENUM);
                 return;
         }
-        callErrorOrErrorData(GLU.GLU_INVALID_VALUE);
+        callErrorOrErrorData(GLU_INVALID_VALUE);
     }
 
 /* Returns tessellator property */
     public void gluGetTessProperty(int which, double[] value, int value_offset) {
         switch (which) {
-            case GLU.GLU_TESS_TOLERANCE:
+            case GLU_TESS_TOLERANCE:
 /* tolerance should be in range [0..1] */
                 assert (0.0 <= relTolerance && relTolerance <= 1.0);
                 value[value_offset] = relTolerance;
                 break;
-            case GLU.GLU_TESS_WINDING_RULE:
-                assert (windingRule == GLU.GLU_TESS_WINDING_ODD ||
-                        windingRule == GLU.GLU_TESS_WINDING_NONZERO ||
-                        windingRule == GLU.GLU_TESS_WINDING_POSITIVE ||
-                        windingRule == GLU.GLU_TESS_WINDING_NEGATIVE ||
-                        windingRule == GLU.GLU_TESS_WINDING_ABS_GEQ_TWO);
+            case GLU_TESS_WINDING_RULE:
+                assert (windingRule == GLU_TESS_WINDING_ODD ||
+                        windingRule == GLU_TESS_WINDING_NONZERO ||
+                        windingRule == GLU_TESS_WINDING_POSITIVE ||
+                        windingRule == GLU_TESS_WINDING_NEGATIVE ||
+                        windingRule == GLU_TESS_WINDING_ABS_GEQ_TWO);
                 value[value_offset] = windingRule;
                 break;
-            case GLU.GLU_TESS_BOUNDARY_ONLY:
+            case GLU_TESS_BOUNDARY_ONLY:
                 assert (boundaryOnly == true || boundaryOnly == false);
                 value[value_offset] = boundaryOnly ? 1 : 0;
                 break;
             default:
                 value[value_offset] = 0.0;
-                callErrorOrErrorData(GLU.GLU_INVALID_ENUM);
+                callErrorOrErrorData(GLU_INVALID_ENUM);
                 break;
         }
     } /* gluGetTessProperty() */
@@ -309,55 +310,55 @@ public class GLUtessellatorImpl implements GLUtessellator {
 
     public void gluTessCallback(int which, GLUtessellatorCallback aCallback) {
         switch (which) {
-            case GLU.GLU_TESS_BEGIN:
+            case GLU_TESS_BEGIN:
                 callBegin = aCallback == null ? NULL_CB : aCallback;
                 return;
-            case GLU.GLU_TESS_BEGIN_DATA:
+            case GLU_TESS_BEGIN_DATA:
                 callBeginData = aCallback == null ? NULL_CB : aCallback;
                 return;
-            case GLU.GLU_TESS_EDGE_FLAG:
+            case GLU_TESS_EDGE_FLAG:
                 callEdgeFlag = aCallback == null ? NULL_CB : aCallback;
 /* If the client wants boundary edges to be flagged,
  * we render everything as separate triangles (no strips or fans).
  */
                 flagBoundary = aCallback != null;
                 return;
-            case GLU.GLU_TESS_EDGE_FLAG_DATA:
+            case GLU_TESS_EDGE_FLAG_DATA:
                 callEdgeFlagData = callBegin = aCallback == null ? NULL_CB : aCallback;
 /* If the client wants boundary edges to be flagged,
  * we render everything as separate triangles (no strips or fans).
  */
                 flagBoundary = (aCallback != null);
                 return;
-            case GLU.GLU_TESS_VERTEX:
+            case GLU_TESS_VERTEX:
                 callVertex = aCallback == null ? NULL_CB : aCallback;
                 return;
-            case GLU.GLU_TESS_VERTEX_DATA:
+            case GLU_TESS_VERTEX_DATA:
                 callVertexData = aCallback == null ? NULL_CB : aCallback;
                 return;
-            case GLU.GLU_TESS_END:
+            case GLU_TESS_END:
                 callEnd = aCallback == null ? NULL_CB : aCallback;
                 return;
-            case GLU.GLU_TESS_END_DATA:
+            case GLU_TESS_END_DATA:
                 callEndData = aCallback == null ? NULL_CB : aCallback;
                 return;
-            case GLU.GLU_TESS_ERROR:
+            case GLU_TESS_ERROR:
                 callError = aCallback == null ? NULL_CB : aCallback;
                 return;
-            case GLU.GLU_TESS_ERROR_DATA:
+            case GLU_TESS_ERROR_DATA:
                 callErrorData = aCallback == null ? NULL_CB : aCallback;
                 return;
-            case GLU.GLU_TESS_COMBINE:
+            case GLU_TESS_COMBINE:
                 callCombine = aCallback == null ? NULL_CB : aCallback;
                 return;
-            case GLU.GLU_TESS_COMBINE_DATA:
+            case GLU_TESS_COMBINE_DATA:
                 callCombineData = aCallback == null ? NULL_CB : aCallback;
                 return;
 //            case GLU_TESS_MESH:
 //                callMesh = aCallback == null ? NULL_CB : aCallback;
 //                return;
             default:
-                callErrorOrErrorData(GLU.GLU_INVALID_ENUM);
+                callErrorOrErrorData(GLU_INVALID_ENUM);
                 return;
         }
     }
@@ -440,25 +441,25 @@ public class GLUtessellatorImpl implements GLUtessellator {
 
         if (flushCacheOnNextVertex) {
             if (!flushCache()) {
-                callErrorOrErrorData(GLU.GLU_OUT_OF_MEMORY);
+                callErrorOrErrorData(GLU_OUT_OF_MEMORY);
                 return;
             }
             lastEdge = null;
         }
         for (i = 0; i < 3; ++i) {
             x = coords[i+coords_offset];
-            if (x < -GLU.GLU_TESS_MAX_COORD) {
-                x = -GLU.GLU_TESS_MAX_COORD;
+            if (x < -GLU_TESS_MAX_COORD) {
+                x = -GLU_TESS_MAX_COORD;
                 tooLarge = true;
             }
-            if (x > GLU.GLU_TESS_MAX_COORD) {
-                x = GLU.GLU_TESS_MAX_COORD;
+            if (x > GLU_TESS_MAX_COORD) {
+                x = GLU_TESS_MAX_COORD;
                 tooLarge = true;
             }
             clamped[i] = x;
         }
         if (tooLarge) {
-            callErrorOrErrorData(GLU.GLU_TESS_COORD_TOO_LARGE);
+            callErrorOrErrorData(GLU_TESS_COORD_TOO_LARGE);
         }
 
         if (mesh == null) {
@@ -467,13 +468,13 @@ public class GLUtessellatorImpl implements GLUtessellator {
                 return;
             }
             if (!flushCache()) {
-                callErrorOrErrorData(GLU.GLU_OUT_OF_MEMORY);
+                callErrorOrErrorData(GLU_OUT_OF_MEMORY);
                 return;
             }
         }
 
         if (!addVertex(clamped, vertexData)) {
-            callErrorOrErrorData(GLU.GLU_OUT_OF_MEMORY);
+            callErrorOrErrorData(GLU_OUT_OF_MEMORY);
         }
     }
 
@@ -597,7 +598,7 @@ public class GLUtessellatorImpl implements GLUtessellator {
             mesh = null;
         } catch (Exception e) {
             e.printStackTrace();
-            callErrorOrErrorData(GLU.GLU_OUT_OF_MEMORY);
+            callErrorOrErrorData(GLU_OUT_OF_MEMORY);
         }
     }
 

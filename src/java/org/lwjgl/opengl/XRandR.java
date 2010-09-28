@@ -42,20 +42,20 @@ import org.lwjgl.LWJGLUtil;
 /**
  * Utility for working with the xrandr commmand-line utility. Assumes
  * xrandr v1.2 or higher.
- * 
+ *
  * @author ryanm
  */
 public class XRandR
 {
 	private static Screen[] current;
 
-	private static Map /* <String, Screen[]> */screens;
+	private static Map<String, Screen[]> screens;
 
 	private static void populate()
 	{
 		if( screens == null )
 		{
-			screens = new HashMap/* <String, Screen[]> */();
+			screens = new HashMap<String, Screen[]>();
 
 			// ProcessBuilder pb = new ProcessBuilder( "xrandr", "-q" );
 			// pb.redirectErrorStream();
@@ -64,8 +64,8 @@ public class XRandR
 				// Process p= pb.start();
 				Process p = Runtime.getRuntime().exec( new String[] { "xrandr", "-q" } );
 
-				List/* <Screen> */currentList = new ArrayList/* <Screen> */();
-				List/* <Screen> */possibles = new ArrayList/* <Screen> */();
+				List<Screen> currentList = new ArrayList<Screen>();
+				List<Screen> possibles = new ArrayList<Screen>();
 				String name = null;
 
 				BufferedReader br = new BufferedReader( new InputStreamReader( p.getInputStream() ) );
@@ -75,7 +75,7 @@ public class XRandR
 					line = line.trim();
 					String[] sa = line.split( "\\s+" );
 
-					if( sa[ 1 ].equals( "connected" ) )
+					if( "connected".equals(sa[1]) )
 					{
 						// found a new screen block
 						if( name != null )
@@ -97,7 +97,7 @@ public class XRandR
 
 				screens.put( name, possibles.toArray( new Screen[ possibles.size() ] ) );
 
-				current = (Screen[]) currentList.toArray(new Screen[currentList.size()]);
+				current = currentList.toArray(new Screen[currentList.size()]);
 			}
 			catch( Throwable e )
 			{
@@ -116,7 +116,7 @@ public class XRandR
 	{
 		populate();
 
-		return (Screen[]) current.clone();
+		return current.clone();
 	}
 
 	/**
@@ -125,42 +125,34 @@ public class XRandR
 	 * @throws IllegalArgumentException
 	 *            if no screens are specified
 	 */
-	public static void setConfiguration( Screen[]/* ... */screens )
+	public static void setConfiguration(Screen... screens)
 	{
 		if( screens.length == 0 )
-		{
 			throw new IllegalArgumentException( "Must specify at least one screen" );
-		}
 
-		List/* <String> */cmd = new ArrayList/* <String> */();
+		List<String> cmd = new ArrayList<String>();
 		cmd.add( "xrandr" );
 
 		// switch off those in the current set not in the new set
-		for( int i = 0; i < current.length; i++ )
-		{
+		for ( Screen screen : current ) {
 			boolean found = false;
-			for( int j = 0; j < screens.length; j++ )
-			{
-				if( screens[ j ].name.equals( current[ i ].name ) )
-				{
+			for ( Screen screen1 : screens ) {
+				if ( screen1.name.equals(screen.name) ) {
 					found = true;
 					break;
 				}
 			}
 
-			if( !found )
-			{
-				cmd.add( "--output" );
-				cmd.add( current[ i ].name );
-				cmd.add( "--off" );
+			if ( !found ) {
+				cmd.add("--output");
+				cmd.add(screen.name);
+				cmd.add("--off");
 			}
 		}
 
 		// set up new set
-		for( int i = 0; i < screens.length; i++ )
-		{
-			screens[ i ].getArgs( cmd );
-		}
+		for ( Screen screen : screens )
+			screen.getArgs(cmd);
 
 		try
 		{
@@ -168,7 +160,7 @@ public class XRandR
 			// pb.redirectErrorStream();
 			// Process p = pb.start();
 			Process p =
-					Runtime.getRuntime().exec( ( String[] ) cmd.toArray( new String[ cmd.size() ] ) );
+					Runtime.getRuntime().exec( cmd.toArray( new String[ cmd.size() ] ) );
 			// no output is expected, but check anyway
 			BufferedReader br = new BufferedReader( new InputStreamReader( p.getInputStream() ) );
 			String line;
@@ -191,7 +183,7 @@ public class XRandR
 	public static String[] getScreenNames()
 	{
 		populate();
-		return ( String[] ) screens.keySet().toArray( new String[ screens.size() ] );
+		return screens.keySet().toArray( new String[ screens.size() ] );
 	}
 
 	/**
@@ -203,7 +195,7 @@ public class XRandR
 	{
 		populate();
 		// clone the array to prevent held copies being altered
-		return (Screen[]) ((Screen[]) screens.get(name)).clone();
+		return screens.get(name).clone();
 	}
 
 	private static final Pattern SCREEN_PATTERN1 =
@@ -214,7 +206,7 @@ public class XRandR
 	/**
 	 * Parses a screen configuration and adds it to the list if it's
 	 * valid.
-	 * 
+	 *
 	 * @param list
 	 *           the list to add the Screen to if it's valid
 	 * @param name
@@ -223,7 +215,7 @@ public class XRandR
 	 *           config string, format either widthxheight or
 	 *           widthxheight+xPos+yPos
 	 */
-	private static void parseScreen( List /* <Screen> */list, String name, String what )
+	private static void parseScreen( List<Screen> list, String name, String what )
 	{
 		Matcher m = SCREEN_PATTERN1.matcher( what );
 		if( !m.matches() )
@@ -254,7 +246,7 @@ public class XRandR
 	/**
 	 * Encapsulates the configuration of a monitor. Resolution is
 	 * fixed, position is mutable
-	 * 
+	 *
 	 * @author ryanm
 	 */
 	public static class Screen implements Cloneable
@@ -277,12 +269,12 @@ public class XRandR
 		/**
 		 * Position on the x-axis, in pixels
 		 */
-		public int xPos = 0;
+		public int xPos;
 
 		/**
 		 * Position on the y-axis, in pixels
 		 */
-		public int yPos = 0;
+		public int yPos;
 
 		private Screen( String name, int width, int height, int xPos, int yPos )
 		{
@@ -293,7 +285,7 @@ public class XRandR
 			this.yPos = yPos;
 		}
 
-		private void getArgs( List/* <String> */argList )
+		private void getArgs( List<String> argList )
 		{
 			argList.add( "--output" );
 			argList.add( name );

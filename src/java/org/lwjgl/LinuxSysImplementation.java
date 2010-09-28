@@ -39,7 +39,7 @@ package org.lwjgl;
  * $Id$
  */
 final class LinuxSysImplementation extends J2SESysImplementation {
-	private final static int JNI_VERSION = 19;
+	private static final int JNI_VERSION = 19;
 
 	static {
 		java.awt.Toolkit.getDefaultToolkit(); // This will make sure libjawt.so is loaded
@@ -55,8 +55,7 @@ final class LinuxSysImplementation extends J2SESysImplementation {
 
 		String[] browsers = {"xdg-open", "firefox", "mozilla", "opera", "konqueror", "nautilus", "galeon", "netscape"};
 
-		for (int i = 0; i < browsers.length; i ++) {
-			final String browser = browsers[i];
+		for ( final String browser : browsers ) {
 			try {
 				LWJGLUtil.execPrivileged(new String[] { browser, url });
 				return true;

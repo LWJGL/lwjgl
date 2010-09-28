@@ -31,6 +31,10 @@
  */
 package org.lwjgl.opengl;
 
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL21.*;
+import static org.lwjgl.opengl.GL40.*;
+
 final class StateTracker {
 	private ReferencesStack references_stack;
 	private final StateStack attrib_stack;
@@ -78,19 +82,19 @@ final class StateTracker {
         static void bindBuffer(ContextCapabilities caps, int target, int buffer) {
             ReferencesStack references_stack = getReferencesStack(caps);
             switch(target) {
-                case GL15.GL_ELEMENT_ARRAY_BUFFER:
+                case GL_ELEMENT_ARRAY_BUFFER:
                     references_stack.getReferences().elementArrayBuffer = buffer;
                     break;
-                case GL15.GL_ARRAY_BUFFER:
+                case GL_ARRAY_BUFFER:
                     references_stack.getReferences().arrayBuffer = buffer;
                     break;
-                case GL21.GL_PIXEL_PACK_BUFFER:
+                case GL_PIXEL_PACK_BUFFER:
 	                references_stack.getReferences().pixelPackBuffer = buffer;
 	                break;
-	            case GL21.GL_PIXEL_UNPACK_BUFFER:
+	            case GL_PIXEL_UNPACK_BUFFER:
 		            references_stack.getReferences().pixelUnpackBuffer = buffer;
 		            break;
-	            case GL40.GL_DRAW_INDIRECT_BUFFER:
+	            case GL_DRAW_INDIRECT_BUFFER:
 		            references_stack.getReferences().indirectBuffer = buffer;
 		            break;
 
