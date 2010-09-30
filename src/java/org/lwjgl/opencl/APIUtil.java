@@ -42,6 +42,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import static org.lwjgl.opencl.APPLEGLSharing.*;
+import static org.lwjgl.opencl.CL10.*;
+import static org.lwjgl.opencl.EXTDeviceFission.*;
+import static org.lwjgl.opencl.KHRGLSharing.*;
+
 /**
  * Utility class for OpenCL API calls.
  *
@@ -432,6 +437,19 @@ final class APIUtil {
 		return extensions;
 	}
 
+	static boolean isDevicesParam(final int param_name) {
+		switch ( param_name ) {
+			case CL_CONTEXT_DEVICES:
+			case CL_CURRENT_DEVICE_FOR_GL_CONTEXT_KHR:
+			case CL_DEVICES_FOR_GL_CONTEXT_KHR:
+			case CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE:
+			case CL_CGL_DEVICES_FOR_SUPPORTED_VIRTUAL_SCREENS_APPLE:
+				return true;
+		}
+
+		return false;
+	}
+
 	static CLPlatform getCLPlatform(final PointerBuffer properties) {
 		long platformID = 0;
 
@@ -441,7 +459,7 @@ final class APIUtil {
 			if ( key == 0 )
 				break;
 
-			if ( key == 0x1084 ) { // CL_CONTEXT_PLATFORM
+			if ( key == CL_CONTEXT_PLATFORM ) {
 				platformID = properties.get((k << 1) + 1);
 				break;
 			}
@@ -452,7 +470,7 @@ final class APIUtil {
 
 		final CLPlatform platform = CLPlatform.getCLPlatform(platformID);
 		if ( platform == null )
-			throw new IllegalStateException("Could not find a valid CLPlatform. Make sure clGetPlatformIDs has been used before creating a CLContext.");
+			throw new IllegalStateException("Could not find a valid CLPlatform. Make sure clGetPlatformIDs has been used before.");
 
 		return platform;
 	}
@@ -546,25 +564,25 @@ final class APIUtil {
 	}
 
 	private static final ObjectDestructor<CLDevice> DESTRUCTOR_CLSubDevice = new ObjectDestructor<CLDevice>() {
-		public void release(final CLDevice object) { EXTDeviceFission.clReleaseDeviceEXT(object); }
+		public void release(final CLDevice object) { clReleaseDeviceEXT(object); }
 	};
 	private static final ObjectDestructor<CLMem> DESTRUCTOR_CLMem = new ObjectDestructor<CLMem>() {
-		public void release(final CLMem object) { CL10.clReleaseMemObject(object); }
+		public void release(final CLMem object) { clReleaseMemObject(object); }
 	};
 	private static final ObjectDestructor<CLCommandQueue> DESTRUCTOR_CLCommandQueue = new ObjectDestructor<CLCommandQueue>() {
-		public void release(final CLCommandQueue object) { CL10.clReleaseCommandQueue(object); }
+		public void release(final CLCommandQueue object) { clReleaseCommandQueue(object); }
 	};
 	private static final ObjectDestructor<CLSampler> DESTRUCTOR_CLSampler = new ObjectDestructor<CLSampler>() {
-		public void release(final CLSampler object) { CL10.clReleaseSampler(object); }
+		public void release(final CLSampler object) { clReleaseSampler(object); }
 	};
 	private static final ObjectDestructor<CLProgram> DESTRUCTOR_CLProgram = new ObjectDestructor<CLProgram>() {
-		public void release(final CLProgram object) { CL10.clReleaseProgram(object); }
+		public void release(final CLProgram object) { clReleaseProgram(object); }
 	};
 	private static final ObjectDestructor<CLKernel> DESTRUCTOR_CLKernel = new ObjectDestructor<CLKernel>() {
-		public void release(final CLKernel object) { CL10.clReleaseKernel(object); }
+		public void release(final CLKernel object) { clReleaseKernel(object); }
 	};
 	private static final ObjectDestructor<CLEvent> DESTRUCTOR_CLEvent = new ObjectDestructor<CLEvent>() {
-		public void release(final CLEvent object) { CL10.clReleaseEvent(object); }
+		public void release(final CLEvent object) { clReleaseEvent(object); }
 	};
 
 	private interface ObjectDestructor<T extends CLObjectChild> {

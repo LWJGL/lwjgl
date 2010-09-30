@@ -63,6 +63,10 @@ public interface KHR_gl_sharing {
 		CL_WGL_HDC_KHR = 0x200B,
 		CL_CGL_SHAREGROUP_KHR = 0x200C;
 
+	@Code(
+		javaBeforeNative = "\t\tif ( param_value_size_ret == null && APIUtil.isDevicesParam(param_name) ) param_value_size_ret = APIUtil.getBufferPointer();",
+		javaAfterNative = "\t\tif ( __result == CL_SUCCESS && param_value != null && APIUtil.isDevicesParam(param_name) ) APIUtil.getCLPlatform(properties).registerCLDevices(param_value, param_value_size_ret);"
+	)
 	@cl_int
 	int clGetGLContextInfoKHR(@NullTerminated @Const @NativeType("cl_context_properties") PointerBuffer properties,
 	                          @NativeType("cl_gl_context_info") int param_name,

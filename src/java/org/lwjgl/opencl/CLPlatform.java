@@ -210,7 +210,7 @@ public final class CLPlatform extends CLObject {
 		for ( int i = 0; i < count; i++ ) {
 			final long id = devices.get(pos + i);
 			if ( !clDevices.hasObject(id) )
-				new CLDevice(devices.get(pos + i), this);
+				new CLDevice(id, this);
 		}
 	}
 
@@ -226,7 +226,7 @@ public final class CLPlatform extends CLObject {
 			final int offset = pos + (i * PointerBuffer.getPointerSize());
 			final long id = PointerBuffer.is64Bit() ? devices.getLong(offset) : devices.getInt(offset);
 			if ( !clDevices.hasObject(id) )
-				new CLDevice(devices.get(pos + i), this);
+				new CLDevice(id, this);
 		}
 	}
 

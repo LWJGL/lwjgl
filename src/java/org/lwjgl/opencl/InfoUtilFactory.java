@@ -96,25 +96,31 @@ final class InfoUtilFactory {
 		}
 
 		/** Custom clCreateContext implementation (reuses APIUtil.getBufferPointer) */
-		public CLContext create(final CLPlatform platform, final List<CLDevice> devices, final CLContextCallback pfn_notify, final Drawable share_drawable, final IntBuffer errcode_ret) throws LWJGLException {
+		public CLContext create(final CLPlatform platform, final List<CLDevice> devices, final CLContextCallback pfn_notify, final Drawable share_drawable, IntBuffer errcode_ret) throws LWJGLException {
 			final int propertyCount = 2 + (share_drawable == null ? 0 : 4) + 1;
 
-			final PointerBuffer buffer = APIUtil.getBufferPointer(propertyCount + devices.size());
-			buffer.put(CL_CONTEXT_PLATFORM).put(platform);
+			final PointerBuffer properties = APIUtil.getBufferPointer(propertyCount + devices.size());
+			properties.put(CL_CONTEXT_PLATFORM).put(platform);
 			if ( share_drawable != null )
-				share_drawable.setCLSharingProperties(buffer);
-			buffer.put(0);
+				share_drawable.setCLSharingProperties(properties);
+			properties.put(0);
 
-			buffer.position(propertyCount); // Make sure we're at the right offset, setCLSharingProperties might not use all 4 positions.
+			properties.position(propertyCount); // Make sure we're at the right offset, setCLSharingProperties might not use all 4 positions.
 			for ( CLDevice device : devices )
-				buffer.put(device);
+				properties.put(device);
 
 			final long function_pointer = CLCapabilities.clCreateContext;
 			BufferChecks.checkFunctionAddress(function_pointer);
+			if ( errcode_ret != null )
+				BufferChecks.checkBuffer(errcode_ret, 1);
+			else if ( LWJGLUtil.DEBUG )
+				errcode_ret = APIUtil.getBufferInt();
 			final long user_data = pfn_notify == null || pfn_notify.isCustom() ? 0 : CallbackUtil.createGlobalRef(pfn_notify);
 			CLContext __result = null;
 			try {
-				__result = new CLContext(nclCreateContext(buffer.getBuffer(), 0, devices.size(), buffer.getBuffer(), propertyCount * PointerBuffer.getPointerSize(), pfn_notify == null ? 0 : pfn_notify.getPointer(), user_data, errcode_ret, errcode_ret != null ? errcode_ret.position() : 0, function_pointer), platform);
+				__result = new CLContext(nclCreateContext(properties.getBuffer(), 0, devices.size(), properties.getBuffer(), propertyCount * PointerBuffer.getPointerSize(), pfn_notify == null ? 0 : pfn_notify.getPointer(), user_data, errcode_ret, errcode_ret != null ? errcode_ret.position() : 0, function_pointer), platform);
+				if ( LWJGLUtil.DEBUG )
+					Util.checkCLError(errcode_ret.get(0));
 				return __result;
 			} finally {
 				CallbackUtil.registerCallback(__result, user_data);
@@ -282,7 +288,7 @@ final class InfoUtilFactory {
 			return clGetMemObjectInfo(mem, param_name, param_value, param_value_size_ret);
 		}
 
-		public CLMem createImage2D(final CLContext context, final long flags, final CLImageFormat image_format, final long image_width, final long image_height, final long image_row_pitch, final Buffer host_ptr, final IntBuffer errcode_ret) {
+		public CLMem createImage2D(final CLContext context, final long flags, final CLImageFormat image_format, final long image_width, final long image_height, final long image_row_pitch, final Buffer host_ptr, IntBuffer errcode_ret) {
 			final ByteBuffer formatBuffer = APIUtil.getBufferByte(2 * 4);
 			formatBuffer.putInt(0, image_format.getChannelOrder());
 			formatBuffer.putInt(4, image_format.getChannelType());
@@ -291,12 +297,18 @@ final class InfoUtilFactory {
 			BufferChecks.checkFunctionAddress(function_pointer);
 			if ( errcode_ret != null )
 				BufferChecks.checkBuffer(errcode_ret, 1);
-			return new CLMem(nclCreateImage2D(context.getPointer(), flags, formatBuffer, 0, image_width, image_height, image_row_pitch, host_ptr,
-			                                  host_ptr != null ? BufferChecks.checkBuffer(host_ptr, CLChecks.calculateImage2DSize(formatBuffer, image_width, image_height, image_row_pitch)) : 0,
-			                                  errcode_ret, errcode_ret != null ? errcode_ret.position() : 0, function_pointer), context);
+			else if ( LWJGLUtil.DEBUG )
+				errcode_ret = APIUtil.getBufferInt();
+
+			CLMem __result = new CLMem(nclCreateImage2D(context.getPointer(), flags, formatBuffer, 0, image_width, image_height, image_row_pitch, host_ptr,
+			                                            host_ptr != null ? BufferChecks.checkBuffer(host_ptr, CLChecks.calculateImage2DSize(formatBuffer, image_width, image_height, image_row_pitch)) : 0,
+			                                            errcode_ret, errcode_ret != null ? errcode_ret.position() : 0, function_pointer), context);
+			if ( LWJGLUtil.DEBUG )
+				Util.checkCLError(errcode_ret.get(0));
+			return __result;
 		}
 
-		public CLMem createImage3D(final CLContext context, final long flags, final CLImageFormat image_format, final long image_width, final long image_height, final long image_depth, final long image_row_pitch, final long image_slice_pitch, final Buffer host_ptr, final IntBuffer errcode_ret) {
+		public CLMem createImage3D(final CLContext context, final long flags, final CLImageFormat image_format, final long image_width, final long image_height, final long image_depth, final long image_row_pitch, final long image_slice_pitch, final Buffer host_ptr, IntBuffer errcode_ret) {
 			final ByteBuffer formatBuffer = APIUtil.getBufferByte(2 * 4);
 			formatBuffer.putInt(0, image_format.getChannelOrder());
 			formatBuffer.putInt(4, image_format.getChannelType());
@@ -305,9 +317,15 @@ final class InfoUtilFactory {
 			BufferChecks.checkFunctionAddress(function_pointer);
 			if ( errcode_ret != null )
 				BufferChecks.checkBuffer(errcode_ret, 1);
-			return new CLMem(nclCreateImage3D(context.getPointer(), flags, formatBuffer, 0, image_width, image_height, image_depth, image_row_pitch, image_slice_pitch, host_ptr,
-			                                  host_ptr != null ? BufferChecks.checkBuffer(host_ptr, CLChecks.calculateImage3DSize(formatBuffer, image_width, image_height, image_depth, image_row_pitch, image_slice_pitch)) : 0,
-			                                  errcode_ret, errcode_ret != null ? errcode_ret.position() : 0, function_pointer), context);
+			else if ( LWJGLUtil.DEBUG )
+				errcode_ret = APIUtil.getBufferInt();
+
+			CLMem __result = new CLMem(nclCreateImage3D(context.getPointer(), flags, formatBuffer, 0, image_width, image_height, image_depth, image_row_pitch, image_slice_pitch, host_ptr,
+			                                            host_ptr != null ? BufferChecks.checkBuffer(host_ptr, CLChecks.calculateImage3DSize(formatBuffer, image_width, image_height, image_depth, image_row_pitch, image_slice_pitch)) : 0,
+			                                            errcode_ret, errcode_ret != null ? errcode_ret.position() : 0, function_pointer), context);
+			if ( LWJGLUtil.DEBUG )
+				Util.checkCLError(errcode_ret.get(0));
+			return __result;
 		}
 
 		public CLMem createSubBuffer(final CLMem mem, final long flags, final int buffer_create_type, final CLBufferRegion buffer_create_info, final IntBuffer errcode_ret) {
@@ -317,7 +335,6 @@ final class InfoUtilFactory {
 			infoBuffer.put(buffer_create_info.getSize());
 
 			return clCreateSubBuffer(mem, flags, buffer_create_type, infoBuffer.getBuffer(), errcode_ret);
-
 		}
 
 		public ByteBuffer getInfoHostBuffer(final CLMem mem) {

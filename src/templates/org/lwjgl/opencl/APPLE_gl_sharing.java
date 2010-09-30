@@ -67,6 +67,10 @@ public interface APPLE_gl_sharing {
 	/** Error code returned by clGetGLContextInfoAPPLE if an invalid platform_gl_ctx is provided */
 	int CL_INVALID_GL_CONTEXT_APPLE = -1000;
 
+	@Code(
+		javaBeforeNative = "\t\tif ( param_value_size_ret == null && APIUtil.isDevicesParam(param_name) ) param_value_size_ret = APIUtil.getBufferPointer();",
+		javaAfterNative = "\t\tif ( __result == CL_SUCCESS && param_value != null && APIUtil.isDevicesParam(param_name) ) context.getParent().registerCLDevices(param_value, param_value_size_ret);"
+	)
 	@cl_int
 	int clGetGLContextInfoAPPLE(@PointerWrapper("cl_context") CLContext context,
 	                            @Check("1") @NativeType("cl_void") PointerBuffer platform_gl_ctx,

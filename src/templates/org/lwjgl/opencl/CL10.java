@@ -456,8 +456,8 @@ public interface CL10 {
 	int clReleaseContext(@PointerWrapper("cl_context") CLContext context);
 
 	@Code(
-		javaBeforeNative = "\t\tif ( param_name == CL_CONTEXT_DEVICES && param_value_size_ret == null ) param_value_size_ret = APIUtil.getBufferPointer();",
-		javaAfterNative = "\t\tif ( param_name == CL_CONTEXT_DEVICES && __result == CL_SUCCESS && param_value != null ) context.getParent().registerCLDevices(param_value, param_value_size_ret);"
+		javaBeforeNative = "\t\tif ( param_value_size_ret == null && APIUtil.isDevicesParam(param_name) ) param_value_size_ret = APIUtil.getBufferPointer();",
+		javaAfterNative = "\t\tif ( __result == CL_SUCCESS && param_value != null && APIUtil.isDevicesParam(param_name) ) context.getParent().registerCLDevices(param_value, param_value_size_ret);"
 	)
 	@cl_int
 	int clGetContextInfo(@PointerWrapper("cl_context") CLContext context,
@@ -915,7 +915,7 @@ public interface CL10 {
 	@cl_int
 	int clGetProgramInfo2(@PointerWrapper("cl_program") CLProgram program,
 	                      @Constant("CL_PROGRAM_BINARIES") @NativeType("cl_program_info") int param_name,
-	                      @Constant("sizes.remaining() * PointerBuffer.getPointerSize()") @size_t long param_value_size,
+	                      @Constant("sizes.remainingByte()") @size_t long param_value_size,
 	                      @Helper(passToNative = true) @Check("1") @Const @NativeType("size_t") PointerBuffer sizes,
 	                      @OutParameter @Check("APIUtil.getSize(sizes)") @PointerArray(value = "param_value_size", lengths = "sizes") @NativeType("cl_uchar") ByteBuffer param_value,
 	                      @OutParameter @Check(value = "1", canBeNull = true) @NativeType("size_t") PointerBuffer param_value_size_ret);

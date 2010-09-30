@@ -290,6 +290,16 @@ public class PointerBuffer implements Comparable {
 	}
 
 	/**
+	 * Returns the number of bytes between the current position and the
+	 * limit. </p>
+	 *
+	 * @return The number of bytes remaining in this buffer
+	 */
+	public final int remainingByte() {
+		return remaining() * getPointerSize();
+	}
+
+	/**
 	 * Tells whether there are any elements between the current position and
 	 * the limit. </p>
 	 *

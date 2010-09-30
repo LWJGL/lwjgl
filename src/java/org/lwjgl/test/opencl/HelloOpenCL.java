@@ -54,6 +54,9 @@ public class HelloOpenCL {
 			CL.create();
 
 			final List<CLPlatform> platforms = CLPlatform.getPlatforms();
+			if ( platforms == null )
+				throw new RuntimeException("No OpenCL platforms found.");
+
 			for ( CLPlatform platform : platforms ) {
 				System.out.println("\n-------------------------");
 				System.out.println("NEW PLATFORM: " + platform.getPointer());
