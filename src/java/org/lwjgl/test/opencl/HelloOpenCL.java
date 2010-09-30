@@ -35,6 +35,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.opencl.*;
+import org.lwjgl.opencl.api.CLBufferRegion;
 
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -70,8 +71,10 @@ public class HelloOpenCL {
 
 				final List<CLDevice> devices = platform.getDevices(CL_DEVICE_TYPE_ALL);
 				for ( CLDevice device : devices ) {
+					final CLDeviceCapabilities caps = CLCapabilities.getDeviceCapabilities(device);
+
 					System.out.println("\n\tNEW DEVICE: " + device.getPointer());
-					System.out.println(CLCapabilities.getDeviceCapabilities(device));
+					System.out.println(caps);
 					System.out.println("\t-------------------------");
 
 					System.out.println("\tCL_DEVICE_TYPE = " + device.getInfoInt(CL_DEVICE_TYPE));
@@ -91,7 +94,8 @@ public class HelloOpenCL {
 					printDeviceInfo(device, "CL_DRIVER_VERSION", CL_DRIVER_VERSION);
 					printDeviceInfo(device, "CL_DEVICE_PROFILE", CL_DEVICE_PROFILE);
 					printDeviceInfo(device, "CL_DEVICE_VERSION", CL_DEVICE_VERSION);
-					printDeviceInfo(device, "CL_DEVICE_OPENCL_C_VERSION", CL_DEVICE_OPENCL_C_VERSION);
+					if ( caps.OpenCL11 )
+						printDeviceInfo(device, "CL_DEVICE_OPENCL_C_VERSION", CL_DEVICE_OPENCL_C_VERSION);
 
 					CLContext context = clCreateContext(ctxProps, device, new CLContextCallback() {
 						protected void handleMessage(final String errinfo, final ByteBuffer private_info) {
@@ -101,29 +105,29 @@ public class HelloOpenCL {
 
 					CLMem buffer = clCreateBuffer(context, CL_MEM_READ_ONLY, 128, null);
 
-					clSetMemObjectDestructorCallback(buffer, new CLMemObjectDestructorCallback() {
-						protected void handleMessage(final long memobj) {
-							System.out.println("FIRST Buffer destructed: " + memobj);
-						}
-					});
+					if ( caps.OpenCL11 ) {
+						clSetMemObjectDestructorCallback(buffer, new CLMemObjectDestructorCallback() {
+							protected void handleMessage(final long memobj) {
+								System.out.println("FIRST Buffer destructed: " + memobj);
+							}
+						});
 
-					clSetMemObjectDestructorCallback(buffer, new CLMemObjectDestructorCallback() {
-						protected void handleMessage(final long memobj) {
-							System.out.println("SECOND Buffer destructed: " + memobj);
-						}
-					});
+						clSetMemObjectDestructorCallback(buffer, new CLMemObjectDestructorCallback() {
+							protected void handleMessage(final long memobj) {
+								System.out.println("SECOND Buffer destructed: " + memobj);
+							}
+						});
+					}
 
-					ByteBuffer bufferCreateInfo = BufferUtils.createByteBuffer(2 * PointerBuffer.getPointerSize());
-					PointerBuffer.put(bufferCreateInfo, 0);
-					PointerBuffer.put(bufferCreateInfo, 64);
-					bufferCreateInfo.flip();
-					CLMem subbuffer = clCreateSubBuffer(buffer, CL10.CL_MEM_READ_ONLY, CL11.CL_BUFFER_CREATE_TYPE_REGION, bufferCreateInfo, null);
+					if ( caps.OpenCL11 ) {
+						CLMem subbuffer = buffer.createSubBuffer(CL_MEM_READ_ONLY, CL_BUFFER_CREATE_TYPE_REGION, new CLBufferRegion(0, 64), null);
 
-					clSetMemObjectDestructorCallback(subbuffer, new CLMemObjectDestructorCallback() {
-						protected void handleMessage(final long memobj) {
-							System.out.println("Sub Buffer destructed: " + memobj);
-						}
-					});
+						clSetMemObjectDestructorCallback(subbuffer, new CLMemObjectDestructorCallback() {
+							protected void handleMessage(final long memobj) {
+								System.out.println("Sub Buffer destructed: " + memobj);
+							}
+						});
+					}
 
 					clRetainMemObject(buffer);
 
