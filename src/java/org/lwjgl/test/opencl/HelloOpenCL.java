@@ -94,6 +94,7 @@ public class HelloOpenCL {
 					printDeviceInfo(device, "CL_DRIVER_VERSION", CL_DRIVER_VERSION);
 					printDeviceInfo(device, "CL_DEVICE_PROFILE", CL_DEVICE_PROFILE);
 					printDeviceInfo(device, "CL_DEVICE_VERSION", CL_DEVICE_VERSION);
+					printDeviceInfo(device, "CL_DEVICE_EXTENSIONS", CL_DEVICE_EXTENSIONS);
 					if ( caps.OpenCL11 )
 						printDeviceInfo(device, "CL_DEVICE_OPENCL_C_VERSION", CL_DEVICE_OPENCL_C_VERSION);
 

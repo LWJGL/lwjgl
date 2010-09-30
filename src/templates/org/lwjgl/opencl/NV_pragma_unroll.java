@@ -34,9 +34,6 @@ package org.lwjgl.opencl;
 import org.lwjgl.util.generator.opencl.CLDeviceExtension;
 
 @CLDeviceExtension
-public interface KHR_fp16 {
-
-	/** cl_device_info */
-	int CL_DEVICE_HALF_FP_CONFIG = 0x1033;
+public interface NV_pragma_unroll {
 
 }

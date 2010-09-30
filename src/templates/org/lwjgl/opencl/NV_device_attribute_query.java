@@ -34,9 +34,15 @@ package org.lwjgl.opencl;
 import org.lwjgl.util.generator.opencl.CLDeviceExtension;
 
 @CLDeviceExtension
-public interface KHR_fp16 {
+public interface NV_device_attribute_query {
 
-	/** cl_device_info */
-	int CL_DEVICE_HALF_FP_CONFIG = 0x1033;
+	/** Accepted as the &lt;param_name&gt; parameter of clGetDeviceInfo. */
+	int CL_DEVICE_COMPUTE_CAPABILITY_MAJOR_NV = 0x4000,
+		CL_DEVICE_COMPUTE_CAPABILITY_MINOR_NV = 0x4001,
+		CL_DEVICE_REGISTERS_PER_BLOCK_NV = 0x4002,
+		CL_DEVICE_WARP_SIZE_NV = 0x4003,
+		CL_DEVICE_GPU_OVERLAP_NV = 0x4004,
+		CL_DEVICE_KERNEL_EXEC_TIMEOUT_NV = 0x4005,
+		CL_DEVICE_INTEGRATED_MEMORY_NV = 0x4006;
 
 }
