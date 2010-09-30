@@ -31,6 +31,12 @@
  */
 package org.lwjgl.opencl;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.opencl.api.CLImageFormat;
+import org.lwjgl.opencl.api.Filter;
+import org.lwjgl.opengl.Drawable;
+
+import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,6 +131,100 @@ public final class CLContext extends CLObjectChild<CLPlatform> {
 	// ---------------[ UTILITY METHODS ]---------------
 
 	/**
+	 * Creates a new CLContext.
+	 *
+	 * @param platform    the platform to use
+	 * @param devices     the devices to use
+	 * @param errcode_ret the error code result
+	 *
+	 * @return the new CLContext
+	 *
+	 * @throws LWJGLException if an exception occurs while creating the context
+	 */
+	public static CLContext create(final CLPlatform platform, final List<CLDevice> devices, final IntBuffer errcode_ret) throws LWJGLException {
+		return create(platform, devices, null, null, errcode_ret);
+	}
+
+	/**
+	 * Creates a new CLContext.
+	 *
+	 * @param platform    the platform to use
+	 * @param devices     the devices to use
+	 * @param pfn_notify  the context callback function
+	 * @param errcode_ret the error code result
+	 *
+	 * @return the new CLContext
+	 *
+	 * @throws LWJGLException if an exception occurs while creating the context
+	 */
+	public static CLContext create(final CLPlatform platform, final List<CLDevice> devices, final CLContextCallback pfn_notify, final IntBuffer errcode_ret) throws LWJGLException {
+		return create(platform, devices, pfn_notify, null, errcode_ret);
+	}
+
+	/**
+	 * Creates a new CLContext.
+	 *
+	 * @param platform       the platform to use
+	 * @param devices        the devices to use
+	 * @param share_drawable the OpenGL drawable to share objects with
+	 * @param errcode_ret    the error code result
+	 *
+	 * @return the new CLContext
+	 *
+	 * @throws LWJGLException if an exception occurs while creating the context
+	 */
+	public static CLContext create(final CLPlatform platform, final List<CLDevice> devices, final CLContextCallback pfn_notify, final Drawable share_drawable, final IntBuffer errcode_ret) throws LWJGLException {
+		return util.create(platform, devices, pfn_notify, share_drawable, errcode_ret);
+	}
+
+	/**
+	 * Creates a new CLContext.
+	 *
+	 * @param platform    the platform to use
+	 * @param device_type the device type to use
+	 * @param errcode_ret the error code result
+	 *
+	 * @return the new CLContext
+	 *
+	 * @throws LWJGLException if an exception occurs while creating the context
+	 */
+	public static CLContext createFromType(final CLPlatform platform, final long device_type, final IntBuffer errcode_ret) throws LWJGLException {
+		return util.createFromType(platform, device_type, null, null, errcode_ret);
+	}
+
+	/**
+	 * Creates a new CLContext.
+	 *
+	 * @param platform    the platform to use
+	 * @param device_type the device type to use
+	 * @param pfn_notify  the context callback function
+	 * @param errcode_ret the error code result
+	 *
+	 * @return the new CLContext
+	 *
+	 * @throws LWJGLException if an exception occurs while creating the context
+	 */
+	public static CLContext createFromType(final CLPlatform platform, final long device_type, final CLContextCallback pfn_notify, final IntBuffer errcode_ret) throws LWJGLException {
+		return util.createFromType(platform, device_type, pfn_notify, null, errcode_ret);
+	}
+
+	/**
+	 * Creates a new CLContext.
+	 *
+	 * @param platform       the platform to use
+	 * @param device_type    the device type to use
+	 * @param share_drawable the OpenGL drawable to share objects with
+	 * @param errcode_ret    the error code result
+	 *
+	 * @return the new CLContext
+	 *
+	 * @throws LWJGLException if an exception occurs while creating the context
+	 */
+	public static CLContext createFromType(final CLPlatform platform, final long device_type, final CLContextCallback pfn_notify, final Drawable share_drawable, final IntBuffer errcode_ret) throws LWJGLException {
+		return util.createFromType(platform, device_type, pfn_notify, share_drawable, errcode_ret);
+	}
+
+	/**
 	 * Returns the integer value of the specified parameter.
 	 *
 	 * @param param_name the parameter
@@ -144,10 +244,24 @@ public final class CLContext extends CLObjectChild<CLPlatform> {
 		return util.getInfoDevices(this);
 	}
 
+	public List<CLImageFormat> getSupportedImageFormats(final long flags, final int image_type) {
+		return getSupportedImageFormats(flags, image_type, null);
+	}
+
+	public List<CLImageFormat> getSupportedImageFormats(final long flags, final int image_type, final Filter<CLImageFormat> filter) {
+		return util.getSupportedImageFormats(this, flags, image_type, filter);
+	}
+
 	/** CLContext utility methods interface. */
 	interface CLContextUtil extends InfoUtil<CLContext> {
 
 		List<CLDevice> getInfoDevices(CLContext context);
+
+		CLContext create(CLPlatform platform, List<CLDevice> devices, CLContextCallback pfn_notify, Drawable share_drawable, IntBuffer errcode_ret) throws LWJGLException;
+
+		CLContext createFromType(CLPlatform platform, long device_type, CLContextCallback pfn_notify, Drawable share_drawable, IntBuffer errcode_ret) throws LWJGLException;
+
+		List<CLImageFormat> getSupportedImageFormats(CLContext context, final long flags, final int image_type, Filter<CLImageFormat> filter);
 
 	}
 

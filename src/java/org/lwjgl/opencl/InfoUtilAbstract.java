@@ -31,6 +31,7 @@
  */
 package org.lwjgl.opencl;
 
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.PointerBuffer;
 
 import java.nio.ByteBuffer;
@@ -112,8 +113,8 @@ abstract class InfoUtilAbstract<T extends CLObject> implements InfoUtil<T> {
 		object.checkValid();
 
 		final int bytes = getSizeRet(object, param_name);
-		if ( bytes == 0 )
-			return "";
+		if ( bytes <= 1 )
+			return null;
 
 		final ByteBuffer buffer = APIUtil.getBufferByte(bytes);
 		getInfo(object, param_name, buffer, null);
@@ -126,7 +127,7 @@ abstract class InfoUtilAbstract<T extends CLObject> implements InfoUtil<T> {
 		final PointerBuffer bytes = APIUtil.getBufferPointer();
 		final int errcode = getInfo(object, param_name, null, bytes);
 		if ( errcode != CL_SUCCESS )
-			throw new IllegalArgumentException("Invalid parameter specified: " + APIUtil.toHexString(param_name));
+			throw new IllegalArgumentException("Invalid parameter specified: " + LWJGLUtil.toHexString(param_name));
 
 		return (int)bytes.get(0);
 	}

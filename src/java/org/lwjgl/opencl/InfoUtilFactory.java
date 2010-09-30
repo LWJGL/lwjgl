@@ -32,8 +32,12 @@
 package org.lwjgl.opencl;
 
 import org.lwjgl.*;
+import org.lwjgl.opencl.api.CLBufferRegion;
+import org.lwjgl.opencl.api.CLImageFormat;
 import org.lwjgl.opencl.api.Filter;
+import org.lwjgl.opengl.Drawable;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -49,7 +53,6 @@ import static org.lwjgl.opencl.CL11.*;
  * so that they can be compiled for the generator.
  *
  * @author Spasi
- * @since 28 Σεπ 2010
  */
 final class InfoUtilFactory {
 
@@ -92,6 +95,70 @@ final class InfoUtilFactory {
 
 		}
 
+		/** Custom clCreateContext implementation (reuses APIUtil.getBufferPointer) */
+		public CLContext create(final CLPlatform platform, final List<CLDevice> devices, final CLContextCallback pfn_notify, final Drawable share_drawable, final IntBuffer errcode_ret) throws LWJGLException {
+			final int propertyCount = 2 + (share_drawable == null ? 0 : 4) + 1;
+
+			final PointerBuffer buffer = APIUtil.getBufferPointer(propertyCount + devices.size());
+			buffer.put(CL_CONTEXT_PLATFORM).put(platform);
+			if ( share_drawable != null )
+				share_drawable.setCLSharingProperties(buffer);
+			buffer.put(0);
+
+			buffer.position(propertyCount); // Make sure we're at the right offset, setCLSharingProperties might not use all 4 positions.
+			for ( CLDevice device : devices )
+				buffer.put(device);
+
+			final long function_pointer = CLCapabilities.clCreateContext;
+			BufferChecks.checkFunctionAddress(function_pointer);
+			final long user_data = pfn_notify == null || pfn_notify.isCustom() ? 0 : CallbackUtil.createGlobalRef(pfn_notify);
+			CLContext __result = null;
+			try {
+				__result = new CLContext(nclCreateContext(buffer.getBuffer(), 0, devices.size(), buffer.getBuffer(), propertyCount * PointerBuffer.getPointerSize(), pfn_notify == null ? 0 : pfn_notify.getPointer(), user_data, errcode_ret, errcode_ret != null ? errcode_ret.position() : 0, function_pointer), platform);
+				return __result;
+			} finally {
+				CallbackUtil.registerCallback(__result, user_data);
+			}
+		}
+
+		public CLContext createFromType(final CLPlatform platform, final long device_type, final CLContextCallback pfn_notify, final Drawable share_drawable, final IntBuffer errcode_ret) throws LWJGLException {
+			final int propertyCount = 2 + (share_drawable == null ? 0 : 4) + 1;
+
+			final PointerBuffer properties = APIUtil.getBufferPointer(propertyCount);
+			properties.put(CL_CONTEXT_PLATFORM).put(platform);
+			if ( share_drawable != null )
+				share_drawable.setCLSharingProperties(properties);
+			properties.put(0);
+			properties.flip();
+
+			return clCreateContextFromType(properties, device_type, pfn_notify, errcode_ret);
+		}
+
+		public List<CLImageFormat> getSupportedImageFormats(final CLContext context, final long flags, final int image_type, final Filter<CLImageFormat> filter) {
+			final IntBuffer numBuffer = APIUtil.getBufferInt();
+			clGetSupportedImageFormats(context, flags, image_type, null, numBuffer);
+
+			final int num_image_formats = numBuffer.get(0);
+			if ( num_image_formats == 0 )
+				return null;
+
+			final ByteBuffer formatBuffer = BufferUtils.createByteBuffer(num_image_formats * CLImageFormat.STRUCT_SIZE);
+			clGetSupportedImageFormats(context, flags, image_type, formatBuffer, null);
+
+			final List<CLImageFormat> formats = new ArrayList<CLImageFormat>(num_image_formats);
+			for ( int i = 0; i < num_image_formats; i++ ) {
+				final int offset = num_image_formats * CLImageFormat.STRUCT_SIZE;
+				final CLImageFormat format = new CLImageFormat(
+					formatBuffer.getInt(offset),
+					formatBuffer.getInt(offset + 4)
+				);
+				if ( filter == null || filter.accept(format) )
+					formats.add(format);
+			}
+
+			return formats.size() == 0 ? null : formats;
+		}
+
 	}
 
 	static final InfoUtil<CLDevice> CL_DEVICE_UTIL = new CLDeviceUtil();
@@ -106,7 +173,7 @@ final class InfoUtilFactory {
 				case CL_DEVICE_MAX_WORK_ITEM_SIZES:
 					return getInfoInt(device, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS);
 				default:
-					throw new IllegalArgumentException("Unsupported parameter: " + APIUtil.toHexString(param_name));
+					throw new IllegalArgumentException("Unsupported parameter: " + LWJGLUtil.toHexString(param_name));
 			}
 		}
 
@@ -183,7 +250,7 @@ final class InfoUtilFactory {
 					size = 3;
 					break;
 				default:
-					throw new IllegalArgumentException("Unsupported parameter: " + APIUtil.toHexString(param_name));
+					throw new IllegalArgumentException("Unsupported parameter: " + LWJGLUtil.toHexString(param_name));
 			}
 
 			final PointerBuffer buffer = APIUtil.getBufferPointer(size);
@@ -215,6 +282,44 @@ final class InfoUtilFactory {
 			return clGetMemObjectInfo(mem, param_name, param_value, param_value_size_ret);
 		}
 
+		public CLMem createImage2D(final CLContext context, final long flags, final CLImageFormat image_format, final long image_width, final long image_height, final long image_row_pitch, final Buffer host_ptr, final IntBuffer errcode_ret) {
+			final ByteBuffer formatBuffer = APIUtil.getBufferByte(2 * 4);
+			formatBuffer.putInt(0, image_format.getChannelOrder());
+			formatBuffer.putInt(4, image_format.getChannelType());
+
+			final long function_pointer = CLCapabilities.clCreateImage2D;
+			BufferChecks.checkFunctionAddress(function_pointer);
+			if ( errcode_ret != null )
+				BufferChecks.checkBuffer(errcode_ret, 1);
+			return new CLMem(nclCreateImage2D(context.getPointer(), flags, formatBuffer, 0, image_width, image_height, image_row_pitch, host_ptr,
+			                                  host_ptr != null ? BufferChecks.checkBuffer(host_ptr, CLChecks.calculateImage2DSize(formatBuffer, image_width, image_height, image_row_pitch)) : 0,
+			                                  errcode_ret, errcode_ret != null ? errcode_ret.position() : 0, function_pointer), context);
+		}
+
+		public CLMem createImage3D(final CLContext context, final long flags, final CLImageFormat image_format, final long image_width, final long image_height, final long image_depth, final long image_row_pitch, final long image_slice_pitch, final Buffer host_ptr, final IntBuffer errcode_ret) {
+			final ByteBuffer formatBuffer = APIUtil.getBufferByte(2 * 4);
+			formatBuffer.putInt(0, image_format.getChannelOrder());
+			formatBuffer.putInt(4, image_format.getChannelType());
+
+			final long function_pointer = CLCapabilities.clCreateImage3D;
+			BufferChecks.checkFunctionAddress(function_pointer);
+			if ( errcode_ret != null )
+				BufferChecks.checkBuffer(errcode_ret, 1);
+			return new CLMem(nclCreateImage3D(context.getPointer(), flags, formatBuffer, 0, image_width, image_height, image_depth, image_row_pitch, image_slice_pitch, host_ptr,
+			                                  host_ptr != null ? BufferChecks.checkBuffer(host_ptr, CLChecks.calculateImage3DSize(formatBuffer, image_width, image_height, image_depth, image_row_pitch, image_slice_pitch)) : 0,
+			                                  errcode_ret, errcode_ret != null ? errcode_ret.position() : 0, function_pointer), context);
+		}
+
+		public CLMem createSubBuffer(final CLMem mem, final long flags, final int buffer_create_type, final CLBufferRegion buffer_create_info, final IntBuffer errcode_ret) {
+			final PointerBuffer infoBuffer = APIUtil.getBufferPointer(2);
+
+			infoBuffer.put(buffer_create_info.getOrigin());
+			infoBuffer.put(buffer_create_info.getSize());
+
+			return clCreateSubBuffer(mem, flags, buffer_create_type, infoBuffer.getBuffer(), errcode_ret);
+
+		}
+
 		public ByteBuffer getInfoHostBuffer(final CLMem mem) {
 			mem.checkValid();
 
@@ -240,6 +345,16 @@ final class InfoUtilFactory {
 			clGetImageInfo(mem, param_name, buffer.getBuffer(), null);
 
 			return buffer.get(0);
+		}
+
+		public CLImageFormat getImageInfoFormat(final CLMem mem) {
+			mem.checkValid();
+
+			final ByteBuffer format = APIUtil.getBufferByte(2 * 4);
+
+			clGetImageInfo(mem, CL_IMAGE_FORMAT, format, null);
+
+			return new CLImageFormat(format.getInt(0), format.getInt(4));
 		}
 
 		public int getImageInfoFormat(final CLMem mem, final int index) {
@@ -346,8 +461,26 @@ final class InfoUtilFactory {
 				case CL_PROGRAM_BINARY_SIZES:
 					return getInfoInt(program, CL_PROGRAM_NUM_DEVICES);
 				default:
-					throw new IllegalArgumentException("Unsupported parameter: " + APIUtil.toHexString(param_name));
+					throw new IllegalArgumentException("Unsupported parameter: " + LWJGLUtil.toHexString(param_name));
 			}
+		}
+
+		public CLKernel[] createKernelsInProgram(final CLProgram program) {
+			final IntBuffer numBuffer = APIUtil.getBufferInt();
+			clCreateKernelsInProgram(program, null, numBuffer);
+
+			final int num_kernels = numBuffer.get(0);
+			if ( num_kernels == 0 )
+				return null;
+
+			final PointerBuffer kernelIDs = APIUtil.getBufferPointer(num_kernels);
+			clCreateKernelsInProgram(program, kernelIDs, null);
+
+			final CLKernel[] kernels = new CLKernel[num_kernels];
+			for ( int i = 0; i < num_kernels; i++ )
+				kernels[i] = program.getCLKernel(kernelIDs.get(i));
+
+			return kernels;
 		}
 
 		public CLDevice[] getInfoDevices(final CLProgram program) {
@@ -413,8 +546,8 @@ final class InfoUtilFactory {
 			program.checkValid();
 
 			final int bytes = getBuildSizeRet(program, device, param_name);
-			if ( bytes == 0 )
-				throw new IllegalArgumentException("Invalid parameter specified: " + APIUtil.toHexString(param_name));
+			if ( bytes <= 1 )
+				return null;
 
 			final ByteBuffer buffer = APIUtil.getBufferByte(bytes);
 			clGetProgramBuildInfo(program, device, param_name, buffer, null);
@@ -435,8 +568,10 @@ final class InfoUtilFactory {
 		private static int getBuildSizeRet(final CLProgram program, final CLDevice device, final int param_name) {
 			final PointerBuffer bytes = APIUtil.getBufferPointer();
 			final int errcode = clGetProgramBuildInfo(program, device, param_name, null, bytes);
+			if ( errcode != CL_SUCCESS )
+				throw new IllegalArgumentException("Invalid parameter specified: " + LWJGLUtil.toHexString(param_name));
 
-			return errcode == CL_SUCCESS ? (int)bytes.get(0) : 0;
+			return (int)bytes.get(0);
 		}
 
 	}

@@ -94,7 +94,7 @@ public class JavaMethodsGenerator {
 
 	private static void printJavaNativeStub(PrintWriter writer, MethodDeclaration method, Mode mode, boolean generate_error_checks, boolean context_specific) {
 		if (Utils.isMethodIndirect(generate_error_checks, context_specific, method)) {
-			writer.print("\tprivate static native ");
+			writer.print("\tstatic native ");
 		} else {
 			Utils.printDocComment(writer, method);
 			writer.print("\tpublic static native ");

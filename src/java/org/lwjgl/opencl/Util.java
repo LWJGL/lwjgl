@@ -31,8 +31,9 @@
  */
 package org.lwjgl.opencl;
 
+import org.lwjgl.LWJGLUtil;
+
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -43,20 +44,11 @@ import java.util.Map;
 public final class Util {
 
 	/** Maps OpenCL error token values to their String representations. */
-	private static final Map<Integer, String> CL_ERROR_TOKENS = new HashMap<Integer, String>(64);
-
-	static {
-		APIUtil.getClassTokens(new Class[] {
-			CL10.class, CL11.class,
-			KHRGLSharing.class, KHRICD.class,
-			APPLEGLSharing.class,
-			EXTDeviceFission.class,
-		}, CL_ERROR_TOKENS, new APIUtil.TokenFilter() {
-			public boolean accept(final Field field, final int value) {
-				return value < 0; // Currently, all OpenCL errors have negative values.
-			}
-		});
-	}
+	private static final Map<Integer, String> CL_ERROR_TOKENS = LWJGLUtil.getClassTokens(new LWJGLUtil.TokenFilter() {
+		public boolean accept(final Field field, final int value) {
+			return value < 0; // Currently, all OpenCL errors have negative values.
+		}
+	}, null, CL10.class, CL11.class, KHRGLSharing.class, KHRICD.class, APPLEGLSharing.class, EXTDeviceFission.class);
 
 	private Util() {
 	}
@@ -70,7 +62,7 @@ public final class Util {
 		String errname = CL_ERROR_TOKENS.get(errcode);
 		if ( errname == null )
 			errname = "UNKNOWN";
-		throw new OpenCLException("Error Code: " + errname + " (" + APIUtil.toHexString(errcode) + ")");
+		throw new OpenCLException("Error Code: " + errname + " (" + LWJGLUtil.toHexString(errcode) + ")");
 	}
 
 }

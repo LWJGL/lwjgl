@@ -29,64 +29,32 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl;
+package org.lwjgl.opencl.api;
 
 /**
- * Base PointerWrapper implementation.
+ * Simple container for cl_image_format struct values.
  *
  * @author Spasi
  */
-public abstract class PointerWrapperAbstract implements PointerWrapper {
+public final class CLImageFormat {
 
-	protected final long pointer;
+	/** The cl_image_format struct size in bytes. */
+	public static final int STRUCT_SIZE = 2 * 4;
 
-	protected PointerWrapperAbstract(final long pointer) {
-		this.pointer = pointer;
+	private final int channelOrder;
+	private final int channelType;
+
+	public CLImageFormat(final int channelOrder, final int channelType) {
+		this.channelOrder = channelOrder;
+		this.channelType = channelType;
 	}
 
-	/**
-	 * Returns true if this object represents a valid pointer.
-	 * The pointer might be invalid because it is NULL or because
-	 * some other action has deleted the object that this pointer
-	 * represents.
-	 *
-	 * @return true if the pointer is valid
-	 */
-	public boolean isValid() {
-		return pointer != 0;
+	public int getChannelOrder() {
+		return channelOrder;
 	}
 
-	/**
-	 * Checks if the pointer is valid and throws an IllegalStateException if
-	 * it is not. This method is a NO-OP, unless the org.lwjgl.util.Debug
-	 * property has been set to true.
-	 */
-	public final void checkValid() {
-		if ( LWJGLUtil.DEBUG && !isValid() )
-			throw new IllegalStateException("This " + getClass().getSimpleName() + " pointer is not valid.");
+	public int getChannelType() {
+		return channelType;
 	}
 
-	public final long getPointer() {
-		checkValid();
-		return pointer;
-	}
-
-	public boolean equals(final Object o) {
-		if ( this == o ) return true;
-		if ( !(o instanceof PointerWrapperAbstract) ) return false;
-
-		final PointerWrapperAbstract that = (PointerWrapperAbstract)o;
-
-		if ( pointer != that.pointer ) return false;
-
-		return true;
-	}
-
-	public int hashCode() {
-		return (int)(pointer ^ (pointer >>> 32));
-	}
-
-	public String toString() {
-		return getClass().getSimpleName() + " pointer (0x" + Long.toHexString(pointer) + ")";
-	}
 }

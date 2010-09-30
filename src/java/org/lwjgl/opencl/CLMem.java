@@ -31,7 +31,12 @@
  */
 package org.lwjgl.opencl;
 
+import org.lwjgl.opencl.api.CLBufferRegion;
+import org.lwjgl.opencl.api.CLImageFormat;
+
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 /**
  * This class is a wrapper around a cl_mem pointer.
@@ -49,6 +54,52 @@ public final class CLMem extends CLObjectChild<CLContext> {
 	}
 
 	// ---------------[ UTILITY METHODS ]---------------
+
+	/**
+	 * Creates a new 2D image object.
+	 *
+	 * @param context         the context on which to create the image object
+	 * @param flags           the memory object flags
+	 * @param image_format    the image format
+	 * @param image_width     the image width
+	 * @param image_height    the image height
+	 * @param image_row_pitch the image row pitch
+	 * @param host_ptr        the host buffer from which to read image data (optional)
+	 * @param errcode_ret     the error code result
+	 *
+	 * @return the new CLMem object
+	 */
+	public static CLMem createImage2D(final CLContext context, final long flags, final CLImageFormat image_format,
+	                                  final long image_width, final long image_height, final long image_row_pitch,
+	                                  final Buffer host_ptr, final IntBuffer errcode_ret) {
+		return util.createImage2D(context, flags, image_format, image_width, image_height, image_row_pitch, host_ptr, errcode_ret);
+	}
+
+	/**
+	 * Creates a new 3D image object.
+	 *
+	 * @param context           the context on which to create the image object
+	 * @param flags             the memory object flags
+	 * @param image_format      the image format
+	 * @param image_width       the image width
+	 * @param image_height      the image height
+	 * @param image_depth       the image depth
+	 * @param image_row_pitch   the image row pitch
+	 * @param image_slice_pitch the image slice pitch
+	 * @param host_ptr          the host buffer from which to read image data (optional)
+	 * @param errcode_ret       the error code result
+	 *
+	 * @return the new CLMem object
+	 */
+	public static CLMem createImage3D(final CLContext context, final long flags, final CLImageFormat image_format,
+	                                  final long image_width, final long image_height, final long image_depth, final long image_row_pitch, final long image_slice_pitch,
+	                                  final Buffer host_ptr, final IntBuffer errcode_ret) {
+		return util.createImage3D(context, flags, image_format, image_width, image_height, image_depth, image_row_pitch, image_slice_pitch, host_ptr, errcode_ret);
+	}
+
+	public CLMem createSubBuffer(final long flags, final int buffer_create_type, final CLBufferRegion buffer_create_info, final IntBuffer errcode_ret) {
+		return util.createSubBuffer(this, flags, buffer_create_type, buffer_create_info, errcode_ret);
+	}
 
 	/**
 	 * Returns the integer value of the specified parameter.
@@ -109,6 +160,15 @@ public final class CLMem extends CLObjectChild<CLContext> {
 	}
 
 	/**
+	 * Returns the image format. Applicable to image objects only.
+	 *
+	 * @return the parameter value
+	 */
+	public CLImageFormat getImageFormat() {
+		return util.getImageInfoFormat(this);
+	}
+
+	/**
 	 * Returns the image channel order. Applicable to image objects only.
 	 *
 	 * @return the parameter value
@@ -165,9 +225,17 @@ public final class CLMem extends CLObjectChild<CLContext> {
 	/** CLMem utility methods interface. */
 	interface CLMemUtil extends InfoUtil<CLMem> {
 
+		CLMem createImage2D(CLContext context, long flags, CLImageFormat image_format, long image_width, long image_height, long image_row_pitch, Buffer host_ptr, IntBuffer errcode_ret);
+
+		CLMem createImage3D(CLContext context, long flags, CLImageFormat image_format, long image_width, long image_height, long image_depth, long image_row_pitch, long image_slice_pitch, Buffer host_ptr, IntBuffer errcode_ret);
+
+		CLMem createSubBuffer(CLMem mem, long flags, int buffer_create_type, CLBufferRegion buffer_create_info, IntBuffer errcode_ret);
+
 		ByteBuffer getInfoHostBuffer(CLMem mem);
 
 		long getImageInfoSize(CLMem mem, int param_name);
+
+		CLImageFormat getImageInfoFormat(CLMem mem);
 
 		int getImageInfoFormat(CLMem mem, int index);
 

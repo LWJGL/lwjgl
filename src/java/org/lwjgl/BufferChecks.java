@@ -31,13 +31,7 @@
  */
 package org.lwjgl;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
-import java.nio.LongBuffer;
+import java.nio.*;
 
 /**
  * <p>A class to check buffer boundaries in general. If there is unsufficient space
@@ -89,21 +83,21 @@ public class BufferChecks {
 
 	/** Helper method to ensure an IntBuffer is null-terminated */
 	public static void checkNullTerminated(IntBuffer buf) {
-		if ( buf.get(buf.limit() - 1) != 0 ) {
+		if ( LWJGLUtil.CHECKS && buf.get(buf.limit() - 1) != 0 ) {
 			throw new IllegalArgumentException("Missing null termination");
 		}
 	}
 
 	/** Helper method to ensure a LongBuffer is null-terminated */
 	public static void checkNullTerminated(LongBuffer buf) {
-		if ( buf.get(buf.limit() - 1) != 0 ) {
+		if ( LWJGLUtil.CHECKS && buf.get(buf.limit() - 1) != 0 ) {
 			throw new IllegalArgumentException("Missing null termination");
 		}
 	}
 
 	/** Helper method to ensure a PointerBuffer is null-terminated */
 	public static void checkNullTerminated(PointerBuffer buf) {
-		if ( buf.get(buf.limit() - 1) != 0 ) {
+		if ( LWJGLUtil.CHECKS && buf.get(buf.limit() - 1) != 0 ) {
 			throw new IllegalArgumentException("Missing null termination");
 		}
 	}
@@ -194,6 +188,41 @@ public class BufferChecks {
 		if ( LWJGLUtil.CHECKS && buf.remaining() < size) {
 			throwBufferSizeException(buf, size);
 		}
+	}
+
+	/**
+	 * Detects the buffer type and performs the corresponding check
+	 * and also returns the buffer position in bytes.
+	 *
+	 * @param buffer the buffer to check
+	 * @param size   the size to check
+	 *
+	 * @return the buffer position in bytes
+	 */
+	public static int checkBuffer(final Buffer buffer, final int size) {
+		final int posShift;
+		if ( buffer instanceof ByteBuffer ) {
+			BufferChecks.checkBuffer((ByteBuffer)buffer, size);
+			posShift = 0;
+		} else if ( buffer instanceof ShortBuffer ) {
+			BufferChecks.checkBuffer((ShortBuffer)buffer, size);
+			posShift = 1;
+		} else if ( buffer instanceof IntBuffer ) {
+			BufferChecks.checkBuffer((IntBuffer)buffer, size);
+			posShift = 2;
+		} else if ( buffer instanceof LongBuffer ) {
+			BufferChecks.checkBuffer((LongBuffer)buffer, size);
+			posShift = 4;
+		} else if ( buffer instanceof FloatBuffer ) {
+			BufferChecks.checkBuffer((FloatBuffer)buffer, size);
+			posShift = 2;
+		} else if ( buffer instanceof DoubleBuffer ) {
+			BufferChecks.checkBuffer((DoubleBuffer)buffer, size);
+			posShift = 4;
+		} else
+			throw new IllegalArgumentException("Unsupported Buffer type specified: " + buffer.getClass());
+
+		return buffer.position() << posShift;
 	}
 
 	public static void checkBuffer(ByteBuffer buf, int size) {

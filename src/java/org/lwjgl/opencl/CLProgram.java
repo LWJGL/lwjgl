@@ -70,6 +70,15 @@ public final class CLProgram extends CLObjectChild<CLContext> {
 	// ---------------[ UTILITY METHODS ]---------------
 
 	/**
+	 * Creates kernel objects for all kernels functions in this program.
+	 *
+	 * @return a CLKernel array
+	 */
+	public CLKernel[] createKernelsInProgram() {
+		return util.createKernelsInProgram(this);
+	}
+
+	/**
 	 * Returns the String value of the specified parameter.
 	 *
 	 * @param param_name the parameter
@@ -167,6 +176,8 @@ public final class CLProgram extends CLObjectChild<CLContext> {
 
 	/** CLProgram utility methods interface. */
 	interface CLProgramUtil extends InfoUtil<CLProgram> {
+
+		CLKernel[] createKernelsInProgram(CLProgram program);
 
 		CLDevice[] getInfoDevices(CLProgram program);
 

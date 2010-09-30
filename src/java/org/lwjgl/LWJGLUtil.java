@@ -32,16 +32,15 @@
 package org.lwjgl;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
+import java.util.*;
 
 /**
  * <p>
@@ -486,6 +485,94 @@ public class LWJGLUtil {
 			return false;
 		}
 		return major > major_required || (major == major_required && minor >= minor_required);
+	}
+
+	/**
+	 * Returns a map of public static final integer fields in the specified classes, to their String representations.
+	 * An optional filter can be specified to only include specific fields. The target map may be null, in which
+	 * case a new map is allocated and returned.
+	 * <p>
+	 * This method is useful when debugging to quickly identify values returned from the AL/GL/CL APIs.
+	 *
+	 * @param filter       the filter to use (optional)
+	 * @param target       the target map (optional)
+	 * @param tokenClasses an array of classes to get tokens from
+	 *
+	 * @return the token map
+	 */
+
+	public static Map<Integer, String> getClassTokens(final TokenFilter filter, final Map<Integer, String> target, final Class ... tokenClasses) {
+		return getClassTokens(filter, target, Arrays.asList(tokenClasses));
+	}
+
+	/**
+	 * Returns a map of public static final integer fields in the specified classes, to their String representations.
+	 * An optional filter can be specified to only include specific fields. The target map may be null, in which
+	 * case a new map is allocated and returned.
+	 * <p>
+	 * This method is useful when debugging to quickly identify values returned from the AL/GL/CL APIs.
+	 *
+	 * @param filter       the filter to use (optional)
+	 * @param target       the target map (optional)
+	 * @param tokenClasses the classes to get tokens from
+	 *
+	 * @return the token map
+	 */
+	public static Map<Integer, String> getClassTokens(final TokenFilter filter, Map<Integer, String> target, final Iterable<Class> tokenClasses) {
+		if ( target == null )
+			target = new HashMap<Integer, String>();
+
+		final int TOKEN_MODIFIERS = Modifier.PUBLIC | Modifier.STATIC | Modifier.FINAL;
+
+		for ( final Class tokenClass : tokenClasses ) {
+			for ( final Field field : tokenClass.getDeclaredFields() ) {
+				// Get only <public static final int> fields.
+				if ( (field.getModifiers() & TOKEN_MODIFIERS) == TOKEN_MODIFIERS && field.getType() == int.class ) {
+					try {
+						final int value = field.getInt(null);
+						if ( filter != null && !filter.accept(field, value) )
+							continue;
+
+						if ( target.containsKey(value) ) // Print colliding tokens in their hex representation.
+							target.put(value, toHexString(value));
+						else
+							target.put(value, field.getName());
+					} catch (IllegalAccessException e) {
+						// Ignore
+					}
+				}
+			}
+		}
+
+		return target;
+	}
+
+	/**
+	 * Returns a string representation of the integer argument as an
+	 * unsigned integer in base&nbsp;16. The string will be uppercase
+	 * and will have a leading '0x'.
+	 *
+	 * @param value the integer value
+	 *
+	 * @return the hex string representation
+	 */
+	public static String toHexString(final int value) {
+		return "0x" + Integer.toHexString(value).toUpperCase();
+	}
+
+	/** Simple interface for Field filtering. */
+	public interface TokenFilter {
+
+		/**
+		 * Should return true if the specified Field passes the filter.
+		 *
+		 * @param field the Field to test
+		 * @param value the integer value of the field
+		 *
+		 * @result true if the Field is accepted
+		 */
+		boolean accept(Field field, int value);
+
 	}
 
 }

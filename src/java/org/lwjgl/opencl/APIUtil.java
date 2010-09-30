@@ -35,18 +35,15 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.PointerBuffer;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.nio.*;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
-import java.util.*;
-
-import static org.lwjgl.opencl.CL10.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 /**
  * Utility class for OpenCL API calls.
- * TODO: Remove useless stuff
  *
  * @author spasi
  */
@@ -356,38 +353,6 @@ final class APIUtil {
 		return (int)size;
 	}
 
-	static String toHexString(final int value) {
-		return "0x" + Integer.toHexString(value).toUpperCase();
-	}
-
-	static void getClassTokens(final Class[] tokenClasses, final Map<Integer, String> target, final TokenFilter filter) {
-		getClassTokens(Arrays.asList(tokenClasses), target, filter);
-	}
-
-	static void getClassTokens(final Iterable<Class> tokenClasses, final Map<Integer, String> target, final TokenFilter filter) {
-		final int TOKEN_MODIFIERS = Modifier.PUBLIC | Modifier.STATIC | Modifier.FINAL;
-
-		for ( final Class tokenClass : tokenClasses ) {
-			for ( final Field field : tokenClass.getDeclaredFields() ) {
-				// Get only <public static final int> fields.
-				if ( (field.getModifiers() & TOKEN_MODIFIERS) == TOKEN_MODIFIERS && field.getType() == int.class ) {
-					try {
-						final int value = field.getInt(null);
-						if ( filter != null && !filter.accept(field, value) )
-							continue;
-
-						if ( target.containsKey(value) ) // Print colliding tokens in their hex representation.
-							target.put(value, toHexString(value));
-						else
-							target.put(value, field.getName());
-					} catch (IllegalAccessException e) {
-						// Ignore
-					}
-				}
-			}
-		}
-	}
-
 	/**
 	 * A mutable CharSequence with very large initial length. We can wrap this in a re-usable CharBuffer for decoding.
 	 * We cannot subclass CharBuffer because of {@link java.nio.CharBuffer#toString(int,int)}.
@@ -448,14 +413,6 @@ final class APIUtil {
 
 			pointers = BufferUtils.createPointerBuffer(BUFFERS_SIZE);
 		}
-
-	}
-
-	/** Simple interface for Field filtering */
-	interface TokenFilter {
-
-		/** Should return true if the specified Field passes the filter. */
-		boolean accept(Field field, int value);
 
 	}
 
