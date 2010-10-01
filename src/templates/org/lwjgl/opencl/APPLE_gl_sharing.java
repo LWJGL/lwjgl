@@ -69,7 +69,7 @@ public interface APPLE_gl_sharing {
 
 	@Code(
 		javaBeforeNative = "\t\tif ( param_value_size_ret == null && APIUtil.isDevicesParam(param_name) ) param_value_size_ret = APIUtil.getBufferPointer();",
-		javaAfterNative = "\t\tif ( __result == CL_SUCCESS && param_value != null && APIUtil.isDevicesParam(param_name) ) context.getParent().registerCLDevices(param_value, param_value_size_ret);"
+		javaAfterNative = "\t\tif ( __result == CL10.CL_SUCCESS && param_value != null && APIUtil.isDevicesParam(param_name) ) context.getParent().registerCLDevices(param_value, param_value_size_ret);"
 	)
 	@cl_int
 	int clGetGLContextInfoAPPLE(@PointerWrapper("cl_context") CLContext context,
