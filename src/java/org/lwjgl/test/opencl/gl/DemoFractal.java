@@ -346,10 +346,12 @@ public class DemoFractal {
 		else if ( device_type == CL_DEVICE_TYPE_CPU && !caps.OpenGL21 )
 			throw new RuntimeException("OpenGL 2.1 is required to run this demo.");
 
-		if ( caps.GL_ARB_debug_output )
-			glDebugMessageCallbackARB(new ARBDebugOutputCallback());
-		else if ( caps.GL_AMD_debug_output )
-			glDebugMessageCallbackAMD(new AMDDebugOutputCallback());
+		if ( params.contains("debugGL") ) {
+			if ( caps.GL_ARB_debug_output )
+				glDebugMessageCallbackARB(new ARBDebugOutputCallback());
+			else if ( caps.GL_AMD_debug_output )
+				glDebugMessageCallbackAMD(new AMDDebugOutputCallback());
+		}
 
 		if ( device_type == CL_DEVICE_TYPE_GPU )
 			System.out.println("OpenCL Device Type: GPU (Use -forceCPU to use CPU)");

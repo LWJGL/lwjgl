@@ -63,12 +63,13 @@ kernel void mandelbrot(
             // We could also use an R32UI texture and do the unpacking in GLSL,
             // but then we'd require OpenGL 3.0 (GLSL 1.30).
             uint c = colorMap[colorIndex];
-            float3 oc = (float3)(
+            float4 oc = (float4)(
                 (c & 0xFF) >> 0,
                 (c & 0xFF00) >> 8,
-                (c & 0xFF0000) >> 16
+                (c & 0xFF0000) >> 16,
+                255.0
             );
-            write_imagef(output, (int2)(ix, iy), (float4)(oc / 255.0, 1.0));
+            write_imagef(output, (int2)(ix, iy), oc / 255.0);
         #else
             output[iy * width + ix] = colorMap[colorIndex];
         #endif
