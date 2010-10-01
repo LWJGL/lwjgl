@@ -122,17 +122,15 @@ public interface ARB_viewport_array {
 	@StripPostfix("data")
 	void glGetDoublei_v2(@GLenum int target, @GLuint int index, @OutParameter DoubleBuffer data);
 
-	// TODO: It's glGetIntegerIndexedvEXT in EXT_draw_buffers2, spec typo?
-	//@Reuse(extension = "EXT_draw_buffers2", className = "EXTDrawBuffers2")
+	@Reuse("EXTDrawBuffers2")
 	@StripPostfix(value = "v", extension = "EXT")
-	void glGetIntegerIndexedivEXT(@GLenum int target, @GLuint int index, @Check @OutParameter IntBuffer v);
+	void glGetIntegerIndexedvEXT(@GLenum int target, @GLuint int index, @Check @OutParameter IntBuffer v);
 
-	// TODO: It's glGetIntegerIndexedvEXT in EXT_draw_buffers2, spec typo?
-	//@Reuse(extension = "EXT_draw_buffers2", className = "EXTDrawBuffers2")
+	@Reuse("EXTDrawBuffers2")
 	@Alternate("glGetIntegerIndexedivEXT")
 	@GLreturn("v")
 	@StripPostfix(value = "v", extension = "EXT")
-	void glGetIntegerIndexedivEXT2(@GLenum int target, @GLuint int index, @OutParameter IntBuffer v);
+	void glGetIntegerIndexedvEXT2(@GLenum int target, @GLuint int index, @OutParameter IntBuffer v);
 
 	@Reuse("EXTDrawBuffers2")
 	void glEnableIndexedEXT(@GLenum int target, @GLuint int index);

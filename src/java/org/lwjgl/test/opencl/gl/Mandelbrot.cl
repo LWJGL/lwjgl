@@ -4,15 +4,17 @@
     #else
         #pragma OPENCL EXTENSION cl_khr_fp64 : enable
     #endif
-    typedef double varfloat;
+    #define varfloat double
+    #define _255 255.0
 #else
-    typedef float varfloat;
+    #define varfloat float
+    #define _255 255.0f
 #endif
 
 #ifdef USE_TEXTURE
-    typedef __write_only image2d_t OUTPUT_TYPE;
+    #define OUTPUT_TYPE __write_only image2d_t
 #else
-    typedef global uint * OUTPUT_TYPE;
+    #define OUTPUT_TYPE global uint *
 #endif
 
 /**
@@ -54,7 +56,7 @@ kernel void mandelbrot(
         #else
             output[iy * width + ix] = 0;
         #endif
-        } else {
+    } else {
         varfloat alpha = (varfloat)iteration / maxIterations;
         int colorIndex = (int)(alpha * colorMapSize);
         #ifdef USE_TEXTURE
@@ -67,9 +69,9 @@ kernel void mandelbrot(
                 (c & 0xFF) >> 0,
                 (c & 0xFF00) >> 8,
                 (c & 0xFF0000) >> 16,
-                255.0
+                _255
             );
-            write_imagef(output, (int2)(ix, iy), oc / 255.0);
+            write_imagef(output, (int2)(ix, iy), oc / _255);
         #else
             output[iy * width + ix] = colorMap[colorIndex];
         #endif

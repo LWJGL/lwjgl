@@ -476,7 +476,7 @@ public class DemoFractal {
 		for ( int i = 0; i < programs.length; i++ ) {
 			final CLDevice device = queues[i].getCLDevice();
 
-			final StringBuilder options = new StringBuilder(useTextures ? " -D USE_TEXTURE" : "");
+			final StringBuilder options = new StringBuilder(useTextures ? "-D USE_TEXTURE" : "");
 			final CLDeviceCapabilities caps = CLCapabilities.getDeviceCapabilities(device);
 			if ( doublePrecision && isDoubleFPAvailable(device) ) {
 				//cl_khr_fp64
