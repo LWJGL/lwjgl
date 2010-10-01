@@ -34,8 +34,6 @@ package org.lwjgl.opencl;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.lwjgl.opencl.CL10.*;
-
 /**
  * Utility class that handles OpenCL API callbacks.
  *
@@ -81,7 +79,7 @@ final class CallbackUtil {
 	 * @param user_data the GlobalRef memory address
 	 */
 	static void checkCallback(final int errcode, final long user_data) {
-		if ( errcode != CL_SUCCESS && user_data != 0 )
+		if ( errcode != 0x0 && user_data != 0 )
 			deleteGlobalRef(user_data);
 	}
 
