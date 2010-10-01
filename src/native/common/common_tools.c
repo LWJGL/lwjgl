@@ -61,6 +61,10 @@ void putAttrib(attrib_list_t *list, int attrib) {
 	list->current_index++;
 }
 
+JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getPointerSize(JNIEnv *env, jclass clazz) {
+    return (jint)sizeof(void *);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_DefaultSysImplementation_setDebug
   (JNIEnv *env, jobject ignored, jboolean enable) {
 	  debug = enable == JNI_TRUE ? true : false;

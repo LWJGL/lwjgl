@@ -33,6 +33,7 @@ package org.lwjgl.test.opencl;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.opencl.*;
 import org.lwjgl.opencl.api.CLBufferRegion;
@@ -49,7 +50,7 @@ public class HelloOpenCL {
 	public HelloOpenCL() {
 	}
 
-	protected void execute() {
+	protected static void execute() {
 		try {
 			CL.create();
 
@@ -135,28 +136,31 @@ public class HelloOpenCL {
 
 					clRetainMemObject(buffer);
 
-					final long exec_caps = device.getInfoLong(CL_DEVICE_EXECUTION_CAPABILITIES);
-					if ( (exec_caps & CL_EXEC_NATIVE_KERNEL) == CL_EXEC_NATIVE_KERNEL ) {
-						System.out.println("-TRYING TO EXEC NATIVE KERNEL-");
-						final CLCommandQueue queue = clCreateCommandQueue(context, device, 0, null);
+					if ( LWJGLUtil.getPlatform() != LWJGLUtil.PLATFORM_MACOSX ) {
+						// TODO: Native kernels crash on MacOSX, disable this until we can debug properly.
+						final long exec_caps = device.getInfoLong(CL_DEVICE_EXECUTION_CAPABILITIES);
+						if ( (exec_caps & CL_EXEC_NATIVE_KERNEL) == CL_EXEC_NATIVE_KERNEL ) {
+							System.out.println("-TRYING TO EXEC NATIVE KERNEL-");
+							final CLCommandQueue queue = clCreateCommandQueue(context, device, 0, null);
 
-						clEnqueueNativeKernel(queue, new CLNativeKernel() {
-							protected void execute(final ByteBuffer[] memobjs) {
-								if ( memobjs == null )
-									System.out.println("OK, it's null");
-								else {
-									System.out.println("memobjs = " + memobjs.length);
-									for ( int k = 0; k < memobjs.length; k++ ) {
-										System.out.println("memobjs[" + k + "].remaining() = " + memobjs[k].remaining());
-										for ( int l = memobjs[k].position(); l < memobjs[k].limit(); l++ ) {
-											memobjs[k].put(l, (byte)l);
+							clEnqueueNativeKernel(queue, new CLNativeKernel() {
+								protected void execute(final ByteBuffer[] memobjs) {
+									if ( memobjs == null )
+										System.out.println("OK, it's null");
+									else {
+										System.out.println("memobjs = " + memobjs.length);
+										for ( int k = 0; k < memobjs.length; k++ ) {
+											System.out.println("memobjs[" + k + "].remaining() = " + memobjs[k].remaining());
+											for ( int l = memobjs[k].position(); l < memobjs[k].limit(); l++ ) {
+												memobjs[k].put(l, (byte)l);
+											}
 										}
 									}
 								}
-							}
-						}, new CLMem[] { buffer }, new long[] { 128 }, null, null);
+							}, new CLMem[] { buffer }, new long[] { 128 }, null, null);
 
-						clFinish(queue);
+							clFinish(queue);
+						}
 					}
 
 					clReleaseMemObject(buffer);

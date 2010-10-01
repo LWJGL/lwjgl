@@ -430,9 +430,11 @@ final class APIUtil {
 	static Set<String> getExtensions(final String extensionList) {
 		final Set<String> extensions = new HashSet<String>();
 
-		final StringTokenizer tokenizer = new StringTokenizer(extensionList);
-		while ( tokenizer.hasMoreTokens() )
-			extensions.add(tokenizer.nextToken());
+		if ( extensionList != null ) {
+			final StringTokenizer tokenizer = new StringTokenizer(extensionList);
+			while ( tokenizer.hasMoreTokens() )
+				extensions.add(tokenizer.nextToken());
+		}
 
 		return extensions;
 	}

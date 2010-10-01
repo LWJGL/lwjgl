@@ -77,15 +77,13 @@ public final class Sys {
 		});
 	}
 
-	private static boolean loadLibrary(final String lib_name) {
+	private static void loadLibrary(final String lib_name) {
 		try {
 			doLoadLibrary(lib_name);
-			return false;
 		} catch (UnsatisfiedLinkError e) {
 			if (implementation.has64Bit()) {
 				try {
 					doLoadLibrary(lib_name + POSTFIX64BIT);
-					return true;
 				} catch (UnsatisfiedLinkError e2) {
 					LWJGLUtil.log("Failed to load 64 bit library: " + e2.getMessage());
 				}
@@ -97,13 +95,14 @@ public final class Sys {
 
 	static {
 		implementation = createImplementation();
-		is64Bit = loadLibrary(JNI_LIBRARY_NAME);
+		loadLibrary(JNI_LIBRARY_NAME);
+		is64Bit = implementation.getPointerSize() == 8;
 
 		int native_jni_version = implementation.getJNIVersion();
 		int required_version = implementation.getRequiredJNIVersion();
 		if (native_jni_version != required_version)
 			throw new LinkageError("Version mismatch: jar version is '" + required_version +
-                             "', native libary version is '" + native_jni_version + "'");
+                             "', native library version is '" + native_jni_version + "'");
 		implementation.setDebug(LWJGLUtil.DEBUG);
 	}
 

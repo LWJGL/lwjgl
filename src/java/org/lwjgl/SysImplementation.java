@@ -51,6 +51,11 @@ interface SysImplementation {
 	 */
 	int getJNIVersion();
 
+	/**
+	 * Returns the platform's pointer size in bytes
+	 */
+	int getPointerSize();
+
 	void setDebug(boolean debug);
 
 	/**

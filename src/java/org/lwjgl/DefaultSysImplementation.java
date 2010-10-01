@@ -40,6 +40,7 @@ package org.lwjgl;
  */
 abstract class DefaultSysImplementation implements SysImplementation {
 	public native int getJNIVersion();
+	public native int getPointerSize();
 	public native void setDebug(boolean debug);
 
 	public long getTimerResolution() {
