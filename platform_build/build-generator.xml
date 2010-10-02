@@ -7,8 +7,8 @@
 		</delete>
 	</target>
 
-    <target name="clean-generated-native" description="Deletes the generated native source">
-        <delete quiet="true" failonerror="false">
+    <target name="clean-generated-native" description="Deletes the generated native source" depends="clean-generated">
+        <delete quiet="false" failonerror="false">
             <fileset dir="${lwjgl.src.native}/generated" includes="**"/>
         </delete>
     </target>
