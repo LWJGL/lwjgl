@@ -74,27 +74,6 @@ public class JavaTypeTranslator implements TypeVisitor {
 				throw new RuntimeException(e);
 			}
 		}
-
-		/*
-		final String className = t.getComponentType().toString();
-		if ( "java.lang.CharSequence".equals(className) )
-			type = CharSequence[].class;
-		else if ( "java.nio.ByteBuffer".equals(className) )
-			type = ByteBuffer[].class;
-		else if ( "org.lwjgl.opencl.CLMem".equals(className) )
-			type = CLMem[].class;
-		else
-			throw new RuntimeException(t + " is not allowed");
-			//*/
-		/*
-		try {
-			System.out.println("t = " + t);
-			System.out.println("t.getClass() = " + t.getClass());
-			System.out.println("t.getComponentType() = " + t.getComponentType());
-			type = Class.forName(t.toString());
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}*/
 	}
 
 	public static Class getPrimitiveClassFromKind(PrimitiveType.Kind kind) {

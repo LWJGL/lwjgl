@@ -134,7 +134,7 @@ public class JavaMethodsGenerator {
 						first_parameter = false;
 						if ( printTypes )
 							writer.print("boolean ");
-						writer.print( TypeInfo.UNSIGNED_PARAMETER_NAME);
+						writer.print(TypeInfo.UNSIGNED_PARAMETER_NAME);
 					}
 				}
 			} else if (

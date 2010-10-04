@@ -110,10 +110,6 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 			NativeType native_type_annotation = NativeTypeTranslator.getAnnotation(annotation, NativeType.class);
 			if (native_type_annotation != null) {
 				Class<? extends Annotation> annotation_type = NativeTypeTranslator.getClassFromType(annotation.getAnnotationType());
-					/*System.out.println("\nYO:");
-					System.out.println("annotation = " + annotation);
-					System.out.println("native_type_annotation = " + native_type_annotation);
-					System.out.println("annotation_type = " + annotation_type);*/
 				Class type = Utils.getJavaType(type_mirror);
 				if (Buffer.class.equals(type))
 					continue;
@@ -229,10 +225,8 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		native_writer.println("#include <jni.h>");
 		type_map.printNativeIncludes(native_writer);
 		native_writer.println();
-		//if ( d.getAnnotation(NoTypeDefs.class) == null ) {
 		TypedefsGenerator.generateNativeTypedefs(type_map, native_writer, d.getMethods());
 		native_writer.println();
-		//}
 		if (!context_specific) {
 			generateMethodsNativePointers(native_writer, d.getMethods());
 			native_writer.println();
