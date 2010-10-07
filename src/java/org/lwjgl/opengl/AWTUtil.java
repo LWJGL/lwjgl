@@ -122,7 +122,7 @@ final class AWTUtil {
 				}
 				return null;
 			}
-		} catch (PrivilegedActionException e) {
+		} catch (Exception e) {
 			LWJGLUtil.log("Failed to query pointer location: " + e.getCause());
 		}
 		return null;
