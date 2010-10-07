@@ -259,7 +259,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	public void init() {
 		state = STATE_INIT;
-
+		
 		// sanity check
 		String[] requiredArgs = {"al_main", "al_logo", "al_progressbar", "al_jars"};
 		for ( String requiredArg : requiredArgs ) {
@@ -693,7 +693,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 						}
 						codebase += File.separator;
 					}
-					return System.getProperty("java.io.tmpdir") + File.separator + codebase + getParameter("al_title") + File.separator;
+					return getCacheDir() + File.separator + codebase + getParameter("al_title") + File.separator;
 				}
 			});
 
@@ -774,6 +774,21 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		} finally {
 			loaderThread = null;
 		}
+	}
+	
+	/**
+	 * get path to the lwjgl cache directory
+	 * 
+	 * @return path to the lwjgl cache directory
+	 */
+	protected String getCacheDir() {
+		String cacheDir = System.getProperty("deployment.user.cachedir");
+		
+		if (cacheDir == null) {
+			cacheDir = System.getProperty("java.io.tmpdir");
+		}
+		
+		return cacheDir + File.separator + "lwjglcache";
 	}
 
 	/**
