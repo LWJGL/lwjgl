@@ -784,7 +784,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	protected String getCacheDir() {
 		String cacheDir = System.getProperty("deployment.user.cachedir");
 		
-		if (cacheDir == null) {
+		if (cacheDir == null || System.getProperty("os.name").startsWith("Win")) {
 			cacheDir = System.getProperty("java.io.tmpdir");
 		}
 		
