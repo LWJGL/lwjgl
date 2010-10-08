@@ -894,9 +894,11 @@ final class LinuxDisplay implements DisplayImplementation {
 
 		if (focused) {
 			acquireInput();
+			if (!xembedded) parent.setFocusable(false);
 		}
 		else {
 			releaseInput();
+			if (!xembedded) parent.setFocusable(true);
 		}
 	}
 	static native long nGetInputFocus(long display);
