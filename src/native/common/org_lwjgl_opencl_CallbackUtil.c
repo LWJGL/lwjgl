@@ -156,9 +156,9 @@ static void CL_USER_FUNC_CALLBACK nativeKernelCallback(void *args) {
             for ( i = 0; i < num_mem_objects; i++ ) {
                 buffer = (*env)->NewDirectByteBuffer(env,
                     // Pointer to cl_mem buffer
-                    (void *)((char *)args + (12 + 4 + (i * (4 + sizeof(size_t))))),
+                    (void *)((char *)args + (12 + 4 + (i * (4 + sizeof(void *))))),
                     // cl_mem buffer size
-                    *((jint *)((char *)args + (12 + (i * (4 + sizeof(size_t))))))
+                    *((jint *)((char *)args + (12 + (i * (4 + sizeof(void *))))))
                 );
                 (*env)->SetObjectArrayElement(env, memobjs, i, buffer);
             }

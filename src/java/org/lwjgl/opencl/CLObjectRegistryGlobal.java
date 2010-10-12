@@ -31,8 +31,6 @@
  */
 package org.lwjgl.opencl;
 
-import java.util.Map;
-
 /**
  * A CLObject registry that also registers/unregisters objects to/from a global registry.
  *
@@ -40,9 +38,9 @@ import java.util.Map;
  */
 final class CLObjectRegistryGlobal<T extends CLObjectChild> extends CLObjectRegistry<T> {
 
-	private final Map<Long, T> globalRegistry;
+	private final FastLongMap<T> globalRegistry;
 
-	CLObjectRegistryGlobal(final Map<Long, T> globalRegistry) {
+	CLObjectRegistryGlobal(final FastLongMap<T> globalRegistry) {
 		this.globalRegistry = globalRegistry;
 	}
 

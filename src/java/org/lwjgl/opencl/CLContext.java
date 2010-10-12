@@ -37,9 +37,7 @@ import org.lwjgl.opencl.api.Filter;
 import org.lwjgl.opengl.Drawable;
 
 import java.nio.IntBuffer;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class is a wrapper around a cl_context pointer.
@@ -57,10 +55,10 @@ public final class CLContext extends CLObjectChild<CLPlatform> {
 	private final CLObjectRegistry<CLEvent> clEvents;
 
 	/** Global registry for build callbacks. */
-	static final Map<Long, CLProgram> clProgramsGlobal = new HashMap<Long, CLProgram>();
+	static final FastLongMap<CLProgram> clProgramsGlobal = new FastLongMap<CLProgram>();
 
 	/** Global registry for event callbacks. */
-	static final Map<Long, CLEvent> clEventsGlobal = new HashMap<Long, CLEvent>();
+	static final FastLongMap<CLEvent> clEventsGlobal = new FastLongMap<CLEvent>();
 
 	CLContext(final long pointer, final CLPlatform platform) {
 		super(pointer, platform);

@@ -2,11 +2,6 @@ package org.lwjgl.opencl;
 
 import org.lwjgl.LWJGLUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * A CLObjectChild container.
  *
@@ -14,7 +9,7 @@ import java.util.Map;
  */
 class CLObjectRegistry<T extends CLObjectChild> {
 
-	private Map<Long, T> registry;
+	private FastLongMap<T> registry;
 
 	CLObjectRegistry() {
 	}
@@ -31,12 +26,12 @@ class CLObjectRegistry<T extends CLObjectChild> {
 		return registry != null && registry.containsKey(id);
 	}
 
-	final List<T> getAll() {
-		return registry == null ? null : new ArrayList<T>(registry.values());
+	final Iterable<FastLongMap.Entry<T>> getAll() {
+		return registry;
 	}
 
 	void registerObject(final T object) {
-		final Map<Long, T> map = getMap();
+		final FastLongMap<T> map = getMap();
 		final Long key = object.getPointer();
 
 		if ( LWJGLUtil.DEBUG && map.containsKey(key) )
@@ -49,9 +44,9 @@ class CLObjectRegistry<T extends CLObjectChild> {
 		getMap().remove(object.getPointerUnsafe());
 	}
 
-	private Map<Long, T> getMap() {
+	private FastLongMap<T> getMap() {
 		if ( registry == null )
-			registry = new HashMap<Long, T>();
+			registry = new FastLongMap<T>();
 
 		return registry;
 	}

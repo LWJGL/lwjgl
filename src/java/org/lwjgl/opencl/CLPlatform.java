@@ -36,9 +36,7 @@ import org.lwjgl.opencl.api.Filter;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.lang.Math.*;
 
@@ -51,12 +49,12 @@ public final class CLPlatform extends CLObject {
 
 	private static final CLPlatformUtil util = (CLPlatformUtil)getInfoUtilInstance(CLPlatform.class, "CL_PLATFORM_UTIL");
 
-	private static final Map<Long, CLPlatform> clPlatforms = new HashMap<Long, CLPlatform>();
+	private static final FastLongMap<CLPlatform> clPlatforms = new FastLongMap<CLPlatform>();
 
 	private final CLObjectRegistry<CLDevice> clDevices;
 
 	/** Global registry for build callbacks. */
-	static final Map<Long, CLDevice> clDevicesGlobal = new HashMap<Long, CLDevice>();
+	static final FastLongMap<CLDevice> clDevicesGlobal = new FastLongMap<CLDevice>();
 
 	private Object caps;
 
