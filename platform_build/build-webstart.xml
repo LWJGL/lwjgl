@@ -17,84 +17,85 @@
 		  </antcall>
 	</target>	
 	
-	<!-- -->
+	<!-- Create webstart demo and extension from release files -->
 	<target name="-webstart_demo" description="Using released files, creates the necessary files used for jnlp demos">
 	
 		<!-- delete existing temp -->
 		<delete dir="${lwjgl.temp}"/>		
 		
-		<!-- unzip common files -->
-		<unzip src="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip" dest="${lwjgl.temp}/jnlp/temp" overwrite="true"/>
+		<!-- unzip release to temp dir -->
+		<unzip src="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip" dest="${lwjgl.temp}/webstart/temp" overwrite="true"/>
 		
-		<!-- move files to unified structure -->
-		<move todir="${lwjgl.temp}/jnlp/temp">
-			<fileset dir="${lwjgl.temp}/jnlp/temp/lwjgl-${lwjgl.version}/">
-				<include name="**"/>
-			</fileset>
-		</move>
-		
-		<!-- move relevant files to root -->
-		<move todir="${lwjgl.temp}/jnlp/" flatten="true">
-			<fileset dir="${lwjgl.temp}/jnlp/temp">
-				<include name="**/jinput.jar"/>
-				<include name="**/lwjgl*.jar"/>
-			</fileset>
-		</move>
-		
-		<!-- update Trusted-Library -->
-		<jar destfile="${lwjgl.temp}/jnlp/lwjgl.jar" update="true">
-			<manifest>
-				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
-				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
-				<attribute name="Specification-Vendor" 			value="lwjgl.org"/>
-				<attribute name="Implementation-Title" 			value="LWJGL ${lwjgl.version}"/>
-				<attribute name="Implementation-Version" 		value="${lwjgl.version}"/>
-				<attribute name="Implementation-Vendor" 		value="lwjgl.org"/>
-				<attribute name="Implementation-Vendor-Id" 	value="org.lwjgl"/>
-				<attribute name="Extension-Name" 						value="org.lwjgl"/>
-				<attribute name="Sealed" value="true"/>
-				<attribute name="Trusted-Library" value="true"/>
-			</manifest>
-		</jar>
-		
-		<jar destfile="${lwjgl.temp}/jnlp/jinput.jar" update="true">
-			<manifest>
-				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
-				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
-				<attribute name="Specification-Vendor" 			value="lwjgl.org"/>
-				<attribute name="Implementation-Title" 			value="LWJGL ${lwjgl.version}"/>
-				<attribute name="Implementation-Version" 		value="${lwjgl.version}"/>
-				<attribute name="Implementation-Vendor" 		value="lwjgl.org"/>
-				<attribute name="Implementation-Vendor-Id" 	value="org.lwjgl"/>
-				<attribute name="Extension-Name" 						value="org.lwjgl"/>
-				<attribute name="Sealed" value="true"/>
-				<attribute name="Trusted-Library" value="true"/>
-			</manifest>
-		</jar>
-		
-		<jar destfile="${lwjgl.temp}/jnlp/lwjgl_util.jar" update="true">
-			<manifest>
-				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
-				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
-				<attribute name="Specification-Vendor" 			value="lwjgl.org"/>
-				<attribute name="Implementation-Title" 			value="LWJGL ${lwjgl.version}"/>
-				<attribute name="Implementation-Version" 		value="${lwjgl.version}"/>
-				<attribute name="Implementation-Vendor" 		value="lwjgl.org"/>
-				<attribute name="Implementation-Vendor-Id" 	value="org.lwjgl"/>
-				<attribute name="Extension-Name" 						value="org.lwjgl"/>
-				<attribute name="Sealed" value="true"/>
-				<attribute name="Trusted-Library" value="true"/>
-			</manifest>
-		</jar>
-		
-		<jar destfile="${lwjgl.temp}/jnlp/lwjgl_test.jar" update="true">
+		<!-- DEMO SECTION -->
+		<move file="${lwjgl.temp}/webstart/temp/lwjgl-${lwjgl.version}/jar/lwjgl_test.jar" tofile="${lwjgl.temp}/webstart/lwjgl_test.jar"/>
+		<jar destfile="${lwjgl.temp}/webstart/lwjgl_test.jar" update="true">
 			<manifest>
 				<attribute name="Sealed" value="true"/>
 			</manifest>
 		</jar>				
+		<jar destfile="${lwjgl.temp}/webstart/media.jar" basedir="${lwjgl.res}">
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+			</manifest>		
+		</jar>
+		
+		<!-- EXTENSION SECTION -->
+		<move todir="${lwjgl.temp}/webstart/${lwjgl.version}/" flatten="true">
+			<fileset dir="${lwjgl.temp}/webstart/temp">
+				<include name="**/jinput.jar"/>
+				<include name="**/lwjgl*.jar"/>
+				<exclude name="**/lwjgl_util_applet.jar"/>
+				<exclude name="**/lwjgl-debug.jar"/>
+			</fileset>
+		</move>
+		
+		<jar destfile="${lwjgl.temp}/webstart/${lwjgl.version}/lwjgl.jar" update="true">
+			<manifest>
+				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Specification-Vendor" 			value="lwjgl.org"/>
+				<attribute name="Implementation-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Implementation-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Implementation-Vendor" 		value="lwjgl.org"/>
+				<attribute name="Implementation-Vendor-Id" 	value="org.lwjgl"/>
+				<attribute name="Extension-Name" 						value="org.lwjgl"/>
+				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
+			</manifest>
+		</jar>
+		
+		<jar destfile="${lwjgl.temp}/webstart/${lwjgl.version}/jinput.jar" update="true">
+			<manifest>
+				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Specification-Vendor" 			value="lwjgl.org"/>
+				<attribute name="Implementation-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Implementation-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Implementation-Vendor" 		value="lwjgl.org"/>
+				<attribute name="Implementation-Vendor-Id" 	value="org.lwjgl"/>
+				<attribute name="Extension-Name" 						value="org.lwjgl"/>
+				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
+			</manifest>
+		</jar>
+		
+		<jar destfile="${lwjgl.temp}/webstart/${lwjgl.version}/lwjgl_util.jar" update="true">
+			<manifest>
+				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Specification-Vendor" 			value="lwjgl.org"/>
+				<attribute name="Implementation-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Implementation-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Implementation-Vendor" 		value="lwjgl.org"/>
+				<attribute name="Implementation-Vendor-Id" 	value="org.lwjgl"/>
+				<attribute name="Extension-Name" 						value="org.lwjgl"/>
+				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
+			</manifest>
+		</jar>
 		
 		<!-- create native jars -->
-		<jar destfile="${lwjgl.temp}/jnlp/native_windows.jar" basedir="${lwjgl.temp}/jnlp/temp/native/windows">
+		<jar destfile="${lwjgl.temp}/webstart/${lwjgl.version}/native_windows.jar" basedir="${lwjgl.temp}/webstart/temp/lwjgl-${lwjgl.version}/native/windows">
 			<manifest>
 				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
 				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
@@ -109,7 +110,7 @@
 			</manifest>		
 		</jar>
 		
-		<jar destfile="${lwjgl.temp}/jnlp/native_linux.jar" basedir="${lwjgl.temp}/jnlp/temp/native/linux">
+		<jar destfile="${lwjgl.temp}/webstart/${lwjgl.version}/native_linux.jar" basedir="${lwjgl.temp}/webstart/temp/lwjgl-${lwjgl.version}/native/linux">
 			<manifest>
 				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
 				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
@@ -124,7 +125,7 @@
 			</manifest>		
 		</jar>
 		
-		<jar destfile="${lwjgl.temp}/jnlp/native_macosx.jar" basedir="${lwjgl.temp}/jnlp/temp/native/macosx">
+		<jar destfile="${lwjgl.temp}/webstart/${lwjgl.version}/native_macosx.jar" basedir="${lwjgl.temp}/webstart/temp/lwjgl-${lwjgl.version}/native/macosx">
 			<manifest>
 				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
 				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
@@ -139,7 +140,7 @@
 			</manifest>		
 		</jar>
 		
-		<jar destfile="${lwjgl.temp}/jnlp/native_solaris.jar" basedir="${lwjgl.temp}/jnlp/temp/native/solaris">
+		<jar destfile="${lwjgl.temp}/webstart/${lwjgl.version}/native_solaris.jar" basedir="${lwjgl.temp}/webstart/temp/lwjgl-${lwjgl.version}/native/solaris">
 			<manifest>
 				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
 				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
@@ -151,23 +152,30 @@
 				<attribute name="Extension-Name" 						value="org.lwjgl"/>
 				<attribute name="Sealed" value="true"/>
 				<attribute name="Trusted-Library" value="true"/>
-			</manifest>		
-		</jar>
-		
-		<!-- create media jar -->
-		<jar destfile="${lwjgl.temp}/jnlp/media.jar" basedir="${lwjgl.res}">
-			<manifest>
-				<attribute name="Sealed" value="true"/>
 			</manifest>		
 		</jar>
 	
 		<!-- sign 'em -->
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_util.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/jinput.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/native_solaris.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/native_linux.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/native_windows.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/webstart/${lwjgl.version}/lwjgl.jar" 						alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/webstart/${lwjgl.version}/lwjgl_util.jar" 			alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/webstart/${lwjgl.version}/jinput.jar" 					alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/webstart/${lwjgl.version}/native_solaris.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/webstart/${lwjgl.version}/native_linux.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/webstart/${lwjgl.version}/native_macosx.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		<signjar jar="${lwjgl.temp}/webstart/${lwjgl.version}/native_windows.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+		
+		<!-- copy over extension jnlp file -->
+		<copy todir="${lwjgl.temp}/webstart/${lwjgl.version}">
+    	<fileset dir="${lwjgl.web}/webstart">
+    		<include name="extension.jnlp"/>
+    	</fileset>
+    	<filterset>
+      	<filter token="LWJGL_VERSION" value="${lwjgl.version}"/>
+    	</filterset>
+  	</copy>
+		
+		<!-- nuke extracted dir -->
+		<delete dir="${lwjgl.temp}/webstart/temp"/>
+
 	</target>
 </project>
