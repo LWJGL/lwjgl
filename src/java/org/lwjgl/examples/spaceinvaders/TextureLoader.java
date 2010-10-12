@@ -33,6 +33,7 @@ package org.lwjgl.examples.spaceinvaders;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
@@ -41,7 +42,6 @@ import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.ByteBuffer;
@@ -50,7 +50,7 @@ import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Hashtable;
 
-import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 import org.lwjgl.BufferUtils;
 
@@ -277,7 +277,14 @@ public class TextureLoader {
             throw new IOException("Cannot find: " + ref);
         }
 
-        BufferedImage bufferedImage = ImageIO.read(new BufferedInputStream(getClass().getClassLoader().getResourceAsStream(ref)));
+        // due to an issue with ImageIO and mixed signed code
+        // we are now using good oldfashioned ImageIcon to load
+        // images and the paint it on top of a new BufferedImage
+        Image img = new ImageIcon(url).getImage();
+        BufferedImage bufferedImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_RGB);
+        Graphics g = bufferedImage.getGraphics();
+        g.drawImage(img, 0, 0, null);
+        g.dispose();
 
         return bufferedImage;
     }
