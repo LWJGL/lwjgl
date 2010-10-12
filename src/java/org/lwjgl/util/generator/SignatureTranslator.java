@@ -83,7 +83,7 @@ class SignatureTranslator implements TypeVisitor {
 	public void visitClassType(ClassType t) {
 		Class type = NativeTypeTranslator.getClassFromType(t);
 		String type_name;
-		if ( CharSequence.class.isAssignableFrom(type) || CharSequence[].class.isAssignableFrom(type) || PointerBuffer.class.isAssignableFrom(type) )
+		if ( (CharSequence.class.isAssignableFrom(type) && !String.class.equals(type)) || CharSequence[].class.isAssignableFrom(type) || PointerBuffer.class.isAssignableFrom(type) )
 			type_name = ByteBuffer.class.getName();
 		else if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(type) ) {
 			signature.append("J");
