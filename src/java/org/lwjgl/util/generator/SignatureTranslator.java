@@ -94,7 +94,7 @@ class SignatureTranslator implements TypeVisitor {
 		signature.append("L");
 		signature.append(getNativeNameFromClassName(type_name));
 		signature.append(";");
-		if ( add_position_signature && Utils.isAddressableType(type) )
+		if ( add_position_signature && Utils.isAddressableType(type) && !String.class.equals(type) )
 			signature.append("I");
 	}
 

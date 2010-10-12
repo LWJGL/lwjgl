@@ -137,7 +137,7 @@ public class Utils {
 	}
 
 	private static boolean isAddressableTypeImpl(Class type) {
-		return Buffer.class.isAssignableFrom(type) || PointerBuffer.class.isAssignableFrom(type) || (CharSequence.class.isAssignableFrom(type) && !String.class.equals(type));
+		return Buffer.class.isAssignableFrom(type) || PointerBuffer.class.isAssignableFrom(type) || CharSequence.class.isAssignableFrom(type);
 	}
 
 	public static Class getJavaType(TypeMirror type_mirror) {
