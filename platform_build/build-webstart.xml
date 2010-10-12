@@ -25,8 +25,6 @@
 		
 		<!-- unzip common files -->
 		<unzip src="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip" dest="${lwjgl.temp}/jnlp/temp" overwrite="true"/>
-		<copy file="${lwjgl.lib}/lwjgl_test.jar" tofile="${lwjgl.temp}/jnlp/temp/lwjgl-${lwjgl.version}/lwjgl_test.jar"/>
-		<copy file="${lwjgl.lib}/lwjgl_util.jar" tofile="${lwjgl.temp}/jnlp/temp/lwjgl-${lwjgl.version}/lwjgl_util.jar"/>
 		
 		<!-- move files to unified structure -->
 		<move todir="${lwjgl.temp}/jnlp/temp">
@@ -46,6 +44,14 @@
 		<!-- update Trusted-Library -->
 		<jar destfile="${lwjgl.temp}/jnlp/lwjgl.jar" update="true">
 			<manifest>
+				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Specification-Vendor" 			value="lwjgl.org"/>
+				<attribute name="Implementation-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Implementation-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Implementation-Vendor" 		value="lwjgl.org"/>
+				<attribute name="Implementation-Vendor-Id" 	value="org.lwjgl"/>
+				<attribute name="Extension-Name" 						value="org.lwjgl"/>
 				<attribute name="Sealed" value="true"/>
 				<attribute name="Trusted-Library" value="true"/>
 			</manifest>
@@ -53,6 +59,14 @@
 		
 		<jar destfile="${lwjgl.temp}/jnlp/jinput.jar" update="true">
 			<manifest>
+				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Specification-Vendor" 			value="lwjgl.org"/>
+				<attribute name="Implementation-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Implementation-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Implementation-Vendor" 		value="lwjgl.org"/>
+				<attribute name="Implementation-Vendor-Id" 	value="org.lwjgl"/>
+				<attribute name="Extension-Name" 						value="org.lwjgl"/>
 				<attribute name="Sealed" value="true"/>
 				<attribute name="Trusted-Library" value="true"/>
 			</manifest>
@@ -60,6 +74,14 @@
 		
 		<jar destfile="${lwjgl.temp}/jnlp/lwjgl_util.jar" update="true">
 			<manifest>
+				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Specification-Vendor" 			value="lwjgl.org"/>
+				<attribute name="Implementation-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Implementation-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Implementation-Vendor" 		value="lwjgl.org"/>
+				<attribute name="Implementation-Vendor-Id" 	value="org.lwjgl"/>
+				<attribute name="Extension-Name" 						value="org.lwjgl"/>
 				<attribute name="Sealed" value="true"/>
 				<attribute name="Trusted-Library" value="true"/>
 			</manifest>
@@ -68,32 +90,67 @@
 		<jar destfile="${lwjgl.temp}/jnlp/lwjgl_test.jar" update="true">
 			<manifest>
 				<attribute name="Sealed" value="true"/>
-				<attribute name="Trusted-Library" value="true"/>
 			</manifest>
 		</jar>				
 		
 		<!-- create native jars -->
 		<jar destfile="${lwjgl.temp}/jnlp/native_windows.jar" basedir="${lwjgl.temp}/jnlp/temp/native/windows">
 			<manifest>
+				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Specification-Vendor" 			value="lwjgl.org"/>
+				<attribute name="Implementation-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Implementation-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Implementation-Vendor" 		value="lwjgl.org"/>
+				<attribute name="Implementation-Vendor-Id" 	value="org.lwjgl"/>
+				<attribute name="Extension-Name" 						value="org.lwjgl"/>
 				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
 			</manifest>		
 		</jar>
 		
 		<jar destfile="${lwjgl.temp}/jnlp/native_linux.jar" basedir="${lwjgl.temp}/jnlp/temp/native/linux">
 			<manifest>
+				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Specification-Vendor" 			value="lwjgl.org"/>
+				<attribute name="Implementation-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Implementation-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Implementation-Vendor" 		value="lwjgl.org"/>
+				<attribute name="Implementation-Vendor-Id" 	value="org.lwjgl"/>
+				<attribute name="Extension-Name" 						value="org.lwjgl"/>
 				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
 			</manifest>		
 		</jar>
 		
 		<jar destfile="${lwjgl.temp}/jnlp/native_macosx.jar" basedir="${lwjgl.temp}/jnlp/temp/native/macosx">
 			<manifest>
+				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Specification-Vendor" 			value="lwjgl.org"/>
+				<attribute name="Implementation-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Implementation-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Implementation-Vendor" 		value="lwjgl.org"/>
+				<attribute name="Implementation-Vendor-Id" 	value="org.lwjgl"/>
+				<attribute name="Extension-Name" 						value="org.lwjgl"/>
 				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
 			</manifest>		
 		</jar>
 		
 		<jar destfile="${lwjgl.temp}/jnlp/native_solaris.jar" basedir="${lwjgl.temp}/jnlp/temp/native/solaris">
 			<manifest>
+				<attribute name="Specification-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Specification-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Specification-Vendor" 			value="lwjgl.org"/>
+				<attribute name="Implementation-Title" 			value="LWJGL ${lwjgl.version}"/>
+				<attribute name="Implementation-Version" 		value="${lwjgl.version}"/>
+				<attribute name="Implementation-Vendor" 		value="lwjgl.org"/>
+				<attribute name="Implementation-Vendor-Id" 	value="org.lwjgl"/>
+				<attribute name="Extension-Name" 						value="org.lwjgl"/>
 				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
 			</manifest>		
 		</jar>
 		
@@ -101,7 +158,6 @@
 		<jar destfile="${lwjgl.temp}/jnlp/media.jar" basedir="${lwjgl.res}">
 			<manifest>
 				<attribute name="Sealed" value="true"/>
-				<attribute name="Trusted-Library" value="true"/>
 			</manifest>		
 		</jar>
 	
@@ -109,8 +165,6 @@
 		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_util.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/jinput.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_test.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
-		<signjar jar="${lwjgl.temp}/jnlp/media.jar" 		alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_solaris.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_linux.jar" 	alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
