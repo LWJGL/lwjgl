@@ -117,7 +117,7 @@
 	<!-- Files to include in solaris package -->
 	<patternset id="lwjgl-solaris.fileset">
 		<include name="liblwjgl*.so" />
-		<include name="libopenal.so" />
+		<include name="libopenal*.so" />
 	</patternset>
 
 	<!-- Files to include in source distribution -->
