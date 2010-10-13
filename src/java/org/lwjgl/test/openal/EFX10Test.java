@@ -290,7 +290,7 @@ public final class EFX10Test {
         // Create a source and buffer audio data
         final int source = AL10.alGenSources();
         final int buffer = AL10.alGenBuffers();
-        WaveData waveFile = WaveData.create(WaveData.class.getClassLoader().getResourceAsStream("Footsteps.wav"));
+        WaveData waveFile = WaveData.create("Footsteps.wav");
         if (waveFile == null) {
             System.out.println("Failed to load Footsteps.wav! Skipping playback test.");
             AL.destroy();
