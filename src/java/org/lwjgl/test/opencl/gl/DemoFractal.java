@@ -43,6 +43,7 @@ import org.lwjgl.util.Color;
 import org.lwjgl.util.ReadableColor;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.HashSet;
@@ -829,15 +830,19 @@ public class DemoFractal {
 	}
 
 	private void createPrograms() throws IOException {
-		final String source = getProgramSource("Mandelbrot.cl");
+		final String source = getProgramSource("org/lwjgl/test/opencl/gl/Mandelbrot.cl");
 		for ( int i = 0; i < programs.length; i++ )
 			programs[i] = clCreateProgramWithSource(clContext, source, null);
 	}
 
 	private String getProgramSource(final String file) throws IOException {
-		InputStream source = getClass().getResourceAsStream(file);
+		InputStream source = null;
+		URL sourceURL = Thread.currentThread().getContextClassLoader().getResource(file);
+		if(sourceURL != null) {
+			source = sourceURL.openStream();
+		}
 		if ( source == null ) // dev-mode
-			source = new FileInputStream("src/java/org/lwjgl/test/opencl/gl/" + file);
+			source = new FileInputStream("src/java/" + file);
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(source));
 
 		final StringBuilder sb = new StringBuilder();
