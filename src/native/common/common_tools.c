@@ -87,7 +87,7 @@ static int do_vsnprintf(char* buffer, size_t buffer_size, const char *format, va
 }
 
 static jstring sprintfJavaString(JNIEnv *env, const char *format, va_list ap) {
-	int buffer_size = 2;
+	int buffer_size = 2048;
 	char *buffer;
 	jstring str;
 	int str_size;
