@@ -68,17 +68,22 @@ public interface GL41 {
 		GL_MEDIUM_INT = 0x8DF4,
 		GL_HIGH_INT = 0x8DF5;
 
+	@Optional(reason = "Not exposed in ATI Catalyst 10.10c")
 	void glReleaseShaderCompiler();
 
+	@Optional(reason = "Not exposed in ATI Catalyst 10.10c")
 	void glShaderBinary(@AutoSize("shaders") @GLsizei int count, @Const @GLuint IntBuffer shaders,
 	                    @GLenum int binaryformat, @Const @GLvoid ByteBuffer binary, @AutoSize("binary") @GLsizei int length);
 
+	@Optional(reason = "Not exposed in ATI Catalyst 10.10c")
 	void glGetShaderPrecisionFormat(@GLenum int shadertype, @GLenum int precisiontype,
 	                                @OutParameter @Check("2") IntBuffer range,
 	                                @OutParameter @Check("1") IntBuffer precision);
 
+	@Optional(reason = "Not exposed in ATI Catalyst 10.10c")
 	void glDepthRangef(@GLclampf float n, @GLclampf float f);
 
+	@Optional(reason = "Not exposed in ATI Catalyst 10.10c")
 	void glClearDepthf(@GLclampf float d);
 
 	// ----------------------------------------------------------------------
@@ -355,31 +360,41 @@ public interface GL41 {
 	int GL_DOUBLE_MAT4x2 = 0x8F4D;
 	int GL_DOUBLE_MAT4x3 = 0x8F4E;
 
+	@Optional(reason = "Not exposed in ATI Catalyst 10.10c")
 	void glVertexAttribL1d(@GLuint int index, double x);
 
+	@Optional(reason = "Not exposed in ATI Catalyst 10.10c")
 	void glVertexAttribL2d(@GLuint int index, double x, double y);
 
+	@Optional(reason = "Not exposed in ATI Catalyst 10.10c")
 	void glVertexAttribL3d(@GLuint int index, double x, double y, double z);
 
+	@Optional(reason = "Not exposed in ATI Catalyst 10.10c")
 	void glVertexAttribL4d(@GLuint int index, double x, double y, double z, double w);
 
+	@Optional(reason = "Not exposed in ATI Catalyst 10.10c")
 	@StripPostfix("v")
 	void glVertexAttribL1dv(@GLuint int index, @Const @Check("1") DoubleBuffer v);
 
+	@Optional(reason = "Not exposed in ATI Catalyst 10.10c")
 	@StripPostfix("v")
 	void glVertexAttribL2dv(@GLuint int index, @Const @Check("2") DoubleBuffer v);
 
+	@Optional(reason = "Not exposed in ATI Catalyst 10.10c")
 	@StripPostfix("v")
 	void glVertexAttribL3dv(@GLuint int index, @Const @Check("3") DoubleBuffer v);
 
+	@Optional(reason = "Not exposed in ATI Catalyst 10.10c")
 	@StripPostfix("v")
 	void glVertexAttribL4dv(@GLuint int index, @Const @Check("4") DoubleBuffer v);
 
+	@Optional(reason = "Not exposed in ATI Catalyst 10.10c")
 	void glVertexAttribLPointer(@GLuint int index, int size, @Constant("GL11.GL_DOUBLE") @GLenum int type, @GLsizei int stride,
 	                            @CachedReference(index = "index", name = "glVertexAttribPointer_buffer")
 	                            @BufferObject(BufferKind.ArrayVBO)
 	                            @Check @Const @GLdouble Buffer pointer);
 
+	@Optional(reason = "Not exposed in ATI Catalyst 10.10c")
 	@StripPostfix("params")
 	void glGetVertexAttribLdv(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") DoubleBuffer params);
 
