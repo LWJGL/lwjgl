@@ -136,7 +136,8 @@ final class LinuxDisplay implements DisplayImplementation {
 	private long parent_window;
 	private boolean xembedded;
 	private boolean parent_focus;
-
+	private boolean mouseInside = true;
+	
 	private LinuxKeyboard keyboard;
 	private LinuxMouse mouse;
 
@@ -777,6 +778,12 @@ final class LinuxDisplay implements DisplayImplementation {
 				case LinuxEvent.Expose:
 					dirty = true;
 					break;
+				case LinuxEvent.EnterNotify:
+					mouseInside = true;
+					break;
+				case LinuxEvent.LeaveNotify:
+					mouseInside = false;
+					break;
 				default:
 					break;
 			}
@@ -1248,9 +1255,9 @@ final class LinuxDisplay implements DisplayImplementation {
 		return Display.getDisplayMode().getHeight();
 	}
 
-        public boolean isInsideWindow() {
-            return true;
-        }
+	public boolean isInsideWindow() {
+		return mouseInside;
+	}
 
 	/**
 	 * Helper class for managing Compiz's workarounds. We need this to enable Legacy

@@ -46,12 +46,14 @@ final class LinuxEvent {
 	public static final int KeyPress        = 2;
 	public static final int KeyRelease      = 3;
 	public static final int ButtonPress     = 4;
-	public static final int ButtonRelease      = 5;
-	public static final int MotionNotify       = 6;
+	public static final int ButtonRelease	= 5;
+	public static final int MotionNotify	= 6;
+	public static final int EnterNotify		= 7;
+	public static final int LeaveNotify		= 8;
 	public static final int UnmapNotify     = 18;
 	public static final int MapNotify       = 19;
 	public static final int Expose          = 12;
-	public static final int ClientMessage       = 33;
+	public static final int ClientMessage   = 33;
 
 	private final ByteBuffer event_buffer;
 

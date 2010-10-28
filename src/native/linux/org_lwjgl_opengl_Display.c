@@ -307,7 +307,7 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 	cmap = XCreateColormap(disp, parent, vis_info->visual, AllocNone);
 	attribs.colormap = cmap;
 	attribs.border_pixel = 0;
-	attribs.event_mask = ExposureMask | FocusChangeMask | VisibilityChangeMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
+	attribs.event_mask = ExposureMask | FocusChangeMask | VisibilityChangeMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask| EnterWindowMask | LeaveWindowMask;
 	attribmask = CWColormap | CWEventMask | CWBorderPixel;
 	if (isLegacyFullscreen(window_mode)) {
 		attribmask |= CWOverrideRedirect;
