@@ -905,7 +905,7 @@ public final class Display {
 
 	private static void initContext() {
 		// set background clear color
-		glClearColor(r, g, b, 1.0f);
+		glClearColor(r, g, b, 0.0f);
 		// Clear window to avoid the desktop "showing through"
 		glClear(GL_COLOR_BUFFER_BIT);
 		update();
