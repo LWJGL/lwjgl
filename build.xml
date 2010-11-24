@@ -266,6 +266,7 @@
 			<class name="org.lwjgl.opengl.CallbackUtil" />
             <class name="org.lwjgl.opencl.CL" />
             <class name="org.lwjgl.opencl.CallbackUtil" />
+      <class name="org.lwjgl.BufferUtils" />
 		</javah>
 	</target>
 

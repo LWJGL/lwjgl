@@ -155,4 +155,41 @@ public final class BufferUtils {
 		return buffer.position() << getElementSizeExponent(buffer);
 	}
 
+	/** Fill buffer with zeros from position to remaining */
+	public static void zeroBuffer(ByteBuffer b) {
+	    zeroBuffer0(b, b.position(), b.remaining());
+	}
+
+	/** Fill buffer with zeros from position to remaining */
+	public static void zeroBuffer(ShortBuffer b) {
+	    zeroBuffer0(b, b.position()*2L, b.remaining()*2L);
+	}
+
+	/** Fill buffer with zeros from position to remaining */
+	public static void zeroBuffer(CharBuffer b) {
+	    zeroBuffer0(b, b.position()*2L, b.remaining()*2L);
+	}
+
+	/** Fill buffer with zeros from position to remaining */
+	public static void zeroBuffer(IntBuffer b) {
+	    zeroBuffer0(b, b.position()*4L, b.remaining()*4L);
+	}
+
+	/** Fill buffer with zeros from position to remaining */
+	public static void zeroBuffer(FloatBuffer b) {
+	    zeroBuffer0(b, b.position()*4L, b.remaining()*4L);
+	}
+
+	/** Fill buffer with zeros from position to remaining */
+	public static void zeroBuffer(LongBuffer b) {
+	    zeroBuffer0(b, b.position()*8L, b.remaining()*8L);
+	}
+
+	/** Fill buffer with zeros from position to remaining */
+	public static void zeroBuffer(DoubleBuffer b) {
+	    zeroBuffer0(b, b.position()*8L, b.remaining()*8L);
+	}
+
+	/** Fill buffer with zeros from position to remaining */
+	private static native void zeroBuffer0(Buffer b, long off, long size);
 }
