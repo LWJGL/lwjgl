@@ -747,11 +747,6 @@ final class WindowsDisplay implements DisplayImplementation {
 		int scan_code = (int)((lParam >>> 16) & 0xFF);
 		if (keyboard != null) {
 			keyboard.handleKey((int)wParam, scan_code, extended != 0, state, millis, repeat);
-
-			if(captureMouse != -1 && keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-				nReleaseCapture();
-				captureMouse = -1;
-			}
 		}
 	}
 
