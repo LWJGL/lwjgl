@@ -800,7 +800,7 @@ public interface GL11 {
 
 	@DeprecatedGL
 	void glColorPointer(int size, @AutoType("pointer") @GLenum int type, @GLsizei int stride,
-	                    @CachedReference
+	                    //@CachedReference
 	                    @Check
 	                    @BufferObject(BufferKind.ArrayVBO)
 	                    @Const
@@ -889,7 +889,7 @@ public interface GL11 {
 
 	@DeprecatedGL
 	void glEdgeFlagPointer(int stride,
-	                       @CachedReference
+	                       //@CachedReference
 	                       @BufferObject(BufferKind.ArrayVBO)
 	                       @Check
 	                       @Const
@@ -1295,7 +1295,7 @@ public interface GL11 {
 
 	@DeprecatedGL
 	void glNormalPointer(@AutoType("pointer") @GLenum int type, @GLsizei int stride,
-	                     @CachedReference
+	                     //@CachedReference
 	                     @BufferObject(BufferKind.ArrayVBO)
 	                     @Check
 	                     @Const
@@ -1431,7 +1431,7 @@ public interface GL11 {
 
 	@DeprecatedGL
 	void glVertexPointer(int size, @AutoType("pointer") @GLenum int type, @GLsizei int stride,
-	                     @CachedReference
+	                     //@CachedReference
 	                     @BufferObject(BufferKind.ArrayVBO)
 	                     @Check
 	                     @Const
@@ -1565,7 +1565,7 @@ public interface GL11 {
 
 	@DeprecatedGL
 	void glTexCoordPointer(int size, @AutoType("pointer") @GLenum int type, @GLsizei int stride,
-	                       @CachedReference(index = "GLChecks.getReferences(caps).glClientActiveTexture", name = "glTexCoordPointer_buffer")
+	                       //@CachedReference(index = "GLChecks.getReferences(caps).glClientActiveTexture", name = "glTexCoordPointer_buffer")
 	                       @BufferObject(BufferKind.ArrayVBO)
 	                       @Check
 	                       @Const

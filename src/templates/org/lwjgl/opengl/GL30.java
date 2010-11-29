@@ -204,7 +204,7 @@ public interface GL30 {
 	void glVertexAttribI4usv(@GLuint int index, @Check("4") @Const @GLushort ShortBuffer v);
 
 	void glVertexAttribIPointer(@GLuint int index, int size, @GLenum int type, @GLsizei int stride,
-	                            @CachedReference
+	                            //@CachedReference
 	                            @BufferObject(BufferKind.ArrayVBO)
 	                            @Check
 	                            @Const
@@ -1011,11 +1011,14 @@ public interface GL30 {
 	 */
 	int GL_VERTEX_ARRAY_BINDING = 0x85B5;
 
+	@Code("		StateTracker.bindVAO(caps, array);")
 	void glBindVertexArray(@GLuint int array);
 
+	@Code("		StateTracker.deleteVAO(caps, arrays);")
 	void glDeleteVertexArrays(@AutoSize("arrays") @GLsizei int n, @Const @GLuint IntBuffer arrays);
 
 	@Alternate("glDeleteVertexArrays")
+	@Code("		StateTracker.deleteVAO(caps, array);")
 	void glDeleteVertexArrays(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, array), 0", keepParam = true) int array);
 
 	void glGenVertexArrays(@AutoSize("arrays") @GLsizei int n, @OutParameter @GLuint IntBuffer arrays);

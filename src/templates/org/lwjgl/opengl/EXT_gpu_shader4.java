@@ -158,7 +158,7 @@ public interface EXT_gpu_shader4 {
 	void glVertexAttribI4usvEXT(@GLuint int index, @Check("4") @Const @GLushort ShortBuffer v);
 
 	void glVertexAttribIPointerEXT(@GLuint int index, int size, @GLenum int type, @GLsizei int stride,
-								   @CachedReference
+								   //@CachedReference
 								   @BufferObject(BufferKind.ArrayVBO)
 								   @Check
 								   @Const

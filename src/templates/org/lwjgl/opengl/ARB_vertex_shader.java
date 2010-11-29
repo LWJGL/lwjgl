@@ -129,7 +129,7 @@ public interface ARB_vertex_shader {
 	void glVertexAttrib4NubARB(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
 
 	void glVertexAttribPointerARB(@GLuint int index, int size, @AutoType("buffer") @GLenum int type, boolean normalized, @GLsizei int stride,
-	                              @CachedReference(index = "index", name = "glVertexAttribPointer_buffer")
+	                              //@CachedReference(index = "index", name = "glVertexAttribPointer_buffer")
 	                              @BufferObject(BufferKind.ArrayVBO)
 	                              @Check
 	                              @Const

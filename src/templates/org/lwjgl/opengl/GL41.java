@@ -390,7 +390,7 @@ public interface GL41 {
 
 	@Optional(reason = "Not exposed in ATI Catalyst 10.10c")
 	void glVertexAttribLPointer(@GLuint int index, int size, @Constant("GL11.GL_DOUBLE") @GLenum int type, @GLsizei int stride,
-	                            @CachedReference(index = "index", name = "glVertexAttribPointer_buffer")
+	                            //@CachedReference(index = "index", name = "glVertexAttribPointer_buffer")
 	                            @BufferObject(BufferKind.ArrayVBO)
 	                            @Check @Const @GLdouble Buffer pointer);
 

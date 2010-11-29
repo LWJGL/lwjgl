@@ -31,20 +31,17 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.util.Arrays;
-
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL20.*;
 
 class BaseReferences {
 
-    int elementArrayBuffer;
-    int arrayBuffer;
-    final Buffer[] glVertexAttribPointer_buffer;
-	final Buffer[] glTexCoordPointer_buffer;
-	int glClientActiveTexture;
+	int elementArrayBuffer;
+	int arrayBuffer;
+	//final Buffer[] glVertexAttribPointer_buffer;
+	//final Buffer[] glTexCoordPointer_buffer;
+	//int glClientActiveTexture;
+
+	int vertexArrayObject;
 
 	int pixelPackBuffer;
 	int pixelUnpackBuffer;
@@ -52,6 +49,7 @@ class BaseReferences {
 	int indirectBuffer;
 
 	BaseReferences(ContextCapabilities caps) {
+		/*
 		int max_vertex_attribs;
 		if (caps.OpenGL20 || caps.GL_ARB_vertex_shader)
 			max_vertex_attribs = glGetInteger(GL_MAX_VERTEX_ATTRIBS);
@@ -67,35 +65,40 @@ class BaseReferences {
 		else
 			max_texture_units = 1;
         glTexCoordPointer_buffer = new Buffer[max_texture_units];
-    }
+        */
+	}
 
-    void clear() {
-        this.elementArrayBuffer = 0;
-        this.arrayBuffer = 0;
-	    this.glClientActiveTexture = 0;
-	    Arrays.fill(glVertexAttribPointer_buffer, null);
-        Arrays.fill(glTexCoordPointer_buffer, null);
+	void clear() {
+		this.elementArrayBuffer = 0;
+		this.arrayBuffer = 0;
+		//this.glClientActiveTexture = 0;
+		//Arrays.fill(glVertexAttribPointer_buffer, null);
+		//Arrays.fill(glTexCoordPointer_buffer, null);
 
-	    this.pixelPackBuffer = 0;
-	    this.pixelUnpackBuffer = 0;
+		this.vertexArrayObject = 0;
 
-	    this.indirectBuffer = 0;
-    }
+		this.pixelPackBuffer = 0;
+		this.pixelUnpackBuffer = 0;
 
-    void copy(BaseReferences references, int mask) {
-	    if ( (mask & GL_CLIENT_VERTEX_ARRAY_BIT) != 0 ) {
-		    this.elementArrayBuffer = references.elementArrayBuffer;
-		    this.arrayBuffer = references.arrayBuffer;
-		    this.glClientActiveTexture = references.glClientActiveTexture;
-		    System.arraycopy(references.glVertexAttribPointer_buffer, 0, glVertexAttribPointer_buffer, 0, glVertexAttribPointer_buffer.length);
-		    System.arraycopy(references.glTexCoordPointer_buffer, 0, glTexCoordPointer_buffer, 0, glTexCoordPointer_buffer.length);
+		this.indirectBuffer = 0;
+	}
 
-		    this.indirectBuffer = references.indirectBuffer;
-	    }
+	void copy(BaseReferences references, int mask) {
+		if ( (mask & GL_CLIENT_VERTEX_ARRAY_BIT) != 0 ) {
+			this.elementArrayBuffer = references.elementArrayBuffer;
+			this.arrayBuffer = references.arrayBuffer;
+			//this.glClientActiveTexture = references.glClientActiveTexture;
+			//System.arraycopy(references.glVertexAttribPointer_buffer, 0, glVertexAttribPointer_buffer, 0, glVertexAttribPointer_buffer.length);
+			//System.arraycopy(references.glTexCoordPointer_buffer, 0, glTexCoordPointer_buffer, 0, glTexCoordPointer_buffer.length);
 
-	    if ( (mask & GL_CLIENT_PIXEL_STORE_BIT) != 0 ) {
+			this.vertexArrayObject = references.vertexArrayObject;
+
+			this.indirectBuffer = references.indirectBuffer;
+		}
+
+		if ( (mask & GL_CLIENT_PIXEL_STORE_BIT) != 0 ) {
 			this.pixelPackBuffer = references.pixelPackBuffer;
 			this.pixelUnpackBuffer = references.pixelUnpackBuffer;
-	    }
-    }
+		}
+	}
 }

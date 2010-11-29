@@ -63,10 +63,6 @@ class GLChecks {
 	private GLChecks() {
 	}
 
-	static References getReferences(ContextCapabilities caps) {
-		return StateTracker.getReferencesStack(caps).getReferences();
-	}
-
 	static int getBufferObjectSize(ContextCapabilities caps, int buffer_enum) {
 		return glGetBufferParameter(buffer_enum, GL_BUFFER_SIZE);
 	}
@@ -85,61 +81,61 @@ class GLChecks {
 
 	/** Helper method to ensure that array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOdisabled(ContextCapabilities caps) {
-		if( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().arrayBuffer != 0 )
+		if( LWJGLUtil.CHECKS && StateTracker.getReferences(caps).arrayBuffer != 0 )
 			throw new OpenGLException("Cannot use Buffers when Array Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOenabled(ContextCapabilities caps) {
-		if( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().arrayBuffer == 0 )
+		if( LWJGLUtil.CHECKS && StateTracker.getReferences(caps).arrayBuffer == 0 )
 			throw new OpenGLException("Cannot use offsets when Array Buffer Object is disabled");
 	}
 
 	/** Helper method to ensure that element array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureElementVBOdisabled(ContextCapabilities caps) {
-		if( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().elementArrayBuffer != 0 )
+		if( LWJGLUtil.CHECKS && StateTracker.getElementArrayBufferBound(caps) != 0 )
 			throw new OpenGLException("Cannot use Buffers when Element Array Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that element array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureElementVBOenabled(ContextCapabilities caps) {
-		if( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().elementArrayBuffer == 0 )
+		if( LWJGLUtil.CHECKS && StateTracker.getElementArrayBufferBound(caps) == 0 )
 			throw new OpenGLException("Cannot use offsets when Element Array Buffer Object is disabled");
 	}
 
 	/** Helper method to ensure that array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureIndirectBOdisabled(ContextCapabilities caps) {
-		if ( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().indirectBuffer != 0 )
+		if ( LWJGLUtil.CHECKS && StateTracker.getReferences(caps).indirectBuffer != 0 )
 			throw new OpenGLException("Cannot use Buffers when Draw Indirect Object is enabled");
 	}
 
 	/** Helper method to ensure that array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureIndirectBOenabled(ContextCapabilities caps) {
-		if ( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().indirectBuffer == 0 )
+		if ( LWJGLUtil.CHECKS && StateTracker.getReferences(caps).indirectBuffer == 0 )
 			throw new OpenGLException("Cannot use offsets when Draw Indirect Object is disabled");
 	}
 
 	/** Helper method to ensure that pixel pack buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensurePackPBOdisabled(ContextCapabilities caps) {
-		if ( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().pixelPackBuffer != 0 )
+		if ( LWJGLUtil.CHECKS && StateTracker.getReferences(caps).pixelPackBuffer != 0 )
 			throw new OpenGLException("Cannot use Buffers when Pixel Pack Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that pixel pack buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensurePackPBOenabled(ContextCapabilities caps) {
-		if ( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().pixelPackBuffer == 0 )
+		if ( LWJGLUtil.CHECKS && StateTracker.getReferences(caps).pixelPackBuffer == 0 )
 			throw new OpenGLException("Cannot use offsets when Pixel Pack Buffer Object is disabled");
 	}
 
 	/** Helper method to ensure that pixel unpack buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureUnpackPBOdisabled(ContextCapabilities caps) {
-		if ( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().pixelUnpackBuffer != 0 )
+		if ( LWJGLUtil.CHECKS && StateTracker.getReferences(caps).pixelUnpackBuffer != 0 )
 			throw new OpenGLException("Cannot use Buffers when Pixel Unpack Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that pixel unpack buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureUnpackPBOenabled(ContextCapabilities caps) {
-		if ( LWJGLUtil.CHECKS && StateTracker.getReferencesStack(caps).getReferences().pixelUnpackBuffer == 0 )
+		if ( LWJGLUtil.CHECKS && StateTracker.getReferences(caps).pixelUnpackBuffer == 0 )
 			throw new OpenGLException("Cannot use offsets when Pixel Unpack Buffer Object is disabled");
 	}
 

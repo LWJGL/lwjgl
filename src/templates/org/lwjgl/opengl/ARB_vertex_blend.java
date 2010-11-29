@@ -106,7 +106,7 @@ public interface ARB_vertex_blend {
 	void glWeightuivARB(@AutoSize("pWeights") int size, @GLuint IntBuffer pWeights);
 
 	void glWeightPointerARB(int size, @AutoType("pPointer") @GLenum int type, @GLsizei int stride,
-	                        @CachedReference
+	                        //@CachedReference
 	                        @BufferObject(BufferKind.ArrayVBO)
 	                        @Check
 	                        @Const

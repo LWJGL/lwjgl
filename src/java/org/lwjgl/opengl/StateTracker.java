@@ -31,15 +31,21 @@
  */
 package org.lwjgl.opengl;
 
+import java.nio.IntBuffer;
+
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL21.*;
 import static org.lwjgl.opengl.GL40.*;
 
 final class StateTracker {
+
 	private ReferencesStack references_stack;
 	private final StateStack attrib_stack;
 
 	private boolean insideBeginEnd;
+
+	// VAOs are not shareable between contexts, no need to sync or make this static.
+	private final FastIntMap<VAOState> vaoMap = new FastIntMap<VAOState>();
 
 	StateTracker() {
 		attrib_stack = new StateStack(0);
@@ -75,29 +81,82 @@ final class StateTracker {
 		references_stack.pushState();
 	}
 
-	static ReferencesStack getReferencesStack(ContextCapabilities caps) {
-		return caps.tracker.references_stack;
+	static BaseReferences getReferences(ContextCapabilities caps) {
+		return caps.tracker.references_stack.getReferences();
 	}
 
-        static void bindBuffer(ContextCapabilities caps, int target, int buffer) {
-            ReferencesStack references_stack = getReferencesStack(caps);
-            switch(target) {
-                case GL_ELEMENT_ARRAY_BUFFER:
-                    references_stack.getReferences().elementArrayBuffer = buffer;
-                    break;
-                case GL_ARRAY_BUFFER:
-                    references_stack.getReferences().arrayBuffer = buffer;
-                    break;
-                case GL_PIXEL_PACK_BUFFER:
-	                references_stack.getReferences().pixelPackBuffer = buffer;
-	                break;
-	            case GL_PIXEL_UNPACK_BUFFER:
-		            references_stack.getReferences().pixelUnpackBuffer = buffer;
-		            break;
-	            case GL_DRAW_INDIRECT_BUFFER:
-		            references_stack.getReferences().indirectBuffer = buffer;
-		            break;
+	static void bindBuffer(ContextCapabilities caps, int target, int buffer) {
+		final BaseReferences references = getReferences(caps);
+		switch ( target ) {
+			case GL_ARRAY_BUFFER:
+				references.arrayBuffer = buffer;
+				break;
+			case GL_ELEMENT_ARRAY_BUFFER:
+				// When a vertex array object is currently bound, update
+				// the VAO state instead of client state.
+				if ( references.vertexArrayObject != 0 )
+					caps.tracker.vaoMap.get(references.vertexArrayObject).elementArrayBuffer = buffer;
+				else
+					references.elementArrayBuffer = buffer;
+				break;
+			case GL_PIXEL_PACK_BUFFER:
+				references.pixelPackBuffer = buffer;
+				break;
+			case GL_PIXEL_UNPACK_BUFFER:
+				references.pixelUnpackBuffer = buffer;
+				break;
+			case GL_DRAW_INDIRECT_BUFFER:
+				references.indirectBuffer = buffer;
+				break;
+		}
+	}
 
-            }
-        }
+	static void bindVAO(final ContextCapabilities caps, final int array) {
+		final FastIntMap<VAOState> vaoMap = caps.tracker.vaoMap;
+		if ( !vaoMap.containsKey(array) )
+			vaoMap.put(array, new VAOState());
+
+		getReferences(caps).vertexArrayObject = array;
+	}
+
+	static void deleteVAO(final ContextCapabilities caps, final IntBuffer arrays) {
+		for ( int i = arrays.position(); i < arrays.limit(); i++ )
+			deleteVAO(caps, arrays.get(i));
+	}
+
+	static void deleteVAO(final ContextCapabilities caps, final int array) {
+		caps.tracker.vaoMap.remove(array);
+
+		final BaseReferences references = getReferences(caps);
+		if ( references.vertexArrayObject == array )
+			references.vertexArrayObject = 0;
+	}
+
+	/**
+	 * Returns the currently bound ELEMENT_ARRAY_BUFFER. If a vertex array
+	 * object is currently bound, then the VAO state is returned instead
+	 * of the client state.
+	 *
+	 * @return the currently bound ELEMENT_ARRAY_BUFFER.
+	 */
+	static int getElementArrayBufferBound(final ContextCapabilities caps) {
+		final BaseReferences references = getReferences(caps);
+
+		if ( references.vertexArrayObject == 0 )
+			return references.elementArrayBuffer;
+		else
+			return caps.tracker.vaoMap.get(references.vertexArrayObject).elementArrayBuffer;
+	}
+
+	/**
+	 * Simple class to help us track VAO state. Currently
+	 * only ELEMENT_ARRAY_BUFFER_BINDING is tracked, since
+	 * that's the only state we check from tables 6.6-6.9.
+	 */
+	private static class VAOState {
+
+		int elementArrayBuffer;
+
+	}
+
 }

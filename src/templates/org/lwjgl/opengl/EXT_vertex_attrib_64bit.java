@@ -75,7 +75,7 @@ public interface EXT_vertex_attrib_64bit {
 	void glVertexAttribL4dvEXT(@GLuint int index, @Const @Check("4") DoubleBuffer v);
 
 	void glVertexAttribLPointerEXT(@GLuint int index, int size, @Constant("GL11.GL_DOUBLE") @GLenum int type, @GLsizei int stride,
-	                               @CachedReference(index = "index", name = "glVertexAttribPointer_buffer")
+	                               //@CachedReference(index = "index", name = "glVertexAttribPointer_buffer")
 	                               @BufferObject(BufferKind.ArrayVBO)
 	                               @Check @Const @GLdouble Buffer pointer);
 
