@@ -81,7 +81,7 @@ final class StateTracker {
 		references_stack.pushState();
 	}
 
-	static BaseReferences getReferences(ContextCapabilities caps) {
+	static References getReferences(ContextCapabilities caps) {
 		return caps.tracker.references_stack.getReferences();
 	}
 

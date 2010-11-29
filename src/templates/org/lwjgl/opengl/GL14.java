@@ -107,7 +107,7 @@ public interface GL14 {
 
 	@DeprecatedGL
 	void glFogCoordPointer(@AutoType("data") @GLenum int type, @GLsizei int stride,
-	                       //@CachedReference
+	                       @CachedReference
 	                       @BufferObject(BufferKind.ArrayVBO)
 	                       @Check
 	                       @Const

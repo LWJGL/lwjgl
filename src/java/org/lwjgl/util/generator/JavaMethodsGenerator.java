@@ -596,7 +596,7 @@ public class JavaMethodsGenerator {
                                         cachedReference != null &&
 					(mode != Mode.BUFFEROBJECT || param.getAnnotation(BufferObject.class) == null) &&
 					param.getAnnotation(Result.class) == null) {
-				writer.print("\t\tif ( LWJGLUtil.CHECKS ) " + Utils.CHECKS_CLASS_NAME + ".getReferences(caps).");
+				writer.print("\t\tif ( LWJGLUtil.CHECKS ) " + "StateTracker.getReferences(caps).");
                                 if(cachedReference.name().length() > 0) {
                                     writer.print(cachedReference.name());
                                 } else {

@@ -57,7 +57,7 @@ public interface EXT_vertex_weighting {
 	void glVertexWeightfEXT(float weight);
 
 	void glVertexWeightPointerEXT(@GLsizei int size, @AutoType("pPointer") @GLenum int type, @GLsizei int stride,
-	                              //@CachedReference
+	                              @CachedReference
 	                              @BufferObject(BufferKind.ArrayVBO)
 	                              @Check
 	                              @Const

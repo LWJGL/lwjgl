@@ -150,7 +150,7 @@ public interface GL13 {
 
 	void glActiveTexture(@GLenum int texture);
 
-    //@Code("\t\tGLChecks.getReferences(caps).glClientActiveTexture = texture - GL_TEXTURE0;")
+    @Code("\t\tStateTracker.getReferences(caps).glClientActiveTexture = texture - GL_TEXTURE0;")
     @DeprecatedGL
 	void glClientActiveTexture(@GLenum int texture);
 

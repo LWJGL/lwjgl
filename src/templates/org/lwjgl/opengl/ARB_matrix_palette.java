@@ -52,7 +52,7 @@ public interface ARB_matrix_palette {
 	void glCurrentPaletteMatrixARB(int index);
 
 	void glMatrixIndexPointerARB(int size, @AutoType("pPointer") @GLenum int type, @GLsizei int stride,
-	                             //@CachedReference
+	                             @CachedReference
 	                             @BufferObject(BufferKind.ArrayVBO)
 	                             @Check
 	                             @Const

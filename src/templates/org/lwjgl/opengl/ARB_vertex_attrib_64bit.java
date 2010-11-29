@@ -85,7 +85,7 @@ public interface ARB_vertex_attrib_64bit {
 
 	@Reuse("GL41")
 	void glVertexAttribLPointer(@GLuint int index, int size, @Constant("GL11.GL_DOUBLE") @GLenum int type, @GLsizei int stride,
-	                               //@CachedReference(index = "index", name = "glVertexAttribPointer_buffer")
+	                               @CachedReference(index = "index", name = "glVertexAttribPointer_buffer")
 	                               @BufferObject(BufferKind.ArrayVBO)
 	                               @Check @Const @GLdouble Buffer pointer);
 

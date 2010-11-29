@@ -204,7 +204,7 @@ public interface GL30 {
 	void glVertexAttribI4usv(@GLuint int index, @Check("4") @Const @GLushort ShortBuffer v);
 
 	void glVertexAttribIPointer(@GLuint int index, int size, @GLenum int type, @GLsizei int stride,
-	                            //@CachedReference
+	                            @CachedReference
 	                            @BufferObject(BufferKind.ArrayVBO)
 	                            @Check
 	                            @Const

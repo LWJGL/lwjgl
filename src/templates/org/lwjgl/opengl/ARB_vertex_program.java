@@ -134,7 +134,7 @@ public interface ARB_vertex_program extends ARB_program {
 
 	@Reuse("ARBVertexShader")
 	void glVertexAttribPointerARB(@GLuint int index, int size, @AutoType("buffer") @GLenum int type, boolean normalized, @GLsizei int stride,
-	                              //@CachedReference(index = "index", name = "glVertexAttribPointer_buffer")
+	                              @CachedReference(index = "index", name = "glVertexAttribPointer_buffer")
 	                              @BufferObject(BufferKind.ArrayVBO)
 	                              @Check
 	                              @Const
