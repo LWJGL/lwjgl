@@ -230,8 +230,12 @@ final class InfoUtilFactory {
 			clSetKernelArg(kernel, index, 8, APIUtil.getBufferDouble().put(0, value));
 		}
 
-		public void setArg(final CLKernel kernel, final int index, final PointerWrapper pointer) {
-			clSetKernelArg(kernel, index, PointerBuffer.getPointerSize(), APIUtil.getBufferPointer().put(0, pointer).getBuffer());
+		public void setArg(final CLKernel kernel, final int index, final CLObject value) {
+			clSetKernelArg(kernel, index, value);
+		}
+
+		public void setArgSize(final CLKernel kernel, final int index, final long size) {
+			clSetKernelArg(kernel, index, size);
 		}
 
 		protected int getInfo(final CLKernel kernel, final int param_name, final ByteBuffer param_value, final PointerBuffer param_value_size_ret) {

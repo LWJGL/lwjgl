@@ -31,8 +31,6 @@
  */
 package org.lwjgl.opencl;
 
-import org.lwjgl.PointerWrapper;
-
 /**
  * This class is a wrapper around a cl_kernel pointer.
  *
@@ -145,8 +143,21 @@ public final class CLKernel extends CLObjectChild<CLProgram> {
 	 *
 	 * @return this CLKernel object
 	 */
-	public CLKernel setArg(final int index, final PointerWrapper value) {
+	public CLKernel setArg(final int index, final CLObject value) {
 		util.setArg(this, index, value);
+		return this;
+	}
+
+	/**
+	 * Sets the size of a __local kernel argument at the specified index.
+	 *
+	 * @param index the argument index
+	 * @param size  the argument size
+	 *
+	 * @return this CLKernel object
+	 */
+	public CLKernel setArgSize(final int index, final long size) {
+		util.setArgSize(this, index, size);
 		return this;
 	}
 
@@ -225,7 +236,9 @@ public final class CLKernel extends CLObjectChild<CLProgram> {
 
 		void setArg(CLKernel kernel, int index, double value);
 
-		void setArg(CLKernel kernel, int index, PointerWrapper pointer);
+		void setArg(CLKernel kernel, int index, CLObject pointer);
+
+		void setArgSize(CLKernel kernel, int index, long size);
 
 		long getWorkGroupInfoSize(CLKernel kernel, CLDevice device, int param_name);
 

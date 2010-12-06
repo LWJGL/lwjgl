@@ -979,8 +979,8 @@ public interface CL10 {
 	@cl_int
 	int clSetKernelArg(@PointerWrapper("cl_kernel") CLKernel kernel,
 	                   @cl_uint int arg_index,
-	                   @AutoSize(value = "arg_value", canBeNull = true) @size_t long arg_size,
-	                   @Check(canBeNull = true) @Const
+	                   @AutoSize("arg_value") @size_t long arg_size,
+	                   @Const
 	                   @cl_byte
 	                   @cl_short
 	                   @cl_int
@@ -988,15 +988,31 @@ public interface CL10 {
 	                   @cl_float
 	                   @cl_double Buffer arg_value);
 
-	// This is used by CLKernelImpl. Assumes arg_value.position() == 0.
-
 	@Alternate("clSetKernelArg")
-	@Private
+	@cl_int
+	int clSetKernelArg(@PointerWrapper("cl_kernel") CLKernel kernel,
+	                   @cl_uint int arg_index,
+	                   @Constant("PointerBuffer.getPointerSize()") @size_t long arg_size,
+	                   @Check(canBeNull = true) @Const
+	                   @Constant(value = "APIUtil.getBufferPointer().put(0, arg_value == null ? 0 : arg_value.getPointer()).getBuffer(), 0", keepParam = true) CLObject arg_value);
+
+	/** Sets the size of a __local kernel argument at the specified index. */
+	@Alternate("clSetKernelArg")
 	@cl_int
 	int clSetKernelArg2(@PointerWrapper("cl_kernel") CLKernel kernel,
 	                    @cl_uint int arg_index,
 	                    @size_t long arg_size,
-	                    @Check(value = "1") @Const Buffer arg_value);
+	                    @Constant("null, 0") Buffer arg_value);
+
+	// This is used by CLKernelUtil. Assumes arg_value.position() == 0.
+
+	@Alternate("clSetKernelArg")
+	@Private
+	@cl_int
+	int clSetKernelArg3(@PointerWrapper("cl_kernel") CLKernel kernel,
+	                    @cl_uint int arg_index,
+	                    @size_t long arg_size,
+	                    @Constant(value = "arg_value, 0", keepParam = true) Buffer arg_value);
 
 	@cl_int
 	int clGetKernelInfo(@PointerWrapper("cl_kernel") CLKernel kernel,
