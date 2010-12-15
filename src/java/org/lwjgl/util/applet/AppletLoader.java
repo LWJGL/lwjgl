@@ -925,7 +925,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * Due to the way applets on plugin1 work, one jvm must
 	 * be used for all applets. We need to use multiple
 	 * classloaders in the same jvm due to LWJGL's static
-	 * nature. I order to solve this we simply remove the
+	 * nature. In order to solve this we simply remove the
 	 * natives from a previous classloader allowing a new
 	 * classloader to use those natives in the same jvm.
 	 *

@@ -541,7 +541,7 @@ public class Keyboard {
 	}
 
 	/**
-	 * Gets the state of the tkey that generated the
+	 * Gets the state of the key that generated the
 	 * current event
 	 *
 	 * @return True if key was down, or false if released
