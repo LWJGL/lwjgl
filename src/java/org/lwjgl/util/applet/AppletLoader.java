@@ -759,6 +759,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 			// add the downloaded jars and natives to classpath
 			updateClassPath(path);
+			
+			// set lwjgl properties
+			setLWJGLProperties();
 
 			// switch to LWJGL Applet
 			switchApplet();
@@ -776,6 +779,26 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		}
 	}
 	
+	/**
+	 * Parses the java_arguments list and sets lwjgl specific 
+	 * properties accordingly, before the launch.
+	 */
+	protected void setLWJGLProperties() {
+		String javaArguments = getParameter("java_arguments");
+		if(javaArguments != null && javaArguments.length() > 0) {
+			int start = javaArguments.indexOf("-Dorg.lwjgl");
+			while(start != -1) {
+				int end = javaArguments.indexOf(" ", start);
+				if(end == -1) {
+					end = javaArguments.length();
+				}
+				String[] keyValue = javaArguments.substring(start+2, end).split("=");
+				System.setProperty(keyValue[0], keyValue[1]);
+				start = javaArguments.indexOf("-Dorg.lwjgl", end);
+			}
+		}
+	}
+
 	/**
 	 * get path to the lwjgl cache directory
 	 * 
