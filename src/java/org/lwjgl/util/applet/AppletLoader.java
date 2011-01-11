@@ -784,17 +784,21 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * properties accordingly, before the launch.
 	 */
 	protected void setLWJGLProperties() {
-		String javaArguments = getParameter("java_arguments");
-		if(javaArguments != null && javaArguments.length() > 0) {
-			int start = javaArguments.indexOf("-Dorg.lwjgl");
+		String lwjglArguments = getParameter("lwjgl_arguments");
+
+		if(lwjglArguments != null && lwjglArguments.length() > 0) {
+			int start = lwjglArguments.indexOf("-Dorg.lwjgl");
 			while(start != -1) {
-				int end = javaArguments.indexOf(" ", start);
+				int end = lwjglArguments.indexOf(" ", start);
 				if(end == -1) {
-					end = javaArguments.length();
+					end = lwjglArguments.length();
 				}
-				String[] keyValue = javaArguments.substring(start+2, end).split("=");
+				String[] keyValue = lwjglArguments.substring(start+2, end).split("=");
 				System.setProperty(keyValue[0], keyValue[1]);
-				start = javaArguments.indexOf("-Dorg.lwjgl", end);
+				if(debugMode) {
+					System.out.println("Setting property " + keyValue[0] + " to " + keyValue[1]);
+				}
+				start = lwjglArguments.indexOf("-Dorg.lwjgl", end);
 			}
 		}
 	}
