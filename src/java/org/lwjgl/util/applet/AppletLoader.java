@@ -921,6 +921,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		        return perms;
 		    }
+			
+			// allow non lwjgl native to be found from cache directory
+			protected String findLibrary (String libname) {
+				return path + "natives" + File.separator + System.mapLibraryName(libname);
+			}
 		};
 
 		debug_sleep(2000);
