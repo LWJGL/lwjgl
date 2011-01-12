@@ -230,7 +230,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	protected String	subtaskMessage = "";
 
 	/** state of applet loader */
-	protected int		state = STATE_INIT;
+	protected volatile int state = STATE_INIT;
 
 	/** whether lzma is supported */
 	protected boolean 	lzmaSupported;
@@ -406,6 +406,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	public void paint(Graphics g) {
 		// don't paint loader if applet loaded
 		if(state == STATE_DONE) {
+			cleanUp(); // clean up resources
 			return;
 		}
 
@@ -767,8 +768,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			switchApplet();
 
 			state = STATE_DONE;
-			// clean up resources
-			cleanUp();
 		} catch (AccessControlException ace) {
 			fatalErrorOccured(ace.getMessage(), ace);
 			certificateRefused = true;
