@@ -880,7 +880,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * @param path location where applet is stored
 	 * @throws Exception if it fails to add classpath
 	 */
-	protected void updateClassPath(String path) throws Exception {
+	protected void updateClassPath(final String path) throws Exception {
 
 		state = STATE_UPDATING_CLASSPATH;
 
