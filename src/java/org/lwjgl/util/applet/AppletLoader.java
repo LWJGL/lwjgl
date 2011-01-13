@@ -768,6 +768,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			switchApplet();
 
 			state = STATE_DONE;
+			repaint();
 		} catch (AccessControlException ace) {
 			fatalErrorOccured(ace.getMessage(), ace);
 			certificateRefused = true;
