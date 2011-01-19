@@ -11,8 +11,8 @@
 		<input 	message="Please type the password for the keystore" addproperty="sign.pwd"/>
 
 		<antcall target="-webstart_demo">
-		    <param name="keystore" value="signing/matzon_java_code_signing.keystore"/>
-			<param name="alias" value="oddlabs_java_code_signing"/>
+		    <param name="keystore" value="signing/lwjgl.jks"/>
+			<param name="alias" value="lwjgl"/>
 			<param name="password" value="${sign.pwd}"/>
 		  </antcall>
 	</target>	
