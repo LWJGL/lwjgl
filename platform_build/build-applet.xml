@@ -3,7 +3,7 @@
 	<!-- Create our packer task -->
 	<taskdef name="pack200" classname="com.sun.tools.apache.ant.pack200.Pack200Task" classpath="platform_build/Pack200Task.jar"/>
 
-	<target name="applet" depends="all">
+	<target name="applet">
 		<antcall target="-applet">
 		    <param name="keystore" value="applet/lwjglkeystore"/>
 			<param name="alias" value="lwjgl"/>			
