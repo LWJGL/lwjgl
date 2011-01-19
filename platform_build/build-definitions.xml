@@ -25,16 +25,21 @@
 
 	<!-- Files to include in the lwjgl.jar file -->
 	<fileset id="lwjgl.fileset" dir="${lwjgl.bin}">
-		<include name="org/**/*" />
-		<exclude name="org/lwjgl/d3d/**" />
-		<exclude name="org/lwjgl/test/**" />
-		<exclude name="org/lwjgl/util/**" />
-		<exclude name="org/lwjgl/examples/**" />
+		<patternset id="lwjgl.package.pattern">
+			<include name="org/**/*" />
+			<exclude name="org/lwjgl/d3d/**" />
+			<exclude name="org/lwjgl/test/**" />
+			<exclude name="org/lwjgl/util/**" />
+			<exclude name="org/lwjgl/examples/**" />
+		</patternset>
 	</fileset>
-
+	
+	<!-- Files to include in the lwjgl_util_applet.jar file -->
 	<fileset id="lwjgl_util_applet.fileset" dir="${lwjgl.bin}">
-		<exclude name="**.*"/>
-		<include name="org/lwjgl/util/applet/**"/>
+		<patternset id="lwjgl_util_applet.package.pattern">
+			<exclude name="**.*"/>
+			<include name="org/lwjgl/util/applet/**"/>
+		</patternset>
 	</fileset>
 
 	<!-- Files to include in the lwjgl_test.jar file -->
@@ -56,11 +61,14 @@
 
 	<!-- Files to include in the lwjgl_util.jar file -->
 	<fileset id="lwjgl_util.fileset" dir="${lwjgl.bin}">
-		<exclude name="**.*" />
-		<exclude name="org/lwjgl/util/generator/**" />
-		<exclude name="org/lwjgl/util/applet/**" />
-		<include name="org/lwjgl/util/**" />
+		<patternset id="lwjgl_util.package.pattern">
+			<exclude name="**.*" />
+			<exclude name="org/lwjgl/util/generator/**" />
+			<exclude name="org/lwjgl/util/applet/**" />
+			<include name="org/lwjgl/util/**" />
+		</patternset>
 	</fileset>
+		
 
 	<!-- Files to include in the lwjgl_applet.jar file -->
 	<fileset id="lwjgl_applet.fileset" dir="${lwjgl.bin}">
@@ -90,28 +98,40 @@
 
 	<!-- Files to include in windows package -->
 	<patternset id="lwjgl-windows.fileset">
-		<include name="lwjgl.dll" />
-		<include name="lwjgl64.dll" />
-		<include name="OpenAL32.dll" />
-		<include name="OpenAL64.dll" />
-    	<include name="jinput-dx8*.dll" />
-    	<include name="jinput-raw*.dll" />
+		<patternset id="lwjgl-windows-lwjgl.fileset">
+			<include name="lwjgl.dll" />
+			<include name="lwjgl64.dll" />
+			<include name="OpenAL32.dll" />
+			<include name="OpenAL64.dll" />
+		</patternset>
+		<patternset id="lwjgl-windows-jinput.fileset">
+	    	<include name="jinput-dx8*.dll" />
+	    	<include name="jinput-raw*.dll" />
+		</patternset>
 	</patternset>
 
 	<!-- Files to include in linux, glibc2.3 package -->
 	<patternset id="lwjgl-linux.fileset">
-		<include name="liblwjgl*.so" />
-		<include name="libopenal*.so" />
-		<include name="libjinput-linux.so" />
-		<include name="libjinput-linux64.so" />
+		<patternset id="lwjgl-linux-lwjgl.fileset">
+			<include name="liblwjgl*.so" />
+			<include name="libopenal*.so" />
+		</patternset>
+		<patternset id="lwjgl-linux-jinput.fileset">	
+			<include name="libjinput-linux.so" />
+			<include name="libjinput-linux64.so" />
+		</patternset>
 	</patternset>
 
 	<!-- Files to include in mac os x package -->
 	<patternset id="lwjgl-macosx.fileset">
-		<include name="liblwjgl.jnilib" />
-		<include name="openal.dylib" />
-	    <include name="libjinput-osx.jnilib" />
-	    <include name="libjinput-osx-legacy.jnilib" />
+		<patternset id="lwjgl-macosx-lwjgl.fileset">
+			<include name="liblwjgl.jnilib" />
+			<include name="openal.dylib" />
+		</patternset>
+		<patternset id="lwjgl-macosx-jinput.fileset">
+		    <include name="libjinput-osx.jnilib" />
+		    <include name="libjinput-osx-legacy.jnilib" />
+		</patternset>
 	</patternset>
 
 	<!-- Files to include in solaris package -->
