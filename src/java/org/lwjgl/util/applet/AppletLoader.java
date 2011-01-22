@@ -258,7 +258,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * @see java.applet.Applet#init()
 	 */
 	public void init() {
-		state = STATE_INIT;
+		setState(STATE_INIT);
 		
 		// sanity check
 		String[] requiredArgs = {"al_main", "al_logo", "al_progressbar", "al_jars"};
@@ -593,7 +593,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * jar to the urlList
 	 */
 	protected void loadJarURLs() throws Exception {
-		state = STATE_DETERMINING_PACKAGES;
+		setState(STATE_DETERMINING_PACKAGES);
 
 		// jars to load
 		String jarList = getParameter("al_jars");
@@ -671,7 +671,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * 5) switch applets
 	 */
 	public void run() {
-		state = STATE_CHECKING_CACHE;
+		setState(STATE_CHECKING_CACHE);
 
  		percentage = 5;
 
@@ -767,7 +767,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			// switch to LWJGL Applet
 			switchApplet();
 
-			state = STATE_DONE;
+			setState(STATE_DONE);
 			repaint();
 		} catch (AccessControlException ace) {
 			fatalErrorOccured(ace.getMessage(), ace);
@@ -883,7 +883,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	protected void updateClassPath(final String path) throws Exception {
 
-		state = STATE_UPDATING_CLASSPATH;
+		setState(STATE_UPDATING_CLASSPATH);
 
 		percentage = 95;
 
@@ -1001,7 +1001,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	protected void switchApplet() throws Exception {
 
-		state = STATE_SWITCHING_APPLET;
+		setState(STATE_SWITCHING_APPLET);
 		percentage = 100;
 
 		debug_sleep(2000);
@@ -1016,10 +1016,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		add(lwjglApplet);
 		validate();
 
-		state = STATE_INITIALIZE_REAL_APPLET;
+		setState(STATE_INITIALIZE_REAL_APPLET);
 		lwjglApplet.init();
 
-		state = STATE_START_REAL_APPLET;
+		setState(STATE_START_REAL_APPLET);
 		lwjglApplet.start();
 	}
 
@@ -1094,7 +1094,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	protected void downloadJars(String path) throws Exception {
 
-		state = STATE_DOWNLOADING;
+		setState(STATE_DOWNLOADING);
 
 		URLConnection urlconnection;
 
@@ -1305,7 +1305,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 *  @throws Exception if any errors occur
 	 */
 	protected void extractJars(String path) throws Exception {
-		state = STATE_EXTRACTING_PACKAGES;
+		setState(STATE_EXTRACTING_PACKAGES);
 
 		float increment = (float) 10.0 / urlList.length;
 		// extract all lzma and pack.lzma files
@@ -1354,7 +1354,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			return;
 		}
 
-		state = STATE_EXTRACTING_PACKAGES;
+		setState(STATE_EXTRACTING_PACKAGES);
 
 		int initialPercentage = percentage;
 
@@ -1616,6 +1616,17 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		repaint();
 	}
 
+	/** 
+	 * set the state of applet loader 
+	 * @param new state of applet loader
+	 * */
+	protected void setState(int state) {
+		this.state = state;
+		if(debugMode) {
+			System.out.println(getDescriptionForState());
+		}
+	}
+	
 	/**
 	 * Utility method for sleeping
 	 * Will only really sleep if debug has been enabled
