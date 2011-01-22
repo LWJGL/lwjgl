@@ -35,6 +35,7 @@ import java.applet.Applet;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -765,10 +766,18 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			setLWJGLProperties();
 
 			// switch to LWJGL Applet
-			switchApplet();
-
-			setState(STATE_DONE);
-			repaint();
+			EventQueue.invokeAndWait(new Runnable() {
+	            public void run() {
+					try {
+						switchApplet();
+					} catch (Exception e) {
+						fatalErrorOccured("This occurred while '" + getDescriptionForState() + "'", e);
+					}
+					setState(STATE_DONE);
+					repaint();
+	            }
+			});
+			
 		} catch (AccessControlException ace) {
 			fatalErrorOccured(ace.getMessage(), ace);
 			certificateRefused = true;
