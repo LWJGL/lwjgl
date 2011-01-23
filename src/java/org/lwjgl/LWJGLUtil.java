@@ -279,7 +279,7 @@ public class LWJGLUtil {
 			PLATFORM = PLATFORM_WINDOWS;
 		else if ( osName.startsWith("Linux") || osName.startsWith("FreeBSD") || osName.startsWith("SunOS") )
 			PLATFORM = PLATFORM_LINUX;
-		else if ( osName.startsWith("Mac OS X") )
+		else if ( osName.startsWith("Mac OS X") || osName.startsWith("Darwin") )
 			PLATFORM = PLATFORM_MACOSX;
 		else
 			throw new LinkageError("Unknown platform: " + osName);
