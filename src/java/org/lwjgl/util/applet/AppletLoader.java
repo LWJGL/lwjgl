@@ -223,6 +223,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/** Sizes of files to download */
 	protected int[] 	fileSizes;
+	
+	/** Number of native jars */
+	protected int		nativeJarCount;
 
 	/** whether to use caching system, only download files that have changed */
 	protected boolean 	cacheEnabled;
@@ -598,67 +601,72 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		// jars to load
 		String jarList = getParameter("al_jars");
-
-		jarList = trimExtensionByCapabilities(jarList);
-
-		StringTokenizer jar = new StringTokenizer(jarList, ", ");
-
-		int jarCount = jar.countTokens() + 1;
-
-		urlList = new URL[jarCount];
-
-		URL path = getCodeBase();
-
-		// set jars urls
-		for (int i = 0; i < jarCount - 1; i++) {
-			urlList[i] = new URL(path, jar.nextToken());
-		}
-
-		// native jar url
-		String osName 		= System.getProperty("os.name");
-		String nativeJar 	= null;
-
+		String nativeJarList = null;
+		
+		String osName = System.getProperty("os.name");
+		
 		if (osName.startsWith("Win")) {
 
 			// check if arch specific natives have been specified
 			if (System.getProperty("os.arch").endsWith("64")) {
-				nativeJar = getParameter("al_windows64");
+				nativeJarList = getParameter("al_windows64");
 			} else {
-				nativeJar = getParameter("al_windows32");
+				nativeJarList = getParameter("al_windows32");
 			}
 
-			if (nativeJar == null) {
-				nativeJar = getParameter("al_windows");
+			if (nativeJarList == null) {
+				nativeJarList = getParameter("al_windows");
 			}
 
 		} else if (osName.startsWith("Linux")) {
 
 			// check if arch specific natives have been specified
 			if (System.getProperty("os.arch").endsWith("64")) {
-				nativeJar = getParameter("al_linux64");
+				nativeJarList = getParameter("al_linux64");
 			} else {
-				nativeJar = getParameter("al_linux32");
+				nativeJarList = getParameter("al_linux32");
 			}
 
-			if (nativeJar == null) {
-				nativeJar = getParameter("al_linux");
+			if (nativeJarList == null) {
+				nativeJarList = getParameter("al_linux");
 			}
 
 		} else if (osName.startsWith("Mac")) {
-			nativeJar = getParameter("al_mac");
+			nativeJarList = getParameter("al_mac");
 		} else if (osName.startsWith("Solaris") || osName.startsWith("SunOS")) {
-			nativeJar = getParameter("al_solaris");
+			nativeJarList = getParameter("al_solaris");
 		} else if (osName.startsWith("FreeBSD")) {
-			nativeJar = getParameter("al_freebsd");
+			nativeJarList = getParameter("al_freebsd");
 		} else {
 			fatalErrorOccured("OS (" + osName + ") not supported", null);
+			return;
+		}
+		
+		if (nativeJarList == null) {
+			fatalErrorOccured("no lwjgl natives files found", null);
+			return;
+		} 
+		
+		jarList = trimExtensionByCapabilities(jarList);
+		StringTokenizer jars = new StringTokenizer(jarList, ", ");
+
+		nativeJarList = trimExtensionByCapabilities(nativeJarList);
+		StringTokenizer nativeJars = new StringTokenizer(nativeJarList, ", ");
+		
+		int jarCount = jars.countTokens();
+		nativeJarCount = nativeJars.countTokens();
+		
+		urlList = new URL[jarCount+nativeJarCount];
+
+		URL path = getCodeBase();
+
+		// set jars urls
+		for (int i = 0; i < jarCount; i++) {
+			urlList[i] = new URL(path, jars.nextToken());
 		}
 
-		if (nativeJar == null) {
-			fatalErrorOccured("no lwjgl natives files found", null);
-		} else {
-			nativeJar = trimExtensionByCapabilities(nativeJar);
-			urlList[jarCount - 1] = new URL(path, nativeJar);
+		for (int i = jarCount; i < jarCount+nativeJarCount; i++) {
+			urlList[i] = new URL(path, nativeJars.nextToken());
 		}
 	}
 
@@ -1357,19 +1365,15 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * @throws Exception if it fails to extract files
 	 */
 	protected void extractNatives(String path) throws Exception {
-
-		// if no new native jar was downloaded, no extracting needed
-		if (fileSizes[fileSizes.length-1] == -2) {
-			return;
-		}
-
+		
 		setState(STATE_EXTRACTING_PACKAGES);
 
-		int initialPercentage = percentage;
-
-		// get name of jar file with natives from urlList, it will be the last url
-		String nativeJar = getJarName(urlList[urlList.length - 1]);
-
+		// create native folder
+		File nativeFolder = new File(path + "natives");
+		if (!nativeFolder.exists()) {
+			nativeFolder.mkdir();
+		}
+		
 		// get the current certificate to compare against native files
 		Certificate[] certificate = AppletLoader.class.getProtectionDomain().getCodeSource().getCertificates();
 
@@ -1382,88 +1386,96 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			jurl.setDefaultUseCaches(true);
 			certificate = jurl.getCertificates();
 		}
-
-		// create native folder
-		File nativeFolder = new File(path + "natives");
-		if (!nativeFolder.exists()) {
-			nativeFolder.mkdir();
-		}
-
-		// open jar file
-		JarFile jarFile = new JarFile(path + nativeJar, true);
-
-		// get list of files in jar
-		Enumeration entities = jarFile.entries();
-
-		totalSizeExtract = 0;
-
-		// calculate the size of the files to extract for progress bar
-		while (entities.hasMoreElements()) {
-			JarEntry entry = (JarEntry) entities.nextElement();
-
-			// skip directories and anything in directories
-			// conveniently ignores the manifest
-			if (entry.isDirectory() || entry.getName().indexOf('/') != -1) {
+		
+		for (int i = fileSizes.length - nativeJarCount; i < fileSizes.length; i++) {
+		
+			int initialPercentage = percentage;
+			
+			// if a new native jar was not downloaded, no extracting needed
+			if (fileSizes[i] == -2) {
 				continue;
 			}
-			totalSizeExtract += entry.getSize();
-		}
-
-		currentSizeExtract = 0;
-
-		// reset point to begining by getting list of file again
-		entities = jarFile.entries();
-
-		// extract all files from the jar
-		while (entities.hasMoreElements()) {
-			JarEntry entry = (JarEntry) entities.nextElement();
-
-			// skip directories and anything in directories
-			// conveniently ignores the manifest
-			if (entry.isDirectory() || entry.getName().indexOf('/') != -1) {
-				continue;
-			}
-
-			// check if native file already exists if so delete it to make room for new one
-			// useful when using the reload button on the browser
-			File f = new File(path + "natives" + File.separator + entry.getName());
-			if (f.exists()) {
-				if (!f.delete()) {
-					continue; // unable to delete file, it is in use, skip extracting it
+			
+			// get name of jar file with natives from urlList
+			String nativeJar = getJarName(urlList[i]);
+	
+			// open jar file
+			JarFile jarFile = new JarFile(path + nativeJar, true);
+	
+			// get list of files in jar
+			Enumeration entities = jarFile.entries();
+	
+			totalSizeExtract = 0;
+	
+			// calculate the size of the files to extract for progress bar
+			while (entities.hasMoreElements()) {
+				JarEntry entry = (JarEntry) entities.nextElement();
+	
+				// skip directories and anything in directories
+				// conveniently ignores the manifest
+				if (entry.isDirectory() || entry.getName().indexOf('/') != -1) {
+					continue;
 				}
+				totalSizeExtract += entry.getSize();
 			}
-
-			debug_sleep(1000);
-
-			InputStream in = jarFile.getInputStream(jarFile.getEntry(entry.getName()));
-			OutputStream out = new FileOutputStream(path + "natives" + File.separator + entry.getName());
-
-			int bufferSize;
-			byte buffer[] = new byte[65536];
-
-			while ((bufferSize = in.read(buffer, 0, buffer.length)) != -1) {
-				debug_sleep(10);
-				out.write(buffer, 0, bufferSize);
-				currentSizeExtract += bufferSize;
-
-				// update progress bar
-				percentage = initialPercentage + ((currentSizeExtract * 20) / totalSizeExtract);
-				subtaskMessage = "Extracting: " + entry.getName() + " " + ((currentSizeExtract * 100) / totalSizeExtract) + "%";
+	
+			currentSizeExtract = 0;
+	
+			// reset point to begining by getting list of file again
+			entities = jarFile.entries();
+	
+			// extract all files from the jar
+			while (entities.hasMoreElements()) {
+				JarEntry entry = (JarEntry) entities.nextElement();
+	
+				// skip directories and anything in directories
+				// conveniently ignores the manifest
+				if (entry.isDirectory() || entry.getName().indexOf('/') != -1) {
+					continue;
+				}
+	
+				// check if native file already exists if so delete it to make room for new one
+				// useful when using the reload button on the browser
+				File f = new File(path + "natives" + File.separator + entry.getName());
+				if (f.exists()) {
+					if (!f.delete()) {
+						continue; // unable to delete file, it is in use, skip extracting it
+					}
+				}
+	
+				debug_sleep(1000);
+	
+				InputStream in = jarFile.getInputStream(jarFile.getEntry(entry.getName()));
+				OutputStream out = new FileOutputStream(path + "natives" + File.separator + entry.getName());
+	
+				int bufferSize;
+				byte buffer[] = new byte[65536];
+	
+				while ((bufferSize = in.read(buffer, 0, buffer.length)) != -1) {
+					debug_sleep(10);
+					out.write(buffer, 0, bufferSize);
+					currentSizeExtract += bufferSize;
+	
+					// update progress bar
+					percentage = initialPercentage + ((currentSizeExtract * 20) / totalSizeExtract);
+					subtaskMessage = "Extracting: " + entry.getName() + " " + ((currentSizeExtract * 100) / totalSizeExtract) + "%";
+				}
+	
+				// validate if the certificate for native file is correct
+				validateCertificateChain(certificate, entry.getCertificates());
+	
+				in.close();
+				out.close();
 			}
-
-			// validate if the certificate for native file is correct
-			validateCertificateChain(certificate, entry.getCertificates());
-
-			in.close();
-			out.close();
+			subtaskMessage = "";
+	
+			jarFile.close();
+	
+			// delete native jar as it is no longer needed
+			File f = new File(path + nativeJar);
+			f.delete();
+		
 		}
-		subtaskMessage = "";
-
-		jarFile.close();
-
-		// delete native jar as it is no longer needed
-		File f = new File(path + nativeJar);
-		f.delete();
 	}
 
 	/**
