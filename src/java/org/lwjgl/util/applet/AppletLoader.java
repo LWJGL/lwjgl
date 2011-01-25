@@ -1367,7 +1367,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	protected void extractNatives(String path) throws Exception {
 		
 		setState(STATE_EXTRACTING_PACKAGES);
-
+		
+		float percentageParts = 20f/nativeJarCount; // parts for each native jar from 20%
+		
 		// create native folder
 		File nativeFolder = new File(path + "natives");
 		if (!nativeFolder.exists()) {
@@ -1387,9 +1389,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			certificate = jurl.getCertificates();
 		}
 		
-		for (int i = fileSizes.length - nativeJarCount; i < fileSizes.length; i++) {
-		
-			int initialPercentage = percentage;
+		for (int i = urlList.length - nativeJarCount; i < urlList.length; i++) {
 			
 			// if a new native jar was not downloaded, no extracting needed
 			if (fileSizes[i] == -2) {
@@ -1406,7 +1406,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			Enumeration entities = jarFile.entries();
 	
 			totalSizeExtract = 0;
-	
+			int jarNum = i - (urlList.length - nativeJarCount); // used for progressbar
+		
 			// calculate the size of the files to extract for progress bar
 			while (entities.hasMoreElements()) {
 				JarEntry entry = (JarEntry) entities.nextElement();
@@ -1457,7 +1458,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 					currentSizeExtract += bufferSize;
 	
 					// update progress bar
-					percentage = initialPercentage + ((currentSizeExtract * 20) / totalSizeExtract);
+					percentage = 65 + (int)(percentageParts * (jarNum + currentSizeExtract/(float)totalSizeExtract));
 					subtaskMessage = "Extracting: " + entry.getName() + " " + ((currentSizeExtract * 100) / totalSizeExtract) + "%";
 				}
 	
