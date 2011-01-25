@@ -631,7 +631,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				nativeJarList = getParameter("al_linux");
 			}
 
-		} else if (osName.startsWith("Mac")) {
+		} else if (osName.startsWith("Mac") || osName.startsWith("Darwin")) {
 			nativeJarList = getParameter("al_mac");
 		} else if (osName.startsWith("Solaris") || osName.startsWith("SunOS")) {
 			nativeJarList = getParameter("al_solaris");
