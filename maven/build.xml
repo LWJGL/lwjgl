@@ -1,0 +1,147 @@
+<project name="maven" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+	
+	<property name="mavenrepo"			value="mvnrepo" />
+	<property name="mavenrepoId"		value="tmprepo" />
+	
+	
+	<target name="deploy">
+		
+		<!-- deploying parent.pom -->
+		
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
+			<arg value="-Durl=${mavenrepo}" />
+			<arg value="-DrepositoryId=${mavenrepoId}" />
+			<arg value="-DpomFile=lwjgl-parent.pom" />
+			<arg value="-Dfile=lwjgl-parent.pom" />
+            <arg value="-Plwjglgpg" />
+        </artifact:mvn>  
+            
+        <!-- deploying lwjgl.jar -->    
+        
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
+			<arg value="-Durl=${mavenrepo}" />
+			<arg value="-DrepositoryId=${mavenrepoId}" />
+			<arg value="-DpomFile=lwjgl.pom" />
+			<arg value="-Dfile=lwjgl.jar" />
+            <arg value="-Plwjglgpg" />
+		</artifact:mvn>
+		
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
+			<arg value="-Durl=${mavenrepo}" />
+			<arg value="-DrepositoryId=${mavenrepoId}" />
+			<arg value="-DpomFile=lwjgl.pom" />
+			<arg value="-Dfile=lwjgl-sources.jar" />
+			<arg value="-Dclassifier=sources" />
+            <arg value="-Plwjglgpg" />
+		</artifact:mvn>
+		
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
+			<arg value="-Durl=${mavenrepo}" />
+			<arg value="-DrepositoryId=${mavenrepoId}" />
+			<arg value="-DpomFile=lwjgl.pom" />
+			<arg value="-Dfile=lwjgl-javadoc.jar" />
+			<arg value="-Dclassifier=javadoc" />
+            <arg value="-Plwjglgpg" />
+		</artifact:mvn>
+		
+		<!-- deploying natives -->    
+		
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
+			<arg value="-Durl=${mavenrepo}" />
+			<arg value="-DrepositoryId=${mavenrepoId}" />
+			<arg value="-DpomFile=lwjgl-platform.pom" />
+			<arg value="-Dfile=lwjgl-platform-natives-win.jar" />
+			<arg value="-Dclassifier=natives-win" />
+            <arg value="-Plwjglgpg" />
+		</artifact:mvn>
+		
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
+			<arg value="-Durl=${mavenrepo}" />
+			<arg value="-DrepositoryId=${mavenrepoId}" />
+			<arg value="-DpomFile=lwjgl-platform.pom" />
+			<arg value="-Dfile=lwjgl-platform-natives-linux.jar" />
+			<arg value="-Dclassifier=natives-linux" />
+            <arg value="-Plwjglgpg" />
+		</artifact:mvn>
+		
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
+			<arg value="-Durl=${mavenrepo}" />
+			<arg value="-DrepositoryId=${mavenrepoId}" />
+			<arg value="-DpomFile=lwjgl-platform.pom" />
+			<arg value="-Dfile=lwjgl-platform-natives-mac.jar" />
+			<arg value="-Dclassifier=natives-mac" />
+            <arg value="-Plwjglgpg" />
+		</artifact:mvn>
+		
+		<!-- deploying lwjgl_util.jar -->    
+		
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
+			<arg value="-Durl=${mavenrepo}" />
+			<arg value="-DrepositoryId=${mavenrepoId}" />
+			<arg value="-DpomFile=lwjgl_util.pom" />
+			<arg value="-Dfile=lwjgl_util.jar" />
+            <arg value="-Plwjglgpg" />
+		</artifact:mvn>
+		
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
+			<arg value="-Durl=${mavenrepo}" />
+			<arg value="-DrepositoryId=${mavenrepoId}" />
+			<arg value="-DpomFile=lwjgl_util.pom" />
+			<arg value="-Dfile=lwjgl_util-sources.jar" />
+			<arg value="-Dclassifier=sources" />
+            <arg value="-Plwjglgpg" />
+		</artifact:mvn>
+		
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
+			<arg value="-Durl=${mavenrepo}" />
+			<arg value="-DrepositoryId=${mavenrepoId}" />
+			<arg value="-DpomFile=lwjgl_util.pom" />
+			<arg value="-Dfile=lwjgl_util-javadoc.jar" />
+			<arg value="-Dclassifier=javadoc" />
+            <arg value="-Plwjglgpg" />
+		</artifact:mvn>
+		
+		<!-- deploying lwjgl_util_applet.jar -->    
+		
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
+			<arg value="-Durl=${mavenrepo}" />
+			<arg value="-DrepositoryId=${mavenrepoId}" />
+			<arg value="-DpomFile=lwjgl_util_applet.pom" />
+			<arg value="-Dfile=lwjgl_util_applet.jar" />
+            <arg value="-Plwjglgpg" />
+		</artifact:mvn>
+		
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
+			<arg value="-Durl=${mavenrepo}" />
+			<arg value="-DrepositoryId=${mavenrepoId}" />
+			<arg value="-DpomFile=lwjgl_util.pom" />
+			<arg value="-Dfile=lwjgl_util_applet-sources.jar" />
+			<arg value="-Dclassifier=sources" />
+            <arg value="-Plwjglgpg" />
+		</artifact:mvn>
+		
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
+			<arg value="-Durl=${mavenrepo}" />
+			<arg value="-DrepositoryId=${mavenrepoId}" />
+			<arg value="-DpomFile=lwjgl_util.pom" />
+			<arg value="-Dfile=lwjgl_util_applet-javadoc.jar" />
+			<arg value="-Dclassifier=javadoc" />
+            <arg value="-Plwjglgpg" />
+		</artifact:mvn>
+	</target>
+
+
+</project>

@@ -6,6 +6,7 @@
 	<import file="platform_build/build-generator.xml"/>
 	<import file="platform_build/build-applet.xml"/>
 	<import file="platform_build/build-webstart.xml"/>
+	<import file="platform_build/build-maven.xml"/>
 
 	<!-- ================================================================== -->
 	<!-- Everything below this line is targets.															-->

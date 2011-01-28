@@ -1,0 +1,155 @@
+<project name="maven">
+	<property name="lwjgl.src.java" 		location="${lwjgl.src}/java" />
+	<property name="lwjgl.src.generated" 	location="${lwjgl.src}/generated" />
+	<property name="lwjgl.maven"			location="maven" />
+	<property name="lwjgl.dstMaven"			location="${lwjgl.temp}/maven" />
+	
+	<property name="lwjgl.src.java" 		location="${lwjgl.src}/java" />
+
+	<property name="lwjgl-maven-version" value="2.7.0"/>
+
+	<fileset id="lwjgl-sources.manual.fileset" dir="${lwjgl.src.java}">
+		<patternset refid="lwjgl.package.pattern" />
+	</fileset>
+
+	<fileset id="lwjgl-sources.generated.fileset" dir="${lwjgl.src.generated}">
+		<include name="**/*" />
+	</fileset>
+	<fileset id="lwjgl_util_applet-sources.fileset" dir="${lwjgl.src.java}">
+		<patternset refid="lwjgl_util_applet.package.pattern" />
+	</fileset>
+
+	<fileset id="lwjgl_util-sources.fileset" dir="${lwjgl.src.java}">
+		<patternset refid="lwjgl_util.package.pattern" />
+	</fileset>
+
+
+	<target name="maven-full">
+		<antcall target="clean-java" />
+		<antcall target="-initialize" />
+		
+		<antcall target="generate-all" />
+		<antcall target="compile" />
+        <antcall target="-createjars" />
+        <antcall target="maven"/>
+	</target>
+	
+	<target name="maven">
+		<delete dir="${lwjgl.dstMaven}" quiet="true" failonerror="false" taskname="cleaning maven dist" />
+		<mkdir dir="${lwjgl.dstMaven}"   taskname="initialiazing temp maven folder" />
+		<antcall target="-copylwjgljars" />
+		<antcall target="-createmavensourcejars" />
+		<antcall target="-createmavenjavadocs" />
+		<antcall target="-createmavennativejars" />
+		<antcall target="-copymavenpoms"/>
+		<antcall target="-copymavendeploybuild"/>
+		<antcall target="-copymaventdist"/>
+	</target>
+
+
+	<target name="-copylwjgljars">
+		<copy todir="${lwjgl.dstMaven}">
+			<fileset dir="${lwjgl.temp}/jar/">
+				<patternset>
+					<include name="lwjgl.jar" />
+					<include name="lwjgl_util.jar" />
+					<include name="lwjgl_util_applet.jar" />
+				</patternset>
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- Packages the java files -->
+	<target name="-createmavensourcejars">
+
+		<jar destfile="${lwjgl.dstMaven}/lwjgl-sources.jar" taskname="lwjgl-sources.jar">
+			<fileset refid="lwjgl-sources.manual.fileset" />
+			<fileset refid="lwjgl-sources.generated.fileset" />
+		</jar>
+		
+		<jar destfile="${lwjgl.dstMaven}/lwjgl_util_applet-sources.jar"	taskname="lwjgl_util_applet-sources.jar">
+			<fileset refid="lwjgl_util_applet-sources.fileset" />
+		</jar>
+		
+		<jar destfile="${lwjgl.dstMaven}/lwjgl_util-sources.jar" taskname="lwjgl_util-sources.jar">
+			<fileset refid="lwjgl_util-sources.fileset" />
+		</jar>
+	</target>
+	
+	<target name="-createmavenjavadocs">
+	<!-- Creates the Javadoc -->
+	
+		<javadoc destdir="${lwjgl.dstMaven}/lwjgl-javadoc" classpath="${lwjgl.lib}/jinput.jar" author="true" version="true" use="true" source="1.5" windowtitle="LWJGL API" useexternalfile="true">
+			<fileset refid="lwjgl-sources.manual.fileset"/>
+			<fileset refid="lwjgl-sources.generated.fileset"/>
+			<doctitle><![CDATA[<h1>Lightweight Java Game Toolkit</h1>]]></doctitle>
+			<bottom><![CDATA[<i>Copyright &#169; 2002-2010 lwjgl.org. All Rights Reserved.</i>]]></bottom>
+		</javadoc>
+		<jar destfile="${lwjgl.dstMaven}/lwjgl-javadoc.jar" taskname="lwjgl-javadoc.jar">
+			<fileset dir="${lwjgl.dstMaven}/lwjgl-javadoc" />
+		</jar>
+		
+		<javadoc destdir="${lwjgl.dstMaven}/lwjgl_util-javadoc" classpath="${lwjgl.lib}/jinput.jar:${lwjgl.lib}/lwjgl.jar" author="true" version="true" use="true" source="1.5" windowtitle="LWJGL UTIL API" useexternalfile="true">
+			<fileset refid="lwjgl_util-sources.fileset"/>
+			<doctitle><![CDATA[<h1>Lightweight Java Game Toolkit</h1>]]></doctitle>
+			<bottom><![CDATA[<i>Copyright &#169; 2002-2010 lwjgl.org. All Rights Reserved.</i>]]></bottom>
+		</javadoc>
+		<jar destfile="${lwjgl.dstMaven}/lwjgl_util-javadoc.jar" taskname="lwjgl_util-javadoc.jar">
+			<fileset dir="${lwjgl.dstMaven}/lwjgl_util-javadoc" />
+		</jar>
+		
+		<javadoc destdir="${lwjgl.dstMaven}/lwjgl_util_applet-javadoc" classpath="${lwjgl.lib}/jinput.jar:${lwjgl.lib}/lwjgl.jar" author="true" version="true" use="true" source="1.5" windowtitle="LWJGL UTIL API" useexternalfile="true">
+			<fileset refid="lwjgl_util_applet-sources.fileset"/>
+			<doctitle><![CDATA[<h1>Lightweight Java Game Toolkit</h1>]]></doctitle>
+			<bottom><![CDATA[<i>Copyright &#169; 2002-2010 lwjgl.org. All Rights Reserved.</i>]]></bottom>
+		</javadoc>
+		<jar destfile="${lwjgl.dstMaven}/lwjgl_util_applet-javadoc.jar" taskname="lwjgl_util_applet-javadoc.jar">
+			<fileset dir="${lwjgl.dstMaven}/lwjgl_util_applet-javadoc" />
+		</jar>
+		
+		<delete dir="${lwjgl.dstMaven}/lwjgl-javadoc" quiet="true" failonerror="false" taskname="cleaning maven javadoc temps lwjgl" />
+		<delete dir="${lwjgl.dstMaven}/lwjgl_util-javadoc" quiet="true" failonerror="false" taskname="cleaning maven javadoc temps lwjgl_util" />
+		<delete dir="${lwjgl.dstMaven}/lwjgl_util_applet-javadoc" quiet="true" failonerror="false" taskname="cleaning maven javadoc temps lwjgl_util_applet" />
+	</target>
+	
+	<target name="-createmavennativejars">
+		<jar destfile="${lwjgl.dstMaven}/lwjgl-platform-natives-win.jar" taskname="lwjgl-platform-natives-win.jar">
+			<fileset dir="${lwjgl.lib}/windows">
+				<patternset refid="lwjgl-windows-lwjgl.fileset"/>
+			</fileset>
+		</jar>
+		<jar destfile="${lwjgl.dstMaven}/lwjgl-platform-natives-linux.jar" taskname="lwjgl-platform-natives-linux.jar">
+			<fileset dir="${lwjgl.lib}/linux">
+				<patternset refid="lwjgl-linux-lwjgl.fileset"/>
+			</fileset>
+		</jar>
+		<jar destfile="${lwjgl.dstMaven}/lwjgl-platform-natives-mac.jar" taskname="lwjgl-platform-natives-mac.jar">
+			<fileset dir="${lwjgl.lib}/macosx">
+				<patternset refid="lwjgl-macosx-lwjgl.fileset"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="-copymavenpoms">
+		<copy todir="${lwjgl.dstMaven}">
+			<fileset dir="${lwjgl.maven}">
+				<include name="*.pom" />
+			</fileset>
+			<filterset>
+      			<filter token="VERSION" value="${lwjgl-maven-version}"/>
+    		</filterset>	
+		</copy>
+	</target>
+	
+	<target name="-copymavendeploybuild">
+		<copy todir="${lwjgl.dstMaven}">
+			<fileset dir="${lwjgl.maven}">
+				<include name="build.xml" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="-copymaventdist">
+		<zip destfile="${lwjgl.dist}/lwjgl-maven-${lwjgl.version}.zip" basedir="${lwjgl.temp}" includes="maven/**" />
+	</target>
+</project>
