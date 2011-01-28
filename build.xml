@@ -142,6 +142,7 @@
 
 		<!-- Create lwjgl_util_applet.jar -->
 		<jar destfile="${lwjgl.temp}/jar/lwjgl_util_applet.jar" taskname="lwjgl_util_applet.jar">
+			<fileset dir="${lwjgl.res}" includes="applet*"/>
 			<fileset refid="lwjgl_util_applet.fileset" />
 			<manifest>
 				<attribute name="Sealed" value="true"/>

@@ -63,10 +63,6 @@
 			</fileset>
 		</jar>
 		<signjar jar="applet/basic/solaris_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>		
-			
-  	<jar destfile="${lwjgl.lib}/lwjgl_util_applet.jar" update="true">
-  		<fileset dir="${lwjgl.res}" includes="applet*"/>
-  	</jar>
 
 	  	<copy file="${lwjgl.lib}/lwjgl.jar" todir="applet/basic" overwrite="true"/>
 		<copy file="${lwjgl.lib}/lwjgl-debug.jar" todir="applet/basic" overwrite="true"/>
