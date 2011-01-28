@@ -79,6 +79,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Pack200;
+import java.util.zip.GZIPInputStream;
 
 import sun.security.util.SecurityConstants;
 
@@ -1295,7 +1296,41 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		// delete LZMA file, as it is no longer needed
 		f.delete();
 	}
+	
+	/**
+	 *  Extract GZip File
+	 *  @param in Input path to pack file
+	 *  @param out output path to resulting file
+	 *  @throws Exception if any errors occur
+	 */
+	protected void extractGZip(String in, String out) throws Exception {
 
+		File f = new File(in);
+		FileInputStream fileInputHandle = new FileInputStream(f);
+
+		InputStream inputHandle = new GZIPInputStream(fileInputHandle);
+
+		OutputStream outputHandle;
+		outputHandle = new FileOutputStream(out);
+
+		byte [] buffer = new byte [1<<14];
+
+		int ret = inputHandle.read(buffer);
+		while (ret >= 1) {
+			outputHandle.write(buffer,0,ret);
+			ret = inputHandle.read(buffer);
+		}
+
+		inputHandle.close();
+		outputHandle.close();
+
+		outputHandle = null;
+		inputHandle = null;
+
+		// delete GZip file, as it is no longer needed
+		f.delete();
+	}
+	
 	/**
 	 *  Extract Pack File
 	 *  @param in Input path to pack file
@@ -1316,7 +1351,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 *  Extract all jars from any lzma/pack files
+	 *  Extract all jars from any lzma/gz/pack files
 	 *
 	 *  @param path output path
 	 *  @throws Exception if any errors occur
@@ -1325,7 +1360,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		setState(STATE_EXTRACTING_PACKAGES);
 
 		float increment = (float) 10.0 / urlList.length;
-		// extract all lzma and pack.lzma files
+		// extract all gz, lzma, pack.gz and pack.lzma files
 		for (int i = 0; i < urlList.length; i++) {
 
 			// if file has not changed, skip it
@@ -1333,7 +1368,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 			percentage = 55 + (int) (increment * (i+1));
 			String filename = getFileName(urlList[i]);
-
+			
 			if (filename.endsWith(".pack.lzma")) {
 				subtaskMessage = "Extracting: " + filename + " to " + filename.replaceAll(".lzma", "");
 				debug_sleep(1000);
@@ -1342,6 +1377,15 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				subtaskMessage = "Extracting: " + filename.replaceAll(".lzma", "") + " to " + filename.replaceAll(".pack.lzma", "");
 				debug_sleep(1000);
 				extractPack(path + filename.replaceAll(".lzma", ""), path + filename.replaceAll(".pack.lzma", ""));
+			}
+			else if (filename.endsWith(".pack.gz")) {
+				subtaskMessage = "Extracting: " + filename + " to " + filename.replaceAll(".gz", "");
+				debug_sleep(1000);
+				extractGZip(path + filename, path + filename.replaceAll(".gz", ""));
+
+				subtaskMessage = "Extracting: " + filename.replaceAll(".gz", "") + " to " + filename.replaceAll(".pack.gz", "");
+				debug_sleep(1000);
+				extractPack(path + filename.replaceAll(".gz", ""), path + filename.replaceAll(".pack.gz", ""));
 			}
 			else if (filename.endsWith(".pack")) {
 				subtaskMessage = "Extracting: " + filename + " to " + filename.replace(".pack", "");
@@ -1352,6 +1396,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				subtaskMessage = "Extracting: " + filename + " to " + filename.replace(".lzma", "");
 				debug_sleep(1000);
 				extractLZMA(path + filename, path + filename.replace(".lzma", ""));
+			}
+			else if (filename.endsWith(".gz")) {
+				subtaskMessage = "Extracting: " + filename + " to " + filename.replace(".gz", "");
+				debug_sleep(1000);
+				extractGZip(path + filename, path + filename.replace(".gz", ""));
 			}
 		}
 	}
@@ -1546,10 +1595,14 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		if (fileName.endsWith(".pack.lzma")) {
 			fileName = fileName.replaceAll(".pack.lzma", "");
+		} else if (fileName.endsWith(".pack.gz")) {
+			fileName = fileName.replaceAll(".pack.gz", "");
 		} else if (fileName.endsWith(".pack")) {
 			fileName = fileName.replaceAll(".pack", "");
 		} else if (fileName.endsWith(".lzma")) {
 			fileName = fileName.replaceAll(".lzma", "");
+		} else if (fileName.endsWith(".gz")) {
+			fileName = fileName.replaceAll(".gz", "");
 		}
 
 		return fileName.substring(fileName.lastIndexOf('/') + 1);
