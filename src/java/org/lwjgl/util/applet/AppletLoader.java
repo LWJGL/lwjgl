@@ -774,7 +774,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			// set lwjgl properties
 			setLWJGLProperties();
 
-			// switch to LWJGL Applet
+			// make applet switch on EDT as an AWT/Swing permission dialog could be called
 			EventQueue.invokeAndWait(new Runnable() {
 	            public void run() {
 					try {
@@ -1556,11 +1556,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	protected Image getImage(String s) {
 		try {
-			URL url = Thread.currentThread().getContextClassLoader().getResource("/"+s);
-
-			// if image not found in jar, look outside it
+			URL url = url = new URL(getCodeBase(), s);
+				
+			// if image failed to load, try another method
 			if (url == null) {
-				url = new URL(getCodeBase(), s);
+				Thread.currentThread().getContextClassLoader().getResource(s);
 			}
 
 			Image image = super.getImage(url);
