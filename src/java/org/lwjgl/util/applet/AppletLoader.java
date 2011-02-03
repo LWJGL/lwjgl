@@ -1560,7 +1560,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				
 			// if image failed to load, try another method
 			if (url == null) {
-				Thread.currentThread().getContextClassLoader().getResource(s);
+				url = Thread.currentThread().getContextClassLoader().getResource(s);
 			}
 
 			Image image = super.getImage(url);
