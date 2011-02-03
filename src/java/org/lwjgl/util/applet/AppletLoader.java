@@ -1555,14 +1555,38 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * @return the Image file
 	 */
 	protected Image getImage(String s) {
+		
+		Image image = null;
+		
 		try {
-			URL url = url = new URL(getCodeBase(), s);
-				
-			// if image failed to load, try another method
-			if (url == null) {
-				url = Thread.currentThread().getContextClassLoader().getResource(s);
-			}
+			image = getImage(new URL(getCodeBase(), s));
+		} catch (Exception e) {
+			/* */
+		}
+		
+		// if image failed to load, try another method
+		if (image == null) {
+			image = getImage(Thread.currentThread().getContextClassLoader().getResource(s));
+		}
+		
+		// if image loaded sucessfully return it
+		if (image != null) {
+			return image;
+		}
 
+		// show error as image could not be loaded
+		fatalErrorOccured("Unable to load logo and progressbar images", null);
+		return null;
+	}
+	
+	/**
+	 * Get Image from path provided
+	 *
+	 * @param url location of the image
+	 * @return the Image file
+	 */
+	public Image getImage(URL url) {
+		try {
 			Image image = super.getImage(url);
 
 			// wait for image to load
@@ -1577,12 +1601,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		} catch (Exception e) {
 			/* */
 		}
-
-		// show error as image could not be loaded
-		fatalErrorOccured("Unable to load logo and progressbar images", null);
+		
 		return null;
 	}
-
 
 	/**
 	 * Get jar name from URL.
