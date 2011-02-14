@@ -6,40 +6,47 @@
 		<version>@VERSION@</version>
 	</parent>
 	<groupId>org.lwjgl.lwjgl</groupId>
-	<artifactId>lwjgl</artifactId>
+	<artifactId>jinput</artifactId>
 	<packaging>jar</packaging>
-	<name>Lighweight Java Game Library</name>
+	<name>JInput - Java Game Controller API</name>
 	<version>@VERSION@</version>
-	<description>Lighweight Java Game Library</description>
-	<url>http://lwjgl.org/</url>
+	<description>JInput - Java Game Controller API</description>
+	<url>http://java.net/projects/jinput</url>
+	<licenses>
+		<license>
+			<name>BSD</name>
+			<url>http://www.opensource.org/licenses/bsd-license.php</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<id>Members</id>
+			<url>http://java.net/projects/jinput/members</url>
+		</developer>
+	</developers>
 	<scm>
-		<url>http://java-game-lib.svn.sourceforge.net/viewvc/java-game-lib/trunk/</url>
-		<connection>https://java-game-lib.svn.sourceforge.net/svnroot/java-game-lib </connection>
+		<url>http://java.net/projects/jinput/sources/svn/show</url>
+		<connection>https://svn.java.net/svn/jinput~svn </connection>
 	</scm>
-
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>lwjgl-platform</artifactId>
+			<artifactId>jinput-platform</artifactId>
 			<version>${project.version}</version>
 			<classifier>natives-win</classifier>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>lwjgl-platform</artifactId>
+			<artifactId>jinput-platform</artifactId>
 			<version>${project.version}</version>
 			<classifier>natives-linux</classifier>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>lwjgl-platform</artifactId>
+			<artifactId>jinput-platform</artifactId>
 			<version>${project.version}</version>
 			<classifier>natives-mac</classifier>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>jinput</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -20,8 +20,8 @@
   </scm>
   <developers>
     <developer>
-      <id>Matzon</id>
-      <name>Brian Matzon</name>
+      <id>Developers</id>
+      <url>http://lwjgl.org/credits.php</url>
     </developer>
   </developers>
 </project>

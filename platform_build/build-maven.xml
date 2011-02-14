@@ -43,6 +43,7 @@
 		<antcall target="-createmavennativejars" />
 		<antcall target="-copymavenpoms"/>
 		<antcall target="-copymavendeploybuild"/>
+		<antcall target="-addjinput"/>
 		<antcall target="-copymaventdist"/>
 	</target>
 
@@ -148,6 +149,43 @@
 			</fileset>
 		</copy>
 	</target>
+	
+	<!-- JINPUT -->
+	<target name="-addjinput">
+		<antcall target="-copyjinputjar" />
+		<antcall target="-createmavennativejinputjars" />
+	</target>
+	
+	<target name="-copyjinputjar">
+		<copy todir="${lwjgl.dstMaven}">
+			<fileset dir="${lwjgl.lib}">
+				<patternset>
+					<include name="jinput.jar" />
+				</patternset>
+			</fileset>
+		</copy>
+	</target>
+	
+	
+	<target name="-createmavennativejinputjars">
+		<jar destfile="${lwjgl.dstMaven}/jinput-platform-natives-win.jar" taskname="jinput-platform-natives-win.jar">
+			<fileset dir="${lwjgl.lib}/windows">
+				<patternset refid="lwjgl-windows-jinput.fileset"/>
+			</fileset>
+		</jar>
+		<jar destfile="${lwjgl.dstMaven}/jinput-platform-natives-linux.jar" taskname="jinput-platform-natives-linux.jar">
+			<fileset dir="${lwjgl.lib}/linux">
+				<patternset refid="lwjgl-linux-jinput.fileset"/>
+			</fileset>
+		</jar>
+		<jar destfile="${lwjgl.dstMaven}/jinput-platform-natives-mac.jar" taskname="jinput-platform-natives-mac.jar">
+			<fileset dir="${lwjgl.lib}/macosx">
+				<patternset refid="lwjgl-macosx-jinput.fileset"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<!-- END JINPUT -->
 
 	<target name="-copymaventdist">
 		<zip destfile="${lwjgl.dist}/lwjgl-maven-${lwjgl.version}.zip" basedir="${lwjgl.temp}" includes="maven/**" />

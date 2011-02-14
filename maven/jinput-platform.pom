@@ -1,0 +1,32 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.lwjgl.lwjgl</groupId>
+		<artifactId>parent</artifactId>
+		<version>@VERSION@</version>
+	</parent>
+	<groupId>org.lwjgl.lwjgl</groupId>
+	<artifactId>jinput-platform</artifactId>
+	<packaging>jar</packaging>
+	<name>JInput - Java Game Controller API</name>
+	<version>@VERSION@</version>
+	<description>JInput - Java Game Controller API</description>
+	<url>http://java.net/projects/jinput</url>
+	<licenses>
+		<license>
+			<name>BSD</name>
+			<url>http://www.opensource.org/licenses/bsd-license.php</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<id>Members</id>
+			<url>http://java.net/projects/jinput/members</url>
+		</developer>
+	</developers>
+	<scm>
+		<url>http://java.net/projects/jinput/sources/svn/show</url>
+		<connection>https://svn.java.net/svn/jinput~svn </connection>
+	</scm>
+</project>
