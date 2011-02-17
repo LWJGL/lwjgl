@@ -97,9 +97,11 @@ import sun.security.util.SecurityConstants;
  * The following applet parameters are required:
  * <ul>
  * <li>al_main - [String] Full package and class the applet to instantiate and display when loaded.</li>
+ * <li>al_jars - [String] Comma seperated list of jars to download.</li>
+ * <p>
  * <li>al_logo - [String Path of of the logo resource to paint while loading.</li>
  * <li>al_progressbar - [String] Path of the progressbar resource to paint on top of the logo, width clipped by percentage.</li>
- * <li>al_jars - [String] Comma seperated list of jars to download.</li>
+ * <p>
  * <li>al_windows - [String] Jar containing native files for windows.</li>
  * <li>al_linux - [String] Jar containing native files for linux.</li>
  * <li>al_mac - [String] Jar containing native files for mac.</li>
@@ -115,14 +117,16 @@ import sun.security.util.SecurityConstants;
  * <li>al_cache - [boolean] Whether to use cache system. <i>Default: true</i>.</li>
  * <li>al_debug - [boolean] Whether to enable debug mode. <i>Default: false</i>.</li>
  * <li>al_prepend_host - [boolean] Whether to limit caching to this domain, disable if your applet is hosted on multple domains and needs to share the cache. <i>Default: true</i>.</li>
- * <ul>
+ * <p>
  * <li>al_windows64 - [String] If specified it will be used instead of al_windows on 64bit windows systems.</li>
  * <li>al_windows32 - [String] If specifed it will be used instead of al_windows on 32bit windows systems.</li>
  * <li>al_linux64 - [String] If specifed it will be used instead of al_linux on 64bit linux systems.</li>
  * <li>al_linux32 - [String] If specifed it will be used instead of al_linux on 32bit linux systems.</li>
- * <ul>
+ * <p>
  * <li>boxbgcolor - [String] any String AWT color ("red", "blue", etc), RGB (0-255) or hex formated color (#RRGGBB) to use as background. <i>Default: #ffffff</i>.</li>
  * <li>boxfgcolor - [String] any String AWT color ("red", "blue", etc), RGB (0-255) or hex formated color (#RRGGBB) to use as foreground. <i>Default: #000000</i>.</li>
+ * <p>
+ * <li>lwjgl_arguments - </li> [String] used to pass the hidden LWJGL parameters to LWJGL e.g. ("-Dorg.lwjgl.input.Mouse.allowNegativeMouseCoords=true -Dorg.lwjgl.util.Debug=true").</li>
  * </ul>
  * </p>
  * @author kappaOne
