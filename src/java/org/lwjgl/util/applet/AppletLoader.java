@@ -774,7 +774,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			// set lwjgl properties
 			setLWJGLProperties();
 
-			// make applet switch on EDT as an AWT/Swing permission dialog could be called
+			// make applet switch on the EDT as an AWT/Swing permission dialog could be called
 			EventQueue.invokeAndWait(new Runnable() {
 	            public void run() {
 					try {
@@ -1023,7 +1023,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		percentage = 100;
 
 		debug_sleep(2000);
-
+		
+		// set correct context classloader for lwjgl applet
+		Thread.currentThread().setContextClassLoader(classLoader);
+		
 		Class appletClass = classLoader.loadClass(getParameter("al_main"));
 		lwjglApplet = (Applet) appletClass.newInstance();
 
