@@ -99,9 +99,6 @@ import sun.security.util.SecurityConstants;
  * <li>al_main - [String] Full package and class the applet to instantiate and display when loaded.</li>
  * <li>al_jars - [String] Comma seperated list of jars to download.</li>
  * <p>
- * <li>al_logo - [String Path of of the logo resource to paint while loading.</li>
- * <li>al_progressbar - [String] Path of the progressbar resource to paint on top of the logo, width clipped by percentage.</li>
- * <p>
  * <li>al_windows - [String] Jar containing native files for windows.</li>
  * <li>al_linux - [String] Jar containing native files for linux.</li>
  * <li>al_mac - [String] Jar containing native files for mac.</li>
@@ -125,6 +122,9 @@ import sun.security.util.SecurityConstants;
  * <p>
  * <li>boxbgcolor - [String] any String AWT color ("red", "blue", etc), RGB (0-255) or hex formated color (#RRGGBB) to use as background. <i>Default: #ffffff</i>.</li>
  * <li>boxfgcolor - [String] any String AWT color ("red", "blue", etc), RGB (0-255) or hex formated color (#RRGGBB) to use as foreground. <i>Default: #000000</i>.</li>
+ * <p>
+ * <li>al_logo - [String Path of of the logo resource to paint while loading.<i>Default: "appletlogo.gif"</i>.</li>
+ * <li>al_progressbar - [String] Path of the progressbar resource to paint on top of the logo, width clipped by percentage.<i>Default: "appletprogress.gif"</i>.</li>
  * <p>
  * <li>lwjgl_arguments - </li> [String] used to pass the hidden LWJGL parameters to LWJGL e.g. ("-Dorg.lwjgl.input.Mouse.allowNegativeMouseCoords=true -Dorg.lwjgl.util.Debug=true").</li>
  * </ul>
@@ -270,7 +270,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		setState(STATE_INIT);
 		
 		// sanity check
-		String[] requiredArgs = {"al_main", "al_logo", "al_progressbar", "al_jars"};
+		String[] requiredArgs = {"al_main", "al_jars"};
 		for ( String requiredArg : requiredArgs ) {
 			if ( getParameter(requiredArg) == null ) {
 				fatalErrorOccured("missing required applet parameter: " + requiredArg, null);
@@ -292,13 +292,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		setBackground(bgColor);
 		fgColor 		= getColor("boxfgcolor", Color.black);
 
-		// load logos, if value is "" then skip
-		if (getParameter("al_logo").length() > 0) {
-			logo 		= getImage(getParameter("al_logo"));
-		}
-		if (getParameter("al_progressbar").length() > 0) {
-			progressbar = getImage(getParameter("al_progressbar"));
-		}
+		// load logos, if value is "" then an image is not loaded
+		logo 		= getImage(getStringParameter("al_logo", "appletlogo.gif"));
+		progressbar = getImage(getStringParameter("al_progressbar", "appletprogress.gif"));
 
 		// check for lzma support
 		try {
@@ -1563,6 +1559,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	protected Image getImage(String s) {
 		
+		// if s is "" then don't load an image
+		if (s.length() == 0) return null;
+		
 		Image image = null;
 		
 		try {
@@ -1688,9 +1687,23 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
         	return defaultColor;
         }
 	}
+	
+	/**
+	 * Retrieves the String value for the parameter
+	 * @param name Name of parameter
+	 * @param defaultValue default value to return if no such parameter
+	 * @return value of parameter or defaultValue
+	 */
+	protected String getStringParameter(String name, String defaultValue) {
+		String parameter = getParameter(name);
+		if (parameter != null) {
+			return parameter;
+		}
+		return defaultValue;
+	}
 
 	/**
-	 * Retrieves the boolean value for the applet
+	 * Retrieves the boolean value for the parameter
 	 * @param name Name of parameter
 	 * @param defaultValue default value to return if no such parameter
 	 * @return value of parameter or defaultValue
