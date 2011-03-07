@@ -129,10 +129,23 @@ import sun.security.util.SecurityConstants;
  * <li>lwjgl_arguments - </li> [String] used to pass the hidden LWJGL parameters to LWJGL e.g. ("-Dorg.lwjgl.input.Mouse.allowNegativeMouseCoords=true -Dorg.lwjgl.util.Debug=true").</li>
  * </ul>
  * </p>
- * @author kappaOne
+ * @author kappaOne <one.kappa@gmail.com>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  * $Id$
+ * 
+ * Contributors:
+ * <ul>
+ * <li>Arielsan</li>
+ * <li>Bobjob</li>
+ * <li>Dashiva</li>
+ * <li>Kevglass</li>
+ * <li>MatthiasM</li>
+ * <li>Mickelukas</li>
+ * <li>NateS</li>
+ * <li>Ruben01</li>
+ * </ul>
+ * 
  */
 public class AppletLoader extends Applet implements Runnable, AppletStub {
 
@@ -844,10 +857,22 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * @throws Exception if it fails to read value
 	 */
 	protected float readVersionFile(File file) throws Exception {
-		DataInputStream dis = new DataInputStream(new FileInputStream(file));
-		float version = dis.readFloat();
-		dis.close();
-		return version;
+		FileInputStream fis = new FileInputStream(file);
+		try {
+			DataInputStream dis = new DataInputStream(fis);
+			float version = dis.readFloat();
+			dis.close();
+			return version;
+		} catch (Exception e) {
+			// failed to read version file
+			e.printStackTrace();
+		}
+		finally {
+			fis.close();
+		}
+		
+		// return 0 if failed to read file
+		return 0;
 	}
 
 	/**
@@ -858,9 +883,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * @throws Exception if it fails to write file
 	 */
 	protected void writeVersionFile(File file, float version) throws Exception {
-		DataOutputStream dos = new DataOutputStream(new FileOutputStream(file));
+		FileOutputStream fos = new FileOutputStream(file);
+		DataOutputStream dos = new DataOutputStream(fos);
 		dos.writeFloat(version);
 		dos.close();
+		fos.close();
 	}
 
 	/**
@@ -872,10 +899,21 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	@SuppressWarnings("unchecked")
 	protected HashMap<String, Long> readCacheFile(File file) throws Exception {
-		ObjectInputStream dis = new ObjectInputStream(new FileInputStream(file));
-		HashMap<String, Long> hashMap = (HashMap<String, Long>)dis.readObject();
-		dis.close();
-		return hashMap;
+		FileInputStream fis = new FileInputStream(file);
+		try {
+			ObjectInputStream dis = new ObjectInputStream(fis);
+			HashMap<String, Long> hashMap = (HashMap<String, Long>) dis.readObject();
+			dis.close();
+			return hashMap;
+		} catch (Exception e) {
+			// failed to read cache file
+			e.printStackTrace();  
+		} finally {
+			fis.close();
+		}
+		
+		// return an empty map if failed to read file
+		return new HashMap<String, Long>();
 	}
 
 	/**
@@ -886,9 +924,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * @throws Exception if it fails to write file
 	 */
 	protected void writeCacheFile(File file, HashMap<String, Long> filesLastModified) throws Exception {
-		ObjectOutputStream dos = new ObjectOutputStream(new FileOutputStream(file));
+		FileOutputStream fos = new FileOutputStream(file);
+		ObjectOutputStream dos = new ObjectOutputStream(fos);
 		dos.writeObject(filesLastModified);
 		dos.close();
+		fos.close();
 	}
 
 	/**
