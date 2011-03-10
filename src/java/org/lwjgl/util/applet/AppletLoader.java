@@ -41,8 +41,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.image.ImageObserver;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -745,7 +743,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				// if version file exists
 				if (versionFile.exists()) {
 					// compare to new version
-					if (latestVersion != readVersionFile(versionFile)) {
+					if (latestVersion != readFloatFile(versionFile)) {
 						versionAvailable = true;
 						percentage = 90;
 
@@ -774,11 +772,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				// save version information once jars downloaded successfully
 				if (version != null) {
 					percentage = 90;
-					writeVersionFile(versionFile, latestVersion);
+					writeObjectFile(versionFile, latestVersion);
 				}
 
 				// save file names with last modified info once downloaded successfully
-				writeCacheFile(new File(dir, "cache"), filesLastModified);
+				writeObjectFile(new File(dir, "timestamps"), filesLastModified);
 			}
 
 			// add the downloaded jars and natives to classpath
@@ -850,83 +848,81 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * read the current version file
+	 * read float from File
 	 *
-	 * @param file the file to read
-	 * @return the version value of saved file
-	 * @throws Exception if it fails to read value
+	 * @param file to be read
+	 * @return the float stored in the file or 0 if it fails
 	 */
-	protected float readVersionFile(File file) throws Exception {
-		FileInputStream fis = new FileInputStream(file);
+	protected float readFloatFile(File file) {
 		try {
-			DataInputStream dis = new DataInputStream(fis);
-			float version = dis.readFloat();
-			dis.close();
-			return version;
+			Float version = (Float)readObjectFile(file);
+			return version.floatValue();
 		} catch (Exception e) {
 			// failed to read version file
 			e.printStackTrace();
-		}
-		finally {
-			fis.close();
 		}
 		
 		// return 0 if failed to read file
 		return 0;
 	}
-
+	
 	/**
-	 * write out version file of applet
-	 *
-	 * @param file the file to write out to
-	 * @param version the version of the applet as a float
-	 * @throws Exception if it fails to write file
-	 */
-	protected void writeVersionFile(File file, float version) throws Exception {
-		FileOutputStream fos = new FileOutputStream(file);
-		DataOutputStream dos = new DataOutputStream(fos);
-		dos.writeFloat(version);
-		dos.close();
-		fos.close();
-	}
-
-	/**
-	 * read the current cache file
+	 * read the HashMap from File
 	 *
 	 * @param file the file to read
-	 * @return the hashmap containing the files names and lastModified times
-	 * @throws Exception if it fails to read hashmap
+	 * @return the hashmap stored in the file or an empty hashmap if it fails
 	 */
 	@SuppressWarnings("unchecked")
-	protected HashMap<String, Long> readCacheFile(File file) throws Exception {
-		FileInputStream fis = new FileInputStream(file);
+	protected HashMap<String, Long> readHashMapFile(File file) {
+		
 		try {
-			ObjectInputStream dis = new ObjectInputStream(fis);
-			HashMap<String, Long> hashMap = (HashMap<String, Long>) dis.readObject();
-			dis.close();
-			return hashMap;
+			return (HashMap<String, Long>) readObjectFile(file);
 		} catch (Exception e) {
-			// failed to read cache file
+			// failed to read hashmap from file
 			e.printStackTrace();  
-		} finally {
-			fis.close();
 		}
 		
 		// return an empty map if failed to read file
 		return new HashMap<String, Long>();
 	}
-
+	
 	/**
-	 * write out cache file of applet
+	 * read the object from the File
+	 * 
+	 * @param file the file to read
+	 * @return the object contained in the file or null if it fails
+	 * @throws Exception if it fails to read object from file
+	 */
+	protected Object readObjectFile(File file) throws Exception {
+		FileInputStream fis = new FileInputStream(file);
+		
+		try {
+			ObjectInputStream dis = new ObjectInputStream(fis);
+			Object object = dis.readObject();
+			dis.close();
+			return object;
+		} catch (Exception e) {
+			// failed to read file
+			e.printStackTrace();  
+		} finally {
+			fis.close();
+		}
+		
+		// return null if failed to read file
+		return null;
+	}
+	
+	/**
+	 * write object to specified File
 	 *
 	 * @param file the file to write out to
-	 * @param filesLastModified the hashmap containing files names and lastModified times
+	 * @param object the contents of the file
 	 * @throws Exception if it fails to write file
 	 */
-	protected void writeCacheFile(File file, HashMap<String, Long> filesLastModified) throws Exception {
+	protected void writeObjectFile(File file, Object object) throws Exception {
 		FileOutputStream fos = new FileOutputStream(file);
 		ObjectOutputStream dos = new ObjectOutputStream(fos);
-		dos.writeObject(filesLastModified);
+		dos.writeObject(object);
 		dos.close();
 		fos.close();
 	}
@@ -1103,11 +1099,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		URLConnection urlconnection;
 
-		File cacheFile = new File(dir, "cache");
+		File timestampsFile = new File(dir, "timestamps");
 
-		// if cache file exists, load it
-		if (cacheFile.exists()) {
-			filesLastModified = readCacheFile(cacheFile);
+		// if timestamps file exists, load it
+		if (timestampsFile.exists()) {
+			filesLastModified = readHashMapFile(timestampsFile);
 		}
 
 		// calculate total size of jars to download
