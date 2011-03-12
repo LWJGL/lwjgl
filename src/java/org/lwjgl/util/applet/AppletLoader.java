@@ -257,6 +257,15 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/** whether pack200 is supported */
 	protected boolean 	pack200Supported;
+	
+	/** whether to run in headless mode */
+	protected boolean headless = false;
+	
+	/** whether to switch applets in headless mode or wait longer */
+	protected boolean headlessWaiting = true;
+
+	/** messages to be passed via liveconnect in headless mode */
+	protected String[] headlessMessage;
 
 	/** generic error message to display on error */
 	protected String[] 	genericErrorMessage = {	"An error occured while loading the applet.",
@@ -273,7 +282,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/** have natives been loaded by another instance of this applet */
 	protected static boolean natives_loaded;
-
+	
 	/*
 	 * @see java.applet.Applet#init()
 	 */
@@ -298,14 +307,19 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		// whether to prepend host to cache path
 		prependHost 	= getBooleanParameter("al_prepend_host", true);
 
+		// whether to run in headless mode
+		headless		= getBooleanParameter("al_headless", false);
+		
 		// get colors of applet
 		bgColor 		= getColor("boxbgcolor", Color.white);
 		setBackground(bgColor);
 		fgColor 		= getColor("boxfgcolor", Color.black);
 
-		// load logos, if value is "" then an image is not loaded
-		logo 		= getImage(getStringParameter("al_logo", "appletlogo.gif"));
-		progressbar = getImage(getStringParameter("al_progressbar", "appletprogress.gif"));
+		if (!headless) {
+			// load logos
+			logo 		= getImage(getStringParameter("al_logo", "appletlogo.gif"));
+			progressbar = getImage(getStringParameter("al_progressbar", "appletprogress.gif"));
+		}
 
 		// check for lzma support
 		try {
@@ -349,17 +363,19 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				loaderThread.setName("AppletLoader.loaderThread");
 				loaderThread.start();
 
-				animationThread = new Thread() {
-					public void run() {
-						while(loaderThread != null) {
-							repaint();
-							AppletLoader.this.sleep(100);
+				if (!headless) {
+					animationThread = new Thread() {
+						public void run() {
+							while(loaderThread != null) {
+								repaint();
+								AppletLoader.this.sleep(100);
+							}
+							animationThread = null;
 						}
-						animationThread = null;
-					}
-				};
-				animationThread.setName("AppletLoader.animationthread");
-				animationThread.start();
+					};
+					animationThread.setName("AppletLoader.animationthread");
+					animationThread.start();
+				}
 			}
 		}
 	}
@@ -402,6 +418,48 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		return lwjglApplet;
 	}
 
+	/**
+	 * Retrieves the current status of the AppletLoader and is 
+	 * used by liveconnect when running in headless mode.
+	 * 
+	 * This method will return the current progress of the AppletLoader
+	 * as a value from 0-100. In the case of a fatal error it will
+	 * return -1. If the certificate is refused it will return -2.
+	 * 
+	 * When method returns 100 the AppletLoader will sleep until the 
+	 * method is called again. When called again it will switch to the
+	 * LWJGL Applet. This is a useful trigger to start the LWJGL applet 
+	 * when needed.
+	 */
+	public int getStatus() {
+		if (fatalError) {
+			if (certificateRefused) return -2;
+			headlessMessage = (certificateRefused) ? certificateRefusedMessage : genericErrorMessage;
+			return -1;
+		}
+		
+		if (percentage == 100 && headlessWaiting) {
+			headlessWaiting = false;
+		}
+		
+		if (percentage == 95) {
+			percentage = 100; // ready to switch applet
+		}
+		
+		String[] message = {getDescriptionForState(), subtaskMessage};
+		headlessMessage = message;
+		
+		return percentage;
+	}
+	
+	/**
+	 * Retrieves the current message for the current status. 
+	 * Used by liveconnect when running in headless mode.
+	 */
+	public String[] getMessages() {
+		return headlessMessage;
+	}
+	
 	/**
 	 * Transfers the call of AppletResize from the stub to the lwjglApplet.
 	 */
@@ -471,7 +529,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 					og.drawString(errorMessage[i], messageX, messageY + i*fm.getHeight());
 				}
 			}
-		} else {
+		} else if (!headless) {
 			og.setColor(fgColor);
 
 			painting = true;
@@ -785,6 +843,13 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			// set lwjgl properties
 			setLWJGLProperties();
 
+			// if headless mode then sleep, until told to continue
+			if (headless) {
+				while(headlessWaiting) {
+					Thread.sleep(100);
+				}
+			}
+			
 			// make applet switch on the EDT as an AWT/Swing permission dialog could be called
 			EventQueue.invokeAndWait(new Runnable() {
 	            public void run() {
