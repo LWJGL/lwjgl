@@ -1009,7 +1009,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		URL[] urls = new URL[urlList.length];
 
 		for (int i = 0; i < urlList.length; i++) {
-			urls[i] = new URL("file:" + path + getJarName(urlList[i]));
+			String file = new File(path, getJarName(urlList[i])).toURI().toString();
+			// fix JVM bug where ! is not escaped
+			file = file.replaceAll("!", "%21");
+			urls[i] = new URL(file);
 		}
 
 		// add downloaded jars to the classpath with required permissions
