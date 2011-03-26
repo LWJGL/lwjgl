@@ -137,11 +137,13 @@ import sun.security.util.SecurityConstants;
  * <li>Arielsan</li>
  * <li>Bobjob</li>
  * <li>Dashiva</li>
- * <li>Kevglass</li>
- * <li>MatthiasM</li>
+ * <li>Kevin Glass</li>
+ * <li>Matthias Mann</li>
  * <li>Mickelukas</li>
  * <li>NateS</li>
  * <li>Ruben01</li>
+ * <li>Shannon Smith</li>
+ * <li>pjohnsen</li>
  * </ul>
  * 
  */
