@@ -801,7 +801,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				// if version file exists
 				if (versionFile.exists()) {
 					// compare to new version
-					if (latestVersion != readFloatFile(versionFile)) {
+					if (latestVersion == readFloatFile(versionFile)) {
 						versionAvailable = true;
 						percentage = 90;
 
