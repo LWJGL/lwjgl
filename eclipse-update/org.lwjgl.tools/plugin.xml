@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+	
+	
+	<extension
+         point="org.eclipse.jdt.core.classpathContainerInitializer">
+      <classpathContainerInitializer
+            class="org.lwjgl.tools.LWJGLClasspathContainerInitializer"
+            id="org.lwjgl.LWJGL_CONTAINER">
+      </classpathContainerInitializer>
+   </extension>
+	
+	<extension
+         point="org.eclipse.jdt.ui.classpathContainerPage">
+      <classpathContainerPage
+            class="org.lwjgl.tools.LWJGLClasspathContainerPage"
+            id="org.lwjgl.LWJGL_CONTAINER"
+            name="LWJGL Library">
+      </classpathContainerPage>
+   </extension>
+	
+
+
+</plugin>

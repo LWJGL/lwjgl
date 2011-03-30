@@ -1,0 +1,88 @@
+The build plugin is part of the LWJGL Eclipse plugins. The following plugins are
+required:
+
+org.lwjgl
+  Skeleton plugin, that is it contains the Eclipse Activator for setting up the
+  native library path, but the lwjgl jars are missing. These jars are added by
+  the build script later on
+
+org.lwjgl.source
+  Skeleton plugin for sources, plugin.xml etc are already configured, but again
+  the sources itself are only added by the build script later on
+  
+org.lwjgl.doc
+  Skeleton plugin for documentation, Javadoc is added by build script, however
+  some Eclipse help files are already in place
+  
+org.lwjgl.info
+  This plugin was called org.lwjgl.test in the elder version. I renamed it as it
+  does not really contain a test but Eclipse views. Besides the spinning torus
+  test view, I added an info view printing out current version of driver etc.
+  and capabilities of user's OpenGL system
+  
+org.lwjgl.tools
+  This plugin contains a library set up for plain Java projects, in order to get
+  rid of defining additional parameters in the run configuration. It is
+  documented in the help files. I have sent you this plugin once, but it never
+  made it into the update site. Well, now it is in place
+  
+org.lwjgl.feature
+  Feature plugin referencing the core lwjgl plugin. It contains two
+  feature.xml definitions, one used for playing around in Eclipse, and a
+  template which is used by the build script. If you ever change something
+  here, pay attention to also change the template file.
+  
+org.lwjgl.feature.sdk
+  Feature plugin referencing the src, doc, tools and info lwjgl plugin. 
+  It contains two feature.xml definitions, one used for playing around in
+  Eclipse, and a template which is used by the build script. If you ever change
+  something here, pay attention to also change the template file.  
+  
+org.lwjgl.updatesite
+  Well, this is the updatesite. As in the feature project, site.xml comes 
+  together with a template version used by the build script.
+  
+org.lwjgl.build -- THIS Plugin
+  This is the build script project. Although it is an Eclipse project, you can
+  simply run the build script with ant from command line. See later on.
+
+Everything is created in org.lwjgl.build/build. 
+Here is how to build the update site:
+
+1) Create a new folder in org.lwjgl.build/lwjgl-archives , use the version 
+   number as folder name. E.g., for version 2.6 create a folder "2.6", 
+   for version 2.6.1 "2.6.1" and so on.
+2) Copy the lwjgl, lwjgl-docs and lwjgl-source zips into that folder. E.g., 
+   for version 2.6, this folder must contain the following files: 
+     org.lwjgl.build/lwjgl-archives
+     	+ 2.6
+     		- lwjgl-2.6.zip
+     		- lwjgl-docs-2.6.zip
+     		- lwjgl-source-2.6.zip
+3) In order to run the build script, change to folder org.lwjgl.build and run
+   ant with a parameter indicating the appropriate LWJGL version, e.g.
+		ant -Dversion=2.6 dist
+
+You will find the updatesite in
+	org.lwjgl.build/build/plugins/org.lwjgl.updatesite
+
+You may note that the jars are all signed. I have added a temporary keystore
+with a dummy alias. In order to use your key, simply edit the properties
+(line 11-14) in the build script. If you do not want to store the password in
+the build script, simply define it via "-Dstorepass=****" in the command line.
+
+Some additional remarks:
+- The version number is automatically "normalized" to Eclipse standards, 
+  that is 2.6 will become 2.6.0. You do not have to rename the initial archives,
+  you can use 2.6. Or 2.6.1 ;-)
+- The lwjgl-debug.jar is not added to the org.lwjgl plugin, as I do not know
+  how to select one or the other. But I have not further investigated in 
+  that direction.
+- Note that only the created plugin and feature jars are signed, and not the
+  nested lwjgl.jar etc., as I figure that you will sign these jars yourself
+  when creating the zip files.
+- When testing the update site and the installation of plugins, pay attention
+  to the Eclipse P2 system, which caches a lot of things. Simply uninstalling
+  a plugin does not remove the plugins from the Eclipse installation. When
+  the very same version is re-installed, instead of loading new files from the
+  update site these pre-installed versions are reused!  

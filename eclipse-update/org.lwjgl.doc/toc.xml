@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="LWJGL Documentation">
+<topic href="html/overview.html" label="Overview">
+ </topic>
+	<topic href="javadoc/index.html" label="API Reference">
+ </topic>
+	
+ <topic href="html/plugins.html" label="LWJGL Plugin Documentation">
+    <topic href="html/tools.html" label="Tools for Java developers">
+    </topic>
+    <topic href="html/views.html" label="LWJGL Eclipse Views">
+    </topic>
+ </topic>
+</toc>

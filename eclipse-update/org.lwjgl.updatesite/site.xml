@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description url="@UPDATEURL@">
+      Update site for LWJGL and related features and plugins.
+   </description>
+   <feature url="features/org.lwjgl_2.jar" id="org.lwjgl" version="2">
+      <category name="3dlibs"/>
+   </feature>
+   <feature url="features/org.lwjgl.sdk_2.jar" id="org.lwjgl" version="2">
+      <category name="3dlibs"/>
+   </feature>
+   <category-def name="3dlibs" label="3D Libraries">
+      <description>
+         Java 3D libraries such as LWJGL.
+      </description>
+   </category-def>
+</site>

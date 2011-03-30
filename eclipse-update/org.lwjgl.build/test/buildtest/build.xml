@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Nov 15, 2010 9:45:57 PM                                                        
+
+     project    
+     description
+                   
+     jpilgrim                                                                
+     ====================================================================== -->
+<project name="project" default="default">
+    <description>
+            description
+    </description>
+
+	
+	<taskdef name="normalizeVersion" classname="de.jevopi.ant.NormalizeVersion" >
+			<classpath>
+				<pathelement location="../../build/classes"/>
+			</classpath>
+		</taskdef>
+	
+    <!-- ================================= 
+          target: default              
+         ================================= -->
+    <target name="default" depends="depends" description="description">
+		<normalizeVersion property="norm" version="1.2"  />
+    	<echo>${norm}</echo>
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: depends                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="depends">
+    </target>
+
+</project>

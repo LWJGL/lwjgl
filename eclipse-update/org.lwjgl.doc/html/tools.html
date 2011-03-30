@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>LWJGL Tools</title>
+</head>
+
+<body>
+<h1>LWJGL Tools</h1>
+<p>The org.lwjgl.tools plugin provides an already configured library to be added
+to a projects build path. It does not only provide the JARs and native libraries,
+relieving developers from configuring extra VM arguments in the run configuration,
+but it also configures Javadoc and source code to be available in Java projects just as in 
+plugin projects. 
+</p>
+<p>You will also need the org.lwjgl plugin. JavaDoc and source code are
+retrieved from the org.lwjgl.doc and org.lwjgl.source plugins.</p> 
+
+<h2>Configure the LWJGL library</h2>
+You can configure the LWJGL library for a plain Java project by opening the
+projects properties. Select "Java Build Path" and "Libraries", such as shown in 
+Figure 1. Note: Click on the images here to show a larger version.
+
+<div style="text-align:center">
+<a href="fig/addLib_1.png">
+<img src="fig/addLib_1.png" style="height:200px; display:block; margin:0px auto 10px; text-align:center;"  border="0" alt="
+"id="Project properties" /></a>
+<span style="font-weight:bold;font-size:small">Fig. 1: Project properties</span>
+</div> 
+
+Select "Add Library..." on the right hand side. This will open a new dialog window as shown in Figure 2.
+
+<div style="text-align:center">
+<a href="fig/addLib_2.png">
+<img src="fig/addLib_2.png" style="height:200px; display:block; margin:0px auto 10px; text-align:center;"  border="0" alt="
+"id="Add library" /></a>
+<span style="font-weight:bold;font-size:small">Fig. 2: Add library</span>
+</div>
+
+Select "LWJGL Library". You can simply press "Finish". However if you want to have some information about
+the paths of the added library, simply select "Next". In the latter case, the next wizard page will show
+you the path settings automatically configured by the tool plugin as shown in Figure 3. 
+
+<div style="text-align:center">
+<a href="fig/addLib_3.png">
+<img src="fig/addLib_3.png" style="height:200px; display:block; margin:0px auto 10px; text-align:center;"  border="0" alt="
+"id="Library info" /></a>
+<span style="font-weight:bold;font-size:small">Fig. 3: Library info</span>
+</div> 
+
+You have no successfully configured the LWJGL library, as shown in Figure 4. Press "OK" to finish the set up.
+
+<div style="text-align:center">
+<a href="fig/addLib_4.png">
+<img src="fig/addLib_4.png" style="height:200px; display:block; margin:0px auto 10px; text-align:center;"  border="0" alt="
+"id="Configured library" /></a>
+<span style="font-weight:bold;font-size:small">Fig. 4: Configured library</span>
+</div> 
+
+<p>
+You can now use the LWJGL library in your Java project, and you can simply start 
+the project by selecting "Run As / Java Application..." in the context menu of a class containing a main method.
+That is, you do not have to configure some VM arguments in the run configuration anymore, which will hopefully make development
+much easier.
+</p>
+
+<p>Note: At this moment, no further tools, e.g., for exporting an LWJGL application, exists. 
+Feel free to write missing functions and contact us in order to add new functionalty.</p>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>LWJGL Eclipse Views</title>
+</head>
+
+<body>
+<h1>LWJGL Eclipse Views</h1>
+<p><p>In order to test whether your installation is correct and in order to
+retrieve additional information on your system, two views are provided. The test view
+draws a spinning torso, while the information view simply prints out available 
+versions and features of your graphics card and OpenGL driver.</p>
+</p>
+
+<h2>Open the views</h2>
+You can open the views by selecting them from "Windows / Show View / Other..." as shown in 
+Figure 1. Note: Click on the images here to show a larger version.
+
+<div style="text-align:center">
+<a href="fig/openView_1.png">
+<img src="fig/openView_1.png" style="height:200px; display:block; margin:0px auto 10px; text-align:center;"  border="0" alt="
+"id="Show View Others" /></a>
+<span style="font-weight:bold;font-size:small">Fig. 1: Show View / Others...</span>
+</div> 
+
+Under "Other", you will find two LWJGL views: "LWJGL Information View" and "LWJGL Test View" (see Figure 2).
+
+<div style="text-align:center">
+<a href="fig/openView_2.png">
+<img src="fig/openView_2.png" style="height:200px; display:block; margin:0px auto 10px; text-align:center;"  border="0" alt="
+"id="LWJGL views" /></a>
+<span style="font-weight:bold;font-size:small">Fig. 2: LWJGL views</span>
+</div>
+
+Select "LWJGL Information View" in order to open a simple text view, as shown in Figure 3. 
+
+<div style="text-align:center">
+<a href="fig/openView_Info.png">
+<img src="fig/openView_Info.png" style="height:200px; display:block; margin:0px auto 10px; text-align:center;"  border="0" alt="
+"id="LWJGL Information View" /></a>
+<span style="font-weight:bold;font-size:small">Fig. 3: LWJGL Information View</span>
+</div> 
+<p>
+This view shows the version numbers of the LWJGL feature, i.e. the LWJGL plugins, and the LWJGL library. For bug reports, it is usually very 
+useful to provide additional information about your OpenGL configuration. This view provides you with a lot of necessary information. Note that
+not all information can be retrieved on all systems. Features not supported by your graphics card or OpenGL driver are omitted, you see only the
+available features and capabilities.
+</p>
+
+<p>In order to test whether LWJGL and OpenGL works on your system, open the test view. The view should look similar to Figure 4.
+
+<div style="text-align:center">
+<a href="fig/openView_Test.png">
+<img src="fig/openView_Test.png" style="height:200px; display:block; margin:0px auto 10px; text-align:center;"  border="0" alt="
+"id="LWJGL Test View" /></a>
+<span style="font-weight:bold;font-size:small">Fig. 4: LWJGL Test View</span>
+</div> 
+The OpenGL code of this torso actually stems from an Eclipse SWT snippet: 
+<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.swt.snippets/src/org/eclipse/swt/snippets/Snippet195.java?view=markup&content-type=text%2Fvnd.viewcvs-markup&revision=HEAD">snippet 195</a>.
+
+<p>
+You should see a spinning torso and the current frames per second (fps) in the status bar. If you do not even see this torso, 
+something has gone seriously wrong when installing the plugins. Note that other OpenGL based applications might cause problems, even if 
+you can see this test view: The test view does not use any extended OpenGL features, such as framebuffer objects. If an application
+requires an additional feature which is not supported by your system (see Information View to retrieve the supported features), it
+won't run. Sometimes it helps to update the drive of your graphics card!  
+</p>
+
+</body>
+</html>

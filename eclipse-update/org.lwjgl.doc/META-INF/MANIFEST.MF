@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: LWJGL Documentation
+Bundle-SymbolicName: org.lwjgl.doc; singleton:=true
+Bundle-Version: 2
+Bundle-Vendor: Lightweight Java Game Library Project

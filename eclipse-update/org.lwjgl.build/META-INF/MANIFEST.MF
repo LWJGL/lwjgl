@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: LWJGL Updatesite Build
+Bundle-SymbolicName: org.lwjgl.build
+Bundle-Version: 1.0.0
+Export-Package: org.lwjgl.ant
+Import-Package: org.apache.tools.ant,
+ org.apache.tools.ant.taskdefs,
+ org.apache.tools.ant.types,
+ org.apache.tools.ant.types.selectors,
+ org.apache.tools.ant.util,
+ org.junit;version="4.8.1"
+Bundle-Vendor: Lightweight Java Game Library Project

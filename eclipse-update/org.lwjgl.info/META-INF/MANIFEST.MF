@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: LWJGL TestView
+Bundle-Vendor: Lightweight Java Game Library Project
+Bundle-SymbolicName: org.lwjgl.info;singleton:=true
+Bundle-Version: 2.0.0
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.views,
+ org.eclipse.core.resources
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Import-Package: org.lwjgl,
+ org.lwjgl.opengl,
+ org.lwjgl.util,
+ org.lwjgl.util.glu

@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>LWJGL Eclipse Plugins</title>
+</head>
+
+<body>
+<img src="fig/lwjgl_logo.png" align="right" />
+<h1>Overview</h1>
+<p>The following plug-ins are provided:
+<dl>
+<dt>org.lwjgl</dt>
+	<dd>Platform independent jars and native libraries for Windows, Linux, Solaris and Mac OS X</dd>
+<dt>org.lwjgl.doc</dt>
+	<dd>Documentation, containing API documentation (Javadoc) and additional material such as this document your currently reading.</dd>
+<dt>org.lwjgl.source</dt>
+	<dd>Source files of LWJGL Java components</dd>
+<dt>org.lwjgl.info</dt>
+	<dd>Two Eclipse views, one for testing LWJGL and one printing out OpenGL specific information</dd>
+<dt>org.lwjgl.tools</dt>
+	<dd>Plugin for Java developers, providing a LWJGL library for the Java Build Path settings</dd>
+</dl>
+</p>
+All plugins are briefly described in the following.
+
+<h2>LWJGL library: org.lwjgl</h2>
+The most important plugin, which actually is the only one needed by non-developers, is org.lwjgl. 
+It makes the LWJGL library available as an Eclipse plugin. That is if you write an Eclipse plugin using LWJGL, 
+simply add this plugin to the list of required plugins. It does not only provide the necessary jar files, 
+but it also configures the library path in order to automatically load the appropriate native library wihtin
+the Eclipse workbench. 
+
+<h2>LWJGL documentation and sources</h2>
+<p>Both, documentation and sources, are only required for developers. Both, Javadoc and sources, are attached to
+the LWJGL library in order to allow you easy access to these information. That is, you can simply open an LWJGL class,
+and the source code will be opened. JavaDoc is available via tool-tip and with Shift-F2. You do not have to configure
+anything in order to access the documentation and the source code. 
+The tools plugin makes JavaDoc and source code available for non-plugin projects as well.</p>
+<p>
+Note that only the Java source code is provided, if you want to have a look at the native code, please download
+the LWJGL sources from the LWJGL website. 
+</p>
+<h2>LWJGL for Java developers</h2>
+<p>The org.lwjgl.tools plugin provides an already configured library to be added
+to a projects build path. It does not only provide the JARs and native libraries,
+relieving developers from configuring extra VM arguments in the run configuration,
+but it also configures Javadoc and source code to be available in Java projects just as in 
+plugin projects.</p> 
+Read more about how to set up the library <a href="tools.html">here</a>.
+
+<h2>Information and test view</h2>
+<p>In order to test whether your installation is correct and in order to
+retrieve additional information on your system, two views are provided. The test view
+draws a spinning torso, while the information view simply prints out available 
+versions and features of your graphics card and OpenGL driver.</p>
+Read more about how to open the views <a href="views.html">here</a>.
+</body>
+</html>

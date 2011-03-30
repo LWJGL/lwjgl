@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension   point="org.eclipse.ui.views" >
+      <view
+            class="org.lwjgl.info.LWJGLTestView"
+            icon="icons/lwjgl_logo_16.gif"
+            id="org.lwjgl.info.LWJGLTestView"
+            name="LWJGL Test View"/>
+   </extension>
+   
+   <extension   point="org.eclipse.ui.views" >
+      <view
+            class="org.lwjgl.info.LWJGLInfoView"
+            icon="icons/lwjgl_logo_16.gif"
+            id="org.lwjgl.info.LWJGLInfoView"
+            name="LWJGL Information View"/>
+   </extension>
+   
+   
+   
+    
+</plugin>

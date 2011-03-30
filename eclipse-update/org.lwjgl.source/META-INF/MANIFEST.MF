@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: LWJGL Sources
+Bundle-Vendor: Lightweight Java Game Library Project
+Bundle-Version: 2
+Bundle-SymbolicName: org.lwjgl.source;singleton:=true
+Bundle-Localization: plugin

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="toc.xml"
+            primary="true">
+      </toc>
+   </extension>
+
+    <extension point="org.eclipse.pde.core.javadoc">
+     <javadoc path="doc.zip!/javadoc/" archive="true">
+        <plugin id="org.lwjgl"/>
+     </javadoc>
+  </extension>
+</plugin>
