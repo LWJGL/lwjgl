@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?NLS TYPE="org.eclipse.help.toc"?>
-
-<toc label="LWJGL Documentation">
-	<topic label="API Reference" href="javadoc/index.html"/>
-	<topic label="LWJGL Website (extern)" href="http://lwjgl.org" />
-	<topic label="LWJGL Wiki (extern)" href="http://lwjgl.org/wiki/doku.php" />
-</toc>
