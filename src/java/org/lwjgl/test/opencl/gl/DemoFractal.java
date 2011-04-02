@@ -518,12 +518,9 @@ public class DemoFractal {
 				glDeleteBuffers(glIDs);
 		}
 
-		if ( useTextures )
-			glGenTextures(glIDs);
-		else
-			glGenBuffers(glIDs);
-
 		if ( useTextures ) {
+			glGenTextures(glIDs);
+
 			// Init textures
 			for ( int i = 0; i < slices; i++ ) {
 				glBindTexture(GL_TEXTURE_2D, glIDs.get(i));
@@ -535,6 +532,8 @@ public class DemoFractal {
 			}
 			glBindTexture(GL_TEXTURE_2D, 0);
 		} else {
+			glGenBuffers(glIDs);
+
 			// setup one empty PBO per slice
 			for ( int i = 0; i < slices; i++ ) {
 				glBindBuffer(GL_PIXEL_UNPACK_BUFFER, glIDs.get(i));

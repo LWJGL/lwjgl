@@ -57,7 +57,7 @@ kernel void mandelbrot(
             output[iy * width + ix] = 0;
         #endif
     } else {
-        varfloat alpha = (varfloat)iteration / maxIterations;
+        float alpha = (float)iteration / maxIterations;
         int colorIndex = (int)(alpha * colorMapSize);
         #ifdef USE_TEXTURE
             // We could have changed colorMap to a texture + sampler, but the
@@ -69,9 +69,9 @@ kernel void mandelbrot(
                 (c & 0xFF) >> 0,
                 (c & 0xFF00) >> 8,
                 (c & 0xFF0000) >> 16,
-                _255
+                255.0f
             );
-            write_imagef(output, (int2)(ix, iy), oc / _255);
+            write_imagef(output, (int2)(ix, iy), oc / 255.0f);
         #else
             output[iy * width + ix] = colorMap[colorIndex];
         #endif
