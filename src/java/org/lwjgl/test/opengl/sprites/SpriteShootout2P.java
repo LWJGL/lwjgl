@@ -479,7 +479,7 @@ public final class SpriteShootout2P {
 
 			final FloatBuffer depths = BufferUtils.createFloatBuffer(count * 2);
 			final float depthStep = 1.9f / count;
-			float depth = Math.nextAfter(1.0f, Float.MIN_VALUE);
+			float depth = Float.parseFloat("0x1.fffffep-1");
 			// Front-to-back
 			for ( int i = 0; i < count; i++ ) {
 				depths.put(depth);
