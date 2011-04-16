@@ -43,7 +43,7 @@
 	
 	<target name="nativelibrary" depends="init">
 		<property name="universal_sdkroot" location="/Developer/SDKs/MacOSX10.4u.sdk"/>
-		<property name="ppc_sdkroot" location="/Developer/SDKs/MacOSX10.3.9.sdk"/>
+		<property name="ppc_sdkroot" location="/Developer/SDKs/MacOSX10.4u.sdk"/>
 		<property name="x86_64_sdkroot" location="/Developer/SDKs/MacOSX10.5.sdk"/>
 		<property name="universal_flags" value="-isysroot ${universal_sdkroot}"/>
 		<property name="ppc_flags" value="-isysroot ${ppc_sdkroot}"/>
