@@ -668,16 +668,16 @@ final class WindowsDisplay implements DisplayImplementation {
 			int size = icon.limit() / 4;
 
 			if ( (((int)Math.sqrt(size)) == small_icon_size) && (!done_small) ) {
-				freeSmallIcon();
 				small_icon = createIcon(small_icon_size, small_icon_size, icon.asIntBuffer());
 				sendMessage(hwnd, WM_SETICON, ICON_SMALL, small_icon);
+				freeSmallIcon();
 				used++;
 				done_small = true;
 			}
 			if ( (((int)Math.sqrt(size)) == large_icon_size) && (!done_large) ) {
-				freeLargeIcon();
 				large_icon = createIcon(large_icon_size, large_icon_size, icon.asIntBuffer());
 				sendMessage(hwnd, WM_SETICON, ICON_BIG, large_icon);
+				freeLargeIcon();
 				used++;
 				done_large = true;
 			}
