@@ -1385,8 +1385,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		Constructor constructor = clazz.getDeclaredConstructor(InputStream.class);
 		InputStream inputHandle = (InputStream) constructor.newInstance(fileInputHandle);
 
-		OutputStream outputHandle;
-		outputHandle = new FileOutputStream(out);
+		OutputStream outputHandle = new FileOutputStream(out);
 
 		byte [] buffer = new byte [1<<14];
 
@@ -1398,9 +1397,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		inputHandle.close();
 		outputHandle.close();
-
-		outputHandle = null;
-		inputHandle = null;
 
 		// delete LZMA file, as it is no longer needed
 		f.delete();
@@ -1419,8 +1415,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		InputStream inputHandle = new GZIPInputStream(fileInputHandle);
 
-		OutputStream outputHandle;
-		outputHandle = new FileOutputStream(out);
+		OutputStream outputHandle = new FileOutputStream(out);
 
 		byte [] buffer = new byte [1<<14];
 
@@ -1432,9 +1427,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		inputHandle.close();
 		outputHandle.close();
-
-		outputHandle = null;
-		inputHandle = null;
 
 		// delete GZip file, as it is no longer needed
 		f.delete();
@@ -1454,6 +1446,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	    Pack200.Unpacker unpacker = Pack200.newUnpacker();
 	    unpacker.unpack(f, jostream);
 	    jostream.close();
+	    fostream.close();
 
 	    // delete pack file as its no longer needed
 	    f.delete();
