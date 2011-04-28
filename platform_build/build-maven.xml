@@ -3,11 +3,8 @@
 	<property name="lwjgl.src.generated" 	location="${lwjgl.src}/generated" />
 	<property name="lwjgl.maven"			location="maven" />
 	<property name="lwjgl.dstMaven"			location="${lwjgl.temp}/maven" />
-	
 	<property name="lwjgl.src.java" 		location="${lwjgl.src}/java" />
-
-	<property name="lwjgl-maven-version" value="2.7.0"/>
-
+	
 	<fileset id="lwjgl-sources.manual.fileset" dir="${lwjgl.src.java}">
 		<patternset refid="lwjgl.package.pattern" />
 	</fileset>
@@ -23,6 +20,22 @@
 		<patternset refid="lwjgl_util.package.pattern" />
 	</fileset>
 
+	 <target name="-fixmavenversion">
+		<script language="javascript">
+			<![CDATA[
+				importPackage(java.lang);
+				var originalVersion = project.getProperty("lwjgl.version");
+				System.out.println("LWJGL Version: " + originalVersion);
+				var mavenVersion = originalVersion;
+				if(originalVersion.match(/^[0-9]+\.[0-9]+$/)){
+					System.out.println("Fixing LWJGL Maven version (Maven version should be x.y.z)");
+					mavenVersion = originalVersion + ".0";
+				}
+				project.setNewProperty("lwjgl-maven-version",mavenVersion);
+				System.out.println("LWJGL Maven Version: " + project.getProperty("lwjgl-maven-version"));
+			]]>
+		</script>
+	</target>
 
 	<target name="maven-full">
 		<antcall target="clean-java" />
@@ -34,7 +47,7 @@
         <antcall target="maven"/>
 	</target>
 	
-	<target name="maven">
+	<target name="maven" depends="-fixmavenversion"> <!-- Added as dependency because using antcall creates a new project scope -->
 		<delete dir="${lwjgl.dstMaven}" quiet="true" failonerror="false" taskname="cleaning maven dist" />
 		<mkdir dir="${lwjgl.dstMaven}"   taskname="initialiazing temp maven folder" />
 		<antcall target="-copylwjgljars" />
