@@ -1665,9 +1665,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 	
 	/**
-	 *  Check and validate jar which will be loaded into the classloader to make 
-	 *  sure that they are not corrupt. This will ensure that cached files are
-	 *  never marked as being successfully downloaded if they are corrupt.
+	 *  Check and validate jars which will be loaded into the classloader to make 
+	 *  sure that they are not corrupt. This ensures corrupt files are never marked
+	 *  as successfully downloadeds by the cache system.
 	 *  
 	 *  @param path - where the jars are stored
 	 *  @throws Exception if a corrupt jar is found
