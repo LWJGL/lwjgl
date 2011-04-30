@@ -41,6 +41,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.image.ImageObserver;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -77,7 +78,11 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Pack200;
+import java.util.zip.CRC32;
+import java.util.zip.CheckedInputStream;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import sun.security.util.SecurityConstants;
 
@@ -141,6 +146,7 @@ import sun.security.util.SecurityConstants;
  * <li>Matthias Mann</li>
  * <li>Mickelukas</li>
  * <li>NateS</li>
+ * <li>Riven</li>
  * <li>Ruben01</li>
  * <li>Shannon Smith</li>
  * <li>pjohnsen</li>
@@ -163,21 +169,24 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/** extracting packages */
 	public static final int STATE_EXTRACTING_PACKAGES 		= 5;
+	
+	/** validating packages */
+	public static final int STATE_VALIDATING_PACKAGES 		= 6;
 
 	/** updating the classpath */
-	public static final int STATE_UPDATING_CLASSPATH 		= 6;
+	public static final int STATE_UPDATING_CLASSPATH 		= 7;
 
 	/** switching to real applet */
-	public static final int STATE_SWITCHING_APPLET 			= 7;
+	public static final int STATE_SWITCHING_APPLET 			= 8;
 
 	/** initializing real applet */
-	public static final int STATE_INITIALIZE_REAL_APPLET	= 8;
+	public static final int STATE_INITIALIZE_REAL_APPLET	= 9;
 
 	/** stating real applet */
-	public static final int STATE_START_REAL_APPLET 		= 9;
+	public static final int STATE_START_REAL_APPLET 		= 10;
 
 	/** done */
-	public static final int STATE_DONE 						= 10;
+	public static final int STATE_DONE 						= 11;
 
 	/** used to calculate length of progress bar */
 	protected int		percentage;
@@ -261,13 +270,13 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	protected boolean 	pack200Supported;
 	
 	/** whether to run in headless mode */
-	protected boolean headless = false;
+	protected boolean 	headless = false;
 	
 	/** whether to switch applets in headless mode or wait longer */
-	protected boolean headlessWaiting = true;
+	protected boolean 	headlessWaiting = true;
 
 	/** messages to be passed via liveconnect in headless mode */
-	protected String[] headlessMessage;
+	protected String[] 	headlessMessage;
 
 	/** generic error message to display on error */
 	protected String[] 	genericErrorMessage = {	"An error occured while loading the applet.",
@@ -632,6 +641,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				return "Downloading packages";
 			case STATE_EXTRACTING_PACKAGES:
 				return "Extracting downloaded packages";
+			case STATE_VALIDATING_PACKAGES:
+				return "Validating packages";
 			case STATE_UPDATING_CLASSPATH:
 				return "Updating classpath";
 			case STATE_SWITCHING_APPLET:
@@ -827,7 +838,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				extractJars(path);		// 55-65%
 
 				// Extracts Native Files
-				extractNatives(path);	// 65-85%
+				extractNatives(path);	// 65-80%
+				
+				// Validate Jars		// 80-90%
+				validateJars(path);
 
 				// save version information once jars downloaded successfully
 				if (version != null) {
@@ -1519,7 +1533,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		
 		setState(STATE_EXTRACTING_PACKAGES);
 		
-		float percentageParts = 20f/nativeJarCount; // parts for each native jar from 20%
+		float percentageParts = 15f/nativeJarCount; // parts for each native jar from 15%
 		
 		// create native folder
 		File nativeFolder = new File(path + "natives");
@@ -1647,6 +1661,87 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			if (!ownCerts[i].equals(native_certs[i])) {
 				throw new Exception("Certificate mismatch: " + ownCerts[i] + " != " + native_certs[i]);
 			}
+		}
+	}
+	
+	/**
+	 *  Check and validate jar which will be loaded into the classloader to make 
+	 *  sure that they are not corrupt. This will ensure that cached files are
+	 *  never marked as being successfully downloaded if they are corrupt.
+	 *  
+	 *  @param path - where the jars are stored
+	 *  @throws Exception if a corrupt jar is found
+	 */
+	protected void validateJars(String path) throws Exception {
+		
+		setState(STATE_VALIDATING_PACKAGES);
+		
+		percentage = 80;
+		
+		float percentageParts = 10f / urlList.length; // percentage for each file out of 10%
+		
+		for (int i = 0; i < urlList.length - nativeJarCount; i++) {
+			
+			debug_sleep(1000);
+			
+			// if file not downloaded, no need to validate again
+			if (fileSizes[i] == -2) continue;
+			
+			subtaskMessage = "Validating: " + getJarName(urlList[i]);
+			
+			File file = new File(path, getJarName(urlList[i])); 
+			if (!isZipValid(file)) {
+				throw new Exception("The file " + getJarName(urlList[i]) + " is corrupt!");
+			}
+			
+			percentage = 80 + (int)(percentageParts * i);
+		}
+		
+		subtaskMessage = "";
+	}
+	
+	/**
+	 * This method will check if a zip file is valid by running through it
+	 * and checking for any corruption and CRC failures
+	 * 
+	 * @param file - zip file to test
+	 * @return boolean - runs false if the file is corrupt
+	 */
+	protected boolean isZipValid(File file) {
+		
+		try {
+			ZipFile zipFile = new ZipFile(file);
+			
+			try {
+				Enumeration e = zipFile.entries();
+		        
+				byte[] buffer = new byte[4096];
+				
+		        while(e.hasMoreElements()) {
+		        	ZipEntry zipEntry = (ZipEntry) e.nextElement();
+		        	
+		        	CRC32 crc = new CRC32();
+		        	
+		        	BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(zipEntry));
+		        	CheckedInputStream cis = new CheckedInputStream(bis, crc);
+		        	
+		        	while(cis.read(buffer, 0, buffer.length) != -1) {
+		        		// scroll through zip entry
+		        	}
+		        	
+		        	if (crc.getValue() != zipEntry.getCrc()) {
+		        		System.out.println("CRC " + crc.getValue() + " " + zipEntry.getCrc());
+		        		return false; // CRC match failed, corrupt zip
+		        	}
+		        }
+		        
+		        return true; // valid zip file
+			} finally {
+				zipFile.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 
