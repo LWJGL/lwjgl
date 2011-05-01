@@ -1730,7 +1730,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		        	}
 		        	
 		        	if (crc.getValue() != zipEntry.getCrc()) {
-		        		System.out.println("CRC " + crc.getValue() + " " + zipEntry.getCrc());
 		        		return false; // CRC match failed, corrupt zip
 		        	}
 		        }
