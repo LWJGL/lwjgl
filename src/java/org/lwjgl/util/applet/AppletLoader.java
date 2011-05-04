@@ -665,11 +665,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	protected String trimExtensionByCapabilities(String file) {
 		if (!pack200Supported) {
-			file = file.replaceAll(".pack", "");
+			file = replaceLast(file, ".pack", "");
 		}
 
 		if (!lzmaSupported) {
-			file = file.replaceAll(".lzma", "");
+			file = replaceLast(file, ".lzma", "");
 		}
 		return file;
 	}
@@ -1027,7 +1027,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		for (int i = 0; i < urlList.length; i++) {
 			String file = new File(path, getJarName(urlList[i])).toURI().toString();
 			// fix JVM bug where ! is not escaped
-			file = file.replaceAll("!", "%21");
+			file = file.replace("!", "%21");
 			urls[i] = new URL(file);
 		}
 
@@ -1486,37 +1486,37 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			String filename = getFileName(urlList[i]);
 			
 			if (filename.endsWith(".pack.lzma")) {
-				subtaskMessage = "Extracting: " + filename + " to " + filename.replaceAll(".lzma", "");
+				subtaskMessage = "Extracting: " + filename + " to " + replaceLast(filename, ".lzma", "");
 				debug_sleep(1000);
-				extractLZMA(path + filename, path + filename.replaceAll(".lzma", ""));
+				extractLZMA(path + filename, path + replaceLast(filename, ".lzma", ""));
 
-				subtaskMessage = "Extracting: " + filename.replaceAll(".lzma", "") + " to " + filename.replaceAll(".pack.lzma", "");
+				subtaskMessage = "Extracting: " + replaceLast(filename, ".lzma", "") + " to " + replaceLast(filename, ".pack.lzma", "");
 				debug_sleep(1000);
-				extractPack(path + filename.replaceAll(".lzma", ""), path + filename.replaceAll(".pack.lzma", ""));
+				extractPack(path + replaceLast(filename, ".lzma", ""), path + replaceLast(filename, ".pack.lzma", ""));
 			}
 			else if (filename.endsWith(".pack.gz")) {
-				subtaskMessage = "Extracting: " + filename + " to " + filename.replaceAll(".gz", "");
+				subtaskMessage = "Extracting: " + filename + " to " + replaceLast(filename, ".gz", "");
 				debug_sleep(1000);
-				extractGZip(path + filename, path + filename.replaceAll(".gz", ""));
+				extractGZip(path + filename, path + replaceLast(filename, ".gz", ""));
 
-				subtaskMessage = "Extracting: " + filename.replaceAll(".gz", "") + " to " + filename.replaceAll(".pack.gz", "");
+				subtaskMessage = "Extracting: " + replaceLast(filename, ".gz", "") + " to " + replaceLast(filename, ".pack.gz", "");
 				debug_sleep(1000);
-				extractPack(path + filename.replaceAll(".gz", ""), path + filename.replaceAll(".pack.gz", ""));
+				extractPack(path + replaceLast(filename, ".gz", ""), path + replaceLast(filename, ".pack.gz", ""));
 			}
 			else if (filename.endsWith(".pack")) {
-				subtaskMessage = "Extracting: " + filename + " to " + filename.replace(".pack", "");
+				subtaskMessage = "Extracting: " + filename + " to " + replaceLast(filename, ".pack", "");
 				debug_sleep(1000);
-				extractPack(path + filename, path + filename.replace(".pack", ""));
+				extractPack(path + filename, path + replaceLast(filename, ".pack", ""));
 			}
 			else if (filename.endsWith(".lzma")) {
-				subtaskMessage = "Extracting: " + filename + " to " + filename.replace(".lzma", "");
+				subtaskMessage = "Extracting: " + filename + " to " + replaceLast(filename, ".lzma", "");
 				debug_sleep(1000);
-				extractLZMA(path + filename, path + filename.replace(".lzma", ""));
+				extractLZMA(path + filename, path + replaceLast(filename, ".lzma", ""));
 			}
 			else if (filename.endsWith(".gz")) {
-				subtaskMessage = "Extracting: " + filename + " to " + filename.replace(".gz", "");
+				subtaskMessage = "Extracting: " + filename + " to " + replaceLast(filename, ".gz", "");
 				debug_sleep(1000);
-				extractGZip(path + filename, path + filename.replace(".gz", ""));
+				extractGZip(path + filename, path + replaceLast(filename, ".gz", ""));
 			}
 		}
 	}
@@ -1814,15 +1814,15 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		String fileName = url.getFile();
 
 		if (fileName.endsWith(".pack.lzma")) {
-			fileName = fileName.replaceAll(".pack.lzma", "");
+			fileName = replaceLast(fileName, ".pack.lzma", "");
 		} else if (fileName.endsWith(".pack.gz")) {
-			fileName = fileName.replaceAll(".pack.gz", "");
+			fileName = replaceLast(fileName, ".pack.gz", "");
 		} else if (fileName.endsWith(".pack")) {
-			fileName = fileName.replaceAll(".pack", "");
+			fileName = replaceLast(fileName, ".pack", "");
 		} else if (fileName.endsWith(".lzma")) {
-			fileName = fileName.replaceAll(".lzma", "");
+			fileName = replaceLast(fileName, ".lzma", "");
 		} else if (fileName.endsWith(".gz")) {
-			fileName = fileName.replaceAll(".gz", "");
+			fileName = replaceLast(fileName, ".gz", "");
 		}
 
 		return fileName.substring(fileName.lastIndexOf('/') + 1);
@@ -1879,6 +1879,25 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
         } catch (Exception e) {
         	return defaultColor;
         }
+	}
+	
+	/**
+	 * Replaces the last occurrence of the specified target substring with
+	 * the specified replacement string in a string.
+	 * 
+	 * @param original - String to search
+	 * @param target - substring to find
+	 * @param replacement - what to replace target substring with
+	 * @return - return the modified string, if target substring not found return original string
+	 */
+	public String replaceLast(String original, String target, String replacement) {
+		int index = original.lastIndexOf(target); 
+		
+		if(index == -1) {
+			return original;
+		}
+		
+		return original.substring(0, index) + replacement + original.substring(index + target.length());
 	}
 	
 	/**
