@@ -159,7 +159,7 @@ public class BufferChecks {
 	 * This is a separate call to help inline checkBufferSize.
 	 */
 	private static void throwBufferSizeException(Buffer buf, int size) {
-		throw new IllegalArgumentException("Number of remaining buffer elements is " + buf.remaining() + ", must be at least " + size);
+		throw new IllegalArgumentException("Number of remaining buffer elements is " + buf.remaining() + ", must be at least " + size + ". Because at most " + size + " elements can be returned, a buffer with at least " + size + " elements is required, regardless of actual returned element count");
 	}
 
 	private static void throwBufferSizeException(PointerBuffer buf, int size) {
