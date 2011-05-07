@@ -84,8 +84,6 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import sun.security.util.SecurityConstants;
-
 /**
  * <p>
  * The AppletLoader enables deployment of LWJGL to applets in an easy
@@ -1046,12 +1044,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 			        if (host != null && (host.length() > 0)) {
 			        	// add permission for downloaded jars to access host they were from
-			        	perms.add(new SocketPermission(host, SecurityConstants.SOCKET_CONNECT_ACCEPT_ACTION));
+			        	perms.add(new SocketPermission(host, "connect,accept"));
 			        }
 			        else if ( "file".equals(codesource.getLocation().getProtocol()) ) {
 			        	// if running locally add file permission
 			        	String path = codesource.getLocation().getFile().replace('/', File.separatorChar);
-			            perms.add(new FilePermission(path, SecurityConstants.FILE_READ_ACTION));
+			            perms.add(new FilePermission(path, "read"));
 			        }
 
 		        } catch (Exception e) {
