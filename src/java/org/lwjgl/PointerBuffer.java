@@ -80,12 +80,8 @@ public class PointerBuffer implements Comparable {
 	 * @param source the source buffer
 	 */
 	public PointerBuffer(final ByteBuffer source) {
-		if ( !source.isDirect() )
-			throw new IllegalArgumentException("ByteBuffer is not direct");
-
-		final int alignment = is64Bit ? 8 : 4;
-		if ( (BufferUtils.getBufferAddress(source) + source.position()) % alignment != 0 || source.remaining() % alignment != 0 )
-			throw new IllegalArgumentException("The source buffer is not aligned to " + alignment + " bytes.");
+		if ( LWJGLUtil.CHECKS )
+			checkSource(source);
 
 		pointers = source.slice().order(source.order());
 
@@ -96,6 +92,15 @@ public class PointerBuffer implements Comparable {
 			view = view32 = pointers.asIntBuffer();
 			view64 = null;
 		}
+	}
+
+	private static void checkSource(final ByteBuffer source) {
+		if ( !source.isDirect() )
+			throw new IllegalArgumentException("The source buffer is not direct.");
+
+		final int alignment = is64Bit ? 8 : 4;
+		if ( (BufferUtils.getBufferAddress(source) + source.position()) % alignment != 0 || source.remaining() % alignment != 0 )
+			throw new IllegalArgumentException("The source buffer is not aligned to " + alignment + " bytes.");
 	}
 
 	/**
