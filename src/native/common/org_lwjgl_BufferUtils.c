@@ -5,5 +5,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_BufferUtils_zeroBuffer0(JNIEnv *env, jclas
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_BufferUtils_getBufferAddress(JNIEnv *env, jclass clazz, jobject buffer) {
-    return (uintptr_t)(*env)->GetDirectBufferAddress(env, buffer);
+    return (intptr_t)(*env)->GetDirectBufferAddress(env, buffer);
 }
