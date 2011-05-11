@@ -192,4 +192,14 @@ public final class BufferUtils {
 
 	/** Fill buffer with zeros from position to remaining */
 	private static native void zeroBuffer0(Buffer b, long off, long size);
+
+	/**
+	 * Returns the memory address of the specified buffer.
+	 *
+	 * @param buffer the buffer
+	 *
+	 * @return the memory address
+	 */
+	static native long getBufferAddress(Buffer buffer);
+
 }
