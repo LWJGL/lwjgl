@@ -140,14 +140,15 @@ import java.util.zip.ZipFile;
  * <li>Arielsan</li>
  * <li>Bobjob</li>
  * <li>Dashiva</li>
+ * <li>Dr_evil</li>
  * <li>Kevin Glass</li>
  * <li>Matthias Mann</li>
  * <li>Mickelukas</li>
  * <li>NateS</li>
+ * <li>pjohnsen</li>
  * <li>Riven</li>
  * <li>Ruben01</li>
  * <li>Shannon Smith</li>
- * <li>pjohnsen</li>
  * </ul>
  * 
  */
@@ -717,7 +718,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			// check if arch specific natives have been specified
 			if (System.getProperty("os.arch").endsWith("64")) {
 				nativeJarList = getParameter("al_mac64");
-			} else if (System.getProperty("os.arch").endsWith("ppc")) {
+			} else if (System.getProperty("os.arch").contains("ppc")) {
 				nativeJarList = getParameter("al_macppc");
 			} else {
 				nativeJarList = getParameter("al_mac32");
