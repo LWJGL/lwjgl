@@ -67,7 +67,7 @@ final class LinuxContextImplementation implements ContextImplementation {
 	}
 
 	public void swapBuffers() throws LWJGLException {
-		Context current_context = Context.getCurrentContext();
+		ContextGL current_context = ContextGL.getCurrentContext();
 		if ( current_context == null )
 			throw new IllegalStateException("No context is current");
 		synchronized ( current_context ) {
@@ -89,7 +89,7 @@ final class LinuxContextImplementation implements ContextImplementation {
 	private static native void nSwapBuffers(ByteBuffer peer_info_handle) throws LWJGLException;
 
 	public void releaseCurrentContext() throws LWJGLException {
-		Context current_context = Context.getCurrentContext();
+		ContextGL current_context = ContextGL.getCurrentContext();
 		if ( current_context == null )
 			throw new IllegalStateException("No context is current");
 		synchronized ( current_context ) {
@@ -142,7 +142,7 @@ final class LinuxContextImplementation implements ContextImplementation {
 	private static native boolean nIsCurrent(ByteBuffer context_handle) throws LWJGLException;
 
 	public void setSwapInterval(int value) {
-		Context current_context = Context.getCurrentContext();
+		ContextGL current_context = ContextGL.getCurrentContext();
 		if ( current_context == null )
 			throw new IllegalStateException("No context is current");
 		synchronized ( current_context ) {

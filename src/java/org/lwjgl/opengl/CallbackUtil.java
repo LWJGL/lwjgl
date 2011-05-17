@@ -42,9 +42,9 @@ import java.util.Map;
 final class CallbackUtil {
 
 	/** Context -> Long */
-	private static final Map<Context, Long> contextUserParamsARB = new HashMap<Context, Long>();
+	private static final Map<ContextGL, Long> contextUserParamsARB = new HashMap<ContextGL, Long>();
 	/** Context -> Long */
-	private static final Map<Context, Long> contextUserParamsAMD = new HashMap<Context, Long>();
+	private static final Map<ContextGL, Long> contextUserParamsAMD = new HashMap<ContextGL, Long>();
 
 	private CallbackUtil() {}
 
@@ -84,8 +84,8 @@ final class CallbackUtil {
 	 *
 	 * @param userParam the global reference pointer
 	 */
-	private static void registerContextCallback(final long userParam, final Map<Context, Long> contextUserData) {
-		Context context = Context.getCurrentContext();
+	private static void registerContextCallback(final long userParam, final Map<ContextGL, Long> contextUserData) {
+		ContextGL context = ContextGL.getCurrentContext();
 		if ( context == null ) {
 			deleteGlobalRef(userParam);
 			throw new IllegalStateException("No context is current.");
@@ -104,7 +104,7 @@ final class CallbackUtil {
 	 *
 	 * @param context the Context to unregister
 	 */
-	static void unregisterCallbacks(final Context context) {
+	static void unregisterCallbacks(final ContextGL context) {
 		Long userParam = contextUserParamsARB.remove(context);
 		if ( userParam != null )
 			deleteGlobalRef(userParam);

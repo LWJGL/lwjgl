@@ -44,13 +44,13 @@ import org.lwjgl.LWJGLException;
  *
  * @author Spasi
  */
-public final class SharedDrawable extends AbstractDrawable {
+public final class SharedDrawable extends DrawableGL {
 
 	public SharedDrawable(final Drawable drawable) throws LWJGLException {
-		this.context = ((DrawableLWJGL)drawable).createSharedContext();
+		this.context = (ContextGL)((DrawableLWJGL)drawable).createSharedContext();
 	}
 
-	public Context createSharedContext() {
+	public ContextGL createSharedContext() {
 		throw new UnsupportedOperationException();
 	}
 

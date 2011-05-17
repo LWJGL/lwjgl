@@ -308,7 +308,7 @@ public class NativeMethodStubsGenerator {
 				if (Buffer.class.isAssignableFrom(java_type) || java_type.equals(CharSequence.class) || java_type.equals(CharSequence[].class) || PointerBuffer.class.isAssignableFrom(java_type) ) {
 					boolean explicitly_byte_sized = java_type.equals(Buffer.class) ||
 						translator.getAnnotationType().equals(type_map.getVoidType()) ||
-						param.getAnnotation(NativeType.class) != null;
+						(param.getAnnotation(NativeType.class) != null && param.getAnnotation(NativeType.class).value().endsWith("void"));
 					if (explicitly_byte_sized)
 						writer.print("(((char *)");
 					if (method.getAnnotation(GenerateAutos.class) != null || (check_annotation != null && check_annotation.canBeNull())) {

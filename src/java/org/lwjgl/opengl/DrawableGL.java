@@ -4,31 +4,62 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.PointerBuffer;
 
-/**
- * @author Spasi
- */
-abstract class AbstractDrawable implements DrawableLWJGL {
+import static org.lwjgl.opengl.GL11.*;
+
+/** @author Spasi */
+abstract class DrawableGL implements DrawableLWJGL {
+
+	/** The PixelFormat used to create the drawable. */
+	protected PixelFormat pixel_format;
 
 	/** Handle to the native GL rendering context */
 	protected PeerInfo peer_info;
 
 	/** The OpenGL Context. */
-	protected Context context;
+	protected ContextGL context;
 
-	protected AbstractDrawable() {
+	protected DrawableGL() {
 	}
 
-	public Context getContext() {
+	public void setPixelFormat(final PixelFormatLWJGL pf) throws LWJGLException {
+		this.pixel_format = (PixelFormat)pf;
+		this.peer_info = Display.getImplementation().createPeerInfo(pixel_format);
+	}
+
+	public PixelFormatLWJGL getPixelFormat() {
+		return pixel_format;
+	}
+
+	public ContextGL getContext() {
 		synchronized ( GlobalLock.lock ) {
 			return context;
 		}
 	}
 
-	public Context createSharedContext() throws LWJGLException {
+	public ContextGL createSharedContext() throws LWJGLException {
 		synchronized ( GlobalLock.lock ) {
 			checkDestroyed();
-			return new Context(peer_info, context.getContextAttribs(), context);
+			return new ContextGL(peer_info, context.getContextAttribs(), context);
 		}
+	}
+
+	public void checkGLError() {
+		Util.checkGLError();
+	}
+
+	public void setSwapInterval(final int swap_interval) {
+		ContextGL.setSwapInterval(swap_interval);
+	}
+
+	public void swapBuffers() throws LWJGLException {
+		ContextGL.swapBuffers();
+	}
+
+	public void initContext(final float r, final float g, final float b) {
+		// set background clear color
+		glClearColor(r, g, b, 0.0f);
+		// Clear window to avoid the desktop "showing through"
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 	public boolean isCurrent() throws LWJGLException {
@@ -49,7 +80,7 @@ abstract class AbstractDrawable implements DrawableLWJGL {
 		synchronized ( GlobalLock.lock ) {
 			checkDestroyed();
 			if ( context.isCurrent() )
-				Context.releaseCurrentContext();
+				context.releaseCurrent();
 		}
 	}
 

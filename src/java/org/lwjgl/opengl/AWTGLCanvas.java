@@ -42,6 +42,8 @@ import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 
+import static org.lwjgl.opengl.GL11.*;
+
 /**
  * <p/>
  * An AWT rendering context.
@@ -56,7 +58,7 @@ public class AWTGLCanvas extends Canvas implements DrawableLWJGL, ComponentListe
 	private static final long serialVersionUID = 1L;
 
 	private static final AWTCanvasImplementation implementation;
-	private boolean update_context;
+	private              boolean                 update_context;
 	private Object SYNC_LOCK = new Object();
 
 	/** The requested pixel format */
@@ -69,8 +71,8 @@ public class AWTGLCanvas extends Canvas implements DrawableLWJGL, ComponentListe
 	private final ContextAttribs attribs;
 
 	/** Context handle */
-	private PeerInfo peer_info;
-	private Context context;
+	private PeerInfo  peer_info;
+	private ContextGL context;
 
 	/**
 	 * re-entry counter for support for re-entrant
@@ -105,18 +107,37 @@ public class AWTGLCanvas extends Canvas implements DrawableLWJGL, ComponentListe
 		}
 	}
 
+	public void setPixelFormat(final PixelFormatLWJGL pf) throws LWJGLException {
+		throw new UnsupportedOperationException();
+	}
+
+	public PixelFormatLWJGL getPixelFormat() {
+		return pixel_format;
+	}
+
 	/** This method should only be called internally. */
-	public Context getContext() {
+	public ContextGL getContext() {
 		return context;
 	}
 
 	/** This method should only be called internally. */
-	public Context createSharedContext() throws LWJGLException {
+	public ContextGL createSharedContext() throws LWJGLException {
 		synchronized ( SYNC_LOCK ) {
 			if ( context == null ) throw new IllegalStateException("Canvas not yet displayable");
 
-			return new Context(peer_info, context.getContextAttribs(), context);
+			return new ContextGL(peer_info, context.getContextAttribs(), context);
 		}
+	}
+
+	public void checkGLError() {
+		Util.checkGLError();
+	}
+
+	public void initContext(final float r, final float g, final float b) {
+		// set background clear color
+		glClearColor(r, g, b, 0.0f);
+		// Clear window to avoid the desktop "showing through"
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 	/** Constructor using the default PixelFormat. */
@@ -195,7 +216,7 @@ public class AWTGLCanvas extends Canvas implements DrawableLWJGL, ComponentListe
 		synchronized ( SYNC_LOCK ) {
 			if ( context == null )
 				throw new IllegalStateException("Canvas not yet displayable");
-			Context.setSwapInterval(swap_interval);
+			ContextGL.setSwapInterval(swap_interval);
 		}
 	}
 
@@ -209,7 +230,7 @@ public class AWTGLCanvas extends Canvas implements DrawableLWJGL, ComponentListe
 		synchronized ( SYNC_LOCK ) {
 			if ( context == null )
 				throw new IllegalStateException("Canvas not yet displayable");
-			Context.swapBuffers();
+			ContextGL.swapBuffers();
 		}
 	}
 
@@ -238,7 +259,7 @@ public class AWTGLCanvas extends Canvas implements DrawableLWJGL, ComponentListe
 			if ( context == null )
 				throw new IllegalStateException("Canvas not yet displayable");
 			if ( context.isCurrent() )
-				Context.releaseCurrentContext();
+				context.releaseCurrent();
 		}
 	}
 
@@ -295,7 +316,7 @@ public class AWTGLCanvas extends Canvas implements DrawableLWJGL, ComponentListe
 				peer_info.lockAndGetHandle();
 				try {
 					if ( context == null ) {
-						this.context = new Context(peer_info, attribs, drawable != null ? ((DrawableLWJGL)drawable).getContext() : null);
+						this.context = new ContextGL(peer_info, attribs, drawable != null ? (ContextGL)((DrawableLWJGL)drawable).getContext() : null);
 						first_run = true;
 					}
 
@@ -315,7 +336,7 @@ public class AWTGLCanvas extends Canvas implements DrawableLWJGL, ComponentListe
 					} finally {
 						reentry_count--;
 						if ( reentry_count == 0 )
-							Context.releaseCurrentContext();
+							context.releaseCurrent();
 					}
 				} finally {
 					peer_info.unlock();

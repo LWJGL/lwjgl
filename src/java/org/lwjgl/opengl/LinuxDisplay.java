@@ -50,6 +50,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.opengl.XRandR.Screen;
+import org.lwjgl.opengles.EGL;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -137,7 +138,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private boolean xembedded;
 	private boolean parent_focus;
 	private boolean mouseInside = true;
-	
+
 	private LinuxKeyboard keyboard;
 	private LinuxMouse mouse;
 
@@ -259,7 +260,12 @@ final class LinuxDisplay implements DisplayImplementation {
 	 */
 	static void incDisplay() throws LWJGLException {
 		if (display_connection_usage_count == 0) {
-			GLContext.loadOpenGLLibrary();
+			try {
+				// TODO: Can we know if we're on desktop or ES?
+				GLContext.loadOpenGLLibrary();
+				org.lwjgl.opengles.GLContext.loadOpenGLLibrary();
+			} catch (Throwable t) {
+			}
 			saved_error_handler = setErrorHandler();
 			display = openDisplay();
 //			synchronize(display, true);
@@ -408,11 +414,14 @@ final class LinuxDisplay implements DisplayImplementation {
 			ungrabKeyboard();
 	}
 
-	public void createWindow(DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException {
+	public void createWindow(final DrawableLWJGL drawable, DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException {
 		lockAWT();
 		try {
 			incDisplay();
 			try {
+				if ( drawable instanceof DrawableGLES )
+					peer_info = new LinuxDisplayPeerInfo();
+
 				ByteBuffer handle = peer_info.lockAndGetHandle();
 				try {
 					current_window_mode = getWindowMode(Display.isFullscreen());
@@ -440,6 +449,9 @@ final class LinuxDisplay implements DisplayImplementation {
 					grab = false;
 					minimized = false;
 					dirty = true;
+
+					if ( drawable instanceof DrawableGLES )
+						((DrawableGLES)drawable).initialize(current_window, getDisplay(), EGL.EGL_WINDOW_BIT, (org.lwjgl.opengles.PixelFormat)drawable.getPixelFormat());
 				} finally {
 					peer_info.unlock();
 				}

@@ -53,13 +53,13 @@ import static org.lwjgl.opengl.GL11.*;
  * @version $Revision$
  *          $Id$
  */
-final class Context {
+final class ContextGL implements Context {
 
 	/** The platform specific implementation of context methods */
 	private static final ContextImplementation implementation;
 
 	/** The current Context */
-	private static final ThreadLocal<Context> current_context_local = new ThreadLocal<Context>();
+	private static final ThreadLocal<ContextGL> current_context_local = new ThreadLocal<ContextGL>();
 
 	/** Handle to the native GL rendering context */
 	private final ByteBuffer handle;
@@ -102,13 +102,13 @@ final class Context {
 		return contextAttribs;
 	}
 
-	static Context getCurrentContext() {
+	static ContextGL getCurrentContext() {
 		return current_context_local.get();
 	}
 
 	/** Create a context with the specified peer info and shared context */
-	Context(PeerInfo peer_info, ContextAttribs attribs, Context shared_context) throws LWJGLException {
-		Context context_lock = shared_context != null ? shared_context : this;
+	ContextGL(PeerInfo peer_info, ContextAttribs attribs, ContextGL shared_context) throws LWJGLException {
+		ContextGL context_lock = shared_context != null ? shared_context : this;
 		// If shared_context is not null, synchronize on it to make sure it is not deleted
 		// while this context is created. Otherwise, simply synchronize on ourself to avoid NPE
 		synchronized ( context_lock ) {
@@ -137,8 +137,8 @@ final class Context {
 	}
 
 	/** Release the current context (if any). After this call, no context is current. */
-	public static void releaseCurrentContext() throws LWJGLException {
-		Context current_context = getCurrentContext();
+	public void releaseCurrent() throws LWJGLException {
+		ContextGL current_context = getCurrentContext();
 		if ( current_context != null ) {
 			implementation.releaseCurrentContext();
 			GLContext.useContext(null);
@@ -254,7 +254,7 @@ final class Context {
 		if ( was_current ) {
 			if ( GLContext.getCapabilities() != null && GLContext.getCapabilities().OpenGL11 )
 				error = glGetError();
-			releaseCurrentContext();
+			releaseCurrent();
 		}
 		checkDestroy();
 		if ( was_current && error != GL_NO_ERROR )

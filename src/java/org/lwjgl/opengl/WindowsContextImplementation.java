@@ -60,7 +60,7 @@ final class WindowsContextImplementation implements ContextImplementation {
 	native long getHDC(ByteBuffer peer_info_handle);
 
 	public void swapBuffers() throws LWJGLException {
-		Context current_context = Context.getCurrentContext();
+		ContextGL current_context = ContextGL.getCurrentContext();
 		if ( current_context == null )
 			throw new IllegalStateException("No context is current");
 		synchronized ( current_context ) {

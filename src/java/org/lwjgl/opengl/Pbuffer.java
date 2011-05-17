@@ -48,7 +48,7 @@ import org.lwjgl.Sys;
  * @version $Revision$
  * $Id$
  */
-public final class Pbuffer extends AbstractDrawable {
+public final class Pbuffer extends DrawableGL {
 	/**
 	 * Indicates that Pbuffers can be created.
 	 */
@@ -222,7 +222,7 @@ public final class Pbuffer extends AbstractDrawable {
 			shared_context = ((DrawableLWJGL)shared_drawable).getContext();
 		else
 			shared_context = ((DrawableLWJGL)Display.getDrawable()).getContext(); // May be null
-		this.context = new Context(peer_info, attribs, shared_context);
+		this.context = new ContextGL(peer_info, attribs, (ContextGL)shared_context);
 	}
 
 	private static PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture) throws LWJGLException {

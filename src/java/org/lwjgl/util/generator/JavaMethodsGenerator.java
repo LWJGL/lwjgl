@@ -209,17 +209,21 @@ public class JavaMethodsGenerator {
 		return false;
 	}
 
-	private static void printBufferObjectCheck(PrintWriter writer, BufferKind kind, Mode mode) {
+	private static void printBufferObjectCheck(PrintWriter writer, BufferKind kind, Mode mode, boolean context_specific) {
 		String bo_check_method_name = kind.toString();
 		writer.print("\t\t" + Utils.CHECKS_CLASS_NAME + ".ensure" + bo_check_method_name);
 		if (mode == Mode.BUFFEROBJECT)
 			writer.print("enabled");
 		else
 			writer.print("disabled");
-		writer.println("(caps);");
+
+		if ( context_specific )
+			writer.println("(caps);");
+		else
+			writer.println("();");
 	}
 
-	private static void printBufferObjectChecks(PrintWriter writer, MethodDeclaration method, Mode mode) {
+	private static void printBufferObjectChecks(PrintWriter writer, MethodDeclaration method, Mode mode, boolean context_specific) {
 		EnumSet<BufferKind> check_set = EnumSet.noneOf(BufferKind.class);
 		for (ParameterDeclaration param : method.getParameters()) {
 			BufferObject bo_annotation = param.getAnnotation(BufferObject.class);
@@ -227,7 +231,7 @@ public class JavaMethodsGenerator {
 				check_set.add(bo_annotation.value());
 		}
 		for (BufferKind kind : check_set)
-			printBufferObjectCheck(writer, kind, mode);
+			printBufferObjectCheck(writer, kind, mode, context_specific);
 	}
 
 	private static void printMethodWithMultiType(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, Mode mode, boolean generate_error_checks, boolean context_specific) {
@@ -272,9 +276,9 @@ public class JavaMethodsGenerator {
 		final Code code_annotation = method.getAnnotation(Code.class);
 		if (code_annotation != null && code_annotation.value().length() > 0)
 			writer.println(code_annotation.value());
-		printBufferObjectChecks(writer, method, mode);
+		printBufferObjectChecks(writer, method, mode, context_specific);
 		printParameterChecks(writer, method, typeinfos_instance, mode, generate_error_checks);
-		printParameterCaching(writer, interface_decl, method, mode);
+		printParameterCaching(writer, interface_decl, method, mode, context_specific);
 
 		if ( code_annotation != null && code_annotation.javaBeforeNative().length() > 0 )
 			writer.println(code_annotation.javaBeforeNative());
@@ -526,7 +530,7 @@ public class JavaMethodsGenerator {
 						writer.print(param.getSimpleName());
 						if (check_annotation != null && check_annotation.canBeNull())
 							writer.print(" != null ? " + param.getSimpleName());
-						if ( type == PointerBuffer.class )
+						if ( type == PointerBuffer.class && param.getAnnotation(NativeType.class).value().endsWith("void") )
 							writer.print(".positionByte()");
 						else
 							writer.print(".position()");
@@ -588,7 +592,7 @@ public class JavaMethodsGenerator {
 		return first_parameter;
 	}
 
-	private static void printParameterCaching(PrintWriter writer, InterfaceDeclaration  interface_decl, MethodDeclaration method, Mode mode) {
+	private static void printParameterCaching(PrintWriter writer, InterfaceDeclaration  interface_decl, MethodDeclaration method, Mode mode, boolean context_specific) {
 		for (ParameterDeclaration param : method.getParameters()) {
 			Class java_type = Utils.getJavaType(param.getType());
                         CachedReference cachedReference = param.getAnnotation(CachedReference.class);
@@ -596,7 +600,11 @@ public class JavaMethodsGenerator {
                                         cachedReference != null &&
 					(mode != Mode.BUFFEROBJECT || param.getAnnotation(BufferObject.class) == null) &&
 					param.getAnnotation(Result.class) == null) {
-				writer.print("\t\tif ( LWJGLUtil.CHECKS ) " + "StateTracker.getReferences(caps).");
+				writer.print("\t\tif ( LWJGLUtil.CHECKS ) StateTracker.");
+				if ( context_specific )
+					writer.print("getReferences(caps).");
+				else
+					writer.print("getTracker().");
                                 if(cachedReference.name().length() > 0) {
                                     writer.print(cachedReference.name());
                                 } else {

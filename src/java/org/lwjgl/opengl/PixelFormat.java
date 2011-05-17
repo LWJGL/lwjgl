@@ -48,7 +48,7 @@ package org.lwjgl.opengl;
  * @version $Revision$
  */
 
-public final class PixelFormat {
+public final class PixelFormat implements PixelFormatLWJGL {
 
 	/**
 	 * The number of bits per pixel, exluding alpha.

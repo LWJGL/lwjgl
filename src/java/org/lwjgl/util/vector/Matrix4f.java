@@ -52,6 +52,11 @@ public class Matrix4f extends Matrix implements Serializable {
 		setIdentity();
 	}
 
+	public Matrix4f(final Matrix4f src) {
+		super();
+		load(src);
+	}
+
 	/**
 	 * Returns a string representation of this matrix
 	 */
@@ -278,6 +283,23 @@ public class Matrix4f extends Matrix implements Serializable {
 		return this;
 	}
 
+	/**
+	 * Store the rotation portion of this matrix in a float buffer. The matrix is stored in column
+	 * major (openGL) order.
+	 * @param buf The buffer to store this matrix in
+	 */
+	public Matrix store3f(FloatBuffer buf) {
+		buf.put(m00);
+		buf.put(m01);
+		buf.put(m02);
+		buf.put(m10);
+		buf.put(m11);
+		buf.put(m12);
+		buf.put(m20);
+		buf.put(m21);
+		buf.put(m22);
+		return this;
+	}
 
 	/**
 	 * Add two matrices together and place the result in a third matrix.
