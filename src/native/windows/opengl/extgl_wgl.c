@@ -84,6 +84,8 @@ static bool WGLQueryExtension(WGLExtensions *extensions, const char *name) {
 	return extgl_QueryExtension(extension_string, name);
 }
 
+/*---------------------------------------------------------------------*/
+
 static void extgl_InitWGLARBPbuffer(WGLExtensions *extensions) {
 	ExtFunction functions[] = {
 		{"wglCreatePbufferARB", (void *)&extensions->wglCreatePbufferARB},
@@ -137,6 +139,32 @@ static void extgl_InitWGLARBCreateContext(WGLExtensions *extensions) {
 		extensions->WGL_ARB_create_context = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
+static void extgl_InitWGLNVPresentVideo(WGLExtensions *extensions) {
+	ExtFunction functions[] = {
+		{"wglEnumerateVideoDevicesNV", (void *)&extensions->wglEnumerateVideoDevicesNV},
+		{"wglBindVideoDeviceNV", (void *)&extensions->wglBindVideoDeviceNV},
+		{"wglQueryCurrentContextNV", (void *)&extensions->wglQueryCurrentContextNV}
+	};
+
+	if (extensions->WGL_NV_present_video)
+		extensions->WGL_NV_present_video = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+}
+
+static void extgl_InitWGLNVVideoCapture(WGLExtensions *extensions) {
+	ExtFunction functions[] = {
+		{"wglBindVideoCaptureDeviceNV", (void *)&extensions->wglBindVideoCaptureDeviceNV},
+		{"wglEnumerateVideoCaptureDevicesNV", (void *)&extensions->wglEnumerateVideoCaptureDevicesNV},
+		{"wglLockVideoCaptureDeviceNV", (void *)&extensions->wglLockVideoCaptureDeviceNV},
+		{"wglQueryVideoCaptureDeviceNV", (void *)&extensions->wglQueryVideoCaptureDeviceNV},
+		{"wglReleaseVideoCaptureDeviceNV", (void *)&extensions->wglReleaseVideoCaptureDeviceNV}
+	};
+
+	if (extensions->WGL_NV_video_capture)
+		extensions->WGL_NV_video_capture = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+}
+
+/*---------------------------------------------------------------------*/
+
 static void extgl_InitSupportedWGLExtensions(WGLExtensions *extensions) {
 	extensions->WGL_ARB_buffer_region = WGLQueryExtension(extensions, "WGL_ARB_buffer_region");
 	extensions->WGL_ARB_make_current_read = WGLQueryExtension(extensions, "WGL_ARB_make_current_read");
@@ -153,6 +181,8 @@ static void extgl_InitSupportedWGLExtensions(WGLExtensions *extensions) {
 	extensions->WGL_EXT_pixel_format_packed_float = WGLQueryExtension(extensions, "WGL_EXT_pixel_format_packed_float");
 	extensions->WGL_ARB_create_context = WGLQueryExtension(extensions, "WGL_ARB_create_context");
 	extensions->WGL_NV_multisample_coverage = WGLQueryExtension(extensions, "WGL_NV_multisample_coverage");
+	extensions->WGL_NV_present_video = WGLQueryExtension(extensions, "WGL_NV_present_video");
+	extensions->WGL_NV_video_capture = WGLQueryExtension(extensions, "WGL_NV_video_capture");
 }
 
 static void extgl_InitWGLEXTExtensionsString(WGLExtensions *extensions) {
@@ -181,4 +211,6 @@ void extgl_InitWGL(WGLExtensions *extensions) {
 	extgl_InitWGLARBPixelFormat(extensions);
 	extgl_InitWGLARBPbuffer(extensions);
 	extgl_InitWGLARBCreateContext(extensions);
+	extgl_InitWGLNVPresentVideo(extensions);
+	extgl_InitWGLNVVideoCapture(extensions);
 }

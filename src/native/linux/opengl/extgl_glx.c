@@ -77,6 +77,17 @@ glXSwapIntervalSGIPROC lwjgl_glXSwapIntervalSGI = NULL;
 /* GLX_ARB_create_context */
 glXCreateContextAttribsARBPROC lwjgl_glXCreateContextAttribsARB = NULL;
 
+/* GLX_NV_present_video */
+glXEnumerateVideoDevicesNVPROC lwjgl_glXEnumerateVideoDevicesNV = NULL;
+glXBindVideoDeviceNVPROC lwjgl_glXBindVideoDeviceNV = NULL;
+
+/* GLX_NV_video_capture */
+glXBindVideoCaptureDeviceNVPROC lwjgl_glXBindVideoCaptureDeviceNV = NULL;
+glXEnumerateVideoCaptureDevicesNVPROC lwjgl_glXEnumerateVideoCaptureDevicesNV = NULL;
+glXLockVideoCaptureDeviceNVPROC lwjgl_glXLockVideoCaptureDeviceNV = NULL;
+glXQueryVideoCaptureDeviceNVPROC lwjgl_glXQueryVideoCaptureDeviceNV = NULL;
+glXReleaseVideoCaptureDeviceNVPROC lwjgl_glXReleaseVideoCaptureDeviceNV = NULL;
+
 static void * lib_gl_handle = NULL;
 
 typedef void * (APIENTRY * glXGetProcAddressARBPROC) (const GLubyte *procName);
@@ -151,6 +162,27 @@ static void extgl_InitGLXARBCreateContext() {
 	symbols_flags.GLX_ARB_create_context = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
+static void extgl_InitGLXNVPresentVideo() {
+	ExtFunction functions[] = {
+		{ "glXEnumerateVideoDevicesNV", (void*)&lwjgl_glXEnumerateVideoDevicesNV },
+		{ "glXBindVideoDeviceNV", (void*)&lwjgl_glXBindVideoDeviceNV }
+	};
+
+	symbols_flags.GLX_NV_present_video = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+}
+
+static void extgl_InitGLXNVVideoCapture() {
+	ExtFunction functions[] = {
+		{ "glXBindVideoCaptureDeviceNV", (void*)&lwjgl_glXBindVideoCaptureDeviceNV },
+		{ "glXEnumerateVideoCaptureDevicesNV", (void*)&lwjgl_glXEnumerateVideoCaptureDevicesNV },
+		{ "glXLockVideoCaptureDeviceNV", (void*)&lwjgl_glXLockVideoCaptureDeviceNV },
+		{ "glXQueryVideoCaptureDeviceNV", (void*)&lwjgl_glXQueryVideoCaptureDeviceNV },
+		{ "glXReleaseVideoCaptureDeviceNV", (void*)&lwjgl_glXReleaseVideoCaptureDeviceNV }
+	};
+
+	symbols_flags.GLX_NV_video_capture = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+}
+
 static void extgl_InitGLXSupportedExtensions(Display *disp, int screen, GLXExtensions *extension_flags) {
 /*	extension_flags.GLX_EXT_visual_info = GLXQueryExtension(disp, screen, "GLX_EXT_visual_info");
 	extension_flags.GLX_EXT_visual_rating = GLXQueryExtension(disp, screen, "GLX_EXT_visual_rating");*/
@@ -161,6 +193,8 @@ static void extgl_InitGLXSupportedExtensions(Display *disp, int screen, GLXExten
 	extension_flags->GLX_ARB_framebuffer_sRGB = GLXQueryExtension(disp, screen, "GLX_ARB_framebuffer_sRGB") || GLXQueryExtension(disp, screen, "GLX_EXT_framebuffer_sRGB");
 	extension_flags->GLX_ARB_create_context = GLXQueryExtension(disp, screen, "GLX_ARB_create_context");
 	extension_flags->GLX_NV_multisample_coverage = GLXQueryExtension(disp, screen, "GLX_NV_multisample_coverage");
+	extension_flags->GLX_NV_present_video = GLXQueryExtension(disp, screen, "GLX_NV_present_video");
+	extension_flags->GLX_NV_video_capture = GLXQueryExtension(disp, screen, "GLX_NV_video_capture");
 }
 
 bool extgl_Open(JNIEnv *env) {
@@ -193,6 +227,8 @@ bool extgl_Open(JNIEnv *env) {
 	extgl_InitGLX13();
 	extgl_InitGLXSGISwapControl();
 	extgl_InitGLXARBCreateContext();
+	extgl_InitGLXNVPresentVideo();
+	extgl_InitGLXNVVideoCapture();
 	return true;
 }
 

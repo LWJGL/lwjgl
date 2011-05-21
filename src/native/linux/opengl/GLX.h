@@ -31,59 +31,30 @@
  */
 
 /**
- * $Id: context.h -1   $
+ * GLX extension implementations.
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
- * @version $Revision: -1 $
+ * @author Spasi
  */
+#ifndef __LWJGL_GLX_H
+#define __LWJGL_GLX_H
 
-#ifndef __LWJGL_CONTEXT_H
-#define __LWJGL_CONTEXT_H
-
-#include <windows.h>
 #include <jni.h>
 #include "common_tools.h"
+#include "context.h"
+
 #include "extgl.h"
+#include "extgl_glx.h"
 
-typedef struct {
-	union {
-		HWND hwnd;
-	} u;
-	HDC drawable_hdc;
-} WindowsPeerInfo;
+/* NV_present_video functions */
+extern jint extgl_EnumerateVideoDevicesNV(JNIEnv *env, jobject peer_info_handle, jobject devices, jint devices_position);
+extern jboolean extgl_BindVideoDeviceNV(JNIEnv *env, jobject peer_info_handle, jint video_slot, jlong video_device, jobject attrib_list, jint attrib_list_position);
+extern jboolean extgl_QueryContextNV(JNIEnv *env, jobject peer_info_handle, jobject context_handle, jint attrib, jobject value, jint value_position);
 
-/*
- * Register the LWJGL window class.
- * Returns true for success, or false for failure
- */
-extern bool registerWindow();
-
-//extern bool applyPixelFormat(JNIEnv *env, HDC hdc, int iPixelFormat);
-
-/*
- * Close the window
- */
-extern void closeWindow(HWND *hwnd, HDC *hdc);
-
-/**
- * Create a dummy window suitable to create contexts from
- */
-extern HWND createDummyWindow(int x, int y);
-
-/**
- * Return appropriate window and extended style flags from the given fullscreen and undecorated property
- */
-extern void getWindowFlags(DWORD *windowflags_return, DWORD *exstyle_return, bool undecorated, bool child_window);
-
-/*
- * Create a window with the specified position, size, and
- * fullscreen attribute. The window will have DirectInput associated
- * with it.
- *
- * Returns true for success, or false for failure
- */
-extern HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height, bool undecorated, bool child_window, HWND parent);
-
-//extern int findPixelFormatOnDC(JNIEnv *env, HDC hdc, int origin_x, int origin_y, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer);
+/* NV_video_capture functions */
+extern jboolean extgl_BindVideoCaptureDeviceNV(JNIEnv *env, jobject peer_info_handle, jint video_slot, jlong device);
+extern jint extgl_EnumerateVideoCaptureDevicesNV(JNIEnv *env, jobject peer_info_handle, jobject devices, jint devices_position);
+extern jboolean extgl_LockVideoCaptureDeviceNV(JNIEnv *env, jobject peer_info_handle, jlong device);
+extern jboolean extgl_QueryVideoCaptureDeviceNV(JNIEnv *env, jobject peer_info_handle, jlong device, jint attribute, jobject value, jint value_position);
+extern jboolean extgl_ReleaseVideoCaptureDeviceNV(JNIEnv *env, jobject peer_info_handle, jlong device);
 
 #endif

@@ -272,9 +272,16 @@
 #define GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB	0x0002
 
 /* GLX_NV_multisample_coverage  */
-#define GLX_COVERAGE_SAMPLES_NV              100001
-#define GLX_COLOR_SAMPLES_NV                 0x20B3
+#define GLX_COVERAGE_SAMPLES_NV         100001
+#define GLX_COLOR_SAMPLES_NV            0x20B3
 
+/* GLX_NV_present_video  */
+#define GLX_NUM_VIDEO_SLOTS_NV          0x20F0
+
+/* GLX_NV_video_capture */
+#define GLX_DEVICE_ID_NV                0x20CD
+#define GLX_NUM_VIDEO_CAPTURE_SLOTS_NV  0x20CF
+#define GLX_UNIQUE_ID_NV                0x20CE
 
 typedef XID GLXContextID;
 typedef XID GLXPixmap;
@@ -339,6 +346,18 @@ typedef void (APIENTRY * glXSwapIntervalSGIPROC)(int interval);
 /* GLX_ARB_create_context */
 typedef GLXContext (APIENTRY * glXCreateContextAttribsARBPROC) (Display *dpy, GLXFBConfig config, GLXContext share_context, Bool direct, const int *attrib_list);
 
+/* GLX_NV_present_video */
+typedef unsigned int * (APIENTRY * glXEnumerateVideoDevicesNVPROC) (Display *dpy, int screen, int *nelements);
+typedef int (APIENTRY * glXBindVideoDeviceNVPROC) (Display *dpy, unsigned int video_slot, unsigned int video_device, const int *attrib_list);
+
+/* GLX_NV_video_capture */
+typedef XID GLXVideoCaptureDeviceNV;
+typedef int (APIENTRY * glXBindVideoCaptureDeviceNVPROC) (Display *dpy, unsigned int video_capture_slot, GLXVideoCaptureDeviceNV device);
+typedef GLXVideoCaptureDeviceNV * (APIENTRY * glXEnumerateVideoCaptureDevicesNVPROC) (Display *dpy, int screen, int *nelements);
+typedef void (APIENTRY * glXLockVideoCaptureDeviceNVPROC) (Display *dpy, GLXVideoCaptureDeviceNV device);
+typedef int (APIENTRY * glXQueryVideoCaptureDeviceNVPROC) (Display *dpy, GLXVideoCaptureDeviceNV device, int attribute, int *value);
+typedef void (APIENTRY * glXReleaseVideoCaptureDeviceNVPROC) (Display *dpy, GLXVideoCaptureDeviceNV device);
+
 typedef struct {
     bool GLX12;
     bool GLX13;
@@ -352,6 +371,8 @@ typedef struct {
 	bool GLX_ARB_framebuffer_sRGB;
 	bool GLX_ARB_create_context;
 	bool GLX_NV_multisample_coverage;
+	bool GLX_NV_present_video;
+	bool GLX_NV_video_capture;
 } GLXExtensions;
 
 /* Add _ to global symbols to avoid symbol clash with the OpenGL library */
@@ -398,6 +419,17 @@ extern glXQueryExtensionsStringPROC lwjgl_glXQueryExtensionsString;
 extern glXSwapIntervalSGIPROC lwjgl_glXSwapIntervalSGI;
 
 extern glXCreateContextAttribsARBPROC lwjgl_glXCreateContextAttribsARB;
+
+/* GLX_NV_present_video */
+extern glXEnumerateVideoDevicesNVPROC lwjgl_glXEnumerateVideoDevicesNV;
+extern glXBindVideoDeviceNVPROC lwjgl_glXBindVideoDeviceNV;
+
+/* GLX_NV_video_capture */
+extern glXBindVideoCaptureDeviceNVPROC lwjgl_glXBindVideoCaptureDeviceNV;
+extern glXEnumerateVideoCaptureDevicesNVPROC lwjgl_glXEnumerateVideoCaptureDevicesNV;
+extern glXLockVideoCaptureDeviceNVPROC lwjgl_glXLockVideoCaptureDeviceNV;
+extern glXQueryVideoCaptureDeviceNVPROC lwjgl_glXQueryVideoCaptureDeviceNV;
+extern glXReleaseVideoCaptureDeviceNVPROC lwjgl_glXReleaseVideoCaptureDeviceNV;
 
 extern bool extgl_InitGLX(Display *disp, int screen, GLXExtensions *extension_flags);
 

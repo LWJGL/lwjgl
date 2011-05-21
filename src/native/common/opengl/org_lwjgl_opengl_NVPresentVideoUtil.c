@@ -31,59 +31,40 @@
  */
 
 /**
- * $Id: context.h -1   $
+ * JNI implementation of the NVPresentVideoUtil class (GLX & WGL only).
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
- * @version $Revision: -1 $
+ * @author Spasi
  */
 
-#ifndef __LWJGL_CONTEXT_H
-#define __LWJGL_CONTEXT_H
-
-#include <windows.h>
 #include <jni.h>
 #include "common_tools.h"
 #include "extgl.h"
+#include "org_lwjgl_opengl_NVPresentVideoUtil.h"
 
-typedef struct {
-	union {
-		HWND hwnd;
-	} u;
-	HDC drawable_hdc;
-} WindowsPeerInfo;
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_NVPresentVideoUtil_nglEnumerateVideoDevicesNV(
+	JNIEnv *env, jclass clazz, jobject peer_info, jobject devices, jint devices_position
+) {
+	#ifdef __APPLE__
+		return 0;
+	#else
+		return extgl_EnumerateVideoDevicesNV(env, peer_info, devices, devices_position);
+	#endif
+}
 
-/*
- * Register the LWJGL window class.
- * Returns true for success, or false for failure
- */
-extern bool registerWindow();
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVPresentVideoUtil_nglBindVideoDeviceNV(
+	JNIEnv *env, jclass clazz, jobject peer_info, jint video_slot, jlong video_device, jobject attrib_list, jint attrib_list_position
+) {
+	#ifdef __APPLE__
+		return false;
+	#else
+		return extgl_BindVideoDeviceNV(env, peer_info, video_slot, video_device, attrib_list, attrib_list_position);
+	#endif
+}
 
-//extern bool applyPixelFormat(JNIEnv *env, HDC hdc, int iPixelFormat);
-
-/*
- * Close the window
- */
-extern void closeWindow(HWND *hwnd, HDC *hdc);
-
-/**
- * Create a dummy window suitable to create contexts from
- */
-extern HWND createDummyWindow(int x, int y);
-
-/**
- * Return appropriate window and extended style flags from the given fullscreen and undecorated property
- */
-extern void getWindowFlags(DWORD *windowflags_return, DWORD *exstyle_return, bool undecorated, bool child_window);
-
-/*
- * Create a window with the specified position, size, and
- * fullscreen attribute. The window will have DirectInput associated
- * with it.
- *
- * Returns true for success, or false for failure
- */
-extern HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height, bool undecorated, bool child_window, HWND parent);
-
-//extern int findPixelFormatOnDC(JNIEnv *env, HDC hdc, int origin_x, int origin_y, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer);
-
-#endif
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVPresentVideoUtil_nglQueryContextNV(JNIEnv *env, jclass clazz, jobject peer_info, jobject context_handle, jint attrib, jobject value, jint value_position) {
+	#ifdef __APPLE__
+		return false;
+	#else
+		return extgl_QueryContextNV(env, peer_info, context_handle, attrib, value, value_position);
+	#endif
+}

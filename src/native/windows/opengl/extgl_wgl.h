@@ -207,6 +207,32 @@ typedef HGLRC (APIENTRY * wglCreateContextAttribsARBPROC) (HDC hDC, HGLRC hShare
 #define WGL_COVERAGE_SAMPLES_NV                                 0x2042
 #define WGL_COLOR_SAMPLES_NV                                    0x20B9
 
+/*--------------------------------------------------------------*/
+/*------------ WGL_NV_present_video ----------------------------*/
+/*--------------------------------------------------------------*/
+
+DECLARE_HANDLE(HVIDEOOUTPUTDEVICENV);
+
+#define WGL_NUM_VIDEO_SLOTS_NV                                  0x20F0
+
+typedef int (APIENTRY * wglEnumerateVideoDevicesNVPROC) (HDC hDc, HVIDEOOUTPUTDEVICENV *phDeviceList);
+typedef BOOL (APIENTRY * wglBindVideoDeviceNVPROC) (HDC hDc, unsigned int uVideoSlot, HVIDEOOUTPUTDEVICENV hVideoDevice, const int *piAttribList);
+typedef BOOL (APIENTRY * wglQueryCurrentContextNVPROC) (int iAttribute, int *piValue);
+
+/*--------------------------------------------------------------*/
+/*------------ WGL_NV_video_capture ----------------------------*/
+/*--------------------------------------------------------------*/
+
+DECLARE_HANDLE(HVIDEOINPUTDEVICENV);
+
+#define WGL_NUM_VIDEO_SLOTS_NV                                  0x20F0
+
+typedef BOOL (APIENTRY * wglBindVideoCaptureDeviceNVPROC) (UINT uVideoSlot, HVIDEOINPUTDEVICENV hDevice);
+typedef UINT (APIENTRY * wglEnumerateVideoCaptureDevicesNVPROC) (HDC hDc, HVIDEOINPUTDEVICENV *phDeviceList);
+typedef BOOL (APIENTRY * wglLockVideoCaptureDeviceNVPROC) (HDC hDc, HVIDEOINPUTDEVICENV hDevice);
+typedef BOOL (APIENTRY * wglQueryVideoCaptureDeviceNVPROC) (HDC hDc, HVIDEOINPUTDEVICENV hDevice, int iAttribute, int *piValue);
+typedef BOOL (APIENTRY * wglReleaseVideoCaptureDeviceNVPROC) (HDC hDc, HVIDEOINPUTDEVICENV hDevice);
+
 /*---------------------------------------------------------------------*/
 
 typedef struct {
@@ -227,6 +253,8 @@ typedef struct {
 	bool WGL_EXT_pixel_format_packed_float;
     bool WGL_ARB_create_context;
     bool WGL_NV_multisample_coverage;
+    bool WGL_NV_present_video;
+    bool WGL_NV_video_capture;
 
 	wglGetExtensionsStringEXTPROC wglGetExtensionsStringEXT;
 
@@ -253,6 +281,16 @@ typedef struct {
 	wglGetCurrentReadDCARBPROC wglGetCurrentReadDCARB;
 
 	wglCreateContextAttribsARBPROC wglCreateContextAttribsARB;
+
+	wglEnumerateVideoDevicesNVPROC wglEnumerateVideoDevicesNV;
+	wglBindVideoDeviceNVPROC wglBindVideoDeviceNV;
+	wglQueryCurrentContextNVPROC wglQueryCurrentContextNV;
+
+	wglBindVideoCaptureDeviceNVPROC wglBindVideoCaptureDeviceNV;
+	wglEnumerateVideoCaptureDevicesNVPROC wglEnumerateVideoCaptureDevicesNV;
+	wglLockVideoCaptureDeviceNVPROC wglLockVideoCaptureDeviceNV;
+	wglQueryVideoCaptureDeviceNVPROC wglQueryVideoCaptureDeviceNV;
+	wglReleaseVideoCaptureDeviceNVPROC wglReleaseVideoCaptureDeviceNV;
 } WGLExtensions;
 
 extern void extgl_InitWGL(WGLExtensions *extensions);

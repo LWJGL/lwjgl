@@ -90,6 +90,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nCr
 		return NULL;
 	}
 	extgl_InitWGL(&extensions);
+	peer_info->extensions = extensions;
 
 	// Restore previous context
 	wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
@@ -127,7 +128,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_getHG
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_getHDC(JNIEnv *env, jclass clazz, jobject peer_info_handle) {
     WindowsPeerInfo *peer_info = (WindowsPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-    return (intptr_t)peer_info->drawable_hdc;   
+    return (intptr_t)peer_info->drawable_hdc;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsContextImplementation_nSwapBuffers
