@@ -395,7 +395,8 @@ public final class SpriteShootoutCL {
 	}
 
 	private void destroy() {
-		clReleaseContext(clContext);
+		if ( clContext != null )
+			clReleaseContext(clContext);
 		Display.destroy();
 		System.exit(0);
 	}
@@ -422,7 +423,6 @@ public final class SpriteShootoutCL {
 
 			kernel.setArg(0, SCREEN_WIDTH);
 			kernel.setArg(1, SCREEN_HEIGHT);
-			kernel.setArg(2, ballSize * 0.5f);
 		}
 
 		protected void createProgram(final int vshID) {

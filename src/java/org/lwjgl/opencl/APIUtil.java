@@ -453,7 +453,7 @@ final class APIUtil {
 	 */
 	static void releaseObjects(final CLDevice device) {
 		// Release objects only if we're about to hit 0.
-		if ( device.getReferenceCount() > 1 )
+		if ( !device.isValid() || device.getReferenceCount() > 1 )
 			return;
 
 		releaseObjects(device.getSubCLDeviceRegistry(), DESTRUCTOR_CLSubDevice);
@@ -466,7 +466,7 @@ final class APIUtil {
 	 */
 	static void releaseObjects(final CLContext context) {
 		// Release objects only if we're about to hit 0.
-		if ( context.getReferenceCount() > 1 )
+		if ( !context.isValid() || context.getReferenceCount() > 1 )
 			return;
 
 		releaseObjects(context.getCLEventRegistry(), DESTRUCTOR_CLEvent);
@@ -483,7 +483,7 @@ final class APIUtil {
 	 */
 	static void releaseObjects(final CLProgram program) {
 		// Release objects only if we're about to hit 0.
-		if ( program.getReferenceCount() > 1 )
+		if ( !program.isValid() || program.getReferenceCount() > 1 )
 			return;
 
 		releaseObjects(program.getCLKernelRegistry(), DESTRUCTOR_CLKernel);
@@ -496,7 +496,7 @@ final class APIUtil {
 	 */
 	static void releaseObjects(final CLCommandQueue queue) {
 		// Release objects only if we're about to hit 0.
-		if ( queue.getReferenceCount() > 1 )
+		if ( !queue.isValid() || queue.getReferenceCount() > 1 )
 			return;
 
 		releaseObjects(queue.getCLEventRegistry(), DESTRUCTOR_CLEvent);
