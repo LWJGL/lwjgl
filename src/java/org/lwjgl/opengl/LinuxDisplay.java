@@ -45,6 +45,7 @@ import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.lang.reflect.InvocationTargetException;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -901,13 +902,26 @@ final class LinuxDisplay implements DisplayImplementation {
 
 		if (focused) {
 			acquireInput();
-			if (parent != null && !xembedded) parent.setFocusable(false);
+			if (parent != null && !xembedded) edtSetCanvasFocus(false);
 		}
 		else {
 			releaseInput();
-			if (parent != null && !xembedded) parent.setFocusable(true);
+			if (parent != null && !xembedded) edtSetCanvasFocus(true);
 		}
 	}
+	
+	private void edtSetCanvasFocus(final boolean focus) {
+		try {
+			java.awt.EventQueue.invokeAndWait(new Runnable() {					
+				public void run() {
+					parent.setFocusable(focus);
+				}
+			});
+		} catch (InterruptedException e) {
+		} catch (InvocationTargetException e) {
+		}
+	}
+	
 	static native long nGetInputFocus(long display);
 
 	private static void setInputFocusUnsafe(long window) {
