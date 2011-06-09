@@ -256,7 +256,7 @@ final class InfoUtilFactory {
 
 			final int size;
 			switch ( param_name ) {
-				case CL_KERNEL_WORK_GROUP_SIZE:
+				case CL_KERNEL_COMPILE_WORK_GROUP_SIZE:
 					size = 3;
 					break;
 				default:
