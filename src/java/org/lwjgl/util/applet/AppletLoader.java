@@ -664,11 +664,13 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	protected String trimExtensionByCapabilities(String file) {
 		if (!pack200Supported) {
-			file = replaceLast(file, ".pack", "");
+			file = file.replace(".pack", "");
 		}
 
 		if (!lzmaSupported) {
-			file = replaceLast(file, ".lzma", "");
+			System.out.println("'lzma.jar' required for LZMA support!");
+			System.out.println("trying files without the lzma extension...");
+			file = file.replace(".lzma", "");
 		}
 		return file;
 	}
@@ -766,7 +768,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * 7 steps
+	 * 8 steps
 	 *
 	 * 1) check applet cache and decide whether to download jars
 	 * 2) download the jars
@@ -774,7 +776,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * 4) validate jars for any corruption
 	 * 5) save applet cache information
 	 * 6) add jars to class path
-	 * 7) switch to loaded applet
+	 * 7) set any lwjgl properties
+	 * 8) switch to loaded applet
 	 */
 	public void run() {
 		setState(STATE_CHECKING_CACHE);
