@@ -766,13 +766,15 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * 4 steps
+	 * 7 steps
 	 *
-	 * 1) check version of applet and decide whether to download jars
+	 * 1) check applet cache and decide whether to download jars
 	 * 2) download the jars
-	 * 3) extract natives
-	 * 4) add to jars to class path
-	 * 5) switch applets
+	 * 3) extract native files
+	 * 4) validate jars for any corruption
+	 * 5) save applet cache information
+	 * 6) add jars to class path
+	 * 7) switch to loaded applet
 	 */
 	public void run() {
 		setState(STATE_CHECKING_CACHE);
@@ -785,22 +787,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			// parse the urls for the jars into the url list
 			loadJarURLs();
 
-			// get path where applet will be stored
-			String path = AccessController.doPrivileged(new PrivilegedExceptionAction<String>() {
-				public String run() throws Exception {
-
-					// we append the code base to avoid naming collisions with al_title
-					String codebase = "";
-					if(prependHost) {
-						codebase = getCodeBase().getHost();
-						if(codebase == null || codebase.length() == 0) {
-							codebase = "localhost";
-						}
-						codebase += File.separator;
-					}
-					return getCacheDir() + File.separator + codebase + getParameter("al_title") + File.separator;
-				}
-			});
+			// get path where applet files will be stored
+			String path = getCacheDirectory();
 
 			File dir = new File(path);
 
@@ -818,24 +806,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			String version = getParameter("al_version");
 			float latestVersion = 0;
 
-			// if applet version specifed, check if you have latest version of applet
+			// if applet version specifed, compare with version in the cache
 			if (version != null) {
-
 				latestVersion = Float.parseFloat(version);
-
-				// if version file exists
-				if (versionFile.exists()) {
-					// compare to new version
-					if (latestVersion == readFloatFile(versionFile)) {
-						versionAvailable = true;
-						percentage = 90;
-
-						if(debugMode) {
-							System.out.println("Loading Cached Applet Version " + latestVersion);
-						}
-						debug_sleep(2000);
-					}
-				}
+				versionAvailable = compareVersion(versionFile, latestVersion);
 			}
 
 			// if jars not available or need updating download them
@@ -902,6 +876,33 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 	
 	/**
+	 * This method will return true if the version stored in the file
+	 * matches the supplied float version.
+	 * 
+	 * @param versionFile - location to file containing version information
+	 * @param version - float version that needs to be compared
+	 * @return returns true if the version in file matches specified version
+	 */
+	protected boolean compareVersion(File versionFile, float version) {
+		// if version file exists
+		if (versionFile.exists()) {
+			// compare to version with file
+			if (version == readFloatFile(versionFile)) {
+				percentage = 90; // not need to download cache files again
+
+				if(debugMode) {
+					System.out.println("Loading Cached Applet Version " + version);
+				}
+				debug_sleep(2000);
+				
+				return true; // version matches file
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Parses the java_arguments list and sets lwjgl specific 
 	 * properties accordingly, before the launch.
 	 */
@@ -926,11 +927,43 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * get path to the lwjgl cache directory
+	 * This method will return the location of the cache directory. All the
+	 * applet files will be downloaded and stored here. A folder will be
+	 * created inside the LWJGL cache directory from the al_title parameter.
+	 * This folder will also be prepended by the host name of the codebase 
+	 * to avoid conflict with same named applets on other hosts.
+	 * 
+	 * @return path to applets cache directory
+	 * @throws Exception if access is denied
+	 */
+	protected String getCacheDirectory() throws Exception {
+		
+		String path = AccessController.doPrivileged(new PrivilegedExceptionAction<String>() {
+			public String run() throws Exception {
+
+				// we append the code base to avoid naming collisions with al_title
+				String codebase = "";
+				if(prependHost) {
+					codebase = getCodeBase().getHost();
+					if(codebase == null || codebase.length() == 0) {
+						codebase = "localhost";
+					}
+					codebase += File.separator;
+				}
+				return getLWJGLCacheDir() + File.separator + codebase + getParameter("al_title") + File.separator;
+			}
+		});
+		
+		return path;
+	}
+	
+	/**
+	 * Get path to the lwjgl cache directory. This location will be where
+	 * the OS keeps temporary files.
 	 * 
 	 * @return path to the lwjgl cache directory
 	 */
-	protected String getCacheDir() {
+	protected String getLWJGLCacheDir() {
 		String cacheDir = System.getProperty("deployment.user.cachedir");
 		
 		if (cacheDir == null || System.getProperty("os.name").startsWith("Win")) {
