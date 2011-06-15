@@ -1662,6 +1662,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				InputStream in = jarFile.getInputStream(jarFile.getEntry(entry.getName()));
 				OutputStream out = new FileOutputStream(path + "natives" + File.separator + entry.getName());
 	
+				// validate if the certificate for native file is correct before extracting
+				validateCertificateChain(certificate, entry.getCertificates());
+				
 				int bufferSize;
 				byte buffer[] = new byte[65536];
 	
@@ -1674,9 +1677,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 					percentage = 65 + (int)(percentageParts * (jarNum + currentSizeExtract/(float)totalSizeExtract));
 					subtaskMessage = "Extracting: " + entry.getName() + " " + ((currentSizeExtract * 100) / totalSizeExtract) + "%";
 				}
-	
-				// validate if the certificate for native file is correct
-				validateCertificateChain(certificate, entry.getCertificates());
 	
 				in.close();
 				out.close();
