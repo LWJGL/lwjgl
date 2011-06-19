@@ -78,6 +78,19 @@ public final class Sys {
 	}
 
 	private static void loadLibrary(final String lib_name) {
+		// actively try to load 64bit libs on 64bit architectures first
+		String osArch = System.getProperty("os.arch");
+		boolean is64bit = "amd64".equals(osArch) || "x86_64".equals(osArch);
+		if(is64bit) {
+			try {
+				doLoadLibrary(lib_name + POSTFIX64BIT);
+				return;
+			} catch (UnsatisfiedLinkError e) {
+				LWJGLUtil.log("Failed to load 64 bit library: " + e.getMessage());
+			}
+		}
+		
+		// fallback to loading the "old way"
 		try {
 			doLoadLibrary(lib_name);
 		} catch (UnsatisfiedLinkError e) {
