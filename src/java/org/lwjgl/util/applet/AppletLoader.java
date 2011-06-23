@@ -702,7 +702,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				nativeJarList = getParameter("al_windows");
 			}
 
-		} else if (osName.startsWith("Linux")) {
+		} else if (osName.startsWith("Linux") || osName.startsWith("Unix")) {
 
 			// check if arch specific natives have been specified
 			if (System.getProperty("os.arch").endsWith("64")) {
