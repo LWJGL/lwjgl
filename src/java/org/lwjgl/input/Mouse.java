@@ -128,6 +128,9 @@ public class Mouse {
 	/** The position of the mouse it was grabbed at */
 	private static int			grab_x;
 	private static int			grab_y;
+	/** The last absolute mouse event position (before clipping) for delta computation */
+	private static int			last_event_raw_x;
+	private static int			last_event_raw_y;
 
 	/** Buffer size in events */
 	private static final int	BUFFER_SIZE									= 50;
@@ -140,7 +143,7 @@ public class Mouse {
 	private static final boolean emulateCursorAnimation = 	LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_WINDOWS ||
 								LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_MACOSX;
 
-        private static final boolean allowNegativeMouseCoords = getPrivilegedBoolean("org.lwjgl.input.Mouse.allowNegativeMouseCoords");
+	private static  boolean clipMouseCoordinatesToWindow = !getPrivilegedBoolean("org.lwjgl.input.Mouse.allowNegativeMouseCoords");
 
 	/**
 	 * Mouse cannot be constructed.
@@ -187,6 +190,14 @@ public class Mouse {
 			}
 			return oldCursor;
 		}
+	}
+
+	public static boolean isClipMouseCoordinatesToWindow() {
+		return clipMouseCoordinatesToWindow;
+	}
+
+	public static void setClipMouseCoordinatesToWindow(boolean clip) {
+		clipMouseCoordinatesToWindow = clip;
 	}
 
 	/**
@@ -350,7 +361,7 @@ public class Mouse {
 				x = poll_coord1;
 				y = poll_coord2;
 			}
-                        if(!allowNegativeMouseCoords) {
+                        if(clipMouseCoordinatesToWindow) {
                             x = Math.min(implementation.getWidth() - 1, Math.max(0, x));
                             y = Math.min(implementation.getHeight() - 1, Math.max(0, y));
                         }
@@ -429,16 +440,22 @@ public class Mouse {
 					event_dy = readBuffer.getInt();
 					event_x += event_dx;
 					event_y += event_dy;
+					last_event_raw_x = event_x;
+					last_event_raw_y = event_y;
 				} else {
 					int new_event_x = readBuffer.getInt();
 					int new_event_y = readBuffer.getInt();
-					event_dx = new_event_x - event_x;
-					event_dy = new_event_y - event_y;
+					event_dx = new_event_x - last_event_raw_x;
+					event_dy = new_event_y - last_event_raw_y;
 					event_x = new_event_x;
 					event_y = new_event_y;
+					last_event_raw_x = new_event_x;
+					last_event_raw_y = new_event_y;
 				}
-				event_x = Math.min(implementation.getWidth() - 1, Math.max(0, event_x));
-				event_y = Math.min(implementation.getHeight() - 1, Math.max(0, event_y));
+				if(clipMouseCoordinatesToWindow) {
+					event_x = Math.min(implementation.getWidth() - 1, Math.max(0, event_x));
+					event_y = Math.min(implementation.getHeight() - 1, Math.max(0, event_y));
+				}
 				event_dwheel = readBuffer.getInt();
 				event_nanos = readBuffer.getLong();
 				return true;
@@ -638,6 +655,8 @@ public class Mouse {
 				poll();
 				event_x = x;
 				event_y = y;
+				last_event_raw_x = x;
+				last_event_raw_y = y;
 				resetMouse();
 			}
 		}
