@@ -39,6 +39,9 @@ package org.lwjgl.opengl;
  */
 
 import java.awt.Canvas;
+import java.awt.event.FocusListener;
+import java.awt.event.FocusEvent;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -141,6 +144,23 @@ final class LinuxDisplay implements DisplayImplementation {
 	
 	private LinuxKeyboard keyboard;
 	private LinuxMouse mouse;
+	
+	private final FocusListener focus_listener = new FocusListener() {
+		public void focusGained(FocusEvent e) {
+			synchronized (GlobalLock.lock) {
+				nGrabKeyboard(getDisplay(), current_window);
+				focused = true;
+				input_released = false;
+			}
+		}
+		public void focusLost(FocusEvent e) {
+			synchronized (GlobalLock.lock) {
+				nUngrabKeyboard(getDisplay());
+				focused = false;
+				input_released = true;
+			}
+		}
+	};
 
 	private static ByteBuffer getCurrentGammaRamp() throws LWJGLException {
 		lockAWT();
@@ -441,6 +461,14 @@ final class LinuxDisplay implements DisplayImplementation {
 					grab = false;
 					minimized = false;
 					dirty = true;
+					if (parent != null) {
+						parent.addFocusListener(focus_listener);
+						if (parent.isFocusOwner()) {
+							nGrabKeyboard(getDisplay(), current_window);
+							focused = true;
+							input_released = false;
+						}
+					}
 				} finally {
 					peer_info.unlock();
 				}
@@ -795,7 +823,6 @@ final class LinuxDisplay implements DisplayImplementation {
 		lockAWT();
 		try {
 			processEvents();
-			checkInput();
 		} finally {
 			unlockAWT();
 		}
@@ -877,63 +904,20 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 
-	private void checkInput() {
-		if (parent == null) return;
-
-		if (parent_focus != parent.hasFocus()) {
-			parent_focus = parent.hasFocus();
-
-			if (parent_focus) {
-				setInputFocusUnsafe(current_window);
-			}
-			else if (xembedded) {
-				setInputFocusUnsafe(1);
-			}
-		}
-		//else if (parent_focus && !focused && !xembedded) {
-		//	setInputFocusUnsafe(current_window);
-		//}
-	}
-
 	private void setFocused(boolean got_focus, int focus_detail) {
-		if (focused == got_focus || focus_detail == NotifyDetailNone || focus_detail == NotifyPointer || focus_detail == NotifyPointerRoot)
+		if (focused == got_focus || focus_detail == NotifyDetailNone || focus_detail == NotifyPointer || focus_detail == NotifyPointerRoot || parent != null)
 			return;
 		focused = got_focus;
 
 		if (focused) {
 			acquireInput();
-			if (parent != null && !xembedded) edtSetCanvasFocus(false);
 		}
 		else {
 			releaseInput();
-			if (parent != null && !xembedded) edtSetCanvasFocus(true);
-		}
-	}
-	
-	private void edtSetCanvasFocus(final boolean focus) {
-		try {
-			java.awt.EventQueue.invokeAndWait(new Runnable() {					
-				public void run() {
-					parent.setFocusable(focus);
-				}
-			});
-		} catch (InterruptedException e) {
-		} catch (InvocationTargetException e) {
 		}
 	}
 	
 	static native long nGetInputFocus(long display);
-
-	private static void setInputFocusUnsafe(long window) {
-		try {
-			setInputFocus(getDisplay(), window, CurrentTime);
-			sync(getDisplay(), false);
-		} catch (LWJGLException e) {
-			// Since we don't have any event timings for XSetInputFocus, a race condition might give a BadMatch, which we'll catch and ignore
-			LWJGLUtil.log("Got exception while trying to focus: " + e);
-		}
-	}
-	private static native void sync(long display, boolean throw_away_events) throws LWJGLException;
 
 	private void releaseInput() {
 		if (isLegacyFullscreen() || input_released)
