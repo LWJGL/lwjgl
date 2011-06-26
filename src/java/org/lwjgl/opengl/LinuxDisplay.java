@@ -148,16 +148,12 @@ final class LinuxDisplay implements DisplayImplementation {
 	private final FocusListener focus_listener = new FocusListener() {
 		public void focusGained(FocusEvent e) {
 			synchronized (GlobalLock.lock) {
-				nGrabKeyboard(getDisplay(), current_window);
 				focused = true;
-				input_released = false;
 			}
 		}
 		public void focusLost(FocusEvent e) {
 			synchronized (GlobalLock.lock) {
-				nUngrabKeyboard(getDisplay());
 				focused = false;
-				input_released = true;
 			}
 		}
 	};
@@ -823,6 +819,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		lockAWT();
 		try {
 			processEvents();
+			checkInput();
 		} finally {
 			unlockAWT();
 		}
@@ -904,6 +901,21 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 
+	private void checkInput() {
+		if (parent == null) return;
+		
+		if (focused != keyboard_grabbed) {
+			if (focused) {
+				grabKeyboard();
+				input_released = false;
+			}
+			else {
+				ungrabKeyboard();
+				input_released = true;
+			}
+		}
+	}
+	
 	private void setFocused(boolean got_focus, int focus_detail) {
 		if (focused == got_focus || focus_detail == NotifyDetailNone || focus_detail == NotifyPointer || focus_detail == NotifyPointerRoot || parent != null)
 			return;
