@@ -380,6 +380,22 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getParentWindow(JNIEn
 	return parent;
 }
 
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getChildCount(JNIEnv *env, jclass unused, jlong display, jlong window_ptr) {
+	Display *disp = (Display *)(intptr_t)display;
+	Window window = (Window)window_ptr;
+	Window root, parent;
+	Window *children;
+	unsigned int nchildren;
+	if (XQueryTree(disp, window, &root, &parent, &children, &nchildren) == 0) {
+		throwException(env, "XQueryTree failed");
+		return None;
+	}
+	if (children != NULL)
+		XFree(children);
+
+	return nchildren;
+}
+
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_hasProperty(JNIEnv *env, jclass unusued, jlong display, jlong window_ptr, jlong property_ptr) {
 	Display *disp = (Display *)(intptr_t)display;
 	Window window = (Window)window_ptr;
@@ -399,7 +415,15 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_hasProperty(JNIEnv
 	return result;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setInputFocus(JNIEnv *env, jclass clazz, jlong display, jlong window_ptr, jlong time) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetInputFocus(JNIEnv *env, jclass unused, jlong display_ptr) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	int revert_mode;
+	Window win;
+	XGetInputFocus(disp, &win, &revert_mode);
+	return win;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetInputFocus(JNIEnv *env, jclass clazz, jlong display, jlong window_ptr, jlong time) {
 	Display *disp = (Display *)(intptr_t)display;
 	Window window = (Window)window_ptr;
 	XSetInputFocus(disp, window, RevertToParent, time);
@@ -572,14 +596,6 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateBlankCursor(JN
 	Cursor cursor = XCreatePixmapCursor(disp, mask, mask, &dummy_color, &dummy_color, 0, 0);
 	XFreePixmap(disp, mask);
 	return cursor;
-}
-
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetInputFocus(JNIEnv *env, jclass unused, jlong display_ptr) {
-	Display *disp = (Display *)(intptr_t)display_ptr;
-	int revert_mode;
-	Window win;
-	XGetInputFocus(disp, &win, &revert_mode);
-	return win;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIconifyWindow(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr, jint screen) {

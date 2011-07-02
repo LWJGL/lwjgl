@@ -136,11 +136,14 @@ final class LinuxDisplay implements DisplayImplementation {
 	private boolean close_requested;
 	private long current_cursor;
 	private long blank_cursor;
+	private boolean mouseInside = true;
+	
 	private Canvas parent;
 	private long parent_window;
 	private boolean xembedded;
-	private boolean parent_focus;
-	private boolean mouseInside = true;
+	private long parent_proxy_focus_window;
+	private boolean parent_focused;
+	private long last_window_focus = 0;
 	
 	private LinuxKeyboard keyboard;
 	private LinuxMouse mouse;
@@ -148,12 +151,12 @@ final class LinuxDisplay implements DisplayImplementation {
 	private final FocusListener focus_listener = new FocusListener() {
 		public void focusGained(FocusEvent e) {
 			synchronized (GlobalLock.lock) {
-				focused = true;
+				parent_focused = true;
 			}
 		}
 		public void focusLost(FocusEvent e) {
 			synchronized (GlobalLock.lock) {
-				focused = false;
+				parent_focused = false;
 			}
 		}
 	};
@@ -460,9 +463,7 @@ final class LinuxDisplay implements DisplayImplementation {
 					if (parent != null) {
 						parent.addFocusListener(focus_listener);
 						if (parent.isFocusOwner()) {
-							nGrabKeyboard(getDisplay(), current_window);
-							focused = true;
-							input_released = false;
+							parent_focused = true;
 						}
 					}
 				} finally {
@@ -480,9 +481,12 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native long getRootWindow(long display, int screen);
 	private static native boolean hasProperty(long display, long window, long property);
 	private static native long getParentWindow(long display, long window) throws LWJGLException;
+	private static native int getChildCount(long display, long window) throws LWJGLException;
 	private static native void mapRaised(long display, long window);
 	private static native void reparentWindow(long display, long window, long parent, int x, int y);
-
+	private static native long nGetInputFocus(long display) throws LWJGLException;
+	private static native void nSetInputFocus(long display, long window, long time);
+	
 	private static boolean isAncestorXEmbedded(long window) throws LWJGLException {
 		long xembed_atom = internAtom("_XEMBED_INFO", true);
 		if (xembed_atom != None) {
@@ -743,8 +747,6 @@ final class LinuxDisplay implements DisplayImplementation {
 		return peer_info;
 	}
 
-	static native void setInputFocus(long display, long window, long time);
-
 	private void relayEventToParent(LinuxEvent event_buffer, int event_mask) {
 		tmp_event_buffer.copyFrom(event_buffer);
 		tmp_event_buffer.setWindow(parent_window);
@@ -900,20 +902,95 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-
+	
 	private void checkInput() {
 		if (parent == null) return;
 		
-		if (focused != keyboard_grabbed) {
-			if (focused) {
-				grabKeyboard();
-				input_released = false;
+		if (xembedded) {
+			long current_focus_window = 0;
+			
+			try {
+				current_focus_window = nGetInputFocus(getDisplay());
+			} catch (LWJGLException e) {
+				return; // fail silently as it can fail whilst splitting browser tabs
 			}
-			else {
-				ungrabKeyboard();
-				input_released = true;
+			
+			if (last_window_focus != current_focus_window || parent_focused != focused) {
+				if (isParentWindowActive(current_focus_window)) {
+					if (parent_focused) {
+						nSetInputFocus(getDisplay(), current_window, CurrentTime);
+						last_window_focus = current_window;
+						focused = true;
+					}
+					else {
+						// return focus to the parent proxy focus window
+						nSetInputFocus(getDisplay(), parent_proxy_focus_window, CurrentTime);
+						last_window_focus = parent_proxy_focus_window;
+						focused = false;
+					}
+				}
+				else {
+					last_window_focus = current_focus_window;
+					focused = false;
+				}
 			}
 		}
+		else {
+			if (parent_focused != keyboard_grabbed) {
+				if (parent_focused) {
+					grabKeyboard();
+					input_released = false;
+					focused = true;
+				}
+				else {
+					ungrabKeyboard();
+					input_released = true;
+					focused = false;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * This method will check if the parent window is active when running
+	 * in xembed mode. Every xembed embedder window has a focus proxy 
+	 * window that recieves all the input. This method will test whether 
+	 * the provided window handle is the focus proxy, if so it will get its 
+	 * parent window and then test whether this is indeed the window that
+	 * belongs to our current_window. If so then parent window is active.
+	 * 
+	 * @param window - the window handle to test
+	 */
+	private boolean isParentWindowActive(long window) {
+		try {
+			// parent window already active as window is current_window
+			if (window == current_window) return true;
+			
+			// xembed focus proxy will have no children
+			if (getChildCount(getDisplay(), window) != 0) return false;
+			
+			// get parent, will be xembed embedder window and ancestor of current_window
+			long parent_window = getParentWindow(getDisplay(), window);
+			
+			// parent must not be None
+			if (parent_window == None) return false;
+			
+			// scroll current_window's ancestors to find parent_window
+			long w = current_window;
+			
+			while (w != None) {
+				w = getParentWindow(getDisplay(), w);
+				if (w == parent_window) {
+					parent_proxy_focus_window = window; // save focus proxy window
+					return true;
+				}
+			}	
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Failed to detect if parent window is active: " + e.getMessage());
+			return true; // on failure assume still active
+		}
+		
+		return false; // failed to find an active parent window
 	}
 	
 	private void setFocused(boolean got_focus, int focus_detail) {
@@ -928,8 +1005,6 @@ final class LinuxDisplay implements DisplayImplementation {
 			releaseInput();
 		}
 	}
-	
-	static native long nGetInputFocus(long display);
 
 	private void releaseInput() {
 		if (isLegacyFullscreen() || input_released)
