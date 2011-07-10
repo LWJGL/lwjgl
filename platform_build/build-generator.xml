@@ -50,7 +50,7 @@
 	<!-- Proxy target to generate it all -->
 	<target name="generate-all" depends="generate-openal, generate-opengl, generate-opengl-capabilities, generate-opengl-references,  generate-opengles, generate-opengles-capabilities, generate-opencl, generate-opencl-capabilities" description="Generates java and native source"/>
 
-	<target name="generate-debug" depends="generate-openal-debug, generate-opengl-debug, generate-opengl-capabilities-debug, generate-opengl-references, generate-opencl-debug, generate-opencl-capabilities-debug" description="Generates java and native source with debug functionality"/>
+	<target name="generate-debug" depends="generate-openal-debug, generate-opengl-debug, generate-opengl-capabilities-debug, generate-opengl-references, generate-opengles-debug, generate-opengles-capabilities-debug, generate-opencl-debug, generate-opencl-capabilities-debug" description="Generates java and native source with debug functionality"/>
 
 	<!-- ********************************************************************************
 		*********************************************************************************
