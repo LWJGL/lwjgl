@@ -730,6 +730,32 @@ public final class Display {
 	}
 
 	/**
+	 * Create the Display with the specified context type. If isFullscreen() is true or if windowed
+	 * context are not supported on the platform, the display mode will be switched to the mode returned by
+	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
+	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
+	 * created with the given parameters, a LWJGLException will be thrown.
+	 * <p/>
+	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
+	 *
+	 * @param type the context type to create
+	 *
+	 * @throws LWJGLException
+	 */
+	public static void create(ContextType type) throws LWJGLException {
+		synchronized ( GlobalLock.lock ) {
+			switch ( type ) {
+				case GL:
+					create(new PixelFormat());
+					break;
+				case GLES:
+					create(new org.lwjgl.opengles.PixelFormat());
+					break;
+			}
+		}
+	}
+
+	/**
 	 * Create the OpenGL context. If isFullscreen() is true or if windowed
 	 * context are not supported on the platform, the display mode will be switched to the mode returned by
 	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
@@ -741,9 +767,7 @@ public final class Display {
 	 * @throws LWJGLException
 	 */
 	public static void create() throws LWJGLException {
-		synchronized ( GlobalLock.lock ) {
-			create(new PixelFormat());
-		}
+		create(ContextType.GL);
 	}
 
 	/**
@@ -874,23 +898,6 @@ public final class Display {
 				display_impl.resetDisplayMode();
 				throw e;
 			}
-		}
-	}
-
-	/**
-	 * Create the OpenGL ES context. If isFullscreen() is true or if windowed
-	 * context are not supported on the platform, the display mode will be switched to the mode returned by
-	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
-	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
-	 * created with the given parameters, a LWJGLException will be thrown.
-	 * <p/>
-	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
-	 *
-	 * @throws LWJGLException
-	 */
-	public static void createES() throws LWJGLException {
-		synchronized ( GlobalLock.lock ) {
-			create(new org.lwjgl.opengles.PixelFormat());
 		}
 	}
 
