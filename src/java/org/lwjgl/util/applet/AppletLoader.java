@@ -120,6 +120,9 @@ import java.util.zip.ZipFile;
  * <li>al_windows32 - [String] If specifed it will be used instead of al_windows on 32bit windows systems.</li>
  * <li>al_linux64 - [String] If specifed it will be used instead of al_linux on 64bit linux systems.</li>
  * <li>al_linux32 - [String] If specifed it will be used instead of al_linux on 32bit linux systems.</li>
+ * <li>al_mac32 - [String] If specifed it will be used instead of al_mac on 64bit mac systems.</li>
+ * <li>al_mac64 - [String] If specifed it will be used instead of al_mac on 32bit mac systems.</li>
+ * <li>al_macppc - [String] If specifed it will be used instead of al_mac on PPC mac systems.</li>
  * <p>
  * <li>boxbgcolor - [String] any String AWT color ("red", "blue", etc), RGB (0-255) or hex formated color (#RRGGBB) to use as background. <i>Default: #ffffff</i>.</li>
  * <li>boxfgcolor - [String] any String AWT color ("red", "blue", etc), RGB (0-255) or hex formated color (#RRGGBB) to use as foreground. <i>Default: #000000</i>.</li>

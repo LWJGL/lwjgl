@@ -956,8 +956,8 @@ final class LinuxDisplay implements DisplayImplementation {
 	 * in xembed mode. Every xembed embedder window has a focus proxy 
 	 * window that recieves all the input. This method will test whether 
 	 * the provided window handle is the focus proxy, if so it will get its 
-	 * parent window and then test whether this is indeed the window that
-	 * belongs to our current_window. If so then parent window is active.
+	 * parent window and then test whether this is an ancestor to our
+	 * current_window. If so then parent window is active.
 	 * 
 	 * @param window - the window handle to test
 	 */
