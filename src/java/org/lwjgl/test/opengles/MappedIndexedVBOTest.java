@@ -45,6 +45,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.ContextType;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengles.GLContext;
@@ -85,7 +86,7 @@ public final class MappedIndexedVBOTest {
 
 	static {
 		try {
-			Display.createES();
+			Display.create(ContextType.GLES);
 			System.out.println("Created OpenGL.");
 
 			if ( !GLContext.getCapabilities().GL_OES_mapbuffer ) {
