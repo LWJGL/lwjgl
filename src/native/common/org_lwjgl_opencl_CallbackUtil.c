@@ -142,7 +142,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opencl_CallbackUtil_getBuildProgramCallba
 
 // ----------------- [ NATIVE KERNEL CALLBACK ] -----------------
 
-static void CL_USER_FUNC_CALLBACK nativeKernelCallback(void *args) {
+static void CL_CALLBACK nativeKernelCallback(void *args) {
     JNIEnv *env = attachCurrentThread();
     jobject user_func = (jobject)(intptr_t)*(jlong *)args;
     jint num_mem_objects = *(jint *)((char *)args + 8);
