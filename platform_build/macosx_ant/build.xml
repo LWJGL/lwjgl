@@ -20,7 +20,7 @@
 
 	<target name="compile">
 		<apply dir="${dstdir}" executable="${compiler}" os="Mac OS X" skipemptyfilesets="true" failonerror="true" dest="${dstdir}">
-			<arg line="${cflags} -ObjC -O2 -Wall -Wunused -c -fPIC -I${sdkroot}/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers -I${native}/common -I${native}/macosx"/>
+			<arg line="${cflags} -ObjC -O2 -Wall -Wunused -c -fPIC -I${sdkroot}/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers -I${native}/common -I${native}/common/opengl -I${native}/macosx"/>
 			<!-- Map from *.m and *.c to .o -->
 			<mapper type="regexp" from="^(.*)\.(c|m)" to="\1.o"/>
 			<fileset dir="${native}/macosx" includes="*.m"/>
