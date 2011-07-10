@@ -94,7 +94,7 @@ public class RegisterStubsGenerator {
 				continue;
 
 			if (mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null)
-				signature += "I";
+				signature += "J";
 			else
 				signature += getTypeSignature(param.getType(), true);
 		}

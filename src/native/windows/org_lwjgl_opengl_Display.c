@@ -1,35 +1,35 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /**
  * $Id$
  *
@@ -43,7 +43,7 @@
 #include <windowsx.h>
 #include <malloc.h>
 #include "Window.h"
-#include "extgl_wgl.h"
+/*#include "extgl_wgl.h"*/
 #include "common_tools.h"
 #include "display.h"
 #include "org_lwjgl_opengl_WindowsDisplay.h"
@@ -121,8 +121,8 @@ static void handleMessages(JNIEnv *env) {
 				PM_REMOVE      // removal options
 				))
 	{
-		if (msg.message == WM_QUIT) 
-			break; 
+		if (msg.message == WM_QUIT)
+			break;
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
@@ -303,14 +303,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nReshape(JNIEnv *env
 	RECT clientSize;
 
 	getWindowFlags(&windowflags, &exstyle, undecorated, child);
-	
+
 	// If we're not a fullscreen window, adjust the height to account for the
 	// height of the title bar:
 	clientSize.bottom = height;
 	clientSize.left = 0;
 	clientSize.right = width;
 	clientSize.top = 0;
-	
+
 	AdjustWindowRectEx(
 	  &clientSize,    // client-rectangle structure
 	  windowflags,    // window styles
@@ -339,7 +339,7 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 	int maskPixelsOff;
 	int scanlineWidth;
 	HBITMAP colorDIB;
-	
+
 	memset(&bitmapInfo, 0, sizeof(BITMAPV5HEADER));
 	bitmapInfo.bV5Size              = sizeof(BITMAPV5HEADER);
 	bitmapInfo.bV5Width             = width;
@@ -380,7 +380,7 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 	DeleteObject(colorDIB);
 
 	// Convert alpha map to pixel packed mask
-	
+
 	// number of bytes it takes to fit a bit packed scan line.
 	widthInBytes = (width & 0x7) != 0 ? (width >> 3) + 1 : (width >> 3);
 
@@ -392,9 +392,9 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 	imageSize = scanlineWidth*height;
 	maskPixels = (unsigned char*)malloc(sizeof(unsigned char)*imageSize);
 	memset(maskPixels, 0xFF, sizeof(unsigned char)*imageSize);
-	
+
 	cursorMask = CreateBitmap(width, height, 1, 1, maskPixels);
-	
+
 	memset(&iconInfo, 0, sizeof(ICONINFO));
 	iconInfo.hbmMask = cursorMask;
 	iconInfo.hbmColor = colorBitmap;

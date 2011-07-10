@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+
+<project name="lwjgl native code, native code" basedir="../../bin/lwjgles" default="compile">
+	<property name="native" location="../../src/native"/>
+	<property environment="env"/>
+	<property name="sdkhome" location="${env.MSSDK}"/>
+
+	<target name="compile_dir">
+		<apply dir="." failonerror="true" executable="cl" dest="." skipemptyfilesets="true">
+			<arg line="/Ox /W2 /nologo /Ox /Ob2 /Oi /Ot /Oy /FD /EHsc /MT /Gy /W2 /nologo /c"/>
+			<arg value="/I${sdkhome}\include"/>
+			<arg value="/I${java.home}\..\include"/>
+			<arg value="/I${java.home}\..\include\win32"/>
+			<arg value="/I${native}\common"/>
+			<arg value="/I${native}\common\opengles"/>
+			<arg value="/I${native}\windows"/>
+			<arg value="/I${native}\windows\opengles"/>
+			<srcfile/>
+			<fileset dir="${native}/common" includes="*.c"/>
+			<fileset dir="${native}/common/opengles" includes="*.c"/>
+			<fileset dir="${native}/generated/openal" includes="*.c"/>
+			<fileset dir="${native}/generated/opencl" includes="*.c"/>
+			<fileset dir="${native}/generated/opengles" includes="*.c"/>
+			<fileset dir="${native}/windows" includes="*.c"/>
+			<fileset dir="${native}/windows/opengles" includes="*.c"/>
+			<mapper type="glob" from="*.c" to="*.obj"/>
+		</apply>
+	</target>
+
+	<target name="link">
+		<apply dir="." parallel="true" executable="cl" failonerror="true">
+			<arg line="/LD /nologo"/>
+			<srcfile/>
+			<arg line="/Fe${dllname} /link"/>
+			<arg value="/LIBPATH:${java.home}\..\lib"/>
+			<arg value="/LIBPATH:${sdkhomelib}"/>
+			<arg value="/LIBPATH:..\..\libs\windows"/>
+			<arg value="/OPT:REF"/>
+			<arg value="/OPT:ICF"/>
+			<arg line="/DLL /DELAYLOAD:jawt.dll ${libs}"/>
+			<fileset dir="." includes="*.obj"/>
+		</apply>
+	</target>
+
+	<target name="clean">
+		<delete>
+			<fileset dir="." includes="*.obj"/>
+			<fileset dir="." includes="*.dll"/>
+			<fileset dir="." includes="*.exp"/>
+			<fileset dir="." includes="*.lib"/>
+		</delete>
+	</target>
+
+	<target name="compile">
+		<condition property="sdkhomelib" value="${sdkhome}\lib" else="${sdkhome}\lib\x64">
+			<equals arg1="${os.arch}" arg2="x86"/>
+		</condition>
+		<condition property="dllname" value="lwjgl.dll" else="lwjgl64.dll">
+			<equals arg1="${os.arch}" arg2="x86"/>
+		</condition>
+		<echo message="${sdkhomelib}"/>
+		<property name="libs" value="Kernel32.lib ole32.lib libEGL.lib Version.lib user32.lib Gdi32.lib Advapi32.lib jawt.lib delayimp.lib winmm.lib Comctl32.lib"/>
+		<antcall target="compile_dir"/>
+		<antcall target="link"/>
+    </target>
+</project>
+

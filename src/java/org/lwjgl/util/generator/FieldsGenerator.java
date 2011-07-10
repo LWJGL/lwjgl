@@ -59,7 +59,8 @@ public class FieldsGenerator {
 			PrimitiveType.Kind field_kind = field_type_prim.getKind();
 			if ( field_kind != PrimitiveType.Kind.INT
 			     && field_kind != PrimitiveType.Kind.LONG
-			     && field_kind != PrimitiveType.Kind.FLOAT ) {
+			     && field_kind != PrimitiveType.Kind.FLOAT
+			     && field_kind != PrimitiveType.Kind.BYTE ) {
 				throw new RuntimeException("Field " + field.getSimpleName() + " is not of type 'int', 'long' or 'float'");
 			}
 		} else if ( "java.lang.String".equals(field_type.toString()) ) {
@@ -85,6 +86,8 @@ public class FieldsGenerator {
 			field_value_string = "0x" + Long.toHexString((Long)field.getConstantValue()).toUpperCase() + 'L';
 		} else if ( field_value_class.equals(Float.class) ) {
 			field_value_string = field.getConstantValue() + "f";
+		} else if ( value.getClass().equals(Byte.class) ) {
+			field_value_string = "0x" + Integer.toHexString((Byte)field.getConstantValue()).toUpperCase();
 		} else if ( field_value_class.equals(String.class) ) {
 			field_value_string = "\"" + field.getConstantValue() + "\"";
 		} else {

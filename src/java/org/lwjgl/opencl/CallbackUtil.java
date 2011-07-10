@@ -107,14 +107,13 @@ final class CallbackUtil {
 	 * @param user_data the global reference pointer
 	 */
 	static void registerCallback(final CLContext context, final long user_data) {
-		if ( context.getPointerUnsafe() == 0 ) {
-			if ( user_data != 0 )
-				deleteGlobalRef(user_data);
+		if ( user_data == 0 )
 			return;
-		}
 
-		if ( user_data != 0 )
+		if ( context.isValid() )
 			contextUserData.put(context, user_data);
+		else
+			deleteGlobalRef(user_data);
 	}
 
 	/**

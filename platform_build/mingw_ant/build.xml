@@ -22,7 +22,9 @@
 			<srcfile/>
 			<fileset dir="${native}/windows" includes="*.c"/>
 			<fileset dir="${native}/common" includes="*.c"/>
-			<fileset dir="${native}/generated" includes="*.c"/>
+			<fileset dir="${native}/generated/openal" includes="*.c"/>
+			<fileset dir="${native}/generated/opencl" includes="*.c"/>
+			<fileset dir="${native}/generated/opengl" includes="*.c"/>
 			<mapper type="glob" from="*.c" to="*.o"/>
 		</apply>
 	</target>
@@ -53,7 +55,7 @@
 			<fileset dir="." includes="*.dll"/>
 		</delete>
 	</target>
-	
+
 	<target name="compile">
 		<property name="libs" value="-lkernel32 -lole32 -lopengl32 -lversion -luser32 -lgdi32 -ladvapi32 -lwinmm"/>
 		<antcall target="compile_dir"/>

@@ -43,10 +43,7 @@ package org.lwjgl.opengl;
  * @author foo
  */
 
-import org.lwjgl.BufferUtils;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.LWJGLUtil;
-import org.lwjgl.Sys;
+import org.lwjgl.*;
 import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -61,8 +58,6 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.HashSet;
-
-import static org.lwjgl.opengl.GL11.*;
 
 public final class Display {
 
@@ -109,7 +104,7 @@ public final class Display {
 	private static int swap_interval;
 
 	/** The Drawable instance that tracks the current Display context */
-	private static final AbstractDrawable drawable;
+	private static DrawableLWJGL drawable;
 
 	private static boolean window_created;
 
@@ -134,22 +129,6 @@ public final class Display {
 			LWJGLUtil.log("Initial mode: " + initial_mode);
 		} catch (LWJGLException e) {
 			throw new RuntimeException(e);
-		}
-		drawable = new AbstractDrawable() {
-			public void destroy() {
-				synchronized ( GlobalLock.lock ) {
-					if ( !isCreated() )
-						return;
-
-					releaseDrawable();
-					super.destroy();
-					destroyWindow();
-					x = y = -1;
-					cached_icons = null;
-					reset();
-					removeShutdownHook();
-				}
-			}
 		};
 	}
 
@@ -314,7 +293,7 @@ public final class Display {
 			tmp_parent.addComponentListener(component_listener);
 		}
 		DisplayMode mode = getEffectiveMode();
-		display_impl.createWindow(mode, tmp_parent, getWindowX(), getWindowY());
+		display_impl.createWindow(drawable, mode, tmp_parent, getWindowX(), getWindowY());
 		window_created = true;
 
 		setTitle(title);
@@ -330,9 +309,9 @@ public final class Display {
 
 	private static void releaseDrawable() {
 		try {
-			Context context = drawable.context;
+			Context context = drawable.getContext();
 			if ( context != null && context.isCurrent() ) {
-				Context.releaseCurrentContext();
+				context.releaseCurrent();
 				context.releaseDrawable();
 			}
 		} catch (LWJGLException e) {
@@ -648,8 +627,8 @@ public final class Display {
 				throw new IllegalStateException("Display not created");
 
 			if ( LWJGLUtil.DEBUG )
-				Util.checkGLError();
-			Context.swapBuffers();
+				drawable.checkGLError();
+			drawable.swapBuffers();
 		}
 	}
 
@@ -851,12 +830,180 @@ public final class Display {
 			registerShutdownHook();
 			if ( isFullscreen() )
 				switchDisplayMode();
+
+			final DrawableGL drawable = new DrawableGL() {
+				public void destroy() {
+					synchronized ( GlobalLock.lock ) {
+						if ( !isCreated() )
+							return;
+
+						releaseDrawable();
+						super.destroy();
+						destroyWindow();
+						x = y = -1;
+						cached_icons = null;
+						reset();
+						removeShutdownHook();
+					}
+				}
+			};
+			Display.drawable = drawable;
+
 			try {
-				drawable.peer_info = display_impl.createPeerInfo(pixel_format);
+				drawable.setPixelFormat(pixel_format);
 				try {
 					createWindow();
 					try {
-						drawable.context = new Context(drawable.peer_info, attribs, shared_drawable != null ? ((AbstractDrawable)shared_drawable).getContext() : null);
+						drawable.context = new ContextGL(drawable.peer_info, attribs, shared_drawable != null ? ((DrawableGL)shared_drawable).getContext() : null);
+						try {
+							makeCurrentAndSetSwapInterval();
+							initContext();
+						} catch (LWJGLException e) {
+							drawable.destroy();
+							throw e;
+						}
+					} catch (LWJGLException e) {
+						destroyWindow();
+						throw e;
+					}
+				} catch (LWJGLException e) {
+					drawable.destroy();
+					throw e;
+				}
+			} catch (LWJGLException e) {
+				display_impl.resetDisplayMode();
+				throw e;
+			}
+		}
+	}
+
+	/**
+	 * Create the OpenGL ES context. If isFullscreen() is true or if windowed
+	 * context are not supported on the platform, the display mode will be switched to the mode returned by
+	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
+	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
+	 * created with the given parameters, a LWJGLException will be thrown.
+	 * <p/>
+	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
+	 *
+	 * @throws LWJGLException
+	 */
+	public static void createES() throws LWJGLException {
+		synchronized ( GlobalLock.lock ) {
+			create(new org.lwjgl.opengles.PixelFormat());
+		}
+	}
+
+	/**
+	 * Create the OpenGL ES context with the given minimum parameters. If isFullscreen() is true or if windowed
+	 * context are not supported on the platform, the display mode will be switched to the mode returned by
+	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
+	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
+	 * created with the given parameters, a LWJGLException will be thrown.
+	 * <p/>
+	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
+	 *
+	 * @param pixel_format Describes the minimum specifications the context must fulfill.
+	 *
+	 * @throws LWJGLException
+	 */
+
+	public static void create(org.lwjgl.opengles.PixelFormat pixel_format) throws LWJGLException {
+		synchronized ( GlobalLock.lock ) {
+			create(pixel_format, null, null);
+		}
+	}
+
+	/**
+	 * Create the OpenGL context with the given minimum parameters. If isFullscreen() is true or if windowed
+	 * context are not supported on the platform, the display mode will be switched to the mode returned by
+	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
+	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
+	 * created with the given parameters, a LWJGLException will be thrown.
+	 * <p/>
+	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
+	 *
+	 * @param pixel_format    Describes the minimum specifications the context must fulfill.
+	 * @param shared_drawable The Drawable to share context with. (optional, may be null)
+	 *
+	 * @throws LWJGLException
+	 */
+	public static void create(org.lwjgl.opengles.PixelFormat pixel_format, Drawable shared_drawable) throws LWJGLException {
+		synchronized ( GlobalLock.lock ) {
+			create(pixel_format, shared_drawable, null);
+		}
+	}
+
+	/**
+	 * Create the OpenGL context with the given minimum parameters. If isFullscreen() is true or if windowed
+	 * context are not supported on the platform, the display mode will be switched to the mode returned by
+	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
+	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
+	 * created with the given parameters, a LWJGLException will be thrown.
+	 * <p/>
+	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
+	 *
+	 * @param pixel_format Describes the minimum specifications the context must fulfill.
+	 * @param attribs      The ContextAttribs to use when creating the context. (optional, may be null)
+	 *
+	 * @throws LWJGLException
+	 */
+	public static void create(org.lwjgl.opengles.PixelFormat pixel_format, org.lwjgl.opengles.ContextAttribs attribs) throws LWJGLException {
+		synchronized ( GlobalLock.lock ) {
+			create(pixel_format, null, attribs);
+		}
+	}
+
+	/**
+	 * Create the OpenGL ES context with the given minimum parameters. If isFullscreen() is true or if windowed
+	 * context are not supported on the platform, the display mode will be switched to the mode returned by
+	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
+	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
+	 * created with the given parameters, a LWJGLException will be thrown.
+	 * <p/>
+	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
+	 *
+	 * @param pixel_format    Describes the minimum specifications the context must fulfill.
+	 * @param shared_drawable The Drawable to share context with. (optional, may be null)
+	 * @param attribs         The ContextAttribs to use when creating the context. (optional, may be null)
+	 *
+	 * @throws LWJGLException
+	 */
+	public static void create(org.lwjgl.opengles.PixelFormat pixel_format, Drawable shared_drawable, org.lwjgl.opengles.ContextAttribs attribs) throws LWJGLException {
+		synchronized ( GlobalLock.lock ) {
+			if ( isCreated() )
+				throw new IllegalStateException("Only one LWJGL context may be instantiated at any one time.");
+			if ( pixel_format == null )
+				throw new NullPointerException("pixel_format cannot be null");
+			removeShutdownHook();
+			registerShutdownHook();
+			if ( isFullscreen() )
+				switchDisplayMode();
+
+			final DrawableGLES drawable = new DrawableGLES() {
+				public void destroy() {
+					synchronized ( GlobalLock.lock ) {
+						if ( !isCreated() )
+							return;
+
+						releaseDrawable();
+						super.destroy();
+						destroyWindow();
+						x = y = -1;
+						cached_icons = null;
+						reset();
+						removeShutdownHook();
+					}
+				}
+			};
+			Display.drawable = drawable;
+
+			try {
+				drawable.setPixelFormat(pixel_format);
+				try {
+					createWindow();
+					try {
+						drawable.createContext(attribs, shared_drawable);
 						try {
 							makeCurrentAndSetSwapInterval();
 							initContext();
@@ -896,7 +1043,7 @@ public final class Display {
 	private static void makeCurrentAndSetSwapInterval() throws LWJGLException {
 		makeCurrent();
 		try {
-			Util.checkGLError();
+			drawable.checkGLError();
 		} catch (OpenGLException e) {
 			LWJGLUtil.log("OpenGL error during context creation: " + e.getMessage());
 		}
@@ -904,10 +1051,7 @@ public final class Display {
 	}
 
 	private static void initContext() {
-		// set background clear color
-		glClearColor(r, g, b, 0.0f);
-		// Clear window to avoid the desktop "showing through"
-		glClear(GL_COLOR_BUFFER_BIT);
+		drawable.initContext(r, g, b);
 		update();
 	}
 
@@ -990,7 +1134,8 @@ public final class Display {
 		synchronized ( GlobalLock.lock ) {
 			swap_interval = value;
 			if ( isCreated() )
-				Context.setSwapInterval(swap_interval);
+				drawable.setSwapInterval(swap_interval);
+
 		}
 	}
 

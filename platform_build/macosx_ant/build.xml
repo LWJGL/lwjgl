@@ -7,7 +7,7 @@
 		<mkdir dir="i386"/>
 		<mkdir dir="x86_64"/>
 	</target>
-	
+
 	<target name="clean">
 		<delete failonerror="false">
 			<fileset dir="i386"/>
@@ -26,10 +26,12 @@
 			<fileset dir="${native}/macosx" includes="*.m"/>
 			<fileset dir="${native}/macosx" includes="*.c"/>
 			<fileset dir="${native}/common" includes="*.c"/>
-			<fileset dir="${native}/generated" includes="*.c"/>
+			<fileset dir="${native}/generated/openal" includes="*.c"/>
+			<fileset dir="${native}/generated/opencl" includes="*.c"/>
+			<fileset dir="${native}/generated/opengl" includes="*.c"/>
 		</apply>
 	</target>
-	
+
 	<target name="link">
 		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
 			<arg line="${linkerflags} -exported_symbols_list ../lwjgl.symbols -dynamiclib -o ${libname} -framework Foundation -framework AppKit -framework JavaVM -framework Carbon"/>
@@ -40,7 +42,7 @@
 			<fileset dir="." file="${libname}"/>
 		</apply>
 	</target>
-	
+
 	<target name="nativelibrary" depends="init">
 		<property name="universal_sdkroot" location="/Developer/SDKs/MacOSX10.4u.sdk"/>
 		<property name="ppc_sdkroot" location="/Developer/SDKs/MacOSX10.4u.sdk"/>

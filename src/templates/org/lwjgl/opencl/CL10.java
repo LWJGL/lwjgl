@@ -976,6 +976,7 @@ public interface CL10 {
 	@cl_int
 	int clReleaseKernel(@PointerWrapper("cl_kernel") CLKernel kernel);
 
+	@GenerateAutos
 	@cl_int
 	int clSetKernelArg(@PointerWrapper("cl_kernel") CLKernel kernel,
 	                   @cl_uint int arg_index,
@@ -995,14 +996,6 @@ public interface CL10 {
 	                   @Constant("PointerBuffer.getPointerSize()") @size_t long arg_size,
 	                   @Check(canBeNull = true) @Const
 	                   @Constant(value = "APIUtil.getBufferPointer().put(0, arg_value == null ? 0 : arg_value.getPointer()).getBuffer(), 0", keepParam = true) CLObject arg_value);
-
-	/** Sets the size of a __local kernel argument at the specified index. */
-	@Alternate("clSetKernelArg")
-	@cl_int
-	int clSetKernelArg2(@PointerWrapper("cl_kernel") CLKernel kernel,
-	                    @cl_uint int arg_index,
-	                    @size_t long arg_size,
-	                    @Constant("null, 0") Buffer arg_value);
 
 	// This is used by CLKernelUtil. Assumes arg_value.position() == 0.
 

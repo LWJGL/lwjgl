@@ -118,7 +118,7 @@ final class InfoUtilFactory {
 			final long user_data = pfn_notify == null || pfn_notify.isCustom() ? 0 : CallbackUtil.createGlobalRef(pfn_notify);
 			CLContext __result = null;
 			try {
-				__result = new CLContext(nclCreateContext(properties.getBuffer(), 0, devices.size(), properties.getBuffer(), propertyCount * PointerBuffer.getPointerSize(), pfn_notify == null ? 0 : pfn_notify.getPointer(), user_data, errcode_ret, errcode_ret != null ? errcode_ret.position() : 0, function_pointer), platform);
+				__result = new CLContext(nclCreateContext(properties.getBuffer(), 0, devices.size(), properties.getBuffer(), propertyCount, pfn_notify == null ? 0 : pfn_notify.getPointer(), user_data, errcode_ret, errcode_ret != null ? errcode_ret.position() : 0, function_pointer), platform);
 				if ( LWJGLUtil.DEBUG )
 					Util.checkCLError(errcode_ret.get(0));
 				return __result;
@@ -256,7 +256,7 @@ final class InfoUtilFactory {
 
 			final int size;
 			switch ( param_name ) {
-				case CL_KERNEL_WORK_GROUP_SIZE:
+				case CL_KERNEL_COMPILE_WORK_GROUP_SIZE:
 					size = 3;
 					break;
 				default:

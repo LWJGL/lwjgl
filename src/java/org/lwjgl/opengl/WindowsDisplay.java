@@ -47,8 +47,8 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Cursor;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengles.EGL;
 
 final class WindowsDisplay implements DisplayImplementation {
 	private static final int GAMMA_LENGTH = 256;
@@ -124,7 +124,6 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private static final IntBuffer rect_buffer = BufferUtils.createIntBuffer(4);
 	private static final Rect rect = new Rect();
-	private static final Rect rect2 = new Rect();
 	private static WindowsDisplay current_display;
 
 	private static boolean cursor_clipped;
@@ -163,7 +162,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		current_display = this;
 	}
 
-	public void createWindow(DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException {
+	public void createWindow(DrawableLWJGL drawable, DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException {
 		close_requested = false;
 		is_dirty = false;
 		isMinimized = false;
@@ -181,12 +180,18 @@ final class WindowsDisplay implements DisplayImplementation {
 			nDestroyWindow(hwnd);
 			throw new LWJGLException("Failed to get dc");
 		}
+
 		try {
-			int format = WindowsPeerInfo.choosePixelFormat(getHdc(), 0, 0, peer_info.getPixelFormat(), null, true, true, false, true);
-			WindowsPeerInfo.setPixelFormat(getHdc(), format);
+			if ( drawable instanceof DrawableGL ) {
+				int format = WindowsPeerInfo.choosePixelFormat(getHdc(), 0, 0, (PixelFormat)drawable.getPixelFormat(), null, true, true, false, true);
+				WindowsPeerInfo.setPixelFormat(getHdc(), format);
+			} else {
+				peer_info = new WindowsDisplayPeerInfo(true);
+				((DrawableGLES)drawable).initialize(hwnd, hdc, EGL.EGL_WINDOW_BIT, (org.lwjgl.opengles.PixelFormat)drawable.getPixelFormat());
+			}
 			peer_info.initDC(getHwnd(), getHdc());
 			showWindow(getHwnd(), SW_SHOWDEFAULT);
-			if (parent == null) {
+			if ( parent == null ) {
 				setForegroundWindow(getHwnd());
 				setFocus(getHwnd());
 			}
@@ -420,7 +425,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
-		peer_info = new WindowsDisplayPeerInfo(pixel_format);
+		peer_info = new WindowsDisplayPeerInfo(false);
 		return peer_info;
 	}
 

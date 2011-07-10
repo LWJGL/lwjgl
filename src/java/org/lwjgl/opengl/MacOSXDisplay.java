@@ -96,7 +96,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		}
 	}
 
-	public void createWindow(DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException {
+	public void createWindow(final DrawableLWJGL drawable, DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException {
 		boolean fullscreen = Display.isFullscreen();
 		hideUI(fullscreen);
 		close_requested = false;
@@ -272,7 +272,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		 *
 		 * - elias
 		 */
-		AbstractDrawable drawable = (AbstractDrawable)Display.getDrawable();
+		DrawableGL drawable = (DrawableGL)Display.getDrawable();
 		if (Display.isFullscreen() && (frame != null && frame.getCanvas().syncCanvasPainted() || should_update)) {
 			try {
 				MacOSXContextImplementation.resetView(drawable.peer_info, drawable.context);

@@ -12,11 +12,17 @@
 			<arg value="/I${java.home}\..\include"/>
 			<arg value="/I${java.home}\..\include\win32"/>
 			<arg value="/I${native}\common"/>
+			<arg value="/I${native}\common\opengl"/>
 			<arg value="/I${native}\windows"/>
+			<arg value="/I${native}\windows\opengl"/>
 			<srcfile/>
-			<fileset dir="${native}/windows" includes="*.c"/>
 			<fileset dir="${native}/common" includes="*.c"/>
-			<fileset dir="${native}/generated" includes="*.c"/>
+			<fileset dir="${native}/common/opengl" includes="*.c"/>
+			<fileset dir="${native}/generated/openal" includes="*.c"/>
+			<fileset dir="${native}/generated/opencl" includes="*.c"/>
+			<fileset dir="${native}/generated/opengl" includes="*.c"/>
+			<fileset dir="${native}/windows" includes="*.c"/>
+			<fileset dir="${native}/windows/opengl" includes="*.c"/>
 			<mapper type="glob" from="*.c" to="*.obj"/>
 		</apply>
 	</target>
@@ -43,7 +49,7 @@
 			<fileset dir="." includes="*.lib"/>
 		</delete>
 	</target>
-	
+
 	<target name="compile">
 		<condition property="sdkhomelib" value="${sdkhome}\lib" else="${sdkhome}\lib\x64">
 			<equals arg1="${os.arch}" arg2="x86"/>
