@@ -50,7 +50,7 @@ import java.nio.ByteBuffer;
  */
 public class MappedObject {
 
-	static final boolean CHECKS = LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.Checks");
+	static final boolean CHECKS = false;//LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.Checks");
 
 	public MappedObject() {
 		//

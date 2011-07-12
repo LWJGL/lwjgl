@@ -44,7 +44,7 @@ public class TestMappedObject {
 			throw new RuntimeException("Asserts must be enabled for this test.");
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		MappedObjectTransformer.register(MappedFloat.class);
 		MappedObjectTransformer.register(MappedVec2.class);
 		MappedObjectTransformer.register(MappedVec3.class);
@@ -70,6 +70,8 @@ public class TestMappedObject {
 		MappedObjectTests3.testForeach();
 		MappedObjectTests3.testConstructor();
 		MappedObjectTests3.testMappedSet();
+		
+		MappedObjectWithLibrary.testLWJGL();
 	}
 
 }

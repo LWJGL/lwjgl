@@ -32,8 +32,8 @@ import static org.objectweb.asm.Opcodes.*;
  */
 public class MappedObjectTransformer {
 
-	static final boolean PRINT_TIMING   = LWJGLUtil.DEBUG && LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.PrintTiming");
-	static final boolean PRINT_ACTIVITY = LWJGLUtil.DEBUG && LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.PrintActivity");
+	static final boolean PRINT_TIMING   = false;//LWJGLUtil.DEBUG && LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.PrintTiming");
+	static final boolean PRINT_ACTIVITY = false;//LWJGLUtil.DEBUG && LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.PrintActivity");
 	static final boolean PRINT_BYTECODE = false; //LWJGLUtil.DEBUG && LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.PrintBytecode");
 
 	private static final Map<String, MappedSubtypeInfo> className_to_subtype;
