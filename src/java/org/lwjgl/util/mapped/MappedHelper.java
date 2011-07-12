@@ -106,6 +106,11 @@ public class MappedHelper {
 	}
 
 	public static void copy(MappedObject src, MappedObject dst, int bytes) {
+		if ( MappedObject.CHECKS ) {
+			src.checkRange(bytes);
+			dst.checkRange(bytes);
+		}
+
 		MappedObjectUnsafe.INSTANCE.copyMemory(src.viewAddress, dst.viewAddress, bytes);
 	}
 

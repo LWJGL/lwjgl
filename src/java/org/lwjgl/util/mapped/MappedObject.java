@@ -33,6 +33,7 @@ package org.lwjgl.util.mapped;
 
 import org.lwjgl.LWJGLUtil;
 
+import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 
 /**
@@ -97,8 +98,17 @@ public class MappedObject {
 	}
 
 	final void checkAddress(final long address) {
-		if ( preventGC.capacity() < (address - MappedObjectUnsafe.getBufferBaseAddress(preventGC) + stride) )
+		final long base = MappedObjectUnsafe.getBufferBaseAddress(preventGC);
+		if ( address < base || preventGC.capacity() < (address - base + stride) )
 			throw new IndexOutOfBoundsException();
+	}
+
+	final void checkRange(final int bytes) {
+		if ( bytes < 0 )
+			throw new IllegalArgumentException();
+
+		if ( preventGC.capacity() < (viewAddress - MappedObjectUnsafe.getBufferBaseAddress(preventGC) + bytes) )
+			throw new BufferOverflowException();
 	}
 
 	/**
