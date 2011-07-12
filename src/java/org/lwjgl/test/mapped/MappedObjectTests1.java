@@ -89,17 +89,34 @@ public class MappedObjectTests1 {
 			vecs.view = 0;
 		}
 
-		// test bound check
+		// test bounds checking
 		{
 			assert (vecs.view == 0);
 			try {
+				vecs.view = 49;
+				assert vecs.view == 49;
+				vecs.view = 0;
 				vecs.view = 50;
 				System.out.println("org.lwjgl.util.mapped.Checks is false or there is a bug in bounds checking.");
 				vecs.view = 0;
 			} catch (IndexOutOfBoundsException e) {
 				// expected, ignore
 			}
+
 			assert (vecs.view == 0);
+
+			try {
+				vecs.view = 10;
+				MappedFloat vecs2 = vecs.slice();
+				vecs.view = 0;
+
+				vecs2.view = 39;
+				assert vecs2.view == 39;
+				vecs2.view = 40;
+				System.out.println("org.lwjgl.util.mapped.Checks is false or there is a bug in bounds checking.");
+			} catch (IndexOutOfBoundsException e) {
+				// expected, ignore
+			}
 		}
 
 		// test dup

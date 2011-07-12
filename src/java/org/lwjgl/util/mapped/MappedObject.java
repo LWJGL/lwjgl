@@ -97,7 +97,7 @@ public class MappedObject {
 	}
 
 	final void checkAddress(final long address) {
-		if ( preventGC.capacity() < (address + stride - baseAddress) )
+		if ( preventGC.capacity() < (address - MappedObjectUnsafe.getBufferBaseAddress(preventGC) + stride) )
 			throw new IndexOutOfBoundsException();
 	}
 
