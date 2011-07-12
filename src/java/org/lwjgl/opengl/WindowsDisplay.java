@@ -935,11 +935,23 @@ final class WindowsDisplay implements DisplayImplementation {
 		return -1;
 	}
 
-        private native boolean nTrackMouseEvent(long hwnd);
+	private native boolean nTrackMouseEvent(long hwnd);
 
-        public boolean isInsideWindow() {
-            return mouseInside;
-        }
+	public boolean isInsideWindow() {
+		return mouseInside;
+	}
+	
+	public void setResizable(boolean resizable) {
+		
+	}
+	
+	public boolean isResizable() {
+		return false;
+	}
+	
+	public boolean wasResized() {
+		return false;
+	}
 
 	private static final class Rect {
 		public int top;

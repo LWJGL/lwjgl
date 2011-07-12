@@ -1249,4 +1249,47 @@ public final class Display {
 			}
 		}
 	}
+	
+	/**
+	 * Enable or disable the Display window to be resized.
+	 *
+	 * @param set true to make the Display window resizable; 
+	 * false to disable resizing on the Display window.
+	 */
+	public static void setResizable(boolean resizable) {
+		
+	}
+	
+	/**
+	 * @return true if the Display window is resizable.
+	 */
+	public static boolean isResizable() {
+		return false;
+	}
+	
+	/**
+	 * @return true if the Display window has been resized.
+	 * This value will be updated after a call to Display.update().
+	 */
+	public static boolean wasResized() {
+		return false;
+	}
+	
+	/**
+	 * @return this method will return the width of the Display window.
+	 * 
+	 * This value will be updated after a call to Display.update().
+	 */
+	public static int getWidth() {
+		return 0;
+	}
+	
+	/**
+	 * @return this method will return the height of the Display window.
+	 * 
+	 * This value will be updated after a call to Display.update().
+	 */
+	public static int getHeight() {
+		return 0;
+	}
 }

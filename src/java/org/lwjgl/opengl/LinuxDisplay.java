@@ -1356,6 +1356,18 @@ final class LinuxDisplay implements DisplayImplementation {
 	public boolean isInsideWindow() {
 		return mouseInside;
 	}
+	
+	public void setResizable(boolean resizable) {
+		
+	}
+	
+	public boolean isResizable() {
+		return false;
+	}
+	
+	public boolean wasResized() {
+		return false;
+	}
 
 	/**
 	 * Helper class for managing Compiz's workarounds. We need this to enable Legacy
