@@ -29,28 +29,28 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.util.mapped;
+package org.lwjgl.test.mapped;
 
-/** <code>MappedSet</code> implementation for two <code>MappedObject</code>s. */
-public class MappedSet2 {
+import org.lwjgl.util.mapped.MappedObject;
+import org.lwjgl.util.mapped.MappedType;
 
-	private final MappedObject a, b;
+/** @author Riven */
+@MappedType(sizeof = 4)
+public class MappedFloat extends MappedObject {
 
-	MappedSet2(MappedObject a, MappedObject b) {
-		this.a = a;
-		this.b = b;
+	public MappedFloat() {
+		this.test();
 	}
 
-	public int view;
+	public float value;
 
-	void view(int view) {
-		MappedHelper.put_view(this.a, view);
-		MappedHelper.put_view(this.b, view);
+	public void test() {
+		this.value = 4;
 	}
 
-	public void next() {
-		this.a.next();
-		this.b.next();
+	@Override
+	public String toString() {
+		return "MappedFloat[" + value + "]";
 	}
 
 }

@@ -1,0 +1,159 @@
+/*
+ * Copyright (c) 2002-2011 LWJGL Project
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
+ *   from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package org.lwjgl.test.mapped;
+
+import org.lwjgl.util.mapped.MappedHelper;
+import org.lwjgl.util.mapped.MappedObjectUnsafe;
+
+import java.nio.ByteBuffer;
+
+/** @author Riven */
+@SuppressWarnings("static-access")
+public class MappedObjectTests1 {
+
+	static class Test {
+
+		int value;
+	}
+
+	static void testViewField() {
+		Test test = new Test();
+		test.value = 13;
+		test.value += 1;
+		test.value++;
+		System.out.println(test);
+
+		ByteBuffer bb = ByteBuffer.allocateDirect(200);
+		MappedFloat vecs = MappedFloat.map(bb);
+
+		// verify 'malloc' and SIZEOF
+		{
+			MappedFloat vecs1 = MappedFloat.malloc(1234);
+
+			assert (vecs1.stride == MappedFloat.SIZEOF);
+			assert (vecs1.stride * 1234 == vecs1.backingByteBuffer().capacity());
+			assert (MappedFloat.SIZEOF * 1234 == vecs1.backingByteBuffer().capacity());
+		}
+
+		// manipulate 'mapped.value'
+		{
+			assert (vecs.value == 0.0f); // 4.0 is set in constructor, but runViewConstructor is not called
+			vecs.value = 1.1f;
+			assert (vecs.value == 1.1f);
+		}
+
+		// manipulate 'view' with assignment
+		{
+			assert (vecs.view == 0);
+			vecs.view = 1;
+			assert (vecs.view == 1);
+			assert (vecs.value != 1.1f); // old view
+			vecs.view = 0;
+		}
+
+		// manipulate 'view' with iinc
+		{
+			assert (vecs.view == 0);
+			vecs.view++;
+			assert (vecs.view == 1);
+			assert (vecs.value != 1.1f); // old view
+			vecs.view = 0;
+		}
+
+		// test bound check
+		{
+			assert (vecs.view == 0);
+			try {
+				vecs.view = 50;
+				System.out.println("org.lwjgl.util.mapped.Checks is false or there is a bug in bounds checking.");
+				vecs.view = 0;
+			} catch (IndexOutOfBoundsException e) {
+				// expected, ignore
+			}
+			assert (vecs.view == 0);
+		}
+
+		// test dup
+		{
+			int newStride = 16;
+			int doOffset = 0;
+
+			vecs.view = 0;
+			MappedFloat.configure(vecs, newStride, doOffset);
+			MappedFloat dec2 = vecs.dup();
+			MappedFloat.configure(dec2, newStride, doOffset);
+
+			String s1 = vecs.baseAddress + "," + vecs.viewAddress + "," + vecs.stride + "," + vecs.SIZEOF;
+			String s2 = dec2.baseAddress + "," + dec2.viewAddress + "," + dec2.stride + "," + dec2.SIZEOF;
+			// System.out.println(s1);
+			// System.out.println(s2);
+			assert (s1.equals(s2));
+
+			dec2.view++;
+
+			String s3 = vecs.baseAddress + "," + vecs.viewAddress + "," + vecs.stride + "," + vecs.SIZEOF;
+			String s4 = dec2.baseAddress + "," + dec2.viewAddress + "," + dec2.stride + "," + dec2.SIZEOF;
+			// System.out.println(s3);
+			// System.out.println(s4);
+			assert (!s3.equals(s4));
+		}
+
+		// test newBuffer
+		{
+			long addr1 = MappedObjectUnsafe.getBufferBaseAddress(bb);
+			ByteBuffer bb2 = MappedHelper.newBuffer(addr1, bb.capacity());
+			long addr2 = MappedObjectUnsafe.getBufferBaseAddress(bb);
+
+			System.out.println(bb);
+			System.out.println(bb2);
+			System.out.println(addr1);
+			System.out.println(addr2);
+		}
+
+		// test 'copy'
+		{
+			vecs.value = 13.37f;
+			MappedFloat dec2 = vecs.dup();
+			dec2.view = 1;
+			System.out.println(vecs);
+			System.out.println(dec2);
+			vecs.copyTo(dec2);
+			System.out.println(vecs);
+			System.out.println(dec2);
+			assert (dec2.value == 13.37f);
+
+			vecs.value = 73.31f;
+			vecs.copyRange(dec2, 1);
+			assert (dec2.value == 73.31f);
+		}
+	}
+}

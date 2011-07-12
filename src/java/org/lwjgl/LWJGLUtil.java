@@ -448,7 +448,7 @@ public class LWJGLUtil {
 	/**
 	 * Gets a boolean property as a privileged action.
 	 */
-	private static boolean getPrivilegedBoolean(final String property_name) {
+	public static boolean getPrivilegedBoolean(final String property_name) {
 		Boolean value = AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
 			public Boolean run() {
 				return Boolean.getBoolean(property_name);
@@ -464,7 +464,7 @@ public class LWJGLUtil {
 	 */
 	public static void log(String msg) {
 		if (DEBUG) {
-			System.err.println(msg);
+			System.err.println("[LWJGL] " + msg);
 		}
 	}
 

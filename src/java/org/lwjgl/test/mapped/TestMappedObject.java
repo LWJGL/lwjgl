@@ -29,28 +29,47 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.util.mapped;
+package org.lwjgl.test.mapped;
 
-/** <code>MappedSet</code> implementation for two <code>MappedObject</code>s. */
-public class MappedSet2 {
+import org.lwjgl.util.mapped.MappedObjectClassLoader;
+import org.lwjgl.util.mapped.MappedObjectTransformer;
 
-	private final MappedObject a, b;
+/** @author Riven */
+public class TestMappedObject {
 
-	MappedSet2(MappedObject a, MappedObject b) {
-		this.a = a;
-		this.b = b;
+	static {
+		boolean assertsEnabled = false;
+		assert assertsEnabled = true; // Intentional side effect!!!
+		if ( !assertsEnabled )
+			throw new RuntimeException("Asserts must be enabled for this test.");
 	}
 
-	public int view;
+	public static void main(String[] args) {
+		MappedObjectTransformer.register(MappedFloat.class);
+		MappedObjectTransformer.register(MappedVec2.class);
+		MappedObjectTransformer.register(MappedVec3.class);
+		MappedObjectTransformer.register(MappedSomething.class);
 
-	void view(int view) {
-		MappedHelper.put_view(this.a, view);
-		MappedHelper.put_view(this.b, view);
-	}
+		MappedObjectTransformer.register(MappedObjectTests3.Xyz.class);
 
-	public void next() {
-		this.a.next();
-		this.b.next();
+		if ( MappedObjectClassLoader.fork(TestMappedObject.class, args) ) {
+			return;
+		}
+
+		MappedObjectTests1.testViewField();
+
+		MappedObjectTests2.testFields();
+
+		// MappedObjectBench.benchmarkMapped();
+		// MappedObjectBench.benchmarkInstances();
+		// MappedObjectBench.benchmarkIndirectArray();
+		// MappedObjectBench.benchmarkDirectArray();
+		// MappedObjectBench.benchmarkUnsafe();
+
+		MappedObjectTests3.testMappedBuffer();
+		MappedObjectTests3.testForeach();
+		MappedObjectTests3.testConstructor();
+		MappedObjectTests3.testMappedSet();
 	}
 
 }

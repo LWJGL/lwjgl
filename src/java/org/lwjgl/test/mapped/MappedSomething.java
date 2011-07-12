@@ -29,28 +29,27 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.util.mapped;
+package org.lwjgl.test.mapped;
 
-/** <code>MappedSet</code> implementation for two <code>MappedObject</code>s. */
-public class MappedSet2 {
+import org.lwjgl.util.mapped.MappedField;
+import org.lwjgl.util.mapped.MappedObject;
+import org.lwjgl.util.mapped.MappedType;
 
-	private final MappedObject a, b;
+import java.nio.ByteBuffer;
 
-	MappedSet2(MappedObject a, MappedObject b) {
-		this.a = a;
-		this.b = b;
-	}
+/** @author Riven */
+@MappedType(sizeof = 64)
+public class MappedSomething extends MappedObject {
 
-	public int view;
+	@MappedField(byteOffset = 0)
+	public int used;
 
-	void view(int view) {
-		MappedHelper.put_view(this.a, view);
-		MappedHelper.put_view(this.b, view);
-	}
+	@MappedField(byteOffset = 4, byteLength = 64 - 4)
+	public ByteBuffer data;
 
-	public void next() {
-		this.a.next();
-		this.b.next();
+	@Override
+	public String toString() {
+		return "MappedSomething[" + used + "]";
 	}
 
 }
