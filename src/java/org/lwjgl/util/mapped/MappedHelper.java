@@ -60,7 +60,7 @@ public class MappedHelper {
 			throw new IllegalStateException("sizeof not a multiple of alignment");
 		mo.stride = sizeof;
 
-		long addr = MappedObjectUnsafe.getBufferBaseAddress(buffer);
+		long addr = MappedObjectUnsafe.getBufferBaseAddress(buffer) + buffer.position();
 		if ( addr % align != 0 )
 			throw new IllegalStateException("buffer address not aligned on " + align + " bytes");
 

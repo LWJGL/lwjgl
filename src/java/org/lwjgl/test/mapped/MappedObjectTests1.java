@@ -117,6 +117,19 @@ public class MappedObjectTests1 {
 			} catch (IndexOutOfBoundsException e) {
 				// expected, ignore
 			}
+
+			try {
+				ByteBuffer posTest = ByteBuffer.allocateDirect(200);
+				posTest.position(10 * MappedFloat.SIZEOF); // position > 0
+
+				MappedFloat vecs2 = MappedFloat.map(posTest);
+				vecs2.view = 39;
+				assert vecs2.view == 39;
+				vecs2.view = 40;
+				System.out.println("org.lwjgl.util.mapped.Checks is false or there is a bug in bounds checking.");
+			} catch (IndexOutOfBoundsException e) {
+				// expected, ignore
+			}
 		}
 
 		// test dup

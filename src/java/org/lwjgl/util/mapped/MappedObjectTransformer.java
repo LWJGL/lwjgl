@@ -62,7 +62,7 @@ public class MappedObjectTransformer {
 
 		String vmName = System.getProperty("java.vm.name");
 		if ( vmName != null && !vmName.contains("Server") ) {
-			LWJGLUtil.log("Warning: " + MappedObject.class.getSimpleName() + "s have inferiour performance on Client VMs, please consider switching to a Server VM.");
+			System.err.println("Warning: " + MappedObject.class.getSimpleName() + "s have inferiour performance on Client VMs, please consider switching to a Server VM.");
 		}
 	}
 
