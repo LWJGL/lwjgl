@@ -8,13 +8,13 @@ import org.lwjgl.LWJGLUtil;
 import org.objectweb.asm.*;
 import org.objectweb.asm.util.TraceClassVisitor;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -32,8 +32,8 @@ import static org.objectweb.asm.Opcodes.*;
  */
 public class MappedObjectTransformer {
 
-	static final boolean PRINT_TIMING   = false;//LWJGLUtil.DEBUG && LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.PrintTiming");
-	static final boolean PRINT_ACTIVITY = false;//LWJGLUtil.DEBUG && LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.PrintActivity");
+	static final boolean PRINT_TIMING   = LWJGLUtil.DEBUG && LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.PrintTiming");
+	static final boolean PRINT_ACTIVITY = LWJGLUtil.DEBUG && LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.PrintActivity");
 	static final boolean PRINT_BYTECODE = false; //LWJGLUtil.DEBUG && LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.PrintBytecode");
 
 	static final Map<String, MappedSubtypeInfo> className_to_subtype;
@@ -138,12 +138,23 @@ public class MappedObjectTransformer {
 		}
 	}
 
-	static final String view_constructor_method = "_construct_view_";
+	static       boolean is_currently_computing_frames = false;
+	static final String  view_constructor_method       = "_construct_view_";
 
 	static byte[] transformFieldAccess(final String className, byte[] bytecode) {
-		int flags = 0;//ClassWriter.COMPUTE_FRAMES;
+		int flags = ClassWriter.COMPUTE_FRAMES;
 
-		ClassWriter writer = new ClassWriter(flags);
+		ClassWriter writer = new ClassWriter(flags) {
+			// HACK: prevent user-code static-initialization-blocks to be executed
+
+			@Override
+			protected String getCommonSuperClass(String a, String b) {
+				if ( is_currently_computing_frames )
+					if ( !a.startsWith("java/") || !b.startsWith("java/") )
+						return "java/lang/Object";
+				return super.getCommonSuperClass(a, b);
+			}
+		};
 
 		ClassAdapter adapter = new ClassAdapter(writer) {
 			@Override
@@ -192,14 +203,14 @@ public class MappedObjectTransformer {
 		bytecode = writer.toByteArray();
 
 		if ( PRINT_BYTECODE )
-			printBytecode(bytecode, adapter);
+			printBytecode(bytecode);
 
 		return bytecode;
 	}
 
-	private static void printBytecode(byte[] bytecode, ClassAdapter adapter) {
+	private static void printBytecode(byte[] bytecode) {
 		StringWriter sw = new StringWriter();
-		ClassVisitor tracer = new TraceClassVisitor(adapter, new PrintWriter(sw));
+		ClassVisitor tracer = new TraceClassVisitor(new ClassWriter(0), new PrintWriter(sw));
 		new ClassReader(bytecode).accept(tracer, 0);
 		String dump = sw.toString();
 
@@ -227,13 +238,16 @@ public class MappedObjectTransformer {
 
 			super.visitTypeInsn(opcode, typeName);
 		}
-		
-		private int requireExtraStack = 0;
-		
+
 		@Override
-		public void visitMaxs(int maxStack, int maxLocals)
-		{
-		   super.visitMaxs(maxStack+this.requireExtraStack, maxLocals);
+		public void visitMaxs(int a, int b) {
+			try {
+				is_currently_computing_frames = true;
+
+				super.visitMaxs(a, b);
+			} finally {
+				is_currently_computing_frames = false;
+			}
 		}
 
 		@Override
@@ -252,7 +266,7 @@ public class MappedObjectTransformer {
 
 				if ( (isMapDirectMethod || isMapBufferMethod) || isMallocMethod ) {
 					if ( isMallocMethod ) {
-					   // stack: count
+						// stack: count
 						pushInt(super.mv, mappedType.sizeof);
 						// stack: sizeof, count
 						super.visitInsn(IMUL);
@@ -282,7 +296,6 @@ public class MappedObjectTransformer {
 					// stack: int, int, buffer, new, new
 					super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), "setup", "(L" + jvmClassName(MappedObject.class) + ";Ljava/nio/ByteBuffer;II)V");
 					// stack: new
-					this.requireExtraStack = 5;
 					return;
 				}
 
@@ -296,7 +309,6 @@ public class MappedObjectTransformer {
 					// stack: new, this
 					super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), "dup", "(L" + jvmClassName(MappedObject.class) + ";L" + jvmClassName(MappedObject.class) + ";)L" + jvmClassName(MappedObject.class) + ";");
 					// stack: new
-					this.requireExtraStack = 3;
 					return;
 				}
 
@@ -310,7 +322,6 @@ public class MappedObjectTransformer {
 					// stack: new, this
 					super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), "slice", "(L" + jvmClassName(MappedObject.class) + ";L" + jvmClassName(MappedObject.class) + ";)L" + jvmClassName(MappedObject.class) + ";");
 					// stack: new
-					this.requireExtraStack = 3;
 					return;
 				}
 
@@ -322,7 +333,6 @@ public class MappedObjectTransformer {
 					// stack: this, this
 					super.visitMethodInsn(INVOKEVIRTUAL, className, view_constructor_method, "()V");
 					// stack: this
-					this.requireExtraStack = 2;
 					return;
 				}
 
@@ -334,7 +344,6 @@ public class MappedObjectTransformer {
 					// stack: sizeof, target, this
 					super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), "copy", "(L" + jvmClassName(MappedObject.class) + ";L" + jvmClassName(MappedObject.class) + ";I)V");
 					// stack: -
-					this.requireExtraStack = 3;
 					return;
 				}
 
@@ -346,7 +355,6 @@ public class MappedObjectTransformer {
 					// stack: bytes, target, this
 					super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), "copy", "(L" + jvmClassName(MappedObject.class) + ";L" + jvmClassName(MappedObject.class) + ";I)V");
 					// stack: -
-					this.requireExtraStack = 4;
 					return;
 				}
 			}
@@ -488,13 +496,12 @@ public class MappedObjectTransformer {
 					// stack: int, long
 					super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), "newBuffer", "(JI)L" + jvmClassName(ByteBuffer.class) + ";");
 					// stack: buffer
-					this.requireExtraStack = 4;
 					return;
 				}
 			}
 
 			if ( opcode == PUTFIELD ) {
-			   // stack: value, ref
+				// stack: value, ref
 				super.visitInsn(SWAP);
 				// stack: ref, value
 				super.visitFieldInsn(GETFIELD, mappedSubtype.className, "viewAddress", "J");
@@ -505,11 +512,10 @@ public class MappedObjectTransformer {
 				// stack: long, value
 				super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), typeName.toLowerCase() + "put", "(" + typeName + "J)V");
 				// stack -
-				this.requireExtraStack = 4+(int)(mappedSubtype.fieldToLength.get(fieldName).longValue()>>2);
 				return;
 			}
 			if ( opcode == GETFIELD ) {
-			   // stack: ref
+				// stack: ref
 				super.visitFieldInsn(GETFIELD, mappedSubtype.className, "viewAddress", "J");
 				// stack: long
 				super.visitLdcInsn(fieldOffset);
@@ -518,7 +524,6 @@ public class MappedObjectTransformer {
 				// stack: long
 				super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), typeName.toLowerCase() + "get", "(J)" + typeName);
 				// stack: value
-				this.requireExtraStack = 4;
 				return;
 			}
 
@@ -573,6 +578,61 @@ public class MappedObjectTransformer {
 
 			this.fieldToOffset = new HashMap<String, Long>();
 			this.fieldToLength = new HashMap<String, Long>();
+		}
+	}
+
+	public static String exportConfiguration() {
+		StringBuilder sb = new StringBuilder();
+
+		for ( MappedSubtypeInfo info : className_to_subtype.values() ) {
+			sb.append("class\t" + info.className + "\t" + info.sizeof + "\t" + info.align + "\r\n");
+
+			for ( String fieldName : info.fieldToOffset.keySet() ) {
+				sb.append("field\t" + info.className + "\t" + fieldName + "\t" + info.fieldToOffset.get(fieldName) + "\t" + info.fieldToLength.get(fieldName) + "\r\n");
+			}
+		}
+
+		className_to_subtype.clear();
+
+		return sb.toString();
+	}
+
+	public static void importConfigation(String input) {
+		className_to_subtype.clear();
+
+		try {
+			BufferedReader br = new BufferedReader(new StringReader(input));
+
+			while ( true ) {
+				String line = br.readLine();
+				if ( line == null )
+					break;
+				if ( (line = line.trim()).isEmpty() )
+					continue;
+
+				StringTokenizer st = new StringTokenizer(line, "\t");
+
+				String type = st.nextToken();
+				if ( type.equals("class") ) {
+					String className = st.nextToken();
+					int sizeof = Integer.parseInt(st.nextToken());
+					int align = Integer.parseInt(st.nextToken());
+
+					className_to_subtype.put(className, new MappedSubtypeInfo(className, sizeof, align));
+				} else if ( type.equals("field") ) {
+					MappedObjectTransformer.MappedSubtypeInfo info = className_to_subtype.get(st.nextToken());
+					String methodName = st.nextToken();
+					int off = Integer.parseInt(st.nextToken());
+					int len = Integer.parseInt(st.nextToken());
+
+					info.fieldToOffset.put(methodName, Long.valueOf(off));
+					info.fieldToLength.put(methodName, Long.valueOf(len));
+				} else {
+					throw new IllegalStateException(type);
+				}
+			}
+		} catch (IOException exc) {
+			throw new IllegalStateException("never happens");
 		}
 	}
 
