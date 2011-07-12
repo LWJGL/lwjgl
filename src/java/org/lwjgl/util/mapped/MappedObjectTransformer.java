@@ -138,7 +138,7 @@ public class MappedObjectTransformer {
 	private static final String view_constructor_method = "_construct_view_";
 
 	static byte[] transformFieldAccess(final String className, byte[] bytecode) {
-		int flags = ClassWriter.COMPUTE_FRAMES;
+		int flags = 0;//ClassWriter.COMPUTE_FRAMES;
 
 		ClassWriter writer = new ClassWriter(flags);
 
@@ -224,6 +224,14 @@ public class MappedObjectTransformer {
 
 			super.visitTypeInsn(opcode, typeName);
 		}
+		
+		private int requireExtraStack = 0;
+		
+		@Override
+		public void visitMaxs(int maxStack, int maxLocals)
+		{
+		   super.visitMaxs(maxStack+this.requireExtraStack, maxLocals);
+		}
 
 		@Override
 		public void visitMethodInsn(int opcode, String className, String methodName, String signature) {
@@ -241,7 +249,7 @@ public class MappedObjectTransformer {
 
 				if ( (isMapDirectMethod || isMapBufferMethod) || isMallocMethod ) {
 					if ( isMallocMethod ) {
-						// stack: count
+					   // stack: count
 						pushInt(super.mv, mappedType.sizeof);
 						// stack: sizeof, count
 						super.visitInsn(IMUL);
@@ -271,6 +279,7 @@ public class MappedObjectTransformer {
 					// stack: int, int, buffer, new, new
 					super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), "setup", "(L" + jvmClassName(MappedObject.class) + ";Ljava/nio/ByteBuffer;II)V");
 					// stack: new
+					this.requireExtraStack = 5;
 					return;
 				}
 
@@ -284,6 +293,7 @@ public class MappedObjectTransformer {
 					// stack: new, this
 					super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), "dup", "(L" + jvmClassName(MappedObject.class) + ";L" + jvmClassName(MappedObject.class) + ";)L" + jvmClassName(MappedObject.class) + ";");
 					// stack: new
+					this.requireExtraStack = 3;
 					return;
 				}
 
@@ -297,6 +307,7 @@ public class MappedObjectTransformer {
 					// stack: new, this
 					super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), "slice", "(L" + jvmClassName(MappedObject.class) + ";L" + jvmClassName(MappedObject.class) + ";)L" + jvmClassName(MappedObject.class) + ";");
 					// stack: new
+					this.requireExtraStack = 3;
 					return;
 				}
 
@@ -308,6 +319,7 @@ public class MappedObjectTransformer {
 					// stack: this, this
 					super.visitMethodInsn(INVOKEVIRTUAL, className, view_constructor_method, "()V");
 					// stack: this
+					this.requireExtraStack = 2;
 					return;
 				}
 
@@ -319,6 +331,7 @@ public class MappedObjectTransformer {
 					// stack: sizeof, target, this
 					super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), "copy", "(L" + jvmClassName(MappedObject.class) + ";L" + jvmClassName(MappedObject.class) + ";I)V");
 					// stack: -
+					this.requireExtraStack = 3;
 					return;
 				}
 
@@ -330,6 +343,7 @@ public class MappedObjectTransformer {
 					// stack: bytes, target, this
 					super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), "copy", "(L" + jvmClassName(MappedObject.class) + ";L" + jvmClassName(MappedObject.class) + ";I)V");
 					// stack: -
+					this.requireExtraStack = 4;
 					return;
 				}
 			}
@@ -458,30 +472,50 @@ public class MappedObjectTransformer {
 				if ( opcode == GETFIELD ) {
 					Long fieldLength = mappedSubtype.fieldToLength.get(fieldName);
 
+					// stack: ref
 					super.visitFieldInsn(GETFIELD, mappedSubtype.className, "viewAddress", "J");
+					// stack: long
 					super.visitLdcInsn(fieldOffset);
+					// stack: long, long
 					super.visitInsn(LADD);
+					// stack: long
 					super.visitLdcInsn(fieldLength);
+					// stack: long, long
 					super.visitInsn(L2I);
+					// stack: int, long
 					super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), "newBuffer", "(JI)L" + jvmClassName(ByteBuffer.class) + ";");
-
+					// stack: buffer
+					this.requireExtraStack = 4;
 					return;
 				}
 			}
 
 			if ( opcode == PUTFIELD ) {
+			   // stack: value, ref
 				super.visitInsn(SWAP);
+				// stack: ref, value
 				super.visitFieldInsn(GETFIELD, mappedSubtype.className, "viewAddress", "J");
+				// stack: long, value
 				super.visitLdcInsn(fieldOffset);
+				// stack: long, long, value
 				super.visitInsn(LADD);
+				// stack: long, value
 				super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), typeName.toLowerCase() + "put", "(" + typeName + "J)V");
+				// stack -
+				this.requireExtraStack = 4+(int)(mappedSubtype.fieldToLength.get(fieldName).longValue()>>2);
 				return;
 			}
 			if ( opcode == GETFIELD ) {
+			   // stack: ref
 				super.visitFieldInsn(GETFIELD, mappedSubtype.className, "viewAddress", "J");
+				// stack: long
 				super.visitLdcInsn(fieldOffset);
+				// stack: long, long
 				super.visitInsn(LADD);
+				// stack: long
 				super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), typeName.toLowerCase() + "get", "(J)" + typeName);
+				// stack: value
+				this.requireExtraStack = 4;
 				return;
 			}
 
@@ -511,7 +545,7 @@ public class MappedObjectTransformer {
 		else if ( value >= Short.MIN_VALUE && value <= Short.MAX_VALUE )
 			mv.visitIntInsn(SIPUSH, value);
 		else
-			mv.visitLdcInsn(value);
+			mv.visitLdcInsn(Integer.valueOf(value));
 	}
 
 	private static String jvmClassName(Class<?> type) {
