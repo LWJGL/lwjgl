@@ -40,8 +40,8 @@ import java.util.Iterator;
  */
 public class MappedForeach<T extends MappedObject> implements Iterable<T> {
 
-	private final T   mapped;
-	private final int elementCount;
+	final T   mapped;
+	final int elementCount;
 
 	MappedForeach(T mapped, int elementCount) {
 		this.mapped = mapped;

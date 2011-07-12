@@ -36,7 +36,7 @@ public class MappedObjectTransformer {
 	static final boolean PRINT_ACTIVITY = false;//LWJGLUtil.DEBUG && LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.PrintActivity");
 	static final boolean PRINT_BYTECODE = false; //LWJGLUtil.DEBUG && LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.PrintBytecode");
 
-	private static final Map<String, MappedSubtypeInfo> className_to_subtype;
+	static final Map<String, MappedSubtypeInfo> className_to_subtype;
 
 	static {
 		className_to_subtype = new HashMap<String, MappedSubtypeInfo>();
@@ -80,6 +80,9 @@ public class MappedObjectTransformer {
 		if ( mapped == null )
 			throw new InternalError("missing " + MappedType.class.getName() + " annotation");
 
+		if ( type.getEnclosingClass() != null && !Modifier.isStatic(type.getModifiers()) )
+			throw new InternalError("only top-level or static inner classes are allowed");
+
 		String className = jvmClassName(type);
 
 		MappedSubtypeInfo mappedType = new MappedSubtypeInfo(className, mapped.sizeof(), mapped.align());
@@ -88,7 +91,7 @@ public class MappedObjectTransformer {
 
 		for ( Field field : type.getDeclaredFields() ) {
 			// static fields are never mapped
-			if ( (field.getModifiers() & Modifier.STATIC) != 0 )
+			if ( Modifier.isStatic(field.getModifiers()) )
 				continue;
 
 			// we only support primitives and ByteBuffers
@@ -135,7 +138,7 @@ public class MappedObjectTransformer {
 		}
 	}
 
-	private static final String view_constructor_method = "_construct_view_";
+	static final String view_constructor_method = "_construct_view_";
 
 	static byte[] transformFieldAccess(final String className, byte[] bytecode) {
 		int flags = 0;//ClassWriter.COMPUTE_FRAMES;
@@ -525,7 +528,7 @@ public class MappedObjectTransformer {
 		}
 	}
 
-	private static void pushInt(MethodVisitor mv, int value) {
+	static void pushInt(MethodVisitor mv, int value) {
 		if ( value == -1 )
 			mv.visitInsn(ICONST_M1);
 		else if ( value == 0 )
@@ -548,7 +551,7 @@ public class MappedObjectTransformer {
 			mv.visitLdcInsn(Integer.valueOf(value));
 	}
 
-	private static String jvmClassName(Class<?> type) {
+	static String jvmClassName(Class<?> type) {
 		return type.getName().replace('.', '/');
 	}
 
