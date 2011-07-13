@@ -38,7 +38,7 @@ import java.util.Iterator;
  *
  * @author Riven
  */
-public class MappedForeach<T extends MappedObject> implements Iterable<T> {
+final class MappedForeach<T extends MappedObject> implements Iterable<T> {
 
 	final T   mapped;
 	final int elementCount;
@@ -58,8 +58,7 @@ public class MappedForeach<T extends MappedObject> implements Iterable<T> {
 			}
 
 			public T next() {
-				mapped.viewAddress = mapped.baseAddress + (this.index++) * mapped.stride;
-
+				MappedHelper.put_view(mapped, this.index++);
 				return mapped;
 			}
 

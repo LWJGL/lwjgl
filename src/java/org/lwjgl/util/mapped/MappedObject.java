@@ -214,7 +214,7 @@ public class MappedObject {
 	 * For convenience you are encouraged to static-import this specific method:
 	 * <code>import static org.lwjgl.util.mapped.MappedObject.foreach;</code>
 	 */
-	public static <T extends MappedObject> MappedForeach<T> foreach(T mapped, int elementCount) {
+	public static <T extends MappedObject> Iterable<T> foreach(T mapped, int elementCount) {
 		return new MappedForeach<T>(mapped, elementCount);
 	}
 
