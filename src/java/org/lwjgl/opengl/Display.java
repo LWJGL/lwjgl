@@ -93,6 +93,12 @@ public final class Display {
 	 * unlike GL, where it is typically at the bottom of the display.
 	 */
 	private static int y = -1;
+	
+	/** the width of the Display window */
+	private static int width = 0;
+	
+	/** the height of the Display window */
+	private static int height = 0;
 
 	/** Title of the window (never null) */
 	private static String title = "Game";
@@ -109,6 +115,10 @@ public final class Display {
 	private static boolean window_created;
 
 	private static boolean parent_resized;
+	
+	private static boolean window_resized;
+	
+	private static boolean window_resizable;
 
 	/** Initial Background Color of Display */
 	private static float r, g, b;
@@ -295,6 +305,9 @@ public final class Display {
 		DisplayMode mode = getEffectiveMode();
 		display_impl.createWindow(drawable, mode, tmp_parent, getWindowX(), getWindowY());
 		window_created = true;
+		
+		width = Display.getDisplayMode().getWidth();
+		height = Display.getDisplayMode().getHeight();
 
 		setTitle(title);
 		initControls();
@@ -660,6 +673,13 @@ public final class Display {
 				} catch (LWJGLException e) {
 					throw new RuntimeException(e);
 				}
+			}
+			
+			window_resized = !isFullscreen() && parent == null && display_impl.wasResized();
+			
+			if ( window_resized ) {
+				width = display_impl.getWidth();
+				height = display_impl.getHeight();
 			}
 
 			if ( parent_resized ) {
@@ -1257,14 +1277,17 @@ public final class Display {
 	 * false to disable resizing on the Display window.
 	 */
 	public static void setResizable(boolean resizable) {
-		
+		window_resizable = resizable;
+		if ( isCreated() ) {
+			display_impl.setResizable(resizable);
+		}
 	}
 	
 	/**
 	 * @return true if the Display window is resizable.
 	 */
 	public static boolean isResizable() {
-		return false;
+		return window_resizable;
 	}
 	
 	/**
@@ -1274,7 +1297,7 @@ public final class Display {
 	 * This will return false if running in fullscreen or with Display.setParent(Canvas parent)
 	 */
 	public static boolean wasResized() {
-		return false;
+		return window_resized;
 	}
 	
 	/**
@@ -1287,7 +1310,16 @@ public final class Display {
 	 * This value will be updated after a call to Display.update().
 	 */
 	public static int getWidth() {
-		return 0;
+		
+		if (Display.isFullscreen()) {
+			return Display.getDisplayMode().getWidth();
+		}
+		
+		if (parent != null) {
+			return parent.getWidth();
+		}
+		
+		return width;
 	}
 	
 	/**
@@ -1300,6 +1332,15 @@ public final class Display {
 	 * This value will be updated after a call to Display.update().
 	 */
 	public static int getHeight() {
-		return 0;
+		
+		if (Display.isFullscreen()) {
+			return Display.getDisplayMode().getHeight();
+		} 
+		
+		if (parent != null) {
+			return parent.getHeight();
+		}
+		
+		return height;
 	}
 }

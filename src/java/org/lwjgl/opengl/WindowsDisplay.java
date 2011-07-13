@@ -945,10 +945,6 @@ final class WindowsDisplay implements DisplayImplementation {
 		
 	}
 	
-	public boolean isResizable() {
-		return false;
-	}
-	
 	public boolean wasResized() {
 		return false;
 	}

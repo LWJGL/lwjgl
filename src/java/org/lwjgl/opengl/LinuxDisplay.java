@@ -1361,10 +1361,6 @@ final class LinuxDisplay implements DisplayImplementation {
 		
 	}
 	
-	public boolean isResizable() {
-		return false;
-	}
-	
 	public boolean wasResized() {
 		return false;
 	}

@@ -497,11 +497,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public int getWidth() {
-		return Display.getDisplayMode().getWidth();
+		return frame.getWidth();
 	}
 
 	public int getHeight() {
-		return Display.getDisplayMode().getHeight();
+		return frame.getHeight();
 	}
 
     public boolean isInsideWindow() {
@@ -509,15 +509,11 @@ final class MacOSXDisplay implements DisplayImplementation {
     }
     
     public void setResizable(boolean resizable) {
-		
-	}
-	
-	public boolean isResizable() {
-		return false;
+		frame.setResizable(resizable);
 	}
 	
 	public boolean wasResized() {
-		return false;
+		return canvas_listener.wasResized();
 	}
 	
 }

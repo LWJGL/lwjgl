@@ -47,6 +47,7 @@ final class MacOSXCanvasListener implements ComponentListener, HierarchyListener
 	private int width;
 	private int height;
 	private boolean context_update;
+	private boolean resized;
 
 	MacOSXCanvasListener(Canvas canvas) {
 		this.canvas = canvas;
@@ -102,6 +103,7 @@ final class MacOSXCanvasListener implements ComponentListener, HierarchyListener
 
 	public void componentResized(ComponentEvent e) {
 		setUpdate();
+		resized = true;
 	}
 
 	public void componentMoved(ComponentEvent e) {
@@ -110,5 +112,14 @@ final class MacOSXCanvasListener implements ComponentListener, HierarchyListener
 
 	public void hierarchyChanged(HierarchyEvent e) {
 		setUpdate();
+	}
+	
+	public boolean wasResized() {
+		if (resized) {
+			resized = false;
+			return true;
+		}
+		
+		return false;
 	}
 }

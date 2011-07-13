@@ -169,12 +169,7 @@ interface DisplayImplementation extends InputImplementation {
 	void setResizable(boolean resizable);
 	
 	/**
-	 * @return true if the Display window is resizable.
-	 */
-	boolean isResizable();
-	
-	/**
-	 * @return true if the Display window has been resized.
+	 * @return true if the Display window has been resized since this method was last called.
 	 */
 	boolean wasResized();
 	
