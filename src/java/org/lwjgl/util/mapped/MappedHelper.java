@@ -58,7 +58,7 @@ public class MappedHelper {
 
 		if ( sizeof % align != 0 )
 			throw new IllegalStateException("sizeof not a multiple of alignment");
-		mo.stride = sizeof;
+		mo.sizeof = sizeof;
 
 		long addr = MappedObjectUnsafe.getBufferBaseAddress(buffer) + buffer.position();
 		if ( addr % align != 0 )
@@ -79,19 +79,19 @@ public class MappedHelper {
 		set.view(view);
 	}
 
-	public static void put_view(MappedObject mapped, int view) {
-		mapped.setViewAddress(mapped.baseAddress + view * mapped.stride);
+	public static void put_view(MappedObject mapped, int view, int sizeof) {
+		mapped.setViewAddress(mapped.baseAddress + view * sizeof);
 	}
 
-	public static int get_view(MappedObject mapped) {
-		return (int)(mapped.viewAddress - mapped.baseAddress) / mapped.stride;
+	public static int get_view(MappedObject mapped, int sizeof) {
+		return (int)(mapped.viewAddress - mapped.baseAddress) / sizeof;
 	}
 
 	public static MappedObject dup(MappedObject src, MappedObject dst) {
 		dst.baseAddress = src.baseAddress;
 		dst.viewAddress = src.viewAddress;
-		dst.stride = src.stride;
 		dst.align = src.align;
+		dst.sizeof = src.sizeof;
 		dst.preventGC = src.preventGC;
 		return dst;
 	}
@@ -99,8 +99,8 @@ public class MappedHelper {
 	public static MappedObject slice(MappedObject src, MappedObject dst) {
 		dst.baseAddress = src.viewAddress; // !
 		dst.viewAddress = src.viewAddress;
-		dst.stride = src.stride;
 		dst.align = src.align;
+		dst.sizeof = src.sizeof;
 		dst.preventGC = src.preventGC;
 		return dst;
 	}

@@ -59,8 +59,8 @@ public class MappedObjectTests1 {
 		{
 			MappedFloat vecs1 = MappedFloat.malloc(1234);
 
-			assert (vecs1.stride == MappedFloat.SIZEOF);
-			assert (vecs1.stride * 1234 == vecs1.backingByteBuffer().capacity());
+			assert (vecs1.sizeof == MappedFloat.SIZEOF);
+			assert (vecs1.sizeof * 1234 == vecs1.backingByteBuffer().capacity());
 			assert (MappedFloat.SIZEOF * 1234 == vecs1.backingByteBuffer().capacity());
 		}
 
@@ -130,31 +130,6 @@ public class MappedObjectTests1 {
 			} catch (IndexOutOfBoundsException e) {
 				// expected, ignore
 			}
-		}
-
-		// test dup
-		{
-			int newStride = 16;
-			int doOffset = 0;
-
-			vecs.view = 0;
-			MappedFloat.configure(vecs, newStride, doOffset);
-			MappedFloat dec2 = vecs.dup();
-			MappedFloat.configure(dec2, newStride, doOffset);
-
-			String s1 = vecs.baseAddress + "," + vecs.viewAddress + "," + vecs.stride + "," + vecs.SIZEOF;
-			String s2 = dec2.baseAddress + "," + dec2.viewAddress + "," + dec2.stride + "," + dec2.SIZEOF;
-			// System.out.println(s1);
-			// System.out.println(s2);
-			assert (s1.equals(s2));
-
-			dec2.view++;
-
-			String s3 = vecs.baseAddress + "," + vecs.viewAddress + "," + vecs.stride + "," + vecs.SIZEOF;
-			String s4 = dec2.baseAddress + "," + dec2.viewAddress + "," + dec2.stride + "," + dec2.SIZEOF;
-			// System.out.println(s3);
-			// System.out.println(s4);
-			assert (!s3.equals(s4));
 		}
 
 		// test newBuffer

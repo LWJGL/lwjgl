@@ -45,9 +45,9 @@ public class MappedSet3 {
 	public int view;
 
 	void view(int view) {
-		MappedHelper.put_view(this.a, view);
-		MappedHelper.put_view(this.b, view);
-		MappedHelper.put_view(this.c, view);
+		MappedHelper.put_view(this.a, view, this.a.sizeof);
+		MappedHelper.put_view(this.b, view, this.b.sizeof);
+		MappedHelper.put_view(this.c, view, this.c.sizeof);
 	}
 
 	public void next() {

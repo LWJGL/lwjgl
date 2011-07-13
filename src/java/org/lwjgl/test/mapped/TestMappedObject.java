@@ -35,6 +35,7 @@ import org.lwjgl.util.mapped.MappedObjectClassLoader;
 import org.lwjgl.util.mapped.MappedObjectTransformer;
 
 /** @author Riven */
+@SuppressWarnings("static-access")
 public class TestMappedObject {
 
 	static {
@@ -49,7 +50,6 @@ public class TestMappedObject {
 		MappedObjectTransformer.register(MappedVec2.class);
 		MappedObjectTransformer.register(MappedVec3.class);
 		MappedObjectTransformer.register(MappedSomething.class);
-
 		MappedObjectTransformer.register(MappedObjectTests3.Xyz.class);
 
 		if ( MappedObjectClassLoader.fork(TestMappedObject.class, args) ) {
@@ -70,8 +70,8 @@ public class TestMappedObject {
 		MappedObjectTests3.testForeach();
 		MappedObjectTests3.testConstructor();
 		MappedObjectTests3.testMappedSet();
-		
-		MappedObjectWithLibrary.testLWJGL();
+
+		System.out.println("done");
 	}
 
 }

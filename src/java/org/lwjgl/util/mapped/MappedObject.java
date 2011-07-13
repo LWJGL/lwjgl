@@ -63,11 +63,11 @@ public class MappedObject {
 	/** The mapped object view memory address, in bytes. Read-only. */
 	public long viewAddress;
 
-	/** The mapped object stride, in bytes. Read-only. */
-	public int stride;
-
 	/** The mapped object memory alignment, in bytes. Read-only. */
 	public int align;
+
+	/** The mapped object memory sizeof, in bytes. Read-only. */
+	public int sizeof;
 
 	/**
 	 * Holds the value of sizeof of the sub-type of this MappedObject<br>
@@ -88,7 +88,7 @@ public class MappedObject {
 
 	/** Moves the current view to the next element. */
 	public final void next() {
-		setViewAddress(this.viewAddress + this.stride);
+		setViewAddress(this.viewAddress + this.sizeof);
 	}
 
 	final void setViewAddress(final long address) {
@@ -99,7 +99,7 @@ public class MappedObject {
 
 	final void checkAddress(final long address) {
 		final long base = MappedObjectUnsafe.getBufferBaseAddress(preventGC);
-		if ( address < base || preventGC.capacity() < (address - base + stride) )
+		if ( address < base || preventGC.capacity() < (address - base + this.sizeof) )
 			throw new IndexOutOfBoundsException();
 	}
 
@@ -216,32 +216,6 @@ public class MappedObject {
 	 */
 	public static <T extends MappedObject> Iterable<T> foreach(T mapped, int elementCount) {
 		return new MappedForeach<T>(mapped, elementCount);
-	}
-
-	/**
-	 * Configures a newly initiated mapped object with the specified stride and offset.
-	 *
-	 * @throws IllegalStateException if view is not at index 0
-	 */
-	public static <T extends MappedObject> T configure(T mapped, int stride, int offset) {
-		if ( mapped.baseAddress != mapped.viewAddress )
-			throw new IllegalStateException("view must be zero");
-
-		if ( offset < 0 )
-			throw new IllegalStateException("offset must not be negative: " + offset);
-		if ( offset % mapped.align != 0 )
-			throw new IllegalStateException("offset not a multiple of alignment: " + offset);
-
-		if ( stride < mapped.stride )
-			throw new IllegalStateException("new stride must not be smaller than current stride: " + stride);
-		if ( stride % mapped.align != 0 )
-			throw new IllegalStateException("stride not a multiple of alignment: " + stride);
-
-		mapped.baseAddress += offset;
-		mapped.viewAddress += offset;
-		mapped.stride = stride;
-
-		return mapped;
 	}
 
 	ByteBuffer preventGC;

@@ -91,40 +91,8 @@ public class MappedObjectTests2 {
 			vecs.view = 1;
 			long a2 = vecs.viewAddress;
 			assert (a2 - a1 == MappedVec3.SIZEOF);
-			assert (a2 - a1 == vecs.stride);
+			assert (a2 - a1 == vecs.sizeof);
 			vecs.view = 0;
-		}
-
-		int newStride = 16;
-
-		MappedVec3.configure(vecs, newStride, +4);
-		assert (vecs.z == 0.1234f); // vecs[1].x ended up in vecs[0].z due to 1float offset
-
-		MappedVec3.configure(vecs, newStride, +8);
-		assert (vecs.z == 0.0000f); // vecs[1].z ended up in vecs[0].z due to 2float offset
-
-		// test new stride
-		{
-			long a1 = vecs.viewAddress;
-			vecs.view = 1;
-			long a2 = vecs.viewAddress;
-			assert (a2 - a1 == newStride);
-			vecs.view = 0;
-		}
-
-		// example: GPU => VBO => VTN
-		{
-			MappedVec3 v = MappedVec3.map(bb);
-			MappedVec2 t = MappedVec2.map(bb);
-			MappedVec3 n = MappedVec3.map(bb);
-
-			int stride = MappedVec3.SIZEOF + MappedVec2.SIZEOF + MappedVec3.SIZEOF;
-			assert (stride == 32);
-
-			MappedVec3.configure(v, stride, 0);
-			MappedVec2.configure(t, stride, MappedVec3.SIZEOF);
-			MappedVec3.configure(n, stride, MappedVec3.SIZEOF + MappedVec2.SIZEOF);
 		}
 	}
-
 }

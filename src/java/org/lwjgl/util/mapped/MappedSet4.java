@@ -46,10 +46,10 @@ public class MappedSet4 {
 	public int view;
 
 	void view(int view) {
-		MappedHelper.put_view(this.a, view);
-		MappedHelper.put_view(this.b, view);
-		MappedHelper.put_view(this.c, view);
-		MappedHelper.put_view(this.d, view);
+		MappedHelper.put_view(this.a, view, this.a.sizeof);
+		MappedHelper.put_view(this.b, view, this.b.sizeof);
+		MappedHelper.put_view(this.c, view, this.c.sizeof);
+		MappedHelper.put_view(this.d, view, this.d.sizeof);
 	}
 
 	public void next() {
@@ -58,5 +58,4 @@ public class MappedSet4 {
 		this.c.next();
 		this.d.next();
 	}
-
 }

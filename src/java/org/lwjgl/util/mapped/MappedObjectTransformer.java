@@ -34,7 +34,7 @@ public class MappedObjectTransformer {
 
 	static final boolean PRINT_TIMING   = LWJGLUtil.DEBUG && LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.PrintTiming");
 	static final boolean PRINT_ACTIVITY = LWJGLUtil.DEBUG && LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.PrintActivity");
-	static final boolean PRINT_BYTECODE = false; //LWJGLUtil.DEBUG && LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.PrintBytecode");
+	static final boolean PRINT_BYTECODE = LWJGLUtil.DEBUG && LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.PrintBytecode");
 
 	static final Map<String, MappedSubtypeInfo> className_to_subtype;
 
@@ -372,6 +372,7 @@ public class MappedObjectTransformer {
 			if ( mappedSubtype == null ) {
 				String mappedSetPrefix = jvmClassName(MappedSet.class);
 
+				// MappedSet.view
 				outer:
 				if ( "view".equals(fieldName) && className.startsWith(mappedSetPrefix) ) {
 					if ( opcode == GETFIELD )
@@ -418,17 +419,23 @@ public class MappedObjectTransformer {
 
 				if ( opcode == GETFIELD ) {
 					// stack: instance
-					super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), "get_view", "(L" + jvmClassName(MappedObject.class) + ";)I");
+					pushInt(super.mv, mappedSubtype.sizeof);
+					// stack: sizeof, instance
+					super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), "get_view", "(L" + jvmClassName(MappedObject.class) + ";I)I");
+					// stack: view
 					return;
 				}
 				if ( opcode == PUTFIELD ) {
-					// stack: int, instance
-					super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), "put_view", "(L" + jvmClassName(MappedObject.class) + ";I)V");
+					// stack: view, instance
+					pushInt(super.mv, mappedSubtype.sizeof);
+					// stack: sizeof, view, instance
+					super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), "put_view", "(L" + jvmClassName(MappedObject.class) + ";II)V");
+					// stack: -
 					return;
 				}
 			}
 
-			if ( "align".equals(fieldName) ) {
+			if ( "align".equals(fieldName) || "sizeof".equals(fieldName) ) {
 				if ( !"I".equals(typeName) )
 					throw new IllegalStateException();
 
@@ -436,21 +443,12 @@ public class MappedObjectTransformer {
 					// stack: instance
 					super.visitInsn(POP);
 					// stack: -
-					pushInt(super.mv, mappedSubtype.align);
+					if ( "sizeof".equals(fieldName) )
+						pushInt(super.mv, mappedSubtype.sizeof);
+					else if ( "align".equals(fieldName) )
+						pushInt(super.mv, mappedSubtype.align);
 					// stack: int
 					return;
-				}
-				if ( opcode == PUTFIELD ) {
-					throwAccessErrorOnReadOnlyField(className, fieldName);
-				}
-			}
-
-			if ( "stride".equals(fieldName) ) {
-				if ( !"I".equals(typeName) )
-					throw new IllegalStateException();
-
-				if ( opcode == GETFIELD ) {
-					// do not change a thing
 				}
 				if ( opcode == PUTFIELD ) {
 					throwAccessErrorOnReadOnlyField(className, fieldName);
@@ -476,6 +474,8 @@ public class MappedObjectTransformer {
 				return;
 			}
 
+			// now we're going to transform ByteBuffer-typed field access
+
 			if ( typeName.equals("L" + jvmClassName(ByteBuffer.class) + ";") ) {
 				if ( opcode == PUTFIELD ) {
 					throwAccessErrorOnReadOnlyField(className, fieldName);
@@ -500,30 +500,34 @@ public class MappedObjectTransformer {
 				}
 			}
 
+			// we're now going to transform the field access
+
 			if ( opcode == PUTFIELD ) {
 				// stack: value, ref
 				super.visitInsn(SWAP);
 				// stack: ref, value
 				super.visitFieldInsn(GETFIELD, mappedSubtype.className, "viewAddress", "J");
-				// stack: long, value
+				// stack: viewAddr, value
 				super.visitLdcInsn(fieldOffset);
-				// stack: long, long, value
+				// stack: offset, viewAddr, value
 				super.visitInsn(LADD);
-				// stack: long, value
+				// stack: fieldAddr, value
 				super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), typeName.toLowerCase() + "put", "(" + typeName + "J)V");
 				// stack -
+
 				return;
 			}
 			if ( opcode == GETFIELD ) {
 				// stack: ref
 				super.visitFieldInsn(GETFIELD, mappedSubtype.className, "viewAddress", "J");
-				// stack: long
+				// stack: viewAddr
 				super.visitLdcInsn(fieldOffset);
-				// stack: long, long
+				// stack: fieldOffset, viewAddr
 				super.visitInsn(LADD);
-				// stack: long
+				// stack: fieldAddr
 				super.visitMethodInsn(INVOKESTATIC, jvmClassName(MappedHelper.class), typeName.toLowerCase() + "get", "(J)" + typeName);
 				// stack: value
+
 				return;
 			}
 
@@ -553,7 +557,7 @@ public class MappedObjectTransformer {
 		else if ( value >= Short.MIN_VALUE && value <= Short.MAX_VALUE )
 			mv.visitIntInsn(SIPUSH, value);
 		else
-			mv.visitLdcInsn(Integer.valueOf(value));
+			mv.visitLdcInsn(value);
 	}
 
 	static String jvmClassName(Class<?> type) {
