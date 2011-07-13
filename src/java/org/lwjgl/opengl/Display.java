@@ -1270,6 +1270,8 @@ public final class Display {
 	/**
 	 * @return true if the Display window has been resized.
 	 * This value will be updated after a call to Display.update().
+	 * 
+	 * This will return false if running in fullscreen or with Display.setParent(Canvas parent)
 	 */
 	public static boolean wasResized() {
 		return false;
@@ -1277,6 +1279,10 @@ public final class Display {
 	
 	/**
 	 * @return this method will return the width of the Display window.
+	 * 
+	 * If running in fullscreen mode it will return the width of the current set DisplayMode.
+	 * If running Display.setParent(Canvas parent) is being used, the width of the parent
+	 * will be returned.
 	 * 
 	 * This value will be updated after a call to Display.update().
 	 */
@@ -1286,6 +1292,10 @@ public final class Display {
 	
 	/**
 	 * @return this method will return the height of the Display window.
+	 *  
+	 * If running in fullscreen mode it will return the height of the current set DisplayMode.
+	 * If running Display.setParent(Canvas parent) is being used, the height of the parent
+	 * will be returned.
 	 * 
 	 * This value will be updated after a call to Display.update().
 	 */
