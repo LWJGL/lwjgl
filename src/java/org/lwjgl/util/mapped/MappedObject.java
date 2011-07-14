@@ -86,12 +86,7 @@ public class MappedObject {
 	 */
 	public int view;
 
-	/** Moves the current view to the next element. */
-	public final void next() {
-		setViewAddress(this.viewAddress + this.sizeof);
-	}
-
-	final void setViewAddress(final long address) {
+	public final void setViewAddress(final long address) {
 		if ( CHECKS )
 			checkAddress(address);
 		this.viewAddress = address;
@@ -99,8 +94,9 @@ public class MappedObject {
 
 	final void checkAddress(final long address) {
 		final long base = MappedObjectUnsafe.getBufferBaseAddress(preventGC);
-		if ( address < base || preventGC.capacity() < (address - base + this.sizeof) )
-			throw new IndexOutOfBoundsException();
+		final int offset = (int)(address - base);
+		if ( address < base || preventGC.capacity() < (offset + this.sizeof) )
+			throw new IndexOutOfBoundsException(Integer.toString(offset / sizeof));
 	}
 
 	final void checkRange(final int bytes) {
@@ -182,6 +178,12 @@ public class MappedObject {
 	 * can be used to run execute that code on the current view.
 	 */
 	public final <T extends MappedObject> void runViewConstructor() {
+		// any method that calls this method will have its call-site modified
+		throw new InternalError("type not registered");
+	}
+
+	/** Moves the current view to the next element. */
+	public final void next() {
 		// any method that calls this method will have its call-site modified
 		throw new InternalError("type not registered");
 	}

@@ -87,6 +87,10 @@ public class MappedHelper {
 		return (int)(mapped.viewAddress - mapped.baseAddress) / sizeof;
 	}
 
+	public static void put_view_next(MappedObject mapped, int sizeof) {
+		mapped.setViewAddress(mapped.viewAddress + sizeof);
+	}
+
 	public static MappedObject dup(MappedObject src, MappedObject dst) {
 		dst.baseAddress = src.baseAddress;
 		dst.viewAddress = src.viewAddress;

@@ -89,6 +89,15 @@ public class MappedObjectTests1 {
 			vecs.view = 0;
 		}
 
+		// manipulate 'view' with next()
+		{
+			assert (vecs.view == 0);
+			vecs.next();
+			assert (vecs.view == 1);
+			assert (vecs.value != 1.1f); // old view
+			vecs.view = 0;
+		}
+
 		// test bounds checking
 		{
 			assert (vecs.view == 0);
