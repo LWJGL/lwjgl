@@ -184,7 +184,7 @@ public class MappedObjectTransformer {
 					}
 				}
 
-				return new MappedInstanceMethodAdapter(access, className, name, desc, super.visitMethod(access, name, desc, signature, exceptions));
+				return new MappedInstanceMethodAdapter(className, name, desc, super.visitMethod(access, name, desc, signature, exceptions));
 			}
 
 			@Override
