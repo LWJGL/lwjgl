@@ -31,6 +31,7 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.PointerBuffer;
@@ -95,7 +96,7 @@ abstract class DrawableGLES implements DrawableLWJGL {
 				EGL_NATIVE_RENDERABLE, EGL_FALSE,
 			};
 
-			final EGLConfig[] configs = eglDisplay.chooseConfig(pf.getAttribBuffer(eglDisplay, eglSurfaceType, attribs), null, APIUtil.getBufferInt());
+			final EGLConfig[] configs = eglDisplay.chooseConfig(pf.getAttribBuffer(eglDisplay, eglSurfaceType, attribs), null, BufferUtils.createIntBuffer(1));
 			if ( configs.length == 0 )
 				throw new LWJGLException("No EGLConfigs found for the specified PixelFormat.");
 
