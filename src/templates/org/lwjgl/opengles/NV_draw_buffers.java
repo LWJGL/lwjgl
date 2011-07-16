@@ -85,6 +85,6 @@ public interface NV_draw_buffers {
 	void glDrawBuffersNV(@AutoSize("bufs") @GLsizei int n, @Const @GLenum IntBuffer bufs);
 
 	@Alternate("glDrawBuffersNV")
-	void glDrawBuffersNV(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, buf), 0", keepParam = true) int buf);
+	void glDrawBuffersNV(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(buf)", keepParam = true) int buf);
 
 }

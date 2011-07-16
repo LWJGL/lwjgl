@@ -166,7 +166,7 @@ public interface GL41 {
 	void glDeleteProgramPipelines(@AutoSize("pipelines") @GLsizei int n, @Const @GLuint IntBuffer pipelines);
 
 	@Alternate("glDeleteProgramPipelines")
-	void glDeleteProgramPipelines(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, pipeline), 0", keepParam = true) int pipeline);
+	void glDeleteProgramPipelines(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(pipeline)", keepParam = true) int pipeline);
 
 	void glGenProgramPipelines(@AutoSize("pipelines") @GLsizei int n, @OutParameter @GLuint IntBuffer pipelines);
 
@@ -339,7 +339,7 @@ public interface GL41 {
 	@Alternate("glGetProgramPipelineInfoLog")
 	@GLreturn(value = "infoLog", maxLength = "bufSize")
 	void glGetProgramPipelineInfoLog2(@GLuint int pipeline, @GLsizei int bufSize,
-	                                  @OutParameter @GLsizei @Constant("infoLog_length, 0") IntBuffer length,
+	                                  @OutParameter @GLsizei @Constant("MemoryUtil.getAddress0(infoLog_length)") IntBuffer length,
 	                                  @OutParameter @GLchar ByteBuffer infoLog);
 
 	// -----------------------------------------------------------------------

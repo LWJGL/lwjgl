@@ -121,7 +121,7 @@ public interface EXT_transform_feedback {
 	@Alternate("glGetTransformFeedbackVaryingEXT")
 	@GLreturn(value = "name", maxLength = "bufSize")
 	void glGetTransformFeedbackVaryingEXT2(@GLuint int program, @GLuint int index, @GLsizei int bufSize,
-	                                       @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
+	                                       @OutParameter @GLsizei @Constant("MemoryUtil.getAddress0(name_length)") IntBuffer length,
 	                                       @OutParameter @GLsizei @Check("1") IntBuffer size,
 	                                       @OutParameter @GLenum @Check("1") IntBuffer type,
 	                                       @OutParameter @GLchar ByteBuffer name);

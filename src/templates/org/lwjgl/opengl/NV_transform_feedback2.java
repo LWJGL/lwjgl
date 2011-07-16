@@ -59,7 +59,7 @@ public interface NV_transform_feedback2 {
 	void glDeleteTransformFeedbacksNV(@AutoSize("ids") @GLsizei int n, @Const @GLuint IntBuffer ids);
 
 	@Alternate("glDeleteTransformFeedbacksNV")
-	void glDeleteTransformFeedbacksNV(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, id), 0", keepParam = true) int id);
+	void glDeleteTransformFeedbacksNV(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(id)", keepParam = true) int id);
 
 	void glGenTransformFeedbacksNV(@AutoSize("ids") @GLsizei int n, @OutParameter @GLuint IntBuffer ids);
 

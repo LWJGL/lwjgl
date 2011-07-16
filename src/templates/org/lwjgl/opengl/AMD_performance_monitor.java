@@ -76,7 +76,7 @@ public interface AMD_performance_monitor {
 	@Alternate("glGetPerfMonitorGroupStringAMD")
 	@GLreturn(value = "groupString", maxLength = "bufSize")
 	void glGetPerfMonitorGroupStringAMD2(@GLuint int group, @GLsizei int bufSize,
-	                                    @OutParameter @GLsizei @Constant("groupString_length, 0") IntBuffer length,
+	                                    @OutParameter @GLsizei @Constant("MemoryUtil.getAddress0(groupString_length)") IntBuffer length,
 	                                    @OutParameter @GLchar ByteBuffer groupString);
 
 	void glGetPerfMonitorCounterStringAMD(@GLuint int group, @GLuint int counter, @AutoSize("counterString") @GLsizei int bufSize,
@@ -86,7 +86,7 @@ public interface AMD_performance_monitor {
 	@Alternate("glGetPerfMonitorCounterStringAMD")
 	@GLreturn(value = "counterString", maxLength = "bufSize")
 	void glGetPerfMonitorCounterStringAMD2(@GLuint int group, @GLuint int counter, @GLsizei int bufSize,
-	                                      @OutParameter @GLsizei @Constant("counterString_length, 0") IntBuffer length,
+	                                      @OutParameter @GLsizei @Constant("MemoryUtil.getAddress0(counterString_length)") IntBuffer length,
 	                                      @OutParameter @GLchar ByteBuffer counterString);
 
 	void glGetPerfMonitorCounterInfoAMD(@GLuint int group, @GLuint int counter, @GLenum int pname, @Check(value = "16") @GLvoid ByteBuffer data);
@@ -100,12 +100,12 @@ public interface AMD_performance_monitor {
 	void glDeletePerfMonitorsAMD(@AutoSize("monitors") @GLsizei int n, @GLuint IntBuffer monitors);
 
 	@Alternate("glDeletePerfMonitorsAMD")
-	void glDeletePerfMonitorsAMD(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, monitor), 0", keepParam = true) int monitor);
+	void glDeletePerfMonitorsAMD(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(monitor)", keepParam = true) int monitor);
 
 	void glSelectPerfMonitorCountersAMD(@GLuint int monitor, boolean enable, @GLuint int group, @AutoSize("counterList") int numCounters, @GLuint IntBuffer counterList);
 
 	@Alternate("glSelectPerfMonitorCountersAMD")
-	void glSelectPerfMonitorCountersAMD(@GLuint int monitor, boolean enable, @GLuint int group, @Constant("1") int numCounters, @Constant(value = "APIUtil.getBufferInt().put(0, counter), 0", keepParam = true) int counter);
+	void glSelectPerfMonitorCountersAMD(@GLuint int monitor, boolean enable, @GLuint int group, @Constant("1") int numCounters, @Constant(value = "APIUtil.getInt(counter)", keepParam = true) int counter);
 
 	void glBeginPerfMonitorAMD(@GLuint int monitor);
 
@@ -119,6 +119,6 @@ public interface AMD_performance_monitor {
 	@GLreturn("data")
 	void glGetPerfMonitorCounterDataAMD2(@GLuint int monitor, @GLenum int pname, @Constant("4") @GLsizei int dataSize,
 	                                     @OutParameter @GLuint IntBuffer data,
-	                                     @OutParameter @GLint @Constant("null, 0") IntBuffer bytesWritten);
+	                                     @OutParameter @GLint @Constant("0L") IntBuffer bytesWritten);
 
 }

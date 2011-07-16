@@ -1075,7 +1075,7 @@ public interface EXT_direct_state_access {
 	@Alternate("glTextureParameterIivEXT")
 	@Dependent("GL_EXT_texture_integer")
 	@StripPostfix("param")
-	void glTextureParameterIivEXT(@GLuint int texture, @GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getBufferInt().put(0, param), 0", keepParam = true) int param);
+	void glTextureParameterIivEXT(@GLuint int texture, @GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getInt(param)", keepParam = true) int param);
 
 	@Dependent("GL_EXT_texture_integer")
 	@StripPostfix("params")
@@ -1084,7 +1084,7 @@ public interface EXT_direct_state_access {
 	@Alternate("glTextureParameterIuivEXT")
 	@Dependent("GL_EXT_texture_integer")
 	@StripPostfix("param")
-	void glTextureParameterIuivEXT(@GLuint int texture, @GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getBufferInt().put(0, param), 0", keepParam = true) @GLuint int param);
+	void glTextureParameterIuivEXT(@GLuint int texture, @GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getInt(param)", keepParam = true) @GLuint int param);
 
 	@Dependent("GL_EXT_texture_integer")
 	@StripPostfix("params")
@@ -1119,7 +1119,7 @@ public interface EXT_direct_state_access {
 	@Alternate("glMultiTexParameterIivEXT")
 	@Dependent("GL_EXT_texture_integer")
 	@StripPostfix("param")
-	void glMultiTexParameterIivEXT(@GLenum int texunit, @GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getBufferInt().put(0, param), 0", keepParam = true) int param);
+	void glMultiTexParameterIivEXT(@GLenum int texunit, @GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getInt(param)", keepParam = true) int param);
 
 	@Dependent("GL_EXT_texture_integer")
 	@StripPostfix("params")
@@ -1128,7 +1128,7 @@ public interface EXT_direct_state_access {
 	@Alternate("glMultiTexParameterIuivEXT")
 	@Dependent("GL_EXT_texture_integer")
 	@StripPostfix("param")
-	void glMultiTexParameterIuivEXT(@GLenum int texunit, @GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getBufferInt().put(0, param), 0", keepParam = true) int param);
+	void glMultiTexParameterIuivEXT(@GLenum int texunit, @GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getInt(param)", keepParam = true) int param);
 
 	@Dependent("GL_EXT_texture_integer")
 	@StripPostfix("params")

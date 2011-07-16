@@ -112,7 +112,7 @@ public interface CL10GL {
 	@cl_int
 	int clEnqueueAcquireGLObjects(@PointerWrapper("cl_command_queue") CLCommandQueue command_queue,
 	                              @Constant("1") @cl_uint int num_objects,
-	                              @Constant(value = "APIUtil.getBufferPointer().put(0, mem_object).getBuffer(), 0", keepParam = true) CLMem mem_object,
+	                              @Constant(value = "APIUtil.getPointer(mem_object)", keepParam = true) CLMem mem_object,
 	                              @AutoSize(value = "event_wait_list", canBeNull = true) @cl_uint int num_events_in_wait_list,
 	                              @Check(canBeNull = true) @Const @NativeType("cl_event") PointerBuffer event_wait_list,
 	                              @OutParameter @Check(value = "1", canBeNull = true) @NativeType("cl_event") PointerBuffer event);
@@ -131,7 +131,7 @@ public interface CL10GL {
 	@cl_int
 	int clEnqueueReleaseGLObjects(@PointerWrapper("cl_command_queue") CLCommandQueue command_queue,
 	                              @Constant("1") @cl_uint int num_objects,
-	                              @Constant(value = "APIUtil.getBufferPointer().put(0, mem_object).getBuffer(), 0", keepParam = true) CLMem mem_object,
+	                              @Constant(value = "APIUtil.getPointer(mem_object)", keepParam = true) CLMem mem_object,
 	                              @AutoSize(value = "event_wait_list", canBeNull = true) @cl_uint int num_events_in_wait_list,
 	                              @Check(canBeNull = true) @Const @NativeType("cl_event") PointerBuffer event_wait_list,
 	                              @OutParameter @Check(value = "1", canBeNull = true) @NativeType("cl_event") PointerBuffer event);

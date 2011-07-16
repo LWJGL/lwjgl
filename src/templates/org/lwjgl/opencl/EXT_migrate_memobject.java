@@ -68,7 +68,7 @@ public interface EXT_migrate_memobject {
 	@cl_int
 	int clEnqueueMigrateMemObjectEXT(@PointerWrapper("cl_command_queue") CLCommandQueue command_queue,
 	                                 @Constant("1") @cl_uint int num_mem_objects,
-	                                 @Constant(value = "APIUtil.getBufferPointer().put(0, mem_object).getBuffer(), 0", keepParam = true) CLMem mem_object,
+	                                 @Constant(value = "APIUtil.getPointer(mem_object)", keepParam = true) CLMem mem_object,
 	                                 @cl_bitfield @NativeType("cl_mem_migration_flags_ext") long flags,
 	                                 @AutoSize(value = "event_wait_list", canBeNull = true) @cl_uint int num_events_in_wait_list,
 	                                 @Check(canBeNull = true) @Const @NativeType("cl_event") PointerBuffer event_wait_list,

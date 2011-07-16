@@ -55,7 +55,7 @@ public interface QCOM_driver_control {
 	@GLreturn(value = "driverControlString", maxLength = "bufSize")
 	void glGetDriverControlStringQCOM2(@GLuint int driverControl,
 	                                   @GLsizei int bufSize,
-	                                   @OutParameter @GLsizei @Constant("driverControlString_length, 0") IntBuffer length,
+	                                   @OutParameter @GLsizei @Constant("MemoryUtil.getAddress0(driverControlString_length)") IntBuffer length,
 	                                   @OutParameter @GLchar ByteBuffer driverControlString);
 
 	void glEnableDriverControlQCOM(@GLuint int driverControl);

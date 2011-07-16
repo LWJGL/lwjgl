@@ -118,6 +118,10 @@ public class MappedObjectTests3 {
 		set.view = 0;
 		assert (vec2.view == 0);
 		assert (vec3.view == 0);
+
+		set.next();
+		assert (vec2.view == 1);
+		assert (vec3.view == 1);
 	}
 
 }

@@ -97,7 +97,7 @@ public interface GL15 {
 	void glDeleteBuffers(@AutoSize("buffers") @GLsizei int n, @Const @GLuint IntBuffer buffers);
 
 	@Alternate("glDeleteBuffers")
-	void glDeleteBuffers(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, buffer), 0", keepParam = true) int buffer);
+	void glDeleteBuffers(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(buffer)", keepParam = true) int buffer);
 
 	void glGenBuffers(@AutoSize("buffers") @GLsizei int n, @OutParameter @GLuint IntBuffer buffers);
 
@@ -205,7 +205,7 @@ public interface GL15 {
 	void glDeleteQueries(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
 
 	@Alternate("glDeleteQueries")
-	void glDeleteQueries(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, id), 0", keepParam = true) int id);
+	void glDeleteQueries(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(id)", keepParam = true) int id);
 
 	boolean glIsQuery(@GLuint int id);
 

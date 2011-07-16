@@ -194,8 +194,8 @@ public class JavaMethodsGenerator {
 				writer.print("long ");
 			else {
 				Class type = type_info.getType();
-				if ( native_stub && (type == CharSequence.class || type == CharSequence[].class || type == PointerBuffer.class) )
-					writer.print("ByteBuffer ");
+				if ( native_stub && (type == CharSequence.class || type == CharSequence[].class || type == PointerBuffer.class || Buffer.class.isAssignableFrom(type) ) )
+					writer.print("long ");
 				else if ( printTypes )
 					writer.print(type_info.getType().getSimpleName() + " ");
 			}
@@ -203,8 +203,6 @@ public class JavaMethodsGenerator {
 			if ( auto_size_annotation != null )
 				writer.print(auto_size_annotation.value() + "_");
 			writer.print(param.getSimpleName());
-			if ( native_stub && buffer_type != null )
-				writer.print(", int " + param.getSimpleName() + NativeMethodStubsGenerator.BUFFER_POSITION_POSTFIX);
 		}
 		return false;
 	}
@@ -490,7 +488,7 @@ public class JavaMethodsGenerator {
 				Check check_annotation = param.getAnnotation(Check.class);
 				boolean hide_buffer = mode == Mode.AUTOS && getAutoTypeParameter(method, param) != null;
 				if (hide_buffer) {
-					writer.print("null");
+					writer.print("0L");
 				} else {
 					if ( type == CharSequence.class || type == CharSequence[].class ) {
 						final String offset = Utils.getStringOffset(method, param);
@@ -502,48 +500,25 @@ public class JavaMethodsGenerator {
 						if ( offset != null )
 							writer.print(", " + offset);
 						writer.print(")");
-						hide_buffer = true;
 					} else {
 						final AutoSize auto_size_annotation = param.getAnnotation(AutoSize.class);
 						if ( auto_size_annotation != null )
 							writer.print(auto_size_annotation.value() + "_");
-						writer.print(param.getSimpleName());
-						if ( PointerBuffer.class.isAssignableFrom(type) ) {
+
+						final Class buffer_type = Utils.getNIOBufferType(param.getType());
+						if ( buffer_type == null )
+							writer.print(param.getSimpleName());
+						else {
+							writer.print("MemoryUtil.getAddress");
 							if ( check_annotation != null && check_annotation.canBeNull() )
-								writer.print(" != null ? " + param.getSimpleName());
-							writer.print(".getBuffer()");
-							if ( check_annotation != null && check_annotation.canBeNull() )
-								writer.print(" : null");
+								writer.print("Safe");
+							writer.print("(");
+							writer.print(param.getSimpleName());
+							writer.print(")");
 						}
 					}
 				}
-				Class buffer_type = Utils.getNIOBufferType(param.getType());
-				if (buffer_type != null) {
-					writer.print(", ");
-					if (!hide_buffer) {
-						int shifting;
-						if (Utils.getNIOBufferType(param.getType()).equals(Buffer.class)) {
-							shifting = getBufferElementSizeExponent(type == Buffer.class ? ByteBuffer.class : type); // TODO: This will always throw an exception
-							//shifting = 0;
-						} else
-							shifting = 0;
-						writer.print(param.getSimpleName());
-						if (check_annotation != null && check_annotation.canBeNull())
-							writer.print(" != null ? " + param.getSimpleName());
-						if ( type == PointerBuffer.class && param.getAnnotation(NativeType.class).value().endsWith("void") )
-							writer.print(".positionByte()");
-						else
-							writer.print(".position()");
-						if (shifting > 0)
-							writer.print(" << " + shifting);
-						if (check_annotation != null && check_annotation.canBeNull())
-							writer.print(" : 0");
-					} else if ( type == CharSequence.class || type == CharSequence[].class ) {
-						final String offset = Utils.getStringOffset(method, param);
-						writer.print(offset == null ? "0" : offset);
-					} else
-						writer.print("0");
-				} else if ( type != long.class ) {
+				if ( type != long.class ) {
 					PointerWrapper pointer_annotation = param.getAnnotation(PointerWrapper.class);
 					if ( pointer_annotation != null ) {
 						if ( pointer_annotation.canBeNull() )

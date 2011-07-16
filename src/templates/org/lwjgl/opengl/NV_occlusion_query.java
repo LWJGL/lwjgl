@@ -59,7 +59,7 @@ public interface NV_occlusion_query {
 	void glDeleteOcclusionQueriesNV(@AutoSize("piIDs") @GLsizei int n, @Const @GLuint IntBuffer piIDs);
 
 	@Alternate("glDeleteOcclusionQueriesNV")
-	void glDeleteOcclusionQueriesNV(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, piID), 0", keepParam = true) int piID);
+	void glDeleteOcclusionQueriesNV(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(piID)", keepParam = true) int piID);
 
 	boolean glIsOcclusionQueryNV(@GLuint int id);
 

@@ -63,12 +63,12 @@ public interface ARB_shading_language_include {
 
 	void glCompileShaderIncludeARB(@GLuint int shader, @GLsizei int count,
 	                               @Const @NullTerminated("count") @PointerArray("count") @GLchar ByteBuffer path,
-	                               @Constant("null, 0") @Const IntBuffer length);
+	                               @Constant("0L") @Const IntBuffer length);
 
 	@Alternate(value = "glCompileShaderIncludeARB", nativeAlt = true)
 	void glCompileShaderIncludeARB2(@GLuint int shader, @Constant("path.length") @GLsizei int count,
 	                                @Const @PointerArray(value = "count", lengths = "length") CharSequence[] path,
-	                                @Constant("APIUtil.getLengths(path), 0") @Const IntBuffer length);
+	                                @Constant("APIUtil.getLengths(path)") @Const IntBuffer length);
 
 	boolean glIsNamedStringARB(@AutoSize("name") int namelen, @Const @GLchar ByteBuffer name);
 
@@ -90,7 +90,7 @@ public interface ARB_shading_language_include {
 	@GLreturn(value = "string", maxLength = "bufSize")
 	void glGetNamedStringARB2(@Constant("name.length()") int namelen, CharSequence name,
 	                          @GLsizei int bufSize,
-	                          @OutParameter @Constant("string_length, 0") IntBuffer stringlen,
+	                          @OutParameter @Constant("MemoryUtil.getAddress0(string_length)") IntBuffer stringlen,
 	                          @OutParameter @GLchar ByteBuffer string);
 
 	@StripPostfix("params")

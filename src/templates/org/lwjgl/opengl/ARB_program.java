@@ -128,7 +128,7 @@ public interface ARB_program {
 	void glDeleteProgramsARB(@AutoSize("programs") @GLsizei int n, @Const @GLuint IntBuffer programs);
 
 	@Alternate("glDeleteProgramsARB")
-	void glDeleteProgramsARB(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, program), 0", keepParam = true) int program);
+	void glDeleteProgramsARB(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(program)", keepParam = true) int program);
 
 	void glGenProgramsARB(@AutoSize("programs") @GLsizei int n, @OutParameter @GLuint IntBuffer programs);
 

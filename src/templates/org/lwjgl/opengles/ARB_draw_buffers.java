@@ -64,6 +64,6 @@ public interface ARB_draw_buffers {
 	void glDrawBuffersARB(@AutoSize("buffers") @GLsizei int size, @Const @GLenum IntBuffer buffers);
 
 	@Alternate("glDrawBuffersARB")
-	void glDrawBuffersARB(@Constant("1") @GLsizei int size, @Constant(value = "APIUtil.getBufferInt().put(0, buffer), 0", keepParam = true) int buffer);
+	void glDrawBuffersARB(@Constant("1") @GLsizei int size, @Constant(value = "APIUtil.getInt(buffer)", keepParam = true) int buffer);
 
 }

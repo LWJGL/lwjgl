@@ -143,35 +143,35 @@ public interface NV_transform_feedback {
 	@Alternate("glGetActiveVaryingNV")
 	@GLreturn(value = "name", maxLength = "bufSize")
 	void glGetActiveVaryingNV2(@GLuint int program, @GLuint int index, @GLsizei int bufSize,
-	                           @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
+	                           @OutParameter @GLsizei @Constant("MemoryUtil.getAddress0(name_length)") IntBuffer length,
 	                           @OutParameter @Check("2") IntBuffer sizeType,
-	                           @OutParameter @GLenum @Constant("sizeType, sizeType.position() + 1") IntBuffer type,
+	                           @OutParameter @GLenum @Constant("MemoryUtil.getAddress(sizeType, sizeType.position() + 1)") IntBuffer type,
 	                           @OutParameter @GLchar ByteBuffer name);
 
 	/** Overloads glGetActiveVaryingNV. This version returns only the varying name. */
 	@Alternate(value = "glGetActiveVaryingNV", javaAlt = true)
 	@GLreturn(value = "name", maxLength = "bufSize")
 	void glGetActiveVaryingNV(@GLuint int program, @GLuint int index, @GLsizei int bufSize,
-	                          @OutParameter @GLsizei @Constant("name_length, 0, APIUtil.getBufferInt(), 0, APIUtil.getBufferInt(), 1") IntBuffer length,
+	                          @OutParameter @GLsizei @Constant("MemoryUtil.getAddress0(name_length), MemoryUtil.getAddress0(APIUtil.getBufferInt()), MemoryUtil.getAddress(APIUtil.getBufferInt(), 1)") IntBuffer length,
 	                          @OutParameter @GLchar ByteBuffer name);
 
 	/** Overloads glGetActiveVaryingNV. This version returns only the varying size. */
 	@Alternate(value = "glGetActiveVaryingNV", javaAlt = true)
 	@GLreturn(value = "size")
 	void glGetActiveVaryingSizeNV(@GLuint int program, @GLuint int index, @Constant("0") @GLsizei int bufSize,
-	                              @OutParameter @GLsizei @Constant("null, 0") IntBuffer length,
+	                              @OutParameter @GLsizei @Constant("0L") IntBuffer length,
 	                              @OutParameter IntBuffer size,
-	                              @OutParameter @GLenum @Constant("size, 1") IntBuffer type, // Reuse size buffer and ignore
-	                              @OutParameter @GLchar @Constant("APIUtil.getBufferByte(0), 0") ByteBuffer name);
+	                              @OutParameter @GLenum @Constant("MemoryUtil.getAddress(size, 1)") IntBuffer type, // Reuse size buffer and ignore
+	                              @OutParameter @GLchar @Constant("APIUtil.getBufferByte0()") ByteBuffer name);
 
 	/** Overloads glGetActiveVaryingNV. This version returns only the varying type. */
 	@Alternate(value = "glGetActiveVaryingNV", javaAlt = true)
 	@GLreturn(value = "type")
 	void glGetActiveVaryingTypeNV(@GLuint int program, @GLuint int index, @Constant("0") @GLsizei int bufSize,
-	                              @OutParameter @GLsizei @Constant("null, 0") IntBuffer length,
-	                              @OutParameter @Constant("type, 1") IntBuffer size, // Reuse type buffer and ignore
+	                              @OutParameter @GLsizei @Constant("0L") IntBuffer length,
+	                              @OutParameter @Constant("MemoryUtil.getAddress(type, 1)") IntBuffer size, // Reuse type buffer and ignore
 	                              @OutParameter @GLenum IntBuffer type,
-	                              @OutParameter @GLchar @Constant("APIUtil.getBufferByte(0), 0") ByteBuffer name);
+	                              @OutParameter @GLchar @Constant("APIUtil.getBufferByte0()") ByteBuffer name);
 
 	void glActiveVaryingNV(@GLuint int program, @NullTerminated @Const @GLchar ByteBuffer name);
 

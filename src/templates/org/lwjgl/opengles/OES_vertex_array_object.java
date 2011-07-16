@@ -48,7 +48,7 @@ public interface OES_vertex_array_object {
 	void glDeleteVertexArraysOES(@AutoSize("arrays") @GLsizei int n, @Const @GLuint IntBuffer arrays);
 
 	@Alternate("glDeleteVertexArraysOES")
-	void glDeleteVertexArraysOES(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, array), 0", keepParam = true) int array);
+	void glDeleteVertexArraysOES(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(array)", keepParam = true) int array);
 
 	void glGenVertexArraysOES(@AutoSize("arrays") @GLsizei int n, @OutParameter @GLuint IntBuffer arrays);
 

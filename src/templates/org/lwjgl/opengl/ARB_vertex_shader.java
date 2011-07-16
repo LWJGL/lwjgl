@@ -161,35 +161,35 @@ public interface ARB_vertex_shader {
 	@Alternate("glGetActiveAttribARB")
 	@GLreturn(value = "name", maxLength = "maxLength")
 	void glGetActiveAttribARB2(@GLhandleARB int programObj, @GLuint int index, @GLsizei int maxLength,
-	                           @OutParameter @GLsizei @Constant("name_length, 0") IntBuffer length,
+	                           @OutParameter @GLsizei @Constant("MemoryUtil.getAddress0(name_length)") IntBuffer length,
 	                           @OutParameter @Check("2") IntBuffer sizeType,
-	                           @OutParameter @GLenum @Constant("sizeType, sizeType.position() + 1") IntBuffer type,
+	                           @OutParameter @GLenum @Constant("MemoryUtil.getAddress(sizeType, sizeType.position() + 1)") IntBuffer type,
 	                           @OutParameter @GLcharARB ByteBuffer name);
 
 	/** Overloads glGetActiveAttribARB. This version returns only the attrib name. */
 	@Alternate(value = "glGetActiveAttribARB", javaAlt = true)
 	@GLreturn(value = "name", maxLength = "maxLength")
 	void glGetActiveAttribARB(@GLhandleARB int programObj, @GLuint int index, @GLsizei int maxLength,
-	                          @OutParameter @GLsizei @Constant("name_length, 0, APIUtil.getBufferInt(), 0, APIUtil.getBufferInt(), 1") IntBuffer length,
+	                          @OutParameter @GLsizei @Constant("MemoryUtil.getAddress0(name_length), MemoryUtil.getAddress0(APIUtil.getBufferInt()), MemoryUtil.getAddress(APIUtil.getBufferInt(), 1)") IntBuffer length,
 	                          @OutParameter @GLcharARB ByteBuffer name);
 
 	/** Overloads glGetActiveAttribARB. This version returns only the attrib size. */
 	@Alternate(value = "glGetActiveAttribARB", javaAlt = true)
 	@GLreturn(value = "size")
 	void glGetActiveAttribSizeARB(@GLhandleARB int programObj, @GLuint int index, @Constant("0") @GLsizei int maxLength,
-	                              @OutParameter @GLsizei @Constant("null, 0") IntBuffer length,
+	                              @OutParameter @GLsizei @Constant("0L") IntBuffer length,
 	                              @OutParameter IntBuffer size,
-	                              @OutParameter @GLenum @Constant("size, 1") IntBuffer type, // Reuse size buffer and ignore
-	                              @OutParameter @GLcharARB @Constant("APIUtil.getBufferByte(0), 0") ByteBuffer name);
+	                              @OutParameter @GLenum @Constant("MemoryUtil.getAddress(size, 1)") IntBuffer type, // Reuse size buffer and ignore
+	                              @OutParameter @GLcharARB @Constant("APIUtil.getBufferByte0()") ByteBuffer name);
 
 	/** Overloads glGetActiveAttribARB. This version returns only the attrib type. */
 	@Alternate(value = "glGetActiveAttribARB", javaAlt = true)
 	@GLreturn(value = "type")
 	void glGetActiveAttribTypeARB(@GLhandleARB int programObj, @GLuint int index, @Constant("0") @GLsizei int maxLength,
-	                              @OutParameter @GLsizei @Constant("null, 0") IntBuffer length,
-	                              @OutParameter @Constant("type, 1") IntBuffer size, // Reuse type buffer and ignore
+	                              @OutParameter @GLsizei @Constant("0L") IntBuffer length,
+	                              @OutParameter @Constant("MemoryUtil.getAddress(type, 1)") IntBuffer size, // Reuse type buffer and ignore
 	                              @OutParameter @GLenum IntBuffer type,
-	                              @OutParameter @GLcharARB @Constant("APIUtil.getBufferByte(0), 0") ByteBuffer name);
+	                              @OutParameter @GLcharARB @Constant("APIUtil.getBufferByte0()") ByteBuffer name);
 
 	int glGetAttribLocationARB(@GLhandleARB int programObj, @NullTerminated @Const @GLcharARB ByteBuffer name);
 

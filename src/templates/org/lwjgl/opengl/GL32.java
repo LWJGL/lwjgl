@@ -335,6 +335,6 @@ public interface GL32 {
 	@GLreturn("values")
 	@StripPostfix("values")
 	void glGetSynciv2(@PointerWrapper("GLsync") GLSync sync, @GLenum int pname, @Constant("1") @GLsizei int bufSize,
-	                  @OutParameter @GLsizei @Constant("null, 0") IntBuffer length,
+	                  @OutParameter @GLsizei @Constant("0L") IntBuffer length,
 	                  @OutParameter IntBuffer values);
 }

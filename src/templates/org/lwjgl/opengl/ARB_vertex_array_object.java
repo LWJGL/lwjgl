@@ -55,7 +55,7 @@ public interface ARB_vertex_array_object {
 
 	@Reuse("GL30")
 	@Alternate("glDeleteVertexArrays")
-	void glDeleteVertexArrays(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, array), 0", keepParam = true) int array);
+	void glDeleteVertexArrays(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(array)", keepParam = true) int array);
 
 	@Reuse("GL30")
 	void glGenVertexArrays(@AutoSize("arrays") @GLsizei int n, @OutParameter @GLuint IntBuffer arrays);

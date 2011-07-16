@@ -31,9 +31,7 @@
  */
 package org.lwjgl.opencl;
 
-import org.lwjgl.BufferUtils;
-import org.lwjgl.LWJGLUtil;
-import org.lwjgl.PointerBuffer;
+import org.lwjgl.*;
 import org.lwjgl.opencl.FastLongMap.Entry;
 
 import java.nio.*;
@@ -53,7 +51,7 @@ import static org.lwjgl.opencl.KHRGLSharing.*;
  */
 final class APIUtil {
 
-	private static final int INITIAL_BUFFER_SIZE = 256;
+	private static final int INITIAL_BUFFER_SIZE  = 256;
 	private static final int INITIAL_LENGTHS_SIZE = 4;
 
 	private static final int BUFFERS_SIZE = 32;
@@ -223,10 +221,10 @@ final class APIUtil {
 	 *
 	 * @return the String as a ByteBuffer
 	 */
-	static ByteBuffer getBuffer(final CharSequence string) {
+	static long getBuffer(final CharSequence string) {
 		final ByteBuffer buffer = encode(getBufferByte(string.length()), string);
 		buffer.flip();
-		return buffer;
+		return MemoryUtil.getAddress0(buffer);
 	}
 
 	/**
@@ -236,10 +234,10 @@ final class APIUtil {
 	 *
 	 * @return the String as a ByteBuffer
 	 */
-	static ByteBuffer getBuffer(final CharSequence string, final int offset) {
+	static long getBuffer(final CharSequence string, final int offset) {
 		final ByteBuffer buffer = encode(getBufferByteOffset(offset + string.length()), string);
 		buffer.flip();
-		return buffer;
+		return MemoryUtil.getAddress(buffer);
 	}
 
 	/**
@@ -249,11 +247,11 @@ final class APIUtil {
 	 *
 	 * @return the String as a ByteBuffer
 	 */
-	static ByteBuffer getBufferNT(final CharSequence string) {
+	static long getBufferNT(final CharSequence string) {
 		final ByteBuffer buffer = encode(getBufferByte(string.length() + 1), string);
 		buffer.put((byte)0);
 		buffer.flip();
-		return buffer;
+		return MemoryUtil.getAddress0(buffer);
 	}
 
 	static int getTotalLength(final CharSequence[] strings) {
@@ -271,14 +269,14 @@ final class APIUtil {
 	 *
 	 * @return the Strings as a ByteBuffer
 	 */
-	static ByteBuffer getBuffer(final CharSequence[] strings) {
+	static long getBuffer(final CharSequence[] strings) {
 		final ByteBuffer buffer = getBufferByte(getTotalLength(strings));
 
 		for ( CharSequence string : strings )
 			encode(buffer, string);
 
 		buffer.flip();
-		return buffer;
+		return MemoryUtil.getAddress0(buffer);
 	}
 
 	/**
@@ -288,7 +286,7 @@ final class APIUtil {
 	 *
 	 * @return the Strings as a ByteBuffer
 	 */
-	static ByteBuffer getBufferNT(final CharSequence[] strings) {
+	static long getBufferNT(final CharSequence[] strings) {
 		final ByteBuffer buffer = getBufferByte(getTotalLength(strings) + strings.length);
 
 		for ( CharSequence string : strings ) {
@@ -297,7 +295,7 @@ final class APIUtil {
 		}
 
 		buffer.flip();
-		return buffer;
+		return MemoryUtil.getAddress0(buffer);
 	}
 
 	/**
@@ -307,14 +305,14 @@ final class APIUtil {
 	 *
 	 * @return the String lengths in a PointerBuffer
 	 */
-	static PointerBuffer getLengths(final CharSequence[] strings) {
+	static long getLengths(final CharSequence[] strings) {
 		PointerBuffer buffer = getLengths(strings.length);
 
 		for ( CharSequence string : strings )
 			buffer.put(string.length());
 
 		buffer.flip();
-		return buffer;
+		return MemoryUtil.getAddress0(buffer);
 	}
 
 	/**
@@ -324,14 +322,14 @@ final class APIUtil {
 	 *
 	 * @return the buffer lengths in a PointerBuffer
 	 */
-	static PointerBuffer getLengths(final ByteBuffer[] buffers) {
+	static long getLengths(final ByteBuffer[] buffers) {
 		PointerBuffer lengths = getLengths(buffers.length);
 
 		for ( ByteBuffer buffer : buffers )
 			lengths.put(buffer.remaining());
 
 		lengths.flip();
-		return lengths;
+		return MemoryUtil.getAddress0(lengths);
 	}
 
 	static int getSize(final PointerBuffer lengths) {
@@ -342,14 +340,22 @@ final class APIUtil {
 		return (int)size;
 	}
 
+	static long getPointer(final PointerWrapper pointer) {
+		return MemoryUtil.getAddress0(getBufferPointer().put(0, pointer));
+	}
+
+	static long getPointerSafe(final PointerWrapper pointer) {
+		return MemoryUtil.getAddress0(getBufferPointer().put(0, pointer == null ? 0L : pointer.getPointer()));
+	}
+
 	private static class Buffers {
 
 		final ShortBuffer shorts;
-		final IntBuffer ints;
-		final IntBuffer intsDebug;
-		final LongBuffer longs;
+		final IntBuffer   ints;
+		final IntBuffer   intsDebug;
+		final LongBuffer  longs;
 
-		final FloatBuffer floats;
+		final FloatBuffer  floats;
 		final DoubleBuffer doubles;
 
 		final PointerBuffer pointers;
@@ -513,25 +519,25 @@ final class APIUtil {
 		}
 	}
 
-	private static final ObjectDestructor<CLDevice> DESTRUCTOR_CLSubDevice = new ObjectDestructor<CLDevice>() {
+	private static final ObjectDestructor<CLDevice>       DESTRUCTOR_CLSubDevice    = new ObjectDestructor<CLDevice>() {
 		public void release(final CLDevice object) { clReleaseDeviceEXT(object); }
 	};
-	private static final ObjectDestructor<CLMem> DESTRUCTOR_CLMem = new ObjectDestructor<CLMem>() {
+	private static final ObjectDestructor<CLMem>          DESTRUCTOR_CLMem          = new ObjectDestructor<CLMem>() {
 		public void release(final CLMem object) { clReleaseMemObject(object); }
 	};
 	private static final ObjectDestructor<CLCommandQueue> DESTRUCTOR_CLCommandQueue = new ObjectDestructor<CLCommandQueue>() {
 		public void release(final CLCommandQueue object) { clReleaseCommandQueue(object); }
 	};
-	private static final ObjectDestructor<CLSampler> DESTRUCTOR_CLSampler = new ObjectDestructor<CLSampler>() {
+	private static final ObjectDestructor<CLSampler>      DESTRUCTOR_CLSampler      = new ObjectDestructor<CLSampler>() {
 		public void release(final CLSampler object) { clReleaseSampler(object); }
 	};
-	private static final ObjectDestructor<CLProgram> DESTRUCTOR_CLProgram = new ObjectDestructor<CLProgram>() {
+	private static final ObjectDestructor<CLProgram>      DESTRUCTOR_CLProgram      = new ObjectDestructor<CLProgram>() {
 		public void release(final CLProgram object) { clReleaseProgram(object); }
 	};
-	private static final ObjectDestructor<CLKernel> DESTRUCTOR_CLKernel = new ObjectDestructor<CLKernel>() {
+	private static final ObjectDestructor<CLKernel>       DESTRUCTOR_CLKernel       = new ObjectDestructor<CLKernel>() {
 		public void release(final CLKernel object) { clReleaseKernel(object); }
 	};
-	private static final ObjectDestructor<CLEvent> DESTRUCTOR_CLEvent = new ObjectDestructor<CLEvent>() {
+	private static final ObjectDestructor<CLEvent>        DESTRUCTOR_CLEvent        = new ObjectDestructor<CLEvent>() {
 		public void release(final CLEvent object) { clReleaseEvent(object); }
 	};
 

@@ -57,7 +57,7 @@ public interface NV_fence {
 	void glDeleteFencesNV(@AutoSize("fences") @GLsizei int n, @Const @GLuint IntBuffer fences);
 
 	@Alternate("glDeleteFencesNV")
-	void glDeleteFencesNV(@Constant("1") @GLsizei int n, @Const @GLuint @Constant(value = "APIUtil.getBufferInt().put(0, fence), 0", keepParam = true) int fence);
+	void glDeleteFencesNV(@Constant("1") @GLsizei int n, @Const @GLuint @Constant(value = "APIUtil.getInt(fence)", keepParam = true) int fence);
 
 	void glSetFenceNV(@GLuint int fence, @GLenum int condition);
 

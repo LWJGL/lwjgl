@@ -88,8 +88,6 @@ public class NativeMethodStubsGenerator {
 			JNITypeTranslator translator = new JNITypeTranslator();
 			param.getType().accept(translator);
 			writer.print(translator.getSignature() + " " + param.getSimpleName());
-			if (Utils.getNIOBufferType(param.getType()) != null)
-				writer.print(", jint " + param.getSimpleName() + BUFFER_POSITION_POSTFIX);
 		}
 	}
 
@@ -108,7 +106,7 @@ public class NativeMethodStubsGenerator {
 		} else {
 			JNITypeTranslator translator = new JNITypeTranslator();
 			result_type.accept(translator);
-			writer.print(translator.getSignature());
+			writer.print(translator.getReturnSignature());
 		}
 		writer.print(" JNICALL ");
 
@@ -298,30 +296,17 @@ public class NativeMethodStubsGenerator {
 
 		if ( !java_type.isArray() || CharSequence.class.isAssignableFrom(java_type.getComponentType()) ) {
 			writer.print("\t" + native_type + param.getSimpleName());
-			writer.print(BUFFER_ADDRESS_POSTFIX + " = ((");
+			writer.print(BUFFER_ADDRESS_POSTFIX + " = (");
 			writer.print(native_type);
 			writer.print(")");
 
 			if (mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null) {
-				writer.print("offsetToPointer(" + param.getSimpleName() + Utils.BUFFER_OBJECT_PARAMETER_POSTFIX + "))");
+				writer.print("offsetToPointer(" + param.getSimpleName() + Utils.BUFFER_OBJECT_PARAMETER_POSTFIX + ")");
 			} else {
 				if (Buffer.class.isAssignableFrom(java_type) || java_type.equals(CharSequence.class) || java_type.equals(CharSequence[].class) || PointerBuffer.class.isAssignableFrom(java_type) ) {
-					boolean explicitly_byte_sized = java_type.equals(Buffer.class) ||
-						translator.getAnnotationType().equals(type_map.getVoidType()) ||
-						(param.getAnnotation(NativeType.class) != null && param.getAnnotation(NativeType.class).value().endsWith("void"));
-					if (explicitly_byte_sized)
-						writer.print("(((char *)");
-					if (method.getAnnotation(GenerateAutos.class) != null || (check_annotation != null && check_annotation.canBeNull())) {
-						writer.print("safeGetBufferAddress(env, " + param.getSimpleName());
-					} else {
-						writer.print("(*env)->GetDirectBufferAddress(env, " + param.getSimpleName());
-					}
-					writer.print("))");
-					writer.print(" + " + param.getSimpleName() + BUFFER_POSITION_POSTFIX);
-					if (explicitly_byte_sized)
-						writer.print("))");
+					writer.print(param.getSimpleName());
 				} else if (java_type.equals(String.class)) {
-					writer.print("GetStringNativeChars(env, " + param.getSimpleName() + "))");
+					writer.print("GetStringNativeChars(env, " + param.getSimpleName() + ")");
 				} else if ( array_annotation == null )
 					throw new RuntimeException("Illegal type " + java_type);
 			}

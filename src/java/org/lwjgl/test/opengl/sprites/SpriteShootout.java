@@ -1,3 +1,34 @@
+/*
+ * Copyright (c) 2002-2011 LWJGL Project
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
+ *   from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.lwjgl.test.opengl.sprites;
 
 import org.lwjgl.BufferUtils;
@@ -33,8 +64,8 @@ import static org.lwjgl.opengl.GL30.*;
  */
 public final class SpriteShootout {
 
-	private static final int SCREEN_WIDTH  = 800;
-	private static final int SCREEN_HEIGHT = 600;
+	static final int SCREEN_WIDTH  = 800;
+	static final int SCREEN_HEIGHT = 600;
 
 	private static final int ANIMATION_TICKS = 60;
 
@@ -45,8 +76,8 @@ public final class SpriteShootout {
 	private boolean smooth;
 	private boolean vsync;
 
-	private int ballSize  = 42;
-	private int ballCount = 100 * 1000;
+	int ballSize  = 42;
+	int ballCount = 100 * 1000;
 
 	private SpriteRenderer renderer;
 
@@ -401,43 +432,45 @@ public final class SpriteShootout {
 			transform = newTransform;
 		}
 
-		protected void animate(final FloatBuffer geom, final int ballIndex, final int batchSize, final int delta) {
-			final float[] transform = this.transform;
-
+		protected void animate(
+			final float[] sprites,
+			final FloatBuffer spritesRender,
+			final int ballSize, final int ballIndex, final int batchSize, final int delta
+		) {
 			final float ballRadius = ballSize * 0.5f;
 			final float boundW = SCREEN_WIDTH - ballRadius;
 			final float boundH = SCREEN_HEIGHT - ballRadius;
 
 			for ( int b = ballIndex * 4, len = (ballIndex + batchSize) * 4; b < len; b += 4 ) {
-				float x = transform[b + 0];
-				float dx = transform[b + 2];
+				float x = sprites[b + 0];
+				float dx = sprites[b + 2];
 
 				x += dx * delta;
 				if ( x < ballRadius ) {
 					x = ballRadius;
-					transform[b + 2] = -dx;
+					sprites[b + 2] = -dx;
 				} else if ( x > boundW ) {
 					x = boundW;
-					transform[b + 2] = -dx;
+					sprites[b + 2] = -dx;
 				}
-				transform[b + 0] = x;
+				sprites[b + 0] = x;
 
-				float y = transform[b + 1];
-				float dy = transform[b + 3];
+				float y = sprites[b + 1];
+				float dy = sprites[b + 3];
 
 				y += dy * delta;
 				if ( y < ballRadius ) {
 					y = ballRadius;
-					transform[b + 3] = -dy;
+					sprites[b + 3] = -dy;
 				} else if ( y > boundH ) {
 					y = boundH;
-					transform[b + 3] = -dy;
+					sprites[b + 3] = -dy;
 				}
-				transform[b + 1] = y;
+				sprites[b + 1] = y;
 
-				geom.put(x).put(y);
+				spritesRender.put(x).put(y);
 			}
-			geom.clear();
+			spritesRender.clear();
 		}
 
 		protected abstract void render(boolean render, boolean animate, int delta);
@@ -517,8 +550,9 @@ public final class SpriteShootout {
 		}
 
 		private void animate(final int ballIndex, final int batchSize, final int delta) {
-			animate(geom, ballIndex, batchSize, delta);
+			animate(transform, geom, ballSize, ballIndex, batchSize, delta);
 
+			// Orphan current buffer and allocate a new one
 			glBufferData(GL_ARRAY_BUFFER, geom.capacity() * 4, GL_STREAM_DRAW);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, geom);
 		}
@@ -526,10 +560,7 @@ public final class SpriteShootout {
 
 	private class SpriteRendererMapped extends SpriteRendererBatched {
 
-		private ByteBuffer[]  mapBuffer;
-		private FloatBuffer[] geomBuffer;
-
-		protected int animVBO;
+		private StreamVBO animVBO;
 
 		SpriteRendererMapped() {
 			System.out.println("Shootout Implementation: CPU animation & MapBufferRange");
@@ -538,41 +569,29 @@ public final class SpriteShootout {
 		public void updateBalls(final int count) {
 			super.updateBalls(count);
 
-			final int batchCount = count / BALLS_PER_BATCH + (count % BALLS_PER_BATCH == 0 ? 0 : 1);
-			mapBuffer = new ByteBuffer[batchCount];
-			geomBuffer = new FloatBuffer[batchCount];
+			if ( animVBO != null )
+				animVBO.destroy();
 
-			animVBO = glGenBuffers();
-			glBindBuffer(GL_ARRAY_BUFFER, animVBO);
-			glBufferData(GL_ARRAY_BUFFER, ballCount * (2 * 4), GL_DYNAMIC_DRAW);
-			glVertexPointer(2, GL_FLOAT, 0, 0);
+			animVBO = new StreamVBO(GL_ARRAY_BUFFER, ballCount * (2 * 4));
 		}
 
 		public void render(final boolean render, final boolean animate, final int delta) {
 			int batchSize = Math.min(ballCount, BALLS_PER_BATCH);
 			int ballIndex = 0;
-			int batchIndex = 0;
 			while ( ballIndex < ballCount ) {
 				if ( animate ) {
-					final ByteBuffer buffer = glMapBufferRange(GL_ARRAY_BUFFER,
-					                                           ballIndex * (2 * 4),
-					                                           batchSize * (2 * 4),
-					                                           GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT,
-					                                           mapBuffer[batchIndex]);
-					if ( buffer != mapBuffer[batchIndex] ) {
-						mapBuffer[batchIndex] = buffer;
-						geomBuffer[batchIndex] = mapBuffer[batchIndex].asFloatBuffer();
-					}
+					final ByteBuffer buffer = animVBO.map(batchSize * (2 * 4));
 
-					animate(geomBuffer[batchIndex], ballIndex, batchSize, delta);
+					animate(transform, buffer.asFloatBuffer(), ballSize, ballIndex, batchSize, delta);
 
-					glUnmapBuffer(GL_ARRAY_BUFFER);
+					animVBO.unmap();
 				}
 
-				if ( render )
-					glDrawArrays(GL_POINTS, ballIndex, batchSize);
+				if ( render ) {
+					glVertexPointer(2, GL_FLOAT, 0, ballIndex * (2 * 4));
+					glDrawArrays(GL_POINTS, 0, batchSize);
+				}
 
-				batchIndex++;
 				ballIndex += batchSize;
 				batchSize = Math.min(ballCount - ballIndex, BALLS_PER_BATCH);
 			}
@@ -653,6 +672,13 @@ public final class SpriteShootout {
 		}
 
 		public void updateBalls(final int count) {
+			if ( tfVBO[0] != 0 ) {
+				// Fetch current animation state
+				final FloatBuffer state = BufferUtils.createFloatBuffer(transform.length);
+				glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, state);
+				state.get(transform);
+			}
+
 			super.updateBalls(count);
 
 			if ( tfVBO[0] != 0 ) {
@@ -660,14 +686,14 @@ public final class SpriteShootout {
 					glDeleteBuffers(tfVBO[i]);
 			}
 
-			final FloatBuffer transform = BufferUtils.createFloatBuffer(count * 4);
-			transform.put(this.transform);
-			transform.flip();
+			final FloatBuffer state = BufferUtils.createFloatBuffer(count * 4);
+			state.put(transform);
+			state.flip();
 
 			for ( int i = 0; i < tfVBO.length; i++ ) {
 				tfVBO[i] = glGenBuffers();
 				glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, tfVBO[i]);
-				glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, transform, GL_STATIC_DRAW);
+				glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, state, GL_STATIC_DRAW);
 			}
 
 			glBindBuffer(GL_ARRAY_BUFFER, tfVBO[0]);

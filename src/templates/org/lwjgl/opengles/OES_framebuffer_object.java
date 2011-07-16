@@ -129,7 +129,7 @@ public interface OES_framebuffer_object {
 	void glDeleteRenderbuffersOES(@AutoSize("renderbuffers") int n, @Const @GLuint IntBuffer renderbuffers);
 
 	@Alternate("glDeleteRenderbuffersOES")
-	void glDeleteRenderbuffersOES(@Constant("1") int n, @Constant(value = "APIUtil.getBufferInt().put(0, renderbuffer), 0", keepParam = true) int renderbuffer);
+	void glDeleteRenderbuffersOES(@Constant("1") int n, @Constant(value = "APIUtil.getInt(renderbuffer)", keepParam = true) int renderbuffer);
 
 	void glGenRenderbuffersOES(@AutoSize("renderbuffers") int n, @OutParameter @GLuint IntBuffer renderbuffers);
 
@@ -154,7 +154,7 @@ public interface OES_framebuffer_object {
 	void glDeleteFramebuffersOES(@AutoSize("framebuffers") int n, @Const @GLuint IntBuffer framebuffers);
 
 	@Alternate("glDeleteFramebuffersOES")
-	void glDeleteFramebuffersOES(@Constant("1") int n, @Constant(value = "APIUtil.getBufferInt().put(0, framebuffer), 0", keepParam = true) int framebuffer);
+	void glDeleteFramebuffersOES(@Constant("1") int n, @Constant(value = "APIUtil.getInt(framebuffer)", keepParam = true) int framebuffer);
 
 	void glGenFramebuffersOES(@AutoSize("framebuffers") int n, @OutParameter @GLuint IntBuffer framebuffers);
 

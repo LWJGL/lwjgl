@@ -252,7 +252,7 @@ public interface GL31 {
 	@GLreturn("params")
 	@StripPostfix("params")
 	void glGetActiveUniformsiv(@GLuint int program, @Constant("1") @GLsizei int uniformCount,
-	                           @Constant(value = "params.put(1, uniformIndex), 1", keepParam = true) int uniformIndex, // Reuse params buffer
+	                           @Constant(value = "MemoryUtil.getAddress(params.put(1, uniformIndex), 1)", keepParam = true) int uniformIndex, // Reuse params buffer
 	                           @GLenum int pname,
 	                           @OutParameter @GLint IntBuffer params);
 
@@ -263,7 +263,7 @@ public interface GL31 {
 	@Alternate("glGetActiveUniformName")
 	@GLreturn(value = "uniformName", maxLength = "bufSize")
 	void glGetActiveUniformName2(@GLuint int program, @GLuint int uniformIndex, @GLsizei int bufSize,
-	                             @OutParameter @GLsizei @Constant("uniformName_length, 0") IntBuffer length,
+	                             @OutParameter @GLsizei @Constant("MemoryUtil.getAddress0(uniformName_length)") IntBuffer length,
 	                             @OutParameter @GLchar ByteBuffer uniformName);
 
 	@GLuint
@@ -290,7 +290,7 @@ public interface GL31 {
 	@Alternate("glGetActiveUniformBlockName")
 	@GLreturn(value = "uniformBlockName", maxLength = "bufSize")
 	void glGetActiveUniformBlockName2(@GLuint int program, @GLuint int uniformBlockIndex, @GLsizei int bufSize,
-	                                  @OutParameter @GLsizei @Constant("uniformBlockName_length, 0") IntBuffer length,
+	                                  @OutParameter @GLsizei @Constant("MemoryUtil.getAddress0(uniformBlockName_length)") IntBuffer length,
 	                                  @OutParameter @GLchar ByteBuffer uniformBlockName);
 
 	void glUniformBlockBinding(@GLuint int program, @GLuint int uniformBlockIndex, @GLuint int uniformBlockBinding);

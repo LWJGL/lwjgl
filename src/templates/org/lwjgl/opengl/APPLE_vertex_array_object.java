@@ -52,7 +52,7 @@ public interface APPLE_vertex_array_object {
 	void glDeleteVertexArraysAPPLE(@AutoSize("arrays") @GLsizei int n, @Const @GLuint IntBuffer arrays);
 
 	@Alternate("glDeleteVertexArraysAPPLE")
-	void glDeleteVertexArraysAPPLE(@Constant("1") @GLsizei int n, @Const @GLuint @Constant(value = "APIUtil.getBufferInt().put(0, array), 0", keepParam = true) int array);
+	void glDeleteVertexArraysAPPLE(@Constant("1") @GLsizei int n, @Const @GLuint @Constant(value = "APIUtil.getInt(array)", keepParam = true) int array);
 
 	void glGenVertexArraysAPPLE(@AutoSize("arrays") @GLsizei int n, @OutParameter @GLuint IntBuffer arrays);
 

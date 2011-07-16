@@ -33,6 +33,7 @@ package org.lwjgl.opengles;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.MemoryUtil;
 import org.lwjgl.PointerBuffer;
 
 import java.nio.ByteBuffer;
@@ -207,10 +208,10 @@ final class APIUtil {
 	 *
 	 * @return the String as a ByteBuffer
 	 */
-	static ByteBuffer getBuffer(final CharSequence string) {
+	static long getBuffer(final CharSequence string) {
 		final ByteBuffer buffer = encode(getBufferByte(string.length()), string);
 		buffer.flip();
-		return buffer;
+		return MemoryUtil.getAddress0(buffer);
 	}
 
 	/**
@@ -220,10 +221,10 @@ final class APIUtil {
 	 *
 	 * @return the String as a ByteBuffer
 	 */
-	static ByteBuffer getBuffer(final CharSequence string, final int offset) {
+	static long getBuffer(final CharSequence string, final int offset) {
 		final ByteBuffer buffer = encode(getBufferByteOffset(offset + string.length()), string);
 		buffer.flip();
-		return buffer;
+		return MemoryUtil.getAddress(buffer);
 	}
 
 	/**
@@ -233,11 +234,11 @@ final class APIUtil {
 	 *
 	 * @return the String as a ByteBuffer
 	 */
-	static ByteBuffer getBufferNT(final CharSequence string) {
+	static long getBufferNT(final CharSequence string) {
 		final ByteBuffer buffer = encode(getBufferByte(string.length() + 1), string);
 		buffer.put((byte)0);
 		buffer.flip();
-		return buffer;
+		return MemoryUtil.getAddress0(buffer);
 	}
 
 	static int getTotalLength(final CharSequence[] strings) {
@@ -255,14 +256,14 @@ final class APIUtil {
 	 *
 	 * @return the Strings as a ByteBuffer
 	 */
-	static ByteBuffer getBuffer(final CharSequence[] strings) {
+	static long getBuffer(final CharSequence[] strings) {
 		final ByteBuffer buffer = getBufferByte(getTotalLength(strings));
 
 		for ( CharSequence string : strings )
 			encode(buffer, string);
 
 		buffer.flip();
-		return buffer;
+		return MemoryUtil.getAddress0(buffer);
 	}
 
 	/**
@@ -272,7 +273,7 @@ final class APIUtil {
 	 *
 	 * @return the Strings as a ByteBuffer
 	 */
-	static ByteBuffer getBufferNT(final CharSequence[] strings) {
+	static long getBufferNT(final CharSequence[] strings) {
 		final ByteBuffer buffer = getBufferByte(getTotalLength(strings) + strings.length);
 
 		for ( CharSequence string : strings ) {
@@ -281,7 +282,7 @@ final class APIUtil {
 		}
 
 		buffer.flip();
-		return buffer;
+		return MemoryUtil.getAddress0(buffer);
 	}
 
 	/**
@@ -291,14 +292,22 @@ final class APIUtil {
 	 *
 	 * @return the String lengths in an IntBuffer
 	 */
-	static IntBuffer getLengths(final CharSequence[] strings) {
+	static long getLengths(final CharSequence[] strings) {
 		IntBuffer buffer = getLengths(strings.length);
 
 		for ( CharSequence string : strings )
 			buffer.put(string.length());
 
 		buffer.flip();
-		return buffer;
+		return MemoryUtil.getAddress0(buffer);
+	}
+
+	static long getInt(final int value) {
+		return MemoryUtil.getAddress(getBufferInt().put(0, value), 0);
+	}
+
+	static long getBufferByte0() {
+		return MemoryUtil.getAddress0(getBufferByte(0));
 	}
 
 	private static class Buffers {

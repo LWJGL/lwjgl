@@ -61,7 +61,7 @@ public interface ARB_transform_feedback2 {
 
 	@Reuse("GL40")
 	@Alternate("glDeleteTransformFeedbacks")
-	void glDeleteTransformFeedbacks(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getBufferInt().put(0, id), 0", keepParam = true) int id);
+	void glDeleteTransformFeedbacks(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(id)", keepParam = true) int id);
 
 	@Reuse("GL40")
 	void glGenTransformFeedbacks(@AutoSize("ids") @GLsizei int n, @OutParameter @GLuint IntBuffer ids);
