@@ -43,9 +43,9 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengles_EGL_neglGetDisplay(JNIEnv *env, 
     return (intptr_t)eglGetDisplay((EGLNativeDisplayType)(intptr_t)display_id);
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGL_neglInitialize(JNIEnv *env, jclass clazz, jlong dpy_ptr, jobject version, jint version_position) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGL_neglInitialize(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong version) {
     EGLDisplay dpy = (EGLDisplay)(intptr_t)dpy_ptr;
-    EGLint *version_address = ((EGLint *)(*env)->GetDirectBufferAddress(env, version)) + version_position;
+    EGLint *version_address = (EGLint *)(intptr_t)version;
 
     return eglInitialize(dpy, version_address, version_address + 1);
 }
@@ -65,43 +65,43 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_opengles_EGL_neglQueryString(JNIEnv *en
    	return NewStringNativeWithLength(env, __result, strlen(__result));
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGL_neglGetConfigs(JNIEnv *env, jclass clazz, jlong dpy_ptr, jobject configs, jint configs_position, jint config_size, jobject num_config, jint num_config_position) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGL_neglGetConfigs(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong configs, jint config_size, jlong num_config) {
     EGLDisplay dpy = (EGLDisplay)(intptr_t)dpy_ptr;
-    EGLConfig *configs_address = ((EGLConfig *)safeGetBufferAddress(env, configs)) + configs_position;
-    EGLint *num_config_address = ((EGLint *)(*env)->GetDirectBufferAddress(env, num_config)) + num_config_position;
+    EGLConfig *configs_address = (EGLConfig *)(intptr_t)configs;
+    EGLint *num_config_address = (EGLint *)(intptr_t)num_config;
 
 	return eglGetConfigs(dpy, configs_address, config_size, num_config_address);
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGL_neglChooseConfig(JNIEnv *env, jclass clazz, jlong dpy_ptr, jobject attrib_list, jint attrib_list_position, jobject configs, jint configs_position, jint config_size, jobject num_config, jint num_config_position) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGL_neglChooseConfig(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong attrib_list, jlong configs, jint config_size, jlong num_config) {
     EGLDisplay dpy = (EGLDisplay)(intptr_t)dpy_ptr;
-    const EGLint *attrib_list_address = ((EGLint *)safeGetBufferAddress(env, attrib_list)) + attrib_list_position;
-    EGLConfig *configs_address = ((EGLConfig *)safeGetBufferAddress(env, configs)) + configs_position;
-    EGLint *num_config_address = ((EGLint *)(*env)->GetDirectBufferAddress(env, num_config)) + num_config_position;
+    const EGLint *attrib_list_address = (EGLint *)(intptr_t)attrib_list;
+    EGLConfig *configs_address = (EGLConfig *)(intptr_t)configs;
+    EGLint *num_config_address = (EGLint *)(intptr_t)num_config;
 
     return eglChooseConfig(dpy, attrib_list_address, configs_address, config_size, num_config_address);
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGL_neglGetConfigAttrib(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong config_ptr, jint attribute, jobject value, jint value_position) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGL_neglGetConfigAttrib(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong config_ptr, jint attribute, jlong value) {
     EGLDisplay dpy = (EGLDisplay)(intptr_t)dpy_ptr;
     EGLConfig config = (EGLConfig)(intptr_t)config_ptr;
-    EGLint *value_address = ((EGLint *)(*env)->GetDirectBufferAddress(env, value)) + value_position;
+    EGLint *value_address = (EGLint *)(intptr_t)value;
 
     return eglGetConfigAttrib(dpy, config, attribute, value_address);
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengles_EGL_neglCreateWindowSurface(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong config_ptr, jlong win, jobject attrib_list, jint attrib_list_position) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengles_EGL_neglCreateWindowSurface(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong config_ptr, jlong win, jlong attrib_list) {
     EGLDisplay dpy = (EGLDisplay)(intptr_t)dpy_ptr;
     EGLConfig config = (EGLConfig)(intptr_t)config_ptr;
-    const EGLint *attrib_list_address = ((EGLint *)safeGetBufferAddress(env, attrib_list)) + attrib_list_position;
+    const EGLint *attrib_list_address = (EGLint *)(intptr_t)attrib_list;
 
     return (intptr_t)eglCreateWindowSurface(dpy, config, (EGLNativeWindowType)(intptr_t)win, attrib_list_address);
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengles_EGL_neglCreatePbufferSurface(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong config_ptr, jobject attrib_list, jint attrib_list_position) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengles_EGL_neglCreatePbufferSurface(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong config_ptr, jlong attrib_list) {
     EGLDisplay dpy = (EGLDisplay)(intptr_t)dpy_ptr;
     EGLConfig config = (EGLConfig)(intptr_t)config_ptr;
-    const EGLint *attrib_list_address = ((EGLint *)safeGetBufferAddress(env, attrib_list)) + attrib_list_position;
+    const EGLint *attrib_list_address = (EGLint *)(intptr_t)attrib_list;
 
     return (intptr_t)eglCreatePbufferSurface(dpy, config, attrib_list_address);
 }
@@ -120,10 +120,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGL_neglSurfaceAttrib(JNIEnv 
     return eglSurfaceAttrib(dpy, surface, attribute, value);
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGL_neglQuerySurface(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong surface_ptr, jint attribute, jobject value, jint value_position) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGL_neglQuerySurface(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong surface_ptr, jint attribute, jlong value) {
     EGLDisplay dpy = (EGLDisplay)(intptr_t)dpy_ptr;
     EGLSurface surface = (EGLSurface)(intptr_t)surface_ptr;
-    EGLint *value_address = ((EGLint *)(*env)->GetDirectBufferAddress(env, value)) + value_position;
+    EGLint *value_address = (EGLint *)(intptr_t)value;
 
     return eglQuerySurface(dpy, surface, attribute, value_address);
 }
@@ -145,11 +145,11 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGL_neglSwapInterval(JNIEnv *
     return eglSwapInterval(dpy, interval);
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengles_EGL_neglCreateContext(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong config_ptr, jlong share_context_ptr, jobject attrib_list, jint attrib_list_position) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengles_EGL_neglCreateContext(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong config_ptr, jlong share_context_ptr, jlong attrib_list) {
     EGLDisplay dpy = (EGLDisplay)(intptr_t)dpy_ptr;
     EGLConfig config = (EGLConfig)(intptr_t)config_ptr;
     EGLContext share_context = (EGLContext)(intptr_t)share_context_ptr;
-    const EGLint *attrib_list_address = ((EGLint *)safeGetBufferAddress(env, attrib_list)) + attrib_list_position;
+    const EGLint *attrib_list_address = (EGLint *)(intptr_t)attrib_list;
 
     return (intptr_t)eglCreateContext(dpy, config, share_context, attrib_list_address);
 }
@@ -182,10 +182,10 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengles_EGL_neglGetCurrentDisplay(JNIEnv
     return (intptr_t)eglGetCurrentDisplay();
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGL_neglQueryContext(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong ctx_ptr, jint attribute, jobject value, jint value_position) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGL_neglQueryContext(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong ctx_ptr, jint attribute, jlong value) {
     EGLDisplay dpy = (EGLDisplay)(intptr_t)dpy_ptr;
     EGLContext ctx = (EGLContext)(intptr_t)ctx_ptr;
-    EGLint *value_address = ((EGLint *)(*env)->GetDirectBufferAddress(env, value)) + value_position;
+    EGLint *value_address = (EGLint *)(intptr_t)value;
 
     return eglQueryContext(dpy, ctx, attribute, value_address);
 

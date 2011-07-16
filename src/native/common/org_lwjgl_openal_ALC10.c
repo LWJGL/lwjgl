@@ -1,40 +1,40 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /**
  * $Id: org_lwjgl_openal_ALC.c 2279 2006-02-23 19:22:00Z elias_naur $
  *
- * This is the actual JNI implementation of the OpenAL context/device library. 
- * 
+ * This is the actual JNI implementation of the OpenAL context/device library.
+ *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision: 2279 $
  */
@@ -103,8 +103,8 @@ static jstring JNICALL Java_org_lwjgl_openal_ALC10_nalcGetString (JNIEnv *env, j
 				break;
 			}
 		case 0x1013:	// ALC_ALL_DEVICES_SPECIFIER
-			while (alcString[i - 1] != '\0' || alcString[i] != '\0') { 
-				i++; 
+			while (alcString[i - 1] != '\0' || alcString[i] != '\0') {
+				i++;
 			}
 			length = i + 1;
 			break;
@@ -116,21 +116,18 @@ static jstring JNICALL Java_org_lwjgl_openal_ALC10_nalcGetString (JNIEnv *env, j
 
 /**
  * This function returns integers related to the context.
- * 
+ *
  * C Specification:
  * ALvoid alcGetIntegerv(ALCdevice *device, ALenum token, ALsizei size, ALint *dest);
  */
-static void JNICALL Java_org_lwjgl_openal_ALC10_nalcGetIntegerv (JNIEnv *env, jclass clazz, jlong deviceaddress, jint token, jint size, jobject dest, jint offset) {
-	ALint* address = NULL;
-	if (dest != NULL) {
-		address = offset + (ALint*) (*env)->GetDirectBufferAddress(env, dest);
-	}
-	alcGetIntegerv((ALCdevice*)((intptr_t)deviceaddress), (ALenum) token, (ALsizei) size, address);
+static void JNICALL Java_org_lwjgl_openal_ALC10_nalcGetIntegerv (JNIEnv *env, jclass clazz, jlong deviceaddress, jint token, jint size, jlong dest) {
+	ALint* dest_address = (ALint*)(intptr_t)dest;
+	alcGetIntegerv((ALCdevice*)((intptr_t)deviceaddress), (ALenum) token, (ALsizei) size, dest_address);
 }
 
 /**
  * This function opens a device by name.
- * 
+ *
  * C Specification:
  * ALCdevice *alcOpenDevice( const ALubyte *tokstr );
  */
@@ -156,7 +153,7 @@ static jlong JNICALL Java_org_lwjgl_openal_ALC10_nalcOpenDevice (JNIEnv *env, jc
 
 /**
  * This function closes a device by name.
- * 
+ *
  * C Specification:
  * bool alcCloseDevice( ALCdevice *dev );
  */
@@ -166,19 +163,16 @@ static jboolean JNICALL Java_org_lwjgl_openal_ALC10_nalcCloseDevice (JNIEnv *env
 
 /**
  * This function creates a context using a specified device.
- * 
+ *
  * C Specification:
  * ALCcontext* alcCreateContext( ALCdevice *dev, ALint* attrlist );
  */
-static jlong JNICALL Java_org_lwjgl_openal_ALC10_nalcCreateContext (JNIEnv *env, jclass clazz, jlong deviceaddress, jobject attrlist) {
-	ALint* address = NULL;
+static jlong JNICALL Java_org_lwjgl_openal_ALC10_nalcCreateContext (JNIEnv *env, jclass clazz, jlong deviceaddress, jlong attrlist) {
+	ALint* attrlist_address = (ALint*)(intptr_t)attrlist;
 	ALCcontext* context;
 
-	if (attrlist != NULL) {
-		address = (ALint*) safeGetBufferAddress(env, attrlist);
-	}
-	context = alcCreateContext((ALCdevice*)((intptr_t)deviceaddress), address); 
-	
+	context = alcCreateContext((ALCdevice*)((intptr_t)deviceaddress), attrlist_address);
+
 	return (jlong)((intptr_t)context);
 }
 
@@ -195,7 +189,7 @@ static jint JNICALL Java_org_lwjgl_openal_ALC10_nalcMakeContextCurrent (JNIEnv *
 
 /**
  * This function tells a context to begin processing.
- * 
+ *
  * C Specification:
  * void alcProcessContext(ALCcontext *context);
  */
@@ -205,7 +199,7 @@ static void JNICALL Java_org_lwjgl_openal_ALC10_nalcProcessContext (JNIEnv *env,
 
 /**
  * This function retrieves the current context.
- * 
+ *
  * C Specification:
  * ALCcontext* alcGetCurrentContext( ALvoid );
  */
@@ -216,7 +210,7 @@ static jlong JNICALL Java_org_lwjgl_openal_ALC10_nalcGetCurrentContext (JNIEnv *
 
 /**
  * This function retrieves the specified contexts device
- * 
+ *
  * C Specification:
  * ALCdevice* alcGetContextsDevice(ALCcontext *context);
  */
@@ -237,7 +231,7 @@ static void JNICALL Java_org_lwjgl_openal_ALC10_nalcSuspendContext (JNIEnv *env,
 
 /**
  * This function destroys a context.
- * 
+ *
  * C Specification:
  * void alcDestroyContext(ALCcontext *context);
  */
@@ -247,7 +241,7 @@ static void JNICALL Java_org_lwjgl_openal_ALC10_nalcDestroyContext (JNIEnv *env,
 
 /**
  * This function retrieves the specified devices context error state.
- * 
+ *
  * C Specification:
  * ALCenum alcGetError(ALCdevice *device);
  */
@@ -257,18 +251,18 @@ static jint JNICALL Java_org_lwjgl_openal_ALC10_nalcGetError (JNIEnv *env, jclas
 
 /**
  * This function queries if a specified context extension is available.
- * 
+ *
  * C Specification:
  * ALboolean alcIsExtensionPresent(ALCdevice *device, ALubyte *extName);
  */
 static jboolean JNICALL Java_org_lwjgl_openal_ALC10_nalcIsExtensionPresent (JNIEnv *env, jclass clazz, jlong deviceaddress, jstring extName) {
 	/* get extension */
 	ALubyte* functionname = (ALubyte*) GetStringNativeChars(env, extName);
-	
+
 	jboolean result = (jboolean) alcIsExtensionPresent((ALCdevice*)((intptr_t)deviceaddress), functionname);
-	
+
 	free(functionname);
-	
+
 	return result;
 }
 
@@ -278,14 +272,14 @@ static jboolean JNICALL Java_org_lwjgl_openal_ALC10_nalcIsExtensionPresent (JNIE
  * C Specification:
  * ALenum alcGetEnumValue(ALCdevice *device, ALubyte *enumName);
  */
-static jint JNICALL Java_org_lwjgl_openal_ALC10_nalcGetEnumValue (JNIEnv *env, jclass clazz, jlong deviceaddress, jstring enumName) {	
+static jint JNICALL Java_org_lwjgl_openal_ALC10_nalcGetEnumValue (JNIEnv *env, jclass clazz, jlong deviceaddress, jstring enumName) {
 	/* get extension */
 	ALubyte* enumerationname = (ALubyte*) GetStringNativeChars(env, enumName);
-	
+
 	jint result = (jint) alcGetEnumValue((ALCdevice*)((intptr_t)deviceaddress), enumerationname);
-	
+
 	free(enumerationname);
-	
+
 	return result;
 }
 

@@ -37,7 +37,7 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
-
+import org.lwjgl.MemoryUtil;
 
 /**
  * <p>
@@ -162,9 +162,9 @@ public final class ALC11 {
 	 * @param samples Number of samples to request
 	 */
 	public static  void alcCaptureSamples(ALCdevice device, ByteBuffer buffer, int samples ) {
-		nalcCaptureSamples(ALC10.getDevice(device), buffer, buffer.position(), samples);
+		nalcCaptureSamples(ALC10.getDevice(device), MemoryUtil.getAddress(buffer), samples);
 	}
-	static native void nalcCaptureSamples(long device, ByteBuffer buffer, int position, int samples );
+	static native void nalcCaptureSamples(long device, long buffer, int samples );
 
 	static native void initNativeStubs() throws LWJGLException;
 

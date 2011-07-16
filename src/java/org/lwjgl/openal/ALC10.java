@@ -37,6 +37,7 @@ import java.util.HashMap;
 
 import org.lwjgl.BufferChecks;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.MemoryUtil;
 
 /**
  *
@@ -180,10 +181,10 @@ public final class ALC10 {
 	 */
 	public static void alcGetInteger(ALCdevice device, int pname, IntBuffer integerdata) {
 		BufferChecks.checkDirect(integerdata);
-		nalcGetIntegerv(getDevice(device), pname, integerdata.remaining(), integerdata, integerdata.position());
+		nalcGetIntegerv(getDevice(device), pname, integerdata.remaining(), MemoryUtil.getAddress(integerdata));
 		Util.checkALCError(device);
 	}
-	static native void nalcGetIntegerv(long device, int pname, int size, Buffer integerdata, int offset);
+	static native void nalcGetIntegerv(long device, int pname, int size, long integerdata);
 
 	/**
 	 * The <code>alcOpenDevice</code> function allows the application (i.e. the client program) to
@@ -246,7 +247,7 @@ public final class ALC10 {
 	 * @return New context, or null if creation failed
 	 */
 	public static ALCcontext alcCreateContext(ALCdevice device, IntBuffer attrList) {
-		long context_address = nalcCreateContext(getDevice(device), attrList);
+		long context_address = nalcCreateContext(getDevice(device), MemoryUtil.getAddressSafe(attrList));
 		Util.checkALCError(device);
 
 		if(context_address != 0) {
@@ -259,7 +260,7 @@ public final class ALC10 {
 		}
 		return null;
 	}
-	static native long nalcCreateContext(long device, IntBuffer attrList);
+	static native long nalcCreateContext(long device, long attrList);
 
 	/**
 	 * To make a Context current with respect to AL Operation (state changes by issueing

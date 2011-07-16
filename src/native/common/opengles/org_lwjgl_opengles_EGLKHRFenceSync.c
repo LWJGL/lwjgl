@@ -40,9 +40,9 @@ static PFNEGLDESTROYSYNCKHRPROC eglDestroySyncKHR;
 static PFNEGLCLIENTWAITSYNCKHRPROC eglClientWaitSyncKHR;
 static PFNEGLGETSYNCATTRIBKHRPROC eglGetSyncAttribKHR;
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengles_EGLKHRFenceSync_neglCreateSyncKHR(JNIEnv *env, jclass clazz, jlong dpy_ptr, jint type, jobject attrib_list, jint attrib_list_position) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengles_EGLKHRFenceSync_neglCreateSyncKHR(JNIEnv *env, jclass clazz, jlong dpy_ptr, jint type, jlong attrib_list) {
     EGLDisplay dpy = (EGLDisplay)(intptr_t)dpy_ptr;
-    const EGLint *attrib_list_address = ((EGLint *)safeGetBufferAddress(env, attrib_list)) + attrib_list_position;
+    const EGLint *attrib_list_address = (EGLint *)(intptr_t)attrib_list;
 
     return (intptr_t)eglCreateSyncKHR(dpy, type, attrib_list_address);
 }
@@ -61,20 +61,20 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengles_EGLKHRFenceSync_neglClientWaitSyn
     return eglClientWaitSyncKHR(dpy, sync, flags, timeout);
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGLKHRFenceSync_neglGetSyncAttribKHR(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong sync_ptr, jint attribute, jobject value, jint value_position) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGLKHRFenceSync_neglGetSyncAttribKHR(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong sync_ptr, jint attribute, jlong value) {
     EGLDisplay dpy = (EGLDisplay)(intptr_t)dpy_ptr;
     EGLSyncKHR sync = (EGLSyncKHR)(intptr_t)sync_ptr;
-    EGLint *value_address = ((EGLint *)(*env)->GetDirectBufferAddress(env, value)) + value_position;
+    EGLint *value_address = (EGLint *)(intptr_t)value;
 
     return eglGetSyncAttribKHR(dpy, sync, attribute, value_address);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengles_EGLKHRFenceSync_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
-		{"neglCreateSyncKHR", "(JILjava/nio/IntBuffer;I)J", (void *)&Java_org_lwjgl_opengles_EGLKHRFenceSync_neglCreateSyncKHR, "eglCreateSyncKHR", (void *)&eglCreateSyncKHR},
+		{"neglCreateSyncKHR", "(JIJ)J", (void *)&Java_org_lwjgl_opengles_EGLKHRFenceSync_neglCreateSyncKHR, "eglCreateSyncKHR", (void *)&eglCreateSyncKHR},
 		{"neglDestroySyncKHR", "(JJ)Z", (void *)&Java_org_lwjgl_opengles_EGLKHRFenceSync_neglDestroySyncKHR, "eglDestroySyncKHR", (void *)&eglDestroySyncKHR},
 		{"neglClientWaitSyncKHR", "(JJIJ)I", (void *)&Java_org_lwjgl_opengles_EGLKHRFenceSync_neglClientWaitSyncKHR, "eglClientWaitSyncKHR", (void *)&eglClientWaitSyncKHR},
-		{"neglGetSyncAttribKHR", "(JJILjava/nio/IntBuffer;I)Z", (void *)&Java_org_lwjgl_opengles_EGLKHRFenceSync_neglGetSyncAttribKHR, "eglGetSyncAttribKHR", (void *)&eglGetSyncAttribKHR}
+		{"neglGetSyncAttribKHR", "(JJIJ)Z", (void *)&Java_org_lwjgl_opengles_EGLKHRFenceSync_neglGetSyncAttribKHR, "eglGetSyncAttribKHR", (void *)&eglGetSyncAttribKHR}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
 	extgl_InitializeClass(env, clazz, num_functions, functions);

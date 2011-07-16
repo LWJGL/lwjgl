@@ -33,9 +33,9 @@ package org.lwjgl.opengles;
 
 import org.lwjgl.BufferChecks;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.MemoryUtil;
 import org.lwjgl.PointerBuffer;
 
-import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 /** EGL wrapper class. */
@@ -266,11 +266,11 @@ public final class EGL {
 	static void eglInitialize(EGLDisplay dpy, IntBuffer version) throws LWJGLException {
 		//LWJGLUtil.log("eglInitialize");
 		BufferChecks.checkBuffer(version, 2);
-		if ( !neglInitialize(dpy.getPointer(), version, version.position()) )
+		if ( !neglInitialize(dpy.getPointer(), MemoryUtil.getAddress(version)) )
 			throwEGLError("Failed to initialize EGL display.");
 	}
 
-	private static native boolean neglInitialize(long dpy_ptr, IntBuffer version, int version_position);
+	private static native boolean neglInitialize(long dpy_ptr, long version);
 
 	/**
 	 * Release the resources associated with the specified EGL display.
@@ -314,7 +314,7 @@ public final class EGL {
 		//LWJGLUtil.log("eglGetConfigsNum");
 		IntBuffer num_config = APIUtil.getBufferInt();
 
-		if ( !neglGetConfigs(dpy.getPointer(), null, 0, 0, num_config, num_config.position()) )
+		if ( !neglGetConfigs(dpy.getPointer(), 0L, 0, MemoryUtil.getAddress0(num_config)) )
 			throwEGLError("Failed to get EGL configs.");
 
 		return num_config.get(0);
@@ -340,14 +340,14 @@ public final class EGL {
 		BufferChecks.checkBuffer(num_config, 1);
 
 		if ( configs == null ) {
-			if ( !neglGetConfigs(dpy.getPointer(), null, 0, 0, num_config, num_config.position()) )
+			if ( !neglGetConfigs(dpy.getPointer(), 0L, 0, MemoryUtil.getAddress(num_config)) )
 				throwEGLError("Failed to get number of available EGL configs.");
 
 			configs = new EGLConfig[num_config.get(num_config.position())];
 		}
 
 		final PointerBuffer configs_buffer = APIUtil.getBufferPointer(configs.length);
-		if ( !neglGetConfigs(dpy.getPointer(), configs_buffer.getBuffer(), 0, configs.length, num_config, num_config.position()) )
+		if ( !neglGetConfigs(dpy.getPointer(), MemoryUtil.getAddress0(configs_buffer), configs.length, MemoryUtil.getAddress(num_config)) )
 			throwEGLError("Failed to get EGL configs.");
 
 		final int config_size = num_config.get(num_config.position());
@@ -357,7 +357,7 @@ public final class EGL {
 		return configs;
 	}
 
-	private static native boolean neglGetConfigs(long dpy_ptr, ByteBuffer configs, int configs_position, int config_size, IntBuffer num_config, int num_config_position);
+	private static native boolean neglGetConfigs(long dpy_ptr, long configs, int config_size, long num_config);
 
 	/**
 	 * Returns the number of EGLConfigs that are available on the specified display and
@@ -376,7 +376,7 @@ public final class EGL {
 		checkAttribList(attrib_list);
 		IntBuffer num_config = APIUtil.getBufferInt();
 
-		if ( !neglChooseConfig(dpy.getPointer(), attrib_list, attrib_list == null ? 0 : attrib_list.position(), null, 0, 0, num_config, num_config.position()) )
+		if ( !neglChooseConfig(dpy.getPointer(), MemoryUtil.getAddressSafe(attrib_list), 0L, 0, MemoryUtil.getAddress0(num_config)) )
 			throwEGLError("Failed to get EGL configs.");
 
 		return num_config.get(0);
@@ -405,7 +405,7 @@ public final class EGL {
 
 		int config_size;
 		if ( configs == null ) {
-			if ( !neglChooseConfig(dpy.getPointer(), attrib_list, attrib_list == null ? 0 : attrib_list.position(), null, 0, 0, num_config, num_config.position()) )
+			if ( !neglChooseConfig(dpy.getPointer(), MemoryUtil.getAddressSafe(attrib_list), 0L, 0, MemoryUtil.getAddress(num_config)) )
 				throwEGLError("Failed to get number of available EGL configs.");
 
 			config_size = num_config.get(num_config.position());
@@ -414,7 +414,7 @@ public final class EGL {
 
 		//LWJGLUtil.log("config_size = " + config_size);
 		PointerBuffer configs_buffer = APIUtil.getBufferPointer(config_size);
-		if ( !neglChooseConfig(dpy.getPointer(), attrib_list, attrib_list == null ? 0 : attrib_list.position(), configs_buffer.getBuffer(), 0, config_size, num_config, num_config.position()) )
+		if ( !neglChooseConfig(dpy.getPointer(), MemoryUtil.getAddressSafe(attrib_list), MemoryUtil.getAddress0(configs_buffer), config_size, MemoryUtil.getAddress(num_config)) )
 			throwEGLError("Failed to choose EGL config.");
 
 		// Get the true number of configurations (the first neglChooseConfig call may return more than the second)
@@ -427,7 +427,7 @@ public final class EGL {
 		return configs;
 	}
 
-	private static native boolean neglChooseConfig(long dpy_ptr, IntBuffer attrib_list, int attrib_list_position, ByteBuffer configs, int configs_position, int config_size, IntBuffer num_config, int num_config_position);
+	private static native boolean neglChooseConfig(long dpy_ptr, long attrib_list, long configs, int config_size, long num_config);
 
 	/**
 	 * Returns the value of an EGL config attribute.
@@ -442,13 +442,13 @@ public final class EGL {
 		//LWJGLUtil.log("eglGetConfigAttrib");
 		final IntBuffer value = APIUtil.getBufferInt();
 
-		if ( !neglGetConfigAttrib(dpy.getPointer(), config.getPointer(), attribute, value, value.position()) )
+		if ( !neglGetConfigAttrib(dpy.getPointer(), config.getPointer(), attribute, MemoryUtil.getAddress(value)) )
 			throwEGLError("Failed to get EGL config attribute.");
 
 		return value.get(0);
 	}
 
-	private static native boolean neglGetConfigAttrib(long dpy_ptr, long config_ptr, int attribute, IntBuffer value, int value_position);
+	private static native boolean neglGetConfigAttrib(long dpy_ptr, long config_ptr, int attribute, long value);
 
 	/**
 	 * Creates an on-screen rendering surface on the specified EGL display.
@@ -465,7 +465,7 @@ public final class EGL {
 	static EGLSurface eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config, long win, IntBuffer attrib_list) throws LWJGLException {
 		//LWJGLUtil.log("eglCreateWindowSurface");
 		checkAttribList(attrib_list);
-		final long pointer = neglCreateWindowSurface(dpy.getPointer(), config.getPointer(), win, attrib_list, attrib_list == null ? 0 : attrib_list.position());
+		final long pointer = neglCreateWindowSurface(dpy.getPointer(), config.getPointer(), win, MemoryUtil.getAddressSafe(attrib_list));
 
 		if ( pointer == EGL_NO_SURFACE )
 			throwEGLError("Failed to create EGL window surface.");
@@ -473,7 +473,7 @@ public final class EGL {
 		return new EGLSurface(dpy, config, pointer);
 	}
 
-	private static native long neglCreateWindowSurface(long dpy_ptr, long config_ptr, long win, IntBuffer attrib_list, int attrib_list_position);
+	private static native long neglCreateWindowSurface(long dpy_ptr, long config_ptr, long win, long attrib_list);
 
 	/**
 	 * Creates an off-screen rendering surface on the specified EGL display.
@@ -489,7 +489,7 @@ public final class EGL {
 	static EGLSurface eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config, IntBuffer attrib_list) throws LWJGLException {
 		//LWJGLUtil.log("eglCreatePbufferSurface");
 		checkAttribList(attrib_list);
-		final long pointer = neglCreatePbufferSurface(dpy.getPointer(), config.getPointer(), attrib_list, attrib_list == null ? 0 : attrib_list.position());
+		final long pointer = neglCreatePbufferSurface(dpy.getPointer(), config.getPointer(), MemoryUtil.getAddressSafe(attrib_list));
 
 		if ( pointer == EGL_NO_SURFACE )
 			throwEGLError("Failed to create EGL pbuffer surface.");
@@ -497,7 +497,7 @@ public final class EGL {
 		return new EGLSurface(dpy, config, pointer);
 	}
 
-	private static native long neglCreatePbufferSurface(long dpy_ptr, long config_ptr, IntBuffer attrib_list, int attrib_list_position);
+	private static native long neglCreatePbufferSurface(long dpy_ptr, long config_ptr, long attrib_list);
 
 	/*
 	EGLAPI EGLSurface EGLAPIENTRY eglCreatePixmapSurface(EGLDisplay dpy, EGLConfig config, EGLNativePixmapType pixmap, const EGLint *attrib_list);
@@ -550,11 +550,11 @@ public final class EGL {
 	public static void eglQuerySurface(EGLDisplay dpy, EGLSurface surface, int attribute, IntBuffer value) throws LWJGLException {
 		//LWJGLUtil.log("eglQuerySurface");
 		BufferChecks.checkBuffer(value, 1);
-		if ( !neglQuerySurface(dpy.getPointer(), surface.getPointer(), attribute, value, value.position()) )
+		if ( !neglQuerySurface(dpy.getPointer(), surface.getPointer(), attribute, MemoryUtil.getAddress(value)) )
 			throwEGLError("Failed to query surface attribute.");
 	}
 
-	private static native boolean neglQuerySurface(long dpy_ptr, long surface_ptr, int attribute, IntBuffer value, int value_position);
+	private static native boolean neglQuerySurface(long dpy_ptr, long surface_ptr, int attribute, long value);
 
 	/**
 	 * Binds the specified rendering API to the current thread.
@@ -627,7 +627,7 @@ public final class EGL {
 		checkAttribList(attrib_list);
 		final long pointer = neglCreateContext(dpy.getPointer(), config.getPointer(),
 		                                       share_context == null ? EGL_NO_CONTEXT : share_context.getPointer(),
-		                                       attrib_list, attrib_list == null ? 0 : attrib_list.position());
+		                                       MemoryUtil.getAddressSafe(attrib_list));
 
 		if ( pointer == EGL_NO_CONTEXT )
 			throwEGLError("Failed to create EGL context.");
@@ -635,7 +635,7 @@ public final class EGL {
 		return new EGLContext(dpy, config, pointer);
 	}
 
-	private static native long neglCreateContext(long dpy_ptr, long config_ptr, long share_context_ptr, IntBuffer attrib_list, int attrib_list_position);
+	private static native long neglCreateContext(long dpy_ptr, long config_ptr, long share_context_ptr, long attrib_list);
 
 	/**
 	 * Destroys a rendering context.
@@ -714,7 +714,7 @@ public final class EGL {
 
 		// Query context's CONFIG_ID
 		final IntBuffer attrib_list = APIUtil.getBufferInt();
-		neglQueryContext(display.getPointer(), ctx, EGL_CONFIG_ID, attrib_list, 0);
+		neglQueryContext(display.getPointer(), ctx, EGL_CONFIG_ID, MemoryUtil.getAddress0(attrib_list));
 
 		final EGLConfig config = getEGLConfig(display, attrib_list);
 
@@ -761,7 +761,7 @@ public final class EGL {
 
 		// Query context's CONFIG_ID
 		final IntBuffer attrib_list = APIUtil.getBufferInt();
-		if ( !neglQuerySurface(display.getPointer(), surface, EGL_CONFIG_ID, attrib_list, 0) )
+		if ( !neglQuerySurface(display.getPointer(), surface, EGL_CONFIG_ID, MemoryUtil.getAddress0(attrib_list)) )
 			throwEGLError("Failed to query surface EGL config ID.");
 
 		final EGLConfig config = getEGLConfig(display, attrib_list);
@@ -799,11 +799,11 @@ public final class EGL {
 	public static void eglQueryContext(EGLDisplay dpy, EGLContext ctx, int attribute, IntBuffer value) throws LWJGLException {
 		//LWJGLUtil.log("eglQueryContext");
 		BufferChecks.checkBuffer(value, 1);
-		if ( !neglQueryContext(dpy.getPointer(), ctx.getPointer(), attribute, value, value.position()) )
+		if ( !neglQueryContext(dpy.getPointer(), ctx.getPointer(), attribute, MemoryUtil.getAddress(value)) )
 			throwEGLError("Failed to query context attribute.");
 	}
 
-	private static native boolean neglQueryContext(long dpy_ptr, long ctx_ptr, int attribute, IntBuffer value, int value_position);
+	private static native boolean neglQueryContext(long dpy_ptr, long ctx_ptr, int attribute, long value);
 
 	/**
 	 * Prevents native rendering API functions from executing until any
@@ -883,7 +883,7 @@ public final class EGL {
 		attrib_list.put(0, EGL_CONFIG_ID).put(1, configID).put(2, EGL_NONE);
 
 		final PointerBuffer configs_buffer = APIUtil.getBufferPointer(1);
-		if ( !neglChooseConfig(dpy.getPointer(), attrib_list, attrib_list.position(), configs_buffer.getBuffer(), 0, 1, attrib_list, attrib_list.position() + 3) )
+		if ( !neglChooseConfig(dpy.getPointer(), MemoryUtil.getAddress(attrib_list), MemoryUtil.getAddress0(configs_buffer), 1, MemoryUtil.getAddress(attrib_list, 3)) )
 			throwEGLError("Failed to choose EGL config.");
 
 		return new EGLConfig(dpy, configs_buffer.get(0));

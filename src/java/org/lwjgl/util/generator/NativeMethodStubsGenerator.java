@@ -298,7 +298,7 @@ public class NativeMethodStubsGenerator {
 			writer.print("\t" + native_type + param.getSimpleName());
 			writer.print(BUFFER_ADDRESS_POSTFIX + " = (");
 			writer.print(native_type);
-			writer.print(")");
+			writer.print(")(intptr_t)");
 
 			if (mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null) {
 				writer.print("offsetToPointer(" + param.getSimpleName() + Utils.BUFFER_OBJECT_PARAMETER_POSTFIX + ")");

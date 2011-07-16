@@ -32,6 +32,7 @@
 package org.lwjgl.opengles;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.MemoryUtil;
 
 import java.nio.IntBuffer;
 
@@ -102,7 +103,7 @@ public final class EGLKHRFenceSync {
 	public static EGLSyncKHR eglCreateSyncKHR(EGLDisplay dpy, int type, IntBuffer attrib_list) throws LWJGLException {
 		checkAttribList(attrib_list);
 
-		final long pointer = neglCreateSyncKHR(dpy.getPointer(), type, attrib_list, attrib_list == null ? 0 : attrib_list.position());
+		final long pointer = neglCreateSyncKHR(dpy.getPointer(), type, MemoryUtil.getAddressSafe(attrib_list));
 
 		if ( pointer == EGL_NO_SYNC_KHR )
 			throwEGLError("Failed to create KHR fence sync object.");
@@ -110,7 +111,7 @@ public final class EGLKHRFenceSync {
 		return new EGLSyncKHR(pointer);
 	}
 
-	private static native long neglCreateSyncKHR(long dpy_ptr, int type, IntBuffer attrib_list, int attrib_list_position);
+	private static native long neglCreateSyncKHR(long dpy_ptr, int type, long attrib_list);
 
 	/**
 	 * Destroys an existing sync object.
@@ -162,12 +163,12 @@ public final class EGLKHRFenceSync {
 	public static int eglGetSyncAttribKHR(EGLDisplay dpy, EGLSyncKHR sync, int attribute) throws LWJGLException {
 		final IntBuffer value = APIUtil.getBufferInt();
 
-		if ( !neglGetSyncAttribKHR(dpy.getPointer(), sync.getPointer(), attribute, value, value.position()) )
+		if ( !neglGetSyncAttribKHR(dpy.getPointer(), sync.getPointer(), attribute, MemoryUtil.getAddress(value)) )
 			throwEGLError("Failed to get KHR fence sync object attribute.");
 
 		return value.get(0);
 	}
 
-	private static native boolean neglGetSyncAttribKHR(long dpy_ptr, long sync_ptr, int attribute, IntBuffer value, int value_position);
+	private static native boolean neglGetSyncAttribKHR(long dpy_ptr, long sync_ptr, int attribute, long value);
 
 }

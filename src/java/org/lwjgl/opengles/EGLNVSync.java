@@ -32,6 +32,7 @@
 package org.lwjgl.opengles;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.MemoryUtil;
 
 import java.nio.IntBuffer;
 
@@ -112,7 +113,7 @@ public final class EGLNVSync {
 	public static EGLSyncNV eglCreateFenceSyncNV(EGLDisplay dpy, int condition, IntBuffer attrib_list) throws LWJGLException {
 		checkAttribList(attrib_list);
 
-		final long pointer = neglCreateFenceSyncNV(dpy.getPointer(), condition, attrib_list, attrib_list == null ? 0 : attrib_list.position());
+		final long pointer = neglCreateFenceSyncNV(dpy.getPointer(), condition, MemoryUtil.getAddressSafe(attrib_list));
 
 		if ( pointer == EGL_NO_SYNC_NV )
 			throwEGLError("Failed to create NV fence sync object.");
@@ -120,7 +121,7 @@ public final class EGLNVSync {
 		return new EGLSyncNV(pointer);
 	}
 
-	private static native long neglCreateFenceSyncNV(long dpy_ptr, int condition, IntBuffer attrib_list, int attrib_list_position);
+	private static native long neglCreateFenceSyncNV(long dpy_ptr, int condition, long attrib_list);
 
 	/**
 	 * Destroys an existing sync object.
@@ -203,12 +204,12 @@ public final class EGLNVSync {
 	public static int eglGetSyncAttribNV(EGLSyncNV sync, int attribute) throws LWJGLException {
 		final IntBuffer value = APIUtil.getBufferInt();
 
-		if ( !neglGetSyncAttribNV(sync.getPointer(), attribute, value, 0) )
+		if ( !neglGetSyncAttribNV(sync.getPointer(), attribute, MemoryUtil.getAddress0(value)) )
 			throwEGLError("Failed to get NV fence sync object attribute.");
 
 		return value.get(0);
 	}
 
-	private static native boolean neglGetSyncAttribNV(long sync_ptr, int attribute, IntBuffer value, int value_position);
+	private static native boolean neglGetSyncAttribNV(long sync_ptr, int attribute, long value);
 
 }
