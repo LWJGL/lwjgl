@@ -63,7 +63,7 @@ public interface ARB_sampler_objects {
 
 	@Reuse("GL33")
 	@Alternate("glDeleteSamplers")
-	void glDeleteSamplers(@Constant("1") @GLsizei int count, @Constant(value = "APIUtil.getInt(sampler)", keepParam = true) int sampler);
+	void glDeleteSamplers(@Constant("1") @GLsizei int count, @Constant(value = "APIUtil.getInt(caps, sampler)", keepParam = true) int sampler);
 
 	@Reuse("GL33")
 	boolean glIsSampler(@GLuint int sampler);

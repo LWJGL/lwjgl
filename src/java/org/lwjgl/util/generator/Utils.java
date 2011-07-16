@@ -57,19 +57,19 @@ import com.sun.mirror.type.TypeMirror;
 
 public class Utils {
 
-	public static final String TYPEDEF_POSTFIX = "PROC";
-	public static final String FUNCTION_POINTER_VAR_NAME = "function_pointer";
-	public static final String FUNCTION_POINTER_POSTFIX = "_pointer";
-	public static final String CHECKS_CLASS_NAME = "GLChecks";
-	public static final String CONTEXT_CAPS_CLASS_NAME = "ContextCapabilities";
-	public static final String STUB_INITIALIZER_NAME = "initNativeStubs";
-	public static final String BUFFER_OBJECT_METHOD_POSTFIX = "BO";
-	public static final String BUFFER_OBJECT_PARAMETER_POSTFIX = "_buffer_offset";
-	public static final String RESULT_SIZE_NAME = "result_size";
-	public static final String RESULT_VAR_NAME = "__result";
-	public static final String CACHED_BUFFER_LENGTH_NAME = "length";
-	public static final String CACHED_BUFFER_NAME = "old_buffer";
-	private static final String OVERLOADED_METHOD_PREFIX = "n";
+	public static final  String TYPEDEF_POSTFIX                 = "PROC";
+	public static final  String FUNCTION_POINTER_VAR_NAME       = "function_pointer";
+	public static final  String FUNCTION_POINTER_POSTFIX        = "_pointer";
+	public static final  String CHECKS_CLASS_NAME               = "GLChecks";
+	public static final  String CONTEXT_CAPS_CLASS_NAME         = "ContextCapabilities";
+	public static final  String STUB_INITIALIZER_NAME           = "initNativeStubs";
+	public static final  String BUFFER_OBJECT_METHOD_POSTFIX    = "BO";
+	public static final  String BUFFER_OBJECT_PARAMETER_POSTFIX = "_buffer_offset";
+	public static final  String RESULT_SIZE_NAME                = "result_size";
+	public static final  String RESULT_VAR_NAME                 = "__result";
+	public static final  String CACHED_BUFFER_LENGTH_NAME       = "length";
+	public static final  String CACHED_BUFFER_NAME              = "old_buffer";
+	private static final String OVERLOADED_METHOD_PREFIX        = "n";
 
 	public static String getTypedefName(MethodDeclaration method) {
 		Alternate alt_annotation = method.getAnnotation(Alternate.class);
@@ -102,6 +102,7 @@ public class Utils {
 	}
 
 	private static class AnnotationMirrorComparator implements Comparator<AnnotationMirror> {
+
 		public int compare(AnnotationMirror a1, AnnotationMirror a2) {
 			String n1 = a1.getAnnotationType().getDeclaration().getQualifiedName();
 			String n2 = a2.getAnnotationType().getDeclaration().getQualifiedName();
@@ -148,22 +149,22 @@ public class Utils {
 
 	private static boolean hasParameterMultipleTypes(ParameterDeclaration param) {
 		int num_native_annotations = 0;
-		for (AnnotationMirror annotation : param.getAnnotationMirrors())
-			if (NativeTypeTranslator.getAnnotation(annotation, NativeType.class) != null)
+		for ( AnnotationMirror annotation : param.getAnnotationMirrors() )
+			if ( NativeTypeTranslator.getAnnotation(annotation, NativeType.class) != null )
 				num_native_annotations++;
 		return num_native_annotations > 1;
 	}
 
 	public static boolean isParameterMultiTyped(ParameterDeclaration param) {
 		boolean result = Buffer.class.equals(Utils.getJavaType(param.getType()));
-		if (!result && hasParameterMultipleTypes(param))
+		if ( !result && hasParameterMultipleTypes(param) )
 			throw new RuntimeException(param + " not defined as java.nio.Buffer but has multiple types");
 		return result;
 	}
 
 	public static ParameterDeclaration findParameter(MethodDeclaration method, String name) {
-		for (ParameterDeclaration param : method.getParameters())
-			if (param.getSimpleName().equals(name))
+		for ( ParameterDeclaration param : method.getParameters() )
+			if ( param.getSimpleName().equals(name) )
 				return param;
 		throw new RuntimeException("Parameter " + name + " not found");
 	}
@@ -176,7 +177,7 @@ public class Utils {
 			overloadsComment = null;
 
 		String doc_comment = decl.getDocComment();
-		if (doc_comment != null) {
+		if ( doc_comment != null ) {
 			final String tab = decl instanceof InterfaceDeclaration ? "" : "\t";
 			writer.println(tab + "/**");
 
@@ -187,7 +188,7 @@ public class Utils {
 
 			final StringTokenizer doc_lines = new StringTokenizer(doc_comment, "\n", true);
 			boolean lastWasNL = false;
-			while (doc_lines.hasMoreTokens()) {
+			while ( doc_lines.hasMoreTokens() ) {
 				final String t = doc_lines.nextToken();
 				if ( "\n".equals(t) ) {
 					if ( lastWasNL )
@@ -205,8 +206,8 @@ public class Utils {
 	}
 
 	public static AnnotationMirror getParameterAutoAnnotation(ParameterDeclaration param) {
-		for (AnnotationMirror annotation : param.getAnnotationMirrors())
-			if (NativeTypeTranslator.getAnnotation(annotation, Auto.class) != null)
+		for ( AnnotationMirror annotation : param.getAnnotationMirrors() )
+			if ( NativeTypeTranslator.getAnnotation(annotation, Auto.class) != null )
 				return annotation;
 		return null;
 	}
@@ -242,9 +243,9 @@ public class Utils {
 
 	public static ParameterDeclaration getResultParameter(MethodDeclaration method) {
 		ParameterDeclaration result_param = null;
-		for (ParameterDeclaration param : method.getParameters()) {
-			if (param.getAnnotation(Result.class) != null) {
-				if (result_param != null)
+		for ( ParameterDeclaration param : method.getParameters() ) {
+			if ( param.getAnnotation(Result.class) != null ) {
+				if ( result_param != null )
 					throw new RuntimeException("Multiple parameters annotated with Result in method " + method);
 				result_param = param;
 			}
@@ -255,7 +256,7 @@ public class Utils {
 	public static TypeMirror getMethodReturnType(MethodDeclaration method) {
 		TypeMirror result_type;
 		ParameterDeclaration result_param = getResultParameter(method);
-		if (result_param != null) {
+		if ( result_param != null ) {
 			result_type = result_param.getType();
 		} else
 			result_type = method.getReturnType();
@@ -291,20 +292,20 @@ public class Utils {
 
 	public static void printExtraCallArguments(PrintWriter writer, MethodDeclaration method, String size_parameter_name) {
 		writer.print(size_parameter_name);
-		if (method.getAnnotation(CachedResult.class) != null) {
+		if ( method.getAnnotation(CachedResult.class) != null ) {
 			writer.print(", " + CACHED_BUFFER_NAME);
 		}
 	}
 
 	private static String getClassName(InterfaceDeclaration interface_decl, String opengl_name) {
 		Extension extension_annotation = interface_decl.getAnnotation(Extension.class);
-		if (extension_annotation != null && !"".equals(extension_annotation.className())) {
+		if ( extension_annotation != null && !"".equals(extension_annotation.className()) ) {
 			return extension_annotation.className();
 		}
 		StringBuilder result = new StringBuilder();
-		for (int i = 0; i < opengl_name.length(); i++) {
+		for ( int i = 0; i < opengl_name.length(); i++ ) {
 			int ch = opengl_name.codePointAt(i);
-			if (ch == '_') {
+			if ( ch == '_' ) {
 				i++;
 				result.appendCodePoint(Character.toUpperCase(opengl_name.codePointAt(i)));
 			} else
@@ -314,8 +315,8 @@ public class Utils {
 	}
 
 	public static boolean hasMethodBufferObjectParameter(MethodDeclaration method) {
-		for (ParameterDeclaration param : method.getParameters()) {
-			if (param.getAnnotation(BufferObject.class) != null) {
+		for ( ParameterDeclaration param : method.getParameters() ) {
+			if ( param.getAnnotation(BufferObject.class) != null ) {
 				return true;
 			}
 		}
@@ -332,7 +333,7 @@ public class Utils {
 
 	public static Class<?> getNIOBufferType(TypeMirror t) {
 		Class<?> param_type = getJavaType(t);
-		if (Buffer.class.isAssignableFrom(param_type))
+		if ( Buffer.class.isAssignableFrom(param_type) )
 			return param_type;
 		else if ( param_type == CharSequence.class || param_type == CharSequence[].class || param_type == PointerBuffer.class )
 			return ByteBuffer.class;
@@ -344,7 +345,7 @@ public class Utils {
 		String method_name;
 		Alternate alt_annotation = method.getAnnotation(Alternate.class);
 		method_name = alt_annotation == null || alt_annotation.nativeAlt() ? method.getSimpleName() : alt_annotation.value();
-		if (isMethodIndirect(generate_error_checks, context_specific, method))
+		if ( isMethodIndirect(generate_error_checks, context_specific, method) )
 			method_name = OVERLOADED_METHOD_PREFIX + method_name;
 		return method_name;
 	}
@@ -392,15 +393,15 @@ public class Utils {
 		return offset;
 	}
 
-	static void printGLReturnPre(PrintWriter writer, MethodDeclaration method, GLreturn return_annotation) {
+	static void printGLReturnPre(PrintWriter writer, MethodDeclaration method, GLreturn return_annotation, TypeMap type_map) {
 		final String return_type = getMethodReturnType(method, return_annotation, true);
 
 		if ( "String".equals(return_type) ) {
 			if ( !return_annotation.forceMaxLength() ) {
-				writer.println("IntBuffer " + return_annotation.value() + "_length = APIUtil.getLengths();");
+				writer.println("IntBuffer " + return_annotation.value() + "_length = APIUtil.getLengths(" + type_map.getAPIUtilParam(false) + ");");
 				writer.print("\t\t");
 			}
-			writer.print("ByteBuffer " + return_annotation.value() + " = APIUtil.getBufferByte(" + return_annotation.maxLength());
+			writer.print("ByteBuffer " + return_annotation.value() + " = APIUtil.getBufferByte(" + type_map.getAPIUtilParam(true) + return_annotation.maxLength());
 			/*
 				Params that use the return buffer will advance its position while filling it. When we return, the position will be
 				at the right spot for grabbing the returned string bytes. We only have to make sure that the original buffer was
@@ -412,9 +413,9 @@ public class Utils {
 			writer.println(");");
 		} else {
 			final String buffer_type = "Boolean".equals(return_type) ? "Byte" : return_type;
-			writer.print(buffer_type + "Buffer " + return_annotation.value() + " = APIUtil.getBuffer" + buffer_type + "(");
+			writer.print(buffer_type + "Buffer " + return_annotation.value() + " = APIUtil.getBuffer" + buffer_type + "(" + type_map.getAPIUtilParam(false));
 			if ( "Byte".equals(buffer_type) )
-				writer.print('1');
+				writer.print((type_map.getAPIUtilParam(false).length() > 0 ? ", " : "") + "1");
 			writer.println(");");
 		}
 
@@ -426,20 +427,20 @@ public class Utils {
 			writer.print("\t\t");
 	}
 
-	static void printGLReturnPost(PrintWriter writer, MethodDeclaration method, GLreturn return_annotation) {
+	static void printGLReturnPost(PrintWriter writer, MethodDeclaration method, GLreturn return_annotation, TypeMap type_map) {
 		final String return_type = getMethodReturnType(method, return_annotation, true);
 
 		if ( "String".equals(return_type) ) {
 			writer.print("\t\t" + return_annotation.value() + ".limit(");
 			final String offset = getStringOffset(method, null);
-			if ( offset != null)
+			if ( offset != null )
 				writer.print(offset + " + ");
 			if ( return_annotation.forceMaxLength() )
 				writer.print(return_annotation.maxLength());
 			else
 				writer.print(return_annotation.value() + "_length.get(0)");
 			writer.println(");");
-			writer.println("\t\treturn APIUtil.getString(" + return_annotation.value() + ");");
+			writer.println("\t\treturn APIUtil.getString(" + type_map.getAPIUtilParam(true) + return_annotation.value() + ");");
 		} else {
 			writer.print("\t\treturn " + return_annotation.value() + ".get(0)");
 			if ( "Boolean".equals(return_type) )

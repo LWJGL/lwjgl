@@ -55,7 +55,7 @@ public interface APPLE_fence {
 	void glDeleteFencesAPPLE(@AutoSize("fences") @GLsizei int n, @Const @GLuint IntBuffer fences);
 
 	@Alternate("glDeleteFencesAPPLE")
-	void glDeleteFencesAPPLE(@Constant("1") @GLsizei int n, @Const @GLuint @Constant(value = "APIUtil.getInt(fence)", keepParam = true) int fence);
+	void glDeleteFencesAPPLE(@Constant("1") @GLsizei int n, @Const @GLuint @Constant(value = "APIUtil.getInt(caps, fence)", keepParam = true) int fence);
 
 	void glSetFenceAPPLE(@GLuint int fence);
 

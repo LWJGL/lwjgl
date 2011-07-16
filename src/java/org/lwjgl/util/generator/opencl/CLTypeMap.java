@@ -89,6 +89,10 @@ public class CLTypeMap implements TypeMap {
 		return "CLCapabilities";
 	}
 
+	public String getAPIUtilParam(boolean comma) {
+		return "";
+	}
+
 	public void printErrorCheckMethod(final PrintWriter writer, final MethodDeclaration method, final String tabs) {
 		final Check check = method.getAnnotation(Check.class);
 		if ( check != null ) // Get the error code from an IntBuffer output parameter

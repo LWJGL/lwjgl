@@ -71,7 +71,7 @@ public interface ARB_buffer_object {
 	void glDeleteBuffersARB(@AutoSize("buffers") @GLsizei int n, @Const @GLuint IntBuffer buffers);
 
 	@Alternate("glDeleteBuffersARB")
-	void glDeleteBuffersARB(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(buffer)", keepParam = true) int buffer);
+	void glDeleteBuffersARB(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(caps, buffer)", keepParam = true) int buffer);
 
 	void glGenBuffersARB(@AutoSize("buffers") @GLsizei int n, @OutParameter @GLuint IntBuffer buffers);
 

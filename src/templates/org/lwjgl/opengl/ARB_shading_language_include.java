@@ -68,7 +68,7 @@ public interface ARB_shading_language_include {
 	@Alternate(value = "glCompileShaderIncludeARB", nativeAlt = true)
 	void glCompileShaderIncludeARB2(@GLuint int shader, @Constant("path.length") @GLsizei int count,
 	                                @Const @PointerArray(value = "count", lengths = "length") CharSequence[] path,
-	                                @Constant("APIUtil.getLengths(path)") @Const IntBuffer length);
+	                                @Constant("APIUtil.getLengths(caps, path)") @Const IntBuffer length);
 
 	boolean glIsNamedStringARB(@AutoSize("name") int namelen, @Const @GLchar ByteBuffer name);
 

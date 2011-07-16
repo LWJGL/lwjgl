@@ -65,5 +65,5 @@ public interface ATI_draw_buffers {
 	void glDrawBuffersATI(@AutoSize("buffers") @GLsizei int size, @Const @GLenum IntBuffer buffers);
 
 	@Alternate("glDrawBuffersATI")
-	void glDrawBuffersATI(@Constant("1") @GLsizei int size, @Constant(value = "APIUtil.getInt(buffer)", keepParam = true) int buffer);
+	void glDrawBuffersATI(@Constant("1") @GLsizei int size, @Constant(value = "APIUtil.getInt(caps, buffer)", keepParam = true) int buffer);
 }

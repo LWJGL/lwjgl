@@ -58,7 +58,7 @@ public interface AMD_name_gen_delete {
 	void glDeleteNamesAMD(@GLenum int identifier, @AutoSize("names") @GLsizei int num, @Const @GLuint IntBuffer names);
 
 	@Alternate("glDeleteNamesAMD")
-	void glDeleteNamesAMD(@GLenum int identifier, @Constant("1") @GLsizei int num, @Constant(value = "APIUtil.getInt(name)", keepParam = true) int name);
+	void glDeleteNamesAMD(@GLenum int identifier, @Constant("1") @GLsizei int num, @Constant(value = "APIUtil.getInt(caps, name)", keepParam = true) int name);
 
 	boolean glIsNameAMD(@GLenum int identifier, @GLuint int name);
 

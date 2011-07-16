@@ -170,7 +170,7 @@ public interface ARB_vertex_shader {
 	@Alternate(value = "glGetActiveAttribARB", javaAlt = true)
 	@GLreturn(value = "name", maxLength = "maxLength")
 	void glGetActiveAttribARB(@GLhandleARB int programObj, @GLuint int index, @GLsizei int maxLength,
-	                          @OutParameter @GLsizei @Constant("MemoryUtil.getAddress0(name_length), MemoryUtil.getAddress0(APIUtil.getBufferInt()), MemoryUtil.getAddress(APIUtil.getBufferInt(), 1)") IntBuffer length,
+	                          @OutParameter @GLsizei @Constant("MemoryUtil.getAddress0(name_length), MemoryUtil.getAddress0(APIUtil.getBufferInt(caps)), MemoryUtil.getAddress(APIUtil.getBufferInt(caps), 1)") IntBuffer length,
 	                          @OutParameter @GLcharARB ByteBuffer name);
 
 	/** Overloads glGetActiveAttribARB. This version returns only the attrib size. */
@@ -180,7 +180,7 @@ public interface ARB_vertex_shader {
 	                              @OutParameter @GLsizei @Constant("0L") IntBuffer length,
 	                              @OutParameter IntBuffer size,
 	                              @OutParameter @GLenum @Constant("MemoryUtil.getAddress(size, 1)") IntBuffer type, // Reuse size buffer and ignore
-	                              @OutParameter @GLcharARB @Constant("APIUtil.getBufferByte0()") ByteBuffer name);
+	                              @OutParameter @GLcharARB @Constant("APIUtil.getBufferByte0(caps)") ByteBuffer name);
 
 	/** Overloads glGetActiveAttribARB. This version returns only the attrib type. */
 	@Alternate(value = "glGetActiveAttribARB", javaAlt = true)
@@ -189,7 +189,7 @@ public interface ARB_vertex_shader {
 	                              @OutParameter @GLsizei @Constant("0L") IntBuffer length,
 	                              @OutParameter @Constant("MemoryUtil.getAddress(type, 1)") IntBuffer size, // Reuse type buffer and ignore
 	                              @OutParameter @GLenum IntBuffer type,
-	                              @OutParameter @GLcharARB @Constant("APIUtil.getBufferByte0()") ByteBuffer name);
+	                              @OutParameter @GLcharARB @Constant("APIUtil.getBufferByte0(caps)") ByteBuffer name);
 
 	int glGetAttribLocationARB(@GLhandleARB int programObj, @NullTerminated @Const @GLcharARB ByteBuffer name);
 

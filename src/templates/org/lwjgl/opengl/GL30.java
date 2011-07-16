@@ -528,7 +528,7 @@ public interface GL30 {
 	void glDeleteRenderbuffers(@AutoSize("renderbuffers") int n, @Const @GLuint IntBuffer renderbuffers);
 
 	@Alternate("glDeleteRenderbuffers")
-	void glDeleteRenderbuffers(@Constant("1") int n, @Constant(value = "APIUtil.getInt(renderbuffer)", keepParam = true) int renderbuffer);
+	void glDeleteRenderbuffers(@Constant("1") int n, @Constant(value = "APIUtil.getInt(caps, renderbuffer)", keepParam = true) int renderbuffer);
 
 	void glGenRenderbuffers(@AutoSize("renderbuffers") int n, @OutParameter @GLuint IntBuffer renderbuffers);
 
@@ -553,7 +553,7 @@ public interface GL30 {
 	void glDeleteFramebuffers(@AutoSize("framebuffers") int n, @Const @GLuint IntBuffer framebuffers);
 
 	@Alternate("glDeleteFramebuffers")
-	void glDeleteFramebuffers(@Constant("1") int n, @Constant(value = "APIUtil.getInt(framebuffer)", keepParam = true) int framebuffer);
+	void glDeleteFramebuffers(@Constant("1") int n, @Constant(value = "APIUtil.getInt(caps, framebuffer)", keepParam = true) int framebuffer);
 
 	void glGenFramebuffers(@AutoSize("framebuffers") int n, @OutParameter @GLuint IntBuffer framebuffers);
 
@@ -712,14 +712,14 @@ public interface GL30 {
 
 	@Alternate("glTexParameterIiv")
 	@StripPostfix(value = "param", postfix = "v")
-	void glTexParameterIiv(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getInt(param)", keepParam = true) int param);
+	void glTexParameterIiv(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getInt(caps, param)", keepParam = true) int param);
 
 	@StripPostfix("params")
 	void glTexParameterIuiv(@GLenum int target, @GLenum int pname, @Check("4") @GLuint IntBuffer params);
 
 	@Alternate("glTexParameterIuiv")
 	@StripPostfix(value = "param", postfix = "v")
-	void glTexParameterIuiv(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getInt(param)", keepParam = true) int param);
+	void glTexParameterIuiv(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getInt(caps, param)", keepParam = true) int param);
 
 	@StripPostfix("params")
 	void glGetTexParameterIiv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
@@ -1019,7 +1019,7 @@ public interface GL30 {
 
 	@Alternate("glDeleteVertexArrays")
 	@Code("		StateTracker.deleteVAO(caps, array);")
-	void glDeleteVertexArrays(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(array)", keepParam = true) int array);
+	void glDeleteVertexArrays(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(caps, array)", keepParam = true) int array);
 
 	void glGenVertexArrays(@AutoSize("arrays") @GLsizei int n, @OutParameter @GLuint IntBuffer arrays);
 

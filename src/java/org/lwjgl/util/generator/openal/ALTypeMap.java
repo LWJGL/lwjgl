@@ -178,6 +178,10 @@ public class ALTypeMap implements TypeMap {
 		throw new UnsupportedOperationException();
 	}
 
+	public String getAPIUtilParam(boolean comma) {
+		return "";
+	}
+
 	public void printErrorCheckMethod(final PrintWriter writer, final MethodDeclaration method, final String tabs) {
 		writer.println(tabs + "Util.checkALError();");
 	}

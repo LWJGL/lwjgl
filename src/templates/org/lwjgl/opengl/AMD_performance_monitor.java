@@ -100,12 +100,12 @@ public interface AMD_performance_monitor {
 	void glDeletePerfMonitorsAMD(@AutoSize("monitors") @GLsizei int n, @GLuint IntBuffer monitors);
 
 	@Alternate("glDeletePerfMonitorsAMD")
-	void glDeletePerfMonitorsAMD(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(monitor)", keepParam = true) int monitor);
+	void glDeletePerfMonitorsAMD(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(caps, monitor)", keepParam = true) int monitor);
 
 	void glSelectPerfMonitorCountersAMD(@GLuint int monitor, boolean enable, @GLuint int group, @AutoSize("counterList") int numCounters, @GLuint IntBuffer counterList);
 
 	@Alternate("glSelectPerfMonitorCountersAMD")
-	void glSelectPerfMonitorCountersAMD(@GLuint int monitor, boolean enable, @GLuint int group, @Constant("1") int numCounters, @Constant(value = "APIUtil.getInt(counter)", keepParam = true) int counter);
+	void glSelectPerfMonitorCountersAMD(@GLuint int monitor, boolean enable, @GLuint int group, @Constant("1") int numCounters, @Constant(value = "APIUtil.getInt(caps, counter)", keepParam = true) int counter);
 
 	void glBeginPerfMonitorAMD(@GLuint int monitor);
 

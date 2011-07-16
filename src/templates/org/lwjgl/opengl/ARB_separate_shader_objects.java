@@ -98,7 +98,7 @@ public interface ARB_separate_shader_objects {
 
 	@Reuse("GL41")
 	@Alternate("glDeleteProgramPipelines")
-	void glDeleteProgramPipelines(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(pipeline)", keepParam = true) int pipeline);
+	void glDeleteProgramPipelines(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(caps, pipeline)", keepParam = true) int pipeline);
 
 	@Reuse("GL41")
 	void glGenProgramPipelines(@AutoSize("pipelines") @GLsizei int n, @OutParameter @GLuint IntBuffer pipelines);

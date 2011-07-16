@@ -118,14 +118,14 @@ public interface EXT_texture_integer {
 
 	@Alternate("glTexParameterIivEXT")
 	@StripPostfix(value = "param", postfix = "v")
-	void glTexParameterIivEXT(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getInt(param)", keepParam = true) int param);
+	void glTexParameterIivEXT(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getInt(caps, param)", keepParam = true) int param);
 
 	@StripPostfix("params")
 	void glTexParameterIuivEXT(@GLenum int target, @GLenum int pname, @Check("4") @GLuint IntBuffer params);
 
 	@Alternate("glTexParameterIuivEXT")
 	@StripPostfix(value = "param", postfix = "v")
-	void glTexParameterIuivEXT(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getInt(param)", keepParam = true) int param);
+	void glTexParameterIuivEXT(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getInt(caps, param)", keepParam = true) int param);
 
 	@StripPostfix("params")
 	void glGetTexParameterIivEXT(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);

@@ -50,6 +50,7 @@ import java.lang.annotation.Annotation;
 public interface TypeMap {
 	void printCapabilitiesInit(PrintWriter writer);
 	String getCapabilities();
+	String getAPIUtilParam(boolean comma);
 	void printErrorCheckMethod(PrintWriter writer, MethodDeclaration method, String tabs);
 	String getRegisterNativesFunctionName();
 	PrimitiveType.Kind getPrimitiveTypeFromNativeType(Class<? extends Annotation> native_type);

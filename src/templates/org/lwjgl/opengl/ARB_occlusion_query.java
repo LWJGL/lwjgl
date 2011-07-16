@@ -68,7 +68,7 @@ public interface ARB_occlusion_query {
 	void glDeleteQueriesARB(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
 
 	@Alternate("glDeleteQueriesARB")
-	void glDeleteQueriesARB(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(id)", keepParam = true) int id);
+	void glDeleteQueriesARB(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(caps, id)", keepParam = true) int id);
 
 	boolean glIsQueryARB(@GLuint int id);
 

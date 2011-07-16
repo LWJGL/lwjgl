@@ -64,6 +64,7 @@ public class GLCapabilitiesGenerator {
 	public static void generateClassPrologue(PrintWriter writer, boolean context_specific, boolean generate_error_checks) {
 		writer.println("public class " + Utils.CONTEXT_CAPS_CLASS_NAME + " {");
 		writer.println("\tstatic final boolean DEBUG = " + Boolean.toString(generate_error_checks) + ";");
+		writer.println("\tfinal APIUtil util = new APIUtil();");
 		writer.println("\tfinal StateTracker tracker = new StateTracker();");
 		writer.println();
 		if ( !context_specific ) {

@@ -136,7 +136,7 @@ public interface EXT_framebuffer_object {
 	void glDeleteRenderbuffersEXT(@AutoSize("renderbuffers") int n, @Const @GLuint IntBuffer renderbuffers);
 
 	@Alternate("glDeleteRenderbuffersEXT")
-	void glDeleteRenderbuffersEXT(@Constant("1") int n, @Constant(value = "APIUtil.getInt(renderbuffer)", keepParam = true) int renderbuffer);
+	void glDeleteRenderbuffersEXT(@Constant("1") int n, @Constant(value = "APIUtil.getInt(caps, renderbuffer)", keepParam = true) int renderbuffer);
 
 	void glGenRenderbuffersEXT(@AutoSize("renderbuffers") int n, @OutParameter @GLuint IntBuffer renderbuffers);
 
@@ -161,7 +161,7 @@ public interface EXT_framebuffer_object {
 	void glDeleteFramebuffersEXT(@AutoSize("framebuffers") int n, @Const @GLuint IntBuffer framebuffers);
 
 	@Alternate("glDeleteFramebuffersEXT")
-	void glDeleteFramebuffersEXT(@Constant("1") int n, @Constant(value = "APIUtil.getInt(framebuffer)", keepParam = true) int framebuffer);
+	void glDeleteFramebuffersEXT(@Constant("1") int n, @Constant(value = "APIUtil.getInt(caps, framebuffer)", keepParam = true) int framebuffer);
 
 	void glGenFramebuffersEXT(@AutoSize("framebuffers") int n, @OutParameter @GLuint IntBuffer framebuffers);
 

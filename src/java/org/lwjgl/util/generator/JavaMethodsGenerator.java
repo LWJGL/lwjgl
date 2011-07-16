@@ -301,13 +301,13 @@ public class JavaMethodsGenerator {
 			}
 		} else if ( method.getAnnotation(GLreturn.class) != null ) {
 			has_result = true;
-			Utils.printGLReturnPre(writer, method, method.getAnnotation(GLreturn.class));
+			Utils.printGLReturnPre(writer, method, method.getAnnotation(GLreturn.class), type_map);
 		}
 		writer.print(Utils.getSimpleNativeMethodName(method, generate_error_checks, context_specific));
 		if (mode == Mode.BUFFEROBJECT)
 			writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
 		writer.print("(");
-		boolean first_parameter = printMethodCallArguments(writer, method, typeinfos_instance, mode);
+		boolean first_parameter = printMethodCallArguments(writer, method, typeinfos_instance, mode, type_map);
 		if (context_specific) {
 			if (!first_parameter)
 				writer.print(", ");
@@ -335,7 +335,7 @@ public class JavaMethodsGenerator {
 				else
 					writer.println(tabs + "return " + Utils.RESULT_VAR_NAME + ";");
 			} else
-				Utils.printGLReturnPost(writer, method, method.getAnnotation(GLreturn.class));
+				Utils.printGLReturnPost(writer, method, method.getAnnotation(GLreturn.class), type_map);
 		}
 
 		if ( code_annotation != null && code_annotation.tryBlock() ) {
@@ -439,7 +439,7 @@ public class JavaMethodsGenerator {
 			throw new RuntimeException(c + " is not allowed");
 	}
 
-	private static boolean printMethodCallArgument(PrintWriter writer, MethodDeclaration method, ParameterDeclaration param, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, Mode mode, boolean first_parameter) {
+	private static boolean printMethodCallArgument(PrintWriter writer, MethodDeclaration method, ParameterDeclaration param, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, Mode mode, boolean first_parameter, TypeMap type_map) {
 		if (!first_parameter)
 			writer.print(", ");
 
@@ -496,7 +496,9 @@ public class JavaMethodsGenerator {
 						writer.print("APIUtil.getBuffer");
 						if ( param.getAnnotation(NullTerminated.class) != null )
 							writer.print("NT");
-						writer.print("(" + param.getSimpleName());
+						writer.print('(');
+						writer.print(type_map.getAPIUtilParam(true));
+						writer.print(param.getSimpleName());
 						if ( offset != null )
 							writer.print(", " + offset);
 						writer.print(")");
@@ -531,7 +533,7 @@ public class JavaMethodsGenerator {
 		return false;
 	}
 
-	private static boolean printMethodCallArguments(PrintWriter writer, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, Mode mode) {
+	private static boolean printMethodCallArguments(PrintWriter writer, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, Mode mode, TypeMap type_map) {
 		boolean first_parameter = true;
 		for ( ParameterDeclaration param : method.getParameters() ) {
 			if ( param.getAnnotation(Result.class) != null || (param.getAnnotation(Helper.class) != null && !param.getAnnotation(Helper.class).passToNative()) )
@@ -539,7 +541,7 @@ public class JavaMethodsGenerator {
 
 			final Constant constant_annotation = param.getAnnotation(Constant.class);
 			if ( constant_annotation== null || !constant_annotation.isNative() )
-				first_parameter = printMethodCallArgument(writer, method, param, typeinfos_instance, mode, first_parameter);
+				first_parameter = printMethodCallArgument(writer, method, param, typeinfos_instance, mode, first_parameter, type_map);
 		}
 		if (Utils.getNIOBufferType(Utils.getMethodReturnType(method)) != null) {
 			if (method.getAnnotation(CachedResult.class) != null && method.getAnnotation(CachedResult.class).isRange()) {

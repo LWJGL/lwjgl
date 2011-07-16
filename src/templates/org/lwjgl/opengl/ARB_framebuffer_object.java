@@ -197,7 +197,7 @@ public interface ARB_framebuffer_object {
 
 	@Reuse("GL30")
 	@Alternate("glDeleteRenderbuffers")
-	void glDeleteRenderbuffers(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(renderbuffer)", keepParam = true) int renderbuffer);
+	void glDeleteRenderbuffers(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(caps, renderbuffer)", keepParam = true) int renderbuffer);
 
 	@Reuse("GL30")
 	void glGenRenderbuffers(@AutoSize("renderbuffers") @GLsizei int n, @OutParameter @GLuint IntBuffer renderbuffers);
@@ -237,7 +237,7 @@ public interface ARB_framebuffer_object {
 
 	@Reuse("GL30")
 	@Alternate("glDeleteFramebuffers")
-	void glDeleteFramebuffers(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(framebuffer)", keepParam = true) int framebuffer);
+	void glDeleteFramebuffers(@Constant("1") @GLsizei int n, @Constant(value = "APIUtil.getInt(caps, framebuffer)", keepParam = true) int framebuffer);
 
 	@Reuse("GL30")
 	void glGenFramebuffers(@AutoSize("framebuffers") @GLsizei int n, @OutParameter @GLuint IntBuffer framebuffers);

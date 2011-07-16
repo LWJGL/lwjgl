@@ -97,6 +97,10 @@ public class GLESTypeMap implements TypeMap {
 		return "caps";
 	}
 
+	public String getAPIUtilParam(boolean comma) {
+		return "";
+	}
+
 	public void printErrorCheckMethod(final PrintWriter writer, final MethodDeclaration method, final String tabs) {
 		writer.println(tabs + "Util.checkGLError();");
 	}

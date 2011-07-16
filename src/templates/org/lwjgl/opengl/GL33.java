@@ -102,7 +102,7 @@ public interface GL33 {
 	void glDeleteSamplers(@AutoSize("samplers") @GLsizei int count, @Const @GLuint IntBuffer samplers);
 
 	@Alternate("glDeleteSamplers")
-	void glDeleteSamplers(@Constant("1") @GLsizei int count, @Constant(value = "APIUtil.getInt(sampler)", keepParam = true) int sampler);
+	void glDeleteSamplers(@Constant("1") @GLsizei int count, @Constant(value = "APIUtil.getInt(caps, sampler)", keepParam = true) int sampler);
 
 	boolean glIsSampler(@GLuint int sampler);
 
