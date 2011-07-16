@@ -49,8 +49,7 @@ public final class MemoryUtil {
 		Accessor util;
 		try {
 			// Depends on java.nio.Buffer#address and sun.misc.Unsafe
-			//util = loadAccessor("org.lwjgl.MemoryUtilSun$AccessorUnsafe");
-			util = new AccessorJNI();
+			util = loadAccessor("org.lwjgl.MemoryUtilSun$AccessorUnsafe");
 		} catch (Exception e0) {
 			try {
 				// Depends on java.nio.Buffer#address and sun.reflect.FieldAccessor
