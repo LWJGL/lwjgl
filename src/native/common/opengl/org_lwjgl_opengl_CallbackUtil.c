@@ -45,11 +45,11 @@ static jmethodID debugOutputCallbackARBJ;
 static jmethodID debugOutputCallbackAMDJ;
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_CallbackUtil_ncreateGlobalRef(JNIEnv *env, jclass clazz, jobject obj) {
-    return (jlong)(*env)->NewGlobalRef(env, obj);
+    return (jlong)(intptr_t)(*env)->NewGlobalRef(env, obj);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CallbackUtil_deleteGlobalRef(JNIEnv *env, jclass clazz, jlong globalRef) {
-    (*env)->DeleteGlobalRef(env, (jobject)globalRef);
+    (*env)->DeleteGlobalRef(env, (jobject)(intptr_t)globalRef);
 }
 
 // ----------------- [ ARB_debug_output ] -----------------
