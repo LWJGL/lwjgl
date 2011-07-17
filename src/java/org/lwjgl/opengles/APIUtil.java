@@ -39,9 +39,12 @@ import org.lwjgl.PointerBuffer;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 
-/** @author spasi */
+/**
+ * Utility class for OpenGL ES API calls.
+ *
+ * @author spasi
+ */
 final class APIUtil {
 
 	private static final int INITIAL_BUFFER_SIZE  = 256;
@@ -138,13 +141,9 @@ final class APIUtil {
 		return buffer;
 	}
 
-	static ShortBuffer getBufferShort() { return buffersTL.get().shorts; }
-
 	static IntBuffer getBufferInt() { return buffersTL.get().ints; }
 
 	static FloatBuffer getBufferFloat() { return buffersTL.get().floats; }
-
-	static PointerBuffer getBufferPointer() { return buffersTL.get().pointers; }
 
 	static IntBuffer getLengths() {
 		return getLengths(1);
@@ -312,18 +311,12 @@ final class APIUtil {
 
 	private static class Buffers {
 
-		final ShortBuffer shorts;
 		final IntBuffer   ints;
 		final FloatBuffer floats;
 
-		final PointerBuffer pointers;
-
 		Buffers() {
-			shorts = BufferUtils.createShortBuffer(BUFFERS_SIZE);
 			ints = BufferUtils.createIntBuffer(BUFFERS_SIZE);
 			floats = BufferUtils.createFloatBuffer(BUFFERS_SIZE);
-
-			pointers = BufferUtils.createPointerBuffer(BUFFERS_SIZE);
 		}
 
 	}

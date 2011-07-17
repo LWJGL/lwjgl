@@ -50,20 +50,29 @@ final class APIUtil {
 
 	private static final int BUFFERS_SIZE = 32;
 
-	private       char[]     arrayTL;
-	private       ByteBuffer bufferTL;
-	private       IntBuffer  lengthsTL;
-	private final Buffers    buffersTL;
+	private char[]     array;
+	private ByteBuffer buffer;
+	private IntBuffer  lengths;
+
+	private final IntBuffer    ints;
+	private final LongBuffer   longs;
+	private final FloatBuffer  floats;
+	private final DoubleBuffer doubles;
 
 	APIUtil() {
-		arrayTL = new char[INITIAL_BUFFER_SIZE];
-		bufferTL = BufferUtils.createByteBuffer(INITIAL_BUFFER_SIZE);
-		lengthsTL = BufferUtils.createIntBuffer(INITIAL_LENGTHS_SIZE);
-		buffersTL = new Buffers();
+		array = new char[INITIAL_BUFFER_SIZE];
+		buffer = BufferUtils.createByteBuffer(INITIAL_BUFFER_SIZE);
+		lengths = BufferUtils.createIntBuffer(INITIAL_LENGTHS_SIZE);
+
+		ints = BufferUtils.createIntBuffer(BUFFERS_SIZE);
+		longs = BufferUtils.createLongBuffer(BUFFERS_SIZE);
+
+		floats = BufferUtils.createFloatBuffer(BUFFERS_SIZE);
+		doubles = BufferUtils.createDoubleBuffer(BUFFERS_SIZE);
 	}
 
 	private static char[] getArray(final ContextCapabilities caps, final int size) {
-		char[] array = caps.util.arrayTL;
+		char[] array = caps.util.array;
 
 		if ( array.length < size ) {
 			int sizeNew = array.length << 1;
@@ -71,14 +80,14 @@ final class APIUtil {
 				sizeNew <<= 1;
 
 			array = new char[size];
-			caps.util.arrayTL = array;
+			caps.util.array = array;
 		}
 
 		return array;
 	}
 
 	static ByteBuffer getBufferByte(final ContextCapabilities caps, final int size) {
-		ByteBuffer buffer = caps.util.bufferTL;
+		ByteBuffer buffer = caps.util.buffer;
 
 		if ( buffer.capacity() < size ) {
 			int sizeNew = buffer.capacity() << 1;
@@ -86,7 +95,7 @@ final class APIUtil {
 				sizeNew <<= 1;
 
 			buffer = BufferUtils.createByteBuffer(size);
-			caps.util.bufferTL = buffer;
+			caps.util.buffer = buffer;
 		} else
 			buffer.clear();
 
@@ -94,7 +103,7 @@ final class APIUtil {
 	}
 
 	private static ByteBuffer getBufferByteOffset(final ContextCapabilities caps, final int size) {
-		ByteBuffer buffer = caps.util.bufferTL;
+		ByteBuffer buffer = caps.util.buffer;
 
 		if ( buffer.capacity() < size ) {
 			int sizeNew = buffer.capacity() << 1;
@@ -103,7 +112,7 @@ final class APIUtil {
 
 			final ByteBuffer bufferNew = BufferUtils.createByteBuffer(size);
 			bufferNew.put(buffer);
-			caps.util.bufferTL = (buffer = bufferNew);
+			caps.util.buffer = (buffer = bufferNew);
 		} else {
 			buffer.position(buffer.limit());
 			buffer.limit(buffer.capacity());
@@ -112,22 +121,20 @@ final class APIUtil {
 		return buffer;
 	}
 
-	static ShortBuffer getBufferShort(final ContextCapabilities caps) { return caps.util.buffersTL.shorts; }
+	static IntBuffer getBufferInt(final ContextCapabilities caps) { return caps.util.ints; }
 
-	static IntBuffer getBufferInt(final ContextCapabilities caps) { return caps.util.buffersTL.ints; }
+	static LongBuffer getBufferLong(final ContextCapabilities caps) { return caps.util.longs; }
 
-	static LongBuffer getBufferLong(final ContextCapabilities caps) { return caps.util.buffersTL.longs; }
+	static FloatBuffer getBufferFloat(final ContextCapabilities caps) { return caps.util.floats; }
 
-	static FloatBuffer getBufferFloat(final ContextCapabilities caps) { return caps.util.buffersTL.floats; }
-
-	static DoubleBuffer getBufferDouble(final ContextCapabilities caps) { return caps.util.buffersTL.doubles; }
+	static DoubleBuffer getBufferDouble(final ContextCapabilities caps) { return caps.util.doubles; }
 
 	static IntBuffer getLengths(final ContextCapabilities caps) {
 		return getLengths(caps, 1);
 	}
 
 	static IntBuffer getLengths(final ContextCapabilities caps, final int size) {
-		IntBuffer lengths = caps.util.lengthsTL;
+		IntBuffer lengths = caps.util.lengths;
 
 		if ( lengths.capacity() < size ) {
 			int sizeNew = lengths.capacity();
@@ -135,7 +142,7 @@ final class APIUtil {
 				sizeNew <<= 1;
 
 			lengths = BufferUtils.createIntBuffer(size);
-			caps.util.lengthsTL = lengths;
+			caps.util.lengths = lengths;
 		} else
 			lengths.clear();
 
@@ -284,26 +291,6 @@ final class APIUtil {
 
 	static long getBufferByte0(final ContextCapabilities caps) {
 		return MemoryUtil.getAddress0(getBufferByte(caps, 0));
-	}
-
-	private static class Buffers {
-
-		final ShortBuffer shorts;
-		final IntBuffer   ints;
-		final LongBuffer  longs;
-
-		final FloatBuffer  floats;
-		final DoubleBuffer doubles;
-
-		Buffers() {
-			shorts = BufferUtils.createShortBuffer(BUFFERS_SIZE);
-			ints = BufferUtils.createIntBuffer(BUFFERS_SIZE);
-			longs = BufferUtils.createLongBuffer(BUFFERS_SIZE);
-
-			floats = BufferUtils.createFloatBuffer(BUFFERS_SIZE);
-			doubles = BufferUtils.createDoubleBuffer(BUFFERS_SIZE);
-		}
-
 	}
 
 }
