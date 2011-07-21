@@ -354,6 +354,10 @@ public class MouseTest {
       if(Keyboard.getEventKey() == Keyboard.KEY_SPACE && Keyboard.getEventKeyState()) {
       	Mouse.setGrabbed(!Mouse.isGrabbed());
       }
+
+      if(Keyboard.getEventKey() == Keyboard.KEY_R && Keyboard.getEventKeyState()) {
+        	Display.setResizable(!Display.isResizable());
+        }
     }
   }
 

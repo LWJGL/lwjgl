@@ -427,6 +427,32 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_sendMessage
 	return SendMessage(hwnd, (UINT)msg, (WPARAM)wparam, (LPARAM)lparam);
 }
 
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setWindowLongPtr
+  (JNIEnv *env, jclass clazz, jlong hwnd_ptr, jint nindex, jlong longPtr) {
+	
+	HWND hwnd		= (HWND)(INT_PTR)hwnd_ptr;
+	return SetWindowLongPtr(hwnd, nindex, (LONG_PTR) longPtr);
+}
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getWindowLongPtr
+  (JNIEnv *env, jclass clazz, jlong hwnd_ptr, jint nindex) {
+	
+	HWND hwnd		= (HWND)(INT_PTR)hwnd_ptr;
+	jlong result = GetWindowLongPtr(hwnd, nindex);
+	return result;
+}
+
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setWindowPos
+  (JNIEnv *env, jclass clazz, jlong hwnd_ptr, jlong hwnd_after_ptr, jint x, jint y, jint width, jint height, jlong uflags) {	
+	
+	jboolean result;
+	HWND hwnd		= (HWND)(INT_PTR)hwnd_ptr;
+	HWND hwnd_after	= (HWND)(INT_PTR)hwnd_after_ptr;
+
+	result = SetWindowPos(hwnd, hwnd_after, x, y, width, height, (UINT) uflags);
+	return result;
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetCursorPosition
 (JNIEnv * env, jclass unused, jint x, jint y) {
 	if (!SetCursorPos(x, y))
@@ -439,6 +465,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getClientRect
 	RECT clientRect;
 	GetClientRect(hwnd, &clientRect);
 	copyRectToBuffer(env, &clientRect, rect_buffer);
+}
+
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsDisplay_adjustWindowRectEx
+	(JNIEnv *env, jclass unused, jobject rect_buffer, jlong style, jboolean menu, jlong styleex) {
+	jboolean result;
+	RECT clientRect;
+	copyBufferToRect(env, rect_buffer, &clientRect);
+	result = AdjustWindowRectEx(&clientRect, style, menu, styleex);
+	copyRectToBuffer(env, &clientRect, rect_buffer);
+	return result;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetNativeCursor

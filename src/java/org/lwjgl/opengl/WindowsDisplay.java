@@ -41,6 +41,7 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.nio.LongBuffer;
 import java.awt.Canvas;
 
 import org.lwjgl.LWJGLException;
@@ -66,7 +67,10 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static final int WM_MBUTTONDBLCLK                 = 0x0209;
 	private static final int WM_MOUSEWHEEL                    = 0x020A;
 	private static final int WM_CAPTURECHANGED                = 0x0215;
-        private static final int WM_MOUSELEAVE                    = 0x02A3;
+	private static final int WM_MOUSELEAVE                    = 0x02A3;
+	private static final int WM_ENTERSIZEMOVE                 = 0x0231;
+	private static final int WM_EXITSIZEMOVE                  = 0x0232;
+	private static final int WM_SIZING                        = 0x0214;
 	private static final int WM_KEYDOWN						  = 256;
 	private static final int WM_KEYUP						  = 257;
 	private static final int WM_SYSKEYUP					  = 261;
@@ -115,6 +119,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static final int     WA_INACTIVE      = 0;
 	private static final int     WA_ACTIVE        = 1;
 	private static final int     WA_CLICKACTIVE   = 2;
+	private static final int SW_NORMAL			  = 1;
 	private static final int SW_SHOWMINNOACTIVE   = 7;
 	private static final int SW_SHOWDEFAULT       = 10;
 	private static final int SW_RESTORE           = 9;
@@ -124,6 +129,23 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private static final IntBuffer rect_buffer = BufferUtils.createIntBuffer(4);
 	private static final Rect rect = new Rect();
+
+	private static final long HWND_TOP 			= 0;
+	private static final long HWND_BOTTOM 		= 1;
+	private static final long HWND_TOPMOST 		= -1;
+	private static final long HWND_NOTOPMOST 	= -2;
+
+	private static final int SWP_NOSIZE 		= 0x0001;
+	private static final int SWP_NOMOVE 		= 0x0002;
+	private static final int SWP_NOZORDER 		= 0x0004;
+	private static final int SWP_FRAMECHANGED 	= 0x0020;
+
+	private static final int GWL_STYLE = -16;
+	private static final int GWL_EXSTYLE = -20; 
+	
+	private static final int WS_THICKFRAME 		= 0x00040000;
+
+	
 	private static WindowsDisplay current_display;
 
 	private static boolean cursor_clipped;
@@ -147,6 +169,10 @@ final class WindowsDisplay implements DisplayImplementation {
 	private boolean isFocused;
 	private boolean did_maximize;
 	private boolean inAppActivate;
+	private boolean resized;
+	private boolean resizable;
+	private int width;
+	private int height;
 
 	private long hwnd;
 	private long hdc;
@@ -191,7 +217,13 @@ final class WindowsDisplay implements DisplayImplementation {
 			}
 			peer_info.initDC(getHwnd(), getHdc());
 			showWindow(getHwnd(), SW_SHOWDEFAULT);
+			
+			updateWidthAndHeight();
+			
 			if ( parent == null ) {
+				if(Display.isResizable()) {
+					setResizable(true);
+				}
 				setForegroundWindow(getHwnd());
 				setFocus(getHwnd());
 			}
@@ -201,6 +233,14 @@ final class WindowsDisplay implements DisplayImplementation {
 			throw e;
 		}
 	}
+	
+	private void updateWidthAndHeight() {
+		getClientRect(hwnd, rect_buffer);
+		rect.copyFromBuffer(rect_buffer);
+		width = rect.right - rect.left;
+		height = rect.bottom - rect.top;
+	}
+
 	private static native long nCreateWindow(int x, int y, int width, int height, boolean undecorated, boolean child_window, long parent_hwnd) throws LWJGLException;
 
 	private static boolean isUndecorated() {
@@ -695,6 +735,9 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static native long createIcon(int width, int height, IntBuffer icon);
 	private static native void destroyIcon(long handle);
 	private static native long sendMessage(long hwnd, long msg, long wparam, long lparam);
+	private static native long setWindowLongPtr(long hwnd, int nindex, long longPtr);
+	private static native long getWindowLongPtr(long hwnd, int nindex);
+	private static native boolean setWindowPos(long hwnd, long hwnd_after, int x, int y, int cx, int cy, long uflags);
 
 	private void handleMouseButton(int button, int state, long millis) {
 		if (mouse != null) {
@@ -820,6 +863,14 @@ final class WindowsDisplay implements DisplayImplementation {
 						break;
 				}
 				return defWindowProc(hwnd, msg, wParam, lParam);
+			case WM_ENTERSIZEMOVE:
+				return defWindowProc(hwnd, msg, wParam, lParam);
+			case WM_EXITSIZEMOVE:
+				return defWindowProc(hwnd, msg, wParam, lParam);
+			case WM_SIZING:
+				resized = true;
+				updateWidthAndHeight();
+				return defWindowProc(hwnd, msg, wParam, lParam);
 			case WM_KILLFOCUS:
 				appActivate(false);
 				return 0;
@@ -900,10 +951,10 @@ final class WindowsDisplay implements DisplayImplementation {
 			case WM_PAINT:
 				is_dirty = true;
 				return defWindowProc(hwnd, msg, wParam, lParam);
-                        case WM_MOUSELEAVE:
-                            mouseInside = false;
-                            trackingMouse = false;
-                            return defWindowProc(hwnd, msg, wParam, lParam);
+            case WM_MOUSELEAVE:
+            	mouseInside = false;
+                trackingMouse = false;
+                return defWindowProc(hwnd, msg, wParam, lParam);
 			case WM_CANCELMODE:
 				nReleaseCapture();
 				/* fall through */
@@ -919,11 +970,11 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public int getWidth() {
-		return Display.getDisplayMode().getWidth();
+		return width;
 	}
 
 	public int getHeight() {
-		return Display.getDisplayMode().getHeight();
+		return height;
 	}
 
 	private int firstMouseButtonDown() {
@@ -942,10 +993,40 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 	
 	public void setResizable(boolean resizable) {
-		
+		if(this.resizable != resizable) {
+			long style = getWindowLongPtr(hwnd, GWL_STYLE);
+			long styleex = getWindowLongPtr(hwnd, GWL_EXSTYLE);
+			
+			// update frame style
+			if(resizable) {
+				setWindowLongPtr(hwnd, GWL_STYLE, style |= WS_THICKFRAME);
+			} else {
+				setWindowLongPtr(hwnd, GWL_STYLE, style &= ~WS_THICKFRAME);
+			}
+
+			// from the existing client rect, determine the new window rect
+			// based on the style changes - using AdjustWindowRectEx.
+			getClientRect(hwnd, rect_buffer);
+			rect.copyFromBuffer(rect_buffer);
+			adjustWindowRectEx(rect_buffer, style, false, styleex);
+			rect.copyFromBuffer(rect_buffer);
+			
+			// force a frame update and resize accordingly
+			setWindowPos(hwnd, HWND_TOP, 0, 0, rect.right - rect.left, rect.bottom - rect.top, SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
+			
+			updateWidthAndHeight();
+			resized = false;
+		}
+		this.resizable = resizable;		
 	}
 	
+	private native boolean adjustWindowRectEx(IntBuffer rectBuffer, long style, boolean menu, long styleex);
+
 	public boolean wasResized() {
+		if(resized) {
+			resized = false;
+			return true;
+		}
 		return false;
 	}
 
@@ -981,7 +1062,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		}
 
 		public String toString() {
-			return "Rect: top = " + top + " bottom = " + bottom + " left = " + left + " right = " + right;
+			return "Rect: top = " + top + " bottom = " + bottom + " left = " + left + " right = " + right + ", width: " + (right - left) + ", height: " + (bottom - top);
 		}
 	}
 }
