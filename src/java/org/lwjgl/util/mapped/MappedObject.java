@@ -50,11 +50,11 @@ import java.nio.ByteBuffer;
  *
  * @author Riven
  */
-public class MappedObject {
+public abstract class MappedObject {
 
 	static final boolean CHECKS = LWJGLUtil.getPrivilegedBoolean("org.lwjgl.util.mapped.Checks");
 
-	public MappedObject() {
+	protected MappedObject() {
 		//
 	}
 
@@ -64,11 +64,8 @@ public class MappedObject {
 	/** The mapped object view memory address, in bytes. Read-only. */
 	public long viewAddress;
 
-	/** The mapped object memory alignment, in bytes. Read-only. */
-	public int align;
-
-	/** The mapped object memory sizeof, in bytes. Read-only. */
-	public int sizeof;
+	/** The mapped buffer. */
+	ByteBuffer preventGC;
 
 	/**
 	 * Holds the value of sizeof of the sub-type of this MappedObject<br>
@@ -87,6 +84,12 @@ public class MappedObject {
 	 */
 	public int view;
 
+	protected final long getViewAddress(final int view) {
+		// No call-site modification for this, we override in every subclass instead,
+		// so that we can use it in MappedForeach.
+		throw new InternalError("type not registered");
+	}
+
 	public final void setViewAddress(final long address) {
 		if ( CHECKS )
 			checkAddress(address);
@@ -96,8 +99,8 @@ public class MappedObject {
 	final void checkAddress(final long address) {
 		final long base = MemoryUtil.getAddress0(preventGC);
 		final int offset = (int)(address - base);
-		if ( address < base || preventGC.capacity() < (offset + this.sizeof) )
-			throw new IndexOutOfBoundsException(Integer.toString(offset / sizeof));
+		if ( address < base || preventGC.capacity() < (offset + getSizeof()) )
+			throw new IndexOutOfBoundsException(Integer.toString(offset / getSizeof()));
 	}
 
 	final void checkRange(final int bytes) {
@@ -106,6 +109,27 @@ public class MappedObject {
 
 		if ( preventGC.capacity() < (viewAddress - MemoryUtil.getAddress0(preventGC) + bytes) )
 			throw new BufferOverflowException();
+	}
+
+	/** The mapped object memory alignment, in bytes. Read-only. */
+	/**
+	 * Returns the mapped object memory alignment, in bytes.
+	 *
+	 * @return the memory alignment
+	 */
+	public final int getAlign() {
+		// No call-site modification for this, we override in every subclass instead.
+		throw new InternalError("type not registered");
+	}
+
+	/**
+	 * Returns the mapped object memory sizeof, in bytes.
+	 *
+	 * @return the sizeof value
+	 */
+	public final int getSizeof() {
+		// No call-site modification for this, we override in every subclass instead.
+		throw new InternalError("type not registered");
 	}
 
 	/**
@@ -178,20 +202,16 @@ public class MappedObject {
 	 * Any code in the default constructor will not run automatically. This method
 	 * can be used to run execute that code on the current view.
 	 */
-	public final <T extends MappedObject> void runViewConstructor() {
+	public final void runViewConstructor() {
 		// any method that calls this method will have its call-site modified
 		throw new InternalError("type not registered");
 	}
 
 	/** Moves the current view to the next element. */
 	public final void next() {
-		// any method that calls this method will have its call-site modified
+		// No call-site modification for this, we override in every subclass instead,
+		// so that we can use it in MappedSetX.
 		throw new InternalError("type not registered");
-	}
-
-	/** Moves the current view to the next element. Non-transformed implementation for MappedSets. */
-	final void nextSet() {
-		setViewAddress(viewAddress + sizeof);
 	}
 
 	/**
@@ -232,14 +252,12 @@ public class MappedObject {
 		throw new InternalError("type not registered");
 	}
 
-	ByteBuffer preventGC;
-
 	/**
 	 * Returns the {@link java.nio.ByteBuffer} that backs this mapped object.
 	 *
 	 * @return the backing buffer
 	 */
-	public ByteBuffer backingByteBuffer() {
+	public final ByteBuffer backingByteBuffer() {
 		return this.preventGC;
 	}
 

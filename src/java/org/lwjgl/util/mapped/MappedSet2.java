@@ -44,13 +44,13 @@ public class MappedSet2 {
 	public int view;
 
 	void view(int view) {
-		MappedHelper.put_view(this.a, view, this.a.sizeof);
-		MappedHelper.put_view(this.b, view, this.b.sizeof);
+		a.setViewAddress(a.getViewAddress(view));
+		b.setViewAddress(b.getViewAddress(view));
 	}
 
 	public void next() {
-		this.a.nextSet();
-		this.b.nextSet();
+		this.a.next();
+		this.b.next();
 	}
 
 }

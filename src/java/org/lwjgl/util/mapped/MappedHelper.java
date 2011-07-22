@@ -55,11 +55,9 @@ public class MappedHelper {
 
 		if ( LWJGLUtil.CHECKS && align <= 0 )
 			throw new IllegalArgumentException("invalid alignment");
-		mo.align = align;
 
 		if ( LWJGLUtil.CHECKS && (sizeof <= 0 || sizeof % align != 0) )
 			throw new IllegalStateException("sizeof not a multiple of alignment");
-		mo.sizeof = sizeof;
 
 		long addr = MemoryUtil.getAddress(buffer);
 		if ( LWJGLUtil.CHECKS && addr % align != 0 )
@@ -107,8 +105,6 @@ public class MappedHelper {
 	public static MappedObject dup(MappedObject src, MappedObject dst) {
 		dst.baseAddress = src.baseAddress;
 		dst.viewAddress = src.viewAddress;
-		dst.align = src.align;
-		dst.sizeof = src.sizeof;
 		dst.preventGC = src.preventGC;
 		return dst;
 	}
@@ -116,8 +112,6 @@ public class MappedHelper {
 	public static MappedObject slice(MappedObject src, MappedObject dst) {
 		dst.baseAddress = src.viewAddress; // !
 		dst.viewAddress = src.viewAddress;
-		dst.align = src.align;
-		dst.sizeof = src.sizeof;
 		dst.preventGC = src.preventGC;
 		return dst;
 	}

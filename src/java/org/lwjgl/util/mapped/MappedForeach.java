@@ -58,7 +58,7 @@ final class MappedForeach<T extends MappedObject> implements Iterable<T> {
 			}
 
 			public T next() {
-				MappedHelper.put_view(mapped, this.index++, mapped.sizeof);
+				mapped.setViewAddress(mapped.getViewAddress(this.index++));
 				return mapped;
 			}
 

@@ -60,8 +60,8 @@ public class MappedObjectTests1 {
 		{
 			MappedFloat vecs1 = MappedFloat.malloc(1234);
 
-			assert (vecs1.sizeof == MappedFloat.SIZEOF);
-			assert (vecs1.sizeof * 1234 == vecs1.backingByteBuffer().capacity());
+			assert (vecs1.getSizeof() == MappedFloat.SIZEOF);
+			assert (vecs1.getSizeof() * 1234 == vecs1.backingByteBuffer().capacity());
 			assert (MappedFloat.SIZEOF * 1234 == vecs1.backingByteBuffer().capacity());
 		}
 

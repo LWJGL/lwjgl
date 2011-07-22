@@ -45,15 +45,15 @@ public class MappedSet3 {
 	public int view;
 
 	void view(int view) {
-		MappedHelper.put_view(this.a, view, this.a.sizeof);
-		MappedHelper.put_view(this.b, view, this.b.sizeof);
-		MappedHelper.put_view(this.c, view, this.c.sizeof);
+		a.setViewAddress(a.getViewAddress(view));
+		b.setViewAddress(b.getViewAddress(view));
+		c.setViewAddress(c.getViewAddress(view));
 	}
 
 	public void next() {
-		this.a.nextSet();
-		this.b.nextSet();
-		this.c.nextSet();
+		this.a.next();
+		this.b.next();
+		this.c.next();
 	}
 
 }

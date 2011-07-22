@@ -35,6 +35,7 @@ import org.lwjgl.LWJGLUtil;
 import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
 import org.objectweb.asm.tree.analysis.*;
+import org.objectweb.asm.tree.analysis.Frame;
 import org.objectweb.asm.util.TraceClassVisitor;
 
 import java.io.PrintWriter;
@@ -76,9 +77,15 @@ public class MappedObjectTransformer {
 	static final String MAPPED_SET3_JVM  = jvmClassName(MappedSet3.class);
 	static final String MAPPED_SET4_JVM  = jvmClassName(MappedSet4.class);
 
-	static final String LENGTH_METHOD_NAME      = "length$LWJGL";
-	static final String VIEWADDRESS_METHOD_NAME = "getViewAddress$LWJGL";
-	static final String VIEW_CONSTRUCTOR_NAME   = "constructView$LWJGL";
+	// Public methods
+	static final String VIEWADDRESS_METHOD_NAME = "getViewAddress";
+	static final String NEXT_METHOD_NAME        = "next";
+	static final String ALIGN_METHOD_NAME       = "getAlign";
+	static final String SIZEOF_METHOD_NAME      = "getSizeof";
+
+	// Internal methods
+	static final String LENGTH_METHOD_NAME    = "length$LWJGL"; // Used for .asArray().length
+	static final String VIEW_CONSTRUCTOR_NAME = "constructView$LWJGL"; // Used by runViewConstructor
 
 	static final Map<Integer, String> OPCODE_TO_NAME   = new HashMap<Integer, String>();
 	static final Map<Integer, String> INSNTYPE_TO_NAME = new HashMap<Integer, String>();
@@ -122,9 +129,6 @@ public class MappedObjectTransformer {
 	 * @param type the mapped object class.
 	 */
 	public static void register(Class<?> type) {
-		if ( MappedObjectClassLoader.FORKED )
-			return;
-
 		final MappedType mapped = type.getAnnotation(MappedType.class);
 		if ( mapped == null )
 			throw new InternalError("missing " + MappedType.class.getName() + " annotation");
@@ -185,6 +189,34 @@ public class MappedObjectTransformer {
 		return (int)byteLength;
 	}
 
+	/** Removes final from methods that will be overriden by subclasses. */
+	static byte[] transformMappedObject(byte[] bytecode) {
+		final ClassWriter cw = new ClassWriter(0);
+
+		ClassVisitor cv = new ClassAdapter(cw) {
+
+			private final String[] DEFINALIZE_LIST = {
+				VIEWADDRESS_METHOD_NAME,
+				NEXT_METHOD_NAME,
+				ALIGN_METHOD_NAME,
+				SIZEOF_METHOD_NAME,
+			};
+
+			public MethodVisitor visitMethod(int access, final String name, final String desc, final String signature, final String[] exceptions) {
+				for ( String method : DEFINALIZE_LIST ) {
+					if ( name.equals(method) ) {
+						access &= ~ACC_FINAL;
+						break;
+					}
+				}
+				return super.visitMethod(access, name, desc, signature, exceptions);
+			}
+		};
+
+		new ClassReader(bytecode).accept(cv, 0);
+		return cw.toByteArray();
+	}
+
 	static byte[] transformMappedAPI(final String className, byte[] bytecode) {
 		final ClassWriter cw = new ClassWriter(COMPUTE_FRAMES) {
 
@@ -203,8 +235,7 @@ public class MappedObjectTransformer {
 		if ( className_to_subtype.containsKey(className) ) // Do a first pass to generate address getters
 			cv = getMethodGenAdapter(className, cv);
 
-		//cr.accept(cv, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
-		new ClassReader(bytecode).accept(cv, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+		new ClassReader(bytecode).accept(cv, ClassReader.SKIP_FRAMES);
 		bytecode = cw.toByteArray();
 
 		if ( PRINT_BYTECODE )
@@ -218,10 +249,13 @@ public class MappedObjectTransformer {
 
 			@Override
 			public void visitEnd() {
+				final MappedSubtypeInfo mappedSubtype = className_to_subtype.get(className);
+
 				generateViewAddressGetter();
 				generateLengthGetter();
-
-				final MappedSubtypeInfo mappedSubtype = className_to_subtype.get(className);
+				generateAlignGetter(mappedSubtype);
+				generateSizeofGetter();
+				generateNext();
 
 				for ( String fieldName : mappedSubtype.fieldToOffset.keySet() ) {
 					final Type type = mappedSubtype.fieldToType.get(fieldName);
@@ -238,7 +272,7 @@ public class MappedObjectTransformer {
 			}
 
 			private void generateViewAddressGetter() {
-				MethodVisitor mv = super.visitMethod(ACC_PUBLIC | ACC_STATIC, VIEWADDRESS_METHOD_NAME, "(L" + className + ";I)J", null, null);
+				MethodVisitor mv = super.visitMethod(ACC_PUBLIC, VIEWADDRESS_METHOD_NAME, "(I)J", null, null);
 				mv.visitCode();
 				mv.visitVarInsn(ALOAD, 0);
 				mv.visitFieldInsn(GETFIELD, MAPPED_OBJECT_JVM, "baseAddress", "J");
@@ -266,7 +300,7 @@ public class MappedObjectTransformer {
 				MethodVisitor mv = super.visitMethod(ACC_PUBLIC | ACC_STATIC, LENGTH_METHOD_NAME, "(L" + className + ";)I", null, null);
 				mv.visitCode();
 				mv.visitVarInsn(ALOAD, 0);
-				mv.visitMethodInsn(INVOKEVIRTUAL, className, "backingByteBuffer", "()L" + jvmClassName(ByteBuffer.class) + ";");
+				mv.visitMethodInsn(INVOKEVIRTUAL, MAPPED_OBJECT_JVM, "backingByteBuffer", "()L" + jvmClassName(ByteBuffer.class) + ";");
 				mv.visitMethodInsn(INVOKEVIRTUAL, jvmClassName(ByteBuffer.class), "capacity", "()I");
 				mv.visitFieldInsn(GETSTATIC, className, "SIZEOF", "I");
 				mv.visitInsn(IDIV);
@@ -275,12 +309,45 @@ public class MappedObjectTransformer {
 				mv.visitEnd();
 			}
 
+			private void generateAlignGetter(final MappedSubtypeInfo mappedSubtype) {
+				MethodVisitor mv = super.visitMethod(ACC_PUBLIC, ALIGN_METHOD_NAME, "()I", null, null);
+				mv.visitCode();
+				visitIntNode(mv, mappedSubtype.sizeof);
+				mv.visitInsn(IRETURN);
+				mv.visitMaxs(1, 1);
+				mv.visitEnd();
+			}
+
+			private void generateSizeofGetter() {
+				MethodVisitor mv = super.visitMethod(ACC_PUBLIC, SIZEOF_METHOD_NAME, "()I", null, null);
+				mv.visitCode();
+				mv.visitFieldInsn(GETSTATIC, className, "SIZEOF", "I");
+				mv.visitInsn(IRETURN);
+				mv.visitMaxs(1, 1);
+				mv.visitEnd();
+			}
+
+			private void generateNext() {
+				MethodVisitor mv = super.visitMethod(ACC_PUBLIC, NEXT_METHOD_NAME, "()V", null, null);
+				mv.visitCode();
+				mv.visitVarInsn(ALOAD, 0);
+				mv.visitInsn(DUP);
+				mv.visitFieldInsn(GETFIELD, MAPPED_OBJECT_JVM, "viewAddress", "J");
+				mv.visitFieldInsn(GETSTATIC, className, "SIZEOF", "I");
+				mv.visitInsn(I2L);
+				mv.visitInsn(LADD);
+				mv.visitMethodInsn(INVOKEVIRTUAL, className, "setViewAddress", "(J)V");
+				mv.visitInsn(RETURN);
+				mv.visitMaxs(3, 1);
+				mv.visitEnd();
+			}
+
 			private void generateByteBufferGetter(final MappedSubtypeInfo mappedSubtype, final String fieldName, final Type type) {
 				MethodVisitor mv = super.visitMethod(ACC_PUBLIC | ACC_STATIC, getterName(fieldName), "(L" + className + ";I)" + type.getDescriptor(), null, null);
 				mv.visitCode();
 				mv.visitVarInsn(ALOAD, 0);
 				mv.visitVarInsn(ILOAD, 1);
-				mv.visitMethodInsn(INVOKESTATIC, className, VIEWADDRESS_METHOD_NAME, "(L" + className + ";I)J");
+				mv.visitMethodInsn(INVOKEVIRTUAL, className, VIEWADDRESS_METHOD_NAME, "(I)J");
 				visitIntNode(mv, mappedSubtype.fieldToOffset.get(fieldName).intValue());
 				mv.visitInsn(I2L);
 				mv.visitInsn(LADD);
@@ -296,13 +363,13 @@ public class MappedObjectTransformer {
 				mv.visitCode();
 				mv.visitVarInsn(ALOAD, 0);
 				mv.visitVarInsn(ILOAD, 1);
-				mv.visitMethodInsn(INVOKESTATIC, className, VIEWADDRESS_METHOD_NAME, "(L" + className + ";I)J");
+				mv.visitMethodInsn(INVOKEVIRTUAL, className, VIEWADDRESS_METHOD_NAME, "(I)J");
 				visitIntNode(mv, mappedSubtype.fieldToOffset.get(fieldName).intValue());
 				mv.visitInsn(I2L);
 				mv.visitInsn(LADD);
 				mv.visitMethodInsn(INVOKESTATIC, MAPPED_HELPER_JVM, type.getDescriptor().toLowerCase() + "get", "(J)" + type.getDescriptor());
 				mv.visitInsn(type.getOpcode(IRETURN));
-				mv.visitMaxs(2, 2);
+				mv.visitMaxs(3, 2);
 				mv.visitEnd();
 			}
 
@@ -331,13 +398,13 @@ public class MappedObjectTransformer {
 				mv.visitVarInsn(load, 2);
 				mv.visitVarInsn(ALOAD, 0);
 				mv.visitVarInsn(ILOAD, 1);
-				mv.visitMethodInsn(INVOKESTATIC, className, VIEWADDRESS_METHOD_NAME, "(L" + className + ";I)J");
+				mv.visitMethodInsn(INVOKEVIRTUAL, className, VIEWADDRESS_METHOD_NAME, "(I)J");
 				visitIntNode(mv, mappedSubtype.fieldToOffset.get(fieldName).intValue());
 				mv.visitInsn(I2L);
 				mv.visitInsn(LADD);
 				mv.visitMethodInsn(INVOKESTATIC, MAPPED_HELPER_JVM, type.getDescriptor().toLowerCase() + "put", "(" + type.getDescriptor() + "J)V");
 				mv.visitInsn(RETURN);
-				mv.visitMaxs(3, 3);
+				mv.visitMaxs(4, 3);
 				mv.visitEnd();
 			}
 
@@ -415,12 +482,14 @@ public class MappedObjectTransformer {
 
 					@Override
 					public void visitEnd() {
-						if ( needsTransformation ) // Early-out for methods that do not touch a mapped object.
+						if ( needsTransformation ) { // Early-out for methods that do not touch a mapped object.
+							//System.err.println("\nTRANSFORMING: " + className + "." + name + desc);
 							try {
 								transformMethod(analyse());
 							} catch (Exception e) {
 								throw new RuntimeException(e);
 							}
+						}
 
 						// Pass the instruction stream to the adapter's MethodVisitor
 						accept(mv);
@@ -433,8 +502,6 @@ public class MappedObjectTransformer {
 					}
 
 					private void transformMethod(final Frame<BasicValue>[] frames) {
-						//System.err.println("\nTRANSFORMING: " + className + " - " + name + desc);
-
 						final InsnList instructions = this.instructions;
 
 						final Map<Integer, MappedSubtypeInfo> arrayVars = new HashMap<Integer, MappedSubtypeInfo>();
@@ -540,10 +607,6 @@ public class MappedObjectTransformer {
 					break;
 				}
 
-				if ( "next".equals(methodInsn.name) && "()V".equals(methodInsn.desc) ) {
-					i = replace(instructions, i, methodInsn, generateNextInstructions(mappedType));
-					break;
-				}
 				break;
 			case INVOKESPECIAL:
 				// super() in VIEW_CONSTRUCTOR_NAME, remove
@@ -565,18 +628,6 @@ public class MappedObjectTransformer {
 		}
 
 		return i;
-	}
-
-	private static InsnList generateNextInstructions(final MappedSubtypeInfo mappedType) {
-		final InsnList list = new InsnList();
-
-		// stack: this
-		list.add(getIntNode(mappedType.sizeof));
-		// stack: sizeof, this
-		list.add(new MethodInsnNode(INVOKESTATIC, MAPPED_HELPER_JVM, "put_view_next", "(L" + MAPPED_OBJECT_JVM + ";I)V"));
-		// stack: -
-
-		return list;
 	}
 
 	private static InsnList generateCopyRangeInstructions(final MappedSubtypeInfo mappedType) {
@@ -705,9 +756,6 @@ public class MappedObjectTransformer {
 		if ( "view".equals(fieldInsn.name) )
 			return generateViewInstructions(fieldInsn, mappedSubtype);
 
-		if ( "align".equals(fieldInsn.name) || "sizeof".equals(fieldInsn.name) )
-			return generateAlignSizeofInstructions(fieldInsn, mappedSubtype);
-
 		if ( "baseAddress".equals(fieldInsn.name) || "viewAddress".equals(fieldInsn.name) ) {
 			return generateAddressInstructions(fieldInsn);
 		}
@@ -803,29 +851,6 @@ public class MappedObjectTransformer {
 			return list;
 		}
 
-		throw new InternalError();
-	}
-
-	private static InsnList generateAlignSizeofInstructions(final FieldInsnNode fieldInsn, final MappedSubtypeInfo mappedSubtype) {
-		if ( !"I".equals(fieldInsn.desc) )
-			throw new InternalError();
-
-		if ( fieldInsn.getOpcode() == GETFIELD ) {
-			final InsnList list = new InsnList();
-
-			// stack: instance
-			list.add(new InsnNode(POP));
-			// stack: -
-			if ( "sizeof".equals(fieldInsn.name) )
-				list.add(getIntNode(mappedSubtype.sizeof));
-			else if ( "align".equals(fieldInsn.name) )
-				list.add(getIntNode(mappedSubtype.align));
-			// stack: int
-			return list;
-		}
-
-		if ( fieldInsn.getOpcode() == PUTFIELD )
-			throwAccessErrorOnReadOnlyField(fieldInsn.owner, fieldInsn.name);
 		throw new InternalError();
 	}
 
@@ -961,7 +986,7 @@ public class MappedObjectTransformer {
 						nextInsn = getter;
 						continue;
 					} else if ( stackSize < loadStackSize )
-						throw new ClassFormatError("Invalid .asArray() usage detected: " + getOpcodeName(nextInsn));
+						throw new ClassFormatError("Invalid " + mappedSubtype.className + " view array usage detected: " + getOpcodeName(nextInsn));
 				}
 
 				instructions.remove(aaLoadInsn);

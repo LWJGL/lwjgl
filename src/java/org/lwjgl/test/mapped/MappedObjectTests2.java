@@ -44,7 +44,7 @@ public class MappedObjectTests2 {
 
 		System.out.println(vecs.viewAddress); // test read-access
 
-		System.out.println(vecs.align); // test read-access
+		System.out.println(vecs.getAlign()); // test read-access
 
 		System.out.println(MappedVec3.SIZEOF); // test read-access
 	}
@@ -91,7 +91,7 @@ public class MappedObjectTests2 {
 			vecs.view = 1;
 			long a2 = vecs.viewAddress;
 			assert (a2 - a1 == MappedVec3.SIZEOF);
-			assert (a2 - a1 == vecs.sizeof);
+			assert (a2 - a1 == vecs.getSizeof());
 			vecs.view = 0;
 		}
 	}

@@ -73,7 +73,9 @@ public class MappedObjectClassLoader extends URLClassLoader {
 		FORKED = true;
 
 		try {
-			URLClassLoader loader = new MappedObjectClassLoader(mainClass);
+			MappedObjectClassLoader loader = new MappedObjectClassLoader(mainClass);
+			loader.loadMappedObject();
+
 			Class<?> replacedMainClass = loader.loadClass(mainClass.getName());
 			Method mainMethod = replacedMainClass.getMethod("main", String[].class);
 			mainMethod.invoke(null, new Object[] { args });
@@ -90,6 +92,28 @@ public class MappedObjectClassLoader extends URLClassLoader {
 		super(((URLClassLoader)mainClass.getClassLoader()).getURLs());
 	}
 
+	protected synchronized Class<?> loadMappedObject() throws ClassNotFoundException {
+		final String name = MappedObject.class.getName();
+		String className = name.replace('.', '/');
+
+		if ( MappedObjectTransformer.PRINT_ACTIVITY )
+			LWJGLUtil.log(MappedObjectClassLoader.class.getSimpleName() + ": " + className);
+
+		byte[] bytecode = readStream(this.getResourceAsStream(className.concat(".class")));
+
+		long t0 = System.nanoTime();
+		bytecode = MappedObjectTransformer.transformMappedObject(bytecode);
+		long t1 = System.nanoTime();
+		total_time_transforming += (t1 - t0);
+
+		if ( MappedObjectTransformer.PRINT_TIMING )
+			LWJGLUtil.log("transforming " + className + " took " + (t1 - t0) / 1000 + " micros (total: " + (total_time_transforming / 1000 / 1000) + "ms)");
+
+		Class<?> clazz = super.defineClass(name, bytecode, 0, bytecode.length);
+		resolveClass(clazz);
+		return clazz;
+	}
+
 	private static long total_time_transforming;
 
 	@Override
@@ -104,10 +128,8 @@ public class MappedObjectClassLoader extends URLClassLoader {
 		if ( name.startsWith("sunw.") )
 			return super.loadClass(name, resolve);
 
-		// never transform classes in this very package, sub-packages should be transformed
-		if ( name.startsWith(MAPPEDOBJECT_PACKAGE_PREFIX) )
-			if ( name.substring(MAPPEDOBJECT_PACKAGE_PREFIX.length()).indexOf('.') == -1 )
-				return super.loadClass(name, resolve);
+		if ( name.equals(MappedObjectClassLoader.class.getName()) )
+			return super.loadClass(name, resolve);
 
 		String className = name.replace('.', '/');
 
@@ -116,13 +138,16 @@ public class MappedObjectClassLoader extends URLClassLoader {
 
 		byte[] bytecode = readStream(this.getResourceAsStream(className.concat(".class")));
 
-		long t0 = System.nanoTime();
-		bytecode = MappedObjectTransformer.transformMappedAPI(className, bytecode);
-		long t1 = System.nanoTime();
-		total_time_transforming += (t1 - t0);
+		// Classes in this package do not get transformed, but need to go through here because we have transformed MappedObject.
+		if ( !(name.startsWith(MAPPEDOBJECT_PACKAGE_PREFIX) && name.substring(MAPPEDOBJECT_PACKAGE_PREFIX.length()).indexOf('.') == -1) ) {
+			long t0 = System.nanoTime();
+			bytecode = MappedObjectTransformer.transformMappedAPI(className, bytecode);
+			long t1 = System.nanoTime();
 
-		if ( MappedObjectTransformer.PRINT_TIMING )
-			LWJGLUtil.log("transforming " + className + " took " + (t1 - t0) / 1000 + " micros (total: " + (total_time_transforming / 1000 / 1000) + "ms)");
+			total_time_transforming += (t1 - t0);
+			if ( MappedObjectTransformer.PRINT_TIMING )
+				LWJGLUtil.log("transforming " + className + " took " + (t1 - t0) / 1000 + " micros (total: " + (total_time_transforming / 1000 / 1000) + "ms)");
+		}
 
 		Class<?> clazz = super.defineClass(name, bytecode, 0, bytecode.length);
 		if ( resolve )
