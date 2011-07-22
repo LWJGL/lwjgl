@@ -71,6 +71,11 @@ public class TestMappedObject {
 		MappedObjectTests3.testConstructor();
 		MappedObjectTests3.testMappedSet();
 
+		MappedObjectTests4.testLocalView();
+
+		//MappedObjectTests4.testLWJGL();
+
+
 		System.out.println("done");
 	}
 

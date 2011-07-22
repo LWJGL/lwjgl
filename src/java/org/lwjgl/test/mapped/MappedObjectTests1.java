@@ -31,6 +31,7 @@
  */
 package org.lwjgl.test.mapped;
 
+import org.lwjgl.MemoryUtil;
 import org.lwjgl.util.mapped.MappedHelper;
 import org.lwjgl.util.mapped.MappedObjectUnsafe;
 
@@ -143,9 +144,9 @@ public class MappedObjectTests1 {
 
 		// test newBuffer
 		{
-			long addr1 = MappedObjectUnsafe.getBufferBaseAddress(bb);
+			long addr1 = MemoryUtil.getAddress(bb);
 			ByteBuffer bb2 = MappedHelper.newBuffer(addr1, bb.capacity());
-			long addr2 = MappedObjectUnsafe.getBufferBaseAddress(bb);
+			long addr2 = MemoryUtil.getAddress(bb);
 
 			System.out.println(bb);
 			System.out.println(bb2);

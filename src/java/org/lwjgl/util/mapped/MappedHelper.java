@@ -31,6 +31,9 @@
  */
 package org.lwjgl.util.mapped;
 
+import org.lwjgl.LWJGLUtil;
+import org.lwjgl.MemoryUtil;
+
 import java.nio.ByteBuffer;
 
 /**
@@ -43,28 +46,30 @@ import java.nio.ByteBuffer;
 public class MappedHelper {
 
 	public static void setup(MappedObject mo, ByteBuffer buffer, int align, int sizeof) {
-		if ( mo.baseAddress != 0L )
+		if ( LWJGLUtil.CHECKS && mo.baseAddress != 0L )
 			throw new IllegalStateException("this method should not be called by user-code");
 
-		if ( buffer == null )
-			throw new NullPointerException("buffer");
-		if ( !buffer.isDirect() )
+		if ( LWJGLUtil.CHECKS && !buffer.isDirect() )
 			throw new IllegalArgumentException("bytebuffer must be direct");
 		mo.preventGC = buffer;
 
-		if ( align <= 0 )
+		if ( LWJGLUtil.CHECKS && align <= 0 )
 			throw new IllegalArgumentException("invalid alignment");
 		mo.align = align;
 
-		if ( sizeof % align != 0 )
+		if ( LWJGLUtil.CHECKS && (sizeof <= 0 || sizeof % align != 0) )
 			throw new IllegalStateException("sizeof not a multiple of alignment");
 		mo.sizeof = sizeof;
 
-		long addr = MappedObjectUnsafe.getBufferBaseAddress(buffer) + buffer.position();
-		if ( addr % align != 0 )
+		long addr = MemoryUtil.getAddress(buffer);
+		if ( LWJGLUtil.CHECKS && addr % align != 0 )
 			throw new IllegalStateException("buffer address not aligned on " + align + " bytes");
 
 		mo.baseAddress = mo.viewAddress = addr;
+	}
+
+	public static void checkAddress(MappedObject mapped, long viewAddress) {
+		mapped.checkAddress(viewAddress);
 	}
 
 	public static void put_views(MappedSet2 set, int view) {
@@ -85,6 +90,14 @@ public class MappedHelper {
 
 	public static int get_view(MappedObject mapped, int sizeof) {
 		return (int)(mapped.viewAddress - mapped.baseAddress) / sizeof;
+	}
+
+	public static void put_view_shift(MappedObject mapped, int view, int sizeof_shift) {
+		mapped.setViewAddress(mapped.baseAddress + (view << sizeof_shift));
+	}
+
+	public static int get_view_shift(MappedObject mapped, int sizeof_shift) {
+		return ((int)(mapped.viewAddress - mapped.baseAddress)) >> sizeof_shift;
 	}
 
 	public static void put_view_next(MappedObject mapped, int sizeof) {
@@ -130,8 +143,16 @@ public class MappedHelper {
 		MappedObjectUnsafe.INSTANCE.putByte(addr, value);
 	}
 
+	public static void bput(MappedObject mapped, byte value, int fieldOffset) {
+		MappedObjectUnsafe.INSTANCE.putByte(mapped.viewAddress + fieldOffset, value);
+	}
+
 	public static byte bget(long addr) {
 		return MappedObjectUnsafe.INSTANCE.getByte(addr);
+	}
+
+	public static byte bget(MappedObject mapped, int fieldOffset) {
+		return MappedObjectUnsafe.INSTANCE.getByte(mapped.viewAddress + fieldOffset);
 	}
 
 	// short
@@ -140,8 +161,16 @@ public class MappedHelper {
 		MappedObjectUnsafe.INSTANCE.putShort(addr, value);
 	}
 
+	public static void sput(MappedObject mapped, short value, int fieldOffset) {
+		MappedObjectUnsafe.INSTANCE.putShort(mapped.viewAddress + fieldOffset, value);
+	}
+
 	public static short sget(long addr) {
 		return MappedObjectUnsafe.INSTANCE.getShort(addr);
+	}
+
+	public static short sget(MappedObject mapped, int fieldOffset) {
+		return MappedObjectUnsafe.INSTANCE.getShort(mapped.viewAddress + fieldOffset);
 	}
 
 	// char
@@ -150,8 +179,16 @@ public class MappedHelper {
 		MappedObjectUnsafe.INSTANCE.putChar(addr, value);
 	}
 
+	public static void cput(MappedObject mapped, char value, int fieldOffset) {
+		MappedObjectUnsafe.INSTANCE.putChar(mapped.viewAddress + fieldOffset, value);
+	}
+
 	public static char cget(long addr) {
 		return MappedObjectUnsafe.INSTANCE.getChar(addr);
+	}
+
+	public static char cget(MappedObject mapped, int fieldOffset) {
+		return MappedObjectUnsafe.INSTANCE.getChar(mapped.viewAddress + fieldOffset);
 	}
 
 	// int
@@ -160,8 +197,16 @@ public class MappedHelper {
 		MappedObjectUnsafe.INSTANCE.putInt(addr, value);
 	}
 
-	public static int iget(long addr) {
-		return MappedObjectUnsafe.INSTANCE.getInt(addr);
+	public static void iput(MappedObject mapped, int value, int fieldOffset) {
+		MappedObjectUnsafe.INSTANCE.putInt(mapped.viewAddress + fieldOffset, value);
+	}
+
+	public static int iget(long address) {
+		return MappedObjectUnsafe.INSTANCE.getInt(address);
+	}
+
+	public static int iget(MappedObject mapped, int fieldOffset) {
+		return MappedObjectUnsafe.INSTANCE.getInt(mapped.viewAddress + fieldOffset);
 	}
 
 	// float
@@ -170,8 +215,16 @@ public class MappedHelper {
 		MappedObjectUnsafe.INSTANCE.putFloat(addr, value);
 	}
 
+	public static void fput(MappedObject mapped, float value, int fieldOffset) {
+		MappedObjectUnsafe.INSTANCE.putFloat(mapped.viewAddress + fieldOffset, value);
+	}
+
 	public static float fget(long addr) {
 		return MappedObjectUnsafe.INSTANCE.getFloat(addr);
+	}
+
+	public static float fget(MappedObject mapped, int fieldOffset) {
+		return MappedObjectUnsafe.INSTANCE.getFloat(mapped.viewAddress + fieldOffset);
 	}
 
 	// long
@@ -180,8 +233,16 @@ public class MappedHelper {
 		MappedObjectUnsafe.INSTANCE.putLong(addr, value);
 	}
 
+	public static void jput(MappedObject mapped, long value, int fieldOffset) {
+		MappedObjectUnsafe.INSTANCE.putLong(mapped.viewAddress + fieldOffset, value);
+	}
+
 	public static long jget(long addr) {
 		return MappedObjectUnsafe.INSTANCE.getLong(addr);
+	}
+
+	public static long lget(MappedObject mapped, int fieldOffset) {
+		return MappedObjectUnsafe.INSTANCE.getLong(mapped.viewAddress + fieldOffset);
 	}
 
 	// double
@@ -190,8 +251,16 @@ public class MappedHelper {
 		MappedObjectUnsafe.INSTANCE.putDouble(addr, value);
 	}
 
+	public static void dput(MappedObject mapped, double value, int fieldOffset) {
+		MappedObjectUnsafe.INSTANCE.putDouble(mapped.viewAddress + fieldOffset, value);
+	}
+
 	public static double dget(long addr) {
 		return MappedObjectUnsafe.INSTANCE.getDouble(addr);
+	}
+
+	public static double dget(MappedObject mapped, int fieldOffset) {
+		return MappedObjectUnsafe.INSTANCE.getDouble(mapped.viewAddress + fieldOffset);
 	}
 
 }

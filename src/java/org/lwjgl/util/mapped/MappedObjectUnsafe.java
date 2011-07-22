@@ -32,7 +32,7 @@
 package org.lwjgl.util.mapped;
 
 import java.lang.reflect.Field;
-import java.nio.Buffer;
+import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
 
 import sun.misc.Unsafe;
@@ -48,10 +48,6 @@ public class MappedObjectUnsafe {
 
 	private static final long BUFFER_ADDRESS_OFFSET  = getObjectFieldOffset(ByteBuffer.class, "address");
 	private static final long BUFFER_CAPACITY_OFFSET = getObjectFieldOffset(ByteBuffer.class, "capacity");
-
-	public static long getBufferBaseAddress(Buffer buffer) {
-		return INSTANCE.getLong(buffer, BUFFER_ADDRESS_OFFSET);
-	}
 
 	private static final ByteBuffer global = ByteBuffer.allocateDirect(4 * 1024);
 
@@ -75,20 +71,39 @@ public class MappedObjectUnsafe {
 				type = type.getSuperclass();
 			}
 		}
-		throw new InternalError();
+
+		throw new UnsupportedOperationException();
 	}
 
 	private static Unsafe getUnsafeInstance() {
-		try {
-			ByteBuffer buffer = ByteBuffer.allocateDirect(1);
-			Field unsafeField = buffer.getClass().getDeclaredField("unsafe");
-			unsafeField.setAccessible(true);
-			Unsafe instance = (Unsafe)unsafeField.get(buffer);
-			buffer.flip(); // prevented 'buffer' from being gc'ed
-			return instance;
-		} catch (Exception exc) {
-			throw new InternalError();
+		final Field[] fields = Unsafe.class.getDeclaredFields();
+
+		/*
+		Different runtimes use different names for the Unsafe singleton,
+		so we cannot use .getDeclaredField and we scan instead. For example:
+
+		Oracle: theUnsafe
+		PERC : m_unsafe_instance
+		Android: THE_ONE
+		*/
+		for ( Field field : fields ) {
+			if ( !field.getType().equals(Unsafe.class) )
+				continue;
+
+			final int modifiers = field.getModifiers();
+			if ( !(Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)) )
+				continue;
+
+			field.setAccessible(true);
+			try {
+				return (Unsafe)field.get(null);
+			} catch (IllegalAccessException e) {
+				// ignore
+			}
+			break;
 		}
+
+		throw new UnsupportedOperationException();
 	}
 
 }

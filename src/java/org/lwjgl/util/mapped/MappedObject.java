@@ -32,6 +32,7 @@
 package org.lwjgl.util.mapped;
 
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.MemoryUtil;
 
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
@@ -93,7 +94,7 @@ public class MappedObject {
 	}
 
 	final void checkAddress(final long address) {
-		final long base = MappedObjectUnsafe.getBufferBaseAddress(preventGC);
+		final long base = MemoryUtil.getAddress0(preventGC);
 		final int offset = (int)(address - base);
 		if ( address < base || preventGC.capacity() < (offset + this.sizeof) )
 			throw new IndexOutOfBoundsException(Integer.toString(offset / sizeof));
@@ -103,7 +104,7 @@ public class MappedObject {
 		if ( bytes < 0 )
 			throw new IllegalArgumentException();
 
-		if ( preventGC.capacity() < (viewAddress - MappedObjectUnsafe.getBufferBaseAddress(preventGC) + bytes) )
+		if ( preventGC.capacity() < (viewAddress - MemoryUtil.getAddress0(preventGC) + bytes) )
 			throw new BufferOverflowException();
 	}
 
@@ -155,7 +156,7 @@ public class MappedObject {
 
 	/**
 	 * Creates an identical new MappedObject instance, comparable to the
-	 * contract of {@link ByteBuffer#duplicate}. This is useful when more than one
+	 * contract of {@link java.nio.ByteBuffer#duplicate}. This is useful when more than one
 	 * views of the mapped object are required at the same time, e.g. in
 	 * multithreaded access.
 	 */
@@ -166,7 +167,7 @@ public class MappedObject {
 
 	/**
 	 * Creates a new MappedObject instance, with a base offset equal to
-	 * the offset of the current view, comparable to the contract of  {@link ByteBuffer#slice}.
+	 * the offset of the current view, comparable to the contract of  {@link java.nio.ByteBuffer#slice}.
 	 */
 	public final <T extends MappedObject> T slice() {
 		// any method that calls this method will have its call-site modified
@@ -186,6 +187,11 @@ public class MappedObject {
 	public final void next() {
 		// any method that calls this method will have its call-site modified
 		throw new InternalError("type not registered");
+	}
+
+	/** Moves the current view to the next element. Non-transformed implementation for MappedSets. */
+	final void nextSet() {
+		setViewAddress(viewAddress + sizeof);
 	}
 
 	/**
@@ -220,10 +226,16 @@ public class MappedObject {
 		return new MappedForeach<T>(mapped, elementCount);
 	}
 
+	@SuppressWarnings("unused")
+	public final <T extends MappedObject> T[] asArray() {
+		// any method that calls this method will have its call-site modified
+		throw new InternalError("type not registered");
+	}
+
 	ByteBuffer preventGC;
 
 	/**
-	 * Returns the {@link ByteBuffer} that backs this mapped object.
+	 * Returns the {@link java.nio.ByteBuffer} that backs this mapped object.
 	 *
 	 * @return the backing buffer
 	 */

@@ -51,9 +51,9 @@ public class MappedSet3 {
 	}
 
 	public void next() {
-		this.a.next();
-		this.b.next();
-		this.c.next();
+		this.a.nextSet();
+		this.b.nextSet();
+		this.c.nextSet();
 	}
 
 }

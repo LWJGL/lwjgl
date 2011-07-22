@@ -31,7 +31,11 @@
  */
 package org.lwjgl.test.mapped;
 
-import org.lwjgl.util.mapped.*;
+import org.lwjgl.MemoryUtil;
+import org.lwjgl.util.mapped.MappedObject;
+import org.lwjgl.util.mapped.MappedSet;
+import org.lwjgl.util.mapped.MappedSet2;
+import org.lwjgl.util.mapped.MappedType;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -49,10 +53,10 @@ public class MappedObjectTests3 {
 
 		assert (some.data != some.data);
 
-		long addr1 = MappedObjectUnsafe.getBufferBaseAddress(some.backingByteBuffer());
+		long addr1 = MemoryUtil.getAddress(some.backingByteBuffer());
 
 		ByteBuffer mapped = some.data; // creates new ByteBuffer instance
-		long addr2 = MappedObjectUnsafe.getBufferBaseAddress(mapped);
+		long addr2 = MemoryUtil.getAddress(mapped);
 
 		assert (addr2 - addr1 == 4);
 		assert (mapped.capacity() == MappedSomething.SIZEOF - 4);
@@ -60,7 +64,7 @@ public class MappedObjectTests3 {
 		some.view++;
 		mapped = some.data; // creates new ByteBuffer instance
 
-		long addr3 = MappedObjectUnsafe.getBufferBaseAddress(mapped);
+		long addr3 = MemoryUtil.getAddress(mapped);
 		assert (addr3 - addr1 == 4 + MappedSomething.SIZEOF);
 		assert (addr3 - addr2 == 0 + MappedSomething.SIZEOF);
 		assert (mapped.capacity() == MappedSomething.SIZEOF - 4);
@@ -87,7 +91,7 @@ public class MappedObjectTests3 {
 	static void testConstructor() {
 		int capacity = 1024;
 		ByteBuffer bb = ByteBuffer.allocateDirect(capacity).order(ByteOrder.nativeOrder());
-		long address = MappedObjectUnsafe.getBufferBaseAddress(bb);
+		long address = MemoryUtil.getAddress(bb);
 
 		MappedFloat mf = MappedFloat.map(address, capacity);
 

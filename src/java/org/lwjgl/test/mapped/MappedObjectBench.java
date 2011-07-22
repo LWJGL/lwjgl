@@ -31,6 +31,7 @@
  */
 package org.lwjgl.test.mapped;
 
+import org.lwjgl.MemoryUtil;
 import org.lwjgl.util.mapped.MappedObjectUnsafe;
 
 import java.nio.ByteBuffer;
@@ -212,7 +213,7 @@ public class MappedObjectBench {
 		final int iterations = 64 * 1024;
 
 		ByteBuffer bb = ByteBuffer.allocateDirect(200);
-		long addr = MappedObjectUnsafe.getBufferBaseAddress(bb);
+		long addr = MemoryUtil.getAddress(bb);
 
 		long[] took = new long[runs];
 		for ( int run = 0; run < runs; run++ ) {

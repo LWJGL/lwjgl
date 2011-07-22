@@ -117,7 +117,7 @@ public class MappedObjectClassLoader extends URLClassLoader {
 		byte[] bytecode = readStream(this.getResourceAsStream(className.concat(".class")));
 
 		long t0 = System.nanoTime();
-		bytecode = MappedObjectTransformer.transformFieldAccess(className, bytecode);
+		bytecode = MappedObjectTransformer.transformMappedAPI(className, bytecode);
 		long t1 = System.nanoTime();
 		total_time_transforming += (t1 - t0);
 
