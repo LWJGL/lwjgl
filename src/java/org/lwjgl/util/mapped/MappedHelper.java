@@ -149,6 +149,22 @@ public class MappedHelper {
 		return MappedObjectUnsafe.INSTANCE.getByte(mapped.viewAddress + fieldOffset);
 	}
 
+	public static void bvput(byte value, long addr) {
+		MappedObjectUnsafe.INSTANCE.putByteVolatile(null, addr, value);
+	}
+
+	public static void bvput(MappedObject mapped, byte value, int fieldOffset) {
+		MappedObjectUnsafe.INSTANCE.putByteVolatile(null, mapped.viewAddress + fieldOffset, value);
+	}
+
+	public static byte bvget(long addr) {
+		return MappedObjectUnsafe.INSTANCE.getByteVolatile(null, addr);
+	}
+
+	public static byte bvget(MappedObject mapped, int fieldOffset) {
+		return MappedObjectUnsafe.INSTANCE.getByteVolatile(null, mapped.viewAddress + fieldOffset);
+	}
+
 	// short
 
 	public static void sput(short value, long addr) {
@@ -165,6 +181,22 @@ public class MappedHelper {
 
 	public static short sget(MappedObject mapped, int fieldOffset) {
 		return MappedObjectUnsafe.INSTANCE.getShort(mapped.viewAddress + fieldOffset);
+	}
+
+	public static void svput(short value, long addr) {
+		MappedObjectUnsafe.INSTANCE.putShortVolatile(null, addr, value);
+	}
+
+	public static void svput(MappedObject mapped, short value, int fieldOffset) {
+		MappedObjectUnsafe.INSTANCE.putShortVolatile(null, mapped.viewAddress + fieldOffset, value);
+	}
+
+	public static short svget(long addr) {
+		return MappedObjectUnsafe.INSTANCE.getShortVolatile(null, addr);
+	}
+
+	public static short svget(MappedObject mapped, int fieldOffset) {
+		return MappedObjectUnsafe.INSTANCE.getShortVolatile(null, mapped.viewAddress + fieldOffset);
 	}
 
 	// char
@@ -185,6 +217,22 @@ public class MappedHelper {
 		return MappedObjectUnsafe.INSTANCE.getChar(mapped.viewAddress + fieldOffset);
 	}
 
+	public static void cvput(char value, long addr) {
+		MappedObjectUnsafe.INSTANCE.putCharVolatile(null, addr, value);
+	}
+
+	public static void cvput(MappedObject mapped, char value, int fieldOffset) {
+		MappedObjectUnsafe.INSTANCE.putCharVolatile(null, mapped.viewAddress + fieldOffset, value);
+	}
+
+	public static char cvget(long addr) {
+		return MappedObjectUnsafe.INSTANCE.getCharVolatile(null, addr);
+	}
+
+	public static char cvget(MappedObject mapped, int fieldOffset) {
+		return MappedObjectUnsafe.INSTANCE.getCharVolatile(null, mapped.viewAddress + fieldOffset);
+	}
+
 	// int
 
 	public static void iput(int value, long addr) {
@@ -201,6 +249,22 @@ public class MappedHelper {
 
 	public static int iget(MappedObject mapped, int fieldOffset) {
 		return MappedObjectUnsafe.INSTANCE.getInt(mapped.viewAddress + fieldOffset);
+	}
+
+	public static void ivput(int value, long addr) {
+		MappedObjectUnsafe.INSTANCE.putIntVolatile(null, addr, value);
+	}
+
+	public static void ivput(MappedObject mapped, int value, int fieldOffset) {
+		MappedObjectUnsafe.INSTANCE.putIntVolatile(null, mapped.viewAddress + fieldOffset, value);
+	}
+
+	public static int ivget(long address) {
+		return MappedObjectUnsafe.INSTANCE.getIntVolatile(null, address);
+	}
+
+	public static int ivget(MappedObject mapped, int fieldOffset) {
+		return MappedObjectUnsafe.INSTANCE.getIntVolatile(null, mapped.viewAddress + fieldOffset);
 	}
 
 	// float
@@ -221,6 +285,22 @@ public class MappedHelper {
 		return MappedObjectUnsafe.INSTANCE.getFloat(mapped.viewAddress + fieldOffset);
 	}
 
+	public static void fvput(float value, long addr) {
+		MappedObjectUnsafe.INSTANCE.putFloatVolatile(null, addr, value);
+	}
+
+	public static void fvput(MappedObject mapped, float value, int fieldOffset) {
+		MappedObjectUnsafe.INSTANCE.putFloatVolatile(null, mapped.viewAddress + fieldOffset, value);
+	}
+
+	public static float fvget(long addr) {
+		return MappedObjectUnsafe.INSTANCE.getFloatVolatile(null, addr);
+	}
+
+	public static float fvget(MappedObject mapped, int fieldOffset) {
+		return MappedObjectUnsafe.INSTANCE.getFloatVolatile(null, mapped.viewAddress + fieldOffset);
+	}
+
 	// long
 
 	public static void jput(long value, long addr) {
@@ -237,6 +317,22 @@ public class MappedHelper {
 
 	public static long lget(MappedObject mapped, int fieldOffset) {
 		return MappedObjectUnsafe.INSTANCE.getLong(mapped.viewAddress + fieldOffset);
+	}
+
+	public static void jvput(long value, long addr) {
+		MappedObjectUnsafe.INSTANCE.putLongVolatile(null, addr, value);
+	}
+
+	public static void jvput(MappedObject mapped, long value, int fieldOffset) {
+		MappedObjectUnsafe.INSTANCE.putLongVolatile(null, mapped.viewAddress + fieldOffset, value);
+	}
+
+	public static long jvget(long addr) {
+		return MappedObjectUnsafe.INSTANCE.getLongVolatile(null, addr);
+	}
+
+	public static long lvget(MappedObject mapped, int fieldOffset) {
+		return MappedObjectUnsafe.INSTANCE.getLongVolatile(null, mapped.viewAddress + fieldOffset);
 	}
 
 	// address
@@ -273,6 +369,22 @@ public class MappedHelper {
 
 	public static double dget(MappedObject mapped, int fieldOffset) {
 		return MappedObjectUnsafe.INSTANCE.getDouble(mapped.viewAddress + fieldOffset);
+	}
+
+	public static void dvput(double value, long addr) {
+		MappedObjectUnsafe.INSTANCE.putDoubleVolatile(null, addr, value);
+	}
+
+	public static void dvput(MappedObject mapped, double value, int fieldOffset) {
+		MappedObjectUnsafe.INSTANCE.putDoubleVolatile(null, mapped.viewAddress + fieldOffset, value);
+	}
+
+	public static double dvget(long addr) {
+		return MappedObjectUnsafe.INSTANCE.getDoubleVolatile(null, addr);
+	}
+
+	public static double dvget(MappedObject mapped, int fieldOffset) {
+		return MappedObjectUnsafe.INSTANCE.getDoubleVolatile(null, mapped.viewAddress + fieldOffset);
 	}
 
 }

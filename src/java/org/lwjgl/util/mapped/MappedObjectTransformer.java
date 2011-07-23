@@ -179,7 +179,11 @@ public class MappedObjectTransformer {
 
 		Pointer pointer = field.getAnnotation(Pointer.class);
 		if ( pointer != null && field.getType() != long.class )
-			throw new ClassFormatError("The @Pointer annotation can only be used on long fields. Field found: " + className + "." + field.getName() + ": " + field.getType());
+			throw new ClassFormatError("The @Pointer annotation can only be used on long fields. @Pointer field found: " + className + "." + field.getName() + ": " + field.getType());
+
+		if ( Modifier.isVolatile(field.getModifiers()) && (pointer != null || field.getType() == ByteBuffer.class) )
+			throw new ClassFormatError("The volatile keyword is not supported for @Pointer or ByteBuffer fields. Volatile field found: " + className + "." + field.getName() + ": " + field.getType());
+
 		// quick hack
 		long byteOffset = meta == null ? advancingOffset : meta.byteOffset();
 		long byteLength;
@@ -209,7 +213,7 @@ public class MappedObjectTransformer {
 		if ( PRINT_ACTIVITY )
 			LWJGLUtil.log(MappedObjectTransformer.class.getSimpleName() + ": " + className + "." + field.getName() + " [type=" + field.getType().getSimpleName() + ", offset=" + byteOffset + "]");
 
-		return new FieldInfo(byteOffset, byteLength, Type.getType(field.getType()), pointer != null);
+		return new FieldInfo(byteOffset, byteLength, Type.getType(field.getType()), Modifier.isVolatile(field.getModifiers()), pointer != null);
 	}
 
 	/** Removes final from methods that will be overriden by subclasses. */
@@ -395,7 +399,7 @@ public class MappedObjectTransformer {
 				visitIntNode(mv, (int)field.offset);
 				mv.visitInsn(I2L);
 				mv.visitInsn(LADD);
-				mv.visitMethodInsn(INVOKESTATIC, MAPPED_HELPER_JVM, field.isPointer ? "a" : field.type.getDescriptor().toLowerCase() + "get", "(J)" + field.type.getDescriptor());
+				mv.visitMethodInsn(INVOKESTATIC, MAPPED_HELPER_JVM, field.getAccessType() + "get", "(J)" + field.type.getDescriptor());
 				mv.visitInsn(field.type.getOpcode(IRETURN));
 				mv.visitMaxs(3, 2);
 				mv.visitEnd();
@@ -430,7 +434,7 @@ public class MappedObjectTransformer {
 				visitIntNode(mv, (int)field.offset);
 				mv.visitInsn(I2L);
 				mv.visitInsn(LADD);
-				mv.visitMethodInsn(INVOKESTATIC, MAPPED_HELPER_JVM, field.isPointer ? "a" : field.type.getDescriptor().toLowerCase() + "put", "(" + field.type.getDescriptor() + "J)V");
+				mv.visitMethodInsn(INVOKESTATIC, MAPPED_HELPER_JVM, field.getAccessType() + "put", "(" + field.type.getDescriptor() + "J)V");
 				mv.visitInsn(RETURN);
 				mv.visitMaxs(4, 4);
 				mv.visitEnd();
@@ -933,13 +937,11 @@ public class MappedObjectTransformer {
 	private static InsnList generateFieldInstructions(final FieldInsnNode fieldInsn, final FieldInfo field) {
 		final InsnList list = new InsnList();
 
-		final String dataType = field.isPointer ? "a" : fieldInsn.desc.toLowerCase();
-
 		if ( fieldInsn.getOpcode() == PUTFIELD ) {
 			// stack: value, ref
 			list.add(getIntNode((int)field.offset));
 			// stack: fieldOffset, value, ref
-			list.add(new MethodInsnNode(INVOKESTATIC, MAPPED_HELPER_JVM, dataType + "put", "(L" + MAPPED_OBJECT_JVM + ";" + fieldInsn.desc + "I)V"));
+			list.add(new MethodInsnNode(INVOKESTATIC, MAPPED_HELPER_JVM, field.getAccessType() + "put", "(L" + MAPPED_OBJECT_JVM + ";" + fieldInsn.desc + "I)V"));
 			// stack -
 			return list;
 		}
@@ -948,7 +950,7 @@ public class MappedObjectTransformer {
 			// stack: ref
 			list.add(getIntNode((int)field.offset));
 			// stack: fieldOffset, ref
-			list.add(new MethodInsnNode(INVOKESTATIC, MAPPED_HELPER_JVM, dataType + "get", "(L" + MAPPED_OBJECT_JVM + ";I)" + fieldInsn.desc));
+			list.add(new MethodInsnNode(INVOKESTATIC, MAPPED_HELPER_JVM, field.getAccessType() + "get", "(L" + MAPPED_OBJECT_JVM + ";I)" + fieldInsn.desc));
 			// stack: -
 			return list;
 		}
@@ -1047,13 +1049,19 @@ public class MappedObjectTransformer {
 		final long    offset;
 		final long    length;
 		final Type    type;
+		final boolean isVolatile;
 		final boolean isPointer;
 
-		FieldInfo(final long offset, final long length, final Type type, final boolean isPointer) {
+		FieldInfo(final long offset, final long length, final Type type, final boolean isVolatile, final boolean isPointer) {
 			this.offset = offset;
 			this.length = length;
 			this.type = type;
+			this.isVolatile = isVolatile;
 			this.isPointer = isPointer;
+		}
+
+		String getAccessType() {
+			return isPointer ? "a" : type.getDescriptor().toLowerCase() + (isVolatile ? "v" : "");
 		}
 
 	}
