@@ -82,7 +82,7 @@ public class MappedObjectTests3 {
 		System.out.println("current.view=" + some.view + ", not " + elementCount + ", as you might expect");
 	}
 
-	@MappedType(sizeof = 12)
+	@MappedType
 	public static class Xyz extends MappedObject {
 
 		int x, y, z;

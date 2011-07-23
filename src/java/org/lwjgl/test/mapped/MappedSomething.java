@@ -38,7 +38,7 @@ import org.lwjgl.util.mapped.MappedType;
 import java.nio.ByteBuffer;
 
 /** @author Riven */
-@MappedType(sizeof = 64)
+@MappedType
 public class MappedSomething extends MappedObject {
 
 	@MappedField(byteOffset = 0)

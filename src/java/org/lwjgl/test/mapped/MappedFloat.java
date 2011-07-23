@@ -35,7 +35,7 @@ import org.lwjgl.util.mapped.MappedObject;
 import org.lwjgl.util.mapped.MappedType;
 
 /** @author Riven */
-@MappedType(sizeof = 4)
+@MappedType
 public class MappedFloat extends MappedObject {
 
 	public MappedFloat() {

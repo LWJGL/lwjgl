@@ -35,7 +35,7 @@ import org.lwjgl.util.mapped.MappedObject;
 import org.lwjgl.util.mapped.MappedType;
 
 /** @author Riven */
-@MappedType(sizeof = 8)
+@MappedType
 public class MappedVec2 extends MappedObject {
 
 	public float x;

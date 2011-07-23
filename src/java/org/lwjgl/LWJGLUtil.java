@@ -462,7 +462,7 @@ public class LWJGLUtil {
 	 *
 	 * @param msg Message to print
 	 */
-	public static void log(String msg) {
+	public static void log(CharSequence msg) {
 		if (DEBUG) {
 			System.err.println("[LWJGL] " + msg);
 		}

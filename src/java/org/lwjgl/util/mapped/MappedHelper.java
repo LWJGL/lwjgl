@@ -239,6 +239,24 @@ public class MappedHelper {
 		return MappedObjectUnsafe.INSTANCE.getLong(mapped.viewAddress + fieldOffset);
 	}
 
+	// address
+
+	public static void aput(long value, long addr) {
+		MappedObjectUnsafe.INSTANCE.putAddress(addr, value);
+	}
+
+	public static void aput(MappedObject mapped, long value, int fieldOffset) {
+		MappedObjectUnsafe.INSTANCE.putAddress(mapped.viewAddress + fieldOffset, value);
+	}
+
+	public static long aget(long addr) {
+		return MappedObjectUnsafe.INSTANCE.getAddress(addr);
+	}
+
+	public static long aget(MappedObject mapped, int fieldOffset) {
+		return MappedObjectUnsafe.INSTANCE.getAddress(mapped.viewAddress + fieldOffset);
+	}
+
 	// double
 
 	public static void dput(double value, long addr) {

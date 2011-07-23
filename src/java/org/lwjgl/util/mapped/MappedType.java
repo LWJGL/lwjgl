@@ -60,11 +60,12 @@ import java.lang.annotation.Target;
 public @interface MappedType {
 
 	/**
-	 * The total size of the mapped object, in bytes.
+	 * The number of bytes to add to the total byte size.
+	 * SIZEOF will be calculated as <code>SIZEOF = max(field_offset + field_length) + padding</code>
 	 *
-	 * @return the byte size
+	 * @return the padding amount
 	 */
-	int sizeof();
+	int padding() default 0;
 
 	/**
 	 * The mapped data memory alignment, in bytes.

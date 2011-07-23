@@ -51,6 +51,7 @@ public class TestMappedObject {
 		MappedObjectTransformer.register(MappedVec3.class);
 		MappedObjectTransformer.register(MappedSomething.class);
 		MappedObjectTransformer.register(MappedObjectTests3.Xyz.class);
+		MappedObjectTransformer.register(MappedObjectTests4.MappedPointer.class);
 
 		if ( MappedObjectClassLoader.fork(TestMappedObject.class, args) ) {
 			return;
@@ -72,9 +73,8 @@ public class TestMappedObject {
 		MappedObjectTests3.testMappedSet();
 
 		MappedObjectTests4.testLocalView();
-
 		//MappedObjectTests4.testLWJGL();
-
+		MappedObjectTests4.testPointer();
 
 		System.out.println("done");
 	}

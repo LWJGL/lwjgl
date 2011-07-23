@@ -204,14 +204,14 @@ public final class SpriteShootoutMapped {
 		return texID;
 	}
 
-	@MappedType(sizeof = 4)
+	@MappedType
 	public static class Pixel4b extends MappedObject {
 
 		public byte r, g, b, a;
 
 	}
 
-	@MappedType(sizeof = 3, align = 3)
+	@MappedType(align = 3)
 	public static class Pixel3b extends MappedObject {
 
 		public byte r, g, b;
@@ -413,15 +413,15 @@ public final class SpriteShootoutMapped {
 		Display.destroy();
 	}
 
-	@MappedType(sizeof = 4 * 4)
+	@MappedType
 	public static class Sprite extends MappedObject {
 
-		public float x, y;
-		public float dx, dy;
+		public float x, dx;
+		public float y, dy;
 
 	}
 
-	@MappedType(sizeof = 2 * 4)
+	@MappedType
 	public static class SpriteRender extends MappedObject {
 
 		public float x, y;
@@ -536,12 +536,15 @@ public final class SpriteShootoutMapped {
 				x += dx * delta;
 				if ( x < ballRadius ) {
 					x = ballRadius;
-					sprites[b].dx = -dx;
+					dx = -dx;
 				} else if ( x > boundW ) {
 					x = boundW;
-					sprites[b].dx = -dx;
+					dx = -dx;
 				}
+
 				sprites[b].x = x;
+				sprites[b].dx = dx;
+				spritesRender[r].x = x;
 
 				float y = sprites[b].y;
 				float dy = sprites[b].dy;
@@ -549,14 +552,14 @@ public final class SpriteShootoutMapped {
 				y += dy * delta;
 				if ( y < ballRadius ) {
 					y = ballRadius;
-					sprites[b].dy = -dy;
+					dy = -dy;
 				} else if ( y > boundH ) {
 					y = boundH;
-					sprites[b].dy = -dy;
+					dy = -dy;
 				}
-				sprites[b].y = y;
 
-				spritesRender[r].x = x;
+				sprites[b].y = y;
+				sprites[b].dy = dy;
 				spritesRender[r].y = y;
 			}
 		}

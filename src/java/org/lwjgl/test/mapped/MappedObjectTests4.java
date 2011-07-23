@@ -32,7 +32,11 @@
 package org.lwjgl.test.mapped;
 
 import org.lwjgl.MemoryUtil;
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.mapped.MappedObject;
+import org.lwjgl.util.mapped.MappedType;
+import org.lwjgl.util.mapped.Pointer;
 
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -109,6 +113,37 @@ public class MappedObjectTests4 {
 
 			assert (data.capacity() == (64 - 4));
 			assert (MemoryUtil.getAddress(data) == baseAddress + i * MappedSomething.SIZEOF + 4);
+		}
+	}
+
+	@MappedType
+	public static class MappedPointer extends MappedObject {
+
+		int foo;
+		@Pointer long pointer;
+		int bar;
+
+	}
+
+	public static void testPointer() {
+		MappedPointer data = MappedPointer.malloc(100);
+
+		assert (data.backingByteBuffer().capacity() == 100 * (4 + 4 + PointerBuffer.getPointerSize()));
+
+		for ( int i = 0; i < 100; i++ ) {
+			data.view = i;
+
+			data.foo = i;
+			data.pointer = i * 1000;
+			data.bar = i * 2;
+		}
+
+		for ( int i = 0; i < 100; i++ ) {
+			data.view = i;
+
+			assert (data.foo == i);
+			assert (data.pointer == i * 1000);
+			assert (data.bar == i * 2);
 		}
 	}
 

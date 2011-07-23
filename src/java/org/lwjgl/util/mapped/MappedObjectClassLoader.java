@@ -96,9 +96,6 @@ public class MappedObjectClassLoader extends URLClassLoader {
 		final String name = MappedObject.class.getName();
 		String className = name.replace('.', '/');
 
-		if ( MappedObjectTransformer.PRINT_ACTIVITY )
-			LWJGLUtil.log(MappedObjectClassLoader.class.getSimpleName() + ": " + className);
-
 		byte[] bytecode = readStream(this.getResourceAsStream(className.concat(".class")));
 
 		long t0 = System.nanoTime();
@@ -106,8 +103,8 @@ public class MappedObjectClassLoader extends URLClassLoader {
 		long t1 = System.nanoTime();
 		total_time_transforming += (t1 - t0);
 
-		if ( MappedObjectTransformer.PRINT_TIMING )
-			LWJGLUtil.log("transforming " + className + " took " + (t1 - t0) / 1000 + " micros (total: " + (total_time_transforming / 1000 / 1000) + "ms)");
+		if ( MappedObjectTransformer.PRINT_ACTIVITY )
+			printActivity(className, t0, t1);
 
 		Class<?> clazz = super.defineClass(name, bytecode, 0, bytecode.length);
 		resolveClass(clazz);
@@ -128,31 +125,44 @@ public class MappedObjectClassLoader extends URLClassLoader {
 		if ( name.startsWith("sunw.") )
 			return super.loadClass(name, resolve);
 
-		if ( name.equals(MappedObjectClassLoader.class.getName()) )
+		if ( name.startsWith("org.objectweb.asm.") )
+			return super.loadClass(name, resolve);
+
+		if ( name.equals(MappedObjectClassLoader.class.getName()) || name.equals((MappedObjectTransformer.class.getName())) )
 			return super.loadClass(name, resolve);
 
 		String className = name.replace('.', '/');
-
-		if ( MappedObjectTransformer.PRINT_ACTIVITY )
-			LWJGLUtil.log(MappedObjectClassLoader.class.getSimpleName() + ": " + className);
 
 		byte[] bytecode = readStream(this.getResourceAsStream(className.concat(".class")));
 
 		// Classes in this package do not get transformed, but need to go through here because we have transformed MappedObject.
 		if ( !(name.startsWith(MAPPEDOBJECT_PACKAGE_PREFIX) && name.substring(MAPPEDOBJECT_PACKAGE_PREFIX.length()).indexOf('.') == -1) ) {
 			long t0 = System.nanoTime();
-			bytecode = MappedObjectTransformer.transformMappedAPI(className, bytecode);
+			final byte[] newBytecode = MappedObjectTransformer.transformMappedAPI(className, bytecode);
 			long t1 = System.nanoTime();
 
 			total_time_transforming += (t1 - t0);
-			if ( MappedObjectTransformer.PRINT_TIMING )
-				LWJGLUtil.log("transforming " + className + " took " + (t1 - t0) / 1000 + " micros (total: " + (total_time_transforming / 1000 / 1000) + "ms)");
+
+			if ( bytecode != newBytecode ) {
+				bytecode = newBytecode;
+				if ( MappedObjectTransformer.PRINT_ACTIVITY )
+					printActivity(className, t0, t1);
+			}
 		}
 
 		Class<?> clazz = super.defineClass(name, bytecode, 0, bytecode.length);
 		if ( resolve )
 			resolveClass(clazz);
 		return clazz;
+	}
+
+	private static void printActivity(final String className, final long t0, final long t1) {
+		final StringBuilder msg = new StringBuilder(MappedObjectClassLoader.class.getSimpleName() + ": " + className);
+
+		if ( MappedObjectTransformer.PRINT_TIMING )
+			msg.append("\n\ttransforming took " + (t1 - t0) / 1000 + " micros (total: " + (total_time_transforming / 1000 / 1000) + "ms)");
+
+		LWJGLUtil.log(msg);
 	}
 
 	private static byte[] readStream(InputStream in) {
