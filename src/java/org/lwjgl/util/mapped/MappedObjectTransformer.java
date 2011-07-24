@@ -113,7 +113,7 @@ public class MappedObjectTransformer {
 			// => IADD
 			// => PUTFIELD MyMappedType.view
 			//
-			className_to_subtype.put(MAPPED_OBJECT_JVM, new MappedSubtypeInfo(MAPPED_OBJECT_JVM, null, -1, -1));
+			className_to_subtype.put(MAPPED_OBJECT_JVM, new MappedSubtypeInfo(MAPPED_OBJECT_JVM, null, -1, -1, -1));
 		}
 
 		final String vmName = System.getProperty("java.vm.name");
@@ -128,15 +128,13 @@ public class MappedObjectTransformer {
 	 *
 	 * @param type the mapped object class.
 	 */
-	public static void register(Class<?> type) {
+	public static void register(Class<? extends MappedObject> type) {
 		if ( MappedObjectClassLoader.FORKED )
 			return;
 
 		final MappedType mapped = type.getAnnotation(MappedType.class);
-		if ( mapped == null )
-			throw new ClassFormatError("missing " + MappedType.class.getName() + " annotation");
 
-		if ( mapped.padding() < 0 )
+		if ( mapped != null && mapped.padding() < 0 )
 			throw new ClassFormatError("Invalid mapped type padding: " + mapped.padding());
 
 		if ( type.getEnclosingClass() != null && !Modifier.isStatic(type.getModifiers()) )
@@ -148,7 +146,7 @@ public class MappedObjectTransformer {
 		int advancingOffset = 0;
 		long sizeof = 0;
 		for ( Field field : type.getDeclaredFields() ) {
-			FieldInfo fieldInfo = registerField(mapped, className, advancingOffset, field);
+			FieldInfo fieldInfo = registerField(mapped == null || mapped.autoGenerateOffsets(), className, advancingOffset, field);
 			if ( fieldInfo == null )
 				continue;
 
@@ -158,14 +156,17 @@ public class MappedObjectTransformer {
 			sizeof = Math.max(sizeof, fieldInfo.offset + fieldInfo.length);
 		}
 
-		sizeof += mapped.padding();
+		final int align = mapped == null ? 4 : mapped.align();
+		final int padding = mapped == null ? 0 : mapped.padding();
 
-		final MappedSubtypeInfo mappedType = new MappedSubtypeInfo(className, fields, (int)sizeof, mapped.align());
+		sizeof += padding;
+
+		final MappedSubtypeInfo mappedType = new MappedSubtypeInfo(className, fields, (int)sizeof, align, padding);
 		if ( className_to_subtype.put(className, mappedType) != null )
 			throw new InternalError("duplicate mapped type: " + mappedType.className);
 	}
 
-	private static FieldInfo registerField(final MappedType mapped, final String className, int advancingOffset, final Field field) {
+	private static FieldInfo registerField(final boolean autoGenerateOffsets, final String className, int advancingOffset, final Field field) {
 		if ( Modifier.isStatic(field.getModifiers()) ) // static fields are never mapped
 			return null;
 
@@ -174,7 +175,7 @@ public class MappedObjectTransformer {
 			throw new ClassFormatError("field '" + className + "." + field.getName() + "' not supported: " + field.getType());
 
 		MappedField meta = field.getAnnotation(MappedField.class);
-		if ( meta == null && !mapped.autoGenerateOffsets() )
+		if ( meta == null && !autoGenerateOffsets )
 			throw new ClassFormatError("field '" + className + "." + field.getName() + "' missing annotation " + MappedField.class.getName() + ": " + className);
 
 		Pointer pointer = field.getAnnotation(Pointer.class);
@@ -688,7 +689,7 @@ public class MappedObjectTransformer {
 		final InsnList list = new InsnList();
 
 		// stack: target, this
-		list.add(getIntNode(mappedType.sizeof));
+		list.add(getIntNode(mappedType.sizeof - mappedType.padding));
 		// stack: sizeof, target, this
 		list.add(new MethodInsnNode(INVOKESTATIC, MAPPED_HELPER_JVM, "copy", "(L" + MAPPED_OBJECT_JVM + ";L" + MAPPED_OBJECT_JVM + ";I)V"));
 		// stack: -
@@ -1073,10 +1074,11 @@ public class MappedObjectTransformer {
 		final int sizeof;
 		final int sizeof_shift;
 		final int align;
+		final int padding;
 
 		final Map<String, FieldInfo> fields;
 
-		MappedSubtypeInfo(String className, Map<String, FieldInfo> fields, int sizeof, int align) {
+		MappedSubtypeInfo(String className, Map<String, FieldInfo> fields, int sizeof, int align, int padding) {
 			this.className = className;
 
 			this.sizeof = sizeof;
@@ -1085,6 +1087,7 @@ public class MappedObjectTransformer {
 			else
 				this.sizeof_shift = 0;
 			this.align = align;
+			this.padding = padding;
 
 			this.fields = fields;
 		}

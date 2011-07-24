@@ -35,7 +35,6 @@ import org.lwjgl.MemoryUtil;
 import org.lwjgl.util.mapped.MappedObject;
 import org.lwjgl.util.mapped.MappedSet;
 import org.lwjgl.util.mapped.MappedSet2;
-import org.lwjgl.util.mapped.MappedType;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -82,7 +81,6 @@ public class MappedObjectTests3 {
 		System.out.println("current.view=" + some.view + ", not " + elementCount + ", as you might expect");
 	}
 
-	@MappedType
 	public static class Xyz extends MappedObject {
 
 		int x, y, z;

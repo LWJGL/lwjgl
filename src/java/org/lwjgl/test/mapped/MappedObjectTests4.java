@@ -35,7 +35,6 @@ import org.lwjgl.MemoryUtil;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.mapped.MappedObject;
-import org.lwjgl.util.mapped.MappedType;
 import org.lwjgl.util.mapped.Pointer;
 
 import java.io.File;
@@ -116,7 +115,6 @@ public class MappedObjectTests4 {
 		}
 	}
 
-	@MappedType
 	public static class MappedPointer extends MappedObject {
 
 		int foo;

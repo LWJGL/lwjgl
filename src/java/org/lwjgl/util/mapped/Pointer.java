@@ -37,7 +37,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation can be used on long fields of {@link MappedType} classes,
+ * This annotation can be used on long fields of {@link MappedObject} subclasses,
  * to specify that the long value should be interpreted as a pointer. This
  * will determine the actual byte size of the field at runtime (4 or 8 bytes).
  *

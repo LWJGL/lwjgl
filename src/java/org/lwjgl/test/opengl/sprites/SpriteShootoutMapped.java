@@ -204,7 +204,6 @@ public final class SpriteShootoutMapped {
 		return texID;
 	}
 
-	@MappedType
 	public static class Pixel4b extends MappedObject {
 
 		public byte r, g, b, a;
@@ -413,7 +412,6 @@ public final class SpriteShootoutMapped {
 		Display.destroy();
 	}
 
-	@MappedType
 	public static class Sprite extends MappedObject {
 
 		public float x, dx;
@@ -421,7 +419,6 @@ public final class SpriteShootoutMapped {
 
 	}
 
-	@MappedType
 	public static class SpriteRender extends MappedObject {
 
 		public float x, y;

@@ -33,12 +33,10 @@ package org.lwjgl.test.mapped;
 
 import org.lwjgl.util.mapped.MappedField;
 import org.lwjgl.util.mapped.MappedObject;
-import org.lwjgl.util.mapped.MappedType;
 
 import java.nio.ByteBuffer;
 
 /** @author Riven */
-@MappedType
 public class MappedSomething extends MappedObject {
 
 	@MappedField(byteOffset = 0)

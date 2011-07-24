@@ -37,7 +37,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation can be used on fields of {@link MappedType} classes,
+ * This annotation can be used on fields of {@link MappedObject} subclasses,
  * to manually specify byte offsets and lengths. This is useful when the
  * mapped fields require custom alignment. {@link java.nio.ByteBuffer}
  * fields are required to have this annotation with a hardcoded byte length.

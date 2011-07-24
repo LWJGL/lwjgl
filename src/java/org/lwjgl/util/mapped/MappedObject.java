@@ -39,8 +39,8 @@ import java.nio.ByteBuffer;
 
 /**
  * Base superclass of all mapped objects. Classes that require
- * data mapping should extend this class and also be annotated
- * with {@link MappedType}.
+ * data mapping should extend this class and registered with
+ * {@link MappedObjectTransformer#register(Class)}.
  * <p/>
  * Subclasses may only specify the default constructor. Any code
  * inside that constructor is optional, but will not run when the
@@ -215,7 +215,7 @@ public abstract class MappedObject {
 	}
 
 	/**
-	 * Copies and amount of <code>SIZEOF</code> bytes, from the current
+	 * Copies and amount of <code>SIZEOF - padding</code> bytes, from the current
 	 * mapped object, to the specified mapped object.
 	 */
 	@SuppressWarnings("unused")
@@ -225,8 +225,9 @@ public abstract class MappedObject {
 	}
 
 	/**
-	 * Copies and amount of <code>SIZEOF*instances<c/ode> bytes, from the
-	 * current mapped object, to the specified mapped object.
+	 * Copies and amount of <code>SIZEOF * instances</code> bytes, from the
+	 * current mapped object, to the specified mapped object. Note that
+	 * this includes any padding bytes that are part of SIZEOF.
 	 */
 	@SuppressWarnings("unused")
 	public final <T extends MappedObject> void copyRange(T target, int instances) {
