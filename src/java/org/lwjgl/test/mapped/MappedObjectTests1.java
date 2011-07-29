@@ -33,7 +33,6 @@ package org.lwjgl.test.mapped;
 
 import org.lwjgl.MemoryUtil;
 import org.lwjgl.util.mapped.MappedHelper;
-import org.lwjgl.util.mapped.MappedObjectUnsafe;
 
 import java.nio.ByteBuffer;
 

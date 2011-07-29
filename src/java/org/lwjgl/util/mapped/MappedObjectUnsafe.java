@@ -42,9 +42,9 @@ import sun.misc.Unsafe;
  *
  * @author Riven
  */
-public class MappedObjectUnsafe {
+final class MappedObjectUnsafe {
 
-	public static final Unsafe INSTANCE = getUnsafeInstance();
+	static final Unsafe INSTANCE = getUnsafeInstance();
 
 	private static final long BUFFER_ADDRESS_OFFSET  = getObjectFieldOffset(ByteBuffer.class, "address");
 	private static final long BUFFER_CAPACITY_OFFSET = getObjectFieldOffset(ByteBuffer.class, "capacity");

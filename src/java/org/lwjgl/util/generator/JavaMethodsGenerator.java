@@ -458,24 +458,26 @@ public class JavaMethodsGenerator {
 				writer.print(auto_type);
 			} else if (AutoSize.class.equals(param_type)) {
 				final AutoSize auto_size_annotation = param.getAnnotation(AutoSize.class);
-				final String auto_parameter_name = auto_size_annotation.value();
-				final ParameterDeclaration auto_target_param = Utils.findParameter(method, auto_parameter_name);
-				final TypeInfo auto_target_type_info = typeinfos_instance.get(auto_target_param);
-				final boolean shift_remaining = !hasAnyParameterAutoTypeAnnotation(method, auto_target_param) && Utils.isParameterMultiTyped(auto_target_param);
-				int shifting = 0;
-				if ( shift_remaining ) {
-					shifting = getBufferElementSizeExponent(auto_target_type_info.getType());
-					if ( shifting > 0 )
-						writer.print("(");
-				}
-				if ( auto_size_annotation.canBeNull() )
-					writer.print("(" + auto_parameter_name + " == null ? 0 : " + auto_parameter_name + ".remaining())");
-				else
-					writer.print(auto_parameter_name + ".remaining()");
-				// Shift the remaining if the target parameter is multityped and there's no AutoType to track type
-				if (shift_remaining && shifting > 0) {
-					writer.print(" << " + shifting);
-					writer.print(")");
+				if ( !auto_size_annotation.useExpression() ) {
+					final String auto_parameter_name = auto_size_annotation.value();
+					final ParameterDeclaration auto_target_param = Utils.findParameter(method, auto_parameter_name);
+					final TypeInfo auto_target_type_info = typeinfos_instance.get(auto_target_param);
+					final boolean shift_remaining = !hasAnyParameterAutoTypeAnnotation(method, auto_target_param) && Utils.isParameterMultiTyped(auto_target_param);
+					int shifting = 0;
+					if ( shift_remaining ) {
+						shifting = getBufferElementSizeExponent(auto_target_type_info.getType());
+						if ( shifting > 0 )
+							writer.print("(");
+					}
+					if ( auto_size_annotation.canBeNull() )
+						writer.print("(" + auto_parameter_name + " == null ? 0 : " + auto_parameter_name + ".remaining())");
+					else
+						writer.print(auto_parameter_name + ".remaining()");
+					// Shift the remaining if the target parameter is multityped and there's no AutoType to track type
+					if (shift_remaining && shifting > 0) {
+						writer.print(" << " + shifting);
+						writer.print(")");
+					}
 				}
 				writer.print(auto_size_annotation.expression());
 			} else

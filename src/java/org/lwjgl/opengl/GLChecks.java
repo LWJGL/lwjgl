@@ -31,10 +31,11 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLUtil;
+
+import java.nio.Buffer;
+import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.ARBBufferObject.*;
 import static org.lwjgl.opengl.ATIVertexArrayObject.*;
@@ -43,6 +44,7 @@ import static org.lwjgl.opengl.EXTBgra.*;
 import static org.lwjgl.opengl.EXTDirectStateAccess.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.NVPathRendering.*;
 
 /**
  * A class to check buffer boundaries in GL methods. Many GL
@@ -55,7 +57,7 @@ import static org.lwjgl.opengl.GL15.*;
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
- * $Id$
+ *          $Id$
  */
 class GLChecks {
 
@@ -81,25 +83,25 @@ class GLChecks {
 
 	/** Helper method to ensure that array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOdisabled(ContextCapabilities caps) {
-		if( LWJGLUtil.CHECKS && StateTracker.getReferences(caps).arrayBuffer != 0 )
+		if ( LWJGLUtil.CHECKS && StateTracker.getReferences(caps).arrayBuffer != 0 )
 			throw new OpenGLException("Cannot use Buffers when Array Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOenabled(ContextCapabilities caps) {
-		if( LWJGLUtil.CHECKS && StateTracker.getReferences(caps).arrayBuffer == 0 )
+		if ( LWJGLUtil.CHECKS && StateTracker.getReferences(caps).arrayBuffer == 0 )
 			throw new OpenGLException("Cannot use offsets when Array Buffer Object is disabled");
 	}
 
 	/** Helper method to ensure that element array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureElementVBOdisabled(ContextCapabilities caps) {
-		if( LWJGLUtil.CHECKS && StateTracker.getElementArrayBufferBound(caps) != 0 )
+		if ( LWJGLUtil.CHECKS && StateTracker.getElementArrayBufferBound(caps) != 0 )
 			throw new OpenGLException("Cannot use Buffers when Element Array Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that element array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureElementVBOenabled(ContextCapabilities caps) {
-		if( LWJGLUtil.CHECKS && StateTracker.getElementArrayBufferBound(caps) == 0 )
+		if ( LWJGLUtil.CHECKS && StateTracker.getElementArrayBufferBound(caps) == 0 )
 			throw new OpenGLException("Cannot use offsets when Element Array Buffer Object is disabled");
 	}
 
@@ -209,10 +211,10 @@ class GLChecks {
 			case GL_FLOAT:
 				bpe = 4;
 				break;
-			default :
+			default:
 				// TODO: Add more types (like the GL12 types GL_UNSIGNED_INT_8_8_8_8
 				return 0;
-				//		throw new IllegalArgumentException("Unknown type " + type);
+			//		throw new IllegalArgumentException("Unknown type " + type);
 		}
 		int epp;
 		switch ( format ) {
@@ -233,7 +235,7 @@ class GLChecks {
 			case GL_BGRA_EXT:
 				epp = 4;
 				break;
-			default :
+			default:
 				// TODO: Add more formats. Assuming 4 is too wasteful on buffer sizes where e.g. 1 is enough (like GL_DEPTH_COMPONENT)
 				return 0;
 /*				// Assume 4 elements per pixel
@@ -242,4 +244,116 @@ class GLChecks {
 
 		return bpe * epp;
 	}
+
+	// NV_path_rendering checks
+
+	static int calculateBytesPerCharCode(int type) {
+		switch ( type ) {
+			case GL_UNSIGNED_BYTE:
+			case GL_UTF8_NV:
+				return 1;
+			case GL_UNSIGNED_SHORT:
+			case GL_2_BYTES:
+			case GL_UTF16_NV:
+				return 2;
+			case GL_3_BYTES:
+				return 3;
+			case GL_4_BYTES:
+				return 4;
+			default:
+				throw new IllegalArgumentException("Unsupported charcode type: " + type);
+		}
+	}
+
+	static int calculateBytesPerPathName(int pathNameType) {
+		switch ( pathNameType ) {
+			case GL_BYTE:
+			case GL_UNSIGNED_BYTE:
+			case GL_UTF8_NV:
+				return 1;
+			case GL_SHORT:
+			case GL_UNSIGNED_SHORT:
+			case GL_2_BYTES:
+			case GL_UTF16_NV:
+				return 2;
+			case GL_3_BYTES:
+				return 3;
+			case GL_INT:
+			case GL_UNSIGNED_INT:
+			case GL_FLOAT:
+			case GL_4_BYTES:
+				return 4;
+			default:
+				throw new IllegalArgumentException("Unsupported path name type: " + pathNameType);
+		}
+	}
+
+	static int calculateTransformPathValues(int transformType) {
+		switch ( transformType ) {
+			case GL_NONE:
+				return 0;
+			case GL_TRANSLATE_X_NV:
+			case GL_TRANSLATE_Y_NV:
+				return 1;
+			case GL_TRANSLATE_2D_NV:
+				return 2;
+			case GL_TRANSLATE_3D_NV:
+				return 3;
+			case GL_AFFINE_2D_NV:
+			case GL_TRANSPOSE_AFFINE_2D_NV:
+				return 6;
+			case GL_AFFINE_3D_NV:
+			case GL_TRANSPOSE_AFFINE_3D_NV:
+				return 12;
+			default:
+				throw new IllegalArgumentException("Unsupported transform type: " + transformType);
+		}
+	}
+
+	static int calculatePathColorGenCoeffsCount(int genMode, int colorFormat) {
+		final int coeffsPerComponent = calculatePathGenCoeffsPerComponent(genMode);
+
+		switch ( colorFormat ) {
+			case GL_RGB:
+				return 3 * coeffsPerComponent;
+			case GL_RGBA:
+				return 4 * coeffsPerComponent;
+			default:
+				return coeffsPerComponent;
+		}
+	}
+
+	static int calculatePathTextGenCoeffsPerComponent(FloatBuffer coeffs, int genMode) {
+		if ( genMode == GL_NONE )
+			return 0;
+
+		return coeffs.remaining() / calculatePathGenCoeffsPerComponent(genMode);
+	}
+
+	private static int calculatePathGenCoeffsPerComponent(int genMode) {
+		switch ( genMode ) {
+			case GL_NONE:
+				return 0;
+			case GL_OBJECT_LINEAR:
+			case GL_PATH_OBJECT_BOUNDING_BOX_NV:
+				return 3;
+			case GL_EYE_LINEAR:
+				return 4;
+			default:
+				throw new IllegalArgumentException("Unsupported gen mode: " + genMode);
+		}
+	}
+
+	static int calculateMetricsSize(int metricQueryMask, int stride) {
+		if ( LWJGLUtil.DEBUG && (stride < 0 || (stride % 4) != 0) )
+			throw new IllegalArgumentException("Invalid stride value: " + stride);
+
+		final int metrics = Integer.bitCount(metricQueryMask);
+
+		if ( LWJGLUtil.DEBUG && (stride >> 2) < metrics )
+			throw new IllegalArgumentException("The queried metrics do not fit in the specified stride: " + stride);
+
+		return stride == 0 ? metrics : (stride >> 2);
+	}
+
 }
