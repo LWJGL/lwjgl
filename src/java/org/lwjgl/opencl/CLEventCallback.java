@@ -31,15 +31,30 @@
  */
 package org.lwjgl.opencl;
 
+import org.lwjgl.PointerWrapperAbstract;
+
 /**
- * Instances of this class can be used to receive OpenCL memory object destruction notifications.
+ * Instances of this class can be used to handle OpenCL event callbacks. A single
+ * CLEventCallback instance should only be used on events generated from the same
+ * CLCommandQueue or on user events associated with the same CLContext.
  *
  * @author Spasi
  */
-public abstract class CLEventCallback extends CLCallback {
+public abstract class CLEventCallback extends PointerWrapperAbstract {
+
+	private CLObjectRegistry<CLEvent> eventRegistry;
 
 	protected CLEventCallback() {
 		super(CallbackUtil.getEventCallback());
+	}
+
+	/**
+	 * Sets the eventRegistry that contains the CLEvents to which we're registered.
+	 *
+	 * @param eventRegistry the CLEvent object registry
+	 */
+	void setRegistry(final CLObjectRegistry<CLEvent> eventRegistry) {
+		this.eventRegistry = eventRegistry;
 	}
 
 	/**
@@ -48,13 +63,14 @@ public abstract class CLEventCallback extends CLCallback {
 	 * @param event_address the CLEvent object pointer
 	 */
 	private void handleMessage(long event_address, int event_command_exec_status) {
-		handleMessage(CLContext.getCLEventGlobal(event_address), event_command_exec_status);
+		handleMessage(eventRegistry.getObject(event_address), event_command_exec_status);
 	}
 
 	/**
 	 * The callback method.
 	 *
-	 * @param event the CLEvent object
+	 * @param event                     the CLEvent object
+	 * @param event_command_exec_status the execution status
 	 */
 	protected abstract void handleMessage(CLEvent event, int event_command_exec_status);
 

@@ -143,23 +143,41 @@ public class HelloOpenCL {
 							System.out.println("-TRYING TO EXEC NATIVE KERNEL-");
 							final CLCommandQueue queue = clCreateCommandQueue(context, device, 0, null);
 
+							final PointerBuffer ev = BufferUtils.createPointerBuffer(1);
+
 							clEnqueueNativeKernel(queue, new CLNativeKernel() {
 								protected void execute(final ByteBuffer[] memobjs) {
-									if ( memobjs == null )
-										System.out.println("OK, it's null");
-									else {
-										System.out.println("memobjs = " + memobjs.length);
-										for ( int k = 0; k < memobjs.length; k++ ) {
-											System.out.println("memobjs[" + k + "].remaining() = " + memobjs[k].remaining());
-											for ( int l = memobjs[k].position(); l < memobjs[k].limit(); l++ ) {
-												memobjs[k].put(l, (byte)l);
-											}
+									System.out.println("\tmemobjs.length = " + memobjs.length);
+									for ( int k = 0; k < memobjs.length; k++ ) {
+										System.out.println("\tmemobjs[" + k + "].remaining() = " + memobjs[k].remaining());
+										for ( int l = memobjs[k].position(); l < memobjs[k].limit(); l++ ) {
+											memobjs[k].put(l, (byte)l);
 										}
 									}
+									System.out.println("\tNative kernel done.");
 								}
-							}, new CLMem[] { buffer }, new long[] { 128 }, null, null);
+							}, new CLMem[] { buffer }, new long[] { 128 }, null, ev);
 
-							clFinish(queue);
+							final CLEvent e = queue.getCLEvent(ev.get(0));
+
+							clSetEventCallback(e, CL_COMPLETE, new CLEventCallback() {
+								protected void handleMessage(final CLEvent event, final int event_command_exec_status) {
+									System.out.println("\t\tEvent callback status: " + getEventStatusName(event_command_exec_status));
+								}
+							});
+
+							int status = e.getInfoInt(CL_EVENT_COMMAND_EXECUTION_STATUS);
+							System.out.println("NATIVE KERNEL STATUS: " + getEventStatusName(status));
+							clFlush(queue);
+							do {
+								int newStatus = e.getInfoInt(CL_EVENT_COMMAND_EXECUTION_STATUS);
+								if ( newStatus != status ) {
+									status = newStatus;
+									System.out.println("NATIVE KERNEL STATUS: " + getEventStatusName(status));
+								}
+							} while ( status != CL_SUCCESS ); // Busy-spin until we're done
+
+							clReleaseEvent(e);
 						}
 					}
 
@@ -180,6 +198,19 @@ public class HelloOpenCL {
 
 	private static void printDeviceInfo(final CLDevice device, final String param_name, final int param) {
 		System.out.println("\t" + param_name + " = " + device.getInfoString(param));
+	}
+
+	private static String getEventStatusName(final int status) {
+		switch ( status ) {
+			case CL_QUEUED:
+				return "CL_QUEUED";
+			case CL_SUBMITTED:
+				return "CL_SUBMITTED";
+			case CL_RUNNING:
+				return "CL_RUNNING";
+			default:
+				return "CL_COMPLETE";
+		}
 	}
 
 	private static void die(String kind, String description) {

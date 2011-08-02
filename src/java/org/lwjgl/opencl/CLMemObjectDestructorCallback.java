@@ -31,12 +31,14 @@
  */
 package org.lwjgl.opencl;
 
+import org.lwjgl.PointerWrapperAbstract;
+
 /**
  * Instances of this class can be used to receive OpenCL memory object destruction notifications.
  *
  * @author Spasi
  */
-public abstract class CLMemObjectDestructorCallback extends CLCallback {
+public abstract class CLMemObjectDestructorCallback extends PointerWrapperAbstract {
 
 	protected CLMemObjectDestructorCallback() {
 		super(CallbackUtil.getMemObjectDestructorCallback());

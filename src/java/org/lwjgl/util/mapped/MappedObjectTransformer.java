@@ -32,6 +32,7 @@
 package org.lwjgl.util.mapped;
 
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.MemoryUtil;
 import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
 import org.objectweb.asm.tree.analysis.*;
@@ -42,6 +43,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -82,9 +84,9 @@ public class MappedObjectTransformer {
 	static final String NEXT_METHOD_NAME        = "next";
 	static final String ALIGN_METHOD_NAME       = "getAlign";
 	static final String SIZEOF_METHOD_NAME      = "getSizeof";
+	static final String CAPACITY_METHOD_NAME    = "capacity"; // Used for .asArray().length
 
 	// Internal methods
-	static final String LENGTH_METHOD_NAME    = "length$LWJGL"; // Used for .asArray().length
 	static final String VIEW_CONSTRUCTOR_NAME = "constructView$LWJGL"; // Used by runViewConstructor
 
 	static final Map<Integer, String> OPCODE_TO_NAME   = new HashMap<Integer, String>();
@@ -228,6 +230,7 @@ public class MappedObjectTransformer {
 				NEXT_METHOD_NAME,
 				ALIGN_METHOD_NAME,
 				SIZEOF_METHOD_NAME,
+				CAPACITY_METHOD_NAME,
 			};
 
 			public MethodVisitor visitMethod(int access, final String name, final String desc, final String signature, final String[] exceptions) {
@@ -285,7 +288,7 @@ public class MappedObjectTransformer {
 				final MappedSubtypeInfo mappedSubtype = className_to_subtype.get(className);
 
 				generateViewAddressGetter();
-				generateLengthGetter();
+				generateCapacity();
 				generateAlignGetter(mappedSubtype);
 				generateSizeofGetter();
 				generateNext();
@@ -329,16 +332,25 @@ public class MappedObjectTransformer {
 				mv.visitEnd();
 			}
 
-			private void generateLengthGetter() {
-				MethodVisitor mv = super.visitMethod(ACC_PUBLIC | ACC_STATIC, LENGTH_METHOD_NAME, "(L" + className + ";)I", null, null);
+			private void generateCapacity() {
+				// return (backingByteBuffer().capacity() + (int)(MemoryUtil.getAddress0(backingByteBuffer()) - baseAddress)) / SIZEOF;
+				MethodVisitor mv = super.visitMethod(ACC_PUBLIC, CAPACITY_METHOD_NAME, "()I", null, null);
 				mv.visitCode();
 				mv.visitVarInsn(ALOAD, 0);
 				mv.visitMethodInsn(INVOKEVIRTUAL, MAPPED_OBJECT_JVM, "backingByteBuffer", "()L" + jvmClassName(ByteBuffer.class) + ";");
+				mv.visitInsn(DUP);
 				mv.visitMethodInsn(INVOKEVIRTUAL, jvmClassName(ByteBuffer.class), "capacity", "()I");
+				mv.visitInsn(SWAP);
+				mv.visitMethodInsn(INVOKESTATIC, jvmClassName(MemoryUtil.class), "getAddress0", "(L" + jvmClassName(Buffer.class) + ";)J");
+				mv.visitVarInsn(ALOAD, 0);
+				mv.visitFieldInsn(GETFIELD, MAPPED_OBJECT_JVM, "baseAddress", "J");
+				mv.visitInsn(LSUB);
+				mv.visitInsn(L2I);
+				mv.visitInsn(IADD);
 				mv.visitFieldInsn(GETSTATIC, className, "SIZEOF", "I");
 				mv.visitInsn(IDIV);
 				mv.visitInsn(IRETURN);
-				mv.visitMaxs(2, 1);
+				mv.visitMaxs(3, 1);
 				mv.visitEnd();
 			}
 
@@ -1037,7 +1049,7 @@ public class MappedObjectTransformer {
 
 				instructions.remove(nextInsn);
 				loadInsn.var = var;
-				instructions.insert(loadInsn, new MethodInsnNode(INVOKESTATIC, mappedSubtype.className, LENGTH_METHOD_NAME, "(L" + mappedSubtype.className + ";)I"));
+				instructions.insert(loadInsn, new MethodInsnNode(INVOKEVIRTUAL, mappedSubtype.className, CAPACITY_METHOD_NAME, "()I"));
 
 				return i + 1;
 			} else if ( stackSize < loadStackSize ) // Consumed by something other than AALOAD or ARRAYLENGTH

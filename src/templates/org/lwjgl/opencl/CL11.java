@@ -190,7 +190,8 @@ public interface CL11 {
 	@Code(
 		tryBlock = true,
 		// Create a GlobalRef to the callback object.
-		javaBeforeNative = "\t\tlong user_data = CallbackUtil.createGlobalRef(pfn_notify);",
+		javaBeforeNative = "\t\tlong user_data = CallbackUtil.createGlobalRef(pfn_notify);\n" +
+		                   "\t\tpfn_notify.setRegistry(event.getParentRegistry());",
 		// Check if we need to delete the GlobalRef.
 		javaFinally = "\t\t\tCallbackUtil.checkCallback(__result, user_data);"
 	)

@@ -53,9 +53,6 @@ public final class CLPlatform extends CLObject {
 
 	private final CLObjectRegistry<CLDevice> clDevices;
 
-	/** Global registry for build callbacks. */
-	static final FastLongMap<CLDevice> clDevicesGlobal = new FastLongMap<CLDevice>();
-
 	private Object caps;
 
 	CLPlatform(final long pointer) {
@@ -63,7 +60,7 @@ public final class CLPlatform extends CLObject {
 
 		if ( isValid() ) {
 			clPlatforms.put(pointer, this);
-			clDevices = new CLObjectRegistryGlobal<CLDevice>(clDevicesGlobal);
+			clDevices = new CLObjectRegistry<CLDevice>();
 		} else
 			clDevices = null;
 	}
@@ -194,8 +191,6 @@ public final class CLPlatform extends CLObject {
 	}
 
 	CLObjectRegistry<CLDevice> getCLDeviceRegistry() { return clDevices; }
-
-	static CLDevice getCLDeviceGlobal(final long id) { return clDevicesGlobal.get(id); }
 
 	/**
 	 * Called from <code>clGetDeviceIDs</code> to register new devices.

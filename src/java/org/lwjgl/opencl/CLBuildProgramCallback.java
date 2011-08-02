@@ -31,15 +31,30 @@
  */
 package org.lwjgl.opencl;
 
+import org.lwjgl.PointerWrapperAbstract;
+
 /**
  * Instances of this class can be used to receive OpenCL program build notifications.
+ * A single CLBuildProgramCallback instance should only be used with programs created
+ * in the same CLContext.
  *
  * @author Spasi
  */
-public abstract class CLBuildProgramCallback extends CLCallback {
+public abstract class CLBuildProgramCallback extends PointerWrapperAbstract {
+
+	private CLContext context;
 
 	protected CLBuildProgramCallback() {
 		super(CallbackUtil.getBuildProgramCallback());
+	}
+
+	/**
+	 * Sets the context that contains the CLPrograms to which we're registered.
+	 *
+	 * @param context the CLContext object
+	 */
+	void setContext(final CLContext context) {
+		this.context = context;
 	}
 
 	/**
@@ -48,7 +63,7 @@ public abstract class CLBuildProgramCallback extends CLCallback {
 	 * @param program_address the CLProgram object pointer
 	 */
 	private void handleMessage(long program_address) {
-		handleMessage(CLContext.getCLProgramGlobal(program_address));
+		handleMessage(context.getCLProgram(program_address));
 	}
 
 	/**

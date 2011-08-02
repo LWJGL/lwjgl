@@ -31,6 +31,8 @@
  */
 package org.lwjgl.opencl;
 
+import org.lwjgl.PointerWrapperAbstract;
+
 import java.nio.ByteBuffer;
 
 /**
@@ -43,7 +45,7 @@ import java.nio.ByteBuffer;
  * @see CL10#clEnqueueNativeKernel
  * @see #execute(java.nio.ByteBuffer[])
  */
-public abstract class CLNativeKernel extends CLCallback {
+public abstract class CLNativeKernel extends PointerWrapperAbstract {
 
 	protected CLNativeKernel() {
 		super(CallbackUtil.getNativeKernelCallback());

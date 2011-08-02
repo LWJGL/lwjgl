@@ -50,7 +50,7 @@ public final class CLCommandQueue extends CLObjectChild<CLContext> {
 		super(pointer, context);
 		if ( isValid() ) {
 			this.device = device;
-			this.clEvents = new CLObjectRegistryGlobal<CLEvent>(CLContext.clEventsGlobal);
+			this.clEvents = new CLObjectRegistry<CLEvent>();
 			context.getCLCommandQueueRegistry().registerObject(this);
 		} else {
 			this.device = null;

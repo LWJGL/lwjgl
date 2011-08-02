@@ -108,6 +108,13 @@ public final class CLEvent extends CLObjectChild<CLContext> {
 
 	// -------[ IMPLEMENTATION STUFF BELOW ]-------
 
+	CLObjectRegistry<CLEvent> getParentRegistry() {
+		if ( queue == null )
+			return getParent().getCLEventRegistry();
+		else
+			return queue.getCLEventRegistry();
+	}
+
 	int release() {
 		try {
 			return super.release();

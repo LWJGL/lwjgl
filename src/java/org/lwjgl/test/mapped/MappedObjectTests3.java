@@ -70,15 +70,21 @@ public class MappedObjectTests3 {
 	}
 
 	static void testForeach() {
-		int elementCount = 4;
+		int elementCount = 10;
 		MappedSomething some = MappedSomething.malloc(elementCount);
 
 		int i = 0;
-		for ( MappedSomething item : foreach(some, elementCount) ) {
+		for ( MappedSomething item : foreach(some, elementCount / 2) ) {
 			assert (item.view == i++);
 		}
-		assert (some.view != elementCount);
-		System.out.println("current.view=" + some.view + ", not " + elementCount + ", as you might expect");
+		assert (some.view == (elementCount / 2) - 1);
+		System.out.println("current.view=" + some.view + ", not " + (elementCount / 2) + ", as you might expect");
+
+		i = 0;
+		for ( MappedSomething item : foreach(some) ) {
+			assert (item.view == i++);
+		}
+		assert (some.view == elementCount - 1);
 	}
 
 	public static class Xyz extends MappedObject {

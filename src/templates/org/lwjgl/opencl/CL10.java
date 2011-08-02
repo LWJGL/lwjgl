@@ -432,7 +432,7 @@ public interface CL10 {
 	@Code(
 		tryBlock = true,
 		// Create a GlobalRef to the callback object.
-		javaBeforeNative = "\t\tlong user_data = CallbackUtil.createGlobalRef(pfn_notify);",
+		javaBeforeNative = "\t\tlong user_data = pfn_notify == null || pfn_notify.isCustom() ? 0 : CallbackUtil.createGlobalRef(pfn_notify);",
 		// Associate context with the GlobalRef, so we can delete it later.
 		javaFinally = "\t\t\tCallbackUtil.registerCallback(__result, user_data);"
 	)
@@ -845,7 +845,8 @@ public interface CL10 {
 	@Code(
 		tryBlock = true,
 		// Create a GlobalRef to the callback object.
-		javaBeforeNative = "\t\tlong user_data = CallbackUtil.createGlobalRef(pfn_notify);",
+		javaBeforeNative = "\t\tlong user_data = CallbackUtil.createGlobalRef(pfn_notify);\n" +
+		                   "\t\tif ( pfn_notify != null ) pfn_notify.setContext(program.getParent());",
 		// Check if we need to delete the GlobalRef.
 		javaFinally = "\t\t\tCallbackUtil.checkCallback(__result, user_data);"
 	)
@@ -861,7 +862,8 @@ public interface CL10 {
 	@Code(
 		tryBlock = true,
 		// Create a GlobalRef to the callback object.
-		javaBeforeNative = "\t\tlong user_data = CallbackUtil.createGlobalRef(pfn_notify);",
+		javaBeforeNative = "\t\tlong user_data = CallbackUtil.createGlobalRef(pfn_notify);\n" +
+		                   "\t\tif ( pfn_notify != null ) pfn_notify.setContext(program.getParent());",
 		// Check if we need to delete the GlobalRef.
 		javaFinally = "\t\t\tCallbackUtil.checkCallback(__result, user_data);"
 	)
@@ -877,7 +879,8 @@ public interface CL10 {
 	@Code(
 		tryBlock = true,
 		// Create a GlobalRef to the callback object.
-		javaBeforeNative = "\t\tlong user_data = CallbackUtil.createGlobalRef(pfn_notify);",
+		javaBeforeNative = "\t\tlong user_data = CallbackUtil.createGlobalRef(pfn_notify);\n" +
+		                   "\t\tif ( pfn_notify != null ) pfn_notify.setContext(program.getParent());",
 		// Check if we need to delete the GlobalRef.
 		javaFinally = "\t\t\tCallbackUtil.checkCallback(__result, user_data);"
 	)

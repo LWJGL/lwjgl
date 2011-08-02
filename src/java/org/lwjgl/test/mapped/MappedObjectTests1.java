@@ -55,13 +55,20 @@ public class MappedObjectTests1 {
 		ByteBuffer bb = ByteBuffer.allocateDirect(200);
 		MappedFloat vecs = MappedFloat.map(bb);
 
-		// verify 'malloc' and SIZEOF
+		// verify 'malloc', SIZEOF and capacity()
 		{
 			MappedFloat vecs1 = MappedFloat.malloc(1234);
 
 			assert (vecs1.getSizeof() == MappedFloat.SIZEOF);
 			assert (vecs1.getSizeof() * 1234 == vecs1.backingByteBuffer().capacity());
 			assert (MappedFloat.SIZEOF * 1234 == vecs1.backingByteBuffer().capacity());
+			assert(vecs1.capacity() == vecs1.backingByteBuffer().capacity() / MappedFloat.SIZEOF);
+
+			ByteBuffer buf = ByteBuffer.allocateDirect(200);
+			buf.position(10 * MappedFloat.SIZEOF);
+
+			MappedFloat vecs2 = MappedFloat.map(buf);
+			assert(vecs2.capacity() == (vecs2.backingByteBuffer().capacity() / MappedFloat.SIZEOF) - 10);
 		}
 
 		// manipulate 'mapped.value'

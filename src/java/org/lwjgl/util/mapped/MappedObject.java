@@ -133,6 +133,16 @@ public abstract class MappedObject {
 	}
 
 	/**
+	 * Returns the number of mapped objects that fit in the mapped buffer.
+	 *
+	 * @return the mapped object capacity
+	 */
+	public final int capacity() {
+		// No call-site modification for this, we override in every subclass instead.
+		throw new InternalError("type not registered");
+	}
+
+	/**
 	 * Creates a MappedObject instance, mapping the memory region of the specified direct ByteBuffer.
 	 * <p/>
 	 * The behavior of this (transformed) method does not follow the normal Java behavior.<br>
@@ -200,7 +210,7 @@ public abstract class MappedObject {
 
 	/**
 	 * Any code in the default constructor will not run automatically. This method
-	 * can be used to run execute that code on the current view.
+	 * can be used to execute that code on the current view.
 	 */
 	public final void runViewConstructor() {
 		// any method that calls this method will have its call-site modified
@@ -233,6 +243,18 @@ public abstract class MappedObject {
 	public final <T extends MappedObject> void copyRange(T target, int instances) {
 		// any method that calls this method will have its call-site modified
 		throw new InternalError("type not registered");
+	}
+
+	/**
+	 * Creates an {@link Iterable} <MappedObject> that will step through
+	 * <code>capacity()</code> views, leaving the <code>view</code> at
+	 * the last valid value.<br>
+	 * <p/>
+	 * For convenience you are encouraged to static-import this specific method:
+	 * <code>import static org.lwjgl.util.mapped.MappedObject.foreach;</code>
+	 */
+	public static <T extends MappedObject> Iterable<T> foreach(T mapped) {
+		return foreach(mapped, mapped.capacity());
 	}
 
 	/**

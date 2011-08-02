@@ -54,12 +54,6 @@ public final class CLContext extends CLObjectChild<CLPlatform> {
 	private final CLObjectRegistry<CLProgram> clPrograms;
 	private final CLObjectRegistry<CLEvent> clEvents;
 
-	/** Global registry for build callbacks. */
-	static final FastLongMap<CLProgram> clProgramsGlobal = new FastLongMap<CLProgram>();
-
-	/** Global registry for event callbacks. */
-	static final FastLongMap<CLEvent> clEventsGlobal = new FastLongMap<CLEvent>();
-
 	CLContext(final long pointer, final CLPlatform platform) {
 		super(pointer, platform);
 
@@ -70,8 +64,8 @@ public final class CLContext extends CLObjectChild<CLPlatform> {
 			clCommandQueues = new CLObjectRegistry<CLCommandQueue>();
 			clMems = new CLObjectRegistry<CLMem>();
 			clSamplers = new CLObjectRegistry<CLSampler>();
-			clPrograms = new CLObjectRegistryGlobal<CLProgram>(clProgramsGlobal);
-			clEvents = new CLObjectRegistryGlobal<CLEvent>(clEventsGlobal);
+			clPrograms = new CLObjectRegistry<CLProgram>();
+			clEvents = new CLObjectRegistry<CLEvent>();
 		} else {
 			clCommandQueues = null;
 			clMems = null;
@@ -274,9 +268,5 @@ public final class CLContext extends CLObjectChild<CLPlatform> {
 	CLObjectRegistry<CLProgram> getCLProgramRegistry() { return clPrograms; }
 
 	CLObjectRegistry<CLEvent> getCLEventRegistry() { return clEvents; }
-
-	static CLProgram getCLProgramGlobal(final long id) { return clProgramsGlobal.get(id); }
-
-	static CLEvent getCLEventGlobal(final long id) { return clEventsGlobal.get(id); }
 
 }
