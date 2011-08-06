@@ -31,6 +31,10 @@
  */
 package org.lwjgl;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedExceptionAction;
+import java.lang.UnsatisfiedLinkError;
 
 /**
  *
@@ -42,7 +46,21 @@ final class LinuxSysImplementation extends J2SESysImplementation {
 	private static final int JNI_VERSION = 19;
 
 	static {
-		java.awt.Toolkit.getDefaultToolkit(); // This will make sure libjawt.so is loaded
+		// Load libawt.so and libmawt.so, needed for libjawt.so
+		java.awt.Toolkit.getDefaultToolkit();
+		
+		// manually load libjawt.so into vm, needed since Java 7
+		AccessController.doPrivileged(new PrivilegedAction<Object>() {
+			public Object run() {
+				try {
+					System.loadLibrary("jawt");
+				} catch (UnsatisfiedLinkError e) {
+			        // catch and ignore an already loaded in another classloader 
+					// exception, as vm already has it loaded
+			    }
+				return null;
+			}
+		});
 	}
 
 	public int getRequiredJNIVersion() {
