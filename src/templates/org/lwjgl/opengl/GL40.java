@@ -184,7 +184,6 @@ public interface GL40 {
 	 */
 	int GL_MIN_SAMPLE_SHADING_VALUE = 0x8C37;
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 10.9)")
 	void glMinSampleShading(@GLclampf float value);
 
 	// ---------------------------------------------------------------------

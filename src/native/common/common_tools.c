@@ -120,7 +120,7 @@ void printfDebugJava(JNIEnv *env, const char *format, ...) {
 		org_lwjgl_LWJGLUtil_class = (*env)->FindClass(env, "org/lwjgl/LWJGLUtil");
 		if (org_lwjgl_LWJGLUtil_class == NULL)
 			return;
-		log_method = (*env)->GetStaticMethodID(env, org_lwjgl_LWJGLUtil_class, "log", "(Ljava/lang/String;)V");
+		log_method = (*env)->GetStaticMethodID(env, org_lwjgl_LWJGLUtil_class, "log", "(Ljava/lang/CharSequence;)V");
 		if (log_method == NULL)
 			return;
 		(*env)->CallStaticVoidMethod(env, org_lwjgl_LWJGLUtil_class, log_method, str);

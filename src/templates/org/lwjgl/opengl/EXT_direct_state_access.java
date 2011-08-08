@@ -520,11 +520,11 @@ public interface EXT_direct_state_access {
     value parameters
 	 */
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 10.9)")
+	@Optional(reason = "AMD does not expose this (last driver checked: 11.7)")
 	@Dependent("OpenGL30")
 	void glEnableClientStateiEXT(@GLenum int array, @GLuint int index);
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 10.9)")
+	@Optional(reason = "AMD does not expose this (last driver checked: 11.7)")
 	@Dependent("OpenGL30")
 	void glDisableClientStateiEXT(@GLenum int array, @GLuint int index);
 
@@ -566,7 +566,7 @@ public interface EXT_direct_state_access {
     and before state value parameters
 	 */
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 10.9)")
+	@Optional(reason = "AMD does not expose this (last driver checked: 11.7)")
 	@Dependent("OpenGL30")
 	@StripPostfix("params")
 	void glGetFloati_vEXT(@GLenum int pname, @GLuint int index, @OutParameter @Check("16") FloatBuffer params);
@@ -577,7 +577,7 @@ public interface EXT_direct_state_access {
 	@StripPostfix("params")
 	void glGetFloati_vEXT2(@GLenum int pname, @GLuint int index, @OutParameter FloatBuffer params);
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 10.9)")
+	@Optional(reason = "AMD does not expose this (last driver checked: 11.7)")
 	@Dependent("OpenGL30")
 	@StripPostfix("params")
 	void glGetDoublei_vEXT(@GLenum int pname, @GLuint int index, @OutParameter @Check("16") DoubleBuffer params);
@@ -588,7 +588,7 @@ public interface EXT_direct_state_access {
 	@StripPostfix("params")
 	void glGetDoublei_vEXT2(@GLenum int pname, @GLuint int index, @OutParameter DoubleBuffer params);
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 10.9)")
+	@Optional(reason = "AMD does not expose this (last driver checked: 11.7)")
 	@Dependent("OpenGL30")
 	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetPointeri_vEXT(@GLenum int pname, @GLuint int index, @Result @GLvoid ByteBuffer params);

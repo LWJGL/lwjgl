@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2010 LWJGL Project
+ * Copyright (c) 2002-2011 LWJGL Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,30 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.opencl;
+package org.lwjgl.opengl;
 
-import org.lwjgl.PointerBuffer;
-import org.lwjgl.util.generator.*;
-import org.lwjgl.util.generator.opencl.CLPlatformExtension;
-import org.lwjgl.util.generator.opencl.cl_int;
-import org.lwjgl.util.generator.opencl.cl_uint;
-
-import java.nio.IntBuffer;
-
-@CLPlatformExtension
-@Extension(postfix = "KHR", className = "KHRICD")
-public interface KHR_icd {
-
-	/** Accepted as &lt;param_name&gt; to the function clGetPlatformInfo */
-	int CL_PLATFORM_ICD_SUFFIX_KHR = 0x0920;
-
-	/** Returned by clGetPlatformIDs when no platforms are found */
-	int CL_PLATFORM_NOT_FOUND_KHR = -1001;
-
-	@Optional(reason = "AMD Stream does not expose this (version tested: 2.5)")
-	@cl_int
-	int clIcdGetPlatformIDsKHR(@AutoSize(value = "platforms", canBeNull = true) @cl_uint int num_entries,
-	                           @OutParameter @Check(canBeNull = true) @NativeType("cl_platform_id") PointerBuffer platforms,
-	                           @OutParameter @Check(value = "1", canBeNull = true) @cl_uint IntBuffer num_platforms);
-
+public interface ARB_conservative_depth {
 }

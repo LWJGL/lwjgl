@@ -87,7 +87,7 @@ public final class ContextAttribs {
 	public ContextAttribs(final int majorVersion, final int minorVersion) {
 		if ( majorVersion < 0 || 4 < majorVersion ||
 		     minorVersion < 0 ||
-		     (majorVersion == 4 && 1 < minorVersion) ||
+		     (majorVersion == 4 && 2 < minorVersion) ||
 		     (majorVersion == 3 && 3 < minorVersion) ||
 		     (majorVersion == 2 && 1 < minorVersion) ||
 		     (majorVersion == 1 && 5 < minorVersion) )
