@@ -31,6 +31,7 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.util.generator.Dependent;
 import org.lwjgl.util.generator.Reuse;
 import org.lwjgl.util.generator.opengl.GLenum;
 import org.lwjgl.util.generator.opengl.GLsizei;
@@ -54,5 +55,20 @@ public interface ARB_texture_storage {
 	void glTexStorage3D(@GLenum int target, @GLsizei int levels,
 	                    @GLenum int internalformat,
 	                    @GLsizei int width, @GLsizei int height, @GLsizei int depth);
+
+	@Dependent("EXT_direct_state_access")
+	void glTextureStorage1DEXT(@GLuint int texture, @GLenum int target, @GLsizei int levels,
+	                           @GLenum int internalformat,
+	                           @GLsizei int width);
+
+	@Dependent("EXT_direct_state_access")
+	void glTextureStorage2DEXT(@GLuint int texture, @GLenum int target, @GLsizei int levels,
+	                           @GLenum int internalformat,
+	                           @GLsizei int width, @GLsizei int height);
+
+	@Dependent("EXT_direct_state_access")
+	void glTextureStorage3DEXT(@GLuint int texture, @GLenum int target, @GLsizei int levels,
+	                           @GLenum int internalformat,
+	                           @GLsizei int width, @GLsizei int height, @GLsizei int depth);
 
 }
