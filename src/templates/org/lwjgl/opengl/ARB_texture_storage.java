@@ -35,7 +35,9 @@ import org.lwjgl.util.generator.Dependent;
 import org.lwjgl.util.generator.Reuse;
 import org.lwjgl.util.generator.opengl.GLenum;
 import org.lwjgl.util.generator.opengl.GLsizei;
+import org.lwjgl.util.generator.opengl.GLuint;
 
+@Dependent
 public interface ARB_texture_storage {
 
 	/** Accepted by the &lt;value&gt; parameter of GetTexParameter{if}v: */
