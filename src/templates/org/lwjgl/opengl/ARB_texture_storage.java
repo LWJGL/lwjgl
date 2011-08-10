@@ -31,6 +31,7 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.util.generator.Alias;
 import org.lwjgl.util.generator.Dependent;
 import org.lwjgl.util.generator.Reuse;
 import org.lwjgl.util.generator.opengl.GLenum;
@@ -38,6 +39,7 @@ import org.lwjgl.util.generator.opengl.GLsizei;
 import org.lwjgl.util.generator.opengl.GLuint;
 
 @Dependent
+@Alias(value = "EXT_texture_storage", postfix = "EXT")
 public interface ARB_texture_storage {
 
 	/** Accepted by the &lt;value&gt; parameter of GetTexParameter{if}v: */
