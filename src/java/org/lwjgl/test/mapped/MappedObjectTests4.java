@@ -34,10 +34,10 @@ package org.lwjgl.test.mapped;
 import org.lwjgl.MemoryUtil;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.util.mapped.MappedObject;
-import org.lwjgl.util.mapped.Pointer;
+import org.lwjgl.util.mapped.*;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 
 /** @author Riven */
@@ -143,6 +143,111 @@ public class MappedObjectTests4 {
 			assert (data.pointer == i * 1000);
 			assert (data.bar == i * 2);
 		}
+	}
+
+	@MappedType(cacheLinePadding = true)
+	public static class MappedCacheLinePadded extends MappedObject {
+
+		int foo;
+		int bar;
+
+	}
+
+	public static void testCacheLineAlignment() {
+		MappedCacheLinePadded data = MappedCacheLinePadded.malloc(10);
+
+		assert (data.backingByteBuffer().capacity() == 10 * CacheUtil.getCacheLineSize());
+		assert (MemoryUtil.getAddress(data.backingByteBuffer()) % CacheUtil.getCacheLineSize() == 0);
+
+		for ( int i = 0; i < 10; i++ ) {
+			data.view = i;
+
+			data.foo = i;
+			data.bar = i * 2;
+		}
+
+		for ( int i = 0; i < 10; i++ ) {
+			data.view = i;
+
+			assert (data.foo == i);
+			assert (data.bar == i * 2);
+		}
+	}
+
+	public static class MappedFieldCacheLinePadded extends MappedObject {
+
+		// If we assume CacheUtil.getCacheLineSize() == 64
+		// 0 - 63
+		@CacheLinePad long longBar;
+		// 64 - 71
+		long longFoo;
+		// 72 - 75
+		int  intFoo;
+		// 128 - 131
+		@CacheLinePad(before = true) int intBar;
+		// 192 - 195
+		int foo;
+		// 256 - 267
+		@CacheLinePad(before = true, after = false)
+		@MappedField(byteLength = 12)
+		ByteBuffer buffer;
+		// 268 - 271
+		int bar;
+
+	}
+
+	public static void testCacheLinePadding() {
+		MappedFieldCacheLinePadded data = MappedFieldCacheLinePadded.map(CacheUtil.createByteBuffer(10 * MappedFieldCacheLinePadded.SIZEOF));
+
+		final int sizeof =
+			CacheUtil.getCacheLineSize()
+			+ 8
+			+ (CacheUtil.getCacheLineSize() - 8)
+			+ CacheUtil.getCacheLineSize()
+			+ 4
+			+ (CacheUtil.getCacheLineSize() - 4)
+			+ 12
+			+ 4;
+
+		assert (MappedFieldCacheLinePadded.SIZEOF == sizeof);
+		assert (data.backingByteBuffer().capacity() == sizeof * 10);
+
+		for ( int i = 0; i < 10; i++ ) {
+			data.view = i;
+
+			data.longFoo = i * 1000000000L;
+			data.longBar = i * 2000000000L;
+			data.intFoo = i * 1000;
+			data.intBar = i * 2000;
+			data.foo = i;
+		}
+
+		for ( int i = 0; i < 10; i++ ) {
+			data.view = i;
+
+			assert (data.longFoo == i * 1000000000L);
+			assert (data.longBar == i * 2000000000L);
+			assert (data.intFoo == i * 1000);
+			assert (data.intBar == i * 2000);
+			assert (data.foo == i);
+		}
+	}
+
+	public static class POJOFieldCacheLinePadded {
+
+		@CacheLinePad long longBar;
+		long longFoo;
+		int  intFoo;
+		@CacheLinePad(before = true) int intBar;
+		int foo;
+		@CacheLinePad boolean bool;
+		int bar;
+
+	}
+
+	public static void testCacheLinePaddingPOJO() {
+		Field[] fields = new POJOFieldCacheLinePadded().getClass().getDeclaredFields();
+		assert (fields.length == (1 + 7) + 1 + 1 + (15 + 1 + 15) + 1 + (1 + 63) + 1);
 	}
 
 }

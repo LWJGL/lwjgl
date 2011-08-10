@@ -53,7 +53,7 @@ public @interface MappedField {
 	 *
 	 * @return the field byte offset
 	 */
-	long byteOffset();
+	long byteOffset() default -1;
 
 	/**
 	 * Specifies the field byte length. Required for {@link java.nio.ByteBuffer} fields.

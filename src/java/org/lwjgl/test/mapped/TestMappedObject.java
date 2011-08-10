@@ -52,6 +52,8 @@ public class TestMappedObject {
 		MappedObjectTransformer.register(MappedSomething.class);
 		MappedObjectTransformer.register(MappedObjectTests3.Xyz.class);
 		MappedObjectTransformer.register(MappedObjectTests4.MappedPointer.class);
+		MappedObjectTransformer.register(MappedObjectTests4.MappedCacheLinePadded.class);
+		MappedObjectTransformer.register(MappedObjectTests4.MappedFieldCacheLinePadded.class);
 
 		if ( MappedObjectClassLoader.fork(TestMappedObject.class, args) ) {
 			return;
@@ -75,6 +77,9 @@ public class TestMappedObject {
 		MappedObjectTests4.testLocalView();
 		//MappedObjectTests4.testLWJGL();
 		MappedObjectTests4.testPointer();
+		MappedObjectTests4.testCacheLineAlignment();
+		MappedObjectTests4.testCacheLinePadding();
+		MappedObjectTests4.testCacheLinePaddingPOJO();
 
 		System.out.println("done");
 	}

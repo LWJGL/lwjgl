@@ -60,6 +60,16 @@ public class MappedObjectTests3 {
 		assert (addr2 - addr1 == 4);
 		assert (mapped.capacity() == MappedSomething.SIZEOF - 4);
 
+		{
+			assert (some.shared == 0);
+			assert (mapped.getInt(8) == 0);
+
+			some.shared = 1234;
+
+			assert (some.shared == 1234);
+			assert (mapped.getInt(8) == 1234);
+		}
+
 		some.view++;
 		mapped = some.data; // creates new ByteBuffer instance
 

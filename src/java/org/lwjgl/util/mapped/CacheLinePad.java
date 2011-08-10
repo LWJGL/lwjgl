@@ -29,28 +29,38 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.test.mapped;
+package org.lwjgl.util.mapped;
 
-import org.lwjgl.util.mapped.MappedField;
-import org.lwjgl.util.mapped.MappedObject;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.nio.ByteBuffer;
+/**
+ * When this annotation is used on a field, automatic cache-line-sized padding
+ * will be inserted around the field. This is useful in multi-threaded algorithms
+ * to avoid cache line false sharing. The annotation defaults to padding after
+ * the field, but can be changed to before or both before and after. It can be
+ * applied to both mapped object fields and POJO primitive fields.
+ *
+ * @author Spasi
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface CacheLinePad {
 
-/** @author Riven */
-public class MappedSomething extends MappedObject {
+	/**
+	 * When true, cache-line padding will be inserted before the field.
+	 *
+	 * @return
+	 */
+	boolean before() default false;
 
-	@MappedField(byteOffset = 0)
-	public int used;
-
-	@MappedField(byteLength = 64 - 4) // optional byteOffset
-	public ByteBuffer data;
-
-	@MappedField(byteOffset = 12) // inside data
-	public int shared;
-
-	@Override
-	public String toString() {
-		return "MappedSomething[" + used + "]";
-	}
+	/**
+	 * When true, cache-line padding will be inserted after the field.
+	 *
+	 * @return
+	 */
+	boolean after() default true;
 
 }

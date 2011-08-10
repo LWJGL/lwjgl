@@ -449,12 +449,42 @@ public class LWJGLUtil {
 	 * Gets a boolean property as a privileged action.
 	 */
 	public static boolean getPrivilegedBoolean(final String property_name) {
-		Boolean value = AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
+		return AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
 			public Boolean run() {
 				return Boolean.getBoolean(property_name);
 			}
 		});
-		return value;
+	}
+
+	/**
+	 * Gets an integer property as a privileged action.
+	 *
+	 * @param property_name the integer property name
+	 *
+	 * @return the property value
+	 */
+	public static Integer getPrivilegedInteger(final String property_name) {
+		return AccessController.doPrivileged(new PrivilegedAction<Integer>() {
+			public Integer run() {
+				return Integer.getInteger(property_name);
+			}
+		});
+	}
+
+	/**
+	 * Gets an integer property as a privileged action.
+	 *
+	 * @param property_name the integer property name
+	 * @param default_val   the default value to use if the property is not defined
+	 *
+	 * @return the property value
+	 */
+	public static Integer getPrivilegedInteger(final String property_name, final int default_val) {
+		return AccessController.doPrivileged(new PrivilegedAction<Integer>() {
+			public Integer run() {
+				return Integer.getInteger(property_name, default_val);
+			}
+		});
 	}
 
 	/**

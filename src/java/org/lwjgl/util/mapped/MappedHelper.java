@@ -68,7 +68,7 @@ public class MappedHelper {
 		mo.baseAddress = mo.viewAddress = addr;
 	}
 
-	public static void checkAddress(MappedObject mapped, long viewAddress) {
+	public static void checkAddress(long viewAddress, MappedObject mapped) {
 		mapped.checkAddress(viewAddress);
 	}
 
@@ -317,7 +317,7 @@ public class MappedHelper {
 		return INSTANCE.getLong(addr);
 	}
 
-	public static long lget(MappedObject mapped, int fieldOffset) {
+	public static long jget(MappedObject mapped, int fieldOffset) {
 		return INSTANCE.getLong(mapped.viewAddress + fieldOffset);
 	}
 
@@ -333,7 +333,7 @@ public class MappedHelper {
 		return INSTANCE.getLongVolatile(null, addr);
 	}
 
-	public static long lvget(MappedObject mapped, int fieldOffset) {
+	public static long jvget(MappedObject mapped, int fieldOffset) {
 		return INSTANCE.getLongVolatile(null, mapped.viewAddress + fieldOffset);
 	}
 

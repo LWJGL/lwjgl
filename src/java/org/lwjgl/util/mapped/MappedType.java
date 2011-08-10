@@ -61,11 +61,26 @@ public @interface MappedType {
 
 	/**
 	 * The number of bytes to add to the total byte size.
-	 * SIZEOF will be calculated as <code>SIZEOF = max(field_offset + field_length) + padding</code>
+	 * SIZEOF will be calculated as <code>SIZEOF = max(field_offset + field_length) + padding</code>.
+	 * <p/>
+	 * Cannot be used with {@link #cacheLinePadding()}.
 	 *
 	 * @return the padding amount
 	 */
 	int padding() default 0;
+
+	/**
+	 * When true, SIZEOF will be increased (if necessary) so that it's a multiple of the CPU cache line size.
+	 * Additionally, {@link MappedObject#malloc(int)} on the mapped object type will automatically use
+	 * {@link CacheUtil#createByteBuffer(int)} instead of the unaligned {@link org.lwjgl.BufferUtils#createByteBuffer(int)}.
+	 * <p/>
+	 * Cannot be used with {@link #padding()}.
+	 *
+	 * @return if cache-line padding should be applied
+	 *
+	 * @see CacheUtil
+	 */
+	boolean cacheLinePadding() default false;
 
 	/**
 	 * The mapped data memory alignment, in bytes.

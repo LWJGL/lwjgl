@@ -48,11 +48,7 @@ import java.util.Arrays;
  */
 public class MappedObjectClassLoader extends URLClassLoader {
 
-	static final String MAPPEDOBJECT_PACKAGE_PREFIX;
-
-	static {
-		MAPPEDOBJECT_PACKAGE_PREFIX = MappedObjectClassLoader.class.getPackage().getName() + ".";
-	}
+	static final String MAPPEDOBJECT_PACKAGE_PREFIX = MappedObjectClassLoader.class.getPackage().getName() + ".";
 
 	static boolean FORKED;
 
@@ -115,28 +111,28 @@ public class MappedObjectClassLoader extends URLClassLoader {
 
 	@Override
 	protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-		if ( name.startsWith("java.") )
-			return super.loadClass(name, resolve);
-		if ( name.startsWith("javax.") )
-			return super.loadClass(name, resolve);
-
-		if ( name.startsWith("sun.") )
-			return super.loadClass(name, resolve);
-		if ( name.startsWith("sunw.") )
+		if ( name.startsWith("java.")
+		     || name.startsWith("javax.")
+		     || name.startsWith("sun.")
+		     || name.startsWith("sunw.")
+		     || name.startsWith("org.objectweb.asm.")
+			)
 			return super.loadClass(name, resolve);
 
-		if ( name.startsWith("org.objectweb.asm.") )
-			return super.loadClass(name, resolve);
+		final String className = name.replace('.', '/');
+		final boolean inThisPackage = name.startsWith(MAPPEDOBJECT_PACKAGE_PREFIX);
 
-		if ( name.equals(MappedObjectClassLoader.class.getName()) || name.equals((MappedObjectTransformer.class.getName())) )
+		if ( inThisPackage && (
+			name.equals(MappedObjectClassLoader.class.getName())
+			|| name.equals((MappedObjectTransformer.class.getName()))
+			|| name.equals((CacheUtil.class.getName()))
+		) )
 			return super.loadClass(name, resolve);
-
-		String className = name.replace('.', '/');
 
 		byte[] bytecode = readStream(this.getResourceAsStream(className.concat(".class")));
 
 		// Classes in this package do not get transformed, but need to go through here because we have transformed MappedObject.
-		if ( !(name.startsWith(MAPPEDOBJECT_PACKAGE_PREFIX) && name.substring(MAPPEDOBJECT_PACKAGE_PREFIX.length()).indexOf('.') == -1) ) {
+		if ( !(inThisPackage && name.substring(MAPPEDOBJECT_PACKAGE_PREFIX.length()).indexOf('.') == -1) ) {
 			long t0 = System.nanoTime();
 			final byte[] newBytecode = MappedObjectTransformer.transformMappedAPI(className, bytecode);
 			long t1 = System.nanoTime();

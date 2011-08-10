@@ -31,6 +31,7 @@
  */
 package org.lwjgl.util.mapped;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.MemoryUtil;
 import org.objectweb.asm.*;
@@ -79,6 +80,8 @@ public class MappedObjectTransformer {
 	static final String MAPPED_SET3_JVM  = jvmClassName(MappedSet3.class);
 	static final String MAPPED_SET4_JVM  = jvmClassName(MappedSet4.class);
 
+	static final String CACHE_LINE_PAD_JVM = "L" + jvmClassName(CacheLinePad.class) + ";";
+
 	// Public methods
 	static final String VIEWADDRESS_METHOD_NAME = "getViewAddress";
 	static final String NEXT_METHOD_NAME        = "next";
@@ -115,7 +118,7 @@ public class MappedObjectTransformer {
 			// => IADD
 			// => PUTFIELD MyMappedType.view
 			//
-			className_to_subtype.put(MAPPED_OBJECT_JVM, new MappedSubtypeInfo(MAPPED_OBJECT_JVM, null, -1, -1, -1));
+			className_to_subtype.put(MAPPED_OBJECT_JVM, new MappedSubtypeInfo(MAPPED_OBJECT_JVM, null, -1, -1, -1, false));
 		}
 
 		final String vmName = System.getProperty("java.vm.name");
@@ -145,30 +148,44 @@ public class MappedObjectTransformer {
 		final String className = jvmClassName(type);
 		final Map<String, FieldInfo> fields = new HashMap<String, FieldInfo>();
 
-		int advancingOffset = 0;
 		long sizeof = 0;
 		for ( Field field : type.getDeclaredFields() ) {
-			FieldInfo fieldInfo = registerField(mapped == null || mapped.autoGenerateOffsets(), className, advancingOffset, field);
+			FieldInfo fieldInfo = registerField(mapped == null || mapped.autoGenerateOffsets(), className, sizeof, field);
 			if ( fieldInfo == null )
 				continue;
 
 			fields.put(field.getName(), fieldInfo);
 
-			advancingOffset += fieldInfo.length;
-			sizeof = Math.max(sizeof, fieldInfo.offset + fieldInfo.length);
+			sizeof = Math.max(sizeof, fieldInfo.offset + fieldInfo.lengthPadded);
 		}
 
-		final int align = mapped == null ? 4 : mapped.align();
-		final int padding = mapped == null ? 0 : mapped.padding();
+		int align = 4;
+		int padding = 0;
+		boolean cacheLinePadded = false;
+
+		if ( mapped != null ) {
+			align = mapped.align();
+			if ( mapped.cacheLinePadding() ) {
+				if ( mapped.padding() != 0 )
+					throw new ClassFormatError("Mapped type padding cannot be specified together with cacheLinePadding.");
+
+				final int cacheLineMod = (int)(sizeof % CacheUtil.getCacheLineSize());
+				if ( cacheLineMod != 0 )
+					padding = CacheUtil.getCacheLineSize() - cacheLineMod;
+
+				cacheLinePadded = true;
+			} else
+				padding = mapped.padding();
+		}
 
 		sizeof += padding;
 
-		final MappedSubtypeInfo mappedType = new MappedSubtypeInfo(className, fields, (int)sizeof, align, padding);
+		final MappedSubtypeInfo mappedType = new MappedSubtypeInfo(className, fields, (int)sizeof, align, padding, cacheLinePadded);
 		if ( className_to_subtype.put(className, mappedType) != null )
 			throw new InternalError("duplicate mapped type: " + mappedType.className);
 	}
 
-	private static FieldInfo registerField(final boolean autoGenerateOffsets, final String className, int advancingOffset, final Field field) {
+	private static FieldInfo registerField(final boolean autoGenerateOffsets, final String className, long advancingOffset, final Field field) {
 		if ( Modifier.isStatic(field.getModifiers()) ) // static fields are never mapped
 			return null;
 
@@ -188,7 +205,6 @@ public class MappedObjectTransformer {
 			throw new ClassFormatError("The volatile keyword is not supported for @Pointer or ByteBuffer fields. Volatile field found: " + className + "." + field.getName() + ": " + field.getType());
 
 		// quick hack
-		long byteOffset = meta == null ? advancingOffset : meta.byteOffset();
 		long byteLength;
 		if ( field.getType() == long.class || field.getType() == double.class ) {
 			if ( pointer == null )
@@ -213,10 +229,36 @@ public class MappedObjectTransformer {
 		if ( field.getType() != ByteBuffer.class && (advancingOffset % byteLength) != 0 )
 			throw new IllegalStateException("misaligned mapped type: " + className + "." + field.getName());
 
+		CacheLinePad pad = field.getAnnotation(CacheLinePad.class);
+
+		long byteOffset = advancingOffset;
+		if ( meta != null && meta.byteOffset() != -1 ) {
+			if ( meta.byteOffset() < 0 )
+				throw new ClassFormatError("Invalid field byte offset: " + className + "." + field.getName() + " [byteOffset=" + meta.byteOffset() + "]");
+			if ( pad != null )
+				throw new ClassFormatError("A field byte offset cannot be specified together with cache-line padding: " + className + "." + field.getName());
+
+			byteOffset = meta.byteOffset();
+		}
+
+		long byteLengthPadded = byteLength;
+		if ( pad != null ) {
+			// Pad before
+			if ( pad.before() && byteOffset % CacheUtil.getCacheLineSize() != 0 )
+				byteOffset += CacheUtil.getCacheLineSize() - (byteOffset & (CacheUtil.getCacheLineSize() - 1));
+
+			// Pad after
+			if ( pad.after() && (byteOffset + byteLength) % CacheUtil.getCacheLineSize() != 0 )
+				byteLengthPadded += CacheUtil.getCacheLineSize() - (byteOffset + byteLength) % CacheUtil.getCacheLineSize();
+
+			assert !pad.before() || (byteOffset % CacheUtil.getCacheLineSize() == 0);
+			assert !pad.after() || ((byteOffset + byteLengthPadded) % CacheUtil.getCacheLineSize() == 0);
+		}
+
 		if ( PRINT_ACTIVITY )
 			LWJGLUtil.log(MappedObjectTransformer.class.getSimpleName() + ": " + className + "." + field.getName() + " [type=" + field.getType().getSimpleName() + ", offset=" + byteOffset + "]");
 
-		return new FieldInfo(byteOffset, byteLength, Type.getType(field.getType()), Modifier.isVolatile(field.getModifiers()), pointer != null);
+		return new FieldInfo(byteOffset, byteLength, byteLengthPadded, Type.getType(field.getType()), Modifier.isVolatile(field.getModifiers()), pointer != null);
 	}
 
 	/** Removes final from methods that will be overriden by subclasses. */
@@ -318,17 +360,12 @@ public class MappedObjectTransformer {
 				mv.visitInsn(I2L);
 				mv.visitInsn(LADD);
 				if ( MappedObject.CHECKS ) {
-					mv.visitVarInsn(LSTORE, 2);
+					mv.visitInsn(DUP2);
 					mv.visitVarInsn(ALOAD, 0);
-					mv.visitVarInsn(LLOAD, 2);
-					mv.visitMethodInsn(INVOKESTATIC, MAPPED_HELPER_JVM, "checkAddress", "(L" + MAPPED_OBJECT_JVM + ";J)V");
-					mv.visitVarInsn(LLOAD, 2);
+					mv.visitMethodInsn(INVOKESTATIC, MAPPED_HELPER_JVM, "checkAddress", "(JL" + MAPPED_OBJECT_JVM + ";)V");
 				}
 				mv.visitInsn(LRETURN);
-				if ( MappedObject.CHECKS )
-					mv.visitMaxs(3, 4);
-				else
-					mv.visitMaxs(3, 2);
+				mv.visitMaxs(3, 2);
 				mv.visitEnd();
 			}
 
@@ -477,7 +514,71 @@ public class MappedObjectTransformer {
 				return null;
 			}
 
-			return super.visitField(access, name, desc, signature, value);
+			if ( (access & ACC_STATIC) == 0 ) {
+				return new FieldNode(access, name, desc, signature, value) {
+					public void visitEnd() {
+						if ( visibleAnnotations == null ) { // early-out
+							accept(cv);
+							return;
+						}
+
+						boolean before = false;
+						boolean after = false;
+						int byteLength = 0;
+						for ( AnnotationNode pad : visibleAnnotations ) {
+							if ( CACHE_LINE_PAD_JVM.equals(pad.desc) ) {
+								if ( "J".equals(desc) || "D".equals(desc) )
+									byteLength = 8;
+								else if ( "I".equals(desc) || "F".equals(desc) )
+									byteLength = 4;
+								else if ( "S".equals(desc) || "C".equals(desc) )
+									byteLength = 2;
+								else if ( "B".equals(desc) || "Z".equals(desc) )
+									byteLength = 1;
+								else
+									throw new ClassFormatError("The @CacheLinePad annotation cannot be used on non-primitive fields: " + className + "." + name);
+
+								transformed = true;
+
+								after = true;
+								if ( pad.values != null ) {
+									for ( int i = 0; i < pad.values.size(); i += 2 ) {
+										final boolean value = pad.values.get(i + 1).equals(Boolean.TRUE);
+										if ( "before".equals(pad.values.get(i)) )
+											before = value;
+										else
+											after = value;
+									}
+								}
+								break;
+							}
+						}
+
+						/*
+							We make the fields public to force the JVM to keep the fields in the object.
+							Instead of using only longs or integers, we use the same type as the original
+							field. That's because modern JVMs usually reorder fields by type:
+							longs, then doubles, then integers, then booleans, etc. This way it's more
+							likely that the padding will work as expected.
+						 */
+
+						if ( before ) {
+							final int count = CacheUtil.getCacheLineSize() / byteLength - 1;
+							for ( int i = count; i >= 1; i-- )
+								cv.visitField(access | ACC_PUBLIC | ACC_SYNTHETIC, name + "$PAD_" + i, desc, signature, null);
+						}
+
+						accept(cv);
+
+						if ( after ) {
+							final int count = CacheUtil.getCacheLineSize() / byteLength - 1;
+							for ( int i = 1; i <= count; i++ )
+								cv.visitField(access | ACC_PUBLIC | ACC_SYNTHETIC, name + "$PAD" + i, desc, signature, null);
+						}
+					}
+				};
+			} else
+				return super.visitField(access, name, desc, signature, value);
 		}
 
 		@Override
@@ -762,7 +863,7 @@ public class MappedObjectTransformer {
 			// stack: sizeof, count
 			trg.add(new InsnNode(IMUL));
 			// stack: bytes
-			trg.add(new MethodInsnNode(INVOKESTATIC, jvmClassName(ByteBuffer.class), "allocateDirect", "(I)L" + jvmClassName(ByteBuffer.class) + ";"));
+			trg.add(new MethodInsnNode(INVOKESTATIC, mappedType.cacheLinePadded ? jvmClassName(CacheUtil.class) : jvmClassName(BufferUtils.class), "createByteBuffer", "(I)L" + jvmClassName(ByteBuffer.class) + ";"));
 			// stack: buffer
 		} else if ( mapDirectMethod ) {
 			// stack: capacity, address
@@ -1061,13 +1162,15 @@ public class MappedObjectTransformer {
 
 		final long    offset;
 		final long    length;
+		final long    lengthPadded;
 		final Type    type;
 		final boolean isVolatile;
 		final boolean isPointer;
 
-		FieldInfo(final long offset, final long length, final Type type, final boolean isVolatile, final boolean isPointer) {
+		FieldInfo(final long offset, final long length, final long lengthPadded, final Type type, final boolean isVolatile, final boolean isPointer) {
 			this.offset = offset;
 			this.length = length;
+			this.lengthPadded = lengthPadded;
 			this.type = type;
 			this.isVolatile = isVolatile;
 			this.isPointer = isPointer;
@@ -1083,14 +1186,15 @@ public class MappedObjectTransformer {
 
 		final String className;
 
-		final int sizeof;
-		final int sizeof_shift;
-		final int align;
-		final int padding;
+		final int     sizeof;
+		final int     sizeof_shift;
+		final int     align;
+		final int     padding;
+		final boolean cacheLinePadded;
 
 		final Map<String, FieldInfo> fields;
 
-		MappedSubtypeInfo(String className, Map<String, FieldInfo> fields, int sizeof, int align, int padding) {
+		MappedSubtypeInfo(String className, Map<String, FieldInfo> fields, int sizeof, int align, int padding, final boolean cacheLinePadded) {
 			this.className = className;
 
 			this.sizeof = sizeof;
@@ -1100,6 +1204,7 @@ public class MappedObjectTransformer {
 				this.sizeof_shift = 0;
 			this.align = align;
 			this.padding = padding;
+			this.cacheLinePadded = cacheLinePadded;
 
 			this.fields = fields;
 		}

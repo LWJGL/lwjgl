@@ -34,6 +34,7 @@ package org.lwjgl.util.mapped;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import sun.misc.Unsafe;
 
@@ -55,7 +56,7 @@ final class MappedObjectUnsafe {
 		if ( address <= 0L || capacity < 0 )
 			throw new IllegalStateException("you almost crashed the jvm");
 
-		ByteBuffer buffer = global.duplicate();
+		ByteBuffer buffer = global.duplicate().order(ByteOrder.nativeOrder());
 		INSTANCE.putLong(buffer, BUFFER_ADDRESS_OFFSET, address);
 		INSTANCE.putInt(buffer, BUFFER_CAPACITY_OFFSET, capacity);
 		buffer.position(0);

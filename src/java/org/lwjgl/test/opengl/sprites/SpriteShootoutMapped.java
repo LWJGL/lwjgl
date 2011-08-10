@@ -89,6 +89,8 @@ public final class SpriteShootoutMapped {
 	private int texBigID;
 	private int texSmallID;
 
+	long animateTime;
+
 	private SpriteShootoutMapped() {
 	}
 
@@ -312,6 +314,8 @@ public final class SpriteShootoutMapped {
 				long timeUsed = 5000 + (startTime - System.currentTimeMillis());
 				startTime = System.currentTimeMillis() + 5000;
 				System.out.println("FPS: " + (Math.round(fps / (timeUsed / 1000.0) * 10) / 10.0) + ", Balls: " + ballCount);
+				System.out.println("Animation: " + animateTime / fps);
+				animateTime = 0;
 				fps = 0;
 			}
 		}
@@ -414,8 +418,8 @@ public final class SpriteShootoutMapped {
 
 	public static class Sprite extends MappedObject {
 
-		public float x, dx;
-		public float y, dy;
+		public float dx, x;
+		public float dy, y;
 
 	}
 
@@ -527,8 +531,8 @@ public final class SpriteShootoutMapped {
 			final Sprite[] sprites = sprite.asArray();
 			final SpriteRender[] spritesRender = spriteRender.asArray();
 			for ( int b = ballIndex, r = 0, len = (ballIndex + batchSize); b < len; b++, r++ ) {
-				float x = sprites[b].x;
 				float dx = sprites[b].dx;
+				float x = sprites[b].x;
 
 				x += dx * delta;
 				if ( x < ballRadius ) {
@@ -539,12 +543,12 @@ public final class SpriteShootoutMapped {
 					dx = -dx;
 				}
 
-				sprites[b].x = x;
 				sprites[b].dx = dx;
+				sprites[b].x = x;
 				spritesRender[r].x = x;
 
-				float y = sprites[b].y;
 				float dy = sprites[b].dy;
+				float y = sprites[b].y;
 
 				y += dy * delta;
 				if ( y < ballRadius ) {
@@ -555,8 +559,8 @@ public final class SpriteShootoutMapped {
 					dy = -dy;
 				}
 
-				sprites[b].y = y;
 				sprites[b].dy = dy;
+				sprites[b].y = y;
 				spritesRender[r].y = y;
 			}
 		}
@@ -654,7 +658,11 @@ public final class SpriteShootoutMapped {
 				if ( animate ) {
 					final ByteBuffer buffer = animVBO.map(batchSize * (2 * 4));
 
+					long t0 = System.nanoTime();
 					animate(sprites, SpriteRender.<SpriteRender>map(buffer), ballSize, ballIndex, batchSize, delta);
+					long t1 = System.nanoTime();
+
+					animateTime += t1 - t0;
 
 					animVBO.unmap();
 				}

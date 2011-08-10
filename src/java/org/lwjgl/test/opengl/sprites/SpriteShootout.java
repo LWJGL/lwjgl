@@ -86,6 +86,8 @@ public final class SpriteShootout {
 	private int texBigID;
 	private int texSmallID;
 
+	long animateTime;
+
 	private SpriteShootout() {
 	}
 
@@ -276,6 +278,8 @@ public final class SpriteShootout {
 				long timeUsed = 5000 + (startTime - System.currentTimeMillis());
 				startTime = System.currentTimeMillis() + 5000;
 				System.out.println("FPS: " + (Math.round(fps / (timeUsed / 1000.0) * 10) / 10.0) + ", Balls: " + ballCount);
+				System.out.println("\tAnimation: " + (animateTime / fps / 1000) + "us");
+				animateTime = 0;
 				fps = 0;
 			}
 		}
@@ -582,7 +586,11 @@ public final class SpriteShootout {
 				if ( animate ) {
 					final ByteBuffer buffer = animVBO.map(batchSize * (2 * 4));
 
+					long t0 = System.nanoTime();
 					animate(transform, buffer.asFloatBuffer(), ballSize, ballIndex, batchSize, delta);
+					long t1 = System.nanoTime();
+
+					animateTime += t1 - t0;
 
 					animVBO.unmap();
 				}
