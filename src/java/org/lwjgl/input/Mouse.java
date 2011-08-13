@@ -362,8 +362,8 @@ public class Mouse {
 				y = poll_coord2;
 			}
                         if(clipMouseCoordinatesToWindow) {
-                            x = Math.min(implementation.getWidth() - 1, Math.max(0, x));
-                            y = Math.min(implementation.getHeight() - 1, Math.max(0, y));
+                            x = Math.min(Display.getWidth() - 1, Math.max(0, x));
+                            y = Math.min(Display.getHeight() - 1, Math.max(0, y));
                         }
                         dwheel += poll_dwheel;
 			read();
@@ -453,8 +453,8 @@ public class Mouse {
 					last_event_raw_y = new_event_y;
 				}
 				if(clipMouseCoordinatesToWindow) {
-					event_x = Math.min(implementation.getWidth() - 1, Math.max(0, event_x));
-					event_y = Math.min(implementation.getHeight() - 1, Math.max(0, event_y));
+					event_x = Math.min(Display.getWidth() - 1, Math.max(0, event_x));
+					event_y = Math.min(Display.getHeight() - 1, Math.max(0, event_y));
 				}
 				event_dwheel = readBuffer.getInt();
 				event_nanos = readBuffer.getLong();
