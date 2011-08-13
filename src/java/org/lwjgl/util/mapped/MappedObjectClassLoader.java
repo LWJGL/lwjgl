@@ -38,7 +38,6 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLClassLoader;
-import java.util.Arrays;
 
 /**
  * This classloader is responsible for applying the bytecode transformation to mapped objects.
@@ -167,7 +166,7 @@ public class MappedObjectClassLoader extends URLClassLoader {
 		try {
 			while ( true ) {
 				if ( bytecode.length == len )
-					bytecode = Arrays.copyOf(bytecode, len * 2);
+					bytecode = copyOf(bytecode, len * 2);
 				int got = in.read(bytecode, len, bytecode.length - len);
 				if ( got == -1 )
 					break;
@@ -182,7 +181,13 @@ public class MappedObjectClassLoader extends URLClassLoader {
 				// ignore...
 			}
 		}
-		return Arrays.copyOf(bytecode, len);
+		return copyOf(bytecode, len);
+	}
+
+	private static byte[] copyOf(byte[] original, int newLength) {
+		byte[] copy = new byte[newLength];
+		System.arraycopy(original, 0, copy, 0, Math.min(original.length, newLength));
+		return copy;
 	}
 
 }
