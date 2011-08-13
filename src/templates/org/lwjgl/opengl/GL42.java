@@ -127,6 +127,7 @@ public interface GL42 {
 	/** Returned in &lt;params&gt; by GetActiveUniform and GetActiveUniformsiv: */
 	int GL_UNSIGNED_INT_ATOMIC_COUNTER = 0x92DB;
 
+	@Optional(reason = "AMD's beta 4.2 driver (11.8) does not expose this")
 	@StripPostfix("params")
 	void glGetActiveAtomicCounterBufferiv(@GLuint int program, @GLuint int bufferIndex, @GLenum int pname, @Check("1") @OutParameter IntBuffer params);
 
