@@ -33,9 +33,11 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.MemoryUtil;
 import org.lwjgl.Sys;
 
 import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
@@ -187,8 +189,12 @@ public final class GLContext {
 		return 0;
 	}
 
-	/** Helper method to get a pointer to a named function in the OpenGL library */
-	static native long getFunctionAddress(String name);
+	/** Helper method to get a pointer to a named function in the OpenGL library. */
+	static long getFunctionAddress(String name) {
+		ByteBuffer buffer = MemoryUtil.encodeASCII(name);
+		return ngetFunctionAddress(MemoryUtil.getAddress(buffer));
+	}
+	private static native long ngetFunctionAddress(long name);
 
 	/**
 	 * Determine which extensions are available and returns the context profile mask. Helper method to ContextCapabilities.

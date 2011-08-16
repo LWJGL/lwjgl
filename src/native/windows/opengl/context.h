@@ -40,9 +40,7 @@
 #ifndef __LWJGL_CONTEXT_H
 #define __LWJGL_CONTEXT_H
 
-#include <windows.h>
-#include <jni.h>
-#include "common_tools.h"
+#include "Window.h"
 #include "extgl.h"
 #include "extgl_wgl.h"
 

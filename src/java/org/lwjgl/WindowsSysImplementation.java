@@ -31,6 +31,7 @@
  */
 package org.lwjgl;
 
+import java.nio.CharBuffer;
 import java.security.PrivilegedExceptionAction;
 import java.security.PrivilegedActionException;
 import java.security.AccessController;
@@ -95,9 +96,15 @@ final class WindowsSysImplementation extends DefaultSysImplementation {
 		if(!Display.isCreated()) {
 			initCommonControls();
 		}
-		nAlert(getHwnd(), title, message);
+
+		LWJGLUtil.log(String.format("*** Alert *** %s\n%s\n", title, message));
+
+		// Pack both strings in the same buffer
+		final CharBuffer buffer = MemoryUtil.encodeUTF16(title, message);
+		final long address = MemoryUtil.getAddress0(buffer);
+		nAlert(getHwnd(), address, address + (title.length() + 1) * 2);
 	}
-	private static native void nAlert(long parent_hwnd, String title, String message);
+	private static native void nAlert(long parent_hwnd, long title, long message);
 	private static native void initCommonControls();
 
 	public boolean openURL(final String url) {

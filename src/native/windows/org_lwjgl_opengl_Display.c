@@ -40,9 +40,9 @@
  */
 
 #define _PRIVATE_WINDOW_H_
-#include <windowsx.h>
 #include <malloc.h>
 #include "Window.h"
+#include <windowsx.h>
 /*#include "extgl_wgl.h"*/
 #include "common_tools.h"
 #include "display.h"
@@ -51,7 +51,7 @@
 #include "context.h"
 #include <commctrl.h>
 
-#define WINDOWCLASSNAME "LWJGL"
+#define WINDOWCLASSNAME _T("LWJGL")
 
 /*
  *	WindowProc for the GL window.
@@ -134,11 +134,9 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getDC(JNIEnv *env, 
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nSetTitle
-  (JNIEnv * env, jclass unused, jlong hwnd_ptr, jstring title_obj) {
+  (JNIEnv * env, jclass unused, jlong hwnd_ptr, jlong title) {
     HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
-	char * title = GetStringNativeChars(env, title_obj);
-	SetWindowText(hwnd, title);
-	free(title);
+	SetWindowText(hwnd, (LPCTSTR)(intptr_t)title);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nUpdate(JNIEnv * env, jclass class) {
@@ -429,22 +427,19 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_sendMessage
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setWindowLongPtr
   (JNIEnv *env, jclass clazz, jlong hwnd_ptr, jint nindex, jlong longPtr) {
-	
 	HWND hwnd		= (HWND)(INT_PTR)hwnd_ptr;
 	return SetWindowLongPtr(hwnd, nindex, (LONG_PTR) longPtr);
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getWindowLongPtr
   (JNIEnv *env, jclass clazz, jlong hwnd_ptr, jint nindex) {
-	
 	HWND hwnd		= (HWND)(INT_PTR)hwnd_ptr;
 	jlong result = GetWindowLongPtr(hwnd, nindex);
 	return result;
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setWindowPos
-  (JNIEnv *env, jclass clazz, jlong hwnd_ptr, jlong hwnd_after_ptr, jint x, jint y, jint width, jint height, jlong uflags) {	
-	
+  (JNIEnv *env, jclass clazz, jlong hwnd_ptr, jlong hwnd_after_ptr, jint x, jint y, jint width, jint height, jlong uflags) {
 	jboolean result;
 	HWND hwnd		= (HWND)(INT_PTR)hwnd_ptr;
 	HWND hwnd_after	= (HWND)(INT_PTR)hwnd_after_ptr;

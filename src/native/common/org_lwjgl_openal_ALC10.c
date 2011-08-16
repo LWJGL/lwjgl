@@ -131,24 +131,8 @@ static void JNICALL Java_org_lwjgl_openal_ALC10_nalcGetIntegerv (JNIEnv *env, jc
  * C Specification:
  * ALCdevice *alcOpenDevice( const ALubyte *tokstr );
  */
-static jlong JNICALL Java_org_lwjgl_openal_ALC10_nalcOpenDevice (JNIEnv *env, jclass clazz, jstring tokstr) {
-	char * tokenstring;
-	ALCdevice* device;
-
-	if(tokstr != NULL) {
-		tokenstring = GetStringNativeChars(env, tokstr);
-	} else {
-		tokenstring = NULL;
-	}
-
-	/* get device */
-	device = alcOpenDevice((ALubyte *) tokenstring);
-
-	if(tokenstring != NULL) {
-		free(tokenstring);
-	}
-
-	return (jlong)((intptr_t)device);
+static jlong JNICALL Java_org_lwjgl_openal_ALC10_nalcOpenDevice (JNIEnv *env, jclass clazz, jlong tokstr) {
+	return (jlong)(intptr_t)alcOpenDevice((ALubyte *)(intptr_t)tokstr);
 }
 
 /**
@@ -255,15 +239,8 @@ static jint JNICALL Java_org_lwjgl_openal_ALC10_nalcGetError (JNIEnv *env, jclas
  * C Specification:
  * ALboolean alcIsExtensionPresent(ALCdevice *device, ALubyte *extName);
  */
-static jboolean JNICALL Java_org_lwjgl_openal_ALC10_nalcIsExtensionPresent (JNIEnv *env, jclass clazz, jlong deviceaddress, jstring extName) {
-	/* get extension */
-	ALubyte* functionname = (ALubyte*) GetStringNativeChars(env, extName);
-
-	jboolean result = (jboolean) alcIsExtensionPresent((ALCdevice*)((intptr_t)deviceaddress), functionname);
-
-	free(functionname);
-
-	return result;
+static jboolean JNICALL Java_org_lwjgl_openal_ALC10_nalcIsExtensionPresent (JNIEnv *env, jclass clazz, jlong deviceaddress, jlong extName) {
+	return (jboolean) alcIsExtensionPresent((ALCdevice*)((intptr_t)deviceaddress), (ALubyte*)(intptr_t)extName);
 }
 
 /**
@@ -272,15 +249,8 @@ static jboolean JNICALL Java_org_lwjgl_openal_ALC10_nalcIsExtensionPresent (JNIE
  * C Specification:
  * ALenum alcGetEnumValue(ALCdevice *device, ALubyte *enumName);
  */
-static jint JNICALL Java_org_lwjgl_openal_ALC10_nalcGetEnumValue (JNIEnv *env, jclass clazz, jlong deviceaddress, jstring enumName) {
-	/* get extension */
-	ALubyte* enumerationname = (ALubyte*) GetStringNativeChars(env, enumName);
-
-	jint result = (jint) alcGetEnumValue((ALCdevice*)((intptr_t)deviceaddress), enumerationname);
-
-	free(enumerationname);
-
-	return result;
+static jint JNICALL Java_org_lwjgl_openal_ALC10_nalcGetEnumValue (JNIEnv *env, jclass clazz, jlong deviceaddress, jlong enumName) {
+	return (jint) alcGetEnumValue((ALCdevice*)((intptr_t)deviceaddress), (ALubyte*)(intptr_t)enumName);
 }
 
 /**
@@ -294,10 +264,10 @@ extern "C" {
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC10_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"nalcGetString", "(JI)Ljava/lang/String;", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetString, "alcGetString", (void*)&alcGetString},
-		{"nalcGetIntegerv", "(JIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetIntegerv, "alcGetIntegerv", (void*)&alcGetIntegerv},
-		{"nalcOpenDevice", "(Ljava/lang/String;)J", (void*)&Java_org_lwjgl_openal_ALC10_nalcOpenDevice, "alcOpenDevice", (void*)&alcOpenDevice},
+		{"nalcGetIntegerv", "(JIIJ)V", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetIntegerv, "alcGetIntegerv", (void*)&alcGetIntegerv},
+		{"nalcOpenDevice", "(J)J", (void*)&Java_org_lwjgl_openal_ALC10_nalcOpenDevice, "alcOpenDevice", (void*)&alcOpenDevice},
 		{"nalcCloseDevice", "(J)Z", (void*)&Java_org_lwjgl_openal_ALC10_nalcCloseDevice, "alcCloseDevice", (void*)&alcCloseDevice},
-		{"nalcCreateContext", "(JLjava/nio/IntBuffer;)J", (void*)&Java_org_lwjgl_openal_ALC10_nalcCreateContext, "alcCreateContext", (void*)&alcCreateContext},
+		{"nalcCreateContext", "(JJ)J", (void*)&Java_org_lwjgl_openal_ALC10_nalcCreateContext, "alcCreateContext", (void*)&alcCreateContext},
 		{"nalcMakeContextCurrent", "(J)I", (void*)&Java_org_lwjgl_openal_ALC10_nalcMakeContextCurrent, "alcMakeContextCurrent", (void*)&alcMakeContextCurrent},
 		{"nalcProcessContext", "(J)V", (void*)&Java_org_lwjgl_openal_ALC10_nalcProcessContext, "alcProcessContext", (void*)&alcProcessContext},
 		{"nalcGetCurrentContext", "()J", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetCurrentContext, "alcGetCurrentContext", (void*)&alcGetCurrentContext},
@@ -305,8 +275,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC10_initNativeStubs(JNIEnv *env, 
 		{"nalcSuspendContext", "(J)V", (void*)&Java_org_lwjgl_openal_ALC10_nalcSuspendContext, "alcSuspendContext", (void*)&alcSuspendContext},
 		{"nalcDestroyContext", "(J)V", (void*)&Java_org_lwjgl_openal_ALC10_nalcDestroyContext, "alcDestroyContext", (void*)&alcDestroyContext},
 		{"nalcGetError", "(J)I", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetError, "alcGetError", (void*)&alcGetError},
-		{"nalcIsExtensionPresent", "(JLjava/lang/String;)Z", (void*)&Java_org_lwjgl_openal_ALC10_nalcIsExtensionPresent, "alcIsExtensionPresent", (void*)&alcIsExtensionPresent},
-		{"nalcGetEnumValue", "(JLjava/lang/String;)I", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetEnumValue, "alcGetEnumValue", (void*)&alcGetEnumValue}
+		{"nalcIsExtensionPresent", "(JJ)Z", (void*)&Java_org_lwjgl_openal_ALC10_nalcIsExtensionPresent, "alcIsExtensionPresent", (void*)&alcIsExtensionPresent},
+		{"nalcGetEnumValue", "(JJ)I", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetEnumValue, "alcGetEnumValue", (void*)&alcGetEnumValue}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
 	extal_InitializeClass(env, clazz, num_functions, functions);

@@ -38,15 +38,13 @@ package org.lwjgl.opengl;
  * @author elias_naur
  */
 
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
+import java.nio.*;
 import java.awt.Canvas;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.MemoryUtil;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengles.EGL;
@@ -141,11 +139,11 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static final int SWP_FRAMECHANGED 	= 0x0020;
 
 	private static final int GWL_STYLE = -16;
-	private static final int GWL_EXSTYLE = -20; 
-	
+	private static final int GWL_EXSTYLE = -20;
+
 	private static final int WS_THICKFRAME 		= 0x00040000;
 
-	
+
 	private static WindowsDisplay current_display;
 
 	private static boolean cursor_clipped;
@@ -217,9 +215,9 @@ final class WindowsDisplay implements DisplayImplementation {
 			}
 			peer_info.initDC(getHwnd(), getHdc());
 			showWindow(getHwnd(), SW_SHOWDEFAULT);
-			
+
 			updateWidthAndHeight();
-			
+
 			if ( parent == null ) {
 				if(Display.isResizable()) {
 					setResizable(true);
@@ -233,7 +231,7 @@ final class WindowsDisplay implements DisplayImplementation {
 			throw e;
 		}
 	}
-	
+
 	private void updateWidthAndHeight() {
 		getClientRect(hwnd, rect_buffer);
 		rect.copyFromBuffer(rect_buffer);
@@ -440,9 +438,10 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static native DisplayMode getCurrentDisplayMode() throws LWJGLException;
 
 	public void setTitle(String title) {
-		nSetTitle(hwnd, title);
+		CharBuffer buffer = MemoryUtil.encodeUTF16(title);
+		nSetTitle(hwnd, MemoryUtil.getAddress0(buffer));
 	}
-	private static native void nSetTitle(long hwnd, String title);
+	private static native void nSetTitle(long hwnd, long title);
 
 	public boolean isCloseRequested() {
 		boolean saved = close_requested;
@@ -786,7 +785,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		byte state = (byte)(1 - ((lParam >>> 31) & 0x1));
 		boolean repeat = state == previous_state;
 		if (keyboard != null)
-			keyboard.handleChar((int)(wParam & 0xFF), millis, repeat);
+			keyboard.handleChar((int)(wParam & 0xFFFF), millis, repeat);
 	}
 
 	private void handleKeyButton(long wParam, long lParam, long millis) {
@@ -991,12 +990,12 @@ final class WindowsDisplay implements DisplayImplementation {
 	public boolean isInsideWindow() {
 		return mouseInside;
 	}
-	
+
 	public void setResizable(boolean resizable) {
 		if(this.resizable != resizable) {
 			long style = getWindowLongPtr(hwnd, GWL_STYLE);
 			long styleex = getWindowLongPtr(hwnd, GWL_EXSTYLE);
-			
+
 			// update frame style
 			if(resizable) {
 				setWindowLongPtr(hwnd, GWL_STYLE, style |= WS_THICKFRAME);
@@ -1010,16 +1009,16 @@ final class WindowsDisplay implements DisplayImplementation {
 			rect.copyFromBuffer(rect_buffer);
 			adjustWindowRectEx(rect_buffer, style, false, styleex);
 			rect.copyFromBuffer(rect_buffer);
-			
+
 			// force a frame update and resize accordingly
 			setWindowPos(hwnd, HWND_TOP, 0, 0, rect.right - rect.left, rect.bottom - rect.top, SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
-			
+
 			updateWidthAndHeight();
 			resized = false;
 		}
-		this.resizable = resizable;		
+		this.resizable = resizable;
 	}
-	
+
 	private native boolean adjustWindowRectEx(IntBuffer rectBuffer, long style, boolean menu, long styleex);
 
 	public boolean wasResized() {

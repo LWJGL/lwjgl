@@ -33,6 +33,8 @@ package org.lwjgl;
 
 import java.lang.reflect.Field;
 import java.nio.*;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 
 /**
  * [INTERNAL USE ONLY]
@@ -42,6 +44,16 @@ import java.nio.*;
  * @author Spasi
  */
 public final class MemoryUtil {
+
+	private static final CharsetEncoder textEncoder;
+
+	static {
+		CharsetEncoder encoder = Charset.defaultCharset().newEncoder();
+		if ( 1.0f < encoder.maxBytesPerChar() )
+			encoder = Charset.forName("ISO-8859-1").newEncoder();
+
+		textEncoder = encoder;
+	}
 
 	private static final Accessor memUtil;
 
@@ -90,10 +102,6 @@ public final class MemoryUtil {
 	}
 
 	private MemoryUtil() {
-	}
-
-	public static String wrap(final String test) {
-		return "MemoryUtil.getAddress(" + test + ")";
 	}
 
 	/**
@@ -178,6 +186,66 @@ public final class MemoryUtil {
 	public static long getAddressSafe(PointerBuffer buffer) { return buffer == null ? 0L : getAddress(buffer); }
 
 	public static long getAddressSafe(PointerBuffer buffer, int position) { return buffer == null ? 0L : getAddress(buffer, position); }
+
+	// --- [ String utilities ] ---
+
+	/**
+	 * Returns the specified text as a null-terminated CharBuffer.
+	 *
+	 * @param text the text to encode
+	 *
+	 * @return the encoded text
+	 */
+	public static CharBuffer encodeUTF16(final CharSequence text) {
+		CharBuffer buffer = BufferUtils.createCharBuffer(text.length() + 1);
+		buffer.append(text).append('\0');
+		buffer.flip();
+		return buffer;
+	}
+
+	/**
+	 * Returns the specified text array as a CharBuffer. The CharBuffer is packed
+	 * and each text is null-terminated.
+	 *
+	 * @param text the text array to encode
+	 *
+	 * @return the encoded text
+	 */
+	public static CharBuffer encodeUTF16(final CharSequence... text) {
+		int len = 0;
+		for ( CharSequence cs : text )
+			len += cs.length();
+
+		final CharBuffer buffer = BufferUtils.createCharBuffer(len + text.length);
+		for ( CharSequence cs : text )
+			buffer.append(cs).append('\0');
+
+		buffer.flip();
+		return buffer;
+	}
+
+	/**
+	 * Encodes and null-terminated the specified text and returns a ByteBuffer.
+	 * If text is null, null is returned.
+	 *
+	 * @param text the text to encode
+	 *
+	 * @return the encoded text or null
+	 *
+	 * @see String#getBytes()
+	 */
+	public static ByteBuffer encodeASCII(final CharSequence text) {
+		if ( text == null )
+			return null;
+
+		final ByteBuffer buffer = BufferUtils.createByteBuffer(text.length() + 1);
+
+		textEncoder.encode(CharBuffer.wrap(text), buffer, true);
+		buffer.put((byte)0);
+		buffer.flip();
+
+		return buffer;
+	}
 
 	interface Accessor {
 

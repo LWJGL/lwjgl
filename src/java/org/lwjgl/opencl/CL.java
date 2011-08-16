@@ -33,6 +33,7 @@ package org.lwjgl.opencl;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.MemoryUtil;
 import org.lwjgl.Sys;
 
 import java.nio.ByteBuffer;
@@ -143,7 +144,12 @@ public final class CL {
 		return 0;
 	}
 
-	static native long getFunctionAddress(String name);
+	/** Helper method to get a pointer to a named function in the OpenCL library. */
+	static long getFunctionAddress(String name) {
+		ByteBuffer buffer = MemoryUtil.encodeASCII(name);
+		return ngetFunctionAddress(MemoryUtil.getAddress(buffer));
+	}
+	private static native long ngetFunctionAddress(long name);
 
 	static native ByteBuffer getHostBuffer(final long address, final int size);
 

@@ -31,7 +31,7 @@
  */
 package org.lwjgl.openal;
 
-import java.nio.Buffer;
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 
@@ -199,7 +199,8 @@ public final class ALC10 {
 	 * @return opened device, or null
 	 */
 	public static ALCdevice alcOpenDevice(String devicename) {
-		long device_address = nalcOpenDevice(devicename);
+		ByteBuffer buffer = MemoryUtil.encodeASCII(devicename);
+		long device_address = nalcOpenDevice(MemoryUtil.getAddressSafe(buffer));
 		if(device_address != 0) {
 			ALCdevice device = new ALCdevice(device_address);
 			synchronized (ALC10.devices) {
@@ -209,7 +210,7 @@ public final class ALC10 {
 		}
 		return null;
 	}
-	static native long nalcOpenDevice(String devicename);
+	static native long nalcOpenDevice(long devicename);
 
 	/**
 	 * The <code>alcCloseDevice</code> function allows the application (i.e. the client program) to
@@ -395,11 +396,12 @@ public final class ALC10 {
 	 * @return true if extension is available, false if not
 	 */
 	public static boolean alcIsExtensionPresent(ALCdevice device, String extName) {
-		boolean result = nalcIsExtensionPresent(getDevice(device), extName);
+		ByteBuffer buffer = MemoryUtil.encodeASCII(extName);
+		boolean result = nalcIsExtensionPresent(getDevice(device), MemoryUtil.getAddress(buffer));
 		Util.checkALCError(device);
 		return result;
 	}
-	static native boolean nalcIsExtensionPresent(long device, String extName);
+	private static native boolean nalcIsExtensionPresent(long device, long extName);
 
 	/**
 	 * Enumeration/token values are device independend, but tokens defined for
@@ -412,11 +414,12 @@ public final class ALC10 {
 	 * @return value of enumeration
 	 */
 	public static int alcGetEnumValue(ALCdevice device, String enumName) {
-		int result = nalcGetEnumValue(getDevice(device), enumName);
+		ByteBuffer buffer = MemoryUtil.encodeASCII(enumName);
+		int result = nalcGetEnumValue(getDevice(device), MemoryUtil.getAddress(buffer));
 		Util.checkALCError(device);
 		return result;
 	}
-	static native int nalcGetEnumValue(long device, String enumName);
+	private static native int nalcGetEnumValue(long device, long enumName);
 
 	static long getDevice(ALCdevice device) {
 		if(device != null) {

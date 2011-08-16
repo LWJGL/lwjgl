@@ -60,18 +60,8 @@ static alcCaptureSamplesPROC alcCaptureSamples;
  * Method:    nalcCaptureOpenDevice
  * Signature: (Ljava/lang/String;III)J
  */
-static jlong JNICALL Java_org_lwjgl_openal_ALC11_nalcCaptureOpenDevice(JNIEnv *env, jclass clazz, jstring devicename, jint frequency, jint format, jint buffersize) {
-	ALubyte* dev_name = NULL;
-	ALCdevice* device = NULL;
-
-	if(devicename != NULL) {
-		dev_name = (ALubyte*) GetStringNativeChars(env, devicename);
-	}
-
-	device = alcCaptureOpenDevice((const char *)dev_name, (unsigned int) frequency, format, buffersize);
-
-	free(dev_name);
-	return (jlong) ((intptr_t)device);
+static jlong JNICALL Java_org_lwjgl_openal_ALC11_nalcCaptureOpenDevice(JNIEnv *env, jclass clazz, jlong devicename, jint frequency, jint format, jint buffersize) {
+	return (jlong)(intptr_t)alcCaptureOpenDevice((const char *)(intptr_t)devicename, (unsigned int) frequency, format, buffersize);
 }
 
 /*
@@ -121,11 +111,11 @@ extern "C" {
 #endif
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC11_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
-		{"nalcCaptureOpenDevice", "(Ljava/lang/String;III)J", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureOpenDevice, "alcCaptureOpenDevice", (void*)&alcCaptureOpenDevice},
+		{"nalcCaptureOpenDevice", "(JIII)J", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureOpenDevice, "alcCaptureOpenDevice", (void*)&alcCaptureOpenDevice},
 		{"nalcCaptureCloseDevice", "(J)Z", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureCloseDevice, "alcCaptureCloseDevice", (void*)&alcCaptureCloseDevice},
 		{"nalcCaptureStart", "(J)V", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureStart, "alcCaptureStart", (void*)&alcCaptureStart},
 		{"nalcCaptureStop", "(J)V", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureStop, "alcCaptureStop", (void*)&alcCaptureStop},
-		{"nalcCaptureSamples", "(JLjava/nio/ByteBuffer;II)V", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureSamples, "alcCaptureSamples", (void*)&alcCaptureSamples}
+		{"nalcCaptureSamples", "(JJI)V", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureSamples, "alcCaptureSamples", (void*)&alcCaptureSamples}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
 	extal_InitializeClass(env, clazz, num_functions, functions);

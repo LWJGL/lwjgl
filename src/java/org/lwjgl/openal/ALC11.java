@@ -92,7 +92,8 @@ public final class ALC11 {
 	 * @return ALCdevice if it was possible to open a device
 	 */
 	public static ALCdevice alcCaptureOpenDevice(String devicename, int frequency, int format, int buffersize) {
-		long device_address = nalcCaptureOpenDevice(devicename, frequency, format, buffersize);
+		ByteBuffer buffer = MemoryUtil.encodeASCII(devicename);
+		long device_address = nalcCaptureOpenDevice(MemoryUtil.getAddress(buffer), frequency, format, buffersize);
 		if(device_address != 0) {
 			ALCdevice device = new ALCdevice(device_address);
 			synchronized (ALC10.devices) {
@@ -102,7 +103,7 @@ public final class ALC11 {
 		}
 		return null;
 	}
-	static native long nalcCaptureOpenDevice( String devicename, int frequency, int format, int buffersize);
+	private static native long nalcCaptureOpenDevice(long devicename, int frequency, int format, int buffersize);
 
 	/**
 	 * The alcCaptureCloseDevice function allows the application to disconnect from a capture

@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -38,15 +38,14 @@
  */
 
 #include <malloc.h>
-#include <jni.h>
-#include "common_tools.h"
+#include "Window.h"
 #include "extgl.h"
 #include "extgl_wgl.h"
 #include "context.h"
 
 extern HINSTANCE dll_handle;                     // Handle to the LWJGL dll
 
-#define _CONTEXT_PRIVATE_CLASS_NAME "__lwjgl_context_class_name"
+#define _CONTEXT_PRIVATE_CLASS_NAME _T("__lwjgl_context_class_name")
 
 /*
  * Register the LWJGL window class.
@@ -85,7 +84,7 @@ bool applyPixelFormat(JNIEnv *env, HDC hdc, int iPixelFormat) {
 		return false;
 	}
 
-	// make that the pixel format of the device context 
+	// make that the pixel format of the device context
 	if (SetPixelFormat(hdc, iPixelFormat, &desc) == FALSE) {
 		throwFormattedException(env, "SetPixelFormat failed (%d)", GetLastError());
 		return false;
@@ -134,14 +133,14 @@ HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height
 	RECT clientSize;
 	DWORD exstyle, windowflags;
 	HWND new_hwnd;
-	
+
 	getWindowFlags(&windowflags, &exstyle, undecorated, child_window);
 
 	clientSize.bottom = height;
 	clientSize.left = 0;
 	clientSize.right = width;
 	clientSize.top = 0;
-	
+
 	AdjustWindowRectEx(
 	  &clientSize,    // client-rectangle structure
 	  windowflags,    // window styles
@@ -150,9 +149,9 @@ HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height
 	);
 	// Create the window now, using that class:
 	new_hwnd = CreateWindowEx (
-			exstyle, 
+			exstyle,
 			window_class_name,
-			"",
+			_T(""),
 			windowflags,
 			x, y, clientSize.right - clientSize.left, clientSize.bottom - clientSize.top,
 			parent,
@@ -191,12 +190,12 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extens
 	int num_aux_buffers = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "num_aux_buffers", "I"));
 	int accum_bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_bpp", "I"));
 	int accum_alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_alpha", "I"));
-	
+
 	jboolean stereo = (*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "stereo", "Z"));
 	jboolean floating_point = (*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
 	jboolean floating_point_packed = (*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point_packed", "Z"));
 	jboolean sRGB = (*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "sRGB", "Z"));
-	
+
 	int pixel_type;
 	int iPixelFormat;
 	unsigned int num_formats_returned;
@@ -206,18 +205,18 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extens
 	BOOL result;
 	jlong i;
 	int bpe = convertToBPE(bpp);
-	
+
 	if ( floating_point )
 		pixel_type = WGL_TYPE_RGBA_FLOAT_ARB;
 	else if ( floating_point_packed )
 		pixel_type = WGL_TYPE_RGBA_UNSIGNED_FLOAT_EXT;
 	else
 		pixel_type = WGL_TYPE_RGBA_ARB;
-		
+
 	initAttribList(&attrib_list);
 	if (window) {
 		putAttrib(&attrib_list, WGL_DRAW_TO_WINDOW_ARB); putAttrib(&attrib_list, TRUE);
-	} 
+	}
 	if (pbuffer) {
 		putAttrib(&attrib_list, WGL_DRAW_TO_PBUFFER_ARB); putAttrib(&attrib_list, TRUE);
 	}
@@ -299,31 +298,31 @@ static int findPixelFormatFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format, in
 	int accum_bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_bpp", "I"));
 	int accum_alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_alpha", "I"));
 	jboolean stereo = (*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "stereo", "Z"));
-	unsigned int flags = PFD_DRAW_TO_WINDOW |   // support window 
+	unsigned int flags = PFD_DRAW_TO_WINDOW |   // support window
 		PFD_SUPPORT_OPENGL |
 		(double_buffer ? PFD_DOUBLEBUFFER : 0) |
 		(stereo ? PFD_STEREO : 0);
 	PIXELFORMATDESCRIPTOR desc;
 	int iPixelFormat;
-	PIXELFORMATDESCRIPTOR pfd = { 
-		sizeof(PIXELFORMATDESCRIPTOR),   // size of this pfd 
-		1,                     // version number 
-		flags,         // RGBA type 
+	PIXELFORMATDESCRIPTOR pfd = {
+		sizeof(PIXELFORMATDESCRIPTOR),   // size of this pfd
+		1,                     // version number
+		flags,         // RGBA type
 		PFD_TYPE_RGBA,
-		(BYTE)bpp,       
-		0, 0, 0, 0, 0, 0,      // color bits ignored 
-		(BYTE)alpha,       
-		0,                     // shift bit ignored 
-		accum_bpp + accum_alpha,                     // no accumulation buffer 
-		0, 0, 0, 0,            // accum bits ignored 
-		(BYTE)depth,       
-		(BYTE)stencil,     
-		num_aux_buffers, 
+		(BYTE)bpp,
+		0, 0, 0, 0, 0, 0,      // color bits ignored
+		(BYTE)alpha,
+		0,                     // shift bit ignored
+		accum_bpp + accum_alpha,                     // no accumulation buffer
+		0, 0, 0, 0,            // accum bits ignored
+		(BYTE)depth,
+		(BYTE)stencil,
+		num_aux_buffers,
 		PFD_MAIN_PLANE,        // main layer
-		0,                     // reserved 
+		0,                     // reserved
 		0, 0, 0                // layer masks ignored
 	};
-	// get the best available match of pixel format for the device context  
+	// get the best available match of pixel format for the device context
 	iPixelFormat = ChoosePixelFormat(hdc, &pfd);
 	if (iPixelFormat == 0) {
 		throwException(env, "Failed to choose pixel format");
@@ -442,14 +441,14 @@ int findPixelFormatOnDC(JNIEnv *env, HDC hdc, int origin_x, int origin_y, jobjec
 	HDC dummy_hdc;
 	int pixel_format_id;
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
-	
+
 	int samples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "samples", "I"));
 	int colorSamples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "colorSamples", "I"));
 	bool floating_point = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point", "Z"));
 	bool floating_point_packed = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "floating_point_packed", "Z"));
 	bool sRGB = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "sRGB", "Z"));
 	bool use_arb_selection = samples > 0 || floating_point || floating_point_packed || sRGB || pbuffer || pixelFormatCaps != NULL;
-	
+
 	pixel_format_id = findPixelFormatDefault(env, hdc, pixel_format, use_hdc_bpp, double_buffer);
 	if (!(*env)->ExceptionOccurred(env) && use_arb_selection) {
 		dummy_hwnd = createDummyWindow(origin_x, origin_y);

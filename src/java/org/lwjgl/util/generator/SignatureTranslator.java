@@ -91,11 +91,13 @@ class SignatureTranslator implements TypeVisitor {
 		} else
 			type_name = t.getDeclaration().getQualifiedName();
 
-		signature.append("L");
-		signature.append(getNativeNameFromClassName(type_name));
-		signature.append(";");
-		if ( add_position_signature && Utils.isAddressableType(type) && !String.class.equals(type) )
-			signature.append("I");
+		if ( Utils.isAddressableType(type) && !String.class.equals(type) )
+			signature.append("J");
+		else {
+			signature.append("L");
+			signature.append(getNativeNameFromClassName(type_name));
+			signature.append(";");
+		}
 	}
 
 	public void visitDeclaredType(DeclaredType t) {

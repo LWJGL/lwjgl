@@ -42,13 +42,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opencl_CL_nDestroy(JNIEnv *env, jclass cla
 	extcl_UnloadLibrary();
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opencl_CL_getFunctionAddress(JNIEnv *env, jclass clazz, jstring function_name) {
-	jlong address_jlong;
-	char *function_name_pointer = GetStringNativeChars(env, function_name);
-	void *address = extcl_GetProcAddress(function_name_pointer);
-	free(function_name_pointer);
-	address_jlong = (jlong)(intptr_t)address;
-	return address_jlong;
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opencl_CL_ngetFunctionAddress(JNIEnv *env, jclass clazz, jlong function_name) {
+	return (jlong)(intptr_t)extcl_GetProcAddress((char *)(intptr_t)function_name);
 }
 
 JNIEXPORT jobject JNICALL Java_org_lwjgl_opencl_CL_getHostBuffer(JNIEnv *env, jclass clazz, jlong address, jint size) {
