@@ -1351,6 +1351,9 @@ public interface GL11 {
 	void glRotatef(float angle, float x, float y, float z);
 
 	@DeprecatedGL
+	void glRotated(double angle, double x, double y, double z);
+
+	@DeprecatedGL
 	int glRenderMode(@GLenum int mode);
 
 	@DeprecatedGL
