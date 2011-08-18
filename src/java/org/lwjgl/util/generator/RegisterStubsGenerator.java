@@ -41,8 +41,6 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-import org.lwjgl.opencl.CLMem;
-
 import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
 

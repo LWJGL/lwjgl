@@ -97,9 +97,8 @@ static glXGetProcAddressARBPROC lwjgl_glXGetProcAddressARB;
 static GLXExtensions symbols_flags;
 
 /** returns true if the extention is available */
-static bool GLXQueryExtension(Display *disp, int screen, const char *name) {
-	const GLubyte *exts = (const GLubyte *)lwjgl_glXQueryExtensionsString(disp, screen);
-	return extgl_QueryExtension(exts, name);
+static bool GLXQueryExtension(const GLubyte *serverExts, const GLubyte *clientExts, const char *name) {
+	return extgl_QueryExtension(clientExts, name) || extgl_QueryExtension(serverExts, name);
 }
 
 static void extgl_InitGLX13() {
@@ -184,17 +183,20 @@ static void extgl_InitGLXNVVideoCapture() {
 }
 
 static void extgl_InitGLXSupportedExtensions(Display *disp, int screen, GLXExtensions *extension_flags) {
-/*	extension_flags.GLX_EXT_visual_info = GLXQueryExtension(disp, screen, "GLX_EXT_visual_info");
-	extension_flags.GLX_EXT_visual_rating = GLXQueryExtension(disp, screen, "GLX_EXT_visual_rating");*/
-	extension_flags->GLX_SGI_swap_control = symbols_flags.GLX_SGI_swap_control && GLXQueryExtension(disp, screen, "GLX_SGI_swap_control");
-	extension_flags->GLX_ARB_multisample = GLXQueryExtension(disp, screen, "GLX_ARB_multisample");
-	extension_flags->GLX_ARB_fbconfig_float = GLXQueryExtension(disp, screen, "GLX_ARB_fbconfig_float");
-	extension_flags->GLX_EXT_fbconfig_packed_float = GLXQueryExtension(disp, screen, "GLX_EXT_fbconfig_packed_float");
-	extension_flags->GLX_ARB_framebuffer_sRGB = GLXQueryExtension(disp, screen, "GLX_ARB_framebuffer_sRGB") || GLXQueryExtension(disp, screen, "GLX_EXT_framebuffer_sRGB");
-	extension_flags->GLX_ARB_create_context = GLXQueryExtension(disp, screen, "GLX_ARB_create_context");
-	extension_flags->GLX_NV_multisample_coverage = GLXQueryExtension(disp, screen, "GLX_NV_multisample_coverage");
-	extension_flags->GLX_NV_present_video = GLXQueryExtension(disp, screen, "GLX_NV_present_video");
-	extension_flags->GLX_NV_video_capture = GLXQueryExtension(disp, screen, "GLX_NV_video_capture");
+	const GLubyte *serverExts = (const GLubyte *)lwjgl_glXQueryServerString(disp, screen, GLX_EXTENSIONS);
+	const GLubyte *clientExts = (const GLubyte *)lwjgl_glXGetClientString(disp, GLX_EXTENSIONS);
+
+/*	extension_flags.GLX_EXT_visual_info = GLXQueryExtension(serverExts, clientExts, "GLX_EXT_visual_info");
+	extension_flags.GLX_EXT_visual_rating = GLXQueryExtension(serverExts, clientExts, "GLX_EXT_visual_rating");*/
+	extension_flags->GLX_SGI_swap_control = symbols_flags.GLX_SGI_swap_control && GLXQueryExtension(serverExts, clientExts, "GLX_SGI_swap_control");
+	extension_flags->GLX_ARB_multisample = GLXQueryExtension(serverExts, clientExts, "GLX_ARB_multisample");
+	extension_flags->GLX_ARB_fbconfig_float = GLXQueryExtension(serverExts, clientExts, "GLX_ARB_fbconfig_float");
+	extension_flags->GLX_EXT_fbconfig_packed_float = GLXQueryExtension(serverExts, clientExts, "GLX_EXT_fbconfig_packed_float");
+	extension_flags->GLX_ARB_framebuffer_sRGB = GLXQueryExtension(serverExts, clientExts, "GLX_ARB_framebuffer_sRGB") || GLXQueryExtension(serverExts, clientExts, "GLX_EXT_framebuffer_sRGB");
+	extension_flags->GLX_ARB_create_context = GLXQueryExtension(serverExts, clientExts, "GLX_ARB_create_context");
+	extension_flags->GLX_NV_multisample_coverage = GLXQueryExtension(serverExts, clientExts, "GLX_NV_multisample_coverage");
+	extension_flags->GLX_NV_present_video = GLXQueryExtension(serverExts, clientExts, "GLX_NV_present_video");
+	extension_flags->GLX_NV_video_capture = GLXQueryExtension(serverExts, clientExts, "GLX_NV_video_capture");
 }
 
 bool extgl_Open(JNIEnv *env) {
