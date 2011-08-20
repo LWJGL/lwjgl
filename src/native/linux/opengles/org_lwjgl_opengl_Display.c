@@ -169,6 +169,13 @@ static bool isLegacyFullscreen(jint window_mode) {
 
 static void setWindowTitle(Display *disp, Window window, const char *title) {
 	XStoreName(disp, window, title);
+
+	// tell WM to use Unicode
+	XChangeProperty(disp, window,
+					XInternAtom(disp, "_NET_WM_NAME", False),
+					XInternAtom(disp, "UTF8_STRING", False),
+					8, PropModeReplace, (unsigned char *) title,
+					strlen(title));
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_openDisplay(JNIEnv *env, jclass clazz) {
