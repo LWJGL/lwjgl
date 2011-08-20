@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -72,8 +72,8 @@ static GLXWindow glx_window = None;
 
 static Colormap cmap;
 static int current_depth;
-static Pixmap current_icon_pixmap;	
-static Pixmap current_icon_mask_pixmap;	
+static Pixmap current_icon_pixmap;
+static Pixmap current_icon_mask_pixmap;
 
 static Visual *current_visual;
 
@@ -94,7 +94,7 @@ static int global_error_handler(Display *disp, XErrorEvent *error) {
 		jmethodID handler_method = (*env)->GetStaticMethodID(env, org_lwjgl_LinuxDisplay_class, "globalErrorHandler", "(JJJJJJJ)I");
 		if (handler_method == NULL)
 			return 0;
-		return (*env)->CallStaticIntMethod(env, org_lwjgl_LinuxDisplay_class, handler_method, (jlong)(intptr_t)disp, (jlong)(intptr_t)error, 
+		return (*env)->CallStaticIntMethod(env, org_lwjgl_LinuxDisplay_class, handler_method, (jlong)(intptr_t)disp, (jlong)(intptr_t)error,
 				(jlong)(intptr_t)error->display, (jlong)error->serial, (jlong)error->error_code, (jlong)error->request_code, (jlong)error->minor_code);
 	} else
 		return 0;
@@ -170,15 +170,16 @@ static bool isLegacyFullscreen(jint window_mode) {
 	return window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_LEGACY;
 }
 
-static void setWindowTitle(Display *disp, Window window, const char *title) {
-	XStoreName(disp, window, title);
+static void setWindowTitle(Display *disp, Window window, jlong title, jint len) {
+	// ASCII fallback if XChangeProperty fails.
+	XStoreName(disp, window, (const char *)(intptr_t)title);
 
-	// tell WM to use Unicode
+	// Set the UTF-8 encoded title
 	XChangeProperty(disp, window,
 					XInternAtom(disp, "_NET_WM_NAME", False),
 					XInternAtom(disp, "UTF8_STRING", False),
-					8, PropModeReplace, (unsigned char *) title,
-					strlen(title));
+					8, PropModeReplace, (const char *)(intptr_t)title,
+					len);
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_openDisplay(JNIEnv *env, jclass clazz) {
@@ -202,13 +203,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplayPeerInfo_initDefaultPee
 	Display *disp = (Display *)(intptr_t)display;
 	initPeerInfo(env, peer_info_handle, disp, screen, pixel_format, true, GLX_WINDOW_BIT, true, false);
 }
-  
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetTitle(JNIEnv * env, jclass clazz, jlong display, jlong window_ptr, jstring title_obj) {
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetTitle(JNIEnv * env, jclass clazz, jlong display, jlong window_ptr, jlong title, jint len) {
 	Display *disp = (Display *)(intptr_t)display;
 	Window window = (Window)window_ptr;
-	char * title = GetStringNativeChars(env, title_obj);
-	setWindowTitle(disp, window, title);
-	free(title);
+	setWindowTitle(disp, window, title, len);
 }
 
 static void freeIconPixmap(Display *disp) {
@@ -285,7 +284,7 @@ static void updateWindowHints(JNIEnv *env, Display *disp, Window window) {
 		throwException(env, "XAllocWMHints failed");
 		return;
 	}
-	
+
 	win_hints->flags = InputHint;
 	win_hints->input = True;
 	if (current_icon_pixmap != 0) {
@@ -321,10 +320,10 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 		attribs.override_redirect = True;
 	}
 	win = XCreateWindow(disp, parent, x, y, width, height, 0, vis_info->depth, InputOutput, vis_info->visual, attribmask, &attribs);
-	
+
 	current_depth = vis_info->depth;
 	current_visual = vis_info->visual;
-	
+
 	XFree(vis_info);
 	if (!checkXError(env, disp)) {
 		XFreeColormap(disp, cmap);
@@ -511,7 +510,7 @@ static Pixmap createPixmapFromBuffer(JNIEnv *env, Display *disp, Window window, 
 		throwException(env, "XCreateImage failed");
 		return None;
 	}
-	
+
 	GC gc = XCreateGC(disp, pixmap, 0, NULL);
 	XPutImage(disp, pixmap, gc, image, 0, 0, 0, 0, width, height);
 	XFreeGC(disp, gc);
@@ -530,7 +529,7 @@ static void setIcon(JNIEnv *env, Display *disp, Window window, char *rgb_data, i
 		freeIconPixmap(disp);
 		return;
 	}
-	
+
 	updateWindowHints(env, disp, window);
 }
 

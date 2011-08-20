@@ -167,15 +167,16 @@ static bool isLegacyFullscreen(jint window_mode) {
 	return window_mode == org_lwjgl_opengl_LinuxDisplay_FULLSCREEN_LEGACY;
 }
 
-static void setWindowTitle(Display *disp, Window window, const char *title) {
-	XStoreName(disp, window, title);
+static void setWindowTitle(Display *disp, Window window, jlong title, jint len) {
+	// ASCII fallback if XChangeProperty fails.
+	XStoreName(disp, window, (const char *)(intptr_t)title);
 
-	// tell WM to use Unicode
+	// Set the UTF-8 encoded title
 	XChangeProperty(disp, window,
 					XInternAtom(disp, "_NET_WM_NAME", False),
 					XInternAtom(disp, "UTF8_STRING", False),
-					8, PropModeReplace, (unsigned char *) title,
-					strlen(title));
+					8, PropModeReplace, (const char *)(intptr_t)title,
+					len);
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_openDisplay(JNIEnv *env, jclass clazz) {
@@ -197,12 +198,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplayPeerInfo_initDefaultPee
 	//initPeerInfo(env, peer_info_handle, disp, screen);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetTitle(JNIEnv * env, jclass clazz, jlong display, jlong window_ptr, jstring title_obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetTitle(JNIEnv * env, jclass clazz, jlong display, jlong window_ptr, jlong title, jint len) {
 	Display *disp = (Display *)(intptr_t)display;
 	Window window = (Window)window_ptr;
-	char * title = GetStringNativeChars(env, title_obj);
-	setWindowTitle(disp, window, title);
-	free(title);
+	setWindowTitle(disp, window, title, len);
 }
 
 static void freeIconPixmap(Display *disp) {

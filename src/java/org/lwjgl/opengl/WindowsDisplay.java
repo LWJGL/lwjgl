@@ -438,7 +438,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static native DisplayMode getCurrentDisplayMode() throws LWJGLException;
 
 	public void setTitle(String title) {
-		CharBuffer buffer = MemoryUtil.encodeUTF16(title);
+		ByteBuffer buffer = MemoryUtil.encodeUTF16(title);
 		nSetTitle(hwnd, MemoryUtil.getAddress0(buffer));
 	}
 	private static native void nSetTitle(long hwnd, long title);

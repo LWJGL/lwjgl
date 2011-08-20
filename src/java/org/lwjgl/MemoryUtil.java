@@ -33,26 +33,28 @@ package org.lwjgl;
 
 import java.lang.reflect.Field;
 import java.nio.*;
+import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CoderResult;
 
 /**
  * [INTERNAL USE ONLY]
  * <p/>
- * This class provides utility methods for passing buffer addresses to JNI API calls.
+ * This class provides utility methods for passing buffers to JNI API calls.
  *
  * @author Spasi
  */
 public final class MemoryUtil {
 
-	private static final CharsetEncoder textEncoder;
+	private static final Charset ascii;
+	private static final Charset utf8;
+	private static final Charset utf16;
 
 	static {
-		CharsetEncoder encoder = Charset.defaultCharset().newEncoder();
-		if ( 1.0f < encoder.maxBytesPerChar() )
-			encoder = Charset.forName("ISO-8859-1").newEncoder();
-
-		textEncoder = encoder;
+		ascii = Charset.forName("ISO-8859-1");
+		utf8 = Charset.forName("UTF-8");
+		utf16 = Charset.forName("UTF-16LE");
 	}
 
 	private static final Accessor memUtil;
@@ -190,42 +192,7 @@ public final class MemoryUtil {
 	// --- [ String utilities ] ---
 
 	/**
-	 * Returns the specified text as a null-terminated CharBuffer.
-	 *
-	 * @param text the text to encode
-	 *
-	 * @return the encoded text
-	 */
-	public static CharBuffer encodeUTF16(final CharSequence text) {
-		CharBuffer buffer = BufferUtils.createCharBuffer(text.length() + 1);
-		buffer.append(text).append('\0');
-		buffer.flip();
-		return buffer;
-	}
-
-	/**
-	 * Returns the specified text array as a CharBuffer. The CharBuffer is packed
-	 * and each text is null-terminated.
-	 *
-	 * @param text the text array to encode
-	 *
-	 * @return the encoded text
-	 */
-	public static CharBuffer encodeUTF16(final CharSequence... text) {
-		int len = 0;
-		for ( CharSequence cs : text )
-			len += cs.length();
-
-		final CharBuffer buffer = BufferUtils.createCharBuffer(len + text.length);
-		for ( CharSequence cs : text )
-			buffer.append(cs).append('\0');
-
-		buffer.flip();
-		return buffer;
-	}
-
-	/**
-	 * Encodes and null-terminated the specified text and returns a ByteBuffer.
+	 * Returns a ByteBuffer containing the specified text ASCII encoded and null-terminated.
 	 * If text is null, null is returned.
 	 *
 	 * @param text the text to encode
@@ -235,16 +202,116 @@ public final class MemoryUtil {
 	 * @see String#getBytes()
 	 */
 	public static ByteBuffer encodeASCII(final CharSequence text) {
+		return encode(text, ascii);
+	}
+
+	/**
+	 * Returns a ByteBuffer containing the specified text UTF-8 encoded and null-terminated.
+	 * If text is null, null is returned.
+	 *
+	 * @param text the text to encode
+	 *
+	 * @return the encoded text or null
+	 *
+	 * @see String#getBytes()
+	 */
+	public static ByteBuffer encodeUTF8(final CharSequence text) {
+		return encode(text, utf8);
+	}
+
+	/**
+	 * Returns a ByteBuffer containing the specified text UTF-16LE encoded and null-terminated.
+	 * If text is null, null is returned.
+	 *
+	 * @param text the text to encode
+	 *
+	 * @return the encoded text
+	 */
+	public static ByteBuffer encodeUTF16(final CharSequence text) {
+		return encode(text, utf16);
+	}
+
+	/**
+	 * Wraps the specified text in a null-terminated CharBuffer and encodes it using the specified Charset.
+	 *
+	 * @param text    the text to encode
+	 * @param charset the charset to use for encoding
+	 *
+	 * @return the encoded text
+	 */
+	private static ByteBuffer encode(final CharSequence text, final Charset charset) {
 		if ( text == null )
 			return null;
 
-		final ByteBuffer buffer = BufferUtils.createByteBuffer(text.length() + 1);
+		return encode(CharBuffer.wrap(new CharSequenceNT(text)), charset);
+	}
 
-		textEncoder.encode(CharBuffer.wrap(text), buffer, true);
-		buffer.put((byte)0);
-		buffer.flip();
+	/**
+	 * A {@link CharsetEncoder#encode(java.nio.CharBuffer)} implementation that uses {@link BufferUtils#createByteBuffer(int)}
+	 * instead of {@link ByteBuffer#allocate(int)}.
+	 *
+	 * @see CharsetEncoder#encode(java.nio.CharBuffer)
+	 */
+	private static ByteBuffer encode(final CharBuffer in, final Charset charset) {
+		final CharsetEncoder encoder = charset.newEncoder(); // encoders are not thread-safe, create a new one on every call
 
-		return buffer;
+		int n = (int)(in.remaining() * encoder.averageBytesPerChar());
+		ByteBuffer out = BufferUtils.createByteBuffer(n);
+
+		if ( n == 0 && in.remaining() == 0 )
+			return out;
+
+		encoder.reset();
+		while ( true ) {
+			CoderResult cr = in.hasRemaining() ? encoder.encode(in, out, true) : CoderResult.UNDERFLOW;
+			if ( cr.isUnderflow() )
+				cr = encoder.flush(out);
+
+			if ( cr.isUnderflow() )
+				break;
+
+			if ( cr.isOverflow() ) {
+				n = 2 * n + 1;    // Ensure progress; n might be 0!
+				ByteBuffer o = BufferUtils.createByteBuffer(n);
+				out.flip();
+				o.put(out);
+				out = o;
+				continue;
+			}
+
+			try {
+				cr.throwException();
+			} catch (CharacterCodingException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		out.flip();
+		return out;
+	}
+
+	/** A null-terminated CharSequence. */
+	private static class CharSequenceNT implements CharSequence {
+
+		final CharSequence source;
+
+		CharSequenceNT(CharSequence source) {
+			this.source = source;
+		}
+
+		public int length() {
+			return source.length() + 1;
+
+		}
+
+		public char charAt(final int index) {
+			return index == source.length() ? '\0' : source.charAt(index);
+
+		}
+
+		public CharSequence subSequence(final int start, final int end) {
+			return new CharSequenceNT(source.subSequence(start, Math.min(end, source.length())));
+		}
+
 	}
 
 	interface Accessor {
