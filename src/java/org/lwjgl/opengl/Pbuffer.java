@@ -217,11 +217,11 @@ public final class Pbuffer extends DrawableGL {
 		this.width = width;
 		this.height = height;
 		this.peer_info = createPbuffer(width, height, pixel_format, renderTexture);
-		Context shared_context;
+		Context shared_context = null;
+		if ( shared_drawable == null )
+			shared_drawable = Display.getDrawable(); // May be null
 		if (shared_drawable != null)
 			shared_context = ((DrawableLWJGL)shared_drawable).getContext();
-		else
-			shared_context = ((DrawableLWJGL)Display.getDrawable()).getContext(); // May be null
 		this.context = new ContextGL(peer_info, attribs, (ContextGL)shared_context);
 	}
 

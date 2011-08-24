@@ -38,7 +38,7 @@ package org.lwjgl.opengl;
  * <p/>
  * Instants of this class are immutable. An example of the expected way to set
  * the PixelFormat property values is the following:
- * <code>PixelFormat pf = new PixelFormat().withDepth(24).withSamples(4).withSRGB(true);</code>
+ * <code>PixelFormat pf = new PixelFormat().withDepthBits(24).withSamples(4).withSRGB(true);</code>
  * <p/>
  * WARNING: Some pixel formats are known to cause troubles on certain buggy drivers.
  * Example: Under Windows, specifying samples != 0 will enable the ARB
@@ -47,7 +47,6 @@ package org.lwjgl.opengl;
  * @author elias_naur@sourceforge.net
  * @version $Revision$
  */
-
 public final class PixelFormat implements PixelFormatLWJGL {
 
 	/**
