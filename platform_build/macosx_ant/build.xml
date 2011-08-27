@@ -20,7 +20,7 @@
 
 	<target name="compile">
 		<apply dir="${dstdir}" executable="${compiler}" os="Mac OS X" skipemptyfilesets="true" failonerror="true" dest="${dstdir}">
-			<arg line="${cflags} -ObjC -O2 -Wall -Wunused -c -fPIC -I${sdkroot}/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers -I${native}/common -I${native}/common/opengl -I${native}/macosx"/>
+			<arg line="${cflags} -ObjC -O2 -Wall -Wunused -c -fPIC -I${sdkroot}/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers -I${sdkroot}/System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks/JavaNativeFoundation.framework/Headers -I${native}/common -I${native}/common/opengl -I${native}/macosx"/>
 			<!-- Map from *.m and *.c to .o -->
 			<mapper type="regexp" from="^(.*)\.(c|m)" to="\1.o"/>
 			<fileset dir="${native}/macosx" includes="*.m"/>
@@ -35,7 +35,7 @@
 
 	<target name="link">
 		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
-			<arg line="${linkerflags} -exported_symbols_list ../lwjgl.symbols -dynamiclib -o ${libname} -framework Foundation -framework AppKit -framework JavaVM -framework Carbon"/>
+			<arg line="${linkerflags} -exported_symbols_list ../lwjgl.symbols -dynamiclib -o ${libname} -framework Foundation -framework AppKit -framework JavaVM -framework Carbon -framework OpenGL"/>
 			<fileset dir="${objdir}" includes="*.o"/>
 		</apply>
 		<apply dir="${objdir}" executable="strip" os="Mac OS X" failonerror="true">
@@ -45,9 +45,9 @@
 	</target>
 
 	<target name="nativelibrary" depends="init">
-		<property name="universal_sdkroot" location="/Developer/SDKs/MacOSX10.4u.sdk"/>
-		<property name="ppc_sdkroot" location="/Developer/SDKs/MacOSX10.4u.sdk"/>
-		<property name="x86_64_sdkroot" location="/Developer/SDKs/MacOSX10.5.sdk"/>
+		<property name="universal_sdkroot" location="/Developer/SDKs/MacOSX10.6.sdk"/>
+		<property name="ppc_sdkroot" location="/Developer/SDKs/MacOSX10.6.sdk"/>
+		<property name="x86_64_sdkroot" location="/Developer/SDKs/MacOSX10.6.sdk"/>
 		<property name="universal_flags" value="-isysroot ${universal_sdkroot}"/>
 		<property name="ppc_flags" value="-isysroot ${ppc_sdkroot}"/>
 		<antcall target="compile">
