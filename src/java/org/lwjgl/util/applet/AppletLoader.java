@@ -98,7 +98,7 @@ import java.util.zip.ZipFile;
  * The following applet parameters are required:
  * <ul>
  * <li>al_main - [String] Full package and class the applet to instantiate and display when loaded.</li>
- * <li>al_jars - [String] Comma seperated list of jars to download.</li>
+ * <li>al_jars - [String] Comma separated list of jars to download.</li>
  * <p>
  * <li>al_windows - [String] Jar containing native files for windows.</li>
  * <li>al_linux - [String] Jar containing native files for linux.</li>
@@ -110,19 +110,21 @@ import java.util.zip.ZipFile;
  * <p>
  * Additionally the following parameters can be supplied to tweak the behaviour of the AppletLoader.
  * <ul>
+ * <li>al_cache - [boolean] Whether to use cache system. <i>Default: true</i>.</li>
  * <li>al_version - [int or float] Version of deployment. If this is specified, the jars will be cached and
  * reused if the version matches. If version doesn't match all of the files are reloaded.</li>
- * <li>al_cache - [boolean] Whether to use cache system. <i>Default: true</i>.</li>
+ * 
  * <li>al_debug - [boolean] Whether to enable debug mode. <i>Default: false</i>.</li>
- * <li>al_prepend_host - [boolean] Whether to limit caching to this domain, disable if your applet is hosted on multple domains and needs to share the cache. <i>Default: true</i>.</li>
+ * <li>al_min_jre - [String] Specify the minimum jre version that the applet requires, should be in format like 1.6.0_24 or a subset like 1.6 <i>Default: 1.5</i>.</li>
+ * <li>al_prepend_host - [boolean] Whether to limit caching to this domain, disable if your applet is hosted on multiple domains and needs to share the cache. <i>Default: true</i>.</li>
  * <p>
  * <li>al_windows64 - [String] If specified it will be used instead of al_windows on 64bit windows systems.</li>
- * <li>al_windows32 - [String] If specifed it will be used instead of al_windows on 32bit windows systems.</li>
- * <li>al_linux64 - [String] If specifed it will be used instead of al_linux on 64bit linux systems.</li>
- * <li>al_linux32 - [String] If specifed it will be used instead of al_linux on 32bit linux systems.</li>
- * <li>al_mac32 - [String] If specifed it will be used instead of al_mac on 64bit mac systems.</li>
- * <li>al_mac64 - [String] If specifed it will be used instead of al_mac on 32bit mac systems.</li>
- * <li>al_macppc - [String] If specifed it will be used instead of al_mac on PPC mac systems.</li>
+ * <li>al_windows32 - [String] If specified it will be used instead of al_windows on 32bit windows systems.</li>
+ * <li>al_linux64 - [String] If specified it will be used instead of al_linux on 64bit linux systems.</li>
+ * <li>al_linux32 - [String] If specified it will be used instead of al_linux on 32bit linux systems.</li>
+ * <li>al_mac32 - [String] If specified it will be used instead of al_mac on 64bit mac systems.</li>
+ * <li>al_mac64 - [String] If specified it will be used instead of al_mac on 32bit mac systems.</li>
+ * <li>al_macppc - [String] If specified it will be used instead of al_mac on PPC mac systems.</li>
  * <p>
  * <li>boxbgcolor - [String] any String AWT color ("red", "blue", etc), RGB (0-255) or hex formated color (#RRGGBB) to use as background. <i>Default: #ffffff</i>.</li>
  * <li>boxfgcolor - [String] any String AWT color ("red", "blue", etc), RGB (0-255) or hex formated color (#RRGGBB) to use as foreground. <i>Default: #000000</i>.</li>
@@ -144,7 +146,6 @@ import java.util.zip.ZipFile;
  * <li>Bobjob</li>
  * <li>Dashiva</li>
  * <li>Dr_evil</li>
- * <li>Elias Naur</li>
  * <li>Kevin Glass</li>
  * <li>Matthias Mann</li>
  * <li>Mickelukas</li>
@@ -160,36 +161,39 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/** initializing */
 	public static final int STATE_INIT 						= 1;
+	
+	/** checking version of jre */
+	public static final int STATE_CHECK_JRE_VERSION			= 2;
 
 	/** determining which packages that are required */
-	public static final int STATE_DETERMINING_PACKAGES 		= 2;
+	public static final int STATE_DETERMINING_PACKAGES 		= 3;
 
 	/** checking for already downloaded files */
-	public static final int STATE_CHECKING_CACHE 			= 3;
+	public static final int STATE_CHECKING_CACHE 			= 4;
 
 	/** downloading packages */
-	public static final int STATE_DOWNLOADING 				= 4;
+	public static final int STATE_DOWNLOADING 				= 5;
 
 	/** extracting packages */
-	public static final int STATE_EXTRACTING_PACKAGES 		= 5;
+	public static final int STATE_EXTRACTING_PACKAGES 		= 6;
 	
 	/** validating packages */
-	public static final int STATE_VALIDATING_PACKAGES 		= 6;
+	public static final int STATE_VALIDATING_PACKAGES 		= 7;
 
 	/** updating the classpath */
-	public static final int STATE_UPDATING_CLASSPATH 		= 7;
+	public static final int STATE_UPDATING_CLASSPATH 		= 8;
 
 	/** switching to real applet */
-	public static final int STATE_SWITCHING_APPLET 			= 8;
+	public static final int STATE_SWITCHING_APPLET 			= 9;
 
 	/** initializing real applet */
-	public static final int STATE_INITIALIZE_REAL_APPLET	= 9;
+	public static final int STATE_INITIALIZE_REAL_APPLET	= 10;
 
 	/** stating real applet */
-	public static final int STATE_START_REAL_APPLET 		= 10;
+	public static final int STATE_START_REAL_APPLET 		= 11;
 
 	/** done */
-	public static final int STATE_DONE 						= 11;
+	public static final int STATE_DONE 						= 12;
 
 	/** used to calculate length of progress bar */
 	protected int		percentage;
@@ -239,9 +243,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/** applet to load after all downloads are complete */
 	protected Applet	lwjglApplet;
 
-	/** whether a fatal error occured */
-	protected boolean	fatalError;
-
 	/** whether we're running in debug mode */
 	protected boolean 	debugMode;
 
@@ -280,19 +281,33 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/** messages to be passed via liveconnect in headless mode */
 	protected String[] 	headlessMessage;
+	
+	/** whether a fatal error occurred */
+	protected boolean	fatalError;
+	
+	/** whether a certificate refused error occurred */
+	protected boolean	certificateRefused;
+	
+	/** whether the minimum required JRE version is not found */
+	protected boolean	minimumJreNotFound;
 
 	/** generic error message to display on error */
 	protected String[] 	genericErrorMessage = {	"An error occured while loading the applet.",
 												"Please contact support to resolve this issue.",
 												"<placeholder for error message>"};
 
-	/** whether a certificate refused error occured */
-	protected boolean	certificateRefused;
-
-	/** error message to display if user refuses to accept certicate*/
+	/** error message to display if user refuses to accept certificate*/
 	protected String[] 	certificateRefusedMessage = { "Permissions for Applet Refused.",
 												      "Please accept the permissions dialog to allow",
 												      "the applet to continue the loading process."};
+	
+	/** error message to display if minimum JRE version is not met */
+	protected String[] 	minimumJREMessage = { "Your version of Java is out of date.",
+											  "Visit java.com to get the latest version.",
+											  "Java <al_min_jre> or greater is required."};
+	
+	/** fatal error message to display */
+	protected String[]	errorMessage;
 
 	/** have natives been loaded by another instance of this applet */
 	protected static boolean natives_loaded;
@@ -439,6 +454,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * This method will return the current progress of the AppletLoader
 	 * as a value from 0-100. In the case of a fatal error it will
 	 * return -1. If the certificate is refused it will return -2.
+	 * If the minimum jre requirement is not met will return -3.
 	 * 
 	 * When method returns 100 the AppletLoader will sleep until the 
 	 * method is called again. When called again it will switch to the
@@ -447,8 +463,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	public int getStatus() {
 		if (fatalError) {
+			headlessMessage = errorMessage;
+			
 			if (certificateRefused) return -2;
-			headlessMessage = (certificateRefused) ? certificateRefusedMessage : genericErrorMessage;
+			if (minimumJreNotFound) return -3;
 			return -1;
 		}
 		
@@ -497,6 +515,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			cleanUp(); // clean up resources
 			return;
 		}
+		
+		// no drawing in headless mode
+		if (headless) return;
 
 		// create offscreen if missing
 		if (offscreen == null) {
@@ -529,12 +550,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		og.fillRect(0, 0, offscreen.getWidth(null), offscreen.getHeight(null));
 
 		og.setColor(fgColor);
-		String message = getDescriptionForState();
-
+		
 		// if we had a failure of some sort, notify the user
 		if (fatalError) {
-			String[] errorMessage = (certificateRefused) ? certificateRefusedMessage : genericErrorMessage;
-
 			for(int i=0; i<errorMessage.length; i++) {
 				if(errorMessage[i] != null) {
 					int messageX = (offscreen.getWidth(null) - fm.stringWidth(errorMessage[i])) / 2;
@@ -543,7 +561,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 					og.drawString(errorMessage[i], messageX, messageY + i*fm.getHeight());
 				}
 			}
-		} else if (!headless) {
+		} else {
 			og.setColor(fgColor);
 
 			painting = true;
@@ -558,6 +576,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			}
 
 			// draw message
+			String message = getDescriptionForState();
+			
 			int messageX = (offscreen.getWidth(null) - fm.stringWidth(message)) / 2;
 			int messageY = y + 20;
 
@@ -572,7 +592,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				og.drawString(subtaskMessage, messageX, messageY+20);
 			}
 
-			// draw loading bar, clipping it depending on percentage done
+			// draw loading progress bar, clipping it depending on percentage done
 			if (progressbar != null) {
 				int barSize = (progressbar.getWidth(null) * percentage) / 100;
 				og.clipRect(x-progressbar.getWidth(null)/2, 0, barSize, offscreen.getHeight(null));
@@ -636,6 +656,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		switch (state) {
 			case STATE_INIT:
 				return "Initializing loader";
+			case STATE_CHECK_JRE_VERSION:
+				return "Checking version";
 			case STATE_DETERMINING_PACKAGES:
 				return "Determining packages to load";
 			case STATE_CHECKING_CACHE:
@@ -772,24 +794,30 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * 8 steps
+	 * 9 steps
 	 *
-	 * 1) check applet cache and decide whether to download jars
-	 * 2) download the jars
-	 * 3) extract native files
-	 * 4) validate jars for any corruption
-	 * 5) save applet cache information
-	 * 6) add jars to class path
-	 * 7) set any lwjgl properties
-	 * 8) switch to loaded applet
+	 * 1) check jre version meets minimum requirements
+	 * 2) check applet cache and decide which jars to download
+	 * 3) download the jars
+	 * 4) extract native files
+	 * 5) validate jars for any corruption
+	 * 6) save applet cache information
+	 * 7) add jars to class path
+	 * 8) set any lwjgl properties
+	 * 9) switch to loaded applet
 	 */
 	public void run() {
-		setState(STATE_CHECKING_CACHE);
-
- 		percentage = 5;
+		percentage = 5;
 
  		try {
 			debug_sleep(2000);
+			
+			// check JRE version meets minimum requirements
+			if (!isMinJREVersionAvailable()) {
+				minimumJreNotFound = true;
+				fatalErrorOccured("Java " + getStringParameter("al_min_jre", "1.5") + " or greater is required.", null);
+				return;
+			}
 
 			// parse the urls for the jars into the url list
 			loadJarURLs();
@@ -809,12 +837,14 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			// if specified applet version already available don't download anything
 			boolean versionAvailable = false;
 
-			// version string of applet
+			// version of applet
 			String version = getParameter("al_version");
-			
+			float latestVersion = 0;
+
 			// if applet version specifed, compare with version in the cache
 			if (version != null) {
-				versionAvailable = compareVersion(versionFile, version.toLowerCase());
+				latestVersion = Float.parseFloat(version);
+				versionAvailable = compareVersion(versionFile, latestVersion);
 			}
 
 			// if jars not available or need updating download them
@@ -837,7 +867,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				// save version information once jars downloaded successfully
 				if (version != null) {
 					percentage = 90;
-					writeObjectFile(versionFile, version.toLowerCase());
+					writeObjectFile(versionFile, latestVersion);
 				}
 
 				// save file names with last modified info once downloaded successfully
@@ -871,8 +901,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			});
 			
 		} catch (AccessControlException ace) {
-			fatalErrorOccured(ace.getMessage(), ace);
 			certificateRefused = true;
+			fatalErrorOccured(ace.getMessage(), ace);
 		} catch (Exception e) {
 			fatalErrorOccured("This occurred while '" + getDescriptionForState() + "'", e);
 		} finally {
@@ -881,24 +911,69 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 	
 	/**
+	 * When this method is supplied with a JRE version it will compare it to the
+	 * current JRE version.
+	 * 
+	 * minimum requried JRE version is set using al_min_jre parameter, if not 
+	 * this is not set then the value will default to version 1.5
+	 * 
+	 * The minimumVersion should follow a structure such as x.x.x_x
+	 * Example values would include 1.6.0_10 or a subset like 1.6.0 or 1.6
+	 * 
+	 * @return returns true if the available version is greater or equal to the 
+	 * minimum version required
+	 * 
+	 * @throws Exception a NumberFormatException is thrown if the string is not valid
+	 */
+	public boolean isMinJREVersionAvailable() throws Exception {
+		setState(STATE_CHECK_JRE_VERSION);
+		
+		String minimumVersion = getStringParameter("al_min_jre", "1.5");
+		String javaVersion = System.getProperty("java.version");
+		
+		// split version string into a string arrays
+		String[] jvmVersionData = javaVersion.split("[_\\.]");
+		String[] minVersionData = minimumVersion.split("[_\\.]");
+		
+		int maxLength = Math.max(jvmVersionData.length, minVersionData.length);
+		
+		// convert string arrays into int arrays
+		int[] jvmVersion = new int[maxLength];
+		int[] minVersion = new int[maxLength];
+		
+		for (int i = 0; i < jvmVersionData.length; i++) {
+			jvmVersion[i] = Integer.parseInt(jvmVersionData[i]);
+		}
+		
+		for (int i = 0; i < minVersionData.length; i++) {
+			minVersion[i] = Integer.parseInt(minVersionData[i]);
+		}
+		
+		// compare versions
+		for (int i = 0; i < maxLength; i++) {
+			if (jvmVersion[i] < minVersion[i]) return false; // minVersion is greater then jvmVersion
+		}
+		
+		return true;
+	}
+	
+	/**
 	 * This method will return true if the version stored in the file
-	 * matches the supplied String version.
+	 * matches the supplied float version.
 	 * 
 	 * @param versionFile - location to file containing version information
-	 * @param version - String version that needs to be compared
+	 * @param version - float version that needs to be compared
 	 * @return returns true if the version in file matches specified version
 	 */
-	protected boolean compareVersion(File versionFile, String version) {
+	protected boolean compareVersion(File versionFile, float version) {
 		// if version file exists
 		if (versionFile.exists()) {
-			String s = readStringFile(versionFile);
-			
 			// compare to version with file
-			if (s != null && s.equals(version)) {
+			if (version == readFloatFile(versionFile)) {
 				percentage = 90; // not need to download cache files again
 
 				if(debugMode) {
-					System.out.println("Loading Cached Applet Version: " + version);
+					System.out.println("Loading Cached Applet Version " + version);
 				}
 				debug_sleep(2000);
 				
@@ -981,21 +1056,22 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * read String object from File
+	 * read float from File
 	 *
 	 * @param file to be read
-	 * @return the String stored in the file or null if it fails
+	 * @return the float stored in the file or 0 if it fails
 	 */
-	protected String readStringFile(File file) {
+	protected float readFloatFile(File file) {
 		try {
-			return (String)readObjectFile(file);
+			Float version = (Float)readObjectFile(file);
+			return version.floatValue();
 		} catch (Exception e) {
 			// failed to read version file
 			e.printStackTrace();
 		}
 		
-		// return null if failed to read file
-		return null;
+		// return 0 if failed to read file
+		return 0;
 	}
 	
 	/**
@@ -1226,7 +1302,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * @throws Exception - if fails to get infomation
 	 */
 	protected void getJarInfo(File dir) throws Exception {
-
+		setState(STATE_CHECKING_CACHE);
+		
 		filesLastModified = new HashMap<String, Long>();
 
 		// store file sizes and mark which files not to download
@@ -1285,7 +1362,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 * @throws Exception if download fails
 	 */
 	protected void downloadJars(String path) throws Exception {
-
 		setState(STATE_DOWNLOADING);
 
 		URLConnection urlconnection;
@@ -1980,13 +2056,25 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * Sets the state of the loaded and prints some debug information
+	 * Sets the error message and print debug information
 	 *
 	 * @param error Error message to print
 	 */
 	protected void fatalErrorOccured(String error, Exception e) {
 		fatalError = true;
-		genericErrorMessage[genericErrorMessage.length-1] = error;
+		
+		if (minimumJreNotFound) {
+			errorMessage = minimumJREMessage;
+			errorMessage[errorMessage.length-1] = error;
+		}
+		else if (certificateRefused) {
+			errorMessage = certificateRefusedMessage;
+		}
+		else {
+			errorMessage = genericErrorMessage;
+			errorMessage[errorMessage.length-1] = error;
+		}
+		
 		System.out.println(error);
 		if(e != null) {
 			System.out.println(e.getMessage());
