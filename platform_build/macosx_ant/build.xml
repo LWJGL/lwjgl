@@ -7,7 +7,7 @@
 		<mkdir dir="i386"/>
 		<mkdir dir="x86_64"/>
 	</target>
-
+	
 	<target name="clean">
 		<delete failonerror="false">
 			<fileset dir="i386"/>
@@ -20,22 +20,19 @@
 
 	<target name="compile">
 		<apply dir="${dstdir}" executable="${compiler}" os="Mac OS X" skipemptyfilesets="true" failonerror="true" dest="${dstdir}">
-			<arg line="${cflags} -ObjC -O2 -Wall -Wunused -c -fPIC -I${sdkroot}/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers -I${sdkroot}/System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks/JavaNativeFoundation.framework/Headers -I${native}/common -I${native}/common/opengl -I${native}/macosx"/>
+			<arg line="${cflags} -ObjC -O2 -Wall -Wunused -c -fPIC -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers -I${native}/common -I${native}/macosx -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks/JavaNativeFoundation.framework/Versions/A/Headers"/>
 			<!-- Map from *.m and *.c to .o -->
 			<mapper type="regexp" from="^(.*)\.(c|m)" to="\1.o"/>
 			<fileset dir="${native}/macosx" includes="*.m"/>
 			<fileset dir="${native}/macosx" includes="*.c"/>
 			<fileset dir="${native}/common" includes="*.c"/>
-			<fileset dir="${native}/common/opengl" includes="*.c"/>
-			<fileset dir="${native}/generated/openal" includes="*.c"/>
-			<fileset dir="${native}/generated/opencl" includes="*.c"/>
-			<fileset dir="${native}/generated/opengl" includes="*.c"/>
+			<fileset dir="${native}/generated" includes="*.c"/>
 		</apply>
 	</target>
-
+	
 	<target name="link">
 		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
-			<arg line="${linkerflags} -exported_symbols_list ../lwjgl.symbols -dynamiclib -o ${libname} -framework Foundation -framework AppKit -framework JavaVM -framework Carbon -framework OpenGL"/>
+			<arg line="${linkerflags} -exported_symbols_list ../lwjgl.symbols -dynamiclib -o ${libname} -framework Foundation -framework AppKit -framework JavaVM -framework Carbon -framework OpenGL -framework JavaNativeFoundation -F/System/Library/Frameworks/JavaVM.framework/Frameworks"/>
 			<fileset dir="${objdir}" includes="*.o"/>
 		</apply>
 		<apply dir="${objdir}" executable="strip" os="Mac OS X" failonerror="true">
@@ -43,7 +40,7 @@
 			<fileset dir="." file="${libname}"/>
 		</apply>
 	</target>
-
+	
 	<target name="nativelibrary" depends="init">
 		<property name="universal_sdkroot" location="/Developer/SDKs/MacOSX10.6.sdk"/>
 		<property name="ppc_sdkroot" location="/Developer/SDKs/MacOSX10.6.sdk"/>
@@ -52,19 +49,19 @@
 		<property name="ppc_flags" value="-isysroot ${ppc_sdkroot}"/>
 		<antcall target="compile">
 			<param name="dstdir" location="ppc"/>
-			<param name="compiler" value="gcc-4.0"/>
+			<param name="compiler" value="gcc-4.2"/>
 			<param name="sdkroot" location="${ppc_sdkroot}"/>
 			<param name="cflags" value="${universal_flags} -arch ppc -mmacosx-version-min=10.3"/>
 		</antcall>
 		<antcall target="compile">
 			<param name="dstdir" location="i386"/>
-			<param name="compiler" value="gcc-4.0"/>
+			<param name="compiler" value="gcc-4.2"/>
 			<param name="sdkroot" location="${universal_sdkroot}"/>
 			<param name="cflags" value="${universal_flags} -arch i386 -mmacosx-version-min=10.4"/>
 		</antcall>
 		<antcall target="compile">
 			<param name="dstdir" location="x86_64"/>
-			<param name="compiler" value="gcc-4.0"/>
+			<param name="compiler" value="gcc-4.2"/>
 			<param name="sdkroot" location="${universal_sdkroot}"/>
 			<param name="cflags" value="-isysroot ${x86_64_sdkroot} -arch x86_64 -mmacosx-version-min=10.5"/>
 		</antcall>
@@ -75,19 +72,19 @@
 		<antcall target="link">
 			<param name="objdir" location="ppc"/>
 			<param name="libname" value="liblwjgl-ppc.jnilib"/>
-			<param name="linker" value="gcc-4.0"/>
+			<param name="linker" value="gcc-4.2"/>
 			<param name="linkerflags" value="${universal_flags} -arch ppc -mmacosx-version-min=10.3"/>
 		</antcall>
 		<antcall target="link">
 			<param name="objdir" location="i386"/>
 			<param name="libname" value="liblwjgl-i386.jnilib"/>
-			<param name="linker" value="gcc-4.0"/>
+			<param name="linker" value="gcc-4.2"/>
 			<param name="linkerflags" value="${universal_flags} -arch i386 -mmacosx-version-min=10.4"/>
 		</antcall>
 		<antcall target="link">
 			<param name="objdir" location="x86_64"/>
 			<param name="libname" value="liblwjgl-i86_64.jnilib"/>
-			<param name="linker" value="gcc-4.0"/>
+			<param name="linker" value="gcc-4.2"/>
 			<param name="linkerflags" value="-isysroot ${x86_64_sdkroot} -arch x86_64 -mmacosx-version-min=10.5"/>
 		</antcall>
 		<apply dir="." parallel="true" executable="lipo" os="Mac OS X" failonerror="true" skipemptyfilesets="true" >

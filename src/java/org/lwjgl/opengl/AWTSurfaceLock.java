@@ -78,14 +78,15 @@ final class AWTSurfaceLock {
 		// We need to elevate privileges because of an AWT bug. Please see
 		// http://192.18.37.44/forums/index.php?topic=10572 for a discussion.
 		// It is only needed on first call, so we avoid it on all subsequent calls
-		// due to performance.
+		// due to performance..
+        final Canvas parent = component instanceof AWTGLCanvas ? component : Display.getParent();
 		if (firstLockSucceeded)
-			return lockAndInitHandle(lock_buffer, component);
+			return lockAndInitHandle(lock_buffer, component, parent);
 		else
 			try {
 				firstLockSucceeded = AccessController.doPrivileged(new PrivilegedExceptionAction<Boolean>() {
 					public Boolean run() throws LWJGLException {
-						return lockAndInitHandle(lock_buffer, component);
+						return lockAndInitHandle(lock_buffer, component, parent);
 					}
 				});
 				return firstLockSucceeded;
@@ -94,7 +95,7 @@ final class AWTSurfaceLock {
 			}
 	}
 
-	private static native boolean lockAndInitHandle(ByteBuffer lock_buffer, Canvas component) throws LWJGLException;
+	private static native boolean lockAndInitHandle(ByteBuffer lock_buffer, Canvas component, Canvas display_parent) throws LWJGLException;
 
 	void unlock() throws LWJGLException {
 		nUnlock(lock_buffer);

@@ -37,6 +37,9 @@
  * @version $Revision$
  */
 
+#import <Cocoa/Cocoa.h>
+#import <JavaNativeFoundation.h>
+
 #include <jni.h>
 #include <jawt_md.h>
 #include "awt_tools.h"
@@ -44,13 +47,147 @@
 #include "context.h"
 #include "common_tools.h"
 
+// forward declaration
+@interface PBufferGLLayer : NSOpenGLLayer {
+    MacOSXPeerInfo *peer_info;
+    GLuint textureID;
+    BOOL canDraw;
+}
+
+@property (nonatomic) MacOSXPeerInfo *peer_info;
+@property (nonatomic) GLuint textureID;
+@end
+
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
-  (JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle) {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+(JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	AWTSurfaceLock *surface = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
 	JAWT_MacOSXDrawingSurfaceInfo *macosx_dsi = (JAWT_MacOSXDrawingSurfaceInfo *)surface->dsi->platformInfo;
-	peer_info->nsview = macosx_dsi->cocoaViewRef;
-	peer_info->window = true;
+    
+    // check for CALayer support
+    if(surface->awt.version & JAWT_MACOSX_USE_CALAYER) {
+        jint width = surface->dsi->bounds.width;
+        jint height = surface->dsi->bounds.height;
+        
+        if(peer_info->pbuffer == NULL ||
+           width != [peer_info->pbuffer pixelsWide] || height != [peer_info->pbuffer pixelsHigh]) {
+            if(peer_info->pbuffer != NULL) {
+                [peer_info->pbuffer release];
+            }
+            
+            // make pbuffer
+            NSOpenGLPixelBuffer *pbuffer = nil;
+            NSLog(@"Make pbuffer: %d x %d", width, height);
+            pbuffer = [[NSOpenGLPixelBuffer alloc] initWithTextureTarget:GL_TEXTURE_RECTANGLE_EXT
+                                                   textureInternalFormat:GL_RGBA
+                                                   textureMaxMipMapLevel:0
+                                                              pixelsWide:width
+                                                              pixelsHigh:height];
+            
+            peer_info->pbuffer = pbuffer;
+            peer_info->window = false;
+            peer_info->canDrawGL = true;
+        }
+        
+        if (macosx_dsi != NULL) {
+            [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^(){
+                // attach the "root layer" to the AWT Canvas surface layers
+                id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;//dsi->platformInfo;
+                if(surfaceLayers.layer == NULL) {
+                    PBufferGLLayer *caGLLayer = [[PBufferGLLayer new] autorelease];
+                    caGLLayer.peer_info = peer_info;
+                    caGLLayer.asynchronous = YES;
+                    caGLLayer.needsDisplayOnBoundsChange = YES;
+                    caGLLayer.opaque = YES;
+                    surfaceLayers.layer = caGLLayer;                
+                }
+            }];
+        }
+    } else {
+        peer_info->nsview = macosx_dsi->cocoaViewRef;
+        peer_info->window = true;
+    }
+    
 	[pool release];
 }
+
+// rotates a red square when asked to draw
+@implementation PBufferGLLayer
+
+@synthesize peer_info;
+@synthesize textureID;
+
+// override to draw custom GL content
+-(void)drawInCGLContext:(CGLContextObj)glContext
+			pixelFormat:(CGLPixelFormatObj)pixelFormat
+		   forLayerTime:(CFTimeInterval)timeInterval
+			displayTime:(const CVTimeStamp *)timeStamp {
+	
+    if(!peer_info || !peer_info->pbuffer) {
+        return;
+    }
+    
+    peer_info->canDrawGL = false;
+    
+    NSOpenGLPixelBuffer *pbuffer = self.peer_info->pbuffer;
+    
+    // set the current context
+    CGLSetCurrentContext(glContext);
+	
+    GLsizei width = [pbuffer pixelsWide];
+    GLsizei height = [pbuffer pixelsHigh];
+	
+    if(textureID == 0) {
+        glGenTextures(1, &textureID);
+    }
+    glBindTexture(GL_TEXTURE_RECTANGLE_EXT, self.textureID);
+    CGLTexImagePBuffer(glContext,[pbuffer CGLPBufferObj], GL_FRONT);
+	
+    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	
+    glEnable(GL_TEXTURE_RECTANGLE_EXT);
+	
+    static GLfloat verts[] = {
+        -1.0, -1.0,
+        -1.0,  1.0,
+		1.0,  1.0,
+		1.0, -1.0
+    };
+    
+    GLfloat tex[] = {
+        0.0, 0.0,
+        0.0, height,
+        width, height,
+        width, 0.0
+    };
+    
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glVertexPointer(2, GL_FLOAT, 0, verts);
+    glTexCoordPointer(2, GL_FLOAT, 0, tex);
+    
+    glDrawArrays(GL_QUADS, 0, 4);
+    
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    
+    glDisable(GL_TEXTURE_RECTANGLE_EXT);
+	
+    // call super to finalize the drawing - by default all it does is call glFlush()
+    [super drawInCGLContext:glContext pixelFormat:pixelFormat forLayerTime:timeInterval displayTime:timeStamp];
+}
+
+-(BOOL)canDrawInCGLContext:(CGLContextObj)glContext
+			   pixelFormat:(CGLPixelFormatObj)pixelFormat
+			  forLayerTime:(CFTimeInterval)timeInterval
+			   displayTime:(const CVTimeStamp *)timeStamp {
+    return peer_info->canDrawGL ? YES : NO;
+}
+
+@end

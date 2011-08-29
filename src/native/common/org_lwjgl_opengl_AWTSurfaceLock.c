@@ -49,15 +49,29 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_AWTSurfaceLock_createHandle
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_AWTSurfaceLock_lockAndInitHandle
-  (JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject canvas) {
+  (JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject canvas, jobject display_parent) {
 	JAWT awt;
 	JAWT_DrawingSurface* ds;
 	JAWT_DrawingSurfaceInfo *dsi;
 	AWTSurfaceLock *awt_lock = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
-	awt.version = JAWT_VERSION_1_4;
-	if (JAWT_GetAWT(env, &awt) == JNI_FALSE) {
-		throwException(env, "Could not get the JAWT interface");
-		return JNI_FALSE;
+    
+    jboolean result = JNI_FALSE;
+	
+	#ifdef __MACH__
+	if (display_parent) {
+        //first try CALAYER
+        awt.version = JAWT_VERSION_1_4 | JAWT_MACOSX_USE_CALAYER;
+        result = JAWT_GetAWT(env, &awt);
+    }
+	#endif
+    
+	if (result == JNI_FALSE) {
+        // now try without CALAYER
+        awt.version = JAWT_VERSION_1_4;
+        if (JAWT_GetAWT(env, &awt) == JNI_FALSE) {
+            throwException(env, "Could not get the JAWT interface");
+            return JNI_FALSE;
+        }
 	}
 
 	ds = awt.GetDrawingSurface(env, canvas);

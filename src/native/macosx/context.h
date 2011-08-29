@@ -50,6 +50,7 @@
 typedef struct {
 	NSOpenGLPixelFormat *pixel_format;
 	bool window;
+    bool canDrawGL;
 	union {
 		NSView *nsview;
 		NSOpenGLPixelBuffer *pbuffer;

@@ -45,6 +45,7 @@
 
 typedef struct {
 	NSOpenGLContext *context;
+    MacOSXPeerInfo *peer_info;
 } MacOSXContext;
 
 JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCreate
@@ -72,6 +73,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCre
 	}
 	context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	context_info->context = context;
+    context_info->peer_info = peer_info;
 	[pool release];
 	return context_handle;		
 }
@@ -79,8 +81,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCre
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSwapBuffers
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	MacOSXContext *peer_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	[peer_info->context flushBuffer];
+	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
+	[context_info->context flushBuffer];
+    context_info->peer_info->canDrawGL = true;
 	[pool release];
 }
 
@@ -90,6 +93,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nUpdate
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	[context_info->context update];
+    context_info->peer_info->canDrawGL = true;
 	[pool release];
 }
 
@@ -118,6 +122,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_setView
 	} else {
 		[context_info->context setPixelBuffer:peer_info->pbuffer cubeMapFace:0 mipMapLevel:0 currentVirtualScreen:0];
 	}
+    peer_info->canDrawGL = true;
 	[pool release];
 }
 
