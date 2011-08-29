@@ -334,15 +334,17 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 		// Use Motif decoration hint property and hope the window manager respects them
 		setDecorations(disp, win, 0);
 	}
-	XSizeHints * size_hints = XAllocSizeHints();
-	size_hints->flags = PMinSize | PMaxSize;
-	size_hints->min_width = width;
-	size_hints->max_width = width;
-	size_hints->min_height = height;
-	size_hints->max_height = height;
-	XSetWMNormalHints(disp, win, size_hints);
+	XSizeHints * window_hints = XAllocSizeHints();
+	window_hints->flags = PPosition | PMinSize | PMaxSize;
+	window_hints->x = x;
+	window_hints->y = y;
+	window_hints->min_width = width;
+	window_hints->max_width = width;
+	window_hints->min_height = height;
+	window_hints->max_height = height;
+	XSetWMNormalHints(disp, win, window_hints);
 	updateWindowHints(env, disp, win);
-	XFree(size_hints);
+	XFree(window_hints);
 #define NUM_ATOMS 1
 	Atom protocol_atoms[NUM_ATOMS] = {XInternAtom(disp, "WM_DELETE_WINDOW", False)/*, XInternAtom(disp, "WM_TAKE_FOCUS", False)*/};
 	XSetWMProtocols(disp, win, protocol_atoms, NUM_ATOMS);
