@@ -146,6 +146,7 @@ import java.util.zip.ZipFile;
  * <li>Bobjob</li>
  * <li>Dashiva</li>
  * <li>Dr_evil</li>
+ * <li>Elias Naur</li>
  * <li>Kevin Glass</li>
  * <li>Matthias Mann</li>
  * <li>Mickelukas</li>
@@ -837,14 +838,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			// if specified applet version already available don't download anything
 			boolean versionAvailable = false;
 
-			// version of applet
+			// version string of applet
 			String version = getParameter("al_version");
-			float latestVersion = 0;
 
 			// if applet version specifed, compare with version in the cache
 			if (version != null) {
-				latestVersion = Float.parseFloat(version);
-				versionAvailable = compareVersion(versionFile, latestVersion);
+				versionAvailable = compareVersion(versionFile, version.toLowerCase());
 			}
 
 			// if jars not available or need updating download them
@@ -867,7 +866,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				// save version information once jars downloaded successfully
 				if (version != null) {
 					percentage = 90;
-					writeObjectFile(versionFile, latestVersion);
+					writeObjectFile(versionFile, version.toLowerCase());
 				}
 
 				// save file names with last modified info once downloaded successfully
@@ -959,21 +958,23 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	
 	/**
 	 * This method will return true if the version stored in the file
-	 * matches the supplied float version.
+	 * matches the supplied String version.
 	 * 
 	 * @param versionFile - location to file containing version information
-	 * @param version - float version that needs to be compared
+	 * @param version - String version that needs to be compared
 	 * @return returns true if the version in file matches specified version
 	 */
-	protected boolean compareVersion(File versionFile, float version) {
+	protected boolean compareVersion(File versionFile, String version) {
 		// if version file exists
 		if (versionFile.exists()) {
+			String s = readStringFile(versionFile);
+			
 			// compare to version with file
-			if (version == readFloatFile(versionFile)) {
+			if (s != null && s.equals(version)) {
 				percentage = 90; // not need to download cache files again
 
 				if(debugMode) {
-					System.out.println("Loading Cached Applet Version " + version);
+					System.out.println("Loading Cached Applet Version: " + version);
 				}
 				debug_sleep(2000);
 				
@@ -1056,22 +1057,21 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * read float from File
+	 * read String object from File
 	 *
 	 * @param file to be read
-	 * @return the float stored in the file or 0 if it fails
+	 * @return the String stored in the file or null if it fails
 	 */
-	protected float readFloatFile(File file) {
+	protected String readStringFile(File file) {
 		try {
-			Float version = (Float)readObjectFile(file);
-			return version.floatValue();
+			return (String)readObjectFile(file);
 		} catch (Exception e) {
 			// failed to read version file
 			e.printStackTrace();
 		}
 		
-		// return 0 if failed to read file
-		return 0;
+		// return null if failed to read file
+		return null;
 	}
 	
 	/**
