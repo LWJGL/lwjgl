@@ -60,7 +60,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_AWTSurfaceLock_lockAndInitHandl
 	#ifdef __MACH__
 	if (display_parent) {
         //first try CALAYER
-        awt.version = JAWT_VERSION_1_4 | JAWT_MACOSX_USE_CALAYER;
+        awt.version = JAWT_VERSION_1_4 | 0x80000000;//JAWT_MACOSX_USE_CALAYER;
         result = JAWT_GetAWT(env, &awt);
     }
 	#endif

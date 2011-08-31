@@ -68,7 +68,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	JAWT_MacOSXDrawingSurfaceInfo *macosx_dsi = (JAWT_MacOSXDrawingSurfaceInfo *)surface->dsi->platformInfo;
     
     // check for CALayer support
-    if(surface->awt.version & JAWT_MACOSX_USE_CALAYER) {
+    if(surface->awt.version & 0x80000000) { //JAWT_MACOSX_USE_CALAYER) {
         jint width = surface->dsi->bounds.width;
         jint height = surface->dsi->bounds.height;
         
