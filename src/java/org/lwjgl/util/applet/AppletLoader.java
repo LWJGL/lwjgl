@@ -151,7 +151,7 @@ import java.util.zip.ZipFile;
  * <li>Matthias Mann</li>
  * <li>Mickelukas</li>
  * <li>NateS</li>
- * <li>pjohnsen</li>
+ * <li>Pelle Johnsen</li>
  * <li>Riven</li>
  * <li>Ruben01</li>
  * <li>Shannon Smith</li>

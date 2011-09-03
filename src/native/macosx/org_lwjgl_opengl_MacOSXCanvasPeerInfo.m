@@ -34,6 +34,7 @@
  * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author Pelle Johnsen
  * @version $Revision$
  */
 
