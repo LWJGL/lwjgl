@@ -27,7 +27,9 @@
 			<fileset dir="${native}/macosx" includes="*.c"/>
 			<fileset dir="${native}/common" includes="*.c"/>
 			<fileset dir="${native}/common/opengl" includes="*.c"/>
-			<fileset dir="${native}/generated" includes="*.c"/>
+			<fileset dir="${native}/generated/openal" includes="*.c"/>
+			<fileset dir="${native}/generated/opencl" includes="*.c"/>
+			<fileset dir="${native}/generated/opengl" includes="*.c"/>
 		</apply>
 	</target>
 
