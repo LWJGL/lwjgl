@@ -7,7 +7,7 @@
 		<mkdir dir="i386"/>
 		<mkdir dir="x86_64"/>
 	</target>
-	
+
 	<target name="clean">
 		<delete failonerror="false">
 			<fileset dir="i386"/>
@@ -20,16 +20,17 @@
 
 	<target name="compile">
 		<apply dir="${dstdir}" executable="${compiler}" os="Mac OS X" skipemptyfilesets="true" failonerror="true" dest="${dstdir}">
-			<arg line="${cflags} -ObjC -O2 -Wall -Wunused -c -fPIC -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers -I${native}/common -I${native}/macosx -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks/JavaNativeFoundation.framework/Versions/A/Headers"/>
+			<arg line="${cflags} -ObjC -O2 -Wall -Wunused -c -fPIC -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers -I${native}/common -I${native}/common/opengl -I${native}/macosx -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks/JavaNativeFoundation.framework/Versions/A/Headers"/>
 			<!-- Map from *.m and *.c to .o -->
 			<mapper type="regexp" from="^(.*)\.(c|m)" to="\1.o"/>
 			<fileset dir="${native}/macosx" includes="*.m"/>
 			<fileset dir="${native}/macosx" includes="*.c"/>
 			<fileset dir="${native}/common" includes="*.c"/>
+			<fileset dir="${native}/common/opengl" includes="*.c"/>
 			<fileset dir="${native}/generated" includes="*.c"/>
 		</apply>
 	</target>
-	
+
 	<target name="link">
 		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
 			<arg line="${linkerflags} -exported_symbols_list ../lwjgl.symbols -dynamiclib -o ${libname} -framework Foundation -framework AppKit -framework JavaVM -framework Carbon -framework OpenGL -framework JavaNativeFoundation -F/System/Library/Frameworks/JavaVM.framework/Frameworks"/>
@@ -40,7 +41,7 @@
 			<fileset dir="." file="${libname}"/>
 		</apply>
 	</target>
-	
+
 	<target name="nativelibrary" depends="init">
 		<property name="universal_sdkroot" location="/Developer/SDKs/MacOSX10.6.sdk"/>
 		<property name="ppc_sdkroot" location="/Developer/SDKs/MacOSX10.6.sdk"/>
