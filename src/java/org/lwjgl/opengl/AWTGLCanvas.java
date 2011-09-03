@@ -107,6 +107,10 @@ public class AWTGLCanvas extends Canvas implements DrawableLWJGL, ComponentListe
 		}
 	}
 
+	public void setPixelFormat(final PixelFormatLWJGL pf) throws LWJGLException {
+		throw new UnsupportedOperationException();
+	}
+
 	public void setPixelFormat(final PixelFormatLWJGL pf, final ContextAttribs attribs) throws LWJGLException {
 		throw new UnsupportedOperationException();
 	}
