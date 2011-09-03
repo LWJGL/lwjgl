@@ -240,11 +240,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 		return frame != null && frame.getCanvas().syncIsDirty();
 	}
 
-	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
+	public PeerInfo createPeerInfo(PixelFormat pixel_format, ContextAttribs attribs) throws LWJGLException {
 		try {
-			return new MacOSXDisplayPeerInfo(pixel_format, true);
+			return new MacOSXDisplayPeerInfo(pixel_format, attribs, true);
 		} catch (LWJGLException e) {
-			return new MacOSXDisplayPeerInfo(pixel_format, false);
+			return new MacOSXDisplayPeerInfo(pixel_format, attribs, false);
 		}
 	}
 
@@ -434,10 +434,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 		return false;
 	}
 
-	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
+	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format, ContextAttribs attribs,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs) throws LWJGLException {
-		return new MacOSXPbufferPeerInfo(width, height, pixel_format);
+		return new MacOSXPbufferPeerInfo(width, height, pixel_format, attribs);
 	}
 
 	public void setPbufferAttrib(PeerInfo handle, int attrib, int value) {
@@ -507,13 +507,13 @@ final class MacOSXDisplay implements DisplayImplementation {
     public boolean isInsideWindow() {
     		return true;
     }
-    
+
     public void setResizable(boolean resizable) {
 		frame.setResizable(resizable);
 	}
-	
+
 	public boolean wasResized() {
 		return canvas_listener.wasResized();
 	}
-	
+
 }

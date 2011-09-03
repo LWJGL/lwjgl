@@ -44,8 +44,8 @@ import org.lwjgl.LWJGLException;
 final class MacOSXDisplayPeerInfo extends MacOSXCanvasPeerInfo {
 	private boolean locked;
 
-	MacOSXDisplayPeerInfo(PixelFormat pixel_format, boolean support_pbuffer) throws LWJGLException {
-		super(pixel_format, support_pbuffer);
+	MacOSXDisplayPeerInfo(PixelFormat pixel_format, ContextAttribs attribs, boolean support_pbuffer) throws LWJGLException {
+		super(pixel_format, attribs, support_pbuffer);
 	}
 
 	protected void doLockAndInitHandle() throws LWJGLException {

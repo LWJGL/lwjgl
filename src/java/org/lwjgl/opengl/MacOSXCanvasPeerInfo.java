@@ -45,8 +45,8 @@ import org.lwjgl.LWJGLException;
 abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
 
-	protected MacOSXCanvasPeerInfo(PixelFormat pixel_format, boolean support_pbuffer) throws LWJGLException {
-		super(pixel_format, true, true, support_pbuffer, true);
+	protected MacOSXCanvasPeerInfo(PixelFormat pixel_format, ContextAttribs attribs, boolean support_pbuffer) throws LWJGLException {
+		super(pixel_format, attribs, true, true, support_pbuffer, true);
 	}
 
 	protected void initHandle(Canvas component) throws LWJGLException {

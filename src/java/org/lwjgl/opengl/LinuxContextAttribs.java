@@ -33,8 +33,6 @@ package org.lwjgl.opengl;
 
 /**
  * An implementation of ContextAttribs using GLX_create_context.
- * <p/><p/>
- * ---- WIP - GLX_create_context has not been defined yet ----
  *
  * @author spasi <spasi@users.sourceforge.net>
  */
@@ -42,14 +40,13 @@ final class LinuxContextAttribs implements ContextAttribsImplementation {
 
 	private static final int GLX_CONTEXT_MAJOR_VERSION_ARB = 0x2091;
 	private static final int GLX_CONTEXT_MINOR_VERSION_ARB = 0x2092;
-	private static final int GLX_CONTEXT_LAYER_PLANE_ARB = 0x2093;
-	private static final int GLX_CONTEXT_FLAGS_ARB = 0x2094;
-	private static final int GLX_CONTEXT_PROFILE_MASK_ARB = 0x9126;
+	private static final int GLX_CONTEXT_FLAGS_ARB         = 0x2094;
+	private static final int GLX_CONTEXT_PROFILE_MASK_ARB  = 0x9126;
 
-	private static final int GLX_CONTEXT_DEBUG_BIT_ARB = 0x0001;
+	private static final int GLX_CONTEXT_DEBUG_BIT_ARB              = 0x0001;
 	private static final int GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB = 0x0002;
 
-	private static final int GLX_CONTEXT_CORE_PROFILE_BIT_ARB = 0x00000001;
+	private static final int GLX_CONTEXT_CORE_PROFILE_BIT_ARB          = 0x00000001;
 	private static final int GLX_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB = 0x00000002;
 
 	LinuxContextAttribs() {
@@ -64,7 +61,7 @@ final class LinuxContextAttribs implements ContextAttribsImplementation {
 	}
 
 	public int getLayerPlaneAttrib() {
-		return GLX_CONTEXT_LAYER_PLANE_ARB;
+		throw new UnsupportedOperationException();
 	}
 
 	public int getFlagsAttrib() {

@@ -44,11 +44,11 @@ import org.lwjgl.LWJGLException;
  * $Id$
  */
 final class MacOSXCanvasImplementation implements AWTCanvasImplementation {
-	public PeerInfo createPeerInfo(Canvas component, PixelFormat pixel_format) throws LWJGLException {
+	public PeerInfo createPeerInfo(Canvas component, PixelFormat pixel_format, ContextAttribs attribs) throws LWJGLException {
 		try {
-			return new MacOSXAWTGLCanvasPeerInfo(component, pixel_format, true);
+			return new MacOSXAWTGLCanvasPeerInfo(component, pixel_format, attribs, true);
 		} catch (LWJGLException e) {
-			return new MacOSXAWTGLCanvasPeerInfo(component, pixel_format, false);
+			return new MacOSXAWTGLCanvasPeerInfo(component, pixel_format, attribs, false);
 		}
 	}
 

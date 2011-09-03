@@ -516,7 +516,7 @@ final class LinuxDisplay implements DisplayImplementation {
 
 	private static long getHandle(Canvas parent) throws LWJGLException {
 		AWTCanvasImplementation awt_impl = AWTGLCanvas.createImplementation();
-		LinuxPeerInfo parent_peer_info = (LinuxPeerInfo)awt_impl.createPeerInfo(parent, null);
+		LinuxPeerInfo parent_peer_info = (LinuxPeerInfo)awt_impl.createPeerInfo(parent, null, null);
 		ByteBuffer parent_peer_info_handle = parent_peer_info.lockAndGetHandle();
 		try {
 			return parent_peer_info.getDrawable();
@@ -757,7 +757,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		return result;
 	}
 
-	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
+	public PeerInfo createPeerInfo(PixelFormat pixel_format, ContextAttribs attribs) throws LWJGLException {
 		peer_info = new LinuxDisplayPeerInfo(pixel_format);
 		return peer_info;
 	}
@@ -1243,7 +1243,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		return false;
 	}
 
-	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
+	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format, ContextAttribs attribs,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs) throws LWJGLException {
 		return new LinuxPbufferPeerInfo(width, height, pixel_format);

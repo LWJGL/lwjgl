@@ -108,7 +108,7 @@ interface DisplayImplementation extends InputImplementation {
 	 * Create the native PeerInfo.
 	 * @throws LWJGLException
 	 */
-	PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException;
+	PeerInfo createPeerInfo(PixelFormat pixel_format, ContextAttribs attribs) throws LWJGLException;
 
 //	void destroyPeerInfo();
 
@@ -136,7 +136,7 @@ interface DisplayImplementation extends InputImplementation {
 	/**
 	 * Method to create a Pbuffer
 	 */
-	PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
+	PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format, ContextAttribs attribs,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs) throws LWJGLException;
 
@@ -159,25 +159,25 @@ interface DisplayImplementation extends InputImplementation {
 	 * @return number of icons used.
 	 */
 	int setIcon(ByteBuffer[] icons);
-	
+
 	/**
 	 * Enable or disable the Display window to be resized.
 	 *
-	 * @param set true to make the Display window resizable; 
+	 * @param resizable set to true to make the Display window resizable;
 	 * false to disable resizing on the Display window.
 	 */
 	void setResizable(boolean resizable);
-	
+
 	/**
 	 * @return true if the Display window has been resized since this method was last called.
 	 */
 	boolean wasResized();
-	
+
 	/**
 	 * @return this method will return a the width of the Display window.
 	 */
 	int getWidth();
-	
+
 	/**
 	 * @return this method will return a the height of the Display window.
 	 */

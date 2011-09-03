@@ -43,18 +43,23 @@ import org.lwjgl.LWJGLUtil;
  * $Id$
  */
 abstract class MacOSXPeerInfo extends PeerInfo {
-	MacOSXPeerInfo(PixelFormat pixel_format, boolean use_display_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException {
+	MacOSXPeerInfo(PixelFormat pixel_format, ContextAttribs attribs, boolean use_display_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException {
 		super(createHandle());
 		if (pixel_format.isFloatingPoint() && !LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 4))
-			throw new LWJGLException("Floating point pixel format requested, but is not supported");
-		choosePixelFormat(pixel_format, use_display_bpp, support_window, support_pbuffer, double_buffered);
+			throw new LWJGLException("Floating point pixel format requested, but it requires MacOS X 10.4 or newer");
+
+		boolean gl32 = attribs.getMajorVersion() == 3 && attribs.getMinorVersion() == 2 && attribs.isProfileCore();
+		if ( gl32 && !LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 7) )
+			throw new LWJGLException("OpenGL 3.2 requested, but it requires MacOS X 10.7 or newer");
+
+		choosePixelFormat(pixel_format, gl32, use_display_bpp, support_window, support_pbuffer, double_buffered);
 	}
 	private static native ByteBuffer createHandle();
 
-	private void choosePixelFormat(PixelFormat pixel_format, boolean use_display_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException {
-		nChoosePixelFormat(getHandle(), pixel_format, use_display_bpp, support_window, support_pbuffer, double_buffered);
+	private void choosePixelFormat(PixelFormat pixel_format, boolean gl32, boolean use_display_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException {
+		nChoosePixelFormat(getHandle(), pixel_format, gl32, use_display_bpp, support_window, support_pbuffer, double_buffered);
 	}
-	private static native void nChoosePixelFormat(ByteBuffer peer_info_handle, PixelFormat pixel_format, boolean use_display_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException;
+	private static native void nChoosePixelFormat(ByteBuffer peer_info_handle, PixelFormat pixel_format, boolean gl32, boolean use_display_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException;
 
 	public void destroy() {
 		nDestroy(getHandle());

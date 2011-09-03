@@ -247,7 +247,7 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private static long getHwnd(Canvas parent) throws LWJGLException {
 		AWTCanvasImplementation awt_impl = AWTGLCanvas.createImplementation();
-		WindowsPeerInfo parent_peer_info = (WindowsPeerInfo)awt_impl.createPeerInfo(parent, null);
+		WindowsPeerInfo parent_peer_info = (WindowsPeerInfo)awt_impl.createPeerInfo(parent, null, null);
 		ByteBuffer parent_peer_info_handle = parent_peer_info.lockAndGetHandle();
 		try {
 			return parent_peer_info.getHwnd();
@@ -463,7 +463,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		return saved;
 	}
 
-	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
+	public PeerInfo createPeerInfo(PixelFormat pixel_format, ContextAttribs attribs) throws LWJGLException {
 		peer_info = new WindowsDisplayPeerInfo(false);
 		return peer_info;
 	}
@@ -657,7 +657,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		return ((WindowsPbufferPeerInfo)handle).isBufferLost();
 	}
 
-	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
+	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format, ContextAttribs attribs,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs) throws LWJGLException {
 		return new WindowsPbufferPeerInfo(width, height, pixel_format, pixelFormatCaps, pBufferAttribs);

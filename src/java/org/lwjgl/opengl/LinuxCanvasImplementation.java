@@ -76,7 +76,7 @@ final class LinuxCanvasImplementation implements AWTCanvasImplementation {
 		}
 	}
 
-	public PeerInfo createPeerInfo(Canvas component, PixelFormat pixel_format) throws LWJGLException {
+	public PeerInfo createPeerInfo(Canvas component, PixelFormat pixel_format, ContextAttribs attribs) throws LWJGLException {
 		return new LinuxAWTGLCanvasPeerInfo(component);
 	}
 

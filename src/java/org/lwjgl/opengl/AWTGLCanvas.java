@@ -107,7 +107,7 @@ public class AWTGLCanvas extends Canvas implements DrawableLWJGL, ComponentListe
 		}
 	}
 
-	public void setPixelFormat(final PixelFormatLWJGL pf) throws LWJGLException {
+	public void setPixelFormat(final PixelFormatLWJGL pf, final ContextAttribs attribs) throws LWJGLException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -311,7 +311,7 @@ public class AWTGLCanvas extends Canvas implements DrawableLWJGL, ComponentListe
 				return;
 			try {
 				if ( peer_info == null ) {
-					this.peer_info = implementation.createPeerInfo(this, pixel_format);
+					this.peer_info = implementation.createPeerInfo(this, pixel_format, attribs);
 				}
 				peer_info.lockAndGetHandle();
 				try {

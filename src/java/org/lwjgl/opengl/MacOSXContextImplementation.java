@@ -46,13 +46,13 @@ final class MacOSXContextImplementation implements ContextImplementation {
 	public ByteBuffer create(PeerInfo peer_info, IntBuffer attribs, ByteBuffer shared_context_handle) throws LWJGLException {
 		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
 		try {
-			return nCreate(peer_handle, attribs, shared_context_handle);
+			return nCreate(peer_handle, shared_context_handle);
 		} finally {
 			peer_info.unlock();
 		}
 	}
 
-	private static native ByteBuffer nCreate(ByteBuffer peer_handle, IntBuffer attribs, ByteBuffer shared_context_handle) throws LWJGLException;
+	private static native ByteBuffer nCreate(ByteBuffer peer_handle, ByteBuffer shared_context_handle) throws LWJGLException;
 
 	public void swapBuffers() throws LWJGLException {
 		ContextGL current_context = ContextGL.getCurrentContext();
