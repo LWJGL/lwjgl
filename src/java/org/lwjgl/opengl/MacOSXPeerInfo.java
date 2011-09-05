@@ -48,7 +48,7 @@ abstract class MacOSXPeerInfo extends PeerInfo {
 		if (pixel_format.isFloatingPoint() && !LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 4))
 			throw new LWJGLException("Floating point pixel format requested, but it requires MacOS X 10.4 or newer");
 
-		boolean gl32 = attribs.getMajorVersion() == 3 && attribs.getMinorVersion() == 2 && attribs.isProfileCore();
+		boolean gl32 = attribs != null && attribs.getMajorVersion() == 3 && attribs.getMinorVersion() == 2 && attribs.isProfileCore();
 		if ( gl32 && !LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 7) )
 			throw new LWJGLException("OpenGL 3.2 requested, but it requires MacOS X 10.7 or newer");
 
