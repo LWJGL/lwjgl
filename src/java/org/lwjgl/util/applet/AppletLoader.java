@@ -899,10 +899,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	            }
 			});
 			
-		} catch (AccessControlException ace) {
-			certificateRefused = true;
-			fatalErrorOccured(ace.getMessage(), ace);
 		} catch (Exception e) {
+			certificateRefused = e instanceof AccessControlException;
 			fatalErrorOccured("This occurred while '" + getDescriptionForState() + "'", e);
 		} finally {
 			loaderThread = null;
