@@ -4,198 +4,240 @@
 	<property name="mavenrepoId"		value="tmprepoid" />
 	
 	<target name="install">
-		<antcall target="execute">
+		<antcall target="execute-install">
 			<param name="mvncommand" value="org.apache.maven.plugins:maven-install-plugin:2.3.1:install-file"/>
 		</antcall>
 	</target>
 	
+	
 	<target name="deploy">
 		<antcall target="execute">
-			<param name="mvncommand" value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file"/>
+			<param name="mvncommand" value="org.apache.maven.plugins:maven-deploy-plugin:2.7:deploy-file"/>
 		</antcall>
 	</target>
 	
-	<target name="execute">
-		
-		<!-- parent.pom -->
-		
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=lwjgl-parent.pom" />
-			<arg value="-Dfile=lwjgl-parent.pom" />
-            <arg value="-Plwjglgpg" />
-        </artifact:mvn>  
-            
-        <!-- lwjgl.jar -->    
-        
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=lwjgl.pom" />
-			<arg value="-Dfile=lwjgl.jar" />
-            <arg value="-Plwjglgpg" />
-		</artifact:mvn>
-		
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=lwjgl.pom" />
-			<arg value="-Dfile=lwjgl-sources.jar" />
-			<arg value="-Dclassifier=sources" />
-            <arg value="-Plwjglgpg" />
-		</artifact:mvn>
-		
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=lwjgl.pom" />
-			<arg value="-Dfile=lwjgl-javadoc.jar" />
-			<arg value="-Dclassifier=javadoc" />
-            <arg value="-Plwjglgpg" />
-		</artifact:mvn>
-		
-		<!-- lwjgl natives -->    
-		
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=lwjgl-platform.pom" />
-			<arg value="-Dfile=lwjgl-platform-natives-win.jar" />
-			<arg value="-Dclassifier=natives-win" />
-            <arg value="-Plwjglgpg" />
-		</artifact:mvn>
-		
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=lwjgl-platform.pom" />
-			<arg value="-Dfile=lwjgl-platform-natives-linux.jar" />
-			<arg value="-Dclassifier=natives-linux" />
-            <arg value="-Plwjglgpg" />
-		</artifact:mvn>
-		
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=lwjgl-platform.pom" />
-			<arg value="-Dfile=lwjgl-platform-natives-mac.jar" />
-			<arg value="-Dclassifier=natives-mac" />
-            <arg value="-Plwjglgpg" />
-		</artifact:mvn>
-		
-		<!-- lwjgl_util.jar -->    
-		
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=lwjgl_util.pom" />
-			<arg value="-Dfile=lwjgl_util.jar" />
-            <arg value="-Plwjglgpg" />
-		</artifact:mvn>
-		
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=lwjgl_util.pom" />
-			<arg value="-Dfile=lwjgl_util-sources.jar" />
-			<arg value="-Dclassifier=sources" />
-            <arg value="-Plwjglgpg" />
-		</artifact:mvn>
-		
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=lwjgl_util.pom" />
-			<arg value="-Dfile=lwjgl_util-javadoc.jar" />
-			<arg value="-Dclassifier=javadoc" />
-            <arg value="-Plwjglgpg" />
-		</artifact:mvn>
-		
-		<!-- lwjgl_util_applet.jar -->    
-		
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=lwjgl_util_applet.pom" />
-			<arg value="-Dfile=lwjgl_util_applet.jar" />
-            <arg value="-Plwjglgpg" />
-		</artifact:mvn>
-		
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=lwjgl_util.pom" />
-			<arg value="-Dfile=lwjgl_util_applet-sources.jar" />
-			<arg value="-Dclassifier=sources" />
-            <arg value="-Plwjglgpg" />
-		</artifact:mvn>
-		
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=lwjgl_util.pom" />
-			<arg value="-Dfile=lwjgl_util_applet-javadoc.jar" />
-			<arg value="-Dclassifier=javadoc" />
-            <arg value="-Plwjglgpg" />
-		</artifact:mvn>
-		
-		<!-- jinput.jar -->    
-		
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=jinput.pom" />
-			<arg value="-Dfile=jinput.jar" />
-            <arg value="-Plwjglgpg" />
-		</artifact:mvn>
-		
-		<!-- jinput natives -->    
-				
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=jinput-platform.pom" />
-			<arg value="-Dfile=jinput-platform-natives-win.jar" />
-			<arg value="-Dclassifier=natives-win" />
-            <arg value="-Plwjglgpg" />
-		</artifact:mvn>
-		
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=jinput-platform.pom" />
-			<arg value="-Dfile=jinput-platform-natives-linux.jar" />
-			<arg value="-Dclassifier=natives-linux" />
-            <arg value="-Plwjglgpg" />
-		</artifact:mvn>
-		
-		<artifact:mvn>
-			<arg value="${mvncommand}" />
-			<arg value="-Durl=${mavenrepo}" />
-			<arg value="-DrepositoryId=${mavenrepoId}" />
-			<arg value="-DpomFile=jinput-platform.pom" />
-			<arg value="-Dfile=jinput-platform-natives-mac.jar" />
-			<arg value="-Dclassifier=natives-mac" />
-            <arg value="-Plwjglgpg" />
-		</artifact:mvn>
-		
+	<target name="deploy-gpg">
+		<antcall target="execute">
+			<param name="mvncommand" value="org.apache.maven.plugins:maven-gpg-plugin:1.4:sign-and-deploy-file"/>
+		</antcall>
 	</target>
+	
+	
+	
+	<target name="execute">
+			
+			<!-- parent.pom -->
+			
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl-parent.pom" />
+				<arg value="-Dfile=lwjgl-parent.pom" />
+	            <arg value="-Plwjglgpg" />
+	        </artifact:mvn>  
+	            
+	        <!-- lwjgl.jar -->    
+	        
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl.pom" />
+				<arg value="-Dfile=lwjgl.jar" />
+				<arg value="-Dtypes=jar,jar" />
+				<arg value="-Dclassifiers=sources,javadoc" />
+				<arg value="-Dfiles=lwjgl-sources.jar,lwjgl-javadoc.jar" />
+	            <arg value="-Plwjglgpg" />
+			</artifact:mvn>
+			
+			
+			<!-- lwjgl natives -->    
+			
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl-platform.pom" />
+				<arg value="-Dfile=lwjgl-platform-natives-windows.jar" />
+				<arg value="-Dclassifier=natives-windows" />
+				<arg value="-Dtypes=jar,jar" />
+				<arg value="-Dclassifiers=natives-linux,natives-osx" />
+				<arg value="-Dfiles=lwjgl-platform-natives-linux.jar,lwjgl-platform-natives-osx.jar" />
+	            <arg value="-Plwjglgpg" />
+			</artifact:mvn>
+			
+			
+			<!-- lwjgl_util.jar -->    
+			
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl_util.pom" />
+				<arg value="-Dfile=lwjgl_util.jar" />
+				<arg value="-Dtypes=jar,jar" />
+				<arg value="-Dclassifiers=sources,javadoc" />
+				<arg value="-Dfiles=lwjgl_util-sources.jar,lwjgl_util-javadoc.jar" />
+	            <arg value="-Plwjglgpg" />
+			</artifact:mvn>
+			
+			<!-- lwjgl_util_applet.jar -->    
+			
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl_util_applet.pom" />
+				<arg value="-Dfile=lwjgl_util_applet.jar" />
+				<arg value="-Dtypes=jar,jar" />
+				<arg value="-Dclassifiers=sources,javadoc" />
+				<arg value="-Dfiles=lwjgl_util_applet-sources.jar,lwjgl_util_applet-javadoc.jar" />
+	            <arg value="-Plwjglgpg" />
+			</artifact:mvn>
+			
+		</target>
+	
+	
+	<target name="execute-install">
+			
+			<!-- parent.pom -->
+			
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl-parent.pom" />
+				<arg value="-Dfile=lwjgl-parent.pom" />
+	            <arg value="-Plwjglgpg" />
+	        </artifact:mvn>  
+	            
+	        <!-- lwjgl.jar -->    
+	        
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl.pom" />
+				<arg value="-Dfile=lwjgl.jar" />
+	            <arg value="-Plwjglgpg" />
+			</artifact:mvn>
+			
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl.pom" />
+				<arg value="-Dfile=lwjgl-sources.jar" />
+				<arg value="-Dclassifier=sources" />
+	            <arg value="-Plwjglgpg" />
+			</artifact:mvn>
+			
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl.pom" />
+				<arg value="-Dfile=lwjgl-javadoc.jar" />
+				<arg value="-Dclassifier=javadoc" />
+	            <arg value="-Plwjglgpg" />
+			</artifact:mvn>
+			
+			<!-- lwjgl natives -->    
+			
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl-platform.pom" />
+				<arg value="-Dfile=lwjgl-platform-natives-windows.jar" />
+				<arg value="-Dclassifier=natives-windows" />
+	            <arg value="-Plwjglgpg" />
+			</artifact:mvn>
+			
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl-platform.pom" />
+				<arg value="-Dfile=lwjgl-platform-natives-linux.jar" />
+				<arg value="-Dclassifier=natives-linux" />
+	            <arg value="-Plwjglgpg" />
+			</artifact:mvn>
+			
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl-platform.pom" />
+				<arg value="-Dfile=lwjgl-platform-natives-osx.jar" />
+				<arg value="-Dclassifier=natives-osx" />
+	            <arg value="-Plwjglgpg" />
+			</artifact:mvn>
+			
+			<!-- lwjgl_util.jar -->    
+			
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl_util.pom" />
+				<arg value="-Dfile=lwjgl_util.jar" />
+	            <arg value="-Plwjglgpg" />
+			</artifact:mvn>
+			
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl_util.pom" />
+				<arg value="-Dfile=lwjgl_util-sources.jar" />
+				<arg value="-Dclassifier=sources" />
+	            <arg value="-Plwjglgpg" />
+			</artifact:mvn>
+			
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl_util.pom" />
+				<arg value="-Dfile=lwjgl_util-javadoc.jar" />
+				<arg value="-Dclassifier=javadoc" />
+	            <arg value="-Plwjglgpg" />
+			</artifact:mvn>
+			
+			<!-- lwjgl_util_applet.jar -->    
+			
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl_util_applet.pom" />
+				<arg value="-Dfile=lwjgl_util_applet.jar" />
+	            <arg value="-Plwjglgpg" />
+			</artifact:mvn>
+			
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl_util_applet.pom" />
+				<arg value="-Dfile=lwjgl_util_applet-sources.jar" />
+				<arg value="-Dclassifier=sources" />
+	            <arg value="-Plwjglgpg" />
+			</artifact:mvn>
+			
+			<artifact:mvn>
+				<arg value="${mvncommand}" />
+				<arg value="-Durl=${mavenrepo}" />
+				<arg value="-DrepositoryId=${mavenrepoId}" />
+				<arg value="-DpomFile=lwjgl_util_applet.pom" />
+				<arg value="-Dfile=lwjgl_util_applet-javadoc.jar" />
+				<arg value="-Dclassifier=javadoc" />
+	            <arg value="-Plwjglgpg" />
+			</artifact:mvn>
+		</target>
+		
+	
 	
 </project>

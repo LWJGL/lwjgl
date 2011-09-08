@@ -4,6 +4,7 @@
 	<property name="lwjgl.maven"			location="maven" />
 	<property name="lwjgl.dstMaven"			location="${lwjgl.temp}/maven" />
 	<property name="lwjgl.src.java" 		location="${lwjgl.src}/java" />
+	<property name="jinput.version"			value="2.0.5" />
 	
 	<fileset id="lwjgl-sources.manual.fileset" dir="${lwjgl.src.java}">
 		<patternset refid="lwjgl.package.pattern" />
@@ -36,6 +37,32 @@
 			]]>
 		</script>
 	</target>
+	
+	<target name="-checkjinputversion">
+			<script language="javascript" classpath="${lwjgl.lib}/jinput.jar">
+			<![CDATA[
+			importPackage(java.lang);
+			var version =  net.java.games.input.Version.getVersion()
+			project.setNewProperty("jinputversion",version);
+			var declaredJinputVersion = project.getProperty("jinput.version");
+			System.out.println("JINPUT Version: " + version + " - DeclaredVersion: " + declaredJinputVersion);
+				
+			if(declaredJinputVersion.equals(version)){
+				System.out.println("JINPUT Version Matches");
+				project.setNewProperty("jinputversionmatches", true);
+			} else {
+				System.out.println("JINPUT Version don't match");
+			}
+			]]>
+			</script>
+			<condition property="failjinputcheck">
+				<and>
+					<not><isset property="jinputversionmatches" /></not>
+					<not><isset property="overridejinput" /></not>
+				</and>
+			</condition>
+			<fail  if="failjinputcheck" message="Jinput version in project is different from the declared jinput version for maven add -Doverridejinput=true as a command line option to avoid this check" />
+		</target>
 
 	<target name="maven-full">
 		<antcall target="clean-java" />
@@ -47,7 +74,7 @@
         <antcall target="maven"/>
 	</target>
 	
-	<target name="maven" depends="-fixmavenversion"> <!-- Added as dependency because using antcall creates a new project scope -->
+	<target name="maven" depends="-fixmavenversion, -checkjinputversion"> <!-- Added as dependency because using antcall creates a new project scope -->
 		<delete dir="${lwjgl.dstMaven}" quiet="true" failonerror="false" taskname="cleaning maven dist" />
 		<mkdir dir="${lwjgl.dstMaven}"   taskname="initialiazing temp maven folder" />
 		<antcall target="-copylwjgljars" />
@@ -56,9 +83,14 @@
 		<antcall target="-createmavennativejars" />
 		<antcall target="-copymavenpoms"/>
 		<antcall target="-copymavendeploybuild"/>
-		<antcall target="-addjinput"/>
 		<antcall target="-copymaventdist"/>
 	</target>
+	
+	
+		
+	
+	
+	
 
 
 	<target name="-copylwjgljars">
@@ -127,7 +159,7 @@
 	</target>
 	
 	<target name="-createmavennativejars">
-		<jar destfile="${lwjgl.dstMaven}/lwjgl-platform-natives-win.jar" taskname="lwjgl-platform-natives-win.jar">
+		<jar destfile="${lwjgl.dstMaven}/lwjgl-platform-natives-windows.jar" taskname="lwjgl-platform-natives-windows.jar">
 			<fileset dir="${lwjgl.lib}/windows">
 				<patternset refid="lwjgl-windows-lwjgl.fileset"/>
 			</fileset>
@@ -137,7 +169,7 @@
 				<patternset refid="lwjgl-linux-lwjgl.fileset"/>
 			</fileset>
 		</jar>
-		<jar destfile="${lwjgl.dstMaven}/lwjgl-platform-natives-mac.jar" taskname="lwjgl-platform-natives-mac.jar">
+		<jar destfile="${lwjgl.dstMaven}/lwjgl-platform-natives-osx.jar" taskname="lwjgl-platform-natives-osx.jar">
 			<fileset dir="${lwjgl.lib}/macosx">
 				<patternset refid="lwjgl-macosx-lwjgl.fileset"/>
 			</fileset>
@@ -151,6 +183,7 @@
 			</fileset>
 			<filterset>
       			<filter token="VERSION" value="${lwjgl-maven-version}"/>
+				<filter token="JINPUTVERSION" value="${jinput.version}"/>
     		</filterset>	
 		</copy>
 	</target>
@@ -163,43 +196,6 @@
 		</copy>
 	</target>
 	
-	<!-- JINPUT -->
-	<target name="-addjinput">
-		<antcall target="-copyjinputjar" />
-		<antcall target="-createmavennativejinputjars" />
-	</target>
-	
-	<target name="-copyjinputjar">
-		<copy todir="${lwjgl.dstMaven}">
-			<fileset dir="${lwjgl.lib}">
-				<patternset>
-					<include name="jinput.jar" />
-				</patternset>
-			</fileset>
-		</copy>
-	</target>
-	
-	
-	<target name="-createmavennativejinputjars">
-		<jar destfile="${lwjgl.dstMaven}/jinput-platform-natives-win.jar" taskname="jinput-platform-natives-win.jar">
-			<fileset dir="${lwjgl.lib}/windows">
-				<patternset refid="lwjgl-windows-jinput.fileset"/>
-			</fileset>
-		</jar>
-		<jar destfile="${lwjgl.dstMaven}/jinput-platform-natives-linux.jar" taskname="jinput-platform-natives-linux.jar">
-			<fileset dir="${lwjgl.lib}/linux">
-				<patternset refid="lwjgl-linux-jinput.fileset"/>
-			</fileset>
-		</jar>
-		<jar destfile="${lwjgl.dstMaven}/jinput-platform-natives-mac.jar" taskname="jinput-platform-natives-mac.jar">
-			<fileset dir="${lwjgl.lib}/macosx">
-				<patternset refid="lwjgl-macosx-jinput.fileset"/>
-			</fileset>
-		</jar>
-	</target>
-	
-	<!-- END JINPUT -->
-
 	<target name="-copymaventdist">
 		<zip destfile="${lwjgl.dist}/lwjgl-maven-${lwjgl.version}.zip" basedir="${lwjgl.temp}" includes="maven/**" />
 	</target>

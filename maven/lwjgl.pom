@@ -22,7 +22,7 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>lwjgl-platform</artifactId>
 			<version>${project.version}</version>
-			<classifier>natives-win</classifier>
+			<classifier>natives-windows</classifier>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -34,12 +34,12 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>lwjgl-platform</artifactId>
 			<version>${project.version}</version>
-			<classifier>natives-mac</classifier>
+			<classifier>natives-osx</classifier>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>net.java.jinput</groupId>
 			<artifactId>jinput</artifactId>
-			<version>${project.version}</version>
+			<version>@JINPUTVERSION@</version>
 		</dependency>
 	</dependencies>
 </project>
