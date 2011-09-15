@@ -128,11 +128,12 @@ NSOpenGLPixelFormat *choosePixelFormat(JNIEnv *env, jobject pixel_format, bool g
 	if (gl32) {
 		putAttrib(&attribs, 99); // NSOpenGLPFAOpenGLProfile
 		putAttrib(&attribs, 0x3200); // NSOpenGLProfileVersion3_2Core
+	} else {
+		if (support_window)
+			putAttrib(&attribs, NSOpenGLPFAWindow);
+		if (support_pbuffer)
+			putAttrib(&attribs, NSOpenGLPFAPixelBuffer);
 	}
-	if (support_window)
-		putAttrib(&attribs, NSOpenGLPFAWindow);
-	if (support_pbuffer)
-		putAttrib(&attribs, NSOpenGLPFAPixelBuffer);
 	if (stereo)
 		putAttrib(&attribs, NSOpenGLPFAStereo);
 	if (floating_point)
