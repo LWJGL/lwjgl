@@ -84,6 +84,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxKeyboard_keycodeToKeySym(JNIE
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxKeyboard_openIM(JNIEnv *env, jclass unused, jlong display_ptr) {
 	Display *disp = (Display *)(intptr_t)display_ptr;
+	XSetLocaleModifiers ("@im=none");
 	XIM xim = XOpenIM(disp, NULL, NULL, NULL);
 	return (intptr_t)xim;
 }
