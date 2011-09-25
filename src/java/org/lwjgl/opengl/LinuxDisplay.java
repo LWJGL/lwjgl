@@ -142,7 +142,7 @@ final class LinuxDisplay implements DisplayImplementation {
 
 	private Canvas parent;
 	private long parent_window;
-	private boolean xembedded;
+	private static boolean xembedded;
 	private long parent_proxy_focus_window;
 	private boolean parent_focused;
 	private long last_window_focus = 0;
@@ -299,6 +299,8 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native void synchronize(long display, boolean synchronize);
 
 	private static int globalErrorHandler(long display, long event_ptr, long error_display, long serial, long error_code, long request_code, long minor_code) throws LWJGLException {
+		if (xembedded) return 0; // ignore X errors in xembeded mode to fix browser issues like dragging or switching tabs 
+		
 		if (display == getDisplay()) {
 			String error_msg = getErrorText(display, error_code);
 			throw new LWJGLException("X Error - disp: 0x" + Long.toHexString(error_display) + " serial: " + serial + " error: " + error_msg + " request_code: " + request_code + " minor_code: " + minor_code);
@@ -923,12 +925,6 @@ final class LinuxDisplay implements DisplayImplementation {
 
 		if (xembedded) {
 			long current_focus_window = 0;
-
-			try {
-				current_focus_window = nGetInputFocus(getDisplay());
-			} catch (LWJGLException e) {
-				return; // fail silently as it can fail whilst splitting browser tabs
-			}
 
 			if (last_window_focus != current_focus_window || parent_focused != focused) {
 				if (isParentWindowActive(current_focus_window)) {
