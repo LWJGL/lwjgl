@@ -299,7 +299,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native void synchronize(long display, boolean synchronize);
 
 	private static int globalErrorHandler(long display, long event_ptr, long error_display, long serial, long error_code, long request_code, long minor_code) throws LWJGLException {
-		if (xembedded) return 0; // ignore X errors in xembeded mode to fix browser issues like dragging or switching tabs 
+		if (xembedded && request_code == 42) return 0; // ignore X error in xembeded mode to fix a browser issue when dragging or switching tabs 
 		
 		if (display == getDisplay()) {
 			String error_msg = getErrorText(display, error_code);
