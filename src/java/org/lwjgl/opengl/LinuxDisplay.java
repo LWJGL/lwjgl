@@ -85,6 +85,8 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static final int SetModeInsert = 0;
 	private static final int SaveSetRoot = 1;
 	private static final int SaveSetUnmap = 1;
+	
+	private static final int X_SetInputFocus = 42;
 
 	/** Window mode enum */
 	private static final int FULLSCREEN_LEGACY = 1;
@@ -299,7 +301,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native void synchronize(long display, boolean synchronize);
 
 	private static int globalErrorHandler(long display, long event_ptr, long error_display, long serial, long error_code, long request_code, long minor_code) throws LWJGLException {
-		if (xembedded && request_code == 42) return 0; // ignore X error in xembeded mode to fix a browser issue when dragging or switching tabs 
+		if (xembedded && request_code == X_SetInputFocus) return 0; // ignore X error in xembeded mode to fix a browser issue when dragging or switching tabs 
 		
 		if (display == getDisplay()) {
 			String error_msg = getErrorText(display, error_code);
