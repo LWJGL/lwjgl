@@ -17,7 +17,7 @@
 
 	<property name="opengl-template-pattern" value="org/lwjgl/opengl/GL*.java,org/lwjgl/opengl/ARB*.java,org/lwjgl/opengl/AMD*.java,org/lwjgl/opengl/APPLE*.java,org/lwjgl/opengl/ATI*.java,org/lwjgl/opengl/EXT*.java,org/lwjgl/opengl/NV*.java,org/lwjgl/opengl/NVX*.java,org/lwjgl/opengl/HP*.java,org/lwjgl/opengl/IBM*.java,org/lwjgl/opengl/SUN*.java,org/lwjgl/opengl/SGIS*.java,org/lwjgl/opengl/GREMEDY*.java"/>
 	<property name="opengles-template-pattern" value="org/lwjgl/opengles/GLES*.java,org/lwjgl/opengles/ARB*.java,org/lwjgl/opengles/EXT*.java,org/lwjgl/opengles/AMD*.java,org/lwjgl/opengles/ANGLE*.java,org/lwjgl/opengles/APPLE*.java,org/lwjgl/opengles/ARM*.java,org/lwjgl/opengles/DMP*.java,org/lwjgl/opengles/IMG*.java,org/lwjgl/opengles/NV*.java,org/lwjgl/opengles/OES*.java,org/lwjgl/opengles/QCOM*.java,org/lwjgl/opengles/VIV*.java"/>
-    <property name="opencl-template-pattern-extensions" value="org/lwjgl/opencl/KHR*.java,org/lwjgl/opencl/EXT*.java,org/lwjgl/opencl/APPLE*.java,org/lwjgl/opencl/AMD*.java,org/lwjgl/opencl/NV*.java"/>
+    <property name="opencl-template-pattern-extensions" value="org/lwjgl/opencl/KHR*.java,org/lwjgl/opencl/EXT*.java,org/lwjgl/opencl/APPLE*.java,org/lwjgl/opencl/AMD*.java,org/lwjgl/opencl/INTEL*.java,org/lwjgl/opencl/NV*.java"/>
     <property name="opencl-template-pattern" value="org/lwjgl/opencl/CL*.java,${opencl-template-pattern-extensions}"/>
 
 	<!-- ================================================================== -->
