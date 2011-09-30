@@ -244,7 +244,6 @@ public interface GL32 {
 
 	/** Returned by CheckFramebufferStatusEXT: */
 	int GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS = 0x8DA8;
-	int GL_FRAMEBUFFER_INCOMPLETE_LAYER_COUNT = 0x8DA9;
 
 	/**
 	 * Accepted by the &lt;pname&gt; parameter of GetFramebufferAttachment-
