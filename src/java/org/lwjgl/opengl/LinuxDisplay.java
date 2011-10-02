@@ -141,7 +141,12 @@ final class LinuxDisplay implements DisplayImplementation {
 	private long current_cursor;
 	private long blank_cursor;
 	private boolean mouseInside = true;
-
+	private boolean resizable;
+	private boolean resized;
+	
+	private int window_width;
+	private int window_height;
+	
 	private Canvas parent;
 	private long parent_window;
 	private static boolean xembedded;
@@ -461,7 +466,11 @@ final class LinuxDisplay implements DisplayImplementation {
 					boolean undecorated = Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated") || (current_window_mode != WINDOWED && Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated_fs"));
 					this.parent = parent;
 					parent_window = parent != null ? getHandle(parent) : getRootWindow(getDisplay(), getDefaultScreen());
-					current_window = nCreateWindow(getDisplay(), getDefaultScreen(), handle, mode, current_window_mode, x, y, undecorated, parent_window);
+					resizable = Display.isResizable();
+					resized = false;
+					window_width = mode.getWidth();
+					window_height = mode.getHeight();
+					current_window = nCreateWindow(getDisplay(), getDefaultScreen(), handle, mode, current_window_mode, x, y, undecorated, parent_window, resizable);
 					mapRaised(getDisplay(), current_window);
 					xembedded = parent != null && isAncestorXEmbedded(parent_window);
 					blank_cursor = createBlankCursor();
@@ -495,7 +504,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			unlockAWT();
 		}
 	}
-	private static native long nCreateWindow(long display, int screen, ByteBuffer peer_info_handle, DisplayMode mode, int window_mode, int x, int y, boolean undecorated, long parent_handle) throws LWJGLException;
+	private static native long nCreateWindow(long display, int screen, ByteBuffer peer_info_handle, DisplayMode mode, int window_mode, int x, int y, boolean undecorated, long parent_handle, boolean resizable) throws LWJGLException;
 	private static native long getRootWindow(long display, int screen);
 	private static native boolean hasProperty(long display, long window, long property);
 	private static native long getParentWindow(long display, long window) throws LWJGLException;
@@ -504,6 +513,9 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native void reparentWindow(long display, long window, long parent, int x, int y);
 	private static native long nGetInputFocus(long display) throws LWJGLException;
 	private static native void nSetInputFocus(long display, long window, long time);
+	private static native void nSetWindowSize(long display, long window, int width, int height, boolean resizable);
+	private static native int nGetWidth(long display, long window);
+	private static native int nGetHeight(long display, long window);
 
 	private static boolean isAncestorXEmbedded(long window) throws LWJGLException {
 		long xembed_atom = internAtom("_XEMBED_INFO", true);
@@ -823,6 +835,16 @@ final class LinuxDisplay implements DisplayImplementation {
 					break;
 				case LinuxEvent.Expose:
 					dirty = true;
+					
+					int width = nGetWidth(getDisplay(), getWindow());
+					int height = nGetHeight(getDisplay(), getWindow());
+					
+					if (window_width != width || window_height != height) {
+						resized = true;
+						window_width = width;
+						window_height = height;
+					}
+					
 					break;
 				case LinuxEvent.EnterNotify:
 					mouseInside = true;
@@ -1346,11 +1368,11 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native void nSetWindowIcon(long display, long window, ByteBuffer icon_rgb, int icon_rgb_size, ByteBuffer icon_mask, int icon_mask_size, int width, int height);
 
 	public int getWidth() {
-		return Display.getDisplayMode().getWidth();
+		return window_width;
 	}
 
 	public int getHeight() {
-		return Display.getDisplayMode().getHeight();
+		return window_height;
 	}
 
 	public boolean isInsideWindow() {
@@ -1358,10 +1380,20 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 
 	public void setResizable(boolean resizable) {
-
+		if (this.resizable == resizable) {
+			return;
+		}
+		
+		this.resizable = resizable;
+		nSetWindowSize(getDisplay(), getWindow(), window_width, window_height, resizable);
 	}
 
 	public boolean wasResized() {
+		if (resized) {
+			resized = false;
+			return true;
+		}
+		
 		return false;
 	}
 
