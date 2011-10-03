@@ -32,6 +32,14 @@
 					System.out.println("Fixing LWJGL Maven version (Maven version should be x.y.z)");
 					mavenVersion = originalVersion + ".0";
 				}
+				if(!mavenVersion.match(/^.*-SNAPSHOT$/)){
+					var forceSnapshot = project.getProperty("snapshot")
+					if(forceSnapshot!="false"){
+						System.out.println("Forcing Maven Version to Snapshot");
+						mavenVersion = mavenVersion + "-SNAPSHOT";
+					}
+			    }
+			
 				project.setNewProperty("lwjgl-maven-version",mavenVersion);
 				System.out.println("LWJGL Maven Version: " + project.getProperty("lwjgl-maven-version"));
 			]]>
@@ -60,9 +68,9 @@
 					<not><isset property="jinputversionmatches" /></not>
 					<not><isset property="overridejinput" /></not>
 				</and>
-			</condition>
-			<fail  if="failjinputcheck" message="Jinput version in project is different from the declared jinput version for maven add -Doverridejinput=true as a command line option to avoid this check" />
-		</target>
+			</condition>		
+			<fail  if="failjinputcheck" message="Jinput version in project (${jinputversion}) is different from the declared jinput version for maven (${jinput.version}) add -Doverridejinput=true as a command line option to avoid this check" />	
+	</target>
 
 	<target name="maven-full">
 		<antcall target="clean-java" />
