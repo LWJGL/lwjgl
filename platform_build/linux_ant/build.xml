@@ -111,6 +111,8 @@
 			<mapper type="glob" from="*.c" to="*.o"/>
 		    <fileset dir="${native}/common" includes="*.c"/>
 		    <fileset dir="${native}/common/opengl" includes="*.c"/>
+		    <fileset dir="${native}/generated/openal" includes="*.c"/>
+		    <fileset dir="${native}/generated/opencl" includes="*.c"/>    		
 		    <fileset dir="${native}/generated/opengl" includes="*.c"/>
 		    <fileset dir="${native}/linux" includes="*.c"/>
 		    <fileset dir="${native}/linux/opengl" includes="*.c"/>
