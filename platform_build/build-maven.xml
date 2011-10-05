@@ -34,7 +34,7 @@
 				}
 				if(!mavenVersion.match(/^.*-SNAPSHOT$/)){
 					var forceSnapshot = project.getProperty("snapshot")
-					if(forceSnapshot!="false"){
+					if(forceSnapshot!=null && forceSnapshot!="false"){
 						System.out.println("Forcing Maven Version to Snapshot");
 						mavenVersion = mavenVersion + "-SNAPSHOT";
 					}
