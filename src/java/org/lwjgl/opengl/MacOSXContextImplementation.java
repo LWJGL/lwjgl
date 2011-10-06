@@ -63,6 +63,8 @@ final class MacOSXContextImplementation implements ContextImplementation {
 		}
 	}
 
+	native long getCGLShareGroup(ByteBuffer context_handle);
+	
 	private static native void nSwapBuffers(ByteBuffer context_handle) throws LWJGLException;
 
 	public void update(ByteBuffer context_handle) {

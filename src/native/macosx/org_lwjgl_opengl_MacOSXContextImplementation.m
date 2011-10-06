@@ -38,6 +38,9 @@
  */
 
 #import <jni.h>
+#import <OpenGL/CGLCurrent.h>
+#import <OpenGL/CGLTypes.h>
+#import <OpenGL/CGLDevice.h>
 #import <Cocoa/Cocoa.h>
 #import "org_lwjgl_opengl_MacOSXContextImplementation.h"
 #import "context.h"
@@ -76,6 +79,16 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCre
     context_info->peer_info = peer_info;
 	[pool release];
 	return context_handle;
+}
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_getCGLShareGroup
+  (JNIEnv *env, jclass clazz, jobject context_handle) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
+	CGLContextObj cgl_context = [context_info->context CGLContextObj];
+	CGLShareGroupObj share_group = CGLGetShareGroup(cgl_context);
+	[pool release];
+	return share_group;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSwapBuffers

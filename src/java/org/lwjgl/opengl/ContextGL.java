@@ -36,6 +36,7 @@ import org.lwjgl.LWJGLUtil;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.Sys;
 import org.lwjgl.opencl.KHRGLSharing;
+import org.lwjgl.opencl.APPLEGLSharing;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -275,8 +276,16 @@ final class ContextGL implements Context {
 					properties.put(KHRGLSharing.CL_GL_CONTEXT_KHR).put(implLinux.getGLXContext(handle));
 					properties.put(KHRGLSharing.CL_GLX_DISPLAY_KHR).put(implLinux.getDisplay(peer_handle));
 					break;
+				case LWJGLUtil.PLATFORM_MACOSX:
+					if (LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 6)) { // only supported on OS X 10.6+
+						// http://oscarbg.blogspot.com/2009/10/about-opencl-opengl-interop.html
+						final MacOSXContextImplementation implMacOSX = (MacOSXContextImplementation)implementation;
+						final long CGLShareGroup = implMacOSX.getCGLShareGroup(handle);
+						properties.put(APPLEGLSharing.CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE).put(CGLShareGroup);
+						break;
+					}
 				default:
-					throw new UnsupportedOperationException("CL/GL context sharing is not supposed on this platform.");
+					throw new UnsupportedOperationException("CL/GL context sharing is not supported on this platform.");
 			}
 		} finally {
 			peer_info.unlock();
