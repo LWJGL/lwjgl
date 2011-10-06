@@ -65,8 +65,10 @@ import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.security.AccessControlException;
 import java.security.AccessController;
+import java.security.AllPermission;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
+import java.security.Permissions;
 import java.security.PrivilegedExceptionAction;
 import java.security.SecureClassLoader;
 import java.security.cert.Certificate;
@@ -1155,13 +1157,31 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			file = file.replace("!", "%21");
 			urls[i] = new URL(file);
 		}
-
+		
+		// get AppletLoader certificates
+		final Certificate[] certs = getCurrentCertificates();
+		
+		// detect if we are running on a mac and save result as boolean
+		String osName = System.getProperty("os.name");
+		final boolean isMacOS = (osName.startsWith("Mac") || osName.startsWith("Darwin"));
+		
 		// add downloaded jars to the classpath with required permissions
 		classLoader = new URLClassLoader(urls) {
 			protected PermissionCollection getPermissions (CodeSource codesource) {
 				PermissionCollection perms = null;
 
 				try {
+					
+					// if mac, apply workaround for the multiple security dialog issue
+					if (isMacOS) {
+						// if certificates match the AppletLoader certificates then don't use SecureClassLoader to get further permissions
+						if (certificatesMatch(certs, codesource.getCertificates())) {
+							perms = new Permissions();
+							perms.add(new AllPermission());
+							return perms;
+						}
+					}
+
 					// getPermissions from original classloader is important as it checks for signed jars and shows any security dialogs needed
 					Method method = SecureClassLoader.class.getDeclaredMethod("getPermissions", new Class[] { CodeSource.class });
 					method.setAccessible(true);
@@ -1666,18 +1686,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			nativeFolder.mkdir();
 		}
 		
-		// get the current certificate to compare against native files
-		Certificate[] certificate = AppletLoader.class.getProtectionDomain().getCodeSource().getCertificates();
-
-		// workaround for bug where cached applet loader does not have certificates!?
-		if (certificate == null) {
-			URL location = AppletLoader.class.getProtectionDomain().getCodeSource().getLocation();
-
-			// manually load the certificate
-			JarURLConnection jurl = (JarURLConnection) (new URL("jar:" + location.toString() + "!/org/lwjgl/util/applet/AppletLoader.class").openConnection());
-			jurl.setDefaultUseCaches(true);
-			certificate = jurl.getCertificates();
-		}
+		// get the current AppletLoader certificates to compare against certificates of the native files
+		Certificate[] certificate = getCurrentCertificates();
 		
 		for (int i = urlList.length - nativeJarCount; i < urlList.length; i++) {
 			
@@ -1755,8 +1765,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				in.close();
 				out.close();
 				
-				// validate if the certificate for native file
-				validateCertificateChain(certificate, entry.getCertificates());
+				// validate the certificate for the native file being extracted
+				if (!certificatesMatch(certificate, entry.getCertificates())) {
+					throw new Exception("The certificate(s) in " + nativeJar + " do not match the AppletLoader!");
+				}
 			}
 			subtaskMessage = "";
 	
@@ -1770,23 +1782,51 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * Validates the certificate chain for a single file
+	 * Compare two certificate chains to see if they match
 	 *
-	 * @param ownCerts Chain of certificates to check against
-	 * @param native_certs Chain of certificates to check
+	 * @param cert1 first chain of certificates
+	 * @param cert2 second chain of certificates
+	 * 
+	 * @return true if the certificate chains are the same
 	 */
-	protected static void validateCertificateChain(Certificate[] ownCerts, Certificate[] native_certs) throws Exception {
-		if (native_certs == null)
-			throw new Exception("Unable to validate certificate chain. Native entry did not have a certificate chain at all");
-
-		if (ownCerts.length != native_certs.length)
-			throw new Exception("Unable to validate certificate chain. Chain differs in length [" + ownCerts.length + " vs " + native_certs.length + "]");
-
-		for (int i = 0; i < ownCerts.length; i++) {
-			if (!ownCerts[i].equals(native_certs[i])) {
-				throw new Exception("Certificate mismatch: " + ownCerts[i] + " != " + native_certs[i]);
+	protected static boolean certificatesMatch(Certificate[] certs1, Certificate[] certs2) throws Exception {
+		if (certs1 == null || certs2 == null) {
+			return false;
+		}
+		
+		if (certs1.length != certs2.length) {
+			return false;
+		}
+		
+		for (int i = 0; i < certs1.length; i++) {
+			if (!certs1[i].equals(certs2[i])) {
+				return false;
 			}
 		}
+		
+		return true;
+	}
+	
+	/**
+	 * Returns the current certificate chain of the AppletLoader
+	 * 
+	 * @return - certificate chain of AppletLoader
+	 */
+	protected static Certificate[] getCurrentCertificates() throws Exception {
+		// get the current certificate to compare against native files
+		Certificate[] certificate = AppletLoader.class.getProtectionDomain().getCodeSource().getCertificates();
+		
+		// workaround for bug where cached applet loader does not have certificates!?
+		if (certificate == null) {
+			URL location = AppletLoader.class.getProtectionDomain().getCodeSource().getLocation();
+
+			// manually load the certificate
+			JarURLConnection jurl = (JarURLConnection) (new URL("jar:" + location.toString() + "!/org/lwjgl/util/applet/AppletLoader.class").openConnection());
+			jurl.setDefaultUseCaches(true);
+			certificate = jurl.getCertificates();
+		}
+		
+		return certificate;
 	}
 	
 	/**
