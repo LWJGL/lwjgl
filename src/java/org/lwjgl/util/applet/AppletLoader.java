@@ -125,6 +125,7 @@ import java.util.zip.ZipFile;
  * <li>al_debug - [boolean] Whether to enable debug mode. <i>Default: false</i>.</li>
  * <li>al_min_jre - [String] Specify the minimum jre version that the applet requires, should be in format like 1.6.0_24 or a subset like 1.6 <i>Default: 1.5</i>.</li>
  * <li>al_prepend_host - [boolean] Whether to limit caching to this domain, disable if your applet is hosted on multiple domains and needs to share the cache. <i>Default: true</i>.</li>
+ * <li>al_lookup_threads - [int] Specify the number of concurrent threads to use to get file information before downloading. <i>Default: 1</i>.</li>
  * <p>
  * <li>al_windows64 - [String] If specified it will be used instead of al_windows on 64bit windows systems.</li>
  * <li>al_windows32 - [String] If specified it will be used instead of al_windows on 32bit windows systems.</li>
@@ -1814,6 +1815,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				
 				// validate the certificate for the native file being extracted
 				if (!certificatesMatch(certificate, entry.getCertificates())) {
+					f.delete(); // delete extracted native as its certificates doesn't match
 					throw new Exception("The certificate(s) in " + nativeJar + " do not match the AppletLoader!");
 				}
 			}
