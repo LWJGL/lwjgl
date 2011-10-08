@@ -74,8 +74,14 @@ import java.security.SecureClassLoader;
 import java.security.cert.Certificate;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
@@ -199,7 +205,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	public static final int STATE_DONE 						= 12;
 
 	/** used to calculate length of progress bar */
-	protected int		percentage;
+	protected volatile int percentage;
 
 	/** current size of download in bytes */
 	protected int		currentSizeDownload;
@@ -285,6 +291,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/** messages to be passed via liveconnect in headless mode */
 	protected String[] 	headlessMessage;
 	
+	/** threads to use when fetching information of files to be downloaded */
+	protected int 		concurrentLookupThreads;
+	
 	/** whether a fatal error occurred */
 	protected boolean	fatalError;
 	
@@ -311,7 +320,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	
 	/** fatal error message to display */
 	protected String[]	errorMessage;
-
+	
 	/** have natives been loaded by another instance of this applet */
 	protected static boolean natives_loaded;
 	
@@ -329,7 +338,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				return;
 			}
 		}
-
+		
 		// whether to use cache system
 		cacheEnabled	= getBooleanParameter("al_cache", true);
 
@@ -341,6 +350,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		// whether to run in headless mode
 		headless		= getBooleanParameter("al_headless", false);
+		
+		// obtain the number of concurrent lookup threads to use
+		concurrentLookupThreads = getIntParameter("al_lookup_threads", 1); // defaults to 1
 		
 		// get colors of applet
 		bgColor 		= getColor("boxbgcolor", Color.white);
@@ -1327,8 +1339,6 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		// store file sizes and mark which files not to download
 		fileSizes = new int[urlList.length];
 
-		URLConnection urlconnection;
-
 		File timestampsFile = new File(dir, "timestamps");
 
 		// if timestamps file exists, load it
@@ -1337,39 +1347,76 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		}
 
 		// calculate total size of jars to download
-		for (int i = 0; i < urlList.length; i++) {
-			urlconnection = urlList[i].openConnection();
-			urlconnection.setDefaultUseCaches(false);
-			if (urlconnection instanceof HttpURLConnection) {
-				((HttpURLConnection) urlconnection).setRequestMethod("HEAD");
-			}
+		
+		ExecutorService executorService = Executors.newFixedThreadPool(concurrentLookupThreads);
+		Queue<Future> requests = new LinkedList<Future>();
+		
+		// create unique object to sync code in requests 
+		final Object sync = new Integer(1);
+		
+		for (int j = 0; j < urlList.length; j++) {
+			final int i = j;
+			
+			Future request = executorService.submit(new Runnable() {
+				
+				public void run() {
+					
+					try {
+						
+						URLConnection urlconnection = urlList[i].openConnection();
+						urlconnection.setDefaultUseCaches(false);
+						if (urlconnection instanceof HttpURLConnection) {
+							((HttpURLConnection) urlconnection).setRequestMethod("HEAD");
+						}
+		 
+						fileSizes[i] = urlconnection.getContentLength();
 
-			fileSizes[i] = urlconnection.getContentLength();
+						long lastModified = urlconnection.getLastModified();
+						String fileName = getFileName(urlList[i]);
 
-			long lastModified = urlconnection.getLastModified();
-			String fileName = getFileName(urlList[i]);
+						if (cacheEnabled && lastModified != 0 && filesLastModified.containsKey(fileName)) {
+							long savedLastModified = filesLastModified.get(fileName);
 
+							// if lastModifed time is the same, don't redownload
+							if (savedLastModified == lastModified) {
+								fileSizes[i] = -2; // mark it to not redownload
+							}
+						}
+			 
+						if (fileSizes[i] >= 0) {
+							synchronized (sync) {
+								totalSizeDownload += fileSizes[i];
+							}
+						}
 
-			if (cacheEnabled && lastModified != 0 &&
-					filesLastModified.containsKey(fileName)) {
-				long savedLastModified = filesLastModified.get(fileName);
-
-				// if lastModifed time is the same, don't redownload
-				if (savedLastModified == lastModified) {
-					fileSizes[i] = -2; // mark it to not redownload
-				}
-			}
-
-			if (fileSizes[i] >= 0) {
-				totalSizeDownload += fileSizes[i];
-			}
-
-			// put key and value in the hashmap
-			filesLastModified.put(fileName, lastModified);
-
-			// update progress bar
-			percentage = 5 + (int)(10 * i/(float)urlList.length);
+						// put key and value in the hashmap
+						filesLastModified.put(fileName, lastModified);
+									
+					} catch (Exception e) {
+						throw new RuntimeException("Failed to fetch information for " + urlList[i], e);
+					}				
+				}});
+			
+			requests.add(request);
 		}
+			
+		while (!requests.isEmpty()) {
+			Iterator<Future> iterator = requests.iterator();
+			while (iterator.hasNext()) {
+				Future request = iterator.next();
+					if (request.isDone()) {
+						request.get(); // will throw an exception if request thrown an exception.
+						iterator.remove();
+						
+						// update progress bar
+						percentage = 5 + (int) (10 * (urlList.length - requests.size()) / (float) urlList.length);
+					}
+			}
+		
+			Thread.sleep(10);
+		}
+		
+		executorService.shutdown();
 	}
 
 	/**
@@ -2087,8 +2134,22 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	protected boolean getBooleanParameter(String name, boolean defaultValue) {
 		String parameter = getParameter(name);
-		if(parameter != null) {
+		if (parameter != null) {
 			return Boolean.parseBoolean(parameter);
+		}
+		return defaultValue;
+	}
+	
+	/**
+	 * Retrieves the int value for the applet
+	 * @param name Name of parameter
+	 * @param defaultValue default value to return if no such parameter
+	 * @return value of parameter or defaultValue
+	 */
+	protected int getIntParameter(String name, int defaultValue) {
+		String parameter = getParameter(name);
+		if (parameter != null) {
+			return Integer.parseInt(parameter);
 		}
 		return defaultValue;
 	}
