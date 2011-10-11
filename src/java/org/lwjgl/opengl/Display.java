@@ -259,7 +259,7 @@ public final class Display {
 	}
 
 	private static DisplayMode getEffectiveMode() {
-		return !isFullscreen() && parent != null ? (current_mode = new DisplayMode(parent.getWidth(), parent.getHeight())) : current_mode;
+		return !isFullscreen() && parent != null ? new DisplayMode(parent.getWidth(), parent.getHeight()) : current_mode;
 	}
 
 	private static int getWindowX() {
