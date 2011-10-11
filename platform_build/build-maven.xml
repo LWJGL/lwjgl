@@ -8,6 +8,7 @@
 	
 	<fileset id="lwjgl-sources.manual.fileset" dir="${lwjgl.src.java}">
 		<patternset refid="lwjgl.package.pattern" />
+		<patternset refid="lwjgl.package.dependencies.pattern"/>
 	</fileset>
 
 	<fileset id="lwjgl-sources.generated.fileset" dir="${lwjgl.src.generated}">

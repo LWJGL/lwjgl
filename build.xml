@@ -132,6 +132,7 @@
 		<!-- Create lwjgl.jar -->
 		<jar destfile="${lwjgl.temp}/jar/lwjgl-debug.jar" taskname="lwjgl-debug.jar">
 			<fileset refid="lwjgl.fileset" />
+			<fileset refid="lwjgl.fileset.dependencies"/>
 			<manifest>
 				<attribute name="Sealed" value="true"/>
 			</manifest>
@@ -143,12 +144,7 @@
 		<!-- Create lwjgl.jar -->
 		<jar destfile="${lwjgl.temp}/jar/lwjgl.jar" taskname="lwjgl.jar">
 			<fileset refid="lwjgl.fileset" />
-			<fileset dir="${lwjgl.bin}"> <!-- Display has a dependency on these -->
-				<patternset>
-					<include name="org/lwjgl/opengles/ContextAttribs.*"/>
-					<include name="org/lwjgl/opengles/PixelFormat.*"/>
-				</patternset>
-			</fileset>
+			<fileset refid="lwjgl.fileset.dependencies"/>
 			<manifest>
 				<attribute name="Sealed" value="true"/>
 			</manifest>
@@ -177,9 +173,40 @@
 
 	<!-- Packages the java files for the ES build -->
 	<target name="-createjars_es">
+		<!-- ================================================================== -->
+		<!-- Generate a list of the OpenGL extension classes					-->
+		<!-- ================================================================== -->
+		<fileset id="opengl-template-fileset" dir="${lwjgl.src}/generated" includes="${opengl-template-pattern}"/>
+		<property name="opengl-template-files" refid="opengl-template-fileset"/>
+
+		<tempfile property="temp.file"/>
+		<echo file="${temp.file}" message="${opengl-template-files}" taskname=""/>
+
+		<loadfile srcfile="${temp.file}" property="opengl-template-classes">
+			<filterchain>
+				<tokenfilter delimoutput=",">
+					<stringtokenizer delims=";"/>
+					<replaceregex pattern="org\${file.separator}lwjgl\${file.separator}opengl\${file.separator}(.+)[.]java"
+					              replace="org/lwjgl/opengl/\1.class"/>
+				</tokenfilter>
+			</filterchain>
+		</loadfile>
+
+		<delete file="${temp.file}" />
+
 		<!-- Create lwjgl.jar -->
 		<jar destfile="${lwjgl.temp}/jar/lwjgl.jar" taskname="lwjgl.jar">
-			<fileset refid="lwjgl_es.fileset"/>
+			<!-- Files to include in the lwjgl.jar file, for the ES build -->
+			<fileset dir="${lwjgl.bin}" excludes="${opengl-template-classes}">
+				<patternset id="lwjgl_es.package.pattern">
+					<include name="org/**/*"/>
+					<exclude name="org/lwjgl/d3d/**"/>
+					<exclude name="org/lwjgl/test/**"/>
+					<exclude name="org/lwjgl/util/**"/>
+					<exclude name="org/lwjgl/examples/**"/>
+				</patternset>
+			</fileset>
+
 			<manifest>
 				<attribute name="Sealed" value="true"/>
 			</manifest>
