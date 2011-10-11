@@ -80,8 +80,8 @@ final class AWTSurfaceLock {
 		// It is only needed on first call, so we avoid it on all subsequent calls
 		// due to performance..
         
-		// Allow the use of a Core Animation Layer only when using Display.setParent() or AWTGLCanvas and when not in fullscreen
-		final boolean allowCALayer = (Display.getParent() != null || component instanceof AWTGLCanvas) && !Display.isFullscreen();
+		// Allow the use of a Core Animation Layer only when using non fullscreen Display.setParent() or AWTGLCanvas
+		final boolean allowCALayer = (Display.getParent() != null && !Display.isFullscreen()) || component instanceof AWTGLCanvas;
 		
 		if (firstLockSucceeded)
 			return lockAndInitHandle(lock_buffer, component, allowCALayer);
