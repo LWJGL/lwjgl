@@ -49,7 +49,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_AWTSurfaceLock_createHandle
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_AWTSurfaceLock_lockAndInitHandle
-  (JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject canvas, jobject display_parent) {
+  (JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject canvas, jboolean allowCALayer) {
 	JAWT awt;
 	JAWT_DrawingSurface* ds;
 	JAWT_DrawingSurfaceInfo *dsi;
@@ -58,7 +58,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_AWTSurfaceLock_lockAndInitHandl
     jboolean result = JNI_FALSE;
 	
 	#ifdef __MACH__
-	if (display_parent) {
+	if (allowCALayer) {
         //first try CALAYER
         awt.version = JAWT_VERSION_1_4 | 0x80000000;//JAWT_MACOSX_USE_CALAYER;
         result = JAWT_GetAWT(env, &awt);

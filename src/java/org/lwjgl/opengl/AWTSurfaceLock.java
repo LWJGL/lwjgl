@@ -79,14 +79,17 @@ final class AWTSurfaceLock {
 		// http://192.18.37.44/forums/index.php?topic=10572 for a discussion.
 		// It is only needed on first call, so we avoid it on all subsequent calls
 		// due to performance..
-        final Canvas parent = component instanceof AWTGLCanvas ? component : Display.getParent();
+        
+		// Allow the use of a Core Animation Layer only when using Display.setParent() or AWTGLCanvas and when not in fullscreen
+		final boolean allowCALayer = (Display.getParent() != null || component instanceof AWTGLCanvas) && !Display.isFullscreen();
+		
 		if (firstLockSucceeded)
-			return lockAndInitHandle(lock_buffer, component, parent);
+			return lockAndInitHandle(lock_buffer, component, allowCALayer);
 		else
 			try {
 				firstLockSucceeded = AccessController.doPrivileged(new PrivilegedExceptionAction<Boolean>() {
 					public Boolean run() throws LWJGLException {
-						return lockAndInitHandle(lock_buffer, component, parent);
+						return lockAndInitHandle(lock_buffer, component, allowCALayer);
 					}
 				});
 				return firstLockSucceeded;
@@ -95,7 +98,7 @@ final class AWTSurfaceLock {
 			}
 	}
 
-	private static native boolean lockAndInitHandle(ByteBuffer lock_buffer, Canvas component, Canvas display_parent) throws LWJGLException;
+	private static native boolean lockAndInitHandle(ByteBuffer lock_buffer, Canvas component, boolean allowCALayer) throws LWJGLException;
 
 	void unlock() throws LWJGLException {
 		nUnlock(lock_buffer);

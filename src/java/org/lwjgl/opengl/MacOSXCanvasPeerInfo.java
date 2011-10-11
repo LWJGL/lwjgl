@@ -50,9 +50,12 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 	}
 
 	protected void initHandle(Canvas component) throws LWJGLException {
-		nInitHandle(awt_surface.lockAndGetHandle(component), getHandle());
+		// Allow the use of a Core Animation Layer only when using Display.setParent() or AWTGLCanvas and when not in fullscreen
+		final boolean allowCALayer = (Display.getParent() != null || component instanceof AWTGLCanvas) && !Display.isFullscreen();
+		
+		nInitHandle(awt_surface.lockAndGetHandle(component), getHandle(), allowCALayer);
 	}
-	private static native void nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle) throws LWJGLException;
+	private static native void nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle, boolean allowCALayer) throws LWJGLException;
 
 	protected void doUnlock() throws LWJGLException {
 		awt_surface.unlock();

@@ -65,65 +65,66 @@
 
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
-(JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle) {
+(JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle, jboolean allowCALayer) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	AWTSurfaceLock *surface = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
 	JAWT_MacOSXDrawingSurfaceInfo *macosx_dsi = (JAWT_MacOSXDrawingSurfaceInfo *)surface->dsi->platformInfo;
     
-    // check for CALayer support
-    if(surface->awt.version & 0x80000000) { //JAWT_MACOSX_USE_CALAYER) {
-        jint width = surface->dsi->bounds.width;
-        jint height = surface->dsi->bounds.height;
-        
-        if(peer_info->pbuffer == NULL ||
-           width != [peer_info->pbuffer pixelsWide] || height != [peer_info->pbuffer pixelsHigh]) {
-            if(peer_info->pbuffer != NULL) {
-                [peer_info->pbuffer release];
-            }
+    if (allowCALayer) {
+		// check for CALayer support
+		if(surface->awt.version & 0x80000000) { //JAWT_MACOSX_USE_CALAYER) {
+			jint width = surface->dsi->bounds.width;
+			jint height = surface->dsi->bounds.height;
+			
+			if(peer_info->pbuffer == NULL || width != [peer_info->pbuffer pixelsWide] || height != [peer_info->pbuffer pixelsHigh]) {
+				if(peer_info->pbuffer != NULL) {
+					[peer_info->pbuffer release];
+				}
             
-            // make pbuffer
-            NSOpenGLPixelBuffer *pbuffer = nil;
-            NSLog(@"Make pbuffer: %d x %d", width, height);
-            pbuffer = [[NSOpenGLPixelBuffer alloc] initWithTextureTarget:GL_TEXTURE_RECTANGLE_EXT
-                                                   textureInternalFormat:GL_RGBA
-                                                   textureMaxMipMapLevel:0
-                                                              pixelsWide:width
-                                                              pixelsHigh:height];
+				// make pbuffer
+				NSOpenGLPixelBuffer *pbuffer = nil;
+				NSLog(@"Make pbuffer: %d x %d", width, height);
+				pbuffer = [[NSOpenGLPixelBuffer alloc] initWithTextureTarget:GL_TEXTURE_RECTANGLE_EXT
+													   textureInternalFormat:GL_RGBA
+													   textureMaxMipMapLevel:0
+														pixelsWide:width
+														pixelsHigh:height];
             
-            peer_info->pbuffer = pbuffer;
-            peer_info->window = false;
-            peer_info->canDrawGL = true;
-        }
+				peer_info->pbuffer = pbuffer;
+				peer_info->window = false;
+				peer_info->canDrawGL = true;
+			}
         
-        if (macosx_dsi != NULL) {
-            [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^(){
-                // attach the "root layer" to the AWT Canvas surface layers
-                id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;//dsi->platformInfo;
-                if(surfaceLayers.layer == NULL) {
-                    PBufferGLLayer *caGLLayer = [[PBufferGLLayer new] autorelease];
-                    caGLLayer.peer_info = peer_info;
-                    caGLLayer.asynchronous = YES;
-                    caGLLayer.needsDisplayOnBoundsChange = YES;
-                    caGLLayer.opaque = YES;
-                    surfaceLayers.layer = caGLLayer;                
-                }
-            }];
-        }
-    } else {
-        peer_info->nsview = macosx_dsi->cocoaViewRef;
-        peer_info->window = true;
-    }
+			if (macosx_dsi != NULL) {
+				[JNFRunLoop performOnMainThreadWaiting:YES withBlock:^(){
+					// attach the "root layer" to the AWT Canvas surface layers
+					id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;//dsi->platformInfo;
+					if(surfaceLayers.layer == NULL) {
+						PBufferGLLayer *caGLLayer = [[PBufferGLLayer new] autorelease];
+						caGLLayer.peer_info = peer_info;
+						caGLLayer.asynchronous = YES;
+						caGLLayer.needsDisplayOnBoundsChange = YES;
+						caGLLayer.opaque = YES;
+						surfaceLayers.layer = caGLLayer;                
+					}
+				}];
+			}
+			
+			[pool release];
+			return;
+		}
+	}
+	
+	peer_info->nsview = macosx_dsi->cocoaViewRef;
+    peer_info->window = true;
     
 	[pool release];
 }
 
 // rotates a red square when asked to draw
 @implementation PBufferGLLayer
-
-//@synthesize peer_info;
-//@synthesize textureID;
 
 // override to draw custom GL content
 -(void)drawInCGLContext:(CGLContextObj)glContext
