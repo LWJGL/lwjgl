@@ -55,8 +55,12 @@
     BOOL canDraw;
 }
 
-@property (nonatomic) MacOSXPeerInfo *peer_info;
-@property (nonatomic) GLuint textureID;
+- (MacOSXPeerInfo*) peer_info;
+- (GLuint) textureID;
+
+- (void) setPeer_info: (MacOSXPeerInfo*)input;
+- (void) setTextureID: (GLuint)input;
+
 @end
 
 
@@ -118,8 +122,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 // rotates a red square when asked to draw
 @implementation PBufferGLLayer
 
-@synthesize peer_info;
-@synthesize textureID;
+//@synthesize peer_info;
+//@synthesize textureID;
 
 // override to draw custom GL content
 -(void)drawInCGLContext:(CGLContextObj)glContext
@@ -189,6 +193,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 			  forLayerTime:(CFTimeInterval)timeInterval
 			   displayTime:(const CVTimeStamp *)timeStamp {
     return peer_info->canDrawGL ? YES : NO;
+}
+
+- (MacOSXPeerInfo*) peer_info {
+    return peer_info;
+}
+
+- (GLuint) textureID {
+    return textureID;
+}
+
+- (void) setPeer_info: (MacOSXPeerInfo*)input {
+    peer_info = input;
+}
+
+- (void) setTextureID: (GLuint)input {
+    textureID = input;
 }
 
 @end
