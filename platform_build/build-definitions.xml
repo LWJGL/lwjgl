@@ -38,7 +38,6 @@
 	<fileset id="lwjgl.fileset.dependencies" dir="${lwjgl.bin}">
 		<patternset id="lwjgl.package.dependencies.pattern">
 			<include name="org/lwjgl/opengles/ContextAttribs*.*"/>
-			<include name="org/lwjgl/opengles/PixelFormat*.*"/>
 		</patternset>
 	</fileset>
 

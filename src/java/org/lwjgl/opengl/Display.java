@@ -750,32 +750,6 @@ public final class Display {
 	}
 
 	/**
-	 * Create the Display with the specified context type. If isFullscreen() is true or if windowed
-	 * context are not supported on the platform, the display mode will be switched to the mode returned by
-	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
-	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
-	 * created with the given parameters, a LWJGLException will be thrown.
-	 * <p/>
-	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
-	 *
-	 * @param type the context type to create
-	 *
-	 * @throws LWJGLException
-	 */
-	public static void create(ContextType type) throws LWJGLException {
-		synchronized ( GlobalLock.lock ) {
-			switch ( type ) {
-				case GL:
-					create(new PixelFormat());
-					break;
-				case GLES:
-					create(new org.lwjgl.opengles.PixelFormat());
-					break;
-			}
-		}
-	}
-
-	/**
 	 * Create the OpenGL context. If isFullscreen() is true or if windowed
 	 * context are not supported on the platform, the display mode will be switched to the mode returned by
 	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
@@ -787,7 +761,7 @@ public final class Display {
 	 * @throws LWJGLException
 	 */
 	public static void create() throws LWJGLException {
-		create(ContextType.GL);
+		create(new PixelFormat());
 	}
 
 	/**
@@ -805,7 +779,7 @@ public final class Display {
 	 */
 	public static void create(PixelFormat pixel_format) throws LWJGLException {
 		synchronized ( GlobalLock.lock ) {
-			create(pixel_format, null, null);
+			create(pixel_format, null, (ContextAttribs)null);
 		}
 	}
 
@@ -825,7 +799,7 @@ public final class Display {
 	 */
 	public static void create(PixelFormat pixel_format, Drawable shared_drawable) throws LWJGLException {
 		synchronized ( GlobalLock.lock ) {
-			create(pixel_format, shared_drawable, null);
+			create(pixel_format, shared_drawable, (ContextAttribs)null);
 		}
 	}
 
@@ -930,19 +904,19 @@ public final class Display {
 	 * <p/>
 	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
 	 *
-	 * @param pixel_format Describes the minimum specifications the context must fulfill.
+	 * @param pixel_format Describes the minimum specifications the context must fulfill. Must be an instance of org.lwjgl.opengles.PixelFormat.
 	 *
 	 * @throws LWJGLException
 	 */
 
-	public static void create(org.lwjgl.opengles.PixelFormat pixel_format) throws LWJGLException {
+	public static void create(PixelFormatLWJGL pixel_format) throws LWJGLException {
 		synchronized ( GlobalLock.lock ) {
 			create(pixel_format, null, null);
 		}
 	}
 
 	/**
-	 * Create the OpenGL context with the given minimum parameters. If isFullscreen() is true or if windowed
+	 * Create the OpenGL ES context with the given minimum parameters. If isFullscreen() is true or if windowed
 	 * context are not supported on the platform, the display mode will be switched to the mode returned by
 	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
 	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
@@ -950,19 +924,19 @@ public final class Display {
 	 * <p/>
 	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
 	 *
-	 * @param pixel_format    Describes the minimum specifications the context must fulfill.
+	 * @param pixel_format    Describes the minimum specifications the context must fulfill. Must be an instance of org.lwjgl.opengles.PixelFormat.
 	 * @param shared_drawable The Drawable to share context with. (optional, may be null)
 	 *
 	 * @throws LWJGLException
 	 */
-	public static void create(org.lwjgl.opengles.PixelFormat pixel_format, Drawable shared_drawable) throws LWJGLException {
+	public static void create(PixelFormatLWJGL pixel_format, Drawable shared_drawable) throws LWJGLException {
 		synchronized ( GlobalLock.lock ) {
 			create(pixel_format, shared_drawable, null);
 		}
 	}
 
 	/**
-	 * Create the OpenGL context with the given minimum parameters. If isFullscreen() is true or if windowed
+	 * Create the OpenGL ES context with the given minimum parameters. If isFullscreen() is true or if windowed
 	 * context are not supported on the platform, the display mode will be switched to the mode returned by
 	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
 	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
@@ -970,12 +944,12 @@ public final class Display {
 	 * <p/>
 	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
 	 *
-	 * @param pixel_format Describes the minimum specifications the context must fulfill.
+	 * @param pixel_format Describes the minimum specifications the context must fulfill. Must be an instance of org.lwjgl.opengles.PixelFormat.
 	 * @param attribs      The ContextAttribs to use when creating the context. (optional, may be null)
 	 *
 	 * @throws LWJGLException
 	 */
-	public static void create(org.lwjgl.opengles.PixelFormat pixel_format, org.lwjgl.opengles.ContextAttribs attribs) throws LWJGLException {
+	public static void create(PixelFormatLWJGL pixel_format, org.lwjgl.opengles.ContextAttribs attribs) throws LWJGLException {
 		synchronized ( GlobalLock.lock ) {
 			create(pixel_format, null, attribs);
 		}
@@ -990,13 +964,13 @@ public final class Display {
 	 * <p/>
 	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
 	 *
-	 * @param pixel_format    Describes the minimum specifications the context must fulfill.
+	 * @param pixel_format    Describes the minimum specifications the context must fulfill. Must be an instance of org.lwjgl.opengles.PixelFormat.
 	 * @param shared_drawable The Drawable to share context with. (optional, may be null)
 	 * @param attribs         The ContextAttribs to use when creating the context. (optional, may be null)
 	 *
 	 * @throws LWJGLException
 	 */
-	public static void create(org.lwjgl.opengles.PixelFormat pixel_format, Drawable shared_drawable, org.lwjgl.opengles.ContextAttribs attribs) throws LWJGLException {
+	public static void create(PixelFormatLWJGL pixel_format, Drawable shared_drawable, org.lwjgl.opengles.ContextAttribs attribs) throws LWJGLException {
 		synchronized ( GlobalLock.lock ) {
 			if ( isCreated() )
 				throw new IllegalStateException("Only one LWJGL context may be instantiated at any one time.");
