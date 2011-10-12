@@ -71,10 +71,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGLKHRFenceSync_neglGetSyncAt
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengles_EGLKHRFenceSync_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
-		{"neglCreateSyncKHR", "(JIJ)J", (void *)&Java_org_lwjgl_opengles_EGLKHRFenceSync_neglCreateSyncKHR, "eglCreateSyncKHR", (void *)&eglCreateSyncKHR},
-		{"neglDestroySyncKHR", "(JJ)Z", (void *)&Java_org_lwjgl_opengles_EGLKHRFenceSync_neglDestroySyncKHR, "eglDestroySyncKHR", (void *)&eglDestroySyncKHR},
-		{"neglClientWaitSyncKHR", "(JJIJ)I", (void *)&Java_org_lwjgl_opengles_EGLKHRFenceSync_neglClientWaitSyncKHR, "eglClientWaitSyncKHR", (void *)&eglClientWaitSyncKHR},
-		{"neglGetSyncAttribKHR", "(JJIJ)Z", (void *)&Java_org_lwjgl_opengles_EGLKHRFenceSync_neglGetSyncAttribKHR, "eglGetSyncAttribKHR", (void *)&eglGetSyncAttribKHR}
+		{"neglCreateSyncKHR", "(JIJ)J", (void *)&Java_org_lwjgl_opengles_EGLKHRFenceSync_neglCreateSyncKHR, "eglCreateSyncKHR", (void *)&eglCreateSyncKHR, false},
+		{"neglDestroySyncKHR", "(JJ)Z", (void *)&Java_org_lwjgl_opengles_EGLKHRFenceSync_neglDestroySyncKHR, "eglDestroySyncKHR", (void *)&eglDestroySyncKHR, false},
+		{"neglClientWaitSyncKHR", "(JJIJ)I", (void *)&Java_org_lwjgl_opengles_EGLKHRFenceSync_neglClientWaitSyncKHR, "eglClientWaitSyncKHR", (void *)&eglClientWaitSyncKHR, false},
+		{"neglGetSyncAttribKHR", "(JJIJ)Z", (void *)&Java_org_lwjgl_opengles_EGLKHRFenceSync_neglGetSyncAttribKHR, "eglGetSyncAttribKHR", (void *)&eglGetSyncAttribKHR, false}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
 	extgl_InitializeClass(env, clazz, num_functions, functions);

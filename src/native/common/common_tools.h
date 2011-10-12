@@ -109,6 +109,7 @@ typedef struct {
 
 	char *ext_function_name;
 	void **ext_function_pointer;
+	bool optional;
 } JavaMethodAndExtFunction;
 
 typedef struct {

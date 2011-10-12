@@ -82,12 +82,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGLNVSync_neglGetSyncAttribNV
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengles_EGLNVSync_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
-		{"neglCreateFenceSyncNV", "(JIJ)J", (void *)&Java_org_lwjgl_opengles_EGLNVSync_neglCreateFenceSyncNV, "eglCreateFenceSyncNV", (void *)&eglCreateFenceSyncNV},
-		{"neglDestroySyncNV", "(J)Z", (void *)&Java_org_lwjgl_opengles_EGLNVSync_neglDestroySyncNV, "eglDestroySyncNV", (void *)&eglDestroySyncNV},
-		{"neglFenceNV", "(J)Z", (void *)&Java_org_lwjgl_opengles_EGLNVSync_neglFenceNV, "eglFenceNV", (void *)&eglFenceNV},
-		{"neglClientWaitSyncNV", "(JIJ)I", (void *)&Java_org_lwjgl_opengles_EGLNVSync_neglClientWaitSyncNV, "eglClientWaitSyncNV", (void *)&eglClientWaitSyncNV},
-		{"neglSignalSyncNV", "(JI)Z", (void *)&Java_org_lwjgl_opengles_EGLNVSync_neglSignalSyncNV, "eglSignalSyncNV", (void *)&eglSignalSyncNV},
-		{"neglGetSyncAttribNV", "(JIJ)Z", (void *)&Java_org_lwjgl_opengles_EGLNVSync_neglGetSyncAttribNV, "eglGetSyncAttribNV", (void *)&eglGetSyncAttribNV}
+		{"neglCreateFenceSyncNV", "(JIJ)J", (void *)&Java_org_lwjgl_opengles_EGLNVSync_neglCreateFenceSyncNV, "eglCreateFenceSyncNV", (void *)&eglCreateFenceSyncNV, false},
+		{"neglDestroySyncNV", "(J)Z", (void *)&Java_org_lwjgl_opengles_EGLNVSync_neglDestroySyncNV, "eglDestroySyncNV", (void *)&eglDestroySyncNV, false},
+		{"neglFenceNV", "(J)Z", (void *)&Java_org_lwjgl_opengles_EGLNVSync_neglFenceNV, "eglFenceNV", (void *)&eglFenceNV, false},
+		{"neglClientWaitSyncNV", "(JIJ)I", (void *)&Java_org_lwjgl_opengles_EGLNVSync_neglClientWaitSyncNV, "eglClientWaitSyncNV", (void *)&eglClientWaitSyncNV, false},
+		{"neglSignalSyncNV", "(JI)Z", (void *)&Java_org_lwjgl_opengles_EGLNVSync_neglSignalSyncNV, "eglSignalSyncNV", (void *)&eglSignalSyncNV, false},
+		{"neglGetSyncAttribNV", "(JIJ)Z", (void *)&Java_org_lwjgl_opengles_EGLNVSync_neglGetSyncAttribNV, "eglGetSyncAttribNV", (void *)&eglGetSyncAttribNV, false}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
 	extgl_InitializeClass(env, clazz, num_functions, functions);

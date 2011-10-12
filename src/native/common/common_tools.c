@@ -297,7 +297,7 @@ void ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, i
 	void *ext_func_pointer;
 	void **ext_function_pointer_pointer;
 	JNINativeMethod *method;
-	int i;
+	int i, num_natives = 0;
 	if (clazz == NULL) {
 		throwException(env, "Null class");
 		return;
@@ -308,6 +308,9 @@ void ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, i
 		if (function->ext_function_name != NULL) {
 			ext_func_pointer = gpa(function->ext_function_name);
 			if (ext_func_pointer == NULL) {
+				if ( function->optional )
+					continue;
+
 				free(methods);
 				throwException(env, "Missing driver symbols");
 				return;
@@ -315,12 +318,14 @@ void ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, i
 			ext_function_pointer_pointer = function->ext_function_pointer;
 			*ext_function_pointer_pointer = ext_func_pointer;
 		}
-		method = methods + i;
+		method = methods + num_natives;
 		method->name = function->method_name;
 		method->signature = function->signature;
 		method->fnPtr = function->method_pointer;
+
+		num_natives++;
 	}
-	(*env)->RegisterNatives(env, clazz, methods, num_functions);
+	(*env)->RegisterNatives(env, clazz, methods, num_natives);
 	free(methods);
 }
 

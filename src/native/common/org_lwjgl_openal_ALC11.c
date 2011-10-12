@@ -111,11 +111,11 @@ extern "C" {
 #endif
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC11_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
-		{"nalcCaptureOpenDevice", "(JIII)J", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureOpenDevice, "alcCaptureOpenDevice", (void*)&alcCaptureOpenDevice},
-		{"nalcCaptureCloseDevice", "(J)Z", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureCloseDevice, "alcCaptureCloseDevice", (void*)&alcCaptureCloseDevice},
-		{"nalcCaptureStart", "(J)V", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureStart, "alcCaptureStart", (void*)&alcCaptureStart},
-		{"nalcCaptureStop", "(J)V", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureStop, "alcCaptureStop", (void*)&alcCaptureStop},
-		{"nalcCaptureSamples", "(JJI)V", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureSamples, "alcCaptureSamples", (void*)&alcCaptureSamples}
+		{"nalcCaptureOpenDevice", "(JIII)J", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureOpenDevice, "alcCaptureOpenDevice", (void*)&alcCaptureOpenDevice, false},
+		{"nalcCaptureCloseDevice", "(J)Z", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureCloseDevice, "alcCaptureCloseDevice", (void*)&alcCaptureCloseDevice, false},
+		{"nalcCaptureStart", "(J)V", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureStart, "alcCaptureStart", (void*)&alcCaptureStart, false},
+		{"nalcCaptureStop", "(J)V", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureStop, "alcCaptureStop", (void*)&alcCaptureStop, false},
+		{"nalcCaptureSamples", "(JJI)V", (void*)&Java_org_lwjgl_openal_ALC11_nalcCaptureSamples, "alcCaptureSamples", (void*)&alcCaptureSamples, false}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
 	extal_InitializeClass(env, clazz, num_functions, functions);

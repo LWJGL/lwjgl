@@ -45,7 +45,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGLKHRReusableSync_neglSignal
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengles_EGLKHRReusableSync_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
-		{"neglSignalSyncKHR", "(JJI)Z", (void *)&Java_org_lwjgl_opengles_EGLKHRReusableSync_neglSignalSyncKHR, "eglSignalSyncKHR", (void *)&eglSignalSyncKHR}
+		{"neglSignalSyncKHR", "(JJI)Z", (void *)&Java_org_lwjgl_opengles_EGLKHRReusableSync_neglSignalSyncKHR, "eglSignalSyncKHR", (void *)&eglSignalSyncKHR, false}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
 	extgl_InitializeClass(env, clazz, num_functions, functions);

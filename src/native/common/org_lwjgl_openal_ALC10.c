@@ -263,20 +263,20 @@ extern "C" {
 #endif
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC10_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
-		{"nalcGetString", "(JI)Ljava/lang/String;", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetString, "alcGetString", (void*)&alcGetString},
-		{"nalcGetIntegerv", "(JIIJ)V", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetIntegerv, "alcGetIntegerv", (void*)&alcGetIntegerv},
-		{"nalcOpenDevice", "(J)J", (void*)&Java_org_lwjgl_openal_ALC10_nalcOpenDevice, "alcOpenDevice", (void*)&alcOpenDevice},
-		{"nalcCloseDevice", "(J)Z", (void*)&Java_org_lwjgl_openal_ALC10_nalcCloseDevice, "alcCloseDevice", (void*)&alcCloseDevice},
-		{"nalcCreateContext", "(JJ)J", (void*)&Java_org_lwjgl_openal_ALC10_nalcCreateContext, "alcCreateContext", (void*)&alcCreateContext},
-		{"nalcMakeContextCurrent", "(J)I", (void*)&Java_org_lwjgl_openal_ALC10_nalcMakeContextCurrent, "alcMakeContextCurrent", (void*)&alcMakeContextCurrent},
-		{"nalcProcessContext", "(J)V", (void*)&Java_org_lwjgl_openal_ALC10_nalcProcessContext, "alcProcessContext", (void*)&alcProcessContext},
-		{"nalcGetCurrentContext", "()J", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetCurrentContext, "alcGetCurrentContext", (void*)&alcGetCurrentContext},
-		{"nalcGetContextsDevice", "(J)J", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetContextsDevice, "alcGetContextsDevice", (void*)&alcGetContextsDevice},
-		{"nalcSuspendContext", "(J)V", (void*)&Java_org_lwjgl_openal_ALC10_nalcSuspendContext, "alcSuspendContext", (void*)&alcSuspendContext},
-		{"nalcDestroyContext", "(J)V", (void*)&Java_org_lwjgl_openal_ALC10_nalcDestroyContext, "alcDestroyContext", (void*)&alcDestroyContext},
-		{"nalcGetError", "(J)I", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetError, "alcGetError", (void*)&alcGetError},
-		{"nalcIsExtensionPresent", "(JJ)Z", (void*)&Java_org_lwjgl_openal_ALC10_nalcIsExtensionPresent, "alcIsExtensionPresent", (void*)&alcIsExtensionPresent},
-		{"nalcGetEnumValue", "(JJ)I", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetEnumValue, "alcGetEnumValue", (void*)&alcGetEnumValue}
+		{"nalcGetString", "(JI)Ljava/lang/String;", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetString, "alcGetString", (void*)&alcGetString, false},
+		{"nalcGetIntegerv", "(JIIJ)V", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetIntegerv, "alcGetIntegerv", (void*)&alcGetIntegerv, false},
+		{"nalcOpenDevice", "(J)J", (void*)&Java_org_lwjgl_openal_ALC10_nalcOpenDevice, "alcOpenDevice", (void*)&alcOpenDevice, false},
+		{"nalcCloseDevice", "(J)Z", (void*)&Java_org_lwjgl_openal_ALC10_nalcCloseDevice, "alcCloseDevice", (void*)&alcCloseDevice, false},
+		{"nalcCreateContext", "(JJ)J", (void*)&Java_org_lwjgl_openal_ALC10_nalcCreateContext, "alcCreateContext", (void*)&alcCreateContext, false},
+		{"nalcMakeContextCurrent", "(J)I", (void*)&Java_org_lwjgl_openal_ALC10_nalcMakeContextCurrent, "alcMakeContextCurrent", (void*)&alcMakeContextCurrent, false},
+		{"nalcProcessContext", "(J)V", (void*)&Java_org_lwjgl_openal_ALC10_nalcProcessContext, "alcProcessContext", (void*)&alcProcessContext, false},
+		{"nalcGetCurrentContext", "()J", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetCurrentContext, "alcGetCurrentContext", (void*)&alcGetCurrentContext, false},
+		{"nalcGetContextsDevice", "(J)J", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetContextsDevice, "alcGetContextsDevice", (void*)&alcGetContextsDevice, false},
+		{"nalcSuspendContext", "(J)V", (void*)&Java_org_lwjgl_openal_ALC10_nalcSuspendContext, "alcSuspendContext", (void*)&alcSuspendContext, false},
+		{"nalcDestroyContext", "(J)V", (void*)&Java_org_lwjgl_openal_ALC10_nalcDestroyContext, "alcDestroyContext", (void*)&alcDestroyContext, false},
+		{"nalcGetError", "(J)I", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetError, "alcGetError", (void*)&alcGetError, false},
+		{"nalcIsExtensionPresent", "(JJ)Z", (void*)&Java_org_lwjgl_openal_ALC10_nalcIsExtensionPresent, "alcIsExtensionPresent", (void*)&alcIsExtensionPresent, false},
+		{"nalcGetEnumValue", "(JJ)I", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetEnumValue, "alcGetEnumValue", (void*)&alcGetEnumValue, false}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
 	extal_InitializeClass(env, clazz, num_functions, functions);
