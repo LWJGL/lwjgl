@@ -2001,11 +2001,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	public Image getImage(URL url) {
 		try {
+			MediaTracker tracker = new MediaTracker(this);
+			
 			Image image = super.getImage(url);
 
 			// wait for image to load
-			MediaTracker tracker = new MediaTracker(this);
-	        tracker.addImage(image, 0);
+			tracker.addImage(image, 0);
 	        tracker.waitForAll();
 
 	        // if no errors return image
