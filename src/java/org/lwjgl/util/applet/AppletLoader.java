@@ -1843,11 +1843,13 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		}
 		
 		if (certs1.length != certs2.length) {
+			System.out.println("Certificate chain differs in length!");
 			return false;
 		}
 		
 		for (int i = 0; i < certs1.length; i++) {
 			if (!certs1[i].equals(certs2[i])) {
+				System.out.println("Certificate mismatch found!");
 				return false;
 			}
 		}
