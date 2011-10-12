@@ -709,10 +709,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			file = file.replace(".pack", "");
 		}
 
-		if (!lzmaSupported) {
-			System.out.println("'lzma.jar' required for LZMA support!");
-			System.out.println("trying files without the lzma extension...");
+		if (!lzmaSupported && file.endsWith(".lzma")) {
 			file = file.replace(".lzma", "");
+			System.out.println("LZMA decoder (lzma.jar) not found, trying " + file + " without lzma extension.");
 		}
 		return file;
 	}
