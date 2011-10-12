@@ -45,10 +45,10 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.ContextType;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengles.GLContext;
+import org.lwjgl.opengles.PixelFormat;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -86,7 +86,7 @@ public final class MappedIndexedVBOTest {
 
 	static {
 		try {
-			Display.create(ContextType.GLES);
+			Display.create(new PixelFormat());
 			System.out.println("Created OpenGL.");
 
 			if ( !GLContext.getCapabilities().GL_OES_mapbuffer ) {
