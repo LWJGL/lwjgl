@@ -178,7 +178,7 @@ static void setWindowTitle(Display *disp, Window window, jlong title, jint len) 
 	XChangeProperty(disp, window,
 					XInternAtom(disp, "_NET_WM_NAME", False),
 					XInternAtom(disp, "UTF8_STRING", False),
-					8, PropModeReplace, (const char *)(intptr_t)title,
+					8, PropModeReplace, (const unsigned char *)(intptr_t)title,
 					len);
 }
 
