@@ -71,7 +71,7 @@ class SignatureTranslator implements TypeVisitor {
 	public void visitArrayType(ArrayType t) {
 		final Class type = Utils.getJavaType(t.getComponentType());
 		if ( CharSequence.class.isAssignableFrom(type) )
-			signature.append("Ljava/nio/ByteBuffer;I");
+			signature.append("J");
 		else if ( Buffer.class.isAssignableFrom(type) )
 			signature.append("[Ljava/nio/ByteBuffer;");
 		else if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(type) )
@@ -82,18 +82,16 @@ class SignatureTranslator implements TypeVisitor {
 
 	public void visitClassType(ClassType t) {
 		Class type = NativeTypeTranslator.getClassFromType(t);
-		String type_name;
-		if ( (CharSequence.class.isAssignableFrom(type) && !String.class.equals(type)) || CharSequence[].class.isAssignableFrom(type) || PointerBuffer.class.isAssignableFrom(type) )
-			type_name = ByteBuffer.class.getName();
-		else if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(type) ) {
-			signature.append("J");
-			return;
-		} else
-			type_name = t.getDeclaration().getQualifiedName();
 
-		if ( Utils.isAddressableType(type) && !String.class.equals(type) )
+		if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(type) || (Utils.isAddressableType(type) && !String.class.equals(type)) )
 			signature.append("J");
 		else {
+			String type_name;
+			if ( (CharSequence.class.isAssignableFrom(type) && !String.class.equals(type)) || CharSequence[].class.isAssignableFrom(type) || PointerBuffer.class.isAssignableFrom(type) )
+				type_name = ByteBuffer.class.getName();
+			else
+				type_name = t.getDeclaration().getQualifiedName();
+
 			signature.append("L");
 			signature.append(getNativeNameFromClassName(type_name));
 			signature.append(";");

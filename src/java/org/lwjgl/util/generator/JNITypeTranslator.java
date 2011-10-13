@@ -69,7 +69,7 @@ public class JNITypeTranslator implements TypeVisitor {
 	public void visitArrayType(ArrayType t) {
 		final String className = t.getComponentType().toString();
 		if ( "java.lang.CharSequence".equals(className) )
-			signature.append("jobject");
+			signature.append("jlong");
 		else if ( "java.nio.ByteBuffer".equals(className) )
 			signature.append("jobjectArray");
 		else if ( "org.lwjgl.opencl.CLMem".equals(className) )
