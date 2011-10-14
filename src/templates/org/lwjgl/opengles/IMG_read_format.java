@@ -31,9 +31,10 @@
  */
 package org.lwjgl.opengles;
 
-import org.lwjgl.util.generator.Alias;
+public interface IMG_read_format {
 
-@Alias("OES_egl_sync")
-public interface OES_EGL_sync {
+	/** Accepted by the &lt;format&gt; parameter of ReadPixels: */
+	int GL_BGRA_IMG                       = 0x80E1,
+		GL_UNSIGNED_SHORT_4_4_4_4_REV_IMG = 0x8365;
 
 }

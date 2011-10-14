@@ -35,7 +35,7 @@ import org.lwjgl.util.generator.opengl.GLenum;
 import org.lwjgl.util.generator.opengl.GLsizei;
 import org.lwjgl.util.generator.opengl.GLuint;
 
-public interface IMG_multisamples_render_to_texture {
+public interface IMG_multisampled_render_to_texture {
 
 	/** Accepted by the &lt;pname&gt; parameter of GetRenderbufferParameteriv: */
 	int GL_RENDERBUFFER_SAMPLES_IMG = 0x9133;
