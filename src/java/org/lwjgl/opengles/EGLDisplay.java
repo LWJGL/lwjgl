@@ -172,7 +172,7 @@ public final class EGLDisplay extends PointerWrapperAbstract {
 	 *
 	 * @return the EGL surface
 	 */
-	public EGLSurface createWindowSurface(EGLConfig config, int window, IntBuffer attrib_list) throws LWJGLException {
+	public EGLSurface createWindowSurface(EGLConfig config, long window, IntBuffer attrib_list) throws LWJGLException {
 		checkInitialized();
 
 		if ( config.getDisplay() != this )

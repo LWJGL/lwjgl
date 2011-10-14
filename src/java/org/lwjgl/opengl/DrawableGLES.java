@@ -101,7 +101,7 @@ abstract class DrawableGLES implements DrawableLWJGL {
 				throw new LWJGLException("No EGLConfigs found for the specified PixelFormat.");
 
 			final EGLConfig eglConfig = pf.getBestMatch(configs);
-			final EGLSurface eglSurface = eglDisplay.createWindowSurface(eglConfig, (int)window, null);
+			final EGLSurface eglSurface = eglDisplay.createWindowSurface(eglConfig, window, null);
 			pf.setSurfaceAttribs(eglSurface);
 
 			this.eglDisplay = eglDisplay;

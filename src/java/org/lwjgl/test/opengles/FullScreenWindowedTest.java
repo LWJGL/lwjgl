@@ -82,7 +82,6 @@ public class FullScreenWindowedTest {
 		initialize();
 		mainLoop();
 		cleanup();
-		Display.destroy();
 	}
 
 	private void switchMode() throws LWJGLException {
@@ -99,16 +98,20 @@ public class FullScreenWindowedTest {
 		try {
 			//find displaymode
 			switchMode();
-			// start of in windowed mode
-			Display.create(new PixelFormat());
-			glInit();
+
 			quadPosition = new Vector2f(100f, 100f);
 			quadVelocity = new Vector2f(1.0f, 1.0f);
 
-			renderer = new QuadRenderer();
+			reinit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void reinit() throws LWJGLException {
+		Display.create(new PixelFormat());
+		glInit();
+		renderer = new QuadRenderer();
 	}
 
 	/** Runs the main loop of the "test" */
@@ -185,8 +188,7 @@ public class FullScreenWindowedTest {
 
 				switchMode();
 
-				glInit();
-				renderer = new QuadRenderer();
+				reinit();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -199,8 +201,7 @@ public class FullScreenWindowedTest {
 				mode = new DisplayMode(800, 480);
 				Display.setDisplayModeAndFullscreen(mode);
 
-				glInit();
-				renderer = new QuadRenderer();
+				reinit();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -254,6 +255,8 @@ public class FullScreenWindowedTest {
 		int_buffer.put(1, indices_buffer_id);
 
 		glDeleteBuffers(int_buffer);
+
+		Display.destroy();
 	}
 
 	/**
