@@ -625,4 +625,16 @@
 			<bottom><![CDATA[<i>Copyright &#169; 2002-2009 lwjgl.org. All Rights Reserved.</i>]]></bottom>
 		</javadoc>
 	</target>
+	
+	<!-- get and copy nightly binaries into libs folder -->
+	<target name="copy-nightly-binaries" depends="-initialize" description="Copies latest successful nightly binaries into appropriate libs folder">
+		<delete file="${lwjgl.temp}/lwjgl-${lwjgl.version}.zip" failonerror="false"/>
+		<get src="http://www.newdawnsoftware.com/jenkins/view/LWJGL/job/LWJGL/lastSuccessfulBuild/artifact/dist/lwjgl-${lwjgl.version}.zip" dest="${lwjgl.temp}" verbose="true"/>
+		<unzip src="${lwjgl.temp}/lwjgl-${lwjgl.version}.zip" dest="${lwjgl.lib}" overwrite="true">
+		 	<patternset>
+				<include name="**/native/**/*lwjgl*"/>
+			</patternset>
+			<globmapper from="lwjgl-${lwjgl.version}/native/*" to="*"/>	
+		</unzip>
+	</target>	
 </project>
