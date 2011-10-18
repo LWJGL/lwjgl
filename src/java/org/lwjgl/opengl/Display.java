@@ -1107,7 +1107,9 @@ public final class Display {
 	 * regardless of whether the Display was the current rendering context.
 	 */
 	public static void destroy() {
-		drawable.destroy();
+		if(isCreated()) {
+			drawable.destroy();
+		}
 	}
 
 	/*
