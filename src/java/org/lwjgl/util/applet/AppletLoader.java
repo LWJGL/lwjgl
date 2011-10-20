@@ -1843,7 +1843,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		}
 		
 		if (certs1.length != certs2.length) {
-			System.out.println("Certificate chain differs in length!");
+			System.out.println("Certificate chain differs in length [" + certs1.length + " vs " + certs2.length + "]!");
 			return false;
 		}
 		
@@ -1989,7 +1989,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		}
 
 		// show error as image could not be loaded
-		fatalErrorOccured("Unable to load logo and progressbar images", null);
+		fatalErrorOccured("Unable to load the logo/progressbar image: " + s, null);
 		return null;
 	}
 	
