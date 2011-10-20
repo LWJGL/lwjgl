@@ -93,7 +93,7 @@ public final class ALC11 {
 	 */
 	public static ALCdevice alcCaptureOpenDevice(String devicename, int frequency, int format, int buffersize) {
 		ByteBuffer buffer = MemoryUtil.encodeASCII(devicename);
-		long device_address = nalcCaptureOpenDevice(MemoryUtil.getAddress(buffer), frequency, format, buffersize);
+		long device_address = nalcCaptureOpenDevice((buffer == null) ? 0 : MemoryUtil.getAddress(buffer), frequency, format, buffersize);
 		if(device_address != 0) {
 			ALCdevice device = new ALCdevice(device_address);
 			synchronized (ALC10.devices) {
