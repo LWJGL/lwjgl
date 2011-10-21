@@ -52,7 +52,6 @@
 @interface PBufferGLLayer : NSOpenGLLayer {
     MacOSXPeerInfo *peer_info;
     GLuint textureID;
-    BOOL canDraw;
 }
 
 - (MacOSXPeerInfo*) peer_info;
@@ -78,7 +77,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 			jint width = surface->dsi->bounds.width;
 			jint height = surface->dsi->bounds.height;
 			
-			if(peer_info->pbuffer == NULL || width != [peer_info->pbuffer pixelsWide] || height != [peer_info->pbuffer pixelsHigh]) {
+			if(peer_info->pbuffer == NULL || peer_info->window || width != [peer_info->pbuffer pixelsWide] || height != [peer_info->pbuffer pixelsHigh]) {
 				if(peer_info->pbuffer != NULL) {
 					[peer_info->pbuffer release];
 				}
@@ -193,7 +192,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 			   pixelFormat:(CGLPixelFormatObj)pixelFormat
 			  forLayerTime:(CFTimeInterval)timeInterval
 			   displayTime:(const CVTimeStamp *)timeStamp {
-    return peer_info->canDrawGL ? YES : NO;
+    return (peer_info->canDrawGL && !peer_info->window) ? YES : NO;
 }
 
 - (MacOSXPeerInfo*) peer_info {
