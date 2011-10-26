@@ -376,8 +376,10 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 		setDecorations(disp, win, 0);
 	}
 
-	updateWindowBounds(disp, win, x, y, width, height, JNI_TRUE, resizable);
-	updateWindowHints(env, disp, win);
+	if (RootWindow(disp, screen) == parent_handle) { // on set hints when Display.setParent isn't used
+		updateWindowBounds(disp, win, x, y, width, height, JNI_TRUE, resizable);
+		updateWindowHints(env, disp, win);
+	}
 
 #define NUM_ATOMS 1
 	Atom protocol_atoms[NUM_ATOMS] = {XInternAtom(disp, "WM_DELETE_WINDOW", False)/*, XInternAtom(disp, "WM_TAKE_FOCUS", False)*/};
