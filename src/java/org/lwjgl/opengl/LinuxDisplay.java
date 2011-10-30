@@ -152,6 +152,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static boolean xembedded;
 	private long parent_proxy_focus_window;
 	private boolean parent_focused;
+	private boolean parent_focus_changed;
 	private long last_window_focus = 0;
 
 	private LinuxKeyboard keyboard;
@@ -161,11 +162,13 @@ final class LinuxDisplay implements DisplayImplementation {
 		public void focusGained(FocusEvent e) {
 			synchronized (GlobalLock.lock) {
 				parent_focused = true;
+				parent_focus_changed = true;
 			}
 		}
 		public void focusLost(FocusEvent e) {
 			synchronized (GlobalLock.lock) {
 				parent_focused = false;
+				parent_focus_changed = true;
 			}
 		}
 	};
@@ -489,9 +492,8 @@ final class LinuxDisplay implements DisplayImplementation {
 
 					if (parent != null) {
 						parent.addFocusListener(focus_listener);
-						if (parent.isFocusOwner()) {
-							parent_focused = true;
-						}
+						parent_focused = parent.isFocusOwner();
+						parent_focus_changed = true;
 					}
 				} finally {
 					peer_info.unlock();
@@ -549,6 +551,9 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void destroyWindow() {
 		lockAWT();
 		try {
+			if (parent != null) {
+				parent.removeFocusListener(focus_listener);
+			}
 			try {
 				setNativeCursor(null);
 			} catch (LWJGLException e) {
@@ -971,20 +976,24 @@ final class LinuxDisplay implements DisplayImplementation {
 			}
 		}
 		else {
-			if (parent_focused != keyboard_grabbed) {
-				if (parent_focused) {
-					grabKeyboard();
-					input_released = false;
-					focused = true;
-				}
-				else {
-					ungrabKeyboard();
-					input_released = true;
-					focused = false;
-				}
+			if (parent_focus_changed && parent_focused) {
+				setInputFocusUnsafe(getWindow());
+				parent_focus_changed = false;
 			}
 		}
 	}
+	
+	private void setInputFocusUnsafe(long window) {
+		try {
+			nSetInputFocus(getDisplay(), window, CurrentTime);
+			nSync(getDisplay(), false);
+		} catch (LWJGLException e) {
+			// Since we don't have any event timings for XSetInputFocus, a race condition might give a BadMatch, which we'll catch and ignore
+			LWJGLUtil.log("Got exception while trying to focus: " + e);
+		}
+	}
+	
+	private static native void nSync(long display, boolean throw_away_events) throws LWJGLException;
 
 	/**
 	 * This method will check if the parent window is active when running

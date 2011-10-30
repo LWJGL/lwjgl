@@ -138,6 +138,11 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_resetErrorHandler(JNI
 	return (intptr_t)XSetErrorHandler(handler);
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSync(JNIEnv *env, jclass unused, jlong display_ptr, jboolean throw_away_events) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	XSync(disp, throw_away_events ? True : False);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_sync(JNIEnv *env, jclass unused, jlong display_ptr, jboolean throw_away_events) {
 	Display *disp = (Display *)(intptr_t)display_ptr;
 	XSync(disp, throw_away_events ? True : False);
