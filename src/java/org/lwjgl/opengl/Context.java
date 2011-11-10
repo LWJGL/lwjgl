@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.opengles.PowerManagementEventException;
 
 /**
  * @author Spasi

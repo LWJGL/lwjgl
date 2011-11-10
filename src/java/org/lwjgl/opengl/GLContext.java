@@ -130,6 +130,17 @@ public final class GLContext {
 			return getThreadLocalCapabilities();
 	}
 
+	/**
+	 * Returns the capabilities instance associated with the specified context object.
+	 *
+	 * @param context the context object
+	 *
+	 * @return the capabilities instance
+	 */
+	static ContextCapabilities getCapabilities(Object context) {
+		return capability_cache.get(context);
+	}
+
 	private static ContextCapabilities getThreadLocalCapabilities() {
 		return current_capabilities.get();
 	}

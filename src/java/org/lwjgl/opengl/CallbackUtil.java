@@ -42,9 +42,9 @@ import java.util.Map;
 final class CallbackUtil {
 
 	/** Context -> Long */
-	private static final Map<ContextGL, Long> contextUserParamsARB = new HashMap<ContextGL, Long>();
+	private static final Map<ContextCapabilities, Long> contextUserParamsARB = new HashMap<ContextCapabilities, Long>();
 	/** Context -> Long */
-	private static final Map<ContextGL, Long> contextUserParamsAMD = new HashMap<ContextGL, Long>();
+	private static final Map<ContextCapabilities, Long> contextUserParamsAMD = new HashMap<ContextCapabilities, Long>();
 
 	private CallbackUtil() {}
 
@@ -84,19 +84,19 @@ final class CallbackUtil {
 	 *
 	 * @param userParam the global reference pointer
 	 */
-	private static void registerContextCallback(final long userParam, final Map<ContextGL, Long> contextUserData) {
-		ContextGL context = ContextGL.getCurrentContext();
-		if ( context == null ) {
+	private static void registerContextCallback(final long userParam, final Map<ContextCapabilities, Long> contextUserData) {
+		ContextCapabilities caps = GLContext.getCapabilities();
+		if ( caps == null ) {
 			deleteGlobalRef(userParam);
 			throw new IllegalStateException("No context is current.");
 		}
 
-		final Long userParam_old = contextUserData.remove(context);
+		final Long userParam_old = contextUserData.remove(caps);
 		if ( userParam_old != null )
 			deleteGlobalRef(userParam_old);
 
 		if ( userParam != 0 )
-			contextUserData.put(context, userParam);
+			contextUserData.put(caps, userParam);
 	}
 
 	/**
@@ -104,12 +104,15 @@ final class CallbackUtil {
 	 *
 	 * @param context the Context to unregister
 	 */
-	static void unregisterCallbacks(final ContextGL context) {
-		Long userParam = contextUserParamsARB.remove(context);
+	static void unregisterCallbacks(final Object context) {
+		// TODO: This is never called for custom contexts. Need to fix for LWJGL 3.0
+		final ContextCapabilities caps = GLContext.getCapabilities(context);
+
+		Long userParam = contextUserParamsARB.remove(caps);
 		if ( userParam != null )
 			deleteGlobalRef(userParam);
 
-		userParam = contextUserParamsAMD.remove(context);
+		userParam = contextUserParamsAMD.remove(caps);
 		if ( userParam != null )
 			deleteGlobalRef(userParam);
 	}
