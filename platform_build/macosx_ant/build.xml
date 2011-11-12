@@ -35,7 +35,7 @@
 
 	<target name="link">
 		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
-			<arg line="${linkerflags} -exported_symbols_list ../lwjgl.symbols -dynamiclib -o ${libname} -framework Foundation -framework AppKit -framework JavaVM -framework Carbon -framework OpenGL -framework JavaNativeFoundation -F/System/Library/Frameworks/JavaVM.framework/Frameworks"/>
+			<arg line="${linkerflags} -exported_symbols_list ../lwjgl.symbols -dynamiclib -o ${libname} -framework Foundation -framework AppKit -framework JavaVM -framework Carbon -framework OpenGL -framework QuartzCore -framework JavaNativeFoundation -F/System/Library/Frameworks/JavaVM.framework/Frameworks"/>
 			<fileset dir="${objdir}" includes="*.o"/>
 		</apply>
 		<apply dir="${objdir}" executable="strip" os="Mac OS X" failonerror="true">
