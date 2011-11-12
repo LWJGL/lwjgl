@@ -180,30 +180,33 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/** checking for already downloaded files */
 	public static final int STATE_CHECKING_CACHE 			= 4;
+	
+	/** checking if any updates are available for cache files */
+	public static final int STATE_CHECKING_FOR_UPDATES		= 5;
 
 	/** downloading packages */
-	public static final int STATE_DOWNLOADING 				= 5;
+	public static final int STATE_DOWNLOADING 				= 6;
 
 	/** extracting packages */
-	public static final int STATE_EXTRACTING_PACKAGES 		= 6;
+	public static final int STATE_EXTRACTING_PACKAGES 		= 7;
 	
 	/** validating packages */
-	public static final int STATE_VALIDATING_PACKAGES 		= 7;
+	public static final int STATE_VALIDATING_PACKAGES 		= 8;
 
 	/** updating the classpath */
-	public static final int STATE_UPDATING_CLASSPATH 		= 8;
+	public static final int STATE_UPDATING_CLASSPATH 		= 9;
 
 	/** switching to real applet */
-	public static final int STATE_SWITCHING_APPLET 			= 9;
+	public static final int STATE_SWITCHING_APPLET 			= 10;
 
 	/** initializing real applet */
-	public static final int STATE_INITIALIZE_REAL_APPLET	= 10;
+	public static final int STATE_INITIALIZE_REAL_APPLET	= 11;
 
 	/** stating real applet */
-	public static final int STATE_START_REAL_APPLET 		= 11;
+	public static final int STATE_START_REAL_APPLET 		= 12;
 
 	/** done */
-	public static final int STATE_DONE 						= 12;
+	public static final int STATE_DONE 						= 13;
 
 	/** used to calculate length of progress bar */
 	protected volatile int percentage;
@@ -678,6 +681,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				return "Determining packages to load";
 			case STATE_CHECKING_CACHE:
 				return "Calculating download size";
+			case STATE_CHECKING_FOR_UPDATES:
+				return "Checking for updates";
 			case STATE_DOWNLOADING:
 				return "Downloading packages";
 			case STATE_EXTRACTING_PACKAGES:
@@ -1343,6 +1348,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		// if timestamps file exists, load it
 		if (timestampsFile.exists()) {
+			setState(STATE_CHECKING_FOR_UPDATES);
 			filesLastModified = readHashMapFile(timestampsFile);
 		}
 
