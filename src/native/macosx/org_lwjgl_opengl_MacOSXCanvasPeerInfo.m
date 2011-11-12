@@ -62,6 +62,21 @@
 
 @end
 
+// forward declaration
+@interface AttachLayerOnMainThread : NSObject {
+    MacOSXPeerInfo *peer_info;
+    JAWT_MacOSXDrawingSurfaceInfo *macosx_dsi;
+}
+
+- (void) attachLayer;
+
+- (MacOSXPeerInfo*) peer_info;
+- (JAWT_MacOSXDrawingSurfaceInfo) macosx_dsi;
+
+- (void) setPeer_info: (MacOSXPeerInfo*)input;
+- (void) setMacosx_dsi: (JAWT_MacOSXDrawingSurfaceInfo*)input;
+
+@end
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 (JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle, jboolean allowCALayer) {
@@ -97,18 +112,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 			}
         
 			if (macosx_dsi != NULL) {
-				[JNFRunLoop performOnMainThreadWaiting:YES withBlock:^(){
-					// attach the "root layer" to the AWT Canvas surface layers
-					id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;//dsi->platformInfo;
-					if(surfaceLayers.layer == NULL) {
-						PBufferGLLayer *caGLLayer = [[PBufferGLLayer new] autorelease];
-						caGLLayer.peer_info = peer_info;
-						caGLLayer.asynchronous = YES;
-						caGLLayer.needsDisplayOnBoundsChange = YES;
-						caGLLayer.opaque = YES;
-						surfaceLayers.layer = caGLLayer;                
-					}
-				}];
+				
+				AttachLayerOnMainThread *attachLayerOnMainThread = [[AttachLayerOnMainThread new] autorelease];
+				attachLayerOnMainThread.peer_info = peer_info;
+				attachLayerOnMainThread.macosx_dsi = macosx_dsi;
+				
+				[JNFRunLoop performOnMainThread:@selector(attachLayer)
+													on:attachLayerOnMainThread
+													withObject:nil
+													waitUntilDone:YES];
 			}
 			
 			[pool release];
@@ -121,6 +133,40 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
     
 	[pool release];
 }
+
+// Object class to CALayer on AppKit Thread
+@implementation AttachLayerOnMainThread
+
+- (void) attachLayer {
+    // attach the "root layer" to the AWT Canvas surface layers
+	id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;//dsi->platformInfo;
+	if(surfaceLayers.layer == NULL) {
+		PBufferGLLayer *caGLLayer = [[PBufferGLLayer new] autorelease];
+		caGLLayer.peer_info = peer_info;
+		caGLLayer.asynchronous = YES;
+		caGLLayer.needsDisplayOnBoundsChange = YES;
+		caGLLayer.opaque = YES;
+		surfaceLayers.layer = caGLLayer;                
+	}
+}
+
+- (MacOSXPeerInfo*) peer_info {
+    return peer_info;
+}
+
+- (JAWT_MacOSXDrawingSurfaceInfo*) macosx_dsi {
+    return macosx_dsi;
+}
+
+- (void) setPeer_info: (MacOSXPeerInfo*)input {
+    peer_info = input;
+}
+
+- (void) setMacosx_dsi: (JAWT_MacOSXDrawingSurfaceInfo*)input {
+    macosx_dsi = input;
+}
+
+@end
 
 // rotates a red square when asked to draw
 @implementation PBufferGLLayer
