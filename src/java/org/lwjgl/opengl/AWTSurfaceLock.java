@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 import java.awt.Canvas;
+import java.awt.Component;
+import java.applet.Applet;
 import java.nio.ByteBuffer;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
@@ -81,7 +83,7 @@ final class AWTSurfaceLock {
 		// due to performance..
         
 		// Allow the use of a Core Animation Layer only when using non fullscreen Display.setParent() or AWTGLCanvas
-		final boolean allowCALayer = (Display.getParent() != null && !Display.isFullscreen()) || component instanceof AWTGLCanvas;
+		final boolean allowCALayer = ((Display.getParent() != null && !Display.isFullscreen()) || component instanceof AWTGLCanvas) && isApplet(component);
 		
 		if (firstLockSucceeded)
 			return lockAndInitHandle(lock_buffer, component, allowCALayer);
@@ -105,4 +107,22 @@ final class AWTSurfaceLock {
 	}
 
 	private static native void nUnlock(ByteBuffer lock_buffer) throws LWJGLException;
+	
+	/**
+	 * This method will return true if the component is running in an applet
+	 */
+	public boolean isApplet(Canvas component) {
+		
+		Component parent = component.getParent();
+		
+		while (parent != null) {
+			if (parent instanceof Applet) {
+				return true;
+			}
+			parent = parent.getParent();
+		}
+		
+		// not an applet
+		return false;
+	}
 }
