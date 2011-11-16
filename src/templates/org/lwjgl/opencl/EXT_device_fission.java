@@ -135,7 +135,6 @@ public interface EXT_device_fission {
 	@cl_int
 	int clCreateSubDevicesEXT(
 		@PointerWrapper("cl_device_id") CLDevice in_device,
-		// TODO: cl_device_partition_property_ext is a cl_bitfield (ulong), but the spec says properties is a {property-value, cl_int[]} list...
 		@NullTerminated @Const @NativeType("cl_device_partition_property_ext") LongBuffer properties,
 		@AutoSize(value = "out_devices", canBeNull = true) @cl_uint int num_entries,
 		@OutParameter @Check(canBeNull = true) @NativeType("cl_device_id") PointerBuffer out_devices,

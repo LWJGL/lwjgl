@@ -399,7 +399,7 @@ public interface CL10 {
 		// Create a GlobalRef to the callback object.
 		javaBeforeNative = "\t\tlong user_data = pfn_notify == null || pfn_notify.isCustom() ? 0 : CallbackUtil.createGlobalRef(pfn_notify);",
 		// Associate context with the GlobalRef, so we can delete it later.
-		javaFinally = "\t\t\tCallbackUtil.registerCallback(__result, user_data);"
+		javaFinally = "\t\t\tif ( __result != null ) __result.setContextCallback(user_data);"
 	)
 	@Check(value = "errcode_ret", canBeNull = true)
 	@PointerWrapper(value = "cl_context", params = "APIUtil.getCLPlatform(properties)")
@@ -417,7 +417,7 @@ public interface CL10 {
 		// Create a GlobalRef to the callback object.
 		javaBeforeNative = "\t\tlong user_data = pfn_notify == null || pfn_notify.isCustom() ? 0 : CallbackUtil.createGlobalRef(pfn_notify);",
 		// Associate context with the GlobalRef, so we can delete it later.
-		javaFinally = "\t\t\tCallbackUtil.registerCallback(__result, user_data);"
+		javaFinally = "\t\t\tif ( __result != null ) __result.setContextCallback(user_data);"
 	)
 	@Check(value = "errcode_ret", canBeNull = true)
 	@PointerWrapper(value = "cl_context", params = "APIUtil.getCLPlatform(properties)")
@@ -434,7 +434,7 @@ public interface CL10 {
 		// Create a GlobalRef to the callback object.
 		javaBeforeNative = "\t\tlong user_data = pfn_notify == null || pfn_notify.isCustom() ? 0 : CallbackUtil.createGlobalRef(pfn_notify);",
 		// Associate context with the GlobalRef, so we can delete it later.
-		javaFinally = "\t\t\tCallbackUtil.registerCallback(__result, user_data);"
+		javaFinally = "\t\t\tif ( __result != null ) __result.setContextCallback(user_data);"
 	)
 	@Check(value = "errcode_ret", canBeNull = true)
 	@PointerWrapper(value = "cl_context", params = "APIUtil.getCLPlatform(properties)")
@@ -450,7 +450,7 @@ public interface CL10 {
 
 	@Code(
 		javaBeforeNative = "\t\tAPIUtil.releaseObjects(context);",
-		javaAfterNative = "\t\tif ( __result == CL_SUCCESS ) CallbackUtil.unregisterCallback(context);"
+		javaAfterNative = "\t\tif ( __result == CL_SUCCESS ) context.releaseImpl();"
 	)
 	@cl_int
 	int clReleaseContext(@PointerWrapper("cl_context") CLContext context);
@@ -511,7 +511,7 @@ public interface CL10 {
 	                        @PointerWrapper("cl_mem") CLMem buffer,
 	                        @cl_bool int blocking_read,
 	                        @size_t long offset,
-	                        @AutoSize("ptr") @size_t long cb,
+	                        @AutoSize("ptr") @size_t long size,
 	                        @OutParameter
 	                        @cl_byte
 	                        @cl_short
@@ -529,7 +529,7 @@ public interface CL10 {
 	                         @PointerWrapper("cl_mem") CLMem buffer,
 	                         @cl_bool int blocking_write,
 	                         @size_t long offset,
-	                         @AutoSize("ptr") @size_t long cb,
+	                         @AutoSize("ptr") @size_t long size,
 	                         @Const
 	                         @cl_byte
 	                         @cl_short
@@ -548,7 +548,7 @@ public interface CL10 {
 	                        @PointerWrapper("cl_mem") CLMem dst_buffer,
 	                        @size_t long src_offset,
 	                        @size_t long dst_offset,
-	                        @size_t long cb,
+	                        @size_t long size,
 	                        @AutoSize(value = "event_wait_list", canBeNull = true) @cl_uint int num_events_in_wait_list,
 	                        @Check(canBeNull = true) @Const @NativeType("cl_event") PointerBuffer event_wait_list,
 	                        @OutParameter @Check(value = "1", canBeNull = true) @NativeType("cl_event") PointerBuffer event);
@@ -556,13 +556,13 @@ public interface CL10 {
 	@Code(javaAfterNative = "\t\tif ( __result != null ) command_queue.registerCLEvent(event);")
 	@Check(value = "errcode_ret", canBeNull = true)
 	@cl_void
-	@AutoSize("cb")
+	@AutoSize("size")
 	ByteBuffer clEnqueueMapBuffer(@PointerWrapper("cl_command_queue") CLCommandQueue command_queue,
 	                              @PointerWrapper("cl_mem") CLMem buffer,
 	                              @cl_bool int blocking_map,
 	                              @NativeType("cl_map_flags") long map_flags,
 	                              @size_t long offset,
-	                              @size_t long cb,
+	                              @size_t long size,
 	                              @AutoSize(value = "event_wait_list", canBeNull = true) @cl_uint int num_events_in_wait_list,
 	                              @Check(canBeNull = true) @Const @NativeType("cl_event") PointerBuffer event_wait_list,
 	                              @OutParameter @Check(value = "1", canBeNull = true) @NativeType("cl_event") PointerBuffer event,
@@ -855,7 +855,7 @@ public interface CL10 {
 	                   @AutoSize(value = "device_list", canBeNull = true) @cl_uint int num_devices,
 	                   @Check(canBeNull = true) @Const @NativeType("cl_device_id") PointerBuffer device_list,
 	                   @Check @NullTerminated @Const @cl_char ByteBuffer options,
-	                   @PointerWrapper(value = "cl_build_program_callback", canBeNull = true) CLBuildProgramCallback pfn_notify,
+	                   @PointerWrapper(value = "cl_program_callback", canBeNull = true) CLBuildProgramCallback pfn_notify,
 	                   @Constant("user_data") @PointerWrapper("void *") long user_data);
 
 	@Alternate("clBuildProgram")
@@ -872,7 +872,7 @@ public interface CL10 {
 	                   @AutoSize(value = "device_list", canBeNull = true) @cl_uint int num_devices,
 	                   @Check(canBeNull = true) @Const @NativeType("cl_device_id") PointerBuffer device_list,
 	                   @NullTerminated @Const CharSequence options,
-	                   @PointerWrapper(value = "cl_build_program_callback", canBeNull = true) CLBuildProgramCallback pfn_notify,
+	                   @PointerWrapper(value = "cl_program_callback", canBeNull = true) CLBuildProgramCallback pfn_notify,
 	                   @Constant("user_data") @PointerWrapper("void *") long user_data);
 
 	@Alternate("clBuildProgram")
@@ -889,7 +889,7 @@ public interface CL10 {
 	                   @Constant("1") @cl_uint int num_devices,
 	                   @Constant(value = "APIUtil.getPointer(device)", keepParam = true) CLDevice device,
 	                   @NullTerminated @Const CharSequence options,
-	                   @PointerWrapper(value = "cl_build_program_callback", canBeNull = true) CLBuildProgramCallback pfn_notify,
+	                   @PointerWrapper(value = "cl_program_callback", canBeNull = true) CLBuildProgramCallback pfn_notify,
 	                   @Constant("user_data") @PointerWrapper("void *") long user_data);
 
 	@cl_int

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2011 LWJGL Project
+ * Copyright (c) 2002-2008 LWJGL Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,13 +31,30 @@
  */
 package org.lwjgl.opencl;
 
-/**
- * Instances of this class can be used to receive OpenCL program build notifications.
- * A single CLBuildProgramCallback instance should only be used with programs created
- * in the same CLContext.
- *
- * @author Spasi
- */
-public abstract class CLBuildProgramCallback extends CLProgramCallback {
+import org.lwjgl.util.generator.Check;
+import org.lwjgl.util.generator.NativeType;
+import org.lwjgl.util.generator.OutParameter;
+import org.lwjgl.util.generator.PointerWrapper;
+import org.lwjgl.util.generator.opencl.cl_int;
+
+import java.nio.IntBuffer;
+
+/** The core OpenCL 1.2 OpenGL interrop functionality. */
+public interface CL12GL {
+
+	/* cl_gl_object_type */
+	int CL_GL_OBJECT_TEXTURE2D_ARRAY = 0x200E,
+		CL_GL_OBJECT_TEXTURE1D       = 0x200F,
+		CL_GL_OBJECT_TEXTURE1D_ARRAY = 0x2010,
+		CL_GL_OBJECT_TEXTURE_BUFFER  = 0x2011;
+
+	@Check(value = "errcode_ret", canBeNull = true)
+	@PointerWrapper(value = "cl_mem", params = "context")
+	CLMem clCreateFromGLTexture(@PointerWrapper("cl_context") CLContext context,
+	                            @NativeType("cl_mem_flags") long flags,
+	                            @NativeType("GLenum") int target,
+	                            @NativeType("GLint") int miplevel,
+	                            @NativeType("GLuint") int texture,
+	                            @OutParameter @Check(value = "1", canBeNull = true) @cl_int IntBuffer errcode_ret);
 
 }

@@ -70,7 +70,7 @@ final class CallbackUtil {
 	 *
 	 * @param ref the GlobalRef memory address.
 	 */
-	private static native void deleteGlobalRef(long ref);
+	static native void deleteGlobalRef(long ref);
 
 	/**
 	 * Deletes the global reference represented by user_data if an OpenCL error occured.
@@ -99,40 +99,6 @@ final class CallbackUtil {
 	 */
 	static native long getContextCallback();
 
-	/**
-	 * Associates the specified CLContext with the specified global reference. If the context
-	 * is invalid, the global reference is deleted. NO-OP if user_data is 0.
-	 *
-	 * @param context   the CLContext to register
-	 * @param user_data the global reference pointer
-	 */
-	static void registerCallback(final CLContext context, final long user_data) {
-		if ( user_data == 0 )
-			return;
-
-		if ( context.isValid() )
-			contextUserData.put(context, user_data);
-		else
-			deleteGlobalRef(user_data);
-	}
-
-	/**
-	 * Decrements the specified context's reference count, clears its association
-	 * with a CLContextCallback object if it exists and deletes the corresponding
-	 * global reference.
-	 *
-	 * @param context the CLContext to unregister
-	 */
-	static void unregisterCallback(final CLContext context) {
-		if ( context.release() > 0 )
-			return;
-
-		final Long user_data = contextUserData.remove(context);
-
-		if ( user_data != null )
-			deleteGlobalRef(user_data);
-	}
-
 	/* [ Other callback functionality ]
 		The other callbacks are simpler. We create the GlobalRef before passing the callback,
 		we delete it when we receive the callback call.
@@ -150,7 +116,7 @@ final class CallbackUtil {
 	 *
 	 * @return the callback function address
 	 */
-	static native long getBuildProgramCallback();
+	static native long getProgramCallback();
 
 	/**
 	 * Returns the memory address of the native function we pass to clEnqueueNativeKernel.
@@ -165,6 +131,13 @@ final class CallbackUtil {
 	 * @return the callback function address
 	 */
 	static native long getEventCallback();
+
+	/**
+	 * Returns the memory address of the native function we pass to clSetPrintfCallback.
+	 *
+	 * @return the callback function address
+	 */
+	static native long getPrintfCallback();
 
 	/**
 	 * Returns the memory address of the native function we pass to clCreateContext(FromType),

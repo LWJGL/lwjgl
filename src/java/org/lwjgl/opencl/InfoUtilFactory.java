@@ -123,7 +123,7 @@ final class InfoUtilFactory {
 					Util.checkCLError(errcode_ret.get(0));
 				return __result;
 			} finally {
-				CallbackUtil.registerCallback(__result, user_data);
+				if ( __result != null ) __result.setContextCallback(user_data);
 			}
 		}
 

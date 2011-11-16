@@ -43,9 +43,10 @@
 
 static jmethodID contextCallbackJ;
 static jmethodID memObjectDestructorCallbackJ;
-static jmethodID buildProgramCallbackJ;
+static jmethodID programCallbackJ;
 static jmethodID nativeKernelCallbackJ;
 static jmethodID eventCallbackJ;
+static jmethodID printfCallbackJ;
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opencl_CallbackUtil_ncreateGlobalRef(JNIEnv *env, jclass clazz, jobject obj) {
 	return (intptr_t)(*env)->NewGlobalRef(env, obj);
@@ -113,13 +114,13 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opencl_CallbackUtil_getMemObjectDestructo
     return (jlong)(intptr_t)&memObjectDestructorCallback;
 }
 
-// ----------------- [ MEM OBJECT DESTRUCTOR CALLBACK ] -----------------
+// ----------------- [ PROGRAM CALLBACK ] -----------------
 
-static void CL_CALLBACK buildProgramCallback(cl_program program, void *user_data) {
+static void CL_CALLBACK programCallback(cl_program program, void *user_data) {
     JNIEnv *env = attachCurrentThread();
 
-	if ( env != NULL && !(*env)->ExceptionOccurred(env) && buildProgramCallbackJ != NULL ) {
-        (*env)->CallVoidMethod(env, (jobject)user_data, buildProgramCallbackJ,
+	if ( env != NULL && !(*env)->ExceptionOccurred(env) && programCallbackJ != NULL ) {
+        (*env)->CallVoidMethod(env, (jobject)user_data, programCallbackJ,
             (jlong)(intptr_t)program
         );
         (*env)->DeleteGlobalRef(env, (jobject)user_data);
@@ -128,16 +129,16 @@ static void CL_CALLBACK buildProgramCallback(cl_program program, void *user_data
     detachCurrentThread();
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opencl_CallbackUtil_getBuildProgramCallback(JNIEnv *env, jclass clazz) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opencl_CallbackUtil_getProgramCallback(JNIEnv *env, jclass clazz) {
     // Cache the callback methodID
     jclass callbackClass;
-    if ( buildProgramCallbackJ == NULL ) {
-        callbackClass = (*env)->FindClass(env, "org/lwjgl/opencl/CLBuildProgramCallback");
+    if ( programCallbackJ == NULL ) {
+        callbackClass = (*env)->FindClass(env, "org/lwjgl/opencl/CLProgramCallback");
         if ( callbackClass != NULL )
-            buildProgramCallbackJ = (*env)->GetMethodID(env, callbackClass, "handleMessage", "(J)V");
+            programCallbackJ = (*env)->GetMethodID(env, callbackClass, "handleMessage", "(J)V");
     }
 
-    return (jlong)(intptr_t)&buildProgramCallback;
+	return (jlong)(intptr_t)&programCallback;
 }
 
 // ----------------- [ NATIVE KERNEL CALLBACK ] -----------------
@@ -212,6 +213,32 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opencl_CallbackUtil_getEventCallback(JNIE
     }
 
     return (jlong)(intptr_t)&eventCallback;
+}
+
+// ----------------- [ PRINTF CALLBACK ] -----------------
+
+static void CL_CALLBACK printfCallback(cl_context context, cl_uint printf_data_len, char *printf_data_ptr, void *user_data) {
+    JNIEnv *env = attachCurrentThread();
+
+	if ( env != NULL && !(*env)->ExceptionOccurred(env) && printfCallbackJ != NULL ) {
+        (*env)->CallVoidMethod(env, (jobject)user_data, printfCallbackJ,
+            NewStringNativeWithLength(env, printf_data_ptr, printf_data_len)
+        );
+    }
+
+    detachCurrentThread();
+}
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opencl_CallbackUtil_getPrintfCallback(JNIEnv *env, jclass clazz) {
+    // Cache the callback methodID
+    jclass callbackClass;
+    if ( printfCallbackJ == NULL ) {
+        callbackClass = (*env)->FindClass(env, "org/lwjgl/opencl/CLPrintfCallback");
+        if ( callbackClass != NULL )
+            printfCallbackJ = (*env)->GetMethodID(env, callbackClass, "handleMessage", "(Ljava/lang/String;)V");
+    }
+
+    return (jlong)(intptr_t)&printfCallback;
 }
 
 // ----------------- [ APPLE_ContextLoggingFunctions CALLBACKS ] -----------------

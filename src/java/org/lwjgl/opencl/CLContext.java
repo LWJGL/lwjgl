@@ -49,10 +49,14 @@ public final class CLContext extends CLObjectChild<CLPlatform> {
 	private static final CLContextUtil util = (CLContextUtil)CLPlatform.getInfoUtilInstance(CLContext.class, "CL_CONTEXT_UTIL");
 
 	private final CLObjectRegistry<CLCommandQueue> clCommandQueues;
-	private final CLObjectRegistry<CLMem> clMems;
-	private final CLObjectRegistry<CLSampler> clSamplers;
-	private final CLObjectRegistry<CLProgram> clPrograms;
-	private final CLObjectRegistry<CLEvent> clEvents;
+	private final CLObjectRegistry<CLMem>          clMems;
+	private final CLObjectRegistry<CLSampler>      clSamplers;
+	private final CLObjectRegistry<CLProgram>      clPrograms;
+	private final CLObjectRegistry<CLEvent>        clEvents;
+
+	private long
+		contextCallback,
+		printfCallback;
 
 	CLContext(final long pointer, final CLPlatform platform) {
 		super(pointer, platform);
@@ -268,5 +272,51 @@ public final class CLContext extends CLObjectChild<CLPlatform> {
 	CLObjectRegistry<CLProgram> getCLProgramRegistry() { return clPrograms; }
 
 	CLObjectRegistry<CLEvent> getCLEventRegistry() { return clEvents; }
+
+	private boolean checkCallback(final long callback, final int result) {
+		if ( result == 0 && (callback == 0 || isValid()) )
+			return true;
+
+		if ( callback != 0 )
+			CallbackUtil.deleteGlobalRef(callback);
+		return false;
+	}
+
+	/**
+	 * Associates this context with the specified context callback reference. If the context
+	 * is invalid, the callback reference is deleted. NO-OP if user_data is 0.
+	 *
+	 * @param callback the context callback pointer
+	 */
+	void setContextCallback(final long callback) {
+		if ( checkCallback(callback, 0) )
+			this.contextCallback = callback;
+	}
+
+	/**
+	 * Associates this context with the specified printf callback reference. If the context
+	 * is invalid, the callback reference is deleted. NO-OP if user_data is 0.
+	 *
+	 * @param callback the printf callback pointer
+	 */
+	void setPrintfCallback(final long callback, final int result) {
+		if ( checkCallback(callback, result) )
+			this.printfCallback = callback;
+	}
+
+	/**
+	 * Decrements the context's reference count. If the reference
+	 * count hits zero, it also deletes
+	 * any callback objects associated with it.
+	 */
+	void releaseImpl() {
+		if ( release() > 0 )
+			return;
+
+		if ( contextCallback != 0 )
+			CallbackUtil.deleteGlobalRef(contextCallback);
+		if ( printfCallback != 0 )
+			CallbackUtil.deleteGlobalRef(printfCallback);
+	}
 
 }

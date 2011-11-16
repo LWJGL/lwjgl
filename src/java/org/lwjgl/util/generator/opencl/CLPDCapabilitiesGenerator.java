@@ -51,7 +51,7 @@ public class CLPDCapabilitiesGenerator {
 
 	// TODO: Add future versions here
 	private static final int[][] CL_VERSIONS = {
-		{ 1 },  // OpenCL 1
+		{ 1, 2 },  // OpenCL 1
 	};
 
 	static void generateClassPrologue(final PrintWriter writer, final String name) {

@@ -53,23 +53,23 @@ final class CLChecks {
 	/**
 	 * Calculates the number of bytes in the specified cl_mem buffer rectangle region.
 	 *
-	 * @param origin      the host origin
+	 * @param offset      the host offset
 	 * @param region      the rectangle region
 	 * @param row_pitch   the host row pitch
 	 * @param slice_pitch the host slice pitch
 	 *
 	 * @return the region size in bytes
 	 */
-	static int calculateBufferRectSize(final PointerBuffer origin, final PointerBuffer region, long row_pitch, long slice_pitch) {
+	static int calculateBufferRectSize(final PointerBuffer offset, final PointerBuffer region, long row_pitch, long slice_pitch) {
 		if ( !LWJGLUtil.CHECKS )
 			return 0;
 
-		final long x = origin.get(0);
-		final long y = origin.get(1);
-		final long z = origin.get(2);
+		final long x = offset.get(0);
+		final long y = offset.get(1);
+		final long z = offset.get(2);
 
 		if ( LWJGLUtil.DEBUG && (x < 0 || y < 0 || z < 0) )
-			throw new IllegalArgumentException("Invalid cl_mem host origin: " + x + ", " + y + ", " + z);
+			throw new IllegalArgumentException("Invalid cl_mem host offset: " + x + ", " + y + ", " + z);
 
 		final long w = region.get(0);
 		final long h = region.get(1);

@@ -36,13 +36,10 @@
             <include name="org/lwjgl/opencl/CLPlatform.java"/>
             <include name="org/lwjgl/opencl/CLDevice.java"/>
             <include name="org/lwjgl/opencl/CLContext.java"/>
-            <include name="org/lwjgl/opencl/CLContextCallback.java"/>
             <include name="org/lwjgl/opencl/CLCommandQueue.java"/>
             <include name="org/lwjgl/opencl/CLMem.java"/>
-            <include name="org/lwjgl/opencl/CLMemObjectDestructorCallback.java"/>
-            <include name="org/lwjgl/opencl/CLBuildProgramCallback.java"/>
+			<include name="org/lwjgl/opencl/CL*Callback.java"/>
             <include name="org/lwjgl/opencl/CLNativeKernel.java"/>
-            <include name="org/lwjgl/opencl/CLEventCallback.java"/>
             <include name="org/lwjgl/opencl/CLFunctionAddress.java"/>
 		</javac>
 	</target>

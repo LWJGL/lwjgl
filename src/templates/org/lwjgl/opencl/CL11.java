@@ -121,14 +121,14 @@ public interface CL11 {
 	int clEnqueueReadBufferRect(@PointerWrapper("cl_command_queue") CLCommandQueue command_queue,
 	                            @PointerWrapper("cl_mem") CLMem buffer,
 	                            @cl_bool int blocking_read,
-	                            @Const @Check("3") @NativeType("size_t") PointerBuffer buffer_origin,
-	                            @Const @Check("3") @NativeType("size_t") PointerBuffer host_origin,
+	                            @Const @Check("3") @NativeType("size_t") PointerBuffer buffer_offset,
+	                            @Const @Check("3") @NativeType("size_t") PointerBuffer host_offset,
 	                            @Const @Check("3") @NativeType("size_t") PointerBuffer region,
 	                            @size_t long buffer_row_pitch,
 	                            @size_t long buffer_slice_pitch,
 	                            @size_t long host_row_pitch,
 	                            @size_t long host_slice_pitch,
-	                            @OutParameter @Check("CLChecks.calculateBufferRectSize(host_origin, region, host_row_pitch, host_slice_pitch)")
+	                            @OutParameter @Check("CLChecks.calculateBufferRectSize(host_offset, region, host_row_pitch, host_slice_pitch)")
 	                            @cl_byte
 	                            @cl_short
 	                            @cl_int
@@ -144,14 +144,14 @@ public interface CL11 {
 	int clEnqueueWriteBufferRect(@PointerWrapper("cl_command_queue") CLCommandQueue command_queue,
 	                             @PointerWrapper("cl_mem") CLMem buffer,
 	                             @cl_bool int blocking_write,
-	                             @Const @Check("3") @NativeType("size_t") PointerBuffer buffer_origin,
-	                             @Const @Check("3") @NativeType("size_t") PointerBuffer host_origin,
+	                             @Const @Check("3") @NativeType("size_t") PointerBuffer buffer_offset,
+	                             @Const @Check("3") @NativeType("size_t") PointerBuffer host_offset,
 	                             @Const @Check("3") @NativeType("size_t") PointerBuffer region,
 	                             @size_t long buffer_row_pitch,
 	                             @size_t long buffer_slice_pitch,
 	                             @size_t long host_row_pitch,
 	                             @size_t long host_slice_pitch,
-	                             @Const @Check("CLChecks.calculateBufferRectSize(host_origin, region, host_row_pitch, host_slice_pitch)")
+	                             @Const @Check("CLChecks.calculateBufferRectSize(host_offset, region, host_row_pitch, host_slice_pitch)")
 	                             @cl_byte
 	                             @cl_short
 	                             @cl_int

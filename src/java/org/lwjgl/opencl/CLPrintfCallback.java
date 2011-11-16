@@ -31,13 +31,21 @@
  */
 package org.lwjgl.opencl;
 
+import org.lwjgl.PointerWrapperAbstract;
+
 /**
- * Instances of this class can be used to receive OpenCL program build notifications.
- * A single CLBuildProgramCallback instance should only be used with programs created
- * in the same CLContext.
+ * Instances of this class can be used to receive OpenCL printf messages.
+ * Different CLContexts should use different CLPrintfCallback instances.
  *
  * @author Spasi
  */
-public abstract class CLBuildProgramCallback extends CLProgramCallback {
+public abstract class CLPrintfCallback extends PointerWrapperAbstract {
+
+	protected CLPrintfCallback() {
+		super(CallbackUtil.getPrintfCallback());
+	}
+
+	/** The callback method. */
+	protected abstract void handleMessage(String data);
 
 }

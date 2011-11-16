@@ -373,20 +373,22 @@ public class Utils {
 			if ( param != null && p.getSimpleName().equals(param.getSimpleName()) )
 				break;
 
+			if ( p.getAnnotation(NullTerminated.class) != null )
+				continue;
+
 			final Class type = Utils.getJavaType(p.getType());
 			if ( type.equals(CharSequence.class) ) {
 				if ( offset == null )
 					offset = p.getSimpleName() + ".length()";
 				else
 					offset += " + " + p.getSimpleName() + ".length()";
-				if ( p.getAnnotation(NullTerminated.class) != null ) offset += " + 1";
-
+				//if ( p.getAnnotation(NullTerminated.class) != null ) offset += " + 1";
 			} else if ( type.equals(CharSequence[].class) ) {
 				if ( offset == null )
 					offset = "APIUtil.getTotalLength(" + p.getSimpleName() + ")";
 				else
 					offset += " + APIUtil.getTotalLength(" + p.getSimpleName() + ")";
-				if ( p.getAnnotation(NullTerminated.class) != null ) offset += " + " + p.getSimpleName() + ".length";
+				//if ( p.getAnnotation(NullTerminated.class) != null ) offset += " + " + p.getSimpleName() + ".length";
 			}
 
 		}

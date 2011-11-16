@@ -46,12 +46,12 @@ public interface GL41 {
 	 * Accepted by the &lt;value&gt; parameter of GetBooleanv, GetIntegerv,
 	 * GetInteger64v, GetFloatv, and GetDoublev:
 	 */
-	int GL_SHADER_COMPILER = 0x8DFA,
-		GL_NUM_SHADER_BINARY_FORMATS = 0x8DF9,
-		GL_MAX_VERTEX_UNIFORM_VECTORS = 0x8DFB,
-		GL_MAX_VARYING_VECTORS = 0x8DFC,
-		GL_MAX_FRAGMENT_UNIFORM_VECTORS = 0x8DFD,
-		GL_IMPLEMENTATION_COLOR_READ_TYPE = 0x8B9A,
+	int GL_SHADER_COMPILER                  = 0x8DFA,
+		GL_NUM_SHADER_BINARY_FORMATS        = 0x8DF9,
+		GL_MAX_VERTEX_UNIFORM_VECTORS       = 0x8DFB,
+		GL_MAX_VARYING_VECTORS              = 0x8DFC,
+		GL_MAX_FRAGMENT_UNIFORM_VECTORS     = 0x8DFD,
+		GL_IMPLEMENTATION_COLOR_READ_TYPE   = 0x8B9A,
 		GL_IMPLEMENTATION_COLOR_READ_FORMAT = 0x8B9B;
 
 	/** Accepted by the &lt;type&gt; parameter of VertexAttribPointer: */
@@ -61,12 +61,12 @@ public interface GL41 {
 	 * Accepted by the &lt;precisiontype&gt; parameter of
 	 * GetShaderPrecisionFormat:
 	 */
-	int GL_LOW_FLOAT = 0x8DF0,
+	int GL_LOW_FLOAT    = 0x8DF0,
 		GL_MEDIUM_FLOAT = 0x8DF1,
-		GL_HIGH_FLOAT = 0x8DF2,
-		GL_LOW_INT = 0x8DF3,
-		GL_MEDIUM_INT = 0x8DF4,
-		GL_HIGH_INT = 0x8DF5;
+		GL_HIGH_FLOAT   = 0x8DF2,
+		GL_LOW_INT      = 0x8DF3,
+		GL_MEDIUM_INT   = 0x8DF4,
+		GL_HIGH_INT     = 0x8DF5;
 
 	void glReleaseShaderCompiler();
 
@@ -99,7 +99,7 @@ public interface GL41 {
 	 * GetInteger64v, GetFloatv and GetDoublev:
 	 */
 	int GL_NUM_PROGRAM_BINARY_FORMATS = 0x87FE,
-		GL_PROGRAM_BINARY_FORMATS = 0x87FF;
+		GL_PROGRAM_BINARY_FORMATS     = 0x87FF;
 
 	void glGetProgramBinary(@GLuint int program, @AutoSize("binary") @GLsizei int bufSize,
 	                        @Check(value = "1", canBeNull = true) @GLsizei IntBuffer length,
@@ -115,12 +115,12 @@ public interface GL41 {
 	// ---------------------------------------------------------------------------
 
 	/** Accepted by &lt;stages&gt; parameter to UseProgramStages: */
-	int GL_VERTEX_SHADER_BIT = 0x00000001,
-		GL_FRAGMENT_SHADER_BIT = 0x00000002,
-		GL_GEOMETRY_SHADER_BIT = 0x00000004,
-		GL_TESS_CONTROL_SHADER_BIT = 0x00000008,
+	int GL_VERTEX_SHADER_BIT          = 0x00000001,
+		GL_FRAGMENT_SHADER_BIT        = 0x00000002,
+		GL_GEOMETRY_SHADER_BIT        = 0x00000004,
+		GL_TESS_CONTROL_SHADER_BIT    = 0x00000008,
 		GL_TESS_EVALUATION_SHADER_BIT = 0x00000010,
-		GL_ALL_SHADER_BITS = 0xFFFFFFFF;
+		GL_ALL_SHADER_BITS            = 0xFFFFFFFF;
 
 	/**
 	 * Accepted by the &lt;pname&gt; parameter of ProgramParameteri and
@@ -141,20 +141,32 @@ public interface GL41 {
 
 	void glActiveShaderProgram(@GLuint int pipeline, @GLuint int program);
 
+	/** Single null-terminated source code string. */
+	@StripPostfix(value = "string", postfix = "v")
+	@GLuint
+	int glCreateShaderProgramv(@GLenum int type, @Constant("1") @GLsizei int count, @NullTerminated @Check @Const @Indirect @GLchar ByteBuffer string);
+
+	/** Multiple null-terminated source code strings, one after the other. */
+	@Alternate(value = "glCreateShaderProgramv", nativeAlt = true)
 	@StripPostfix(value = "strings", postfix = "v")
 	@GLuint
-	int glCreateShaderProgramv(@GLenum int type, @GLsizei int count, @Check @Const @Indirect @GLchar ByteBuffer strings);
+	int glCreateShaderProgramv2(@GLenum int type, @GLsizei int count, @NullTerminated("count") @Check @Const @Indirect @GLchar @PointerArray("count") ByteBuffer strings);
+
+	@Alternate(value = "glCreateShaderProgramv", nativeAlt = true)
+	@StripPostfix(value = "strings", postfix = "v")
+	@GLuint
+	int glCreateShaderProgramv3(@GLenum int type, @Constant("strings.length") @GLsizei int count, @NullTerminated @Check("1") @PointerArray(value = "count") @Const @NativeType("GLchar") ByteBuffer[] strings);
 
 	@Alternate("glCreateShaderProgramv")
 	@StripPostfix(value = "string", postfix = "v")
 	@GLuint
 	int glCreateShaderProgramv(@GLenum int type, @Constant("1") @GLsizei int count, @NullTerminated CharSequence string);
 
-	@Alternate("glCreateShaderProgramv")
+	@Alternate(value = "glCreateShaderProgramv", nativeAlt = true, skipNative = true)
 	@StripPostfix(value = "strings", postfix = "v")
 	@GLuint
-	int glCreateShaderProgramv(@GLenum int type, @Constant("strings.length") @GLsizei int count,
-	                           @Const @NullTerminated @PointerArray(value = "count") CharSequence[] strings);
+	int glCreateShaderProgramv2(@GLenum int type, @Constant("strings.length") @GLsizei int count,
+	                            @Const @NullTerminated @PointerArray(value = "count") CharSequence[] strings);
 
 	void glBindProgramPipeline(@GLuint int pipeline);
 
@@ -342,12 +354,12 @@ public interface GL41 {
 	// -----------------------------------------------------------------------
 
 	/** Returned in the &lt;type&gt; parameter of GetActiveAttrib: */
-	int GL_DOUBLE_VEC2 = 0x8FFC;
-	int GL_DOUBLE_VEC3 = 0x8FFD;
-	int GL_DOUBLE_VEC4 = 0x8FFE;
-	int GL_DOUBLE_MAT2 = 0x8F46;
-	int GL_DOUBLE_MAT3 = 0x8F47;
-	int GL_DOUBLE_MAT4 = 0x8F48;
+	int GL_DOUBLE_VEC2   = 0x8FFC;
+	int GL_DOUBLE_VEC3   = 0x8FFD;
+	int GL_DOUBLE_VEC4   = 0x8FFE;
+	int GL_DOUBLE_MAT2   = 0x8F46;
+	int GL_DOUBLE_MAT3   = 0x8F47;
+	int GL_DOUBLE_MAT4   = 0x8F48;
 	int GL_DOUBLE_MAT2x3 = 0x8F49;
 	int GL_DOUBLE_MAT2x4 = 0x8F4A;
 	int GL_DOUBLE_MAT3x2 = 0x8F4B;
@@ -391,10 +403,10 @@ public interface GL41 {
 	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv, GetFloatv,
 	 * GetDoublev and GetInteger64v:
 	 */
-	int GL_MAX_VIEWPORTS = 0x825B,
-		GL_VIEWPORT_SUBPIXEL_BITS = 0x825C,
-		GL_VIEWPORT_BOUNDS_RANGE = 0x825D,
-		GL_LAYER_PROVOKING_VERTEX = 0x825E,
+	int GL_MAX_VIEWPORTS                   = 0x825B,
+		GL_VIEWPORT_SUBPIXEL_BITS          = 0x825C,
+		GL_VIEWPORT_BOUNDS_RANGE           = 0x825D,
+		GL_LAYER_PROVOKING_VERTEX          = 0x825E,
 		GL_VIEWPORT_INDEX_PROVOKING_VERTEX = 0x825F;
 
 	/** Accepted by the &lt;pname&gt; parameter of GetIntegeri_v: */
@@ -414,9 +426,9 @@ public interface GL41 {
 	 * LAYER_PROVOKING_VERTEX or VIEWPORT_INDEX_PROVOKING_VERTEX:
 	 */
 	int GL_FIRST_VERTEX_CONVENTION = 0x8E4D,
-		GL_LAST_VERTEX_CONVENTION = 0x8E4E,
-		GL_PROVOKING_VERTEX = 0x8E4F,
-		GL_UNDEFINED_VERTEX = 0x8260;
+		GL_LAST_VERTEX_CONVENTION  = 0x8E4E,
+		GL_PROVOKING_VERTEX        = 0x8E4F,
+		GL_UNDEFINED_VERTEX        = 0x8260;
 
 	@StripPostfix("v")
 	void glViewportArrayv(@GLuint int first, @AutoSize(value = "v", expression = " >> 2") @GLsizei int count, @Const FloatBuffer v);
