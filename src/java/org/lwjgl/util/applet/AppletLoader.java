@@ -1128,13 +1128,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			return object;
 		} catch (Exception e) {
 			// failed to read file
-			e.printStackTrace();  
+			throw e;  
 		} finally {
 			fis.close();
 		}
-		
-		// return null if failed to read file
-		return null;
 	}
 	
 	/**
