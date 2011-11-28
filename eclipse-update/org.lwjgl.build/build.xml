@@ -81,6 +81,8 @@ Author: Jens von Pilgrim, developer@jevopi.de
 				<exclude name="**/.settings/**" />
 				<exclude name="**/.classpath" />
 				<exclude name="**/.project" />
+				<!-- do not copy native libraries  -->
+				<exclude name="**/native/**" />
 			</fileset>
 		</copy>
 		<copy todir="${build.plugins}/org.lwjgl">
