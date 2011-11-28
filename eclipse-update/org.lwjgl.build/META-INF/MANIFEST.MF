@@ -9,5 +9,6 @@ Import-Package: org.apache.tools.ant,
  org.apache.tools.ant.types,
  org.apache.tools.ant.types.selectors,
  org.apache.tools.ant.util,
- org.junit;version="4.8.1"
+ org.junit;version="4"
 Bundle-Vendor: Lightweight Java Game Library Project
+Require-Bundle: org.junit;bundle-version="4.8.1"

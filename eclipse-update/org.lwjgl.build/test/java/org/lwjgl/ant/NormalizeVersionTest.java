@@ -67,5 +67,42 @@ public class NormalizeVersionTest {
 	}
 	
 	
+	@Test
+	public void testQualifier() {
+		NormalizeVersion t = new NormalizeVersion();
+		t.setProperty("normalized");
+		t.setAddDateQualifier(true);
+		
+		t.setVersion("1");
+		String s = t.doExecute();
+		Assert.assertEquals(20, s.length());
+		Assert.assertTrue(s.startsWith("1.0.0"));
+		
+		t.setVersion("1.2");
+		s = t.doExecute();
+		Assert.assertEquals(20, s.length());
+		Assert.assertTrue(s.startsWith("1.2.0"));
+		
+		t.setVersion("1.2.3");
+		s = t.doExecute();
+		Assert.assertEquals(20, s.length());
+		Assert.assertTrue(s.startsWith("1.2.3"));
+		
+		t.setVersion("2.8.2");
+		s = t.doExecute();
+		Assert.assertEquals(20, s.length());
+		Assert.assertTrue(s.startsWith("2.8.2"));
+	
+	}
+	
+	@Test(expected= BuildException.class) public void dateQualifierWithQualifier() {
+		NormalizeVersion t = new NormalizeVersion();
+		t.setProperty("normalized");
+		t.setAddDateQualifier(true);
+		t.setVersion("1.2.beta");
+		t.doExecute(); 
+	}
+	
+	
 	
 }

@@ -54,7 +54,7 @@ Author: Jens von Pilgrim, developer@jevopi.de
 
 
 	<target name="init">
-		<normalizeversion version="${version}" property="normversion" />
+		<normalizeversion version="${version}" property="normversion" addDateQualifier="yes" />
 		<echo>Building plugins for version ${version}, normalized version ${normversion}</echo>
 	</target>
 
@@ -209,7 +209,7 @@ Bundle-Name: LWJGL Lightweight Java Game Library
 Bundle-SymbolicName: org.lwjgl
 Bundle-Version: ${normversion}
 Bundle-Vendor: ${bundle.vendor}
-Bundle-Activator: org.lwjgl.eclipse.Activator
+Bundle-Activator: org.lwjgl.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy

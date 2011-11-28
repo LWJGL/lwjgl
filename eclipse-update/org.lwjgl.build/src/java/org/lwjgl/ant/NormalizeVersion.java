@@ -11,6 +11,9 @@
  ******************************************************************************/
 package org.lwjgl.ant;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
@@ -24,13 +27,33 @@ import org.apache.tools.ant.Task;
  */
 public class NormalizeVersion extends Task {
 
-	
+	public final static String SEGMENTS[] = { "major", "minor", "service",
+			"qualifier" };
+
+	public final static String VERSION_QUALIFIER_PATTERN = "yyyyMMdd-HHmm";
+
 	/**
 	* name of the property to set
 	*/
 	protected String property;
 
 	protected String version;
+
+	protected boolean addDateQualifier = false;
+
+	/**
+	 * @return the addQualifier
+	 */
+	public boolean isAddDateQualifier() {
+		return addDateQualifier;
+	}
+
+	/**
+	 * @param i_addQualifier the addQualifier to set
+	 */
+	public void setAddDateQualifier(boolean i_addDateQualifier) {
+		addDateQualifier = i_addDateQualifier;
+	}
 
 	/**
 	 * @return the property
@@ -57,7 +80,7 @@ public class NormalizeVersion extends Task {
 	 * @param i_versionNumber the versionNumber to set
 	 */
 	public void setVersion(String version) {
-		this.version =version;
+		this.version = version;
 	}
 
 	/**
@@ -71,6 +94,30 @@ public class NormalizeVersion extends Task {
 		}
 		if (version == null) {
 			throw new BuildException("attribute version missing");
+		}
+		String s = getVersion().trim();
+		int sn = 0;
+		boolean qualifier = false;
+		for (int i = 0; i < s.length(); i++) {
+			if (s.charAt(i) == '.') {
+				sn++;
+			} else {
+
+				qualifier = !Character.isDigit(s.charAt(i));
+				if (sn < 1 && !Character.isDigit(s.charAt(i))) {
+
+					throw new BuildException(
+							"Wrong version format, must contain only digits in the "
+									+ SEGMENTS[sn] + " segment, was "
+									+ s.substring(0, i) + ">>" + s.charAt(i)
+									+ "<<" + s.substring(i + 1));
+
+				}
+			}
+		}
+		if ((sn > 2 || qualifier) && isAddDateQualifier()) {
+			throw new BuildException(
+					"Cannot add date qualifier, qualifier already specified");
 		}
 	}
 
@@ -147,11 +194,11 @@ public class NormalizeVersion extends Task {
 				}
 				n.append(c);
 			}
-			
 
 		}
+
 		if (!qualifier) {
-			if (digits.length()>0) {
+			if (digits.length() > 0) {
 				if (snIndex > 0)
 					n.append('.');
 				n.append(digits);
@@ -166,8 +213,25 @@ public class NormalizeVersion extends Task {
 			case 2: // e.g. "1.2.beta
 				n.append(".0");
 			}
+			if (isAddDateQualifier())
+				n.append(createDateQualifier());
+		} else {
+			if (isAddDateQualifier()) {
+				throw new BuildException(
+						"Cannot add date qualifier, qualifier already specified");
+			}
 		}
+
 		return n.toString();
+	}
+
+	/**
+	 * @return
+	 */
+	private String createDateQualifier() {
+		return ".v"
+				+ new SimpleDateFormat(VERSION_QUALIFIER_PATTERN)
+						.format(new Date());
 	}
 
 }
