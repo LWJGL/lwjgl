@@ -120,7 +120,7 @@ public interface NV_transform_feedback {
 
 	void glBindBufferBaseNV(@GLenum int target, @GLuint int index, @GLuint int buffer);
 
-	void glTransformFeedbackAttribsNV(@AutoSize("attribs") @GLsizei int count, @Const IntBuffer attribs, @GLenum int bufferMode);
+	void glTransformFeedbackAttribsNV(@Constant("attribs.remaining() / 3") @GLsizei int count, @Check("3") @Const IntBuffer attribs, @GLenum int bufferMode);
 
 	void glTransformFeedbackVaryingsNV(@GLuint int program, @AutoSize("locations") @GLsizei int count, @Const IntBuffer locations, @GLenum int bufferMode);
 
