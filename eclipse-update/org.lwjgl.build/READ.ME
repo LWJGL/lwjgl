@@ -1,3 +1,33 @@
+How to build the Eclipse update site
+------------------------------------
+
+Building the Eclipse update site is fully integrated into the main LWJGL build script.
+Here is how to build the update site:
+
+Run main lwjgl ant script (LWJGL/build.xml) with target "eclipse-updatesite"
+
+You will find the updatesite in
+	LWJGL/eclipse-update/org.lwjgl.build/build/plugins/org.lwjgl.updatesite
+
+Note that there are two targets: eclipse-updatesite and 
+eclipse-updatesite-simple. The first one depends from the target "release",
+defined in the main build file. However, if you are sure the relase target has 
+been called before, you may want to only create the update site without 
+building the release target again. In that case, you can all 
+eclipse-update-simple.
+
+The update site build requires some Java classes to be precompiled. These classes
+can be found in some zip archives in folder plugin-classes and anttasks.jar. 
+Building these classes requires Eclipse dependencies (in case of the 
+plugin-classes) or they define anttasks required to be present when running ant.
+In order to build these classes, open all projects found in subfolder 
+LWJGL/eclipse-update in Eclipse: this way, all Eclipse classes will get 
+automatically compiled. Then run the ant script buildEclipseClasses.xml from 
+within Eclipse. Actually, this is rarely necessary as the archives are all 
+committed to the LWJGL SVN and will be present if you check out everything. You
+only need to run that build if the Eclise plugin classes (or the anttasks) were
+changed. 
+
 The build plugin is part of the LWJGL Eclipse plugins. The following plugins are
 required:
 
@@ -46,35 +76,11 @@ org.lwjgl.build -- THIS Plugin
   This is the build script project. Although it is an Eclipse project, you can
   simply run the build script with ant from command line. See later on.
 
-Everything is created in org.lwjgl.build/build. 
-Here is how to build the update site:
-
-1) Create a new folder in org.lwjgl.build/lwjgl-archives , use the version 
-   number as folder name. E.g., for version 2.6 create a folder "2.6", 
-   for version 2.6.1 "2.6.1" and so on.
-2) Copy the lwjgl, lwjgl-docs and lwjgl-source zips into that folder. E.g., 
-   for version 2.6, this folder must contain the following files: 
-     org.lwjgl.build/lwjgl-archives
-     	+ 2.6
-     		- lwjgl-2.6.zip
-     		- lwjgl-docs-2.6.zip
-     		- lwjgl-source-2.6.zip
-3) In order to run the build script, change to folder org.lwjgl.build and run
-   ant with a parameter indicating the appropriate LWJGL version, e.g.
-		ant -Dversion=2.6 dist
-
-You will find the updatesite in
-	org.lwjgl.build/build/plugins/org.lwjgl.updatesite
-
-You may note that the jars are all signed. I have added a temporary keystore
-with a dummy alias. In order to use your key, simply edit the properties
-(line 11-14) in the build script. If you do not want to store the password in
-the build script, simply define it via "-Dstorepass=****" in the command line.
+Everything is created in LWJGL/eclipse-update/org.lwjgl.build/build. 
 
 Some additional remarks:
 - The version number is automatically "normalized" to Eclipse standards, 
-  that is 2.6 will become 2.6.0. You do not have to rename the initial archives,
-  you can use 2.6. Or 2.6.1 ;-)
+  that is 2.6 will become 2.6.0 with the current date and time added.
 - The lwjgl-debug.jar is not added to the org.lwjgl plugin, as I do not know
   how to select one or the other. But I have not further investigated in 
   that direction.
@@ -85,4 +91,5 @@ Some additional remarks:
   to the Eclipse P2 system, which caches a lot of things. Simply uninstalling
   a plugin does not remove the plugins from the Eclipse installation. When
   the very same version is re-installed, instead of loading new files from the
-  update site these pre-installed versions are reused!  
+  update site these pre-installed versions are reused! Since the date and time
+  is added to the plugin version number, this should cause no problems.  

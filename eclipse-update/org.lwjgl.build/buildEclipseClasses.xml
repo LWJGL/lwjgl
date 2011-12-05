@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+	ant 
+(C) 2011 LWJGL-Project
+Author: Jens von Pilgrim, developer@jevopi.de
+-->
+
+<project default="buildClasses" basedir="." name="Build Eclipse classes" xmlns:ant4eclipse="antlib:org.ant4eclipse" xmlns:antcontrib="antlib:net.sf.antcontrib">
+
+	<property name="plugin.lwjgl.org" value="org.lwjgl" />
+	<property name="plugin.lwjgl.org.info" value="org.lwjgl.info" />
+	<property name="plugin.lwjgl.org.tools" value="org.lwjgl.tools" />
+	<property name="classes.folder" value="build/classes" />
+
+	<property name="plugin.build.folder" value="plugin-classes" />
+	
+
+
+	<!--
+<property name=""	value="" />
+-->
+
+
+	<target name="init">
+		<echo></echo>
+	</target>
+
+	<target name="buildClasses" depends="init">
+		<mkdir dir="${plugin.build.folder}" />		
+		<zip basedir="../${plugin.lwjgl.org}/${classes.folder}" destfile="${plugin.build.folder}/${plugin.lwjgl.org}.zip" />
+		<zip basedir="../${plugin.lwjgl.org.info}/${classes.folder}" destfile="${plugin.build.folder}/${plugin.lwjgl.org.info}.zip" />
+		<zip basedir="../${plugin.lwjgl.org.tools}/${classes.folder}" destfile="${plugin.build.folder}/${plugin.lwjgl.org.tools}.zip" />
+		
+		<jar basedir="anttasks" destfile="anttasks.jar" />
+	</target>
+	
+
+	<target name="clean">
+		<delete dir="${plugin.build.folder}" />
+	</target>
+
+	<target name="help">
+		<echo>Call this ant script in order to create archives containing the classes of all</echo>
+		<echo>Eclipes plugin related classes, such as Activors.</echo>
+		<echo>This build file removes the burden of building Eclipse dependent classes from</echo>
+		<echo>within the main build script</echo>
+	</target>
+
+</project>

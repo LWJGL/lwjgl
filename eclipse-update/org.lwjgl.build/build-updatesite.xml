@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Called from main build script.
+Expects
+	lwjgl.version
+to be set.
+ 
+(C) 2011 LWJGL-Project
+Author: Jens von Pilgrim, developer@jevopi.de
+-->
+
+<project default="eclipse-updatesite" basedir="." name="eclipse.antscript" xmlns:ant4eclipse="antlib:org.ant4eclipse" xmlns:antcontrib="antlib:net.sf.antcontrib">
+
+	<dirname property="eclipse.antscript.basedir" file="${ant.file.eclipse.antscript}" />
+		
+	<property name="keystore" value="teststore" />
+	<property name="alias" value="tester" />
+	<property name="password" value="tester" />
+	<property name="keypass" value="${password}" />
+
+	<property name="eclipse.updatesite" value="http://www.lwjgl.org/update/" />
+	<property name="eclipse.bundle.vendor" value="lwjgl.org" />
+		
+	<taskdef name="packagelist" classname="org.lwjgl.ant.PackageList">
+		<classpath>
+			<pathelement location="eclipse-update/org.lwjgl.build/anttasks.jar" />
+		</classpath>
+	</taskdef>
+	<taskdef name="normalizeversion" classname="org.lwjgl.ant.NormalizeVersion">
+		<classpath>
+			<pathelement location="eclipse-update/org.lwjgl.build/anttasks.jar" />
+		</classpath>
+	</taskdef>
+			
+	<!-- properties imported from build-definitions.xml:  
+	<property name="lwjgl.temp" 				location="temp" />
+	<property name="lwjgl.src" 					location="src" />
+	<property name="lwjgl.version" 				value="2.8.3" />
+	-->
+	
+	<!-- where to build the update site and temporary build files -->
+	<property name="eclipse.build.path" value="${eclipse.antscript.basedir}/build" />
+	<property name="eclipse.build.temp" value="${eclipse.build.path}/temp" />
+	<property name="eclipse.build.plugins" value="${eclipse.build.path}/plugins" />
+	<property name="eclipse.prebuild-plugin-classes" value="${eclipse.antscript.basedir}/plugin-classes" />
+		
+		
+	<!-- from where to retrieve LWJGL files -->
+	<property name="eclipse.skeletons.dir" value="${eclipse.antscript.basedir}/.." />
+	
+	<!-- base:	${lwjgl.temp} : <patternset refid="lwjgl_applet"/>
+	     doc: basedir="${lwjgl.docs}" includes="javadoc/**" 
+	     source: refid="lwjgl.source.fileset"
+	
+	-->
+
+			
+	<property name="NL" value="&#10;" />
+
+
+	<target name="eclipse-updatesite" depends="release">
+		<antcall target="eclipse-updatesite-simple" />
+	</target>
+	
+	
+	<target name="eclipse-updatesite-simple">
+	<normalizeversion version="${lwjgl.version}" property="eclipse.normversion" addDateQualifier="yes" />
+			<echo>Building plugins for version ${lwjgl.version}, normalized version ${eclipse.normversion}</echo>
+	
+		<mkdir dir="${eclipse.build.temp}" />
+
+
+		<!-- *******************************************************************
+		*
+		* Assemble plugins
+		*
+		******************************************************************** -->
+			
+		<!-- Main plugin: lwjgl.org -->	
+		<!-- Copy plugin skeletons -->
+		<mkdir dir="${eclipse.build.plugins}" />
+		<copy todir="${eclipse.build.plugins}/org.lwjgl">
+			<fileset dir="${eclipse.skeletons.dir}/org.lwjgl" casesensitive="yes">
+				<exclude name="**/src/**" />
+				<exclude name="**/*.jar" />
+				<!-- do not copy jars used for development -->
+				<exclude name="**/build/**" />
+				<exclude name="**/build.properties" />
+				<!-- do not copy development settings -->
+				<exclude name="**/.settings/**" />
+				<exclude name="**/.classpath" />
+				<exclude name="**/.project" />
+				<!-- do not copy native libraries  -->
+				<exclude name="**/native/**" />
+			</fileset>
+		</copy>
+		<!-- Copy LWJGL native files and classes -->
+		<copy todir="${eclipse.build.plugins}/org.lwjgl">
+			<fileset dir="${lwjgl.temp}">
+				<patternset refid="lwjgl_base"/>
+			</fileset>
+		</copy>
+		<move todir="${eclipse.build.plugins}/org.lwjgl">
+			<fileset dir="${eclipse.build.plugins}/org.lwjgl/jar">
+				<include name="**" />
+				<exclude name="lwjgl-debug.jar" />	
+			</fileset>
+		</move>	
+		<delete dir="${eclipse.build.plugins}/org.lwjgl/jar" />		
+		<!-- unzip Eclipse dependent classes, 
+		     have to be previously built by buildEclipseClasses.xml, but 
+		     are also contained in SVN
+		-->
+		<unzip dest="${eclipse.build.plugins}/org.lwjgl" src="${eclipse.prebuild-plugin-classes}/org.lwjgl.zip" />
+		
+					
+		<!-- Sources plugin: lwjgl.org.source -->
+		<!-- Copy plugin skeletons -->
+		<copy todir="${eclipse.build.plugins}/org.lwjgl.source">
+			<fileset dir="${eclipse.skeletons.dir}/org.lwjgl.source" casesensitive="yes">
+				<exclude name="**/build.properties" />
+				<exclude name="**/.settings/**" />
+				<exclude name="**/.classpath" />
+				<exclude name="**/.project" />
+			</fileset>
+		</copy>
+		<!-- Create zip files containing the source -->
+		<property name="eclipse.org.lwjgl.src.dir" value="${eclipse.build.plugins}/org.lwjgl.source/src/org.lwjgl_${eclipse.normversion}" />	
+		<mkdir dir="${eclipse.org.lwjgl.src.dir}" />
+     	<!-- Build src zips for plugin org.lwjgl -->
+     	<!-- lwjgl sources (only Java sources) -->	
+		<zip destfile="${eclipse.org.lwjgl.src.dir}/lwjglsrc.zip">
+			<fileset dir="${lwjgl.src}/generated" />
+			<fileset dir="${lwjgl.src}/java">
+				<exclude name="org/lwjgl/util/**" />
+			</fileset>
+		</zip>
+		<zip destfile="${eclipse.org.lwjgl.src.dir}/lwjgl_utilsrc.zip">
+			<fileset dir="${lwjgl.src}/java">
+				<include name="org/lwjgl/util/**" />
+				<exclude name="org/lwjgl/util/applet/**" />
+			</fileset>
+		</zip>
+		<zip destfile="${eclipse.org.lwjgl.src.dir}/lwjgl_util_applet.zip">
+			<fileset dir="${lwjgl.src}/java">
+				<include name="org/lwjgl/util/applet/**" />
+			</fileset>
+		</zip>
+		<!-- and the Eclipse related sources -->		
+		<zip destfile="${eclipse.org.lwjgl.src.dir}/lwjgl_eclipse.zip">
+			<fileset dir="${eclipse.skeletons.dir}/org.lwjgl/src/java" casesensitive="yes">
+				<include name="org/lwjgl/**" />
+			</fileset>
+		</zip>
+		<zip destfile="${eclipse.org.lwjgl.src.dir}/lwjgl_tools.zip">
+			<fileset dir="${eclipse.skeletons.dir}/org.lwjgl.tools/src/java" casesensitive="yes">
+				<include name="org/lwjgl/**" />
+			</fileset>
+		</zip>
+		<zip destfile="${eclipse.org.lwjgl.src.dir}/lwjgl_info.zip">
+			<fileset dir="${eclipse.skeletons.dir}/org.lwjgl.info/src/java" casesensitive="yes">
+				<include name="org/lwjgl/**" />
+			</fileset>
+		</zip>
+
+		<!-- Documentation plugin: lwjgl.org.doc -->			
+	     <!-- Copy plugin skeletons including Eclipse documentation-->
+		<copy todir="${eclipse.build.plugins}/org.lwjgl.doc">
+			<fileset dir="${eclipse.skeletons.dir}/org.lwjgl.doc" casesensitive="yes">
+				<exclude name="**/build.properties" />
+				<exclude name="**/.settings/**" />
+				<exclude name="**/.classpath" />
+				<exclude name="**/.project" />
+			</fileset>
+		</copy>
+		<copy todir="${eclipse.build.plugins}/org.lwjgl.doc">
+			<fileset dir="${lwjgl.docs}">
+				<exclude name="javadoc/**" />
+			</fileset>
+		</copy>
+		<!-- create JavaDoc archive -->
+		<zip destfile="${eclipse.build.plugins}/org.lwjgl.doc/doc.zip" basedir="${lwjgl.docs}" includes="javadoc/**" />	
+					
+
+		<!-- Information view plugin: org.lwjgl.info -->			
+		<copy todir="${eclipse.build.plugins}/org.lwjgl.info">
+			<fileset dir="${eclipse.skeletons.dir}/org.lwjgl.info" casesensitive="yes">
+				<exclude name="**/src/**" />
+				<exclude name="**/build/**" />
+				<exclude name="**/build.properties" />
+				<exclude name="**/.settings/**" />
+				<exclude name="**/.classpath" />
+				<exclude name="**/.project" />
+			</fileset>
+		</copy>
+		<!-- unzip Eclipse dependent classes, 
+		     have to be previously built by buildEclipseClasses.xml, but 
+		     are also contained in SVN
+		-->
+		<unzip dest="${eclipse.build.plugins}/org.lwjgl.info" src="${eclipse.prebuild-plugin-classes}/org.lwjgl.info.zip" />
+
+		<!-- Tools plugin: org.lwjgl.tools -->
+		<copy todir="${eclipse.build.plugins}/org.lwjgl.tools">
+			<fileset dir="${eclipse.skeletons.dir}/org.lwjgl.tools" casesensitive="yes">
+				<exclude name="**/src/**" />
+				<exclude name="**/build/**" />
+				<exclude name="**/build.properties" />
+				<exclude name="**/.settings/**" />
+				<exclude name="**/.classpath" />
+				<exclude name="**/.project" />
+			</fileset>
+		</copy>
+		<!-- unzip Eclipse dependent classes, 
+		     have to be previously built by buildEclipseClasses.xml, but 
+		     are also contained in SVN
+-->
+		<unzip dest="${eclipse.build.plugins}/org.lwjgl.tools" src="${eclipse.prebuild-plugin-classes}/org.lwjgl.tools.zip" />
+
+		<!-- Feature -->
+		<copy todir="${eclipse.build.plugins}/org.lwjgl.feature">
+			<fileset dir="${eclipse.skeletons.dir}/org.lwjgl.feature" casesensitive="yes">
+				<exclude name="**/build.properties" />
+				<exclude name="**/.settings/**" />
+				<exclude name="**/.classpath" />
+				<exclude name="**/.project" />
+				<exclude name="**/*.template" />
+			</fileset>
+		</copy>
+				
+		<!-- Update Site -->		
+		<copy todir="${eclipse.build.plugins}/org.lwjgl.updatesite">
+			<fileset dir="${eclipse.skeletons.dir}/org.lwjgl.updatesite" casesensitive="yes">
+				<exclude name="**/.settings/**" />
+				<exclude name="**/.classpath" />
+				<exclude name="**/.project" />
+				<exclude name="**/*.template" />
+			</fileset>
+		</copy>
+
+
+		<!-- *******************************************************************
+		*
+		* Build manifest files
+		*
+		******************************************************************** -->
+					
+		<!-- Calculate package export and bundle class paths -->
+		<packagelist property="eclipse.bundle.export-package" pathsep=",${NL} ">
+			<fileset dir="${lwjgl.temp}/jar">
+				<exclude name="**/lwjgl-debug.jar" />
+			</fileset>				
+			<patternset>
+				<exclude name="**/test/**" />
+				<exclude name="**/examples/**" />
+			</patternset>
+		</packagelist>
+		<pathconvert property="eclipse.bundle.classpath.jars" pathsep=",${NL} ">
+			<map from="${lwjgl.temp}/jar/" to="" />
+			<fileset dir="${lwjgl.temp}/jar">
+				<exclude name="**/lwjgl-debug.jar" />
+				<exclude name="**/lwjgl_test.jar" />
+			</fileset>	
+		</pathconvert>
+
+
+		
+
+		<!-- *******************************************************************
+		*
+		* org.lwjgl
+		*
+		* Build manifest files, not using manifest task, since manifest wraps 
+		* at the wrong positions (at least ant 1.7)
+		*
+		******************************************************************** -->
+		<echo file="${eclipse.build.plugins}/org.lwjgl/META-INF/MANIFEST.MF" encoding="UTF-8">Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: LWJGL Lightweight Java Game Library
+Bundle-SymbolicName: org.lwjgl
+Bundle-Version: ${eclipse.normversion}
+Bundle-Vendor: ${eclipse.bundle.vendor}
+Bundle-Activator: org.lwjgl.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-ActivationPolicy: lazy
+Export-Package: org.lwjgl.eclipse,${NL} ${eclipse.bundle.export-package}
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ClassPath: .,${NL} ${eclipse.bundle.classpath.jars}
+</echo>
+
+		<!-- *******************************************************************
+		*
+		* org.lwjgl.doc
+		*
+		* Build manifest files, not using manifest task, since manifest wraps 
+		* at the wrong positions (at least ant 1.7)
+		*
+		******************************************************************** -->
+		
+		<echo file="${eclipse.build.plugins}/org.lwjgl.doc/META-INF/MANIFEST.MF" encoding="UTF-8">Manifest-Version: 1.0
+Bundle-Vendor: ${eclipse.bundle.vendor}
+Bundle-Version: ${eclipse.normversion}
+Bundle-SymbolicName: org.lwjgl.doc;singleton:=true
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.help;bundle-version="3.2.0"
+Eclipse-LazyStart: true
+</echo>
+
+
+		<!-- *******************************************************************
+		*
+		* org.lwjgl.source
+		*
+		* Build manifest files, not using manifest task, since manifest wraps 
+		* at the wrong positions (at least ant 1.7)
+		*
+		******************************************************************** -->
+		
+		<!-- Build manfest -->
+		<!-- not using manifest task, since manifest wraps at the wrong positions -->
+		<echo file="${eclipse.build.plugins}/org.lwjgl.source/META-INF/MANIFEST.MF" encoding="UTF-8">Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: LWJGL Sources
+Bundle-Vendor: ${eclipse.bundle.vendor}
+Bundle-Version: ${eclipse.normversion}
+Bundle-SymbolicName: org.lwjgl.source;singleton:=true
+Bundle-Localization: plugin
+</echo>
+
+		<!-- *******************************************************************
+		*
+		* org.lwjgl.info
+		*
+		* Build manifest files, not using manifest task, since manifest wraps 
+		* at the wrong positions (at least ant 1.7)
+		*
+		******************************************************************** -->
+		<echo file="${eclipse.build.plugins}/org.lwjgl.info/META-INF/MANIFEST.MF" encoding="UTF-8">Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: LWJGL Test and Info View
+Bundle-Vendor: ${eclipse.bundle.vendor}
+Bundle-Version: ${eclipse.normversion}
+Bundle-SymbolicName: org.lwjgl.info;singleton:=true
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.views,
+ org.eclipse.core.resources,
+ org.lwjgl
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+</echo>
+		<!-- Files are already in place -->
+
+		<!-- *******************************************************************
+		*
+		* org.lwjgl.tools
+		*
+		* Build manifest files, not using manifest task, since manifest wraps 
+		* at the wrong positions (at least ant 1.7)
+		*
+		******************************************************************** -->
+		<!-- Build plugin org.lwjgl.tools -->
+		<echo file="${eclipse.build.plugins}/org.lwjgl.tools/META-INF/MANIFEST.MF" encoding="UTF-8">Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: LWJGL Tools Plug-in
+Bundle-SymbolicName: org.lwjgl.tools;singleton:=true
+Bundle-Version: ${eclipse.normversion}
+Bundle-Vendor: ${eclipse.bundle.vendor}
+Bundle-Activator: org.lwjgl.tools.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources;bundle-version="3.4.0",
+ org.eclipse.jdt.core;bundle-version="3.4.0",
+ org.eclipse.jdt.ui;bundle-version="3.4.0",
+ org.lwjgl;bundle-version="${eclipse.normversion}",
+ org.eclipse.jdt.launching;bundle-version="3.4.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+</echo>
+		<!-- Files are already in place -->
+
+	     	
+	    <!-- Create features --> 	
+	     	
+		<!-- *******************************************************************
+		*
+		* org.lwjgl.feature
+		*
+		******************************************************************** -->
+		<!-- Build org.lwjgl.feature -->
+		<copy file="${eclipse.skeletons.dir}/org.lwjgl.feature/feature.xml.template" tofile="${eclipse.build.plugins}/org.lwjgl.feature/feature.xml" encoding="UTF-8" overwrite="true">
+			<filterset>
+				<filter token="VERSION" value="${eclipse.normversion}" />
+				<filter token="PROVIDERNAME" value="${eclipse.bundle.vendor}" />
+				<filter token="UPDATEURL" value="${eclipse.updatesite}" />
+			</filterset>
+		</copy>
+
+
+		<!-- *******************************************************************
+		*
+		* org.lwjgl.feature.sdk
+		*
+		******************************************************************** -->
+		<!-- Build org.lwjgl.feature -->
+		<copy file="${eclipse.skeletons.dir}/org.lwjgl.feature.sdk/feature.xml.template" tofile="${eclipse.build.plugins}/org.lwjgl.feature.sdk/feature.xml" encoding="UTF-8" overwrite="true">
+			<filterset>
+				<filter token="VERSION" value="${eclipse.normversion}" />
+				<filter token="PROVIDERNAME" value="${eclipse.bundle.vendor}" />
+				<filter token="UPDATEURL" value="${eclipse.updatesite}" />
+			</filterset>
+		</copy>
+
+					
+		<!-- *******************************************************************
+		*
+		* Build update site, i.e. zip all plugins and feature with version
+		* number to appropriate place
+		*
+		******************************************************************** -->
+		<!-- Build update site -->
+		<copy file="${eclipse.skeletons.dir}/org.lwjgl.updatesite/site.xml.template" tofile="${eclipse.build.plugins}/org.lwjgl.updatesite/site.xml" encoding="UTF-8" overwrite="true">
+			<filterset>
+				<filter token="VERSION" value="${eclipse.normversion}" />
+				<filter token="PROVIDERNAME" value="${eclipse.bundle.vendor}" />
+				<filter token="UPDATEURL" value="${eclipse.updatesite}" />
+			</filterset>
+		</copy>
+		<mkdir dir="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins" />
+		<mkdir dir="${eclipse.build.plugins}/org.lwjgl.updatesite/features" />
+		<jar destfile="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl_${eclipse.normversion}.jar" manifest="${eclipse.build.plugins}/org.lwjgl/META-INF/MANIFEST.MF">
+			<fileset dir="${eclipse.build.plugins}/org.lwjgl" casesensitive="yes" />
+		</jar>
+		<jar destfile="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.doc_${eclipse.normversion}.jar" manifest="${eclipse.build.plugins}/org.lwjgl.doc/META-INF/MANIFEST.MF">
+			<fileset dir="${eclipse.build.plugins}/org.lwjgl.doc" casesensitive="yes" />
+		</jar>
+		<jar destfile="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.source_${eclipse.normversion}.jar" manifest="${eclipse.build.plugins}/org.lwjgl.source/META-INF/MANIFEST.MF">
+			<fileset dir="${eclipse.build.plugins}/org.lwjgl.source" casesensitive="yes" />
+		</jar>
+		<jar destfile="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.info_${eclipse.normversion}.jar" manifest="${eclipse.build.plugins}/org.lwjgl.info/META-INF/MANIFEST.MF">
+			<fileset dir="${eclipse.build.plugins}/org.lwjgl.info" casesensitive="yes" />
+		</jar>
+		<jar destfile="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.tools_${eclipse.normversion}.jar" manifest="${eclipse.build.plugins}/org.lwjgl.tools/META-INF/MANIFEST.MF">
+			<fileset dir="${eclipse.build.plugins}/org.lwjgl.tools" casesensitive="yes" />
+		</jar>
+		<jar destfile="${eclipse.build.plugins}/org.lwjgl.updatesite/features/org.lwjgl_${eclipse.normversion}.jar">
+			<fileset dir="${eclipse.build.plugins}/org.lwjgl.feature" casesensitive="yes" />
+		</jar>
+		<jar destfile="${eclipse.build.plugins}/org.lwjgl.updatesite/features/org.lwjgl.sdk_${eclipse.normversion}.jar">
+			<fileset dir="${eclipse.build.plugins}/org.lwjgl.feature.sdk" casesensitive="yes" />
+		</jar>
+
+		<!-- *******************************************************************
+		*
+		* Sign plugins and feature
+		*
+		******************************************************************** -->
+		
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/features/org.lwjgl_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" keypass="${keypass}" />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/features/org.lwjgl.sdk_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" keypass="${keypass}" />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" keypass="${keypass}" />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.doc_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" keypass="${keypass}" />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.source_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" keypass="${keypass}" />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.info_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" keypass="${keypass}" />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.tools_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" keypass="${keypass}" />
+		
+		
+		<echo>Created Eclipse update site: ${eclipse.build.plugins}/org.lwjgl.updatesite</echo>
+	</target>
+
+	<target name="eclipse-clean">
+		<delete dir="${eclipse.build.path}" />
+	</target>
+
+	<target name="eclipse-help">
+		<echo>This plugin is to be called from main LWJGL build.xml file.</echo>
+		<echo>It creates the update site, the result will be found in</echo>
+		<echo>${eclipse.build.plugins}/org.lwjgl.updatesite</echo>
+	</target>
+
+</project>
