@@ -457,13 +457,17 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 		*
 		******************************************************************** -->
 		
-		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/features/org.lwjgl_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" keypass="${keypass}" />
-		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/features/org.lwjgl.sdk_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" keypass="${keypass}" />
-		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" keypass="${keypass}" />
-		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.doc_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" keypass="${keypass}" />
-		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.source_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" keypass="${keypass}" />
-		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.info_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" keypass="${keypass}" />
-		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.tools_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" keypass="${keypass}" />
+		<input message="Please enter the keystore" addproperty="keystore.location" defaultvalue="applet/lwjglkeystore"/>
+		<input message="Please enter the keystore alias" addproperty="keystore.alias" defaultvalue="lwjgl"/>
+		<input message="Please type the password for the keystore" addproperty="sign.pwd" defaultvalue="123456"/>
+		
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/features/org.lwjgl_${eclipse.normversion}.jar" keystore="${keystore.location}" alias="${keystore.alias}" storepass="${sign.pwd}" />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/features/org.lwjgl.sdk_${eclipse.normversion}.jar" keystore="${keystore.location}" alias="${keystore.alias}" storepass="${sign.pwd}" />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl_${eclipse.normversion}.jar" keystore="${keystore.location}" alias="${keystore.alias}" storepass="${sign.pwd}" />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.doc_${eclipse.normversion}.jar" keystore="${keystore.location}" alias="${keystore.alias}" storepass="${sign.pwd}" />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.source_${eclipse.normversion}.jar" keystore="${keystore.location}" alias="${keystore.alias}" storepass="${sign.pwd}"  />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.info_${eclipse.normversion}.jar" keystore="${keystore.location}" alias="${keystore.alias}" storepass="${sign.pwd}"  />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.tools_${eclipse.normversion}.jar" keystore="${keystore.location}" alias="${keystore.alias}" storepass="${sign.pwd}"  />
 		
 		
 		<echo>Created Eclipse update site: ${eclipse.build.plugins}/org.lwjgl.updatesite</echo>
