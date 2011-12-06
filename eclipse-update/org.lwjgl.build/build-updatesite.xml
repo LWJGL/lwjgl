@@ -17,7 +17,6 @@ Author: Jens von Pilgrim, developer@jevopi.de
 	<property name="keystore" value="teststore" />
 	<property name="alias" value="tester" />
 	<property name="password" value="tester" />
-	<property name="keypass" value="${password}" />
 
 	<property name="eclipse.updatesite" value="http://www.lwjgl.org/update/" />
 	<property name="eclipse.bundle.vendor" value="lwjgl.org" />
@@ -59,8 +58,10 @@ Author: Jens von Pilgrim, developer@jevopi.de
 	<property name="NL" value="&#10;" />
 
 
-	<target name="eclipse-updatesite" depends="release">
-		<antcall target="eclipse-updatesite-simple" />
+	<target name="eclipse-updatesite">
+		<mkdir dir="${lwjgl.temp}"/>
+		<unzip dest="${lwjgl.temp}/eclipse" src="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip" />
+		<antcall target="eclipse-updatesite-simple">
 	</target>
 	
 	
@@ -97,7 +98,7 @@ Author: Jens von Pilgrim, developer@jevopi.de
 		</copy>
 		<!-- Copy LWJGL native files and classes -->
 		<copy todir="${eclipse.build.plugins}/org.lwjgl">
-			<fileset dir="${lwjgl.temp}">
+			<fileset dir="${lwjgl.temp}/eclipse/lwjgl-${lwjgl.version}/">
 				<patternset refid="lwjgl_base"/>
 			</fileset>
 		</copy>
@@ -247,7 +248,7 @@ Author: Jens von Pilgrim, developer@jevopi.de
 					
 		<!-- Calculate package export and bundle class paths -->
 		<packagelist property="eclipse.bundle.export-package" pathsep=",${NL} ">
-			<fileset dir="${lwjgl.temp}/jar">
+			<fileset dir="${lwjgl.temp}/eclipse/lwjgl-${lwjgl.version}/jar">
 				<exclude name="**/lwjgl-debug.jar" />
 			</fileset>				
 			<patternset>
@@ -256,8 +257,8 @@ Author: Jens von Pilgrim, developer@jevopi.de
 			</patternset>
 		</packagelist>
 		<pathconvert property="eclipse.bundle.classpath.jars" pathsep=",${NL} ">
-			<map from="${lwjgl.temp}/jar/" to="" />
-			<fileset dir="${lwjgl.temp}/jar">
+			<map from="${lwjgl.temp}/eclipse/lwjgl-${lwjgl.version}/jar/" to="" />
+			<fileset dir="${lwjgl.temp}/eclipse/lwjgl-${lwjgl.version}/jar">
 				<exclude name="**/lwjgl-debug.jar" />
 				<exclude name="**/lwjgl_test.jar" />
 			</fileset>	
@@ -457,18 +458,13 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 		*
 		******************************************************************** -->
 		
-		<input message="Please enter the keystore" addproperty="keystore.location" defaultvalue="applet/lwjglkeystore"/>
-		<input message="Please enter the keystore alias" addproperty="keystore.alias" defaultvalue="lwjgl"/>
-		<input message="Please type the password for the keystore" addproperty="sign.pwd" defaultvalue="123456"/>
-		
-		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/features/org.lwjgl_${eclipse.normversion}.jar" keystore="${keystore.location}" alias="${keystore.alias}" storepass="${sign.pwd}" />
-		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/features/org.lwjgl.sdk_${eclipse.normversion}.jar" keystore="${keystore.location}" alias="${keystore.alias}" storepass="${sign.pwd}" />
-		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl_${eclipse.normversion}.jar" keystore="${keystore.location}" alias="${keystore.alias}" storepass="${sign.pwd}" />
-		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.doc_${eclipse.normversion}.jar" keystore="${keystore.location}" alias="${keystore.alias}" storepass="${sign.pwd}" />
-		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.source_${eclipse.normversion}.jar" keystore="${keystore.location}" alias="${keystore.alias}" storepass="${sign.pwd}"  />
-		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.info_${eclipse.normversion}.jar" keystore="${keystore.location}" alias="${keystore.alias}" storepass="${sign.pwd}"  />
-		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.tools_${eclipse.normversion}.jar" keystore="${keystore.location}" alias="${keystore.alias}" storepass="${sign.pwd}"  />
-		
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/features/org.lwjgl_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/features/org.lwjgl.sdk_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.doc_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.source_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.info_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" />
+		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.tools_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" />
 		
 		<echo>Created Eclipse update site: ${eclipse.build.plugins}/org.lwjgl.updatesite</echo>
 	</target>
