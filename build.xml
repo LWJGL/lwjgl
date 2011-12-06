@@ -7,6 +7,7 @@
 	<import file="platform_build/build-applet.xml"/>
 	<import file="platform_build/build-webstart.xml"/>
 	<import file="platform_build/build-maven.xml"/>
+	<import file="eclipse-update/org.lwjgl.build/build-updatesite.xml"/>
 
 	<!-- ================================================================== -->
 	<!-- Everything below this line is targets.								-->
