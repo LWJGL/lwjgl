@@ -14,9 +14,9 @@ Author: Jens von Pilgrim, developer@jevopi.de
 
 	<dirname property="eclipse.antscript.basedir" file="${ant.file.eclipse.antscript}" />
 		
-	<property name="keystore" value="teststore" />
-	<property name="alias" value="tester" />
-	<property name="password" value="tester" />
+	<property name="keystore" value="applet/lwjglkeystore" />
+	<property name="alias" value="lwjgl" />
+	<property name="password" value="123456" />
 
 	<property name="eclipse.updatesite" value="http://www.lwjgl.org/update/" />
 	<property name="eclipse.bundle.vendor" value="lwjgl.org" />
@@ -505,6 +505,7 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 		<echo>This plugin is to be called from main LWJGL build.xml file.</echo>
 		<echo>It creates the update site, the result will be found in</echo>
 		<echo>${eclipse.build.plugins}/org.lwjgl.updatesite</echo>
+		<echo>For more information, read READ.ME</echo>
 	</target>
 
 </project>

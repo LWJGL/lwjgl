@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -308,7 +309,6 @@ public class StandalonePublisher extends Task {
 
 					Document doc = readXMLinJar(docBuilder, jis, jarEntry);
 					info.doc = doc;
-					jis.closeEntry();
 					break;
 				}
 			}
@@ -346,7 +346,6 @@ public class StandalonePublisher extends Task {
 
 					Document doc = readXMLinJar(docBuilder, jis, jarEntry);
 					info.doc = doc;
-					jis.closeEntry();
 					break;
 				}
 
@@ -378,17 +377,13 @@ public class StandalonePublisher extends Task {
 	protected Document readXMLinJar(DocumentBuilder docBuilder,
 			JarInputStream jis, JarEntry jarEntry) throws IOException,
 			SAXException {
-		byte[] buffer = new byte[(int) jarEntry.getSize()];
-		int count;
-		int pos = 0;
-		byte data[] = new byte[BUFFERSIZE];
-		while ((count = jis.read(data, 0, BUFFERSIZE)) != -1) {
-			System.arraycopy(data, 0, buffer, pos, count);
-			pos += count;
+		try {
+			Document doc = docBuilder.parse(jis);
+			return doc;
+		} catch (IOException ex) {
+			System.err.println("Error reading jar entry " + jarEntry + ": ex");
+			throw ex;
 		}
-		ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
-		Document doc = docBuilder.parse(bis);
-		return doc;
 	}
 
 	protected static void dump(Node doc) {
@@ -1105,8 +1100,6 @@ public class StandalonePublisher extends Task {
 		}
 		return element;
 	}
-	
-	
 
 	/**
 	 * @return the updateSiteFolder
@@ -1176,20 +1169,20 @@ public class StandalonePublisher extends Task {
 		publisher.repositoryURI = "http://lwjgl.org/update";
 		publisher.execute();
 	}
-	
+
 	/** 
 	 * {@inheritDoc}
 	 * @see org.apache.tools.ant.Task#execute()
 	 */
 	@Override
 	public void execute() throws BuildException {
-		if (updateSiteFolder==null) {
+		if (updateSiteFolder == null) {
 			throw new BuildException("attribute updateSiteFolder missing");
 		}
-		if (repositoryName==null)  {
+		if (repositoryName == null) {
 			throw new BuildException("attribute repositoryName missing");
 		}
-		if (repositoryURI==null)  {
+		if (repositoryURI == null) {
 			throw new BuildException("attribute repositoryURI missing");
 		}
 		try {
@@ -1197,9 +1190,7 @@ public class StandalonePublisher extends Task {
 		} catch (Exception ex) {
 			throw new BuildException(ex);
 		}
-		
+
 	}
-	
-	
 
 }
