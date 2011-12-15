@@ -23,14 +23,19 @@ Author: Jens von Pilgrim, developer@jevopi.de
 		
 	<taskdef name="packagelist" classname="org.lwjgl.ant.PackageList">
 		<classpath>
-			<pathelement location="eclipse-update/org.lwjgl.build/anttasks.jar" />
+			<pathelement location="${eclipse.antscript.basedir}/anttasks.jar" />
 		</classpath>
 	</taskdef>
 	<taskdef name="normalizeversion" classname="org.lwjgl.ant.NormalizeVersion">
 		<classpath>
-			<pathelement location="eclipse-update/org.lwjgl.build/anttasks.jar" />
+			<pathelement location="${eclipse.antscript.basedir}/anttasks.jar" />
 		</classpath>
 	</taskdef>
+	<taskdef name="publishBundlesAndFeatures" classname="org.lwjgl.ant.StandalonePublisher">
+			<classpath>
+				<pathelement location="${eclipse.antscript.basedir}/anttasks.jar" />
+			</classpath>
+		</taskdef>
 			
 	<!-- properties imported from build-definitions.xml:  
 	<property name="lwjgl.temp" 				location="temp" />
@@ -61,7 +66,7 @@ Author: Jens von Pilgrim, developer@jevopi.de
 	<target name="eclipse-updatesite">
 		<mkdir dir="${lwjgl.temp}"/>
 		<unzip dest="${lwjgl.temp}/eclipse" src="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip" />
-		<antcall target="eclipse-updatesite-simple">
+		<antcall target="eclipse-updatesite-simple" />
 	</target>
 	
 	
@@ -465,6 +470,29 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.source_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" />
 		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.info_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" />
 		<signjar jar="${eclipse.build.plugins}/org.lwjgl.updatesite/plugins/org.lwjgl.tools_${eclipse.normversion}.jar" keystore="${keystore}" alias="${alias}" storepass="${password}" />
+		
+		<!-- *******************************************************************
+		*
+		* Publish plugins and feature
+		* content.xml/jar and artifacts.xml/jar, required for some newer featues
+		* and tools such as Eclipse Tycho.
+		*
+		******************************************************************** -->
+		<publishBundlesAndFeatures compressed="true"
+		updatesitefolder="${eclipse.build.plugins}/org.lwjgl.updatesite"
+		repositoryname="lwjgl.org"
+		repositoryuri="${eclipse.updatesite}" />
+		<jar destfile="${eclipse.build.plugins}/org.lwjgl.updatesite/content.jar">
+			<fileset file="${eclipse.build.plugins}/org.lwjgl.updatesite/content.xml" />
+		</jar>
+		<jar destfile="${eclipse.build.plugins}/org.lwjgl.updatesite/artifacts.jar">
+			<fileset file="${eclipse.build.plugins}/org.lwjgl.updatesite/artifacts.xml" />
+		</jar>
+		<delete>
+			<fileset file="${eclipse.build.plugins}/org.lwjgl.updatesite/content.xml" />
+			<fileset file="${eclipse.build.plugins}/org.lwjgl.updatesite/artifacts.xml" />
+		</delete>
+
 		
 		<echo>Created Eclipse update site: ${eclipse.build.plugins}/org.lwjgl.updatesite</echo>
 	</target>
