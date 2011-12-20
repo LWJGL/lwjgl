@@ -419,6 +419,7 @@ public interface CL12 {
 	                                 @Check(canBeNull = true) @Const @NativeType("cl_event") PointerBuffer event_wait_list,
 	                                 @OutParameter @Check(value = "1", canBeNull = true) @NativeType("cl_event") PointerBuffer event);
 
+	@Optional(reason = "Missing from AMD CL 1.2 preview drivers.")
 	@Code(
 		tryBlock = true,
 		// Create a GlobalRef to the callback object.
