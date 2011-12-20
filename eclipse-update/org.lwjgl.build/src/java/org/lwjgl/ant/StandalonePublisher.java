@@ -11,15 +11,14 @@
 
 package org.lwjgl.ant;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +27,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
+import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -626,9 +626,48 @@ public class StandalonePublisher extends Task {
 	 * @throws TransformerException
 	 */
 	protected void writeDocument(Document content, String targetFile)
+			throws Exception {
+
+		if (compressed) {
+			String jarFileNameString = targetFile;
+			int pos = jarFileNameString.lastIndexOf('.');
+			if (pos > 0) {
+				jarFileNameString = jarFileNameString.substring(0, pos) + ".jar";
+			} else {
+				jarFileNameString += ".jar";
+			}
+			
+			JarOutputStream target = new JarOutputStream(new FileOutputStream(
+					jarFileNameString));
+			
+			pos = targetFile.lastIndexOf(File.separatorChar);
+			if (pos>0) {
+				targetFile = targetFile.substring(pos+1);
+			}
+
+			JarEntry entry = new JarEntry(targetFile);
+			target.putNextEntry(entry);
+
+			StreamResult sr = new StreamResult(target);
+			doWriteDocument(content, sr);
+			target.closeEntry();
+			target.close();
+		} else {
+			StreamResult sr = new StreamResult(new File(targetFile));
+			doWriteDocument(content, sr);
+		}
+	}
+
+	/**
+	 * @param content
+	 * @param sr
+	 * @throws TransformerFactoryConfigurationError
+	 * @throws TransformerConfigurationException
+	 * @throws TransformerException
+	 */
+	private void doWriteDocument(Document content, StreamResult sr)
 			throws TransformerFactoryConfigurationError,
 			TransformerConfigurationException, TransformerException {
-		StreamResult sr = new StreamResult(new File(targetFile));
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer t = tf.newTransformer();
 		Properties oprops = new Properties();
@@ -1164,10 +1203,81 @@ public class StandalonePublisher extends Task {
 	 */
 	public static void main(String[] args) throws Exception {
 		StandalonePublisher publisher = new StandalonePublisher();
-		publisher.updateSiteFolder = "build/plugins/org.lwjgl.updatesite";
-		publisher.repositoryName = "org.lwjgl";
-		publisher.repositoryURI = "http://lwjgl.org/update";
-		publisher.execute();
+
+		if (!publisher.parseArgs(args)) {
+			help();
+		} else {
+			//			publisher.updateSiteFolder = "build/plugins/org.lwjgl.updatesite";
+			//			publisher.repositoryName = "org.lwjgl";
+			//			publisher.repositoryURI = "http://lwjgl.org/update";
+			try {
+				publisher.execute();
+				System.out.println("Successfull created p2 metadata in " + publisher.updateSiteFolder);
+			} catch (Exception ex) {
+				System.err.println("Error creating p2 metadata: ");
+				System.err.println(ex);
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * 
+	 */
+	static void help() {
+		System.out
+				.println("StandalonePublisher, (C) Jens von Pilgrim 2011 (EPL and BSD license)");
+		System.out
+				.println("Ant task generating p2 metadata for old style Eclipse update site.");
+		System.out
+				.println("Limited support: only bundles and featues are supported, functionality only");
+		System.out.println("  tested for LWJGL update site");
+		System.out
+				.println("If run as command line tool, specify update site folder, repository name");
+		System.out.println("  and URI as follows:");
+		System.out
+				.println("  >java org.ljgl.ant.StandalonePublisher FOLDER NAME URI");
+		System.out
+				.println("Example (supposed tool is called from updatesite folder):");
+		System.out
+				.println("  >java org.lwjgl.ant.StandalonePublisher . org.lwjgl http://lwjgl.org/update");
+		System.out
+				.println("If content.xml and artfact.xml should be compressed, add 'compress'");
+	}
+
+	/**
+	 * @param i_args
+	 * @return
+	 */
+	boolean parseArgs(String[] i_args) {
+		if (i_args == null || i_args.length < 3) {
+			return false;
+		}
+		updateSiteFolder = i_args[0];
+		repositoryName = i_args[1];
+		repositoryURI = i_args[2];
+
+		if (updateSiteFolder.isEmpty() || repositoryName.isEmpty()
+				|| repositoryURI.isEmpty()) {
+			return false;
+		}
+
+		File f = new File(updateSiteFolder);
+		if (!f.exists()) {
+			System.err.println("Update site folder does not exist.");
+			return false;
+		}
+		if (!(repositoryURI.startsWith("http") || repositoryURI
+				.startsWith("file"))) {
+			System.out
+					.println("Warning: Repository URI should start with protocol, e.g., http: or file:");
+		}
+
+		if (i_args.length == 4 && "compress".equalsIgnoreCase(i_args[3])) {
+			compressed = true;
+		}
+
+		return true;
 	}
 
 	/** 

@@ -482,18 +482,7 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 		updatesitefolder="${eclipse.build.plugins}/org.lwjgl.updatesite"
 		repositoryname="lwjgl.org"
 		repositoryuri="${eclipse.updatesite}" />
-		<jar destfile="${eclipse.build.plugins}/org.lwjgl.updatesite/content.jar">
-			<fileset file="${eclipse.build.plugins}/org.lwjgl.updatesite/content.xml" />
-		</jar>
-		<jar destfile="${eclipse.build.plugins}/org.lwjgl.updatesite/artifacts.jar">
-			<fileset file="${eclipse.build.plugins}/org.lwjgl.updatesite/artifacts.xml" />
-		</jar>
-		<delete>
-			<fileset file="${eclipse.build.plugins}/org.lwjgl.updatesite/content.xml" />
-			<fileset file="${eclipse.build.plugins}/org.lwjgl.updatesite/artifacts.xml" />
-		</delete>
-
-		
+				
 		<echo>Created Eclipse update site: ${eclipse.build.plugins}/org.lwjgl.updatesite</echo>
 	</target>
 
