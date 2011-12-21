@@ -17,13 +17,19 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -94,25 +100,10 @@ public class StandalonePublisher extends Task {
 
 	protected final XPath xpath = XPathFactory.newInstance().newXPath();
 
-	public class FeatureInfo {
-
-		public String getClassifier() {
-			return "org.eclipse.update.feature";
-		}
-
-		public String getContentType() {
-			return "application/zip";
-		}
-
-		public String getRootElementName() {
-			return "feature";
-		}
-
+	public abstract class XMLBasedInfo {
 		public Document doc;
 
-		public int size;
-
-		public File jarFile;
+		abstract public String getRootElementName();
 
 		public String xpath(String path) {
 			if (path.startsWith("/"))
@@ -139,6 +130,76 @@ public class StandalonePublisher extends Task {
 				return Collections.emptyList();
 			}
 		}
+	}
+
+	public class SiteInfo extends XMLBasedInfo {
+		/** 
+		 * {@inheritDoc}
+		 * @see org.lwjgl.ant.StandalonePublisher.XMLBasedInfo#getRootElementName()
+		 */
+		@Override
+		public String getRootElementName() {
+			return "site";
+		}
+	}
+
+	public static class CategoryInfo {
+		String id;
+
+		String name;
+
+		String label;
+
+		String description = "";
+
+		List<FeatureInfo> required = new ArrayList<StandalonePublisher.FeatureInfo>(
+				5);
+
+		public String getVersion() {
+			String version = "0.0.0";
+			for (FeatureInfo featureInfo : required) {
+				String v = featureInfo.getVersion();
+				if (version.compareTo(v) < 0) {
+					version = v; // quick hack, not really correct
+				}
+			}
+			return version;
+
+		}
+
+		String getID() {
+			if (id == null) {
+				String timeStamp = new SimpleDateFormat("yyyyMMddHHmm")
+						.format(new Date());
+				id = timeStamp + "." + name;
+			}
+			return id;
+		}
+		
+		public String getLabel() {
+			if (label==null || label.isEmpty()) return name;
+			return label;
+		}
+
+	}
+
+	public class FeatureInfo extends XMLBasedInfo {
+
+		public String getClassifier() {
+			return "org.eclipse.update.feature";
+		}
+
+		public String getContentType() {
+			return "application/zip";
+		}
+
+		public String getRootElementName() {
+			return "feature";
+		}
+
+		public int size;
+
+		public File jarFile;
 
 		/**
 		 * @return
@@ -366,6 +427,88 @@ public class StandalonePublisher extends Task {
 
 	}
 
+	protected Collection<CategoryInfo> readSite(
+			DocumentBuilder documentBuilder, FeatureInfo[] featureInfos)
+			throws Exception {
+
+		File f = new File(updateSiteFolder + File.separator + "site.xml");
+		if (!f.exists()) {
+			f = new File(updateSiteFolder + File.separator + "category.xml");
+		}
+
+		Map<String, FeatureInfo> featuresById = new HashMap<String, StandalonePublisher.FeatureInfo>();
+		for (FeatureInfo featureInfo : featureInfos) {
+			featuresById.put(featureInfo.getID(), featureInfo);
+		}
+
+		Map<String, CategoryInfo> categoryInfos = new HashMap<String, CategoryInfo>();
+		Map<String, String> featureToGroup = new HashMap<String, String>();
+
+		if (f.exists()) {
+			SiteInfo site = new SiteInfo();
+			site.doc = readXML(documentBuilder, new FileInputStream(f));
+
+			List<Node> categories = site.xpathNods("//site//category-def");
+			for (Node category : categories) {
+				CategoryInfo categoryInfo = new CategoryInfo();
+				categoryInfo.name = xpath(category, "@name");
+				categoryInfo.label = xpath(category, "@label");
+				categoryInfo.description = xpath(category, "description/text()");
+				categoryInfos.put(categoryInfo.name, categoryInfo);
+			}
+
+			List<Node> features = site.xpathNods("//site//feature");
+			for (Node feature : features) {
+				featureToGroup.put(xpath(feature, "@id"),
+						xpath(feature, "category/@name"));
+			}
+
+		}
+
+		// sort features to their category:
+		List<String> sortedFeatures = new ArrayList<String>();
+		for (String id : featuresById.keySet()) {
+			String categoryName = featureToGroup.get(id);
+			if (categoryName != null) {
+				CategoryInfo categoryInfo = categoryInfos.get(categoryName);
+				categoryInfo.required.add(featuresById.get(id));
+				sortedFeatures.add(id);
+			}
+		}
+		for (String id : sortedFeatures) {
+			featuresById.remove(id);
+		}
+
+		if (!featuresById.isEmpty()) {
+			CategoryInfo categoryInfo = categoryInfos.get(this.repositoryName);
+			if (categoryInfo == null) {
+				categoryInfo = new CategoryInfo();
+				categoryInfo.name = this.repositoryName;
+				categoryInfo.label = this.repositoryName;
+				categoryInfo.description = "";
+				categoryInfos.put(categoryInfo.name, categoryInfo);
+			}
+
+			for (FeatureInfo featureInfo : featuresById.values()) {
+				categoryInfo.required.add(featureInfo);
+			}
+
+		}
+
+		return categoryInfos.values();
+	}
+
+	/**
+	 * @param i_documentBuilder
+	 * @param i_fileInputStream
+	 * @return
+	 */
+	protected Document readXML(DocumentBuilder docBuilder, InputStream is)
+			throws Exception {
+		Document doc = docBuilder.parse(is);
+		return doc;
+	}
+
 	/**
 	 * @param docBuilder
 	 * @param jis
@@ -445,7 +588,12 @@ public class StandalonePublisher extends Task {
 			bundleInfos[i] = readBundle(locations[i]);
 		}
 
-		writeContent(featureInfos, bundleInfos);
+		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance()
+				.newDocumentBuilder();
+		Collection<CategoryInfo> categoryInfos = readSite(docBuilder,
+				featureInfos);
+
+		writeContent(featureInfos, bundleInfos, categoryInfos);
 		writeArtifacts(featureInfos, bundleInfos);
 
 	}
@@ -453,10 +601,12 @@ public class StandalonePublisher extends Task {
 	/**
 	 * @param i_featureInfos
 	 * @param i_bundleInfos
+	 * @param i_categoryInfos 
 	 * @throws Exception 
 	 */
 	protected void writeContent(FeatureInfo[] i_featureInfos,
-			BundleInfo[] i_bundleInfos) throws Exception {
+			BundleInfo[] i_bundleInfos, Collection<CategoryInfo> i_categoryInfos)
+			throws Exception {
 
 		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance()
 				.newDocumentBuilder();
@@ -498,6 +648,11 @@ public class StandalonePublisher extends Task {
 		}
 		for (BundleInfo bundleInfo : i_bundleInfos) {
 			units.add(createUnitForBundle(bundleInfo));
+		}
+		
+
+		for (CategoryInfo categoryInfo : i_categoryInfos) {
+			units.add(createUnitForCategory(categoryInfo));
 		}
 		addList(repository, "units", units);
 
@@ -632,17 +787,18 @@ public class StandalonePublisher extends Task {
 			String jarFileNameString = targetFile;
 			int pos = jarFileNameString.lastIndexOf('.');
 			if (pos > 0) {
-				jarFileNameString = jarFileNameString.substring(0, pos) + ".jar";
+				jarFileNameString = jarFileNameString.substring(0, pos)
+						+ ".jar";
 			} else {
 				jarFileNameString += ".jar";
 			}
-			
+
 			JarOutputStream target = new JarOutputStream(new FileOutputStream(
 					jarFileNameString));
-			
+
 			pos = targetFile.lastIndexOf(File.separatorChar);
-			if (pos>0) {
-				targetFile = targetFile.substring(pos+1);
+			if (pos > 0) {
+				targetFile = targetFile.substring(pos + 1);
 			}
 
 			JarEntry entry = new JarEntry(targetFile);
@@ -795,6 +951,78 @@ public class StandalonePublisher extends Task {
 		unit.appendChild(l);
 
 		return unit;
+	}
+
+	/**
+	 * @param i_categoryInfo
+	 * @return
+	 */
+	private Element createUnitForCategory(CategoryInfo info) {
+		String version = info.getVersion();
+		String id = info.getID();
+		/*
+		<unit id="201112211149.GEF3D" version="1.0.0.08-77cLX4vE7UEMMMUUMMMlL">
+		*/
+		Element unit = createElement("unit", //
+				"id", id, //
+				"version", version);
+		/*
+		<properties size="3">
+		<property name="org.eclipse.equinox.p2.name" value="GEF3D"/>
+		<property name="org.eclipse.equinox.p2.description" value="GEF3D"/>
+		<property name="org.eclipse.equinox.p2.type.category" value="true"/>
+		</properties>
+		*/
+		addList(unit,
+				"properties",
+				createElement("property", "name",
+						"org.eclipse.equinox.p2.name", "value",
+						info.getLabel()),
+				createElement("property", "name",
+						"org.eclipse.equinox.p2.description", "value",
+						info.description),
+				createElement("property", "name",
+						"org.eclipse.equinox.p2.type.category", "value",
+				"true"));
+		/*
+		<provides size="1">
+		<provided namespace="org.eclipse.equinox.p2.iu" name="201112211149.GEF3D" version="1.0.0.08-77cLX4vE7UEMMMUUMMMlL"/>
+		</provides>
+		*/
+		addList(unit, "provides",
+				createElement("provided", 
+						"namespace", "org.eclipse.equinox.p2.iu",
+						"name", id,
+						"version", version));
+		
+		/*
+		<requires size="4">
+		<required namespace="org.eclipse.equinox.p2.iu" name="org.eclipse.gef3d.sdk.feature.group" range="[0.8.1.201112211149,0.8.1.201112211149]"/>
+		<required namespace="org.eclipse.equinox.p2.iu" name="org.eclipse.gef3d.feature.group" range="[0.8.1.201112211149,0.8.1.201112211149]"/>
+		...
+		</requires>
+		*/
+		List<Element> requires = new ArrayList<Element>();
+		for (FeatureInfo featureInfo: info.required) {
+			String featureVersion = featureInfo.xpath("@version");
+			String featureName = featureInfo.xpath("@id") + ".feature.group";
+			Element required = createElement("required",
+					"namespace", "org.eclipse.equinox.p2.iu", //
+					"name", featureName, //
+					"range", "[" + featureVersion +"," + featureVersion + "]"
+			);
+			requires.add(required);
+		}
+		addList(unit, "requires", requires);
+		
+		/*
+		<touchpoint id="null" version="0.0.0"/>
+		</unit>
+		*/
+		addElement(unit, "touchpoint", "id", "null", "version", "0.0.0");
+
+		return unit;
+		
 	}
 
 	/**
@@ -1212,7 +1440,8 @@ public class StandalonePublisher extends Task {
 			//			publisher.repositoryURI = "http://lwjgl.org/update";
 			try {
 				publisher.execute();
-				System.out.println("Successfull created p2 metadata in " + publisher.updateSiteFolder);
+				System.out.println("Successfull created p2 metadata in "
+						+ publisher.updateSiteFolder);
 			} catch (Exception ex) {
 				System.err.println("Error creating p2 metadata: ");
 				System.err.println(ex);
