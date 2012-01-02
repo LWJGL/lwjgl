@@ -69,6 +69,8 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static final int WM_ENTERSIZEMOVE                 = 0x0231;
 	private static final int WM_EXITSIZEMOVE                  = 0x0232;
 	private static final int WM_SIZING                        = 0x0214;
+	private static final int WM_MOVING                        = 0x0216;
+	
 	private static final int WM_KEYDOWN						  = 256;
 	private static final int WM_KEYUP						  = 257;
 	private static final int WM_SYSKEYUP					  = 261;
@@ -76,6 +78,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static final int WM_SYSCHAR                          = 262;
 	private static final int WM_CHAR                          = 258;
 	private static final int WM_SETICON						  = 0x0080;
+	private static final int WM_SETCURSOR                     = 0x0020;
 
 	private static final int WM_QUIT						  = 0x0012;
 	private static final int WM_SYSCOMMAND					  = 0x0112;
@@ -142,6 +145,8 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static final int GWL_EXSTYLE = -20;
 
 	private static final int WS_THICKFRAME 		= 0x00040000;
+	
+	private static final int HTCLIENT			= 0x01;
 
 
 	private static WindowsDisplay current_display;
@@ -866,10 +871,24 @@ final class WindowsDisplay implements DisplayImplementation {
 				return defWindowProc(hwnd, msg, wParam, lParam);
 			case WM_EXITSIZEMOVE:
 				return defWindowProc(hwnd, msg, wParam, lParam);
+			case WM_MOVING:
+				Display.callReshapeCallbackAndSwap();
+				return defWindowProc(hwnd, msg, wParam, lParam);
 			case WM_SIZING:
 				resized = true;
 				updateWidthAndHeight();
+				Display.callReshapeCallbackAndSwap();
 				return defWindowProc(hwnd, msg, wParam, lParam);
+			case WM_SETCURSOR:
+				if((lParam & 0xFFFF) == HTCLIENT) {
+					// if the cursor is inside the client area, reset it
+					// to the current LWJGL-cursor
+					updateCursor();
+					return -1; //TRUE
+				} else {
+					// let Windows handle cursors outside the client area for resizing, etc.
+					return defWindowProc(hwnd, msg, wParam, lParam);
+				}
 			case WM_KILLFOCUS:
 				appActivate(false);
 				return 0;
