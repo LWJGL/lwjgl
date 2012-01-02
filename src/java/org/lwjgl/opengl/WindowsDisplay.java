@@ -76,6 +76,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static final int WM_SYSCHAR                          = 262;
 	private static final int WM_CHAR                          = 258;
 	private static final int WM_SETICON						  = 0x0080;
+	private static final int WM_SETCURSOR                     = 0x0020;
 
 	private static final int WM_QUIT						  = 0x0012;
 	private static final int WM_SYSCOMMAND					  = 0x0112;
@@ -142,6 +143,8 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static final int GWL_EXSTYLE = -20;
 
 	private static final int WS_THICKFRAME 		= 0x00040000;
+	
+	private static final int HTCLIENT			= 0x01;
 
 
 	private static WindowsDisplay current_display;
@@ -870,6 +873,16 @@ final class WindowsDisplay implements DisplayImplementation {
 				resized = true;
 				updateWidthAndHeight();
 				return defWindowProc(hwnd, msg, wParam, lParam);
+			case WM_SETCURSOR:
+				if((lParam & 0xFFFF) == HTCLIENT) {
+					// if the cursor is inside the client area, reset it
+					// to the current LWJGL-cursor
+					updateCursor();
+					return -1; //TRUE
+				} else {
+					// let Windows handle cursors outside the client area for resizing, etc.
+					return defWindowProc(hwnd, msg, wParam, lParam);
+				}				
 			case WM_KILLFOCUS:
 				appActivate(false);
 				return 0;
