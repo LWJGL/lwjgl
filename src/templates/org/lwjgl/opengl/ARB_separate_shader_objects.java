@@ -345,7 +345,7 @@ public interface ARB_separate_shader_objects {
 	@Alternate("glGetProgramPipelineInfoLog")
 	@GLreturn(value = "infoLog", maxLength = "bufSize")
 	void glGetProgramPipelineInfoLog2(@GLuint int pipeline, @GLsizei int bufSize,
-	                                  @OutParameter @GLsizei @Constant("infoLog_length, 0") IntBuffer length,
+	                                  @OutParameter @GLsizei @Constant("MemoryUtil.getAddress0(infoLog_length)") IntBuffer length,
 	                                  @OutParameter @GLchar ByteBuffer infoLog);
 
 }

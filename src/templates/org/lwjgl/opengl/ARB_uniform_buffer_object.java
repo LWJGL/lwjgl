@@ -136,7 +136,7 @@ public interface ARB_uniform_buffer_object {
 	@Alternate("glGetActiveUniformName")
 	@GLreturn(value = "uniformName", maxLength = "bufSize")
 	void glGetActiveUniformName2(@GLuint int program, @GLuint int uniformIndex, @GLsizei int bufSize,
-	                             @OutParameter @GLsizei @Constant("uniformName_length, 0") IntBuffer length,
+	                             @OutParameter @GLsizei @Constant("MemoryUtil.getAddress0(uniformName_length)") IntBuffer length,
 	                             @OutParameter @GLchar ByteBuffer uniformName);
 
 	@Reuse("GL31")
@@ -169,7 +169,7 @@ public interface ARB_uniform_buffer_object {
 	@Alternate("glGetActiveUniformBlockName")
 	@GLreturn(value = "uniformBlockName", maxLength = "bufSize")
 	void glGetActiveUniformBlockName2(@GLuint int program, @GLuint int uniformBlockIndex, @GLsizei int bufSize,
-	                                  @OutParameter @GLsizei @Constant("uniformBlockName_length, 0") IntBuffer length,
+	                                  @OutParameter @GLsizei @Constant("MemoryUtil.getAddress0(uniformBlockName_length)") IntBuffer length,
 	                                  @OutParameter @GLchar ByteBuffer uniformBlockName);
 
 	@Reuse("GL30")

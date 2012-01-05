@@ -89,7 +89,7 @@ public interface ARB_shader_subroutine {
 	@Alternate("glGetActiveSubroutineUniformName")
 	@GLreturn(value = "name", maxLength = "bufsize")
 	void glGetActiveSubroutineUniformName2(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLsizei int bufsize,
-	                                       @OutParameter @Constant("name_length, 0") @GLsizei IntBuffer length,
+	                                       @OutParameter @Constant("MemoryUtil.getAddress0(name_length)") @GLsizei IntBuffer length,
 	                                       @OutParameter @GLchar ByteBuffer name);
 
 	@Reuse("GL40")
@@ -101,7 +101,7 @@ public interface ARB_shader_subroutine {
 	@Alternate("glGetActiveSubroutineName")
 	@GLreturn(value = "name", maxLength = "bufsize")
 	void glGetActiveSubroutineName2(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLsizei int bufsize,
-	                                @OutParameter @Constant("name_length, 0") @GLsizei IntBuffer length,
+	                                @OutParameter @Constant("MemoryUtil.getAddress0(name_length)") @GLsizei IntBuffer length,
 	                                @OutParameter @GLchar ByteBuffer name);
 
 	@Reuse("GL40")
