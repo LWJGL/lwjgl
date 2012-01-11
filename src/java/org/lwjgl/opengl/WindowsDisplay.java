@@ -143,6 +143,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static final int GWL_EXSTYLE = -20;
 
 	private static final int WS_THICKFRAME 		= 0x00040000;
+	private static final int WS_MAXIMIZEBOX		= 0x00010000;
 	
 	private static final int HTCLIENT			= 0x01;
 
@@ -858,6 +859,8 @@ final class WindowsDisplay implements DisplayImplementation {
 				switch ((int)wParam) {
 					case SIZE_RESTORED:
 					case SIZE_MAXIMIZED:
+						resized = true;
+						updateWidthAndHeight();
 						setMinimized(false);
 						break;
 					case SIZE_MINIMIZED:
@@ -1011,9 +1014,9 @@ final class WindowsDisplay implements DisplayImplementation {
 
 			// update frame style
 			if(resizable) {
-				setWindowLongPtr(hwnd, GWL_STYLE, style |= WS_THICKFRAME);
+				setWindowLongPtr(hwnd, GWL_STYLE, style |= (WS_THICKFRAME | WS_MAXIMIZEBOX));
 			} else {
-				setWindowLongPtr(hwnd, GWL_STYLE, style &= ~WS_THICKFRAME);
+				setWindowLongPtr(hwnd, GWL_STYLE, style &= ~(WS_THICKFRAME | WS_MAXIMIZEBOX));
 			}
 
 			// from the existing client rect, determine the new window rect
