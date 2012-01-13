@@ -48,21 +48,6 @@
 #include "context.h"
 #include "common_tools.h"
 
-// forward declaration
-@interface PBufferGLLayer : NSOpenGLLayer {
-    MacOSXPeerInfo *peer_info;
-    GLuint textureID;
-}
-
-- (MacOSXPeerInfo*) peer_info;
-- (GLuint) textureID;
-
-- (void) setPeer_info: (MacOSXPeerInfo*)input;
-- (void) setTextureID: (GLuint)input;
-
-@end
-
-// forward declaration
 @interface AttachLayerOnMainThread : NSObject {
     MacOSXPeerInfo *peer_info;
     JAWT_MacOSXDrawingSurfaceInfo *macosx_dsi;
@@ -133,6 +118,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
     
 	[pool release];
 }
+
+@interface PBufferGLLayer : NSOpenGLLayer {
+    MacOSXPeerInfo *peer_info;
+    GLuint textureID;
+}
+
+- (MacOSXPeerInfo*) peer_info;
+- (GLuint) textureID;
+
+- (void) setPeer_info: (MacOSXPeerInfo*)input;
+- (void) setTextureID: (GLuint)input;
+
+@end
 
 // Object class to CALayer on AppKit Thread
 @implementation AttachLayerOnMainThread
