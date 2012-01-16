@@ -35,6 +35,7 @@ import java.awt.Canvas;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 
 /**
  *
@@ -51,7 +52,7 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 
 	protected void initHandle(Canvas component) throws LWJGLException {
 		// Allow the use of a Core Animation Layer only when using non fullscreen Display.setParent() or AWTGLCanvas
-		final boolean allowCALayer = ((Display.getParent() != null && !Display.isFullscreen()) || component instanceof AWTGLCanvas) && awt_surface.isApplet(component);
+		final boolean allowCALayer = ((Display.getParent() != null && !Display.isFullscreen()) || component instanceof AWTGLCanvas) && awt_surface.isApplet(component) && LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 6);
 		
 		nInitHandle(awt_surface.lockAndGetHandle(component), getHandle(), allowCALayer);
 	}

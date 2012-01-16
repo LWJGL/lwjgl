@@ -83,7 +83,7 @@ final class AWTSurfaceLock {
 		// due to performance..
         
 		// Allow the use of a Core Animation Layer only when using non fullscreen Display.setParent() or AWTGLCanvas
-		final boolean allowCALayer = ((Display.getParent() != null && !Display.isFullscreen()) || component instanceof AWTGLCanvas) && isApplet(component);
+		final boolean allowCALayer = ((Display.getParent() != null && !Display.isFullscreen()) || component instanceof AWTGLCanvas) && isApplet(component) && LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 6);
 		
 		if (firstLockSucceeded)
 			return lockAndInitHandle(lock_buffer, component, allowCALayer);
