@@ -141,7 +141,7 @@ import java.util.zip.ZipFile;
  * <li>al_logo - [String Path of of the logo resource to paint while loading.<i>Default: "appletlogo.gif"</i>.</li>
  * <li>al_progressbar - [String] Path of the progressbar resource to paint on top of the logo, width clipped by percentage.<i>Default: "appletprogress.gif"</i>.</li>
  * <p>
- * <li>lwjgl_arguments - </li> [String] used to pass the hidden LWJGL parameters to LWJGL e.g. ("-Dorg.lwjgl.input.Mouse.allowNegativeMouseCoords=true -Dorg.lwjgl.util.Debug=true").</li>
+ * <li>lwjgl_arguments - </li> [String] used to pass LWJGL parameters to LWJGL e.g. ("-Dorg.lwjgl.input.Mouse.allowNegativeMouseCoords=true -Dorg.lwjgl.util.Debug=true").</li>
  * </ul>
  * </p>
  * @author kappaOne <one.kappa@gmail.com>
