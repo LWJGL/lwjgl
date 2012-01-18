@@ -862,6 +862,7 @@ public interface EXT_direct_state_access {
 	@Dependent("OpenGL15")
 	@GenerateAutos
 	void glNamedBufferDataEXT(@GLuint int buffer, @AutoSize("data") @GLsizeiptr long size,
+	                          @Check("1")
 	                          @Const
 	                          @GLbyte
 	                          @GLshort
@@ -871,7 +872,7 @@ public interface EXT_direct_state_access {
 
 	@Dependent("OpenGL15")
 	void glNamedBufferSubDataEXT(@GLuint int buffer, @GLintptr long offset, @AutoSize("data") @GLsizeiptr long size,
-	                             @Check
+	                             @Check("1")
 	                             @Const
 	                             @GLbyte
 	                             @GLshort
@@ -929,7 +930,7 @@ public interface EXT_direct_state_access {
 	@Dependent("OpenGL15")
 	void glGetNamedBufferSubDataEXT(@GLuint int buffer, @GLintptr long offset, @AutoSize("data") @GLsizeiptr long size,
 	                                @OutParameter
-	                                @Check
+	                                @Check("1")
 	                                @GLbyte
 	                                @GLshort
 	                                @GLint

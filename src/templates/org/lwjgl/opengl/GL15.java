@@ -109,6 +109,7 @@ public interface GL15 {
 
 	@GenerateAutos
 	void glBufferData(@GLenum int target, @AutoSize("data") @GLsizeiptr long size,
+	                  @Check("1")
 	                  @Const
 	                  @GLbyte
 	                  @GLshort
@@ -117,7 +118,7 @@ public interface GL15 {
 	                  @GLdouble Buffer data, @GLenum int usage);
 
 	void glBufferSubData(@GLenum int target, @GLintptr long offset, @AutoSize("data") @GLsizeiptr long size,
-	                     @Check
+	                     @Check("1")
 	                     @Const
 	                     @GLbyte
 	                     @GLshort
@@ -127,7 +128,7 @@ public interface GL15 {
 
 	void glGetBufferSubData(@GLenum int target, @GLintptr long offset, @AutoSize("data") @GLsizeiptr long size,
 	                        @OutParameter
-	                        @Check
+	                        @Check("1")
 	                        @GLbyte
 	                        @GLshort
 	                        @GLint
