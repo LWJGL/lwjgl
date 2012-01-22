@@ -800,10 +800,10 @@ final class LinuxDisplay implements DisplayImplementation {
 				relayEventToParent(event_buffer, KeyPressMask);
 				break;
 			case LinuxEvent.ButtonPress:
-				if (xembedded) relayEventToParent(event_buffer, KeyPressMask);
+				if (xembedded || !focused) relayEventToParent(event_buffer, KeyPressMask);
 				break;
 			case LinuxEvent.ButtonRelease:
-				if (xembedded) relayEventToParent(event_buffer, KeyPressMask);
+				if (xembedded || !focused) relayEventToParent(event_buffer, KeyPressMask);
 				break;
 			default:
 				break;
