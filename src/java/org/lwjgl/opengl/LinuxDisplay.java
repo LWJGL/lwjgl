@@ -800,10 +800,10 @@ final class LinuxDisplay implements DisplayImplementation {
 				relayEventToParent(event_buffer, KeyPressMask);
 				break;
 			case LinuxEvent.ButtonPress:
-				relayEventToParent(event_buffer, KeyPressMask);
+				if (xembedded) relayEventToParent(event_buffer, KeyPressMask);
 				break;
 			case LinuxEvent.ButtonRelease:
-				relayEventToParent(event_buffer, KeyPressMask);
+				if (xembedded) relayEventToParent(event_buffer, KeyPressMask);
 				break;
 			default:
 				break;
@@ -1038,7 +1038,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 
 	private void setFocused(boolean got_focus, int focus_detail) {
-		if (focused == got_focus || focus_detail == NotifyDetailNone || focus_detail == NotifyPointer || focus_detail == NotifyPointerRoot || parent != null)
+		if (focused == got_focus || focus_detail == NotifyDetailNone || focus_detail == NotifyPointer || focus_detail == NotifyPointerRoot || xembedded)
 			return;
 		focused = got_focus;
 
