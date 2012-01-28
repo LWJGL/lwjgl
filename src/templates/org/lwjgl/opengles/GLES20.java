@@ -483,7 +483,7 @@ public interface GLES20 {
 	                  @Check("1") @Const @GLbyte @GLshort @GLint @GLfloat Buffer data, @GLenum int usage);
 
 	void glBufferSubData(@GLenum int target, @GLintptr long offset, @AutoSize("data") @GLsizeiptr long size,
-	                     @Check("1") @Const @GLbyte @GLshort @GLint @GLfloat Buffer data);
+	                     @Check @Const @GLbyte @GLshort @GLint @GLfloat Buffer data);
 
 	@GLenum
 	int glCheckFramebufferStatus(@GLenum int target);
