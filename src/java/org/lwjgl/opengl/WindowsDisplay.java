@@ -63,6 +63,9 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static final int WM_MBUTTONDOWN                   = 0x0207;
 	private static final int WM_MBUTTONUP                     = 0x0208;
 	private static final int WM_MBUTTONDBLCLK                 = 0x0209;
+	private static final int WM_XBUTTONDOWN                   = 0x020B;
+	private static final int WM_XBUTTONUP                     = 0x020C;
+	private static final int WM_XBUTTONDBLCLK                 = 0x020D;
 	private static final int WM_MOUSEWHEEL                    = 0x020A;
 	private static final int WM_CAPTURECHANGED                = 0x0215;
 	private static final int WM_MOUSELEAVE                    = 0x02A3;
@@ -146,7 +149,11 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static final int WS_MAXIMIZEBOX		= 0x00010000;
 	
 	private static final int HTCLIENT			= 0x01;
-
+	
+	private static final int MK_XBUTTON1		= 0x0020;
+	private static final int MK_XBUTTON2		= 0x0040;
+	private static final int XBUTTON1			= 0x0001;
+	private static final int XBUTTON2			= 0x0002;
 
 	private static WindowsDisplay current_display;
 
@@ -924,6 +931,20 @@ final class WindowsDisplay implements DisplayImplementation {
 			case WM_MBUTTONUP:
 				handleMouseButton(2, 0, millis);
 				return 0;
+			case WM_XBUTTONUP:
+				if((wParam >> 16) == XBUTTON1) {
+					handleMouseButton(3, 0, millis);
+				} else {
+					handleMouseButton(4, 0, millis);
+				}
+				return 1;
+			case WM_XBUTTONDOWN:
+				if((wParam & 0xFF) == MK_XBUTTON1) {
+					handleMouseButton(3, 1, millis);
+				} else {
+					handleMouseButton(4, 1, millis);
+				}
+				return 1;
 			case WM_SYSCHAR:
 			case WM_CHAR:
 				handleChar(wParam, lParam, millis);
