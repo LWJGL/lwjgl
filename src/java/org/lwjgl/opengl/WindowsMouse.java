@@ -65,7 +65,7 @@ final class WindowsMouse {
 
 	WindowsMouse(long hwnd) throws LWJGLException {
 		this.hwnd = hwnd;
-		this.mouse_button_count = WindowsDisplay.getSystemMetrics(WindowsDisplay.SM_CMOUSEBUTTONS);
+		this.mouse_button_count = Math.min(5, WindowsDisplay.getSystemMetrics(WindowsDisplay.SM_CMOUSEBUTTONS));
 		this.has_wheel = WindowsDisplay.getSystemMetrics(WindowsDisplay.SM_MOUSEWHEELPRESENT) != 0;
 		this.blank_cursor = createBlankCursor();
 		this.button_states = new byte[mouse_button_count];
