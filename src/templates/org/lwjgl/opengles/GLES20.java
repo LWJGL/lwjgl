@@ -480,7 +480,7 @@ public interface GLES20 {
 
 	@GenerateAutos
 	void glBufferData(@GLenum int target, @AutoSize("data") @GLsizeiptr long size,
-	                  @Check("1") @Const @GLbyte @GLshort @GLint @GLfloat Buffer data, @GLenum int usage);
+	                  @Check @Const @GLbyte @GLshort @GLint @GLfloat Buffer data, @GLenum int usage);
 
 	void glBufferSubData(@GLenum int target, @GLintptr long offset, @AutoSize("data") @GLsizeiptr long size,
 	                     @Check @Const @GLbyte @GLshort @GLint @GLfloat Buffer data);

@@ -83,7 +83,7 @@ public interface ARB_buffer_object {
 
 	@GenerateAutos
 	void glBufferDataARB(@GLenum int target, @AutoSize("data") @GLsizeiptrARB long size,
-	                     @Check("1")
+	                     @Check
 	                     @Const
 	                     @GLbyte
 	                     @GLshort

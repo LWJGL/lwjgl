@@ -109,7 +109,7 @@ public interface GL15 {
 
 	@GenerateAutos
 	void glBufferData(@GLenum int target, @AutoSize("data") @GLsizeiptr long size,
-	                  @Check("1")
+	                  @Check
 	                  @Const
 	                  @GLbyte
 	                  @GLshort
