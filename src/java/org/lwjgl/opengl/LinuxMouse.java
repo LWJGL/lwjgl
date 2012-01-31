@@ -76,7 +76,7 @@ final class LinuxMouse {
 	private int accum_dx;
 	private int accum_dy;
 	private int accum_dz;
-	private byte[] buttons;// = new byte[NUM_BUTTONS];
+	private byte[] buttons;
 	private EventQueue event_queue;
 	private long last_event_nanos;
 
