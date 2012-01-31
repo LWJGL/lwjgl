@@ -43,17 +43,23 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 
 final class LinuxMouse {
-	private static final int NUM_BUTTONS = 3;
 	private static final int POINTER_WARP_BORDER = 10;
 	// scale the mouse wheel according to DirectInput
 	private static final int WHEEL_SCALE = 120;
 
+	private int button_count;
+	
 	/* X11 constants */
 	private static final int Button1 = 1;
 	private static final int Button2 = 2;
 	private static final int Button3 = 3;
 	private static final int Button4 = 4;
 	private static final int Button5 = 5;
+	
+	private static final int Button6 = 6; // wheel tilt left *rare*
+	private static final int Button7 = 7; // wheel tilt right *rare*
+	private static final int Button8 = 8; // back button
+	private static final int Button9 = 9; // forward button
 
 	private static final int ButtonPress = 4;
 	private static final int ButtonRelease = 5;
@@ -70,7 +76,7 @@ final class LinuxMouse {
 	private int accum_dx;
 	private int accum_dy;
 	private int accum_dz;
-	private byte[] buttons = new byte[NUM_BUTTONS];
+	private byte[] buttons;// = new byte[NUM_BUTTONS];
 	private EventQueue event_queue;
 	private long last_event_nanos;
 
@@ -79,6 +85,8 @@ final class LinuxMouse {
 		this.window = window;
 		this.input_window = input_window;
 		this.warp_atom = LinuxDisplay.nInternAtom(display, "_LWJGL", false);
+		button_count = nGetButtonCount(display);
+		buttons = new byte[button_count];
 		reset(false, false);
 	}
 
@@ -189,6 +197,8 @@ final class LinuxMouse {
 	}
 	private static native int nGetWindowHeight(long display, long window);
 	private static native int nGetWindowWidth(long display, long window);
+	
+	private static native int nGetButtonCount(long display);
 
 	private static native long nQueryPointer(long display, long window, IntBuffer result);
 
@@ -213,7 +223,23 @@ final class LinuxMouse {
 			case Button3:
 				button_num = (byte)1;
 				break;
+			case Button6:
+				button_num = (byte)5;
+				break;
+			case Button7:
+				button_num = (byte)6;
+				break;
+			case Button8:
+				button_num = (byte)3; // back button
+				break;
+			case Button9:
+				button_num = (byte)4; // forward button
+				break;
 			default:
+				if (button > Button9 && button <= button_count) {
+					button_num = (byte)(button-1);
+					break;
+				}
 				return;
 		}
 		buttons[button_num] = state;

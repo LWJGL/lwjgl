@@ -103,3 +103,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxMouse_nSendWarpEvent(JNIEnv *e
 	warp_event.xclient.data.l[1] = y;
 	XSendEvent(disp, win, False, 0, &warp_event);
 }
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxMouse_nGetButtonCount(JNIEnv *env, jclass unused, jlong display_ptr) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+
+	int count = 256;
+
+	unsigned char * pointer_map = malloc(sizeof(unsigned char) * count);
+	count = XGetPointerMapping(disp, pointer_map, count);
+
+	free(pointer_map);
+
+	return count;
+}
