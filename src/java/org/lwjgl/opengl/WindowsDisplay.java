@@ -207,6 +207,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		hasParent = parent != null;
 		long parent_hwnd = parent != null ? getHwnd(parent) : 0;
 		this.hwnd = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(), Display.isFullscreen() || isUndecorated(), parent != null, parent_hwnd);
+		this.resizable=false;
 		if (hwnd == 0) {
 			throw new LWJGLException("Failed to create window");
 		}
@@ -372,7 +373,6 @@ final class WindowsDisplay implements DisplayImplementation {
 		if (mode_set) {
 			mode_set = false;
 			nResetDisplayMode();
-			setResizable(this.resizable);
 		}
 		resetCursorClipping();
 	}
