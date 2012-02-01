@@ -372,6 +372,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		if (mode_set) {
 			mode_set = false;
 			nResetDisplayMode();
+			setResizable(this.resizable);
 		}
 		resetCursorClipping();
 	}
