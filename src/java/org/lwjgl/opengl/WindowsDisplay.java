@@ -125,6 +125,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static final int SW_SHOWMINNOACTIVE   = 7;
 	private static final int SW_SHOWDEFAULT       = 10;
 	private static final int SW_RESTORE           = 9;
+	private static final int SW_MAXIMIZE          = 3;
 
 	private static final int ICON_SMALL           = 0;
 	private static final int ICON_BIG           = 1;
@@ -176,10 +177,11 @@ final class WindowsDisplay implements DisplayImplementation {
 	private boolean mode_set;
 	private boolean isMinimized;
 	private boolean isFocused;
-	private boolean did_maximize;
+	private boolean redoMakeContextCurrent;
 	private boolean inAppActivate;
 	private boolean resized;
 	private boolean resizable;
+	private boolean maximized;
 	private int width;
 	private int height;
 
@@ -202,7 +204,8 @@ final class WindowsDisplay implements DisplayImplementation {
 		is_dirty = false;
 		isMinimized = false;
 		isFocused = false;
-		did_maximize = false;
+		redoMakeContextCurrent = false;
+		maximized = false;
 		this.parent = parent;
 		hasParent = parent != null;
 		long parent_hwnd = parent != null ? getHwnd(parent) : 0;
@@ -327,11 +330,15 @@ final class WindowsDisplay implements DisplayImplementation {
 				restoreDisplayMode();
 			}
 			if (parent == null) {
-				showWindow(getHwnd(), SW_RESTORE);
+				if(maximized) {
+					showWindow(getHwnd(), SW_MAXIMIZE);
+				} else {
+					showWindow(getHwnd(), SW_RESTORE);
+				}
 				setForegroundWindow(getHwnd());
 				setFocus(getHwnd());
 			}
-			did_maximize = true;
+			redoMakeContextCurrent = true;
 			if (Display.isFullscreen())
 				updateClipping();
 		} else if (Display.isFullscreen()) {
@@ -485,8 +492,8 @@ final class WindowsDisplay implements DisplayImplementation {
 		if (parent != null && parent.isFocusOwner()) {
 			setFocus(getHwnd());
 		}
-		if (did_maximize) {
-			did_maximize = false;
+		if (redoMakeContextCurrent) {
+			redoMakeContextCurrent = false;
 			/**
 			 * WORKAROUND:
 			 * Making the context current (redundantly) when the window
@@ -867,6 +874,7 @@ final class WindowsDisplay implements DisplayImplementation {
 				switch ((int)wParam) {
 					case SIZE_RESTORED:
 					case SIZE_MAXIMIZED:
+						maximized = ((int)wParam) == SIZE_MAXIMIZED;
 						resized = true;
 						updateWidthAndHeight();
 						setMinimized(false);
