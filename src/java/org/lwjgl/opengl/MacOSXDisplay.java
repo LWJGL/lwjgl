@@ -495,6 +495,14 @@ final class MacOSXDisplay implements DisplayImplementation {
 		// Don't use any icon, since Mac OS X windows don't have window icons
 		return 0;
 	}
+	
+	public int getX() {
+		return frame.getX();
+	}
+
+	public int getY() {
+		return frame.getY();
+	}
 
 	public int getWidth() {
 		return frame.getWidth();

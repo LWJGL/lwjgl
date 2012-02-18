@@ -174,12 +174,22 @@ interface DisplayImplementation extends InputImplementation {
 	boolean wasResized();
 
 	/**
-	 * @return this method will return a the width of the Display window.
+	 * @return this method will return the width of the Display window.
 	 */
 	int getWidth();
 
 	/**
-	 * @return this method will return a the height of the Display window.
+	 * @return this method will return the height of the Display window.
 	 */
 	int getHeight();
+	
+	/**
+	 * @return this method will return the top-left x position of the Display window.
+	 */
+	int getX();
+
+	/**
+	 * @return this method will return the top-left y position of the Display window.
+	 */
+	int getY();
 }

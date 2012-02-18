@@ -1013,6 +1013,14 @@ final class WindowsDisplay implements DisplayImplementation {
 				return defWindowProc(hwnd, msg, wParam, lParam);
 		}
 	}
+	
+	public int getX() {
+		return 0; // placeholder until implemented
+	}
+
+	public int getY() {
+		return 0; // placeholder until implemented
+	}
 
 	public int getWidth() {
 		return width;

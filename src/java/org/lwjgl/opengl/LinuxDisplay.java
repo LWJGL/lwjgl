@@ -473,6 +473,8 @@ final class LinuxDisplay implements DisplayImplementation {
 					parent_window = parent != null ? getHandle(parent) : getRootWindow(getDisplay(), getDefaultScreen());
 					resizable = Display.isResizable();
 					resized = false;
+					window_x = x;
+					window_y = y;
 					window_width = mode.getWidth();
 					window_height = mode.getHeight();
 					current_window = nCreateWindow(getDisplay(), getDefaultScreen(), handle, mode, current_window_mode, x, y, undecorated, parent_window, resizable);
@@ -1387,6 +1389,14 @@ final class LinuxDisplay implements DisplayImplementation {
 
 	private static native void nSetWindowIcon(long display, long window, ByteBuffer icon_rgb, int icon_rgb_size, ByteBuffer icon_mask, int icon_mask_size, int width, int height);
 
+	public int getX() {
+		return window_x;
+	}
+
+	public int getY() {
+		return window_y;
+	}
+	
 	public int getWidth() {
 		return window_width;
 	}

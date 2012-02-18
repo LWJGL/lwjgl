@@ -1282,10 +1282,50 @@ public final class Display {
 	}
 
 	/**
+	 * @return this method will return the x position (top-left) of the Display window.
+	 *
+	 * If running in fullscreen mode it will return 0.
+	 * If Display.setParent(Canvas parent) is being used, the x position of 
+	 * the parent will be returned.
+	 */
+	public static int getX() {
+
+		if (Display.isFullscreen()) {
+			return 0;
+		}
+
+		if (parent != null) {
+			return parent.getX();
+		}
+
+		return display_impl.getX();
+	}
+	
+	/**
+	 * @return this method will return the y position (top-left) of the Display window.
+	 *
+	 * If running in fullscreen mode it will return 0.
+	 * If Display.setParent(Canvas parent) is being used, the y position of 
+	 * the parent will be returned.
+	 */
+	public static int getY() {
+
+		if (Display.isFullscreen()) {
+			return 0;
+		}
+
+		if (parent != null) {
+			return parent.getY();
+		}
+
+		return display_impl.getY();
+	}
+	
+	/**
 	 * @return this method will return the width of the Display window.
 	 *
 	 * If running in fullscreen mode it will return the width of the current set DisplayMode.
-	 * If running Display.setParent(Canvas parent) is being used, the width of the parent
+	 * If Display.setParent(Canvas parent) is being used, the width of the parent
 	 * will be returned.
 	 *
 	 * This value will be updated after a call to Display.update().
@@ -1307,7 +1347,7 @@ public final class Display {
 	 * @return this method will return the height of the Display window.
 	 *
 	 * If running in fullscreen mode it will return the height of the current set DisplayMode.
-	 * If running Display.setParent(Canvas parent) is being used, the height of the parent
+	 * If Display.setParent(Canvas parent) is being used, the height of the parent
 	 * will be returned.
 	 *
 	 * This value will be updated after a call to Display.update().
