@@ -144,6 +144,8 @@ final class LinuxDisplay implements DisplayImplementation {
 	private boolean resizable;
 	private boolean resized;
 	
+	private int window_x;
+	private int window_y;
 	private int window_width;
 	private int window_height;
 	
@@ -516,6 +518,8 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native long nGetInputFocus(long display) throws LWJGLException;
 	private static native void nSetInputFocus(long display, long window, long time);
 	private static native void nSetWindowSize(long display, long window, int width, int height, boolean resizable);
+	private static native int nGetX(long display, long window);
+	private static native int nGetY(long display, long window);
 	private static native int nGetWidth(long display, long window);
 	private static native int nGetHeight(long display, long window);
 
@@ -840,9 +844,16 @@ final class LinuxDisplay implements DisplayImplementation {
 					break;
 				case LinuxEvent.Expose:
 					dirty = true;
+					break;
+				case LinuxEvent.ConfigureNotify:
+					int x = nGetX(getDisplay(), getWindow());
+					int y = nGetY(getDisplay(), getWindow());
 					
 					int width = nGetWidth(getDisplay(), getWindow());
 					int height = nGetHeight(getDisplay(), getWindow());
+					
+					window_x = x;
+					window_y = y;
 					
 					if (window_width != width || window_height != height) {
 						resized = true;

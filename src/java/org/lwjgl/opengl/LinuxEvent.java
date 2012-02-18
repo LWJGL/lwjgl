@@ -53,6 +53,7 @@ final class LinuxEvent {
 	public static final int UnmapNotify     = 18;
 	public static final int MapNotify       = 19;
 	public static final int Expose          = 12;
+	public static final int ConfigureNotify = 22;
 	public static final int ClientMessage   = 33;
 
 	private final ByteBuffer event_buffer;

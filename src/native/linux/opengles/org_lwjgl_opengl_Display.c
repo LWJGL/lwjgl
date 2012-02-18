@@ -273,6 +273,49 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getRootWindow(JNIEnv 
 	return RootWindow(disp, screen);
 }
 
+static Window getCurrentWindow(JNIEnv *env, jlong display_ptr, jlong window_ptr) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+
+	Window parent = (Window)window_ptr;
+	Window win, root;
+
+	Window *children;
+	unsigned int nchildren;
+
+	do {
+		win = parent;
+
+		if (XQueryTree(disp, win, &root, &parent, &children, &nchildren) == 0) {
+			throwException(env, "XQueryTree failed");
+			return 0;
+		}
+
+		if (children != NULL) XFree(children);
+	} while (parent != root);
+
+	return win;
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetX(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	Window win = getCurrentWindow(env, display_ptr, window_ptr);
+
+	XWindowAttributes win_attribs;
+	XGetWindowAttributes(disp, win, &win_attribs);
+
+	return win_attribs.x;
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetY(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr) {
+	Display *disp = (Display *)(intptr_t)display_ptr;
+	Window win = getCurrentWindow(env, display_ptr, window_ptr);
+
+	XWindowAttributes win_attribs;
+	XGetWindowAttributes(disp, win, &win_attribs);
+
+	return win_attribs.y;
+}
+
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetWidth(JNIEnv *env, jclass unused, jlong display_ptr, jlong window_ptr) {
 	Display *disp = (Display *)(intptr_t)display_ptr;
 	Window win = (Window)window_ptr;
@@ -375,7 +418,7 @@ static Window createWindow(JNIEnv* env, Display *disp, int screen, jint window_m
 		setDecorations(disp, win, 0);
 	}
 
-	if (RootWindow(disp, screen) == parent_handle) { // on set hints when Display.setParent isn't used
+	if (RootWindow(disp, screen) == parent_handle) { // only set hints when Display.setParent isn't used
 		updateWindowBounds(disp, win, x, y, width, height, JNI_TRUE, resizable);
 		updateWindowHints(env, disp, win);
 	}
