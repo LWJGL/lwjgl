@@ -52,6 +52,7 @@ import org.lwjgl.opengles.EGL;
 final class WindowsDisplay implements DisplayImplementation {
 	private static final int GAMMA_LENGTH = 256;
 
+	private static final int WM_MOVE                          = 0x0003;
 	private static final int WM_CANCELMODE                    = 0x001F;
 	private static final int WM_MOUSEMOVE                     = 0x0200;
 	private static final int WM_LBUTTONDOWN                   = 0x0201;
@@ -182,6 +183,8 @@ final class WindowsDisplay implements DisplayImplementation {
 	private boolean resized;
 	private boolean resizable;
 	private boolean maximized;
+	private int x;
+	private int y;
 	private int width;
 	private int height;
 
@@ -1009,17 +1012,21 @@ final class WindowsDisplay implements DisplayImplementation {
 					captureMouse = -1;
 				}
 				return 0;
+			case WM_MOVE:
+				x = (int)(short)(lParam & 0xFFFF);
+				y = (int)(short)(lParam >> 16);
+				return defWindowProc(hwnd, msg, wParam, lParam);
 			default:
 				return defWindowProc(hwnd, msg, wParam, lParam);
 		}
 	}
 	
 	public int getX() {
-		return 0; // placeholder until implemented
+		return x;
 	}
 
 	public int getY() {
-		return 0; // placeholder until implemented
+		return y;
 	}
 
 	public int getWidth() {
