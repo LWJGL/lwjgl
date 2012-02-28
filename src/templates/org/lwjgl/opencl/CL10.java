@@ -1073,7 +1073,7 @@ public interface CL10 {
 		nativeAfterVars = "\tvoid **args_mem_loc = num_mem_objects == 0 ? NULL : (void **)malloc(num_mem_objects * sizeof(void *));",
 		nativeBeforeCall = "\t_ptr_i = 0;\n" +
 		                   "\twhile ( _ptr_i < num_mem_objects ) {\n" +
-		                   "\t\targs_mem_loc[_ptr_i] = (cl_void *)((char *)args_address + (4 + _ptr_i * (4 + sizeof(void *))));\n" +
+		                   "\t\targs_mem_loc[_ptr_i] = (cl_void *)((char *)args_address + (12 + 4 + _ptr_i * (4 + sizeof(void *))));\n" +
 		                   "\t\t_ptr_i++;\n" +
 		                   "\t}",
 		nativeAfterCall = "\tfree(args_mem_loc);"

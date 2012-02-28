@@ -362,16 +362,18 @@ public final class MemoryUtil {
 		return getDeclaredFieldRecursive(ByteBuffer.class, "address");
 	}
 
-	private static Field getDeclaredFieldRecursive(Class<?> type, final String fieldName) throws NoSuchFieldException {
-		while ( type != null ) {
+	private static Field getDeclaredFieldRecursive(final Class<?> root, final String fieldName) throws NoSuchFieldException {
+		Class<?> type = root;
+
+		do {
 			try {
 				return type.getDeclaredField(fieldName);
 			} catch (NoSuchFieldException e) {
 				type = type.getSuperclass();
 			}
-		}
+		} while ( type != null );
 
-		throw new NoSuchFieldException(fieldName + " does not exist in " + type.getSimpleName() + " or any of its superclasses.");
+		throw new NoSuchFieldException(fieldName + " does not exist in " + root.getSimpleName() + " or any of its superclasses.");
 	}
 
 }

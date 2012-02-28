@@ -146,10 +146,10 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opencl_CallbackUtil_getProgramCallback(JN
 static void CL_CALLBACK nativeKernelCallback(void *args) {
     JNIEnv *env = attachCurrentThread();
     jobject user_func = (jobject)(intptr_t)*(jlong *)args;
-    jint num_mem_objects = *(jint *)((char *)args + 8);
+    jsize num_mem_objects = *(jsize *)((char *)args + 8);
     jobjectArray memobjs = NULL;
     jobject buffer;
-    jint i;
+    jsize i;
 
 	if ( env != NULL && !(*env)->ExceptionOccurred(env) && nativeKernelCallbackJ != NULL ) {
         if ( num_mem_objects > 0 ) {
