@@ -79,8 +79,14 @@ public final class Display {
 	/** The current display mode, if created */
 	private static DisplayMode current_mode;
 
-	/** Timer for sync() */
-	private static long timeThen;
+	/** time at last sync() */
+	private static long lastTime;
+
+	/** Whether the sync() method has been initiated */
+	private static boolean syncInitiated;
+
+	/** adaptive time to yield instead of sleeping in sync()*/
+	private static long adaptiveYieldTime = 1000*1000;
 
 	/** X coordinate of the window */
 	private static int x = -1;
@@ -401,40 +407,83 @@ public final class Display {
 		}
 	}
 
-	private static long timeLate;
-
 	/**
-	 * Best sync method that works reliably.
-	 *
+	 * An accurate sync method that adapts automatically
+	 * to the system it runs on to provide reliable results.
+	 * 
 	 * @param fps The desired frame rate, in frames per second
 	 */
 	public static void sync(int fps) {
-		long timeNow;
-		long gapTo;
-		long savedTimeLate;
-		synchronized ( GlobalLock.lock ) {
-			gapTo = Sys.getTimerResolution() / fps + timeThen;
-			timeNow = Sys.getTime();
-			savedTimeLate = timeLate;
-		}
-
+		if (fps <= 0) return;
+		if (!syncInitiated) initiateSyncTimer();
+		
+		long sleepTime = 1000000000 / fps; // nanoseconds to sleep this frame
+		// adaptiveYieldTime + remainder micro & nano seconds if smaller than sleepTime
+		long yieldTime = Math.min(sleepTime, adaptiveYieldTime + sleepTime % (1000*1000));
+		long overSleep = 0; // time the sync goes over by
+		
 		try {
-			while ( gapTo > timeNow + savedTimeLate ) {
-				Thread.sleep(1);
-				timeNow = Sys.getTime();
+			while (true) {
+				long t = getTime() - lastTime;
+				
+				if (t < sleepTime - yieldTime) {
+					Thread.sleep(1);
+				}
+				else if (t < sleepTime) {
+					// burn the last few CPU cycles to ensure accuracy
+					Thread.yield();
+				}
+				else {
+					overSleep = t - sleepTime;
+					break; // exit while loop
+				}
 			}
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
+		} catch (InterruptedException e) {}
+		
+		lastTime = getTime() - Math.min(overSleep, sleepTime);
+		
+		// auto tune the amount of time to yield
+		if (overSleep > adaptiveYieldTime) {
+			// increase by 500 microseconds (half a ms)
+			adaptiveYieldTime = Math.min(adaptiveYieldTime + 500*1000, sleepTime);
 		}
-
-		synchronized ( GlobalLock.lock ) {
-			if ( gapTo < timeNow )
-				timeLate = timeNow - gapTo;
-			else
-				timeLate = 0;
-
-			timeThen = timeNow;
+		else if (overSleep < adaptiveYieldTime - 1000*1000) {
+			// decrease by 5 microseconds
+			adaptiveYieldTime = Math.max(adaptiveYieldTime - 5*1000, 1000*1000);
 		}
+	}
+	
+	/**
+	 * Get System Nano Time
+	 * @return will return the current time in nano's
+	 */
+	private static long getTime() {
+	    return (Sys.getTime() * 1000000000) / Sys.getTimerResolution();
+	}
+	
+	/**
+	 * On windows the sleep functions can be highly inaccurate by 
+	 * over 10ms making in unusable. However it can be forced to 
+	 * be a bit more accurate by running a separate sleeping daemon
+	 * thread.
+	 */
+	private static void initiateSyncTimer() {
+		syncInitiated = true;
+		
+		if (!System.getProperty("os.name").startsWith("Win")) {
+			return;
+		}
+		
+		Thread timerAccuracyThread = new Thread(new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(Long.MAX_VALUE);
+				} catch (Exception e) {}
+			}
+		});
+		
+		timerAccuracyThread.setDaemon(true);
+		timerAccuracyThread.start();
 	}
 
 	/** @return the title of the window */
