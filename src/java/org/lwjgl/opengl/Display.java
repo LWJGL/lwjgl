@@ -86,7 +86,7 @@ public final class Display {
 	private static boolean syncInitiated;
 
 	/** adaptive time to yield instead of sleeping in sync()*/
-	private static long adaptiveYieldTime = 1000*1000;
+	private static long adaptiveYieldTime;
 
 	/** X coordinate of the window */
 	private static int x = -1;
@@ -444,12 +444,12 @@ public final class Display {
 		
 		// auto tune the amount of time to yield
 		if (overSleep > adaptiveYieldTime) {
-			// increase by 500 microseconds (half a ms)
-			adaptiveYieldTime = Math.min(adaptiveYieldTime + 500*1000, sleepTime);
+			// increase by 200 microseconds (1/5 a ms)
+			adaptiveYieldTime = Math.min(adaptiveYieldTime + 200*1000, sleepTime);
 		}
-		else if (overSleep < adaptiveYieldTime - 1000*1000) {
+		else if (overSleep < adaptiveYieldTime - 200*1000) {
 			// decrease by 5 microseconds
-			adaptiveYieldTime = Math.max(adaptiveYieldTime - 5*1000, 1000*1000);
+			adaptiveYieldTime = Math.max(adaptiveYieldTime - 2*1000, 0);
 		}
 	}
 	
