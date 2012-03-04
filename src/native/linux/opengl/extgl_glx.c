@@ -238,6 +238,7 @@ bool extgl_Open(JNIEnv *env) {
 	extgl_InitGLX12();
 	extgl_InitGLX13();
 	extgl_InitGLXSGISwapControl();
+	extgl_InitGLXEXTSwapControl();
 	extgl_InitGLXARBCreateContext();
 	extgl_InitGLXNVPresentVideo();
 	extgl_InitGLXNVVideoCapture();
