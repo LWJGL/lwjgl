@@ -106,7 +106,7 @@ final class WindowsContextImplementation implements ContextImplementation {
 
 	private static native boolean nIsCurrent(ByteBuffer context_handle) throws LWJGLException;
 
-	public void setSwapInterval(PeerInfo peer_info, int value) {
+	public void setSwapInterval(int value) {
 		boolean success = nSetSwapInterval(value);
 		if ( !success )
 			LWJGLUtil.log("Failed to set swap interval");

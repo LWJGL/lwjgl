@@ -118,7 +118,7 @@ final class MacOSXContextImplementation implements ContextImplementation {
 
 	private static native boolean nIsCurrent(ByteBuffer context_handle) throws LWJGLException;
 
-	public void setSwapInterval(PeerInfo peer_info, int value) {
+	public void setSwapInterval(int value) {
 		ContextGL current_context = ContextGL.getCurrentContext();
 		synchronized ( current_context ) {
 			nSetSwapInterval(current_context.getHandle(), value);

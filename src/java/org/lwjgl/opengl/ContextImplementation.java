@@ -81,7 +81,7 @@ interface ContextImplementation {
 	 */
 	boolean isCurrent(ByteBuffer handle) throws LWJGLException;
 
-	void setSwapInterval(PeerInfo peer_info, int value);
+	void setSwapInterval(int value);
 
 	/**
 	 * Destroys the Context.
