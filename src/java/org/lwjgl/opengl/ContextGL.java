@@ -64,7 +64,7 @@ final class ContextGL implements Context {
 
 	/** Handle to the native GL rendering context */
 	private final ByteBuffer handle;
-	private final PeerInfo peer_info;
+	private static PeerInfo peer_info;
 
 	private final ContextAttribs contextAttribs;
 	private final boolean forwardCompatible;
@@ -229,7 +229,7 @@ final class ContextGL implements Context {
 	 * A video frame period is the time required to display a full frame of video data.
 	 */
 	public static void setSwapInterval(int value) {
-		implementation.setSwapInterval(value);
+		implementation.setSwapInterval(peer_info, value);
 	}
 
 	/**

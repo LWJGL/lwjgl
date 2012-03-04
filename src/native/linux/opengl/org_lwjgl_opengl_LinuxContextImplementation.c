@@ -117,10 +117,15 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_getDisp
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nSetSwapInterval
-  (JNIEnv *env, jclass clazz, jobject context_handle, jint value)
+  (JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject context_handle, jint value)
 {
+	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, peer_info_handle);
 	X11Context *context_info = (*env)->GetDirectBufferAddress(env, context_handle);
-	if (context_info->extension_flags.GLX_SGI_swap_control) {
+
+	if (context_info->extension_flags.GLX_EXT_swap_control) {
+		lwjgl_glXSwapIntervalEXT(peer_info->display, peer_info->drawable, value);
+	}
+	else if (context_info->extension_flags.GLX_SGI_swap_control) {
 		lwjgl_glXSwapIntervalSGI(value);
 	}
 }

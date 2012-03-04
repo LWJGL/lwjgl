@@ -141,18 +141,29 @@ final class LinuxContextImplementation implements ContextImplementation {
 
 	private static native boolean nIsCurrent(ByteBuffer context_handle) throws LWJGLException;
 
-	public void setSwapInterval(int value) {
+	public void setSwapInterval(PeerInfo peer_info, int value) {
 		ContextGL current_context = ContextGL.getCurrentContext();
 		if ( current_context == null )
 			throw new IllegalStateException("No context is current");
 		synchronized ( current_context ) {
 			LinuxDisplay.lockAWT();
-			nSetSwapInterval(current_context.getHandle(), value);
-			LinuxDisplay.unlockAWT();
+			try {
+				ByteBuffer peer_handle = peer_info.lockAndGetHandle();
+				try {
+					nSetSwapInterval(peer_handle, current_context.getHandle(), value);
+				} finally {
+					peer_info.unlock();
+				}
+			} catch (LWJGLException e) {
+				// API CHANGE - this methods should throw LWJGLException
+				e.printStackTrace();
+			} finally {
+				LinuxDisplay.unlockAWT();
+			}
 		}
 	}
 
-	private static native void nSetSwapInterval(ByteBuffer context_handle, int value);
+	private static native void nSetSwapInterval(ByteBuffer peer_handle, ByteBuffer context_handle, int value);
 
 	public void destroy(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException {
 		LinuxDisplay.lockAWT();

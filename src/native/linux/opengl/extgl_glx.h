@@ -343,6 +343,9 @@ typedef const char * (APIENTRY * glXQueryExtensionsStringPROC) (Display *dpy, in
 /* GLX_SGI_swap_control */
 typedef void (APIENTRY * glXSwapIntervalSGIPROC)(int interval);
 
+/* GLX_EXT_swap_control */
+typedef void (APIENTRY * glXSwapIntervalEXTPROC)(Display *dpy, GLXDrawable drawable, int interval);
+
 /* GLX_ARB_create_context */
 typedef GLXContext (APIENTRY * glXCreateContextAttribsARBPROC) (Display *dpy, GLXFBConfig config, GLXContext share_context, Bool direct, const int *attrib_list);
 
@@ -365,6 +368,7 @@ typedef struct {
 /*    bool GLX_EXT_visual_info;
     bool GLX_EXT_visual_rating;*/
     bool GLX_SGI_swap_control;
+    bool GLX_EXT_swap_control;
     bool GLX_ARB_multisample;
 	bool GLX_ARB_fbconfig_float;
 	bool GLX_EXT_fbconfig_packed_float;

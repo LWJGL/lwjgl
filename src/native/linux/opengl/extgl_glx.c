@@ -74,6 +74,9 @@ glXQueryExtensionsStringPROC lwjgl_glXQueryExtensionsString = NULL;
 /* GLX_SGI_swap_control */
 glXSwapIntervalSGIPROC lwjgl_glXSwapIntervalSGI = NULL;
 
+/* GLX_EXT_swap_control */
+glXSwapIntervalEXTPROC lwjgl_glXSwapIntervalEXT = NULL;
+
 /* GLX_ARB_create_context */
 glXCreateContextAttribsARBPROC lwjgl_glXCreateContextAttribsARB = NULL;
 
@@ -155,6 +158,12 @@ static void extgl_InitGLXSGISwapControl() {
 	symbols_flags.GLX_SGI_swap_control = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
+static void extgl_InitGLXEXTSwapControl() {
+	ExtFunction functions[] = {
+		{"glXSwapIntervalEXT", (void*)&lwjgl_glXSwapIntervalEXT}};
+	symbols_flags.GLX_EXT_swap_control = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+}
+
 static void extgl_InitGLXARBCreateContext() {
 	ExtFunction functions[] = {
 		{"glXCreateContextAttribsARB", (void*)&lwjgl_glXCreateContextAttribsARB}};
@@ -189,6 +198,7 @@ static void extgl_InitGLXSupportedExtensions(Display *disp, int screen, GLXExten
 /*	extension_flags.GLX_EXT_visual_info = GLXQueryExtension(serverExts, clientExts, "GLX_EXT_visual_info");
 	extension_flags.GLX_EXT_visual_rating = GLXQueryExtension(serverExts, clientExts, "GLX_EXT_visual_rating");*/
 	extension_flags->GLX_SGI_swap_control = symbols_flags.GLX_SGI_swap_control && GLXQueryExtension(serverExts, clientExts, "GLX_SGI_swap_control");
+	extension_flags->GLX_EXT_swap_control = symbols_flags.GLX_EXT_swap_control && GLXQueryExtension(serverExts, clientExts, "GLX_EXT_swap_control");
 	extension_flags->GLX_ARB_multisample = GLXQueryExtension(serverExts, clientExts, "GLX_ARB_multisample");
 	extension_flags->GLX_ARB_fbconfig_float = GLXQueryExtension(serverExts, clientExts, "GLX_ARB_fbconfig_float");
 	extension_flags->GLX_EXT_fbconfig_packed_float = GLXQueryExtension(serverExts, clientExts, "GLX_EXT_fbconfig_packed_float");
