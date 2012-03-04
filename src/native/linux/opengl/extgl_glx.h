@@ -421,6 +421,7 @@ extern glXQueryServerStringPROC lwjgl_glXQueryServerString;
 extern glXQueryExtensionsStringPROC lwjgl_glXQueryExtensionsString;
 
 extern glXSwapIntervalSGIPROC lwjgl_glXSwapIntervalSGI;
+extern glXSwapIntervalEXTPROC lwjgl_glXSwapIntervalEXT;
 
 extern glXCreateContextAttribsARBPROC lwjgl_glXCreateContextAttribsARB;
 
