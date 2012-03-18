@@ -85,6 +85,9 @@ public final class Display {
 	/** Whether the sync() method has been initiated */
 	private static boolean syncInitiated;
 
+	/** whether to disable adaptive yield time in sync() method */
+	private static boolean adaptiveTimeDisabled;
+	
 	/** adaptive time to yield instead of sleeping in sync()*/
 	private static long adaptiveYieldTime;
 
@@ -419,7 +422,7 @@ public final class Display {
 		
 		long sleepTime = 1000000000 / fps; // nanoseconds to sleep this frame
 		// adaptiveYieldTime + remainder micro & nano seconds if smaller than sleepTime
-		long yieldTime = Math.min(sleepTime, adaptiveYieldTime + sleepTime % (1000*1000));
+		long yieldTime = adaptiveTimeDisabled ? 0 : Math.min(sleepTime, adaptiveYieldTime + sleepTime % (1000*1000));
 		long overSleep = 0; // time the sync goes over by
 		
 		try {
@@ -442,14 +445,16 @@ public final class Display {
 		
 		lastTime = getTime() - Math.min(overSleep, sleepTime);
 		
-		// auto tune the amount of time to yield
-		if (overSleep > adaptiveYieldTime) {
-			// increase by 200 microseconds (1/5 a ms)
-			adaptiveYieldTime = Math.min(adaptiveYieldTime + 200*1000, sleepTime);
-		}
-		else if (overSleep < adaptiveYieldTime - 200*1000) {
-			// decrease by 5 microseconds
-			adaptiveYieldTime = Math.max(adaptiveYieldTime - 2*1000, 0);
+		if (!adaptiveTimeDisabled) {
+			// auto tune the amount of time to yield
+			if (overSleep > adaptiveYieldTime) {
+				// increase by 200 microseconds (1/5 a ms)
+				adaptiveYieldTime = Math.min(adaptiveYieldTime + 200*1000, sleepTime);
+			}
+			else if (overSleep < adaptiveYieldTime - 200*1000) {
+				// decrease by 5 microseconds
+				adaptiveYieldTime = Math.max(adaptiveYieldTime - 2*1000, 0);
+			}
 		}
 	}
 	
@@ -462,28 +467,37 @@ public final class Display {
 	}
 	
 	/**
-	 * On windows the sleep functions can be highly inaccurate by 
-	 * over 10ms making in unusable. However it can be forced to 
-	 * be a bit more accurate by running a separate sleeping daemon
-	 * thread.
+	 * Initialise the sync(fps) method.
 	 */
 	private static void initiateSyncTimer() {
 		syncInitiated = true;
+		lastTime = getTime();
 		
-		if (!System.getProperty("os.name").startsWith("Win")) {
+		String osName = System.getProperty("os.name");
+		
+		if (osName.startsWith("Mac") || osName.startsWith("Darwin")) {
+			// disabled on mac as it uses too much cpu, besides
+			// Thread.sleep is pretty accurate on mac by default 
+			adaptiveTimeDisabled = true;
 			return;
 		}
 		
-		Thread timerAccuracyThread = new Thread(new Runnable() {
-			public void run() {
-				try {
-					Thread.sleep(Long.MAX_VALUE);
-				} catch (Exception e) {}
-			}
-		});
-		
-		timerAccuracyThread.setDaemon(true);
-		timerAccuracyThread.start();
+		if (osName.startsWith("Win")) {
+			// On windows the sleep functions can be highly inaccurate by 
+			// over 10ms making in unusable. However it can be forced to 
+			// be a bit more accurate by running a separate sleeping daemon
+			// thread.
+			Thread timerAccuracyThread = new Thread(new Runnable() {
+				public void run() {
+					try {
+						Thread.sleep(Long.MAX_VALUE);
+					} catch (Exception e) {}
+				}
+			});
+			
+			timerAccuracyThread.setDaemon(true);
+			timerAccuracyThread.start();
+		}
 	}
 
 	/** @return the title of the window */
