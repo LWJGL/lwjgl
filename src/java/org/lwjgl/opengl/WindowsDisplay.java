@@ -1058,7 +1058,7 @@ final class WindowsDisplay implements DisplayImplementation {
 			long styleex = getWindowLongPtr(hwnd, GWL_EXSTYLE);
 
 			// update frame style
-			if(resizable) {
+			if(resizable && !Display.isFullscreen()) {
 				setWindowLongPtr(hwnd, GWL_STYLE, style |= (WS_THICKFRAME | WS_MAXIMIZEBOX));
 			} else {
 				setWindowLongPtr(hwnd, GWL_STYLE, style &= ~(WS_THICKFRAME | WS_MAXIMIZEBOX));
