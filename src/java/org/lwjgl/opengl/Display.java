@@ -451,8 +451,12 @@ public final class Display {
 				// increase by 200 microseconds (1/5 a ms)
 				adaptiveYieldTime = Math.min(adaptiveYieldTime + 200*1000, sleepTime);
 			}
+			else if (overSleep < adaptiveYieldTime - 2*1000*1000) {
+				// fast decrease by 50 microseconds for large under sleeps
+				adaptiveYieldTime = Math.max(adaptiveYieldTime - 50*1000, 0);
+			}
 			else if (overSleep < adaptiveYieldTime - 200*1000) {
-				// decrease by 5 microseconds
+				// slower but finer decrease by 2 microseconds
 				adaptiveYieldTime = Math.max(adaptiveYieldTime - 2*1000, 0);
 			}
 		}
