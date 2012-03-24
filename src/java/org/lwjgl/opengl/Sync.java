@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.Sys;
+import org.ninjacave.framework.Sync.RunningAvg;
 
 /**
 * A highly accurate sync method that continually adapts to the system 
@@ -51,15 +52,13 @@ class Sync {
 	/** whether the initialisation code has run */
 	private static boolean initialised = false;
 	
-	/** stored results of how long sleep/yields took to calculate averages */
+	/** for calculating the averages the previous sleep/yield times are stored */
 	private static RunningAvg sleepDurations = new RunningAvg(10);
 	private static RunningAvg yieldDurations = new RunningAvg(10);
 	
 	
 	/**
-	 * An accurate sync method that will attempt to run an application loop 
-	 * at a constant frame rate.
-	 * 
+	 * An accurate sync method that will attempt to run at a constant frame rate.
 	 * It should be called once every frame.
 	 * 
 	 * @param fps - the desired frame rate, in frames per second
@@ -75,7 +74,7 @@ class Sync {
 				sleepDurations.add((t1 = getTime()) - t0); // update average sleep time
 			}
 	
-			// slowly dampen sleep average if too high to avoid over yielding
+			// slowly dampen sleep average if too high to avoid yielding too much
 			sleepDurations.dampenForLowResTicker();
 	
 			// yield until the average yield time is greater than the time remaining till nextFrame
@@ -93,9 +92,9 @@ class Sync {
 	
 	/**
 	 * This method will initialise the sync method by setting initial
-	 * values for sleepDurations/yieldDurations and nextFrame variables.
+	 * values for sleepDurations/yieldDurations and nextFrame.
 	 * 
-	 * If running windows on windows it will start the sleep timer fix.
+	 * If running on windows it will start the sleep timer fix.
 	 */
 	private static void initialise() {
 		initialised = true;

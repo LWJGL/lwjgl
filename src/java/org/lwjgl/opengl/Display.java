@@ -399,9 +399,7 @@ public final class Display {
 	}
 
 	/**
-	 * An accurate sync method that will attempt to run an application loop 
-	 * at a constant frame rate.
-	 * 
+	 * An accurate sync method that will attempt to run at a constant frame rate.
 	 * It should be called once every frame.
 	 * 
 	 * @param fps - the desired frame rate, in frames per second
