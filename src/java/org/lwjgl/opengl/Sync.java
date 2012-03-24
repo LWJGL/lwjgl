@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.Sys;
-import org.ninjacave.framework.Sync.RunningAvg;
 
 /**
 * A highly accurate sync method that continually adapts to the system 
