@@ -79,18 +79,6 @@ public final class Display {
 	/** The current display mode, if created */
 	private static DisplayMode current_mode;
 
-	/** time at last sync() */
-	private static long lastTime;
-
-	/** Whether the sync() method has been initiated */
-	private static boolean syncInitiated;
-
-	/** whether to disable adaptive yield time in sync() method */
-	private static boolean adaptiveTimeDisabled;
-	
-	/** adaptive time to yield instead of sleeping in sync()*/
-	private static long adaptiveYieldTime;
-
 	/** X coordinate of the window */
 	private static int x = -1;
 
@@ -411,97 +399,15 @@ public final class Display {
 	}
 
 	/**
-	 * An accurate sync method that adapts automatically
-	 * to the system it runs on to provide reliable results.
+	 * An accurate sync method that will attempt to run an application loop 
+	 * at a constant frame rate.
 	 * 
-	 * @param fps The desired frame rate, in frames per second
+	 * It should be called once every frame.
+	 * 
+	 * @param fps - the desired frame rate, in frames per second
 	 */
 	public static void sync(int fps) {
-		if (fps <= 0) return;
-		if (!syncInitiated) initiateSyncTimer();
-		
-		long sleepTime = 1000000000 / fps; // nanoseconds to sleep this frame
-		// adaptiveYieldTime + remainder micro & nano seconds if smaller than sleepTime
-		long yieldTime = adaptiveTimeDisabled ? 0 : Math.min(sleepTime, adaptiveYieldTime + sleepTime % (1000*1000));
-		long overSleep = 0; // time the sync goes over by
-		
-		try {
-			while (true) {
-				long t = getTime() - lastTime;
-				
-				if (t < sleepTime - yieldTime) {
-					Thread.sleep(1);
-				}
-				else if (t < sleepTime) {
-					// burn the last few CPU cycles to ensure accuracy
-					Thread.yield();
-				}
-				else {
-					overSleep = t - sleepTime;
-					break; // exit while loop
-				}
-			}
-		} catch (InterruptedException e) {}
-		
-		lastTime = getTime() - Math.min(overSleep, sleepTime);
-		
-		if (!adaptiveTimeDisabled) {
-			// auto tune the amount of time to yield
-			if (overSleep > adaptiveYieldTime) {
-				// increase by 200 microseconds (1/5 a ms)
-				adaptiveYieldTime = Math.min(adaptiveYieldTime + 200*1000, sleepTime);
-			}
-			else if (overSleep < adaptiveYieldTime - 2*1000*1000) {
-				// fast decrease by 50 microseconds for large under sleeps
-				adaptiveYieldTime = Math.max(adaptiveYieldTime - 50*1000, 0);
-			}
-			else if (overSleep < adaptiveYieldTime - 200*1000) {
-				// slower but finer decrease by 2 microseconds
-				adaptiveYieldTime = Math.max(adaptiveYieldTime - 2*1000, 0);
-			}
-		}
-	}
-	
-	/**
-	 * Get System Nano Time
-	 * @return will return the current time in nano's
-	 */
-	private static long getTime() {
-	    return (Sys.getTime() * 1000000000) / Sys.getTimerResolution();
-	}
-	
-	/**
-	 * Initialise the sync(fps) method.
-	 */
-	private static void initiateSyncTimer() {
-		syncInitiated = true;
-		lastTime = getTime();
-		
-		String osName = System.getProperty("os.name");
-		
-		if (osName.startsWith("Mac") || osName.startsWith("Darwin")) {
-			// disabled on mac as it uses too much cpu, besides
-			// Thread.sleep is pretty accurate on mac by default 
-			adaptiveTimeDisabled = true;
-			return;
-		}
-		
-		if (osName.startsWith("Win")) {
-			// On windows the sleep functions can be highly inaccurate by 
-			// over 10ms making in unusable. However it can be forced to 
-			// be a bit more accurate by running a separate sleeping daemon
-			// thread.
-			Thread timerAccuracyThread = new Thread(new Runnable() {
-				public void run() {
-					try {
-						Thread.sleep(Long.MAX_VALUE);
-					} catch (Exception e) {}
-				}
-			});
-			
-			timerAccuracyThread.setDaemon(true);
-			timerAccuracyThread.start();
-		}
+		Sync.sync(fps);
 	}
 
 	/** @return the title of the window */
