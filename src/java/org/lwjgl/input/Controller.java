@@ -279,12 +279,12 @@ public interface Controller {
 	 * 
 	 * @param index The rumbler index
 	 */
-	String getRumblerName(final int index);
+	String getRumblerName(int index);
 	
 	/** Sets the vibration strength of the specified rumbler
 	 * 
 	 * @param index The index of the rumbler
 	 * @param strength The strength to vibrate at
 	 */
-	void setRumblerStrength(final int index, final float strength);
+	void setRumblerStrength(int index, float strength);
 }

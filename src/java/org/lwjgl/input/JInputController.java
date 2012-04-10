@@ -89,7 +89,7 @@ class JInputController implements Controller {
 	 * @param index The index this controller has been assigned to
 	 * @param target The target JInput controller this class is wrapping
 	 */
-	JInputController(final int index, net.java.games.input.Controller target) {
+	JInputController(int index, net.java.games.input.Controller target) {
 		this.target = target;
 		this.index = index;
 
@@ -515,11 +515,11 @@ class JInputController implements Controller {
 		return rumblers.length;
 	}
 	
-	public String getRumblerName(final int index) {
+	public String getRumblerName(int index) {
 		return rumblers[index].getAxisName();
 	}
 	
-	public void setRumblerStrength(final int index, final float strength) {
+	public void setRumblerStrength(int index, float strength) {
 		rumblers[index].rumble(strength);
 	}
 

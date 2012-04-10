@@ -326,4 +326,15 @@ public class ControllerAdapter implements Controller {
 	 */
 	public void setRZAxisDeadZone(float zone) {
 	}
+	
+	public int getRumblerCount() {
+		return 0;
+	}
+	
+	public String getRumblerName(int index) {
+		return "rumber n/a";
+	}
+	
+	public void setRumblerStrength(int index, float strength) {
+	}
 }
