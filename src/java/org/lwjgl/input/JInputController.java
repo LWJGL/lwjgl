@@ -38,6 +38,7 @@ import net.java.games.input.Component.Identifier.Axis;
 import net.java.games.input.Component.Identifier.Button;
 import net.java.games.input.Event;
 import net.java.games.input.EventQueue;
+import net.java.games.input.Rumbler;
 
 /**
  * A wrapper round a JInput controller that attempts to make the interface
@@ -56,6 +57,8 @@ class JInputController implements Controller {
 	private ArrayList<Component> axes = new ArrayList<Component>();
 	/** The POVs that have been detected on the JInput controller */
 	private ArrayList<Component> pov = new ArrayList<Component>();
+	/** The rumblers exposed by the controller */
+	private Rumbler[] rumblers;
 	/** The state of the buttons last check */
 	private boolean[] buttonState;
 	/** The values that were read from the pov last check */
@@ -86,7 +89,7 @@ class JInputController implements Controller {
 	 * @param index The index this controller has been assigned to
 	 * @param target The target JInput controller this class is wrapping
 	 */
-	JInputController(int index,net.java.games.input.Controller target) {
+	JInputController(final int index, net.java.games.input.Controller target) {
 		this.target = target;
 		this.index = index;
 
@@ -148,6 +151,8 @@ class JInputController implements Controller {
 			axesMax[i] = 1.0f;
 			deadZones[i] = 0.05f;
 		}
+		
+		rumblers = target.getRumblers();
 	}
 
 	/*
@@ -506,5 +511,16 @@ class JInputController implements Controller {
 		return 0;
 	}
 
+	public int getRumblerCount() {
+		return rumblers.length;
+	}
+	
+	public String getRumblerName(final int index) {
+		return rumblers[index].getAxisName();
+	}
+	
+	public void setRumblerStrength(final int index, final float strength) {
+		rumblers[index].rumble(strength);
+	}
 
 }

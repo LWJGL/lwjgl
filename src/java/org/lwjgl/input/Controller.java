@@ -270,4 +270,21 @@ public interface Controller {
 	 * @param zone The dead zone to use for the RZ axis
 	 */
 	void setRZAxisDeadZone(float zone);
+	
+	
+	/** Returns the number of rumblers this controller supports */
+	int getRumblerCount();
+	
+	/** Returns the name of the specified rumbler
+	 * 
+	 * @param index The rumbler index
+	 */
+	String getRumblerName(final int index);
+	
+	/** Sets the vibration strength of the specified rumbler
+	 * 
+	 * @param index The index of the rumbler
+	 * @param strength The strength to vibrate at
+	 */
+	void setRumblerStrength(final int index, final float strength);
 }
