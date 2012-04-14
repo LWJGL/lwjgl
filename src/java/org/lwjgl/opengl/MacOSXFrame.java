@@ -110,6 +110,16 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 		Insets insets = getInsets();
 		setBounds(x, y, width + insets.left + insets.right, height + insets.top + insets.bottom);
 	}
+	
+	public int getWidth() {
+		Insets insets = getInsets();
+		return super.getWidth() - insets.left - insets.right;
+	}
+
+	public int getHeight() {
+		Insets insets = getInsets();
+		return super.getHeight() - insets.top - insets.bottom;
+	}
 
 	public Rectangle syncGetBounds() {
 		synchronized ( this ) {
