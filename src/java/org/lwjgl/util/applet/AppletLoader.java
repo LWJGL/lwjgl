@@ -1464,44 +1464,47 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				String currentFile = getFileName(urlList[i]);
 				InputStream inputstream = getJarInputStream(currentFile, urlconnection);
 				FileOutputStream fos = new FileOutputStream(path + currentFile);
-
-
+				
+				
 				int bufferSize;
 				long downloadStartTime = System.currentTimeMillis();
 				int downloadedAmount = 0;
 				int fileSize = 0;
 				String downloadSpeedMessage = "";
-
-				while ((bufferSize = inputstream.read(buffer, 0, buffer.length)) != -1) {
-					debug_sleep(10);
-					fos.write(buffer, 0, bufferSize);
-					currentSizeDownload += bufferSize;
-					fileSize += bufferSize;
-					percentage = initialPercentage + ((currentSizeDownload * 45) / totalSizeDownload);
-					subtaskMessage = "Retrieving: " + currentFile + " " + ((currentSizeDownload * 100) / totalSizeDownload) + "%";
-
-					downloadedAmount += bufferSize;
-					long timeLapse = System.currentTimeMillis() - downloadStartTime;
-					// update only if a second or more has passed
-					if (timeLapse >= 1000) {
-						// get kb/s, nice that bytes/millis is same as kilobytes/seconds
-						float downloadSpeed = (float) downloadedAmount / timeLapse;
-						// round to two decimal places
-						downloadSpeed = ((int)(downloadSpeed*100))/100f;
-						// set current speed message
-						downloadSpeedMessage = " - " + downloadSpeed + " KB/sec";
-						// reset downloaded amount
-						downloadedAmount = 0;
-						// reset start time
-						downloadStartTime = System.currentTimeMillis();
+				
+				try {	
+					while ((bufferSize = inputstream.read(buffer, 0, buffer.length)) != -1) {
+						debug_sleep(10);
+						fos.write(buffer, 0, bufferSize);
+						currentSizeDownload += bufferSize;
+						fileSize += bufferSize;
+						percentage = initialPercentage + ((currentSizeDownload * 45) / totalSizeDownload);
+						subtaskMessage = "Retrieving: " + currentFile + " " + ((currentSizeDownload * 100) / totalSizeDownload) + "%";
+	
+						downloadedAmount += bufferSize;
+						long timeLapse = System.currentTimeMillis() - downloadStartTime;
+						// update only if a second or more has passed
+						if (timeLapse >= 1000) {
+							// get kb/s, nice that bytes/millis is same as kilobytes/seconds
+							float downloadSpeed = (float) downloadedAmount / timeLapse;
+							// round to two decimal places
+							downloadSpeed = ((int)(downloadSpeed*100))/100f;
+							// set current speed message
+							downloadSpeedMessage = " - " + downloadSpeed + " KB/sec";
+							// reset downloaded amount
+							downloadedAmount = 0;
+							// reset start time
+							downloadStartTime = System.currentTimeMillis();
+						}
+	
+						subtaskMessage += downloadSpeedMessage;
 					}
-
-					subtaskMessage += downloadSpeedMessage;
+					
+				} finally {
+					inputstream.close();
+					fos.close();
 				}
-
-				inputstream.close();
-				fos.close();
-
+				
 				// download complete, verify if it was successful
 				if (urlconnection instanceof HttpURLConnection) {
 	                if (fileSize == fileSizes[i]) {
