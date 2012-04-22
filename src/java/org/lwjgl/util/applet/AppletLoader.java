@@ -1143,10 +1143,13 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	protected void writeObjectFile(File file, Object object) throws Exception {
 		FileOutputStream fos = new FileOutputStream(file);
-		ObjectOutputStream dos = new ObjectOutputStream(fos);
-		dos.writeObject(object);
-		dos.close();
-		fos.close();
+		try {
+			ObjectOutputStream dos = new ObjectOutputStream(fos);
+			dos.writeObject(object);
+			dos.close();
+		} finally {
+			fos.close();
+		}
 	}
 
 	/**
@@ -1602,14 +1605,16 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		byte [] buffer = new byte [1<<14];
 
-		int ret = inputHandle.read(buffer);
-		while (ret >= 1) {
-			outputHandle.write(buffer,0,ret);
-			ret = inputHandle.read(buffer);
+		try {
+			int ret = inputHandle.read(buffer);
+			while (ret >= 1) {
+				outputHandle.write(buffer,0,ret);
+				ret = inputHandle.read(buffer);
+			}
+		} finally {
+			inputHandle.close();
+			outputHandle.close();
 		}
-
-		inputHandle.close();
-		outputHandle.close();
 
 		// delete LZMA file, as it is no longer needed
 		f.delete();
@@ -1630,16 +1635,18 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		OutputStream outputHandle = new FileOutputStream(out);
 
-		byte [] buffer = new byte [1<<14];
-
-		int ret = inputHandle.read(buffer);
-		while (ret >= 1) {
-			outputHandle.write(buffer,0,ret);
-			ret = inputHandle.read(buffer);
+		try {
+			byte [] buffer = new byte [1<<14];
+	
+			int ret = inputHandle.read(buffer);
+			while (ret >= 1) {
+				outputHandle.write(buffer,0,ret);
+				ret = inputHandle.read(buffer);
+			}
+		} finally {
+			inputHandle.close();
+			outputHandle.close();
 		}
-
-		inputHandle.close();
-		outputHandle.close();
 
 		// delete GZip file, as it is no longer needed
 		f.delete();
@@ -1655,11 +1662,14 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		File f = new File(in);
 	    FileOutputStream fostream = new FileOutputStream(out);
 	    JarOutputStream jostream = new JarOutputStream(fostream);
-
-	    Pack200.Unpacker unpacker = Pack200.newUnpacker();
-	    unpacker.unpack(f, jostream);
-	    jostream.close();
-	    fostream.close();
+	    
+	    try {
+	    	Pack200.Unpacker unpacker = Pack200.newUnpacker();
+	    	unpacker.unpack(f, jostream);
+	    } finally {
+	    	jostream.close();
+	    	fostream.close();
+	    }
 
 	    // delete pack file as its no longer needed
 	    f.delete();
@@ -1803,21 +1813,23 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				InputStream in = jarFile.getInputStream(jarFile.getEntry(entry.getName()));
 				OutputStream out = new FileOutputStream(path + "natives" + File.separator + entry.getName());
 	
-				int bufferSize;
-				byte buffer[] = new byte[65536];
-	
-				while ((bufferSize = in.read(buffer, 0, buffer.length)) != -1) {
-					debug_sleep(10);
-					out.write(buffer, 0, bufferSize);
-					currentSizeExtract += bufferSize;
-	
-					// update progress bar
-					percentage = 65 + (int)(percentageParts * (jarNum + currentSizeExtract/(float)totalSizeExtract));
-					subtaskMessage = "Extracting: " + entry.getName() + " " + ((currentSizeExtract * 100) / totalSizeExtract) + "%";
+				try {
+					int bufferSize;
+					byte buffer[] = new byte[65536];
+		
+					while ((bufferSize = in.read(buffer, 0, buffer.length)) != -1) {
+						debug_sleep(10);
+						out.write(buffer, 0, bufferSize);
+						currentSizeExtract += bufferSize;
+		
+						// update progress bar
+						percentage = 65 + (int)(percentageParts * (jarNum + currentSizeExtract/(float)totalSizeExtract));
+						subtaskMessage = "Extracting: " + entry.getName() + " " + ((currentSizeExtract * 100) / totalSizeExtract) + "%";
+					}
+				} finally {
+					in.close();
+					out.close();
 				}
-	
-				in.close();
-				out.close();
 				
 				// validate the certificate for the native file being extracted
 				if (!certificatesMatch(certificate, entry.getCertificates())) {
@@ -1881,6 +1893,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			JarURLConnection jurl = (JarURLConnection) (new URL("jar:" + location.toString() + "!/org/lwjgl/util/applet/AppletLoader.class").openConnection());
 			jurl.setDefaultUseCaches(true);
 			certificate = jurl.getCertificates();
+			jurl.setDefaultUseCaches(false);
 		}
 		
 		return certificate;
