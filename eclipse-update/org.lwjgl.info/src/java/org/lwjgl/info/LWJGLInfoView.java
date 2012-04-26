@@ -21,6 +21,8 @@ import org.eclipse.core.runtime.IBundleGroup;
 import org.eclipse.core.runtime.IBundleGroupProvider;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.opengl.GLCanvas;
+import org.eclipse.swt.opengl.GLData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
@@ -54,13 +56,23 @@ public class LWJGLInfoView extends ViewPart {
 	 */
 	@Override
 	public void createPartControl(Composite i_parent) {
-		
-		Text info = new Text(i_parent, SWT.READ_ONLY | SWT.LEFT | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
-		
+
+		Text info = new Text(i_parent, SWT.READ_ONLY | SWT.LEFT | SWT.MULTI
+				| SWT.H_SCROLL | SWT.V_SCROLL);
+
+		GLCanvas canvas = new GLCanvas(i_parent, SWT.NONE, new GLData());
+		canvas.setCurrent();
+		try {
+			GLContext.useContext(canvas);
+		} catch (LWJGLException ex) {
+			// TODO Implement catch block for LWJGLException
+			ex.printStackTrace();
+		}
+
 		String infoString = gatherInformation();
 		info.setText(infoString);
 	}
-	
+
 	static String getFeatureVersion(String myFeatureId) {
 		IBundleGroupProvider[] providers = Platform.getBundleGroupProviders();
 		if (providers != null) {
@@ -77,41 +89,36 @@ public class LWJGLInfoView extends ViewPart {
 	}
 
 	/**
+	 * @param i_canvas 
 	 * @return
 	 */
-	public static String gatherInformation() {
+	private static String gatherInformation() {
 		StringBuffer strb = new StringBuffer();
 
 		try {
-			Display.setFullscreen(false);
-			Display.create();
-		} catch (LWJGLException ex) {
-			warnNL(strb, "Error initializing OpenGL display: " + ex.getMessage());
-		}
-		
-		try {
-			infoNL(strb, "LWJGL feature version", getFeatureVersion("org.lwjgl"));
+			infoNL(strb, "LWJGL feature version",
+					getFeatureVersion("org.lwjgl"));
 		} catch (Exception ex) {
 			warnNL(strb, "Error retrieving feature version: " + ex.getMessage());
 		}
-		
-		infoNL(strb, "LWJGL version", Sys.getVersion() + (Sys.is64Bit() ? " (64bit)" : ""));
 
-		infoNL(strb, "Java", System.getProperty("java.version"), System
-				.getProperty("java.vendor"));
+		infoNL(strb, "LWJGL version", Sys.getVersion()
+				+ (Sys.is64Bit() ? " (64bit)" : ""));
+
+		infoNL(strb, "Java", System.getProperty("java.version"),
+				System.getProperty("java.vendor"));
 		infoNL(strb, "Platform", LWJGLUtil.getPlatformName());
 		infoNL(strb, "Graphics card", Display.getAdapter());
 		infoNL(strb, "Driver version", Display.getVersion());
 		infoNL(strb, "OpenGL driver version", GL11.glGetString(GL11.GL_VERSION));
 
 		infoNL(strb, "GLU version", Registry.gluGetString(GLU.GLU_VERSION));
-		infoNL(strb, "GLU extensions", Registry.gluGetString(GLU.GLU_EXTENSIONS));
-		
-		
-		
+		infoNL(strb, "GLU extensions",
+				Registry.gluGetString(GLU.GLU_EXTENSIONS));
+
 		ContextCapabilities caps = GLContext.getCapabilities();
 		openGLVersions(strb, caps);
-		
+
 		strb.append(NL).append("Capabilities").append(NL);
 		TreeMap<String, Boolean> capInfos = new TreeMap<String, Boolean>();
 		gatherCapabilities(caps, capInfos);
@@ -121,23 +128,37 @@ public class LWJGLInfoView extends ViewPart {
 
 		return strb.toString();
 	}
-	
+
 	static void openGLVersions(StringBuffer strb, ContextCapabilities caps) {
 		StringBuffer versions = new StringBuffer();
-		if (caps.OpenGL11) versions.append(", 1.1");
-		if (caps.OpenGL12) versions.append(", 1.2");
-		if (caps.OpenGL13) versions.append(", 1.3");
-		if (caps.OpenGL14) versions.append(", 1.4");
-		if (caps.OpenGL15) versions.append(", 1.5");
-		if (caps.OpenGL20) versions.append(", 2.0");
-		if (caps.OpenGL21) versions.append(", 2.1");
-		if (caps.OpenGL30) versions.append(", 3.0");
-		if (caps.OpenGL31) versions.append(", 3.1");
-		if (caps.OpenGL32) versions.append(", 3.2");
-		if (caps.OpenGL33) versions.append(", 3.3");
-		if (caps.OpenGL40) versions.append(", 4.0");
-		if (caps.OpenGL41) versions.append(", 4.1");
-		if (strb.length()>2) versions.delete(0, 2);
+		if (caps.OpenGL11)
+			versions.append(", 1.1");
+		if (caps.OpenGL12)
+			versions.append(", 1.2");
+		if (caps.OpenGL13)
+			versions.append(", 1.3");
+		if (caps.OpenGL14)
+			versions.append(", 1.4");
+		if (caps.OpenGL15)
+			versions.append(", 1.5");
+		if (caps.OpenGL20)
+			versions.append(", 2.0");
+		if (caps.OpenGL21)
+			versions.append(", 2.1");
+		if (caps.OpenGL30)
+			versions.append(", 3.0");
+		if (caps.OpenGL31)
+			versions.append(", 3.1");
+		if (caps.OpenGL32)
+			versions.append(", 3.2");
+		if (caps.OpenGL33)
+			versions.append(", 3.3");
+		if (caps.OpenGL40)
+			versions.append(", 4.0");
+		if (caps.OpenGL41)
+			versions.append(", 4.1");
+		if (strb.length() > 2)
+			versions.delete(0, 2);
 		infoNL(strb, "Supported OpenGL versions", versions.toString());
 	}
 
@@ -178,7 +199,7 @@ public class LWJGLInfoView extends ViewPart {
 			if (groupInfosSupported.isEmpty()) {
 				infoNL(strb, title, "n.a.");
 			} else {
-				
+
 				strb.append(title).append(": ");
 				for (int i = 0; i < TAB - title.length(); i++) {
 					strb.append(' ');
@@ -214,8 +235,7 @@ public class LWJGLInfoView extends ViewPart {
 		capInfos.put("AMD debug output", caps.GL_AMD_debug_output);
 		capInfos.put("AMD draw buffers blend", caps.GL_AMD_draw_buffers_blend);
 		capInfos.put("AMD name gen delete", caps.GL_AMD_name_gen_delete);
-		capInfos
-				.put("AMD performance monitor", caps.GL_AMD_performance_monitor);
+		capInfos.put("AMD performance monitor", caps.GL_AMD_performance_monitor);
 		capInfos.put("AMD seamless cubemap per texture",
 				caps.GL_AMD_seamless_cubemap_per_texture);
 		capInfos.put("AMD shader stencil export",
@@ -225,8 +245,7 @@ public class LWJGLInfoView extends ViewPart {
 				caps.GL_AMD_transform_feedback3_lines_triangles);
 		capInfos.put("AMD vertex shader tessellator",
 				caps.GL_AMD_vertex_shader_tessellator);
-		capInfos
-				.put("APPLE aux depth stencil", caps.GL_APPLE_aux_depth_stencil);
+		capInfos.put("APPLE aux depth stencil", caps.GL_APPLE_aux_depth_stencil);
 		capInfos.put("APPLE client storage", caps.GL_APPLE_client_storage);
 		capInfos.put("APPLE element array", caps.GL_APPLE_element_array);
 		capInfos.put("APPLE fence", caps.GL_APPLE_fence);
@@ -246,8 +265,7 @@ public class LWJGLInfoView extends ViewPart {
 				caps.GL_APPLE_vertex_program_evaluators);
 		capInfos.put("APPLE ycbcr 422", caps.GL_APPLE_ycbcr_422);
 		capInfos.put("ARB ES2 compatibility", caps.GL_ARB_ES2_compatibility);
-		capInfos
-				.put("ARB blend func extended", caps.GL_ARB_blend_func_extended);
+		capInfos.put("ARB blend func extended", caps.GL_ARB_blend_func_extended);
 		capInfos.put("ARB cl event", caps.GL_ARB_cl_event);
 		capInfos.put("ARB color buffer float", caps.GL_ARB_color_buffer_float);
 		capInfos.put("ARB compatibility", caps.GL_ARB_compatibility);
@@ -286,8 +304,7 @@ public class LWJGLInfoView extends ViewPart {
 		capInfos.put("ARB multitexture", caps.GL_ARB_multitexture);
 		capInfos.put("ARB occlusion query", caps.GL_ARB_occlusion_query);
 		capInfos.put("ARB occlusion query2", caps.GL_ARB_occlusion_query2);
-		capInfos
-				.put("ARB pixel buffer object", caps.GL_ARB_pixel_buffer_object);
+		capInfos.put("ARB pixel buffer object", caps.GL_ARB_pixel_buffer_object);
 		capInfos.put("ARB point parameters", caps.GL_ARB_point_parameters);
 		capInfos.put("ARB point sprite", caps.GL_ARB_point_sprite);
 		capInfos.put("ARB provoking vertex", caps.GL_ARB_provoking_vertex);
@@ -297,8 +314,7 @@ public class LWJGLInfoView extends ViewPart {
 		capInfos.put("ARB seamless cube map", caps.GL_ARB_seamless_cube_map);
 		capInfos.put("ARB separate shader objects",
 				caps.GL_ARB_separate_shader_objects);
-		capInfos
-				.put("ARB shader bit encoding", caps.GL_ARB_shader_bit_encoding);
+		capInfos.put("ARB shader bit encoding", caps.GL_ARB_shader_bit_encoding);
 		capInfos.put("ARB shader objects", caps.GL_ARB_shader_objects);
 		capInfos.put("ARB shader precision", caps.GL_ARB_shader_precision);
 		capInfos.put("ARB shader stencil export",
@@ -312,16 +328,14 @@ public class LWJGLInfoView extends ViewPart {
 		capInfos.put("ARB shadow", caps.GL_ARB_shadow);
 		capInfos.put("ARB shadow ambient", caps.GL_ARB_shadow_ambient);
 		capInfos.put("ARB sync", caps.GL_ARB_sync);
-		capInfos
-				.put("ARB tessellation shader", caps.GL_ARB_tessellation_shader);
+		capInfos.put("ARB tessellation shader", caps.GL_ARB_tessellation_shader);
 		capInfos.put("ARB texture border clamp",
 				caps.GL_ARB_texture_border_clamp);
 		capInfos.put("ARB texture buffer object",
 				caps.GL_ARB_texture_buffer_object);
 		capInfos.put("ARB texture buffer object rgb32",
 				caps.GL_ARB_texture_buffer_object_rgb32);
-		capInfos
-				.put("ARB texture compression", caps.GL_ARB_texture_compression);
+		capInfos.put("ARB texture compression", caps.GL_ARB_texture_compression);
 		capInfos.put("ARB texture compression bptc",
 				caps.GL_ARB_texture_compression_bptc);
 		capInfos.put("ARB texture compression rgtc",
@@ -330,8 +344,7 @@ public class LWJGLInfoView extends ViewPart {
 		capInfos.put("ARB texture cube map array",
 				caps.GL_ARB_texture_cube_map_array);
 		capInfos.put("ARB texture env add", caps.GL_ARB_texture_env_add);
-		capInfos
-				.put("ARB texture env combine", caps.GL_ARB_texture_env_combine);
+		capInfos.put("ARB texture env combine", caps.GL_ARB_texture_env_combine);
 		capInfos.put("ARB texture env crossbar",
 				caps.GL_ARB_texture_env_crossbar);
 		capInfos.put("ARB texture env dot3", caps.GL_ARB_texture_env_dot3);
@@ -339,8 +352,7 @@ public class LWJGLInfoView extends ViewPart {
 		capInfos.put("ARB texture gather", caps.GL_ARB_texture_gather);
 		capInfos.put("ARB texture mirrored repeat",
 				caps.GL_ARB_texture_mirrored_repeat);
-		capInfos
-				.put("ARB texture multisample", caps.GL_ARB_texture_multisample);
+		capInfos.put("ARB texture multisample", caps.GL_ARB_texture_multisample);
 		capInfos.put("ARB texture non power of two",
 				caps.GL_ARB_texture_non_power_of_two);
 		capInfos.put("ARB texture query lod", caps.GL_ARB_texture_query_lod);
@@ -349,18 +361,14 @@ public class LWJGLInfoView extends ViewPart {
 		capInfos.put("ARB texture rgb10 a2ui", caps.GL_ARB_texture_rgb10_a2ui);
 		capInfos.put("ARB texture swizzle", caps.GL_ARB_texture_swizzle);
 		capInfos.put("ARB timer query", caps.GL_ARB_timer_query);
-		capInfos
-				.put("ARB transform feedback2", caps.GL_ARB_transform_feedback2);
-		capInfos
-				.put("ARB transform feedback3", caps.GL_ARB_transform_feedback3);
+		capInfos.put("ARB transform feedback2", caps.GL_ARB_transform_feedback2);
+		capInfos.put("ARB transform feedback3", caps.GL_ARB_transform_feedback3);
 		capInfos.put("ARB transpose matrix", caps.GL_ARB_transpose_matrix);
 		capInfos.put("ARB uniform buffer object",
 				caps.GL_ARB_uniform_buffer_object);
 		capInfos.put("ARB vertex array bgra", caps.GL_ARB_vertex_array_bgra);
-		capInfos
-				.put("ARB vertex array object", caps.GL_ARB_vertex_array_object);
-		capInfos
-				.put("ARB vertex attrib 64bit", caps.GL_ARB_vertex_attrib_64bit);
+		capInfos.put("ARB vertex array object", caps.GL_ARB_vertex_array_object);
+		capInfos.put("ARB vertex attrib 64bit", caps.GL_ARB_vertex_attrib_64bit);
 		capInfos.put("ARB vertex blend", caps.GL_ARB_vertex_blend);
 		capInfos.put("ARB vertex buffer object",
 				caps.GL_ARB_vertex_buffer_object);
@@ -386,10 +394,8 @@ public class LWJGLInfoView extends ViewPart {
 		capInfos.put("ATI texture env combine3",
 				caps.GL_ATI_texture_env_combine3);
 		capInfos.put("ATI texture float", caps.GL_ATI_texture_float);
-		capInfos
-				.put("ATI texture mirror once", caps.GL_ATI_texture_mirror_once);
-		capInfos
-				.put("ATI vertex array object", caps.GL_ATI_vertex_array_object);
+		capInfos.put("ATI texture mirror once", caps.GL_ATI_texture_mirror_once);
+		capInfos.put("ATI vertex array object", caps.GL_ATI_vertex_array_object);
 		capInfos.put("ATI vertex attrib array object",
 				caps.GL_ATI_vertex_attrib_array_object);
 		capInfos.put("ATI vertex streams", caps.GL_ATI_vertex_streams);
@@ -399,20 +405,17 @@ public class LWJGLInfoView extends ViewPart {
 		capInfos.put("EXT blend color", caps.GL_EXT_blend_color);
 		capInfos.put("EXT blend equation separate",
 				caps.GL_EXT_blend_equation_separate);
-		capInfos
-				.put("EXT blend func separate", caps.GL_EXT_blend_func_separate);
+		capInfos.put("EXT blend func separate", caps.GL_EXT_blend_func_separate);
 		capInfos.put("EXT blend minmax", caps.GL_EXT_blend_minmax);
 		capInfos.put("EXT blend subtract", caps.GL_EXT_blend_subtract);
 		capInfos.put("EXT Cg shader", caps.GL_EXT_Cg_shader);
 		capInfos.put("EXT compiled vertex array",
 				caps.GL_EXT_compiled_vertex_array);
 		capInfos.put("EXT depth bounds test", caps.GL_EXT_depth_bounds_test);
-		capInfos
-				.put("EXT direct state access", caps.GL_EXT_direct_state_access);
+		capInfos.put("EXT direct state access", caps.GL_EXT_direct_state_access);
 		capInfos.put("EXT draw buffers2", caps.GL_EXT_draw_buffers2);
 		capInfos.put("EXT draw instanced", caps.GL_EXT_draw_instanced);
-		capInfos
-				.put("EXT draw range elements", caps.GL_EXT_draw_range_elements);
+		capInfos.put("EXT draw range elements", caps.GL_EXT_draw_range_elements);
 		capInfos.put("EXT fog coord", caps.GL_EXT_fog_coord);
 		capInfos.put("EXT framebuffer blit", caps.GL_EXT_framebuffer_blit);
 		capInfos.put("EXT framebuffer multisample",
@@ -429,8 +432,7 @@ public class LWJGLInfoView extends ViewPart {
 		capInfos.put("EXT packed float", caps.GL_EXT_packed_float);
 		capInfos.put("EXT packed pixels", caps.GL_EXT_packed_pixels);
 		capInfos.put("EXT paletted texture", caps.GL_EXT_paletted_texture);
-		capInfos
-				.put("EXT pixel buffer object", caps.GL_EXT_pixel_buffer_object);
+		capInfos.put("EXT pixel buffer object", caps.GL_EXT_pixel_buffer_object);
 		capInfos.put("EXT point parameters", caps.GL_EXT_point_parameters);
 		capInfos.put("EXT provoking vertex", caps.GL_EXT_provoking_vertex);
 		capInfos.put("EXT rescale normal", caps.GL_EXT_rescale_normal);
@@ -457,8 +459,7 @@ public class LWJGLInfoView extends ViewPart {
 				caps.GL_EXT_texture_compression_rgtc);
 		capInfos.put("EXT texture compression s3tc",
 				caps.GL_EXT_texture_compression_s3tc);
-		capInfos
-				.put("EXT texture env combine", caps.GL_EXT_texture_env_combine);
+		capInfos.put("EXT texture env combine", caps.GL_EXT_texture_env_combine);
 		capInfos.put("EXT texture env dot3", caps.GL_EXT_texture_env_dot3);
 		capInfos.put("EXT texture filter anisotropic",
 				caps.GL_EXT_texture_filter_anisotropic);
@@ -475,8 +476,7 @@ public class LWJGLInfoView extends ViewPart {
 		capInfos.put("EXT timer query", caps.GL_EXT_timer_query);
 		capInfos.put("EXT transform feedback", caps.GL_EXT_transform_feedback);
 		capInfos.put("EXT vertex array bgra", caps.GL_EXT_vertex_array_bgra);
-		capInfos
-				.put("EXT vertex attrib 64bit", caps.GL_EXT_vertex_attrib_64bit);
+		capInfos.put("EXT vertex attrib 64bit", caps.GL_EXT_vertex_attrib_64bit);
 		capInfos.put("EXT vertex shader", caps.GL_EXT_vertex_shader);
 		capInfos.put("EXT vertex weighting", caps.GL_EXT_vertex_weighting);
 
@@ -491,8 +491,7 @@ public class LWJGLInfoView extends ViewPart {
 		capInfos.put("NV depth buffer float", caps.GL_NV_depth_buffer_float);
 		capInfos.put("NV depth clamp", caps.GL_NV_depth_clamp);
 		capInfos.put("NV evaluators", caps.GL_NV_evaluators);
-		capInfos
-				.put("NV explicit multisample", caps.GL_NV_explicit_multisample);
+		capInfos.put("NV explicit multisample", caps.GL_NV_explicit_multisample);
 		capInfos.put("NV fence", caps.GL_NV_fence);
 		capInfos.put("NV float buffer", caps.GL_NV_float_buffer);
 		capInfos.put("NV fog distance", caps.GL_NV_fog_distance);
@@ -510,13 +509,11 @@ public class LWJGLInfoView extends ViewPart {
 		capInfos.put("NV gpu shader5", caps.GL_NV_gpu_shader5);
 		capInfos.put("NV half float", caps.GL_NV_half_float);
 		capInfos.put("NV light max exponent", caps.GL_NV_light_max_exponent);
-		capInfos
-				.put("NV multisample coverage", caps.GL_NV_multisample_coverage);
+		capInfos.put("NV multisample coverage", caps.GL_NV_multisample_coverage);
 		capInfos.put("NV multisample filter hint",
 				caps.GL_NV_multisample_filter_hint);
 		capInfos.put("NV occlusion query", caps.GL_NV_occlusion_query);
-		capInfos
-				.put("NV packed depth stencil", caps.GL_NV_packed_depth_stencil);
+		capInfos.put("NV packed depth stencil", caps.GL_NV_packed_depth_stencil);
 		capInfos.put("NV parameter buffer object",
 				caps.GL_NV_parameter_buffer_object);
 		capInfos.put("NV parameter buffer object2",
@@ -534,8 +531,7 @@ public class LWJGLInfoView extends ViewPart {
 		capInfos.put("NV texture barrier", caps.GL_NV_texture_barrier);
 		capInfos.put("NV texture compression vtc",
 				caps.GL_NV_texture_compression_vtc);
-		capInfos
-				.put("NV texture env combine4", caps.GL_NV_texture_env_combine4);
+		capInfos.put("NV texture env combine4", caps.GL_NV_texture_env_combine4);
 		capInfos.put("NV texture expand normal",
 				caps.GL_NV_texture_expand_normal);
 		capInfos.put("NV texture rectangle", caps.GL_NV_texture_rectangle);
@@ -591,7 +587,11 @@ public class LWJGLInfoView extends ViewPart {
 		io_strb.append(NL);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
+
+		Display.setFullscreen(false);
+		Display.create();
+
 		String s = gatherInformation();
 		System.out.println(s);
 	}
