@@ -1460,7 +1460,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				urlconnection.setUseCaches(false);
 
 				if (urlconnection instanceof HttpURLConnection) {
-					urlconnection.setRequestProperty("Cache-Control", "no-cache");
+					urlconnection.setRequestProperty("Cache-Control", "no-store,max-age=0,no-cache");
 					urlconnection.connect();
 		        }
 
