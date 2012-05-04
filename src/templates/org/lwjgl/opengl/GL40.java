@@ -184,7 +184,7 @@ public interface GL40 {
 	 */
 	int GL_MIN_SAMPLE_SHADING_VALUE = 0x8C37;
 
-	void glMinSampleShading(@GLclampf float value);
+	void glMinSampleShading(float value);
 
 	// ---------------------------------------------------------------------
 	// ----------------------[ ARB_shader_subroutine ]----------------------
@@ -394,8 +394,10 @@ public interface GL40 {
 	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetDoublev, GetIntegerv,
 	 * and GetFloatv:
 	 */
-	int GL_TRANSFORM_FEEDBACK_BUFFER_PAUSED = 0x8E23;
-	int GL_TRANSFORM_FEEDBACK_BUFFER_ACTIVE = 0x8E24;
+	int GL_TRANSFORM_FEEDBACK_PAUSED = 0x8E23;
+	int GL_TRANSFORM_FEEDBACK_ACTIVE = 0x8E24;
+	int GL_TRANSFORM_FEEDBACK_BUFFER_PAUSED = GL_TRANSFORM_FEEDBACK_PAUSED;
+	int GL_TRANSFORM_FEEDBACK_BUFFER_ACTIVE = GL_TRANSFORM_FEEDBACK_ACTIVE;
 	int GL_TRANSFORM_FEEDBACK_BINDING = 0x8E25;
 
 	void glBindTransformFeedback(@GLenum int target, @GLuint int id);

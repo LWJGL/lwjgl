@@ -719,9 +719,9 @@ public interface GL11 {
 	void glAccum(@GLenum int op, float value);
 
 	@DeprecatedGL
-	void glAlphaFunc(@GLenum int func, @GLclampf float ref);
+	void glAlphaFunc(@GLenum int func, float ref);
 
-	void glClearColor(@GLclampf float red, @GLclampf float green, @GLclampf float blue, @GLclampf float alpha);
+	void glClearColor(float red, float green, float blue, float alpha);
 
 	@DeprecatedGL
 	void glClearAccum(float red, float green, float blue, float alpha);
@@ -755,7 +755,7 @@ public interface GL11 {
 	                          @GLuint IntBuffer textures,
 	                          @Const
 	                          @Check("textures.remaining()")
-	                          @GLclampf FloatBuffer priorities);
+	                          FloatBuffer priorities);
 
 	@DeprecatedGL
 	boolean glAreTexturesResident(@AutoSize("textures") @GLsizei int n,
@@ -776,7 +776,7 @@ public interface GL11 {
 	@NoErrorCheck
 	void glArrayElement(int i);
 
-	void glClearDepth(@GLclampd double depth);
+	void glClearDepth(double depth);
 
 	@DeprecatedGL
 	void glDeleteLists(@GLuint int list, @GLsizei int range);
@@ -918,7 +918,7 @@ public interface GL11 {
 
 	void glDrawArrays(@GLenum int mode, int first, @GLsizei int count);
 
-	void glDepthRange(@GLclampd double zNear, @GLclampd double zFar);
+	void glDepthRange(double zNear, double zFar);
 
 	void glDepthMask(boolean flag);
 

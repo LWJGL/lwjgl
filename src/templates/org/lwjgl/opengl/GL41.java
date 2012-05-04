@@ -77,9 +77,9 @@ public interface GL41 {
 	                                @OutParameter @Check("2") IntBuffer range,
 	                                @OutParameter @Check("1") IntBuffer precision);
 
-	void glDepthRangef(@GLclampf float n, @GLclampf float f);
+	void glDepthRangef(float n, float f);
 
-	void glClearDepthf(@GLclampf float d);
+	void glClearDepthf(float d);
 
 	// ----------------------------------------------------------------------
 	// ----------------------[ ARB_get_program_binary ]----------------------
@@ -447,9 +447,9 @@ public interface GL41 {
 	void glScissorIndexedv(@GLuint int index, @Check("4") @Const IntBuffer v);
 
 	@StripPostfix("v")
-	void glDepthRangeArrayv(@GLuint int first, @AutoSize(value = "v", expression = " >> 1") @GLsizei int count, @Const @GLclampd DoubleBuffer v);
+	void glDepthRangeArrayv(@GLuint int first, @AutoSize(value = "v", expression = " >> 1") @GLsizei int count, @Const DoubleBuffer v);
 
-	void glDepthRangeIndexed(@GLuint int index, @GLclampd double n, @GLclampd double f);
+	void glDepthRangeIndexed(@GLuint int index, double n, double f);
 
 	@StripPostfix("data")
 	void glGetFloati_v(@GLenum int target, @GLuint int index, @Check @OutParameter FloatBuffer data);

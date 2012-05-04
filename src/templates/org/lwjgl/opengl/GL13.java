@@ -253,6 +253,6 @@ public interface GL13 {
 	@DeprecatedGL
 	void glMultTransposeMatrixd(@Check("16") @Const DoubleBuffer m);
 
-	void glSampleCoverage(@GLclampf float value, boolean invert);
+	void glSampleCoverage(float value, boolean invert);
 }
 

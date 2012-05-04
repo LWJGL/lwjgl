@@ -97,7 +97,7 @@ public interface GL14 {
 
 	void glBlendEquation(@GLenum int mode);
 
-	void glBlendColor(@GLclampf float red, @GLclampf float green, @GLclampf float blue, @GLclampf float alpha);
+	void glBlendColor(float red, float green, float blue, float alpha);
 
 	@DeprecatedGL
 	void glFogCoordf(float coord);
