@@ -3,6 +3,7 @@
 <plugin>
    <extension   point="org.eclipse.ui.views" >
       <view
+            category="org.eclipse.ui"
             class="org.lwjgl.info.LWJGLTestView"
             icon="icons/lwjgl_logo_16.gif"
             id="org.lwjgl.info.LWJGLTestView"
@@ -11,6 +12,7 @@
    
    <extension   point="org.eclipse.ui.views" >
       <view
+            category="org.eclipse.ui"
             class="org.lwjgl.info.LWJGLInfoView"
             icon="icons/lwjgl_logo_16.gif"
             id="org.lwjgl.info.LWJGLInfoView"
