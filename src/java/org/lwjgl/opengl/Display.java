@@ -656,6 +656,9 @@ public final class Display {
 			if ( parent_resized ) {
 				reshape();
 				parent_resized = false;
+				window_resized = true;
+				width = parent.getWidth();
+				height = parent.getHeight();
 			}
 
 			if ( processMessages )
