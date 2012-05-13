@@ -77,6 +77,12 @@ public class Mouse {
 
 	/** Mouse absolute Y position in pixels */
 	private static int				y;
+	
+	/** Mouse absolute X position in pixels without any clipping */
+	private static int				absolute_x;
+	
+	/** Mouse absolute Y position in pixels without any clipping */
+	private static int				absolute_y;
 
 	/** Buffer to hold the deltas dx, dy and dwheel */
 	private static IntBuffer	coord_buffer;
@@ -355,17 +361,21 @@ public class Mouse {
 				dy += poll_coord2;
 				x += poll_coord1;
 				y += poll_coord2;
+				absolute_x += poll_coord1;
+				absolute_y += poll_coord2;
 			} else {
-				dx = poll_coord1 - x;
-				dy = poll_coord2 - y;
-				x = poll_coord1;
-				y = poll_coord2;
+				dx = poll_coord1 - absolute_x;
+				dy = poll_coord2 - absolute_y;
+				absolute_x = x = poll_coord1;
+				absolute_y = y = poll_coord2;
 			}
-                        if(clipMouseCoordinatesToWindow) {
-                            x = Math.min(Display.getWidth() - 1, Math.max(0, x));
-                            y = Math.min(Display.getHeight() - 1, Math.max(0, y));
-                        }
-                        dwheel += poll_dwheel;
+                        
+			if(clipMouseCoordinatesToWindow) {
+				x = Math.min(Display.getWidth() - 1, Math.max(0, x));
+				y = Math.min(Display.getHeight() - 1, Math.max(0, y));
+			}
+			
+			dwheel += poll_dwheel;
 			read();
 		}
 	}
