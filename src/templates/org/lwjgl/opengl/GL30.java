@@ -907,12 +907,6 @@ public interface GL30 {
 	int GL_RG = 0x8227;
 	int GL_RG_INTEGER = 0x8228;
 
-	/**
-	 * Accepted by the &lt;param&gt; parameter of the TexParameter{if}*
-	 * functions when &lt;pname&gt; is DEPTH_TEXTURE_MODE:
-	 */
-	int GL_RED = 0x1903;
-
 	// ----------------------------------------------------------------------
 	// ----------------------[ EXT_transform_feedback ]----------------------
 	// ----------------------------------------------------------------------
