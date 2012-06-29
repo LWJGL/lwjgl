@@ -373,14 +373,14 @@ public interface NV_path_rendering {
 
 	void glStencilFillPathInstancedNV(@AutoSize(value="paths", expression = " / GLChecks.calculateBytesPerPathName(pathNameType)") @GLsizei int numPaths,
 	                                  @GLenum int pathNameType, @Const @GLvoid ByteBuffer paths,
-	                                  @Constant("0") @GLuint int pathBase,
+	                                  @GLuint int pathBase,
 	                                  @GLenum int fillMode, @GLuint int mask,
 	                                  @GLenum int transformType,
 	                                  @Check(value = "GLChecks.calculateTransformPathValues(transformType)", canBeNull = true) @Const FloatBuffer transformValues);
 
 	void glStencilStrokePathInstancedNV(@AutoSize(value = "paths", expression = " / GLChecks.calculateBytesPerPathName(pathNameType)") @GLsizei int numPaths,
 	                                    @GLenum int pathNameType, @Const @GLvoid ByteBuffer paths,
-	                                    @Constant("0") @GLuint int pathBase,
+	                                    @GLuint int pathBase,
 	                                    int reference, @GLuint int mask,
 	                                    @GLenum int transformType,
 	                                    @Check(value = "GLChecks.calculateTransformPathValues(transformType)", canBeNull = true) @Const FloatBuffer transformValues);
@@ -405,14 +405,14 @@ public interface NV_path_rendering {
 
 	void glCoverFillPathInstancedNV(@AutoSize(value = "paths", expression = " / GLChecks.calculateBytesPerPathName(pathNameType)") @GLsizei int numPaths,
 	                                @GLenum int pathNameType, @Const @GLvoid ByteBuffer paths,
-	                                @Constant("0") @GLuint int pathBase,
+	                                @GLuint int pathBase,
 	                                @GLenum int coverMode,
 	                                @GLenum int transformType,
 	                                @Check(value = "GLChecks.calculateTransformPathValues(transformType)", canBeNull = true) @Const FloatBuffer transformValues);
 
 	void glCoverStrokePathInstancedNV(@AutoSize(value = "paths", expression = " / GLChecks.calculateBytesPerPathName(pathNameType)") @GLsizei int numPaths,
 	                                  @GLenum int pathNameType, @Const @GLvoid ByteBuffer paths,
-	                                  @Constant("0") @GLuint int pathBase,
+	                                  @GLuint int pathBase,
 	                                  @GLenum int coverMode,
 	                                  @GLenum int transformType,
 	                                  @Check(value = "GLChecks.calculateTransformPathValues(transformType)", canBeNull = true) @Const FloatBuffer transformValues);
@@ -443,7 +443,7 @@ public interface NV_path_rendering {
 	void glGetPathMetricsNV(@GLbitfield int metricQueryMask,
 	                        @AutoSize(value = "paths", expression = " / GLChecks.calculateBytesPerPathName(pathNameType)") @GLsizei int numPaths,
 	                        @GLenum int pathNameType, @Const @GLvoid ByteBuffer paths,
-	                        @Constant("0") @GLuint int pathBase,
+	                        @GLuint int pathBase,
 	                        @GLsizei int stride,
 	                        @Check("GLChecks.calculateMetricsSize(metricQueryMask, stride)") @OutParameter FloatBuffer metrics);
 
@@ -457,7 +457,7 @@ public interface NV_path_rendering {
 	void glGetPathSpacingNV(@GLenum int pathListMode,
 	                        @AutoSize(value = "paths", expression = "numPaths", useExpression = true) @GLsizei int numPaths,
 	                        @GLenum int pathNameType, @Const @GLvoid ByteBuffer paths,
-	                        @Constant("0") @GLuint int pathBase,
+	                        @GLuint int pathBase,
 	                        float advanceScale,
 	                        float kerningScale,
 	                        @GLenum int transformType,
