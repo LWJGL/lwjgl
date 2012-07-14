@@ -52,6 +52,7 @@ import org.lwjgl.opengles.EGL;
 final class WindowsDisplay implements DisplayImplementation {
 	private static final int GAMMA_LENGTH = 256;
 
+	private static final int WM_WINDOWPOSCHANGED              = 0x0047;
 	private static final int WM_MOVE                          = 0x0003;
 	private static final int WM_CANCELMODE                    = 0x001F;
 	private static final int WM_MOUSEMOVE                     = 0x0200;
@@ -1012,15 +1013,22 @@ final class WindowsDisplay implements DisplayImplementation {
 					captureMouse = -1;
 				}
 				return 0;
-			case WM_MOVE:
-				x = (int)(short)(lParam & 0xFFFF);
-				y = (int)(short)(lParam >> 16);
-				return defWindowProc(hwnd, msg, wParam, lParam);
+			case WM_WINDOWPOSCHANGED:
+				if(getWindowRect(hwnd, rect_buffer)) {
+					rect.copyFromBuffer(rect_buffer);
+					x = rect.top;
+					y = rect.bottom;
+				} else {
+					LWJGLUtil.log("WM_WINDOWPOSCHANGED: Unable to get window rect");
+				}
+				return defWindowProc(hwnd, msg, wParam, lParam);				
 			default:
 				return defWindowProc(hwnd, msg, wParam, lParam);
 		}
 	}
 	
+	private native boolean getWindowRect(long hwnd, IntBuffer rectBuffer);
+
 	public int getX() {
 		return x;
 	}

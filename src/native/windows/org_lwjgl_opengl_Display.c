@@ -199,6 +199,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_clientToScreen(JNIEn
 	buffer[1] = point.y;
 }
 
+
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getWindowRect(JNIEnv *env, jclass unused, jlong hwnd_int, jobject buffer_handle) {
+	HWND hwnd = (HWND)(INT_PTR)hwnd_int;
+	RECT *buffer = (RECT *)(*env)->GetDirectBufferAddress(env, buffer_handle);
+	jlong size = (*env)->GetDirectBufferCapacity(env, buffer_handle);
+	if (size < 4) {
+		throwFormattedRuntimeException(env, "Buffer size < 4", size);
+		return false;
+	}
+	return GetWindowRect(hwnd, buffer);
+}
+
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_getForegroundWindow(JNIEnv *env, jclass unused) {
 	return (INT_PTR)GetForegroundWindow();
 }
@@ -510,3 +522,4 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nTrackMouseEvent
 		tme.hwndTrack = hwnd;
 		return TrackMouseEvent(&tme);
 }
+
