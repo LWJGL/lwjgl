@@ -54,6 +54,12 @@ typedef khronos_float_t  GLfloat;
 typedef khronos_float_t  GLclampf;
 typedef khronos_int32_t  GLfixed;
 
+// OpenGL ES 3.0
+typedef unsigned short   GLhalf;
+typedef khronos_int64_t  GLint64;
+typedef khronos_uint64_t GLuint64;
+typedef struct __GLsync *GLsync;
+
 /* GL types for handling large vertex buffer objects */
 typedef khronos_intptr_t GLintptr;
 typedef khronos_ssize_t  GLsizeiptr;

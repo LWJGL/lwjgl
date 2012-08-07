@@ -75,8 +75,14 @@ public interface GL40 {
 	 */
 	int GL_DRAW_INDIRECT_BUFFER_BINDING = 0x8F43;
 
+	void glDrawArraysIndirect(@GLenum int mode, @BufferObject(BufferKind.IndirectBO) @Check("4") @NullTerminated @Const @GLvoid ByteBuffer indirect);
+
+	@Alternate("glDrawArraysIndirect")
 	void glDrawArraysIndirect(@GLenum int mode, @BufferObject(BufferKind.IndirectBO) @Check("4") @NullTerminated @Const @GLvoid(PrimitiveType.Kind.INT) IntBuffer indirect);
 
+	void glDrawElementsIndirect(@GLenum int mode, @GLenum int type, @BufferObject(BufferKind.IndirectBO) @Check("5") @NullTerminated @Const @GLvoid ByteBuffer indirect);
+
+	@Alternate("glDrawElementsIndirect")
 	void glDrawElementsIndirect(@GLenum int mode, @GLenum int type, @BufferObject(BufferKind.IndirectBO) @Check("5") @NullTerminated @Const @GLvoid(PrimitiveType.Kind.INT) IntBuffer indirect);
 
 	// ---------------------------------------------------------------

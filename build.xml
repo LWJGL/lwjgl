@@ -177,7 +177,7 @@
 		<!-- ================================================================== -->
 		<!-- Generate a list of the OpenGL extension classes					-->
 		<!-- ================================================================== -->
-		<fileset id="opengl-template-fileset" dir="${lwjgl.src}/generated" includes="${opengl-template-pattern}"/>
+		<fileset id="opengl-template-fileset" dir="${lwjgl.src}/generated/org/lwjgl/opengl" includes="${opengl-template-pattern}"/>
 		<property name="opengl-template-files" refid="opengl-template-fileset"/>
 
 		<tempfile property="temp.file"/>
@@ -187,7 +187,7 @@
 			<filterchain>
 				<tokenfilter delimoutput=",">
 					<stringtokenizer delims=";"/>
-					<replaceregex pattern="org\${file.separator}lwjgl\${file.separator}opengl\${file.separator}(.+)[.]java"
+					<replaceregex pattern="(.+)[.]java"
 					              replace="org/lwjgl/opengl/\1.class"/>
 				</tokenfilter>
 			</filterchain>
@@ -350,6 +350,7 @@
 			<class name="org.lwjgl.opengles.EGLKHRReusableSync"/>
 			<class name="org.lwjgl.opengles.EGLNVSync"/>
 			<class name="org.lwjgl.opengles.GLContext"/>
+			<class name="org.lwjgl.opengles.CallbackUtil"/>
 		</javah>
 	</target>
 
@@ -626,7 +627,7 @@
 			<bottom><![CDATA[<i>Copyright &#169; 2002-2009 lwjgl.org. All Rights Reserved.</i>]]></bottom>
 		</javadoc>
 	</target>
-	
+
 	<!-- get and copy nightly binaries into libs folder -->
 	<target name="copy-nightly-binaries" depends="-initialize" description="Copies latest successful nightly binaries into appropriate libs folder">
 		<delete file="${lwjgl.temp}/lwjgl-${lwjgl.version}.zip" failonerror="false"/>
@@ -635,7 +636,7 @@
 		 	<patternset>
 				<include name="**/native/**/*lwjgl*"/>
 			</patternset>
-			<globmapper from="lwjgl-${lwjgl.version}/native/*" to="*"/>	
+			<globmapper from="lwjgl-${lwjgl.version}/native/*" to="*"/>
 		</unzip>
-	</target>	
+	</target>
 </project>

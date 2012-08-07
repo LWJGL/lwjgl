@@ -39,7 +39,7 @@ import static org.lwjgl.opengles.EGL.*;
 
 /**
  * This class represents the context attributes passed to EGL's eglCreateContext.
- * The only attribute allowed is EGL_CONTEXT_CLIENT_VERSION and it must be 2 (LWJGL does not support GLES 1.x).
+ * The only attribute allowed is EGL_CONTEXT_CLIENT_VERSION and it must be 2 or 3 (LWJGL does not support GLES 1.x).
  */
 public final class ContextAttribs {
 
@@ -50,7 +50,7 @@ public final class ContextAttribs {
 	}
 
 	public ContextAttribs(final int version) {
-		if ( version != 2 )
+		if ( 3 < version )
 			throw new IllegalArgumentException("Invalid OpenGL ES version specified: " + version);
 
 		this.version = version;

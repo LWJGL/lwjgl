@@ -107,7 +107,11 @@ class SignatureTranslator implements TypeVisitor {
 	}
 
 	public void visitInterfaceType(InterfaceType t) {
-		throw new RuntimeException(t + " is not allowed");
+		Class type = NativeTypeTranslator.getClassFromType(t);
+		if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(type) )
+			signature.append("J");
+		else
+			throw new RuntimeException(t + " is not allowed");
 	}
 
 	public void visitPrimitiveType(PrimitiveType t) {

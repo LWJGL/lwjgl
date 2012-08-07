@@ -42,6 +42,7 @@ package org.lwjgl.util.generator.opengl;
  */
 
 import org.lwjgl.util.generator.NativeTypeTranslator;
+import org.lwjgl.util.generator.PointerWrapper;
 import org.lwjgl.util.generator.Signedness;
 import org.lwjgl.util.generator.TypeMap;
 
@@ -80,6 +81,8 @@ public class GLESTypeMap implements TypeMap {
 		native_types_to_primitive.put(GLvoid.class, PrimitiveType.Kind.BYTE);
 		native_types_to_primitive.put(EGLint64NV.class, PrimitiveType.Kind.LONG);
 		native_types_to_primitive.put(EGLuint64NV.class, PrimitiveType.Kind.LONG);
+		native_types_to_primitive.put(GLint64.class, PrimitiveType.Kind.LONG);
+		native_types_to_primitive.put(GLuint64.class, PrimitiveType.Kind.LONG);
 	}
 
 	public PrimitiveType.Kind getPrimitiveTypeFromNativeType(Class<? extends Annotation> native_type) {
@@ -131,7 +134,9 @@ public class GLESTypeMap implements TypeMap {
 	}
 
 	public String translateAnnotation(Class annotation_type) {
-		if ( annotation_type.equals(GLuint.class) || annotation_type.equals(GLint.class) )
+		if ( annotation_type.equals(GLuint64.class) || annotation_type.equals(GLint64.class) )
+			return "i64";
+		else if ( annotation_type.equals(GLuint.class) || annotation_type.equals(GLint.class) )
 			return "i";
 		else if ( annotation_type.equals(GLushort.class) || annotation_type.equals(GLshort.class) )
 			return "s";
@@ -167,6 +172,9 @@ public class GLESTypeMap implements TypeMap {
 			case BOOLEAN:
 				type = GLboolean.class;
 				break;
+			case LONG:
+				type = GLint64.class;
+				break;
 			default:
 				throw new RuntimeException(kind + " is not allowed");
 		}
@@ -199,14 +207,14 @@ public class GLESTypeMap implements TypeMap {
 		else if ( type.equals(ShortBuffer.class) )
 			return new Class[] { GLhalf.class, GLshort.class, GLushort.class };
 		else if ( type.equals(LongBuffer.class) )
-			return new Class[] { EGLint64NV.class, EGLuint64NV.class };
+			return new Class[] { GLint64.class, GLuint64.class, EGLint64NV.class, EGLuint64NV.class };
 		else
 			return new Class[] { };
 	}
 
 	private static Class[] getValidPrimitiveTypes(Class type) {
 		if ( type.equals(long.class) )
-			return new Class[] { GLintptr.class, GLsizeiptr.class, EGLuint64NV.class, EGLint64NV.class };
+			return new Class[] { GLintptr.class, GLsizeiptr.class, GLint64.class, GLuint64.class, EGLuint64NV.class, EGLint64NV.class };
 		else if ( type.equals(int.class) )
 			return new Class[] { GLbitfield.class, GLenum.class, GLint.class, GLuint.class, GLsizei.class };
 		else if ( type.equals(float.class) )
@@ -244,7 +252,7 @@ public class GLESTypeMap implements TypeMap {
 		else if ( String.class.equals(type) )
 			valid_types = new Class[] { GLubyte.class };
 		else if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(type) )
-			valid_types = new Class[] { org.lwjgl.PointerWrapper.class };
+			valid_types = new Class[] { PointerWrapper.class };
 		else if ( void.class.equals(type) )
 			valid_types = new Class[] { GLreturn.class };
 		else
@@ -253,6 +261,8 @@ public class GLESTypeMap implements TypeMap {
 	}
 
 	public Class<? extends Annotation> getInverseType(Class<? extends Annotation> type) {
+		if ( GLuint64.class.equals(type) )
+			return GLint64.class;
 		if ( GLuint.class.equals(type) )
 			return GLint.class;
 		else if ( GLint.class.equals(type) )

@@ -86,6 +86,30 @@ class GLChecks {
 			throw new OpenGLException("Cannot use offsets when Element Array Buffer Object is disabled");
 	}
 
+	/** Helper method to ensure that pixel pack buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
+	static void ensurePackPBOdisabled() {
+		if ( LWJGLUtil.CHECKS && StateTracker.getTracker().pixelPackBuffer != 0 )
+			throw new OpenGLException("Cannot use Buffers when Pixel Pack Buffer Object is enabled");
+	}
+
+	/** Helper method to ensure that pixel pack buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
+	static void ensurePackPBOenabled() {
+		if ( LWJGLUtil.CHECKS && StateTracker.getTracker().pixelPackBuffer == 0 )
+			throw new OpenGLException("Cannot use offsets when Pixel Pack Buffer Object is disabled");
+	}
+
+	/** Helper method to ensure that pixel unpack buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
+	static void ensureUnpackPBOdisabled() {
+		if ( LWJGLUtil.CHECKS && StateTracker.getTracker().pixelUnpackBuffer != 0 )
+			throw new OpenGLException("Cannot use Buffers when Pixel Unpack Buffer Object is enabled");
+	}
+
+	/** Helper method to ensure that pixel unpack buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
+	static void ensureUnpackPBOenabled() {
+		if ( LWJGLUtil.CHECKS && StateTracker.getTracker().pixelUnpackBuffer == 0 )
+			throw new OpenGLException("Cannot use offsets when Pixel Unpack Buffer Object is disabled");
+	}
+
 	/**
 	 * Calculate the storage required for an image in elements
 	 *

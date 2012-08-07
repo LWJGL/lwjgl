@@ -180,6 +180,8 @@ public final class GLContext {
 		}
 
 		// ----------------------[ 2.X ]----------------------
+		if ( 3 <= majorVersion )
+			supported_extensions.add("OpenGLES30");
 		if ( 2 <= majorVersion )
 			supported_extensions.add("OpenGLES20");
 

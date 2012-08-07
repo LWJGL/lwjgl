@@ -31,7 +31,7 @@
  */
 
 /**
- * JNI implementation of the AMD_debug_output function callback.
+ * JNI implementation of the ARB/AMD_debug_output & KHR_debug function callbacks.
  *
  * @author Spasi
  */
@@ -43,6 +43,7 @@
 
 static jmethodID debugOutputCallbackARBJ;
 static jmethodID debugOutputCallbackAMDJ;
+static jmethodID debugCallbackKHRJ;
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_CallbackUtil_ncreateGlobalRef(JNIEnv *env, jclass clazz, jobject obj) {
     return (jlong)(intptr_t)(*env)->NewGlobalRef(env, obj);
@@ -109,4 +110,34 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_CallbackUtil_getDebugOutputCallbac
     }
 
     return (jlong)(intptr_t)&debugOutputCallbackAMD;
+}
+
+// ----------------- [ KHR_debug ] -----------------
+
+static void APIENTRY debugCallbackKHR(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam) {
+    JNIEnv *env = attachCurrentThread();
+
+	if ( env != NULL && !(*env)->ExceptionOccurred(env) && debugCallbackKHRJ != NULL ) {
+        (*env)->CallVoidMethod(env, (jobject)userParam, debugCallbackKHRJ,
+            (jint)source,
+            (jint)type,
+            (jint)id,
+            (jint)severity,
+            NewStringNativeWithLength(env, message, length)
+        );
+    }
+
+    detachCurrentThread();
+}
+
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_CallbackUtil_getDebugCallbackKHR(JNIEnv *env, jclass clazz) {
+    // Cache the callback methodID
+    jclass callbackClass;
+    if ( debugCallbackKHRJ == NULL ) {
+        callbackClass = (*env)->FindClass(env, "org/lwjgl/opengl/KHRDebugCallback$Handler");
+        if ( callbackClass != NULL )
+            debugCallbackKHRJ = (*env)->GetMethodID(env, callbackClass, "handleMessage", "(IIIILjava/lang/String;)V");
+    }
+
+    return (jlong)(intptr_t)&debugCallbackKHRJ;
 }

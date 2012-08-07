@@ -31,7 +31,7 @@
  */
 
 /**
- * JNI implementation of the AMD_debug_output function callback.
+ * JNI implementation of the OpenCL function callbacks.
  *
  * @author Spasi
  */

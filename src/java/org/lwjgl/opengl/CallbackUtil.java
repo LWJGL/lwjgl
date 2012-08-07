@@ -45,6 +45,8 @@ final class CallbackUtil {
 	private static final Map<ContextCapabilities, Long> contextUserParamsARB = new HashMap<ContextCapabilities, Long>();
 	/** Context -> Long */
 	private static final Map<ContextCapabilities, Long> contextUserParamsAMD = new HashMap<ContextCapabilities, Long>();
+	/** Context -> Long */
+	private static final Map<ContextCapabilities, Long> contextUserParamsKHR = new HashMap<ContextCapabilities, Long>();
 
 	private CallbackUtil() {}
 
@@ -115,6 +117,10 @@ final class CallbackUtil {
 		userParam = contextUserParamsAMD.remove(caps);
 		if ( userParam != null )
 			deleteGlobalRef(userParam);
+
+		userParam = contextUserParamsKHR.remove(caps);
+		if ( userParam != null )
+			deleteGlobalRef(userParam);
 	}
 
 	// --------- [ ARB_debug_output ] ---------
@@ -155,6 +161,26 @@ final class CallbackUtil {
 	 */
 	static void registerContextCallbackAMD(final long userParam) {
 		registerContextCallback(userParam, contextUserParamsAMD);
+	}
+
+	// --------- [ KHR_debug ] ---------
+
+	/**
+	 * Returns the memory address of the native function we pass to glDebugMessageCallback.
+	 *
+	 * @return the callback function address
+	 */
+	static native long getDebugCallbackKHR();
+
+	/**
+	 * Associates the current OpenGL context with the specified global reference. If there
+	 * is no context current, the global reference is deleted and an exception is thrown.
+	 * Any previous callback registrations will be cleared.
+	 *
+	 * @param userParam the global reference pointer
+	 */
+	static void registerContextCallbackKHR(final long userParam) {
+		registerContextCallback(userParam, contextUserParamsKHR);
 	}
 
 }

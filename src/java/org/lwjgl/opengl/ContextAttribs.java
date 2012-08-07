@@ -63,11 +63,13 @@ public final class ContextAttribs {
 	// Same values for GLX & WGL
 	private static final int CONTEXT_ES2_PROFILE_BIT_EXT = 0x00000004;
 
-	private static final int CONTEXT_ROBUST_ACCESS_BIT_ARB = 0x00000004;
+	private static final int CONTEXT_ROBUST_ACCESS_BIT_ARB           = 0x00000004;
 	private static final int CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB = 0x8256;
 	private static final int
-		NO_RESET_NOTIFICATION_ARB = 0x8261,
-		LOSE_CONTEXT_ON_RESET_ARB = 0x8252;
+	                         NO_RESET_NOTIFICATION_ARB               = 0x8261,
+		LOSE_CONTEXT_ON_RESET_ARB                                    = 0x8252;
+
+	private static final int CONTEXT_RESET_ISOLATION_BIT_ARB = 0x00000008;
 
 	private int majorVersion;
 	private int minorVersion;
@@ -83,6 +85,7 @@ public final class ContextAttribs {
 	private boolean profileES;
 
 	private boolean loseContextOnReset;
+	private boolean contextResetIsolation;
 
 	public ContextAttribs() {
 		this(1, 0);
@@ -91,7 +94,7 @@ public final class ContextAttribs {
 	public ContextAttribs(final int majorVersion, final int minorVersion) {
 		if ( majorVersion < 0 || 4 < majorVersion ||
 		     minorVersion < 0 ||
-		     (majorVersion == 4 && 2 < minorVersion) ||
+		     (majorVersion == 4 && 3 < minorVersion) ||
 		     (majorVersion == 3 && 3 < minorVersion) ||
 		     (majorVersion == 2 && 1 < minorVersion) ||
 		     (majorVersion == 1 && 5 < minorVersion) )
@@ -241,6 +244,15 @@ public final class ContextAttribs {
 		return attribs;
 	}
 
+	public ContextAttribs withContextResetIsolation(final boolean contextResetIsolation) {
+		if ( contextResetIsolation == this.contextResetIsolation )
+			return this;
+
+		final ContextAttribs attribs = new ContextAttribs(this);
+		attribs.contextResetIsolation = contextResetIsolation;
+		return attribs;
+	}
+
 	private static ContextAttribsImplementation getImplementation() {
 		switch ( LWJGLUtil.getPlatform() ) {
 			case LWJGLUtil.PLATFORM_LINUX:
@@ -272,6 +284,8 @@ public final class ContextAttribs {
 			flags |= implementation.getForwardCompatibleBit();
 		if ( robustAccess )
 			flags |= CONTEXT_ROBUST_ACCESS_BIT_ARB;
+		if ( contextResetIsolation )
+			flags |= CONTEXT_RESET_ISOLATION_BIT_ARB;
 		if ( 0 < flags )
 			attribCount++;
 
@@ -283,6 +297,9 @@ public final class ContextAttribs {
 		else if ( profileES )
 			profileMask |= CONTEXT_ES2_PROFILE_BIT_EXT;
 		if ( 0 < profileMask )
+			attribCount++;
+
+		if ( loseContextOnReset )
 			attribCount++;
 
 		if ( attribCount == 0 )

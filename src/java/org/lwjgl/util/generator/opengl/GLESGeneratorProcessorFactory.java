@@ -152,7 +152,7 @@ public class GLESGeneratorProcessorFactory implements AnnotationProcessorFactory
 			}
 			for ( TypeDeclaration typedecl : interface_decls ) {
 				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
-				if ( interface_decl.getSimpleName().startsWith("GLES") )
+				if ( "GLES20".equals(interface_decl.getSimpleName()) )
 					continue;
 				GLESCapabilitiesGenerator.generateInitStubs(writer, interface_decl, context_specific);
 			}

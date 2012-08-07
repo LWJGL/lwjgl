@@ -39,6 +39,7 @@ import org.lwjgl.PointerBuffer;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.nio.LongBuffer;
 
 /**
  * Utility class for OpenGL ES API calls.
@@ -142,6 +143,8 @@ final class APIUtil {
 	}
 
 	static IntBuffer getBufferInt() { return buffersTL.get().ints; }
+
+	static LongBuffer getBufferLong() { return buffersTL.get().longs; }
 
 	static FloatBuffer getBufferFloat() { return buffersTL.get().floats; }
 
@@ -312,10 +315,12 @@ final class APIUtil {
 	private static class Buffers {
 
 		final IntBuffer   ints;
+		final LongBuffer  longs;
 		final FloatBuffer floats;
 
 		Buffers() {
 			ints = BufferUtils.createIntBuffer(BUFFERS_SIZE);
+			longs = BufferUtils.createLongBuffer(BUFFERS_SIZE);
 			floats = BufferUtils.createFloatBuffer(BUFFERS_SIZE);
 		}
 

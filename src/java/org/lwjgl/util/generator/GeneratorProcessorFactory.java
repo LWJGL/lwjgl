@@ -97,22 +97,30 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 		public void process() {
 			Map<String, String> options = env.getOptions();
 			String typemap_classname = null;
+			String bin_path = null;
 			boolean generate_error_checks = options.containsKey("-Ageneratechecks");
 			boolean context_specific = options.containsKey("-Acontextspecific");
 			for ( String k : options.keySet() ) {
+				if ( !k.startsWith("-A") )
+					continue;
+
 				int delimiter = k.indexOf('=');
 				if ( delimiter != -1 ) {
 					if ( k.startsWith("-Atypemap") ) {
 						typemap_classname = k.substring(delimiter + 1);
+					} else if ( k.startsWith("-Abinpath") ) {
+						bin_path = k.substring(delimiter + 1);
 					}
 				}
 			}
 			if ( typemap_classname == null )
 				throw new RuntimeException("No TypeMap class name specified with -Atypemap=<class-name>");
+			if ( bin_path == null )
+				throw new RuntimeException("No path specified for the bin directory with -Abinpath=<path>");
 
 			TypeDeclaration lastFile = null;
 			try {
-				long generatorLM = getGeneratorLastModified();
+				long generatorLM = getGeneratorLastModified(bin_path);
 				TypeMap type_map = (TypeMap)(Class.forName(typemap_classname).newInstance());
 				for ( TypeDeclaration typedecl : env.getSpecifiedTypeDeclarations() ) {
 					lastFile = typedecl;
@@ -131,17 +139,17 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 		 *
 		 * @return time of the latest change
 		 */
-		private static long getGeneratorLastModified() {
-			long lastModified = getDirectoryLastModified("/bin/org/lwjgl/util/generator");
-			lastModified = Math.max(lastModified, getDirectoryLastModified("/bin/org/lwjgl/util/generator/openal"));
-			lastModified = Math.max(lastModified, getDirectoryLastModified("/bin/org/lwjgl/util/generator/opengl"));
-			lastModified = Math.max(lastModified, getDirectoryLastModified("/bin/org/lwjgl/util/generator/opencl"));
+		private static long getGeneratorLastModified(final String bin_path) {
+			long lastModified = getDirectoryLastModified(bin_path, "/org/lwjgl/util/generator");
+			lastModified = Math.max(lastModified, getDirectoryLastModified(bin_path, "/org/lwjgl/util/generator/openal"));
+			lastModified = Math.max(lastModified, getDirectoryLastModified(bin_path, "/org/lwjgl/util/generator/opengl"));
+			lastModified = Math.max(lastModified, getDirectoryLastModified(bin_path, "/org/lwjgl/util/generator/opencl"));
 
 			return lastModified;
 		}
 
-		private static long getDirectoryLastModified(final String path) {
-			final File pck = new File(System.getProperty("user.dir") + path);
+		private static long getDirectoryLastModified(final String bin_path, final String path) {
+			final File pck = new File(bin_path + path);
 			if ( !pck.exists() || !pck.isDirectory() )
 				return Long.MAX_VALUE;
 

@@ -196,7 +196,15 @@ public class NativeTypeTranslator implements TypeVisitor {
 	}
 
 	public void visitInterfaceType(InterfaceType t) {
-		throw new RuntimeException(t + " is not allowed");
+		// See ARB_debug_label.glObjectPtrLabel
+		Class<?> c = getClassFromType(t);
+		if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(c) ) {
+			native_types = new ArrayList<Class>();
+			native_types.add(PointerWrapper.class);
+
+			is_indirect = false;
+		} else
+			throw new RuntimeException(t + " is not allowed");
 	}
 
 	// Check if the annotation is itself annotated with a certain annotation type

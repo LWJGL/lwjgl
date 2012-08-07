@@ -15,10 +15,16 @@
 	<property name="lwjgl.version" 				value="2.8.5" />
 	<property name="lwjgl.web" 						location="www" />
 
-	<property name="opengl-template-pattern" value="org/lwjgl/opengl/GL*.java,org/lwjgl/opengl/ARB*.java,org/lwjgl/opengl/AMD*.java,org/lwjgl/opengl/APPLE*.java,org/lwjgl/opengl/ATI*.java,org/lwjgl/opengl/EXT*.java,org/lwjgl/opengl/NV*.java,org/lwjgl/opengl/NVX*.java,org/lwjgl/opengl/HP*.java,org/lwjgl/opengl/IBM*.java,org/lwjgl/opengl/SUN*.java,org/lwjgl/opengl/SGIS*.java,org/lwjgl/opengl/GREMEDY*.java"/>
-	<property name="opengles-template-pattern" value="org/lwjgl/opengles/GLES*.java,org/lwjgl/opengles/ARB*.java,org/lwjgl/opengles/EXT*.java,org/lwjgl/opengles/AMD*.java,org/lwjgl/opengles/ANGLE*.java,org/lwjgl/opengles/APPLE*.java,org/lwjgl/opengles/ARM*.java,org/lwjgl/opengles/DMP*.java,org/lwjgl/opengles/IMG*.java,org/lwjgl/opengles/NV*.java,org/lwjgl/opengles/OES*.java,org/lwjgl/opengles/QCOM*.java,org/lwjgl/opengles/VIV*.java"/>
-    <property name="opencl-template-pattern-extensions" value="org/lwjgl/opencl/KHR*.java,org/lwjgl/opencl/EXT*.java,org/lwjgl/opencl/APPLE*.java,org/lwjgl/opencl/AMD*.java,org/lwjgl/opencl/INTEL*.java,org/lwjgl/opencl/NV*.java"/>
-    <property name="opencl-template-pattern" value="org/lwjgl/opencl/CL*.java,${opencl-template-pattern-extensions}"/>
+	<property name="lwjgl.src.templates.al" location="${lwjgl.src.templates}/org/lwjgl/openal"/>
+	<property name="lwjgl.src.templates.gl" location="${lwjgl.src.templates}/org/lwjgl/opengl"/>
+	<property name="lwjgl.src.templates.gles" location="${lwjgl.src.templates}/org/lwjgl/opengles"/>
+	<property name="lwjgl.src.templates.cl" location="${lwjgl.src.templates}/org/lwjgl/opencl"/>
+
+	<property name="openal-template-pattern" value="AL*.java,EFX*.java"/>
+	<property name="opengl-template-pattern" value="GL*.java,ARB*.java,EXT*.java,KHR*.java,AMD*.java,APPLE*.java,ATI*.java,NV*.java,NVX*.java,HP*.java,IBM*.java,SUN*.java,SGIS*.java,GREMEDY*.java"/>
+	<property name="opengles-template-pattern" value="GLES*.java,ARB*.java,EXT*.java,KHR*.java,AMD*.java,ANGLE*.java,APPLE*.java,ARM*.java,DMP*.java,IMG*.java,NV*.java,OES*.java,QCOM*.java,VIV*.java"/>
+    <property name="opencl-template-pattern-extensions" value="KHR*.java,EXT*.java,APPLE*.java,AMD*.java,INTEL*.java,NV*.java"/>
+    <property name="opencl-template-pattern" value="CL*.java,${opencl-template-pattern-extensions}"/>
 
 	<!-- ================================================================== -->
 	<!-- Filesets used for targets 																					-->

@@ -32,8 +32,10 @@
 package org.lwjgl.opengles;
 
 import java.nio.Buffer;
+import java.nio.IntBuffer;
 
 import static org.lwjgl.opengles.GLES20.*;
+import static org.lwjgl.opengles.GLES30.*;
 
 final class StateTracker {
 
@@ -41,8 +43,14 @@ final class StateTracker {
 
 	int elementArrayBuffer;
 	int arrayBuffer;
+	int pixelPackBuffer;
+	int pixelUnpackBuffer;
 
 	Buffer[] glVertexAttribPointer_buffer;
+
+	private final FastIntMap<VAOState> vaoMap = new FastIntMap<VAOState>();
+
+	int vertexArrayObject;
 
 	StateTracker() {
 	}
@@ -65,7 +73,44 @@ final class StateTracker {
 			case GL_ELEMENT_ARRAY_BUFFER:
 				tracker.elementArrayBuffer = buffer;
 				break;
+			case GL_PIXEL_PACK_BUFFER:
+				tracker.pixelPackBuffer = buffer;
+				break;
+			case GL_PIXEL_UNPACK_BUFFER:
+				tracker.pixelUnpackBuffer = buffer;
+				break;
 		}
+	}
+
+	static void bindVAO(final int array) {
+		final FastIntMap<VAOState> vaoMap = tracker.vaoMap;
+		if ( !vaoMap.containsKey(array) )
+			vaoMap.put(array, new VAOState());
+
+		tracker.vertexArrayObject = array;
+	}
+
+	static void deleteVAO(final IntBuffer arrays) {
+		for ( int i = arrays.position(); i < arrays.limit(); i++ )
+			deleteVAO(arrays.get(i));
+	}
+
+	static void deleteVAO(final int array) {
+		tracker.vaoMap.remove(array);
+
+		if ( tracker.vertexArrayObject == array )
+			tracker.vertexArrayObject = 0;
+	}
+
+	/**
+	 * Simple class to help us track VAO state. Currently
+	 * only ELEMENT_ARRAY_BUFFER_BINDING is tracked, since
+	 * that's the only state we check from tables 6.6-6.9.
+	 */
+	private static class VAOState {
+
+		int elementArrayBuffer;
+
 	}
 
 }

@@ -32,8 +32,6 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
-import org.lwjgl.util.generator.PointerWrapper;
-import org.lwjgl.util.generator.Alternate;
 import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.Buffer;
@@ -47,14 +45,22 @@ public interface GL32 {
 	// ----------------------[ OpenGL 3.2 ]----------------------
 	// ----------------------------------------------------------
 
-	int GL_CONTEXT_PROFILE_MASK = 0x9126;
-	int GL_CONTEXT_CORE_PROFILE_BIT = 0x00000001;
+	int GL_CONTEXT_PROFILE_MASK              = 0x9126;
+	int GL_CONTEXT_CORE_PROFILE_BIT          = 0x00000001;
 	int GL_CONTEXT_COMPATIBILITY_PROFILE_BIT = 0x00000002;
 
-	int GL_MAX_VERTEX_OUTPUT_COMPONENTS = 0x9122;
-	int GL_MAX_GEOMETRY_INPUT_COMPONENTS = 0x9123;
+	int GL_MAX_VERTEX_OUTPUT_COMPONENTS   = 0x9122;
+	int GL_MAX_GEOMETRY_INPUT_COMPONENTS  = 0x9123;
 	int GL_MAX_GEOMETRY_OUTPUT_COMPONENTS = 0x9124;
-	int GL_MAX_FRAGMENT_INPUT_COMPONENTS = 0x9125;
+	int GL_MAX_FRAGMENT_INPUT_COMPONENTS  = 0x9125;
+
+	@StripPostfix("params")
+	void glGetBufferParameteri64v(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") LongBuffer params);
+
+	@Alternate("glGetBufferParameteri64v")
+	@GLreturn("params")
+	@StripPostfix("params")
+	void glGetBufferParameteri64v2(@GLenum int target, @GLenum int pname, @OutParameter LongBuffer params);
 
 	// ---------------------------------------------------------------------
 	// ----------------------[ ARB_vertex_array_bgra ]----------------------
@@ -95,13 +101,13 @@ public interface GL32 {
 
 	/** Accepted by the &lt;mode&gt; parameter of ProvokingVertex: */
 	int GL_FIRST_VERTEX_CONVENTION = 0x8E4D;
-	int GL_LAST_VERTEX_CONVENTION = 0x8E4E;
+	int GL_LAST_VERTEX_CONVENTION  = 0x8E4E;
 
 	/**
 	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
 	 * GetFloatv, and GetDoublev:
 	 */
-	int GL_PROVOKING_VERTEX = 0x8E4F;
+	int GL_PROVOKING_VERTEX                         = 0x8E4F;
 	int GL_QUADS_FOLLOW_PROVOKING_VERTEX_CONVENTION = 0x8E4C;
 
 	void glProvokingVertex(@GLenum int mode);
@@ -159,23 +165,23 @@ public interface GL32 {
 	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetDoublev, GetIntegerv,
 	 * and GetFloatv:
 	 */
-	int GL_MAX_SAMPLE_MASK_WORDS = 0x8E59;
-	int GL_MAX_COLOR_TEXTURE_SAMPLES = 0x910E;
-	int GL_MAX_DEPTH_TEXTURE_SAMPLES = 0x910F;
-	int GL_MAX_INTEGER_SAMPLES = 0x9110;
-	int GL_TEXTURE_BINDING_2D_MULTISAMPLE = 0x9104;
+	int GL_MAX_SAMPLE_MASK_WORDS                = 0x8E59;
+	int GL_MAX_COLOR_TEXTURE_SAMPLES            = 0x910E;
+	int GL_MAX_DEPTH_TEXTURE_SAMPLES            = 0x910F;
+	int GL_MAX_INTEGER_SAMPLES                  = 0x9110;
+	int GL_TEXTURE_BINDING_2D_MULTISAMPLE       = 0x9104;
 	int GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY = 0x9105;
 
 	/** Accepted by the &lt;pname&gt; parameter of GetTexLevelParameter */
-	int GL_TEXTURE_SAMPLES = 0x9106;
+	int GL_TEXTURE_SAMPLES                = 0x9106;
 	int GL_TEXTURE_FIXED_SAMPLE_LOCATIONS = 0x9107;
 
 	/** Returned by the &lt;type&gt; parameter of GetActiveUniform: */
-	int GL_SAMPLER_2D_MULTISAMPLE = 0x9108;
-	int GL_INT_SAMPLER_2D_MULTISAMPLE = 0x9109;
-	int GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE = 0x910A;
-	int GL_SAMPLER_2D_MULTISAMPLE_ARRAY = 0x910B;
-	int GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY = 0x910C;
+	int GL_SAMPLER_2D_MULTISAMPLE                    = 0x9108;
+	int GL_INT_SAMPLER_2D_MULTISAMPLE                = 0x9109;
+	int GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE       = 0x910A;
+	int GL_SAMPLER_2D_MULTISAMPLE_ARRAY              = 0x910B;
+	int GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY          = 0x910C;
 	int GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY = 0x910D;
 
 	void glTexImage2DMultisample(@GLenum int target, @GLsizei int samples, int internalformat,
@@ -217,19 +223,19 @@ public interface GL32 {
 	 * GetProgramiv:
 	 */
 	int GL_GEOMETRY_VERTICES_OUT = 0x8DDA;
-	int GL_GEOMETRY_INPUT_TYPE = 0x8DDB;
-	int GL_GEOMETRY_OUTPUT_TYPE = 0x8DDC;
+	int GL_GEOMETRY_INPUT_TYPE   = 0x8DDB;
+	int GL_GEOMETRY_OUTPUT_TYPE  = 0x8DDC;
 
 	/**
 	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetIntegerv,
 	 * GetFloatv, and GetDoublev:
 	 */
-	int GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS = 0x8C29;
+	int GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS     = 0x8C29;
 	//int GL_MAX_GEOMETRY_VARYING_COMPONENTS = 0x8DDD; -- Missing from 3.2 spec
 	//int GL_MAX_VERTEX_VARYING_COMPONENTS = 0x8DDE; -- Missing from 3.2 spec
-	int GL_MAX_VARYING_COMPONENTS = 0x8B4B;
-	int GL_MAX_GEOMETRY_UNIFORM_COMPONENTS = 0x8DDF;
-	int GL_MAX_GEOMETRY_OUTPUT_VERTICES = 0x8DE0;
+	int GL_MAX_VARYING_COMPONENTS               = 0x8B4B;
+	int GL_MAX_GEOMETRY_UNIFORM_COMPONENTS      = 0x8DDF;
+	int GL_MAX_GEOMETRY_OUTPUT_VERTICES         = 0x8DE0;
 	int GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS = 0x8DE1;
 
 	/**
@@ -237,9 +243,9 @@ public interface GL32 {
 	 * MultiDrawArrays, DrawElements, MultiDrawElements, and
 	 * DrawRangeElements:
 	 */
-	int GL_LINES_ADJACENCY = 0xA;
-	int GL_LINE_STRIP_ADJACENCY = 0xB;
-	int GL_TRIANGLES_ADJACENCY = 0xC;
+	int GL_LINES_ADJACENCY          = 0xA;
+	int GL_LINE_STRIP_ADJACENCY     = 0xB;
+	int GL_TRIANGLES_ADJACENCY      = 0xC;
 	int GL_TRIANGLE_STRIP_ADJACENCY = 0xD;
 
 	/** Returned by CheckFramebufferStatusEXT: */
@@ -249,7 +255,7 @@ public interface GL32 {
 	 * Accepted by the &lt;pname&gt; parameter of GetFramebufferAttachment-
 	 * ParameterivEXT:
 	 */
-	int GL_FRAMEBUFFER_ATTACHMENT_LAYERED = 0x8DA7;
+	int GL_FRAMEBUFFER_ATTACHMENT_LAYERED       = 0x8DA7;
 	int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER = 0x8CD4;
 
 	/**
@@ -269,10 +275,10 @@ public interface GL32 {
 	int GL_MAX_SERVER_WAIT_TIMEOUT = 0x9111;
 
 	/** Accepted as the &lt;pname&gt; parameter of GetSynciv: */
-	int GL_OBJECT_TYPE = 0x9112;
+	int GL_OBJECT_TYPE    = 0x9112;
 	int GL_SYNC_CONDITION = 0x9113;
-	int GL_SYNC_STATUS = 0x9114;
-	int GL_SYNC_FLAGS = 0x9115;
+	int GL_SYNC_STATUS    = 0x9114;
+	int GL_SYNC_FLAGS     = 0x9115;
 
 	/** Returned in &lt;values&gt; for GetSynciv &lt;pname&gt; OBJECT_TYPE: */
 	int GL_SYNC_FENCE = 0x9116;
@@ -282,7 +288,7 @@ public interface GL32 {
 
 	/** Returned in &lt;values&gt; for GetSynciv &lt;pname&gt; SYNC_STATUS: */
 	int GL_UNSIGNALED = 0x9118;
-	int GL_SIGNALED = 0x9119;
+	int GL_SIGNALED   = 0x9119;
 
 	/** Accepted in the &lt;flags&gt; parameter of ClientWaitSync: */
 	int GL_SYNC_FLUSH_COMMANDS_BIT = 0x00000001;
@@ -291,10 +297,10 @@ public interface GL32 {
 	long GL_TIMEOUT_IGNORED = 0xFFFFFFFFFFFFFFFFl;
 
 	/** Returned by ClientWaitSync: */
-	int GL_ALREADY_SIGNALED = 0x911A;
-	int GL_TIMEOUT_EXPIRED = 0x911B;
+	int GL_ALREADY_SIGNALED    = 0x911A;
+	int GL_TIMEOUT_EXPIRED     = 0x911B;
 	int GL_CONDITION_SATISFIED = 0x911C;
-	int GL_WAIT_FAILED = 0x911D;
+	int GL_WAIT_FAILED         = 0x911D;
 
 	@PointerWrapper("GLsync")
 	GLSync glFenceSync(@GLenum int condition, @GLbitfield int flags);
