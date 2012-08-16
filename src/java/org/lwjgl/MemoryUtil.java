@@ -33,10 +33,7 @@ package org.lwjgl;
 
 import java.lang.reflect.Field;
 import java.nio.*;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.nio.charset.CoderResult;
+import java.nio.charset.*;
 
 /**
  * [INTERNAL USE ONLY]
@@ -287,6 +284,60 @@ public final class MemoryUtil {
 		}
 		out.flip();
 		return out;
+	}
+
+	public static String decodeASCII(final ByteBuffer buffer) {
+		return decode(buffer, ascii);
+	}
+
+	public static String decodeUTF8(final ByteBuffer buffer) {
+		return decode(buffer, utf8);
+	}
+
+	public static String decodeUTF16(final ByteBuffer buffer) {
+		return decode(buffer, utf16);
+	}
+
+	private static String decode(final ByteBuffer buffer, final Charset charset) {
+		if ( buffer == null )
+			return null;
+
+		return decodeImpl(buffer, charset);
+	}
+
+	private static String decodeImpl(final ByteBuffer in, final Charset charset) {
+		final CharsetDecoder decoder = charset.newDecoder(); // decoders are not thread-safe, create a new one on every call
+
+		int n = (int)(in.remaining() * decoder.averageCharsPerByte());
+		CharBuffer out = BufferUtils.createCharBuffer(n);
+
+		if ( (n == 0) && (in.remaining() == 0) )
+			return "";
+
+		decoder.reset();
+		for (; ; ) {
+			CoderResult cr = in.hasRemaining() ? decoder.decode(in, out, true) : CoderResult.UNDERFLOW;
+			if ( cr.isUnderflow() )
+				cr = decoder.flush(out);
+
+			if ( cr.isUnderflow() )
+				break;
+			if ( cr.isOverflow() ) {
+				n = 2 * n + 1;    // Ensure progress; n might be 0!
+				CharBuffer o = BufferUtils.createCharBuffer(n);
+				out.flip();
+				o.put(out);
+				out = o;
+				continue;
+			}
+			try {
+				cr.throwException();
+			} catch (CharacterCodingException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		out.flip();
+		return out.toString();
 	}
 
 	/** A null-terminated CharSequence. */

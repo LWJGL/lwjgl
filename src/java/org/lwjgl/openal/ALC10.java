@@ -152,12 +152,11 @@ public final class ALC10 {
 	 * @return String property from device
 	 */
 	public static String alcGetString(ALCdevice device, int pname) {
-		String result;
-		result = nalcGetString(getDevice(device), pname);
+		ByteBuffer buffer = nalcGetString(getDevice(device), pname);
 		Util.checkALCError(device);
-		return result;
+		return MemoryUtil.decodeUTF8(buffer);
 	}
-	static native String nalcGetString(long device, int pname);
+	static native ByteBuffer nalcGetString(long device, int pname);
 
 	/**
 	 * The application can query ALC for information using an integer query function.
@@ -199,7 +198,7 @@ public final class ALC10 {
 	 * @return opened device, or null
 	 */
 	public static ALCdevice alcOpenDevice(String devicename) {
-		ByteBuffer buffer = MemoryUtil.encodeASCII(devicename);
+		ByteBuffer buffer = MemoryUtil.encodeUTF8(devicename);
 		long device_address = nalcOpenDevice(MemoryUtil.getAddressSafe(buffer));
 		if(device_address != 0) {
 			ALCdevice device = new ALCdevice(device_address);

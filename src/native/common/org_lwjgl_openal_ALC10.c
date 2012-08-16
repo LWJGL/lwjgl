@@ -81,8 +81,8 @@ static alcGetEnumValuePROC alcGetEnumValue;
  * C Specification:
  * ALubyte * alcGetString(ALCdevice *device, ALenum token);
  */
-static jstring JNICALL Java_org_lwjgl_openal_ALC10_nalcGetString (JNIEnv *env, jclass clazz, jlong deviceaddress, jint token) {
-	const char* alcString = (const char*) alcGetString((ALCdevice*)((intptr_t)deviceaddress), (ALenum) token);
+static jobject JNICALL Java_org_lwjgl_openal_ALC10_nalcGetString (JNIEnv *env, jclass clazz, jlong deviceaddress, jint token) {
+	char* alcString = (char*) alcGetString((ALCdevice*)((intptr_t)deviceaddress), (ALenum) token);
 	int length;
 	int i=1;
 
@@ -111,7 +111,8 @@ static jstring JNICALL Java_org_lwjgl_openal_ALC10_nalcGetString (JNIEnv *env, j
 		default:	// e.g. ALC_DEFAULT_ALL_DEVICES_SPECIFIER
 			length = strlen(alcString);
 	}
-	return NewStringNativeWithLength(env, alcString, length);
+	//return NewStringNativeWithLength(env, alcString, length);
+	return safeNewBuffer(env, alcString, length);
 }
 
 /**
@@ -263,7 +264,7 @@ extern "C" {
 #endif
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC10_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
-		{"nalcGetString", "(JI)Ljava/lang/String;", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetString, "alcGetString", (void*)&alcGetString, false},
+		{"nalcGetString", "(JI)Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetString, "alcGetString", (void*)&alcGetString, false},
 		{"nalcGetIntegerv", "(JIIJ)V", (void*)&Java_org_lwjgl_openal_ALC10_nalcGetIntegerv, "alcGetIntegerv", (void*)&alcGetIntegerv, false},
 		{"nalcOpenDevice", "(J)J", (void*)&Java_org_lwjgl_openal_ALC10_nalcOpenDevice, "alcOpenDevice", (void*)&alcOpenDevice, false},
 		{"nalcCloseDevice", "(J)Z", (void*)&Java_org_lwjgl_openal_ALC10_nalcCloseDevice, "alcCloseDevice", (void*)&alcCloseDevice, false},
