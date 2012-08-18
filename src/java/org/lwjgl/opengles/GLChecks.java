@@ -59,7 +59,7 @@ class GLChecks {
 	}
 
 	static int getBufferObjectSize(int buffer_enum) {
-		return glGetBufferParameter(buffer_enum, GLES20.GL_BUFFER_SIZE);
+		return glGetBufferParameteri(buffer_enum, GLES20.GL_BUFFER_SIZE);
 	}
 
 	/** Helper method to ensure that array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */

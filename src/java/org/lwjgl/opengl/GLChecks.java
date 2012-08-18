@@ -66,15 +66,15 @@ class GLChecks {
 	}
 
 	static int getBufferObjectSize(ContextCapabilities caps, int buffer_enum) {
-		return glGetBufferParameter(buffer_enum, GL_BUFFER_SIZE);
+		return glGetBufferParameteri(buffer_enum, GL_BUFFER_SIZE);
 	}
 
 	static int getBufferObjectSizeARB(ContextCapabilities caps, int buffer_enum) {
-		return glGetBufferParameterARB(buffer_enum, GL_BUFFER_SIZE_ARB);
+		return glGetBufferParameteriARB(buffer_enum, GL_BUFFER_SIZE_ARB);
 	}
 
 	static int getBufferObjectSizeATI(ContextCapabilities caps, int buffer) {
-		return glGetObjectBufferATI(buffer, GL_OBJECT_BUFFER_SIZE_ATI);
+		return glGetObjectBufferiATI(buffer, GL_OBJECT_BUFFER_SIZE_ATI);
 	}
 
 	static int getNamedBufferObjectSize(ContextCapabilities caps, int buffer) {

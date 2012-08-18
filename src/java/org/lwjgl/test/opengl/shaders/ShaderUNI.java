@@ -75,7 +75,7 @@ final class ShaderUNI extends Shader {
 
 		printShaderObjectInfoLog(file, shaderID);
 
-		if ( glGetShader(shaderID, GL_COMPILE_STATUS) == GL_FALSE )
+		if ( glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE )
 			ShadersTest.kill("A compilation error occured in a vertex shader.");
 
 		programID = glCreateProgram();
@@ -85,14 +85,14 @@ final class ShaderUNI extends Shader {
 
 		printShaderProgramInfoLog(programID);
 
-		if ( glGetProgram(programID, GL_LINK_STATUS) == GL_FALSE )
+		if ( glGetProgrami(programID, GL_LINK_STATUS) == GL_FALSE )
 			ShadersTest.kill("A linking error occured in a shader program.");
 
 		final String[] uniformNames = { "uniformA", "uniformB" };
 
 		// Get uniform block index and data size
 		final int blockIndex = glGetUniformBlockIndex(programID, "test");
-		final int blockSize = glGetActiveUniformBlock(programID, blockIndex, GL_UNIFORM_BLOCK_DATA_SIZE);
+		final int blockSize = glGetActiveUniformBlocki(programID, blockIndex, GL_UNIFORM_BLOCK_DATA_SIZE);
 
 		System.out.println("blockSize = " + blockSize);
 

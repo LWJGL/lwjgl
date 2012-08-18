@@ -75,7 +75,7 @@ public class Shader implements GLObject {
 
 		glCompileShader(ID);
 
-		if ( glGetShader(ID, GL_COMPILE_STATUS) == GL_FALSE ) {
+		if ( glGetShaderi(ID, GL_COMPILE_STATUS) == GL_FALSE ) {
 			printInfoLog();
 			destroy();
 			throw new RuntimeException("A compilation error occured in a shader.");
@@ -86,7 +86,7 @@ public class Shader implements GLObject {
 		if ( ID == 0 )
 			throw new IllegalStateException("The shader has not been created");
 
-		final int logLength = glGetShader(ID, GL_INFO_LOG_LENGTH);
+		final int logLength = glGetShaderi(ID, GL_INFO_LOG_LENGTH);
 		if ( logLength <= 1 )
 			return;
 

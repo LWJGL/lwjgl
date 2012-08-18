@@ -76,7 +76,7 @@ public interface ARB_shader_subroutine {
 	@Reuse("GL40")
 	@Alternate("glGetActiveSubroutineUniformiv")
 	@GLreturn("values")
-	@StripPostfix("values")
+	@StripPostfix(value = "values", postfix = "v")
 	void glGetActiveSubroutineUniformiv2(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLenum int pname,
 	                                     @OutParameter IntBuffer values);
 
@@ -125,7 +125,7 @@ public interface ARB_shader_subroutine {
 	@Reuse("GL40")
 	@Alternate("glGetProgramStageiv")
 	@GLreturn("values")
-	@StripPostfix("values")
+	@StripPostfix(value = "values", postfix = "v")
 	void glGetProgramStageiv2(@GLuint int program, @GLenum int shadertype, @GLenum int pname, @OutParameter IntBuffer values);
 
 }

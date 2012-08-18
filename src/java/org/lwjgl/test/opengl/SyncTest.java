@@ -130,7 +130,7 @@ public final class SyncTest {
 				System.out.println("Unexpected wait status: 0x" + Integer.toHexString(status));
 		}
 
-		System.out.println("Sync Status: " + (glGetSync(sync, GL_SYNC_STATUS) == GL_UNSIGNALED ? "UNSIGNALED" : "SIGNALED"));
+		System.out.println("Sync Status: " + (glGetSynci(sync, GL_SYNC_STATUS) == GL_UNSIGNALED ? "UNSIGNALED" : "SIGNALED"));
 
 		glDeleteSync(sync);
 

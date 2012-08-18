@@ -14,7 +14,7 @@ public class ShaderProgram implements GLObject {
 
 		glLinkProgram(ID);
 
-		if ( glGetProgram(ID, GL_LINK_STATUS) == GL_FALSE ) {
+		if ( glGetProgrami(ID, GL_LINK_STATUS) == GL_FALSE ) {
 			printInfoLog();
 			destroy();
 			throw new RuntimeException("Failed to link a Shader Program: " + ID);
@@ -24,7 +24,7 @@ public class ShaderProgram implements GLObject {
 	public void validate() {
 		glValidateProgram(ID);
 
-		final boolean error = glGetProgram(ID, GL_VALIDATE_STATUS) == GL_FALSE;
+		final boolean error = glGetProgrami(ID, GL_VALIDATE_STATUS) == GL_FALSE;
 
 		if ( error ) {
 			printInfoLog();
@@ -67,7 +67,7 @@ public class ShaderProgram implements GLObject {
 	}
 
 	private void printInfoLog() {
-		final int logLength = glGetProgram(ID, GL_INFO_LOG_LENGTH);
+		final int logLength = glGetProgrami(ID, GL_INFO_LOG_LENGTH);
 
 		System.out.println(logLength);
 		if ( logLength <= 1 )

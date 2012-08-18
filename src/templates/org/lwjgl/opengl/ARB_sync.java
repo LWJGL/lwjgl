@@ -109,7 +109,7 @@ public interface ARB_sync {
 	@Reuse("GL32")
 	@Alternate("glGetSynciv")
 	@GLreturn("values")
-	@StripPostfix("values")
+	@StripPostfix(value = "values", postfix = "v")
 	void glGetSynciv2(@PointerWrapper("GLsync") GLSync sync, @GLenum int pname, @Constant("1") @GLsizei int bufSize,
 	                  @OutParameter @GLsizei @Constant("0L") IntBuffer length,
 	                  @OutParameter IntBuffer values);

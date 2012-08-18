@@ -394,8 +394,8 @@ public final class SpriteShootout {
 			                      "     gl_FragColor = texture2D(COLOR_MAP, gl_PointCoord);\n" +
 			                      "}");
 			glCompileShader(fshID);
-			if ( glGetShader(fshID, GL_COMPILE_STATUS) == GL_FALSE ) {
-				System.out.println(glGetShaderInfoLog(fshID, glGetShader(fshID, GL_INFO_LOG_LENGTH)));
+			if ( glGetShaderi(fshID, GL_COMPILE_STATUS) == GL_FALSE ) {
+				System.out.println(glGetShaderInfoLog(fshID, glGetShaderi(fshID, GL_INFO_LOG_LENGTH)));
 				throw new RuntimeException("Failed to compile fragment shader.");
 			}
 
@@ -403,8 +403,8 @@ public final class SpriteShootout {
 			glAttachShader(progID, vshID);
 			glAttachShader(progID, fshID);
 			glLinkProgram(progID);
-			if ( glGetProgram(progID, GL_LINK_STATUS) == GL_FALSE ) {
-				System.out.println(glGetProgramInfoLog(progID, glGetProgram(progID, GL_INFO_LOG_LENGTH)));
+			if ( glGetProgrami(progID, GL_LINK_STATUS) == GL_FALSE ) {
+				System.out.println(glGetProgramInfoLog(progID, glGetProgrami(progID, GL_INFO_LOG_LENGTH)));
 				throw new RuntimeException("Failed to link shader program.");
 			}
 
@@ -491,8 +491,8 @@ public final class SpriteShootout {
 			                      "     gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n" +
 			                      "}");
 			glCompileShader(vshID);
-			if ( glGetShader(vshID, GL_COMPILE_STATUS) == GL_FALSE ) {
-				System.out.println(glGetShaderInfoLog(vshID, glGetShader(vshID, GL_INFO_LOG_LENGTH)));
+			if ( glGetShaderi(vshID, GL_COMPILE_STATUS) == GL_FALSE ) {
+				System.out.println(glGetShaderInfoLog(vshID, glGetShaderi(vshID, GL_INFO_LOG_LENGTH)));
 				throw new RuntimeException("Failed to compile vertex shader.");
 			}
 
@@ -635,8 +635,8 @@ public final class SpriteShootout {
 			                      "     gl_Position = vec4(animC, anim.zw);\n" +
 			                      "}");
 			glCompileShader(vshID);
-			if ( glGetShader(vshID, GL_COMPILE_STATUS) == GL_FALSE ) {
-				System.out.println(glGetShaderInfoLog(vshID, glGetShader(vshID, GL_INFO_LOG_LENGTH)));
+			if ( glGetShaderi(vshID, GL_COMPILE_STATUS) == GL_FALSE ) {
+				System.out.println(glGetShaderInfoLog(vshID, glGetShaderi(vshID, GL_INFO_LOG_LENGTH)));
 				throw new RuntimeException("Failed to compile vertex shader.");
 			}
 
@@ -644,8 +644,8 @@ public final class SpriteShootout {
 			glAttachShader(progIDTF, vshID);
 			glTransformFeedbackVaryings(progIDTF, new CharSequence[] { "gl_Position" }, GL_SEPARATE_ATTRIBS);
 			glLinkProgram(progIDTF);
-			if ( glGetProgram(progIDTF, GL_LINK_STATUS) == GL_FALSE ) {
-				System.out.println(glGetProgramInfoLog(progIDTF, glGetProgram(progIDTF, GL_INFO_LOG_LENGTH)));
+			if ( glGetProgrami(progIDTF, GL_LINK_STATUS) == GL_FALSE ) {
+				System.out.println(glGetProgramInfoLog(progIDTF, glGetProgrami(progIDTF, GL_INFO_LOG_LENGTH)));
 				throw new RuntimeException("Failed to link shader program.");
 			}
 
@@ -663,8 +663,8 @@ public final class SpriteShootout {
 			                           "     gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n" +
 			                           "}");
 			glCompileShader(this.vshID);
-			if ( glGetShader(this.vshID, GL_COMPILE_STATUS) == GL_FALSE ) {
-				System.out.println(glGetShaderInfoLog(this.vshID, glGetShader(this.vshID, GL_INFO_LOG_LENGTH)));
+			if ( glGetShaderi(this.vshID, GL_COMPILE_STATUS) == GL_FALSE ) {
+				System.out.println(glGetShaderInfoLog(this.vshID, glGetShaderi(this.vshID, GL_INFO_LOG_LENGTH)));
 				throw new RuntimeException("Failed to compile vertex shader.");
 			}
 
