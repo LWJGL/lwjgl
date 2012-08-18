@@ -72,7 +72,7 @@ public interface ARB_framebuffer_no_attachments {
 	@Reuse("GL43")
 	@Alternate("glGetFramebufferParameteriv")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetFramebufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@Dependent("GL_EXT_direct_state_access")

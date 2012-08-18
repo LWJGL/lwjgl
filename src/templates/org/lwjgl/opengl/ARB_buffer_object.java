@@ -144,7 +144,7 @@ public interface ARB_buffer_object {
 
 	@Alternate("glGetBufferParameterivARB")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetBufferParameterivARB2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("pointer")

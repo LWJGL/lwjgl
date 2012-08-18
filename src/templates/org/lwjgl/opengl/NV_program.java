@@ -82,13 +82,13 @@ public interface NV_program {
 
 	@Alternate("glGetProgramivNV")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetProgramivNV2(@GLuint int programID, @GLenum int parameterName, @OutParameter @GLint IntBuffer params);
 
 	void glGetProgramStringNV(@GLuint int programID, @GLenum int parameterName, @OutParameter @Check @GLubyte Buffer paramString);
 
 	@Alternate("glGetProgramStringNV")
-	@Code("\t\tint programLength = glGetProgramNV(programID, GL_PROGRAM_LENGTH_NV);")
+	@Code("\t\tint programLength = glGetProgramiNV(programID, GL_PROGRAM_LENGTH_NV);")
 	@GLreturn(value="paramString", maxLength = "programLength", forceMaxLength = true)
 	void glGetProgramStringNV2(@GLuint int programID, @GLenum int parameterName, @OutParameter @GLchar ByteBuffer paramString);
 

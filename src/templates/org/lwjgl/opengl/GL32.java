@@ -59,7 +59,7 @@ public interface GL32 {
 
 	@Alternate("glGetBufferParameteri64v")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetBufferParameteri64v2(@GLenum int target, @GLenum int pname, @OutParameter LongBuffer params);
 
 	// ---------------------------------------------------------------------
@@ -338,7 +338,7 @@ public interface GL32 {
 
 	@Alternate("glGetSynciv")
 	@GLreturn("values")
-	@StripPostfix("values")
+	@StripPostfix(value = "values", postfix = "v")
 	void glGetSynciv2(@PointerWrapper("GLsync") GLSync sync, @GLenum int pname, @Constant("1") @GLsizei int bufSize,
 	                  @OutParameter @GLsizei @Constant("0L") IntBuffer length,
 	                  @OutParameter IntBuffer values);

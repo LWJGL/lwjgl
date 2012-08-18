@@ -115,7 +115,7 @@ public interface ARB_shader_subroutine {
 	@Reuse("GL40")
 	@Alternate("glGetUniformSubroutineuiv")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetUniformSubroutineuiv2(@GLenum int shadertype, int location, @OutParameter @GLuint IntBuffer params);
 
 	@Reuse("GL40")

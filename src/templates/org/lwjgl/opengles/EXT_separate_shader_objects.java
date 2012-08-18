@@ -113,7 +113,7 @@ public interface EXT_separate_shader_objects {
 
 	@Alternate("glGetProgramPipelineivEXT")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetProgramPipelineivEXT2(@GLuint int pipeline, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glProgramUniform1iEXT(@GLuint int program, int location, int v0);

@@ -211,7 +211,7 @@ public interface GL33 {
 
 	@Alternate("glGetQueryObjecti64v")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetQueryObjecti64v2(@GLuint int id, @GLenum int pname, @OutParameter @GLint64 LongBuffer params);
 
 	@StripPostfix("params")
@@ -219,7 +219,7 @@ public interface GL33 {
 
 	@Alternate("glGetQueryObjectui64v")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetQueryObjectui64v2(@GLuint int id, @GLenum int pname, @OutParameter @GLuint64 LongBuffer params);
 
 	// --------------------------------------------------------------------

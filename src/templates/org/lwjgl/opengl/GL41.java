@@ -188,7 +188,7 @@ public interface GL41 {
 
 	@Alternate("glGetProgramPipelineiv")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetProgramPipelineiv2(@GLuint int pipeline, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glProgramUniform1i(@GLuint int program, int location, int v0);

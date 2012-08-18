@@ -173,13 +173,13 @@ public interface ARB_program {
 
 	@Alternate("glGetProgramivARB")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetProgramivARB2(@GLenum int target, @GLenum int parameterName, @OutParameter IntBuffer params);
 
 	void glGetProgramStringARB(@GLenum int target, @GLenum int parameterName, @OutParameter @Check @GLbyte Buffer paramString);
 
 	@Alternate("glGetProgramStringARB")
-	@Code("\t\tint programLength = glGetProgramARB(target, GL_PROGRAM_LENGTH_ARB);")
+	@Code("\t\tint programLength = glGetProgramiARB(target, GL_PROGRAM_LENGTH_ARB);")
 	@GLreturn(value="paramString", maxLength = "programLength", forceMaxLength = true)
 	void glGetProgramStringARB2(@GLenum int target, @GLenum int parameterName, @OutParameter @GLchar ByteBuffer paramString);
 

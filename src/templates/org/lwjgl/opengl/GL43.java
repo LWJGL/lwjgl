@@ -393,7 +393,7 @@ public interface GL43 {
 
 	@Alternate("glGetFramebufferParameteriv")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetFramebufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	// -----------------------------------------------------------------------------
@@ -536,7 +536,7 @@ public interface GL43 {
 
 	@Alternate("glGetInternalformati64v")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetInternalformati64v2(@GLenum int target, @GLenum int internalformat,
 	                              @GLenum int pname, @Constant("1") @GLsizei int bufSize, @OutParameter @GLint64 LongBuffer params);
 
@@ -658,7 +658,7 @@ public interface GL43 {
 
 	@Alternate("glGetProgramInterfaceiv")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetProgramInterfaceiv2(@GLuint int program, @GLenum int programInterface,
 	                              @GLenum int pname, @OutParameter IntBuffer params);
 

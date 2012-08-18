@@ -75,7 +75,7 @@ public interface ATI_vertex_array_object {
 
 	@Alternate("glGetObjectBufferivATI")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetObjectBufferivATI2(@GLuint int buffer, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glFreeObjectBufferATI(@GLuint int buffer);

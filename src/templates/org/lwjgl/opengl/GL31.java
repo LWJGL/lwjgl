@@ -253,7 +253,7 @@ public interface GL31 {
 
 	@Alternate("glGetActiveUniformsiv")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetActiveUniformsiv(@GLuint int program, @Constant("1") @GLsizei int uniformCount,
 	                           @Constant(value = "MemoryUtil.getAddress(params.put(1, uniformIndex), 1)", keepParam = true) int uniformIndex, // Reuse params buffer
 	                           @GLenum int pname,
@@ -282,7 +282,7 @@ public interface GL31 {
 
 	@Alternate("glGetActiveUniformBlockiv")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetActiveUniformBlockiv2(@GLuint int program, @GLuint int uniformBlockIndex, @GLenum int pname,
 	                                @OutParameter @GLint IntBuffer params);
 

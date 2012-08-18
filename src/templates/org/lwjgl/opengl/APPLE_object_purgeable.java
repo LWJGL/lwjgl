@@ -75,7 +75,7 @@ public interface APPLE_object_purgeable {
 
 	@Alternate("glGetObjectParameterivAPPLE")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetObjectParameterivAPPLE2(@GLenum int objectType, @GLuint int name, @GLenum int pname, @OutParameter IntBuffer params);
 
 }

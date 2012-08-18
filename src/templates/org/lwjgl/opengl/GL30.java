@@ -543,7 +543,7 @@ public interface GL30 {
 
 	@Alternate("glGetRenderbufferParameteriv")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetRenderbufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	boolean glIsFramebuffer(@GLuint int framebuffer);
@@ -577,7 +577,7 @@ public interface GL30 {
 
 	@Alternate("glGetFramebufferAttachmentParameteriv")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetFramebufferAttachmentParameteriv2(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGenerateMipmap(@GLenum int target);

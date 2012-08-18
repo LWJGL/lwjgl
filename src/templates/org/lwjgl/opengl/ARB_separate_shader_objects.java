@@ -134,7 +134,7 @@ public interface ARB_separate_shader_objects {
 	@Reuse("GL41")
 	@Alternate("glGetProgramPipelineiv")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetProgramPipelineiv2(@GLuint int pipeline, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@Reuse("GL41")

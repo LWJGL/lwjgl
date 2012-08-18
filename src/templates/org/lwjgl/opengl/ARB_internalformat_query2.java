@@ -180,7 +180,7 @@ public interface ARB_internalformat_query2 {
 	@Reuse("GL43")
 	@Alternate("glGetInternalformati64v")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetInternalformati64v2(@GLenum int target, @GLenum int internalformat,
 	                              @GLenum int pname, @Constant("1") @GLsizei int bufSize, @OutParameter @GLint64 LongBuffer params);
 

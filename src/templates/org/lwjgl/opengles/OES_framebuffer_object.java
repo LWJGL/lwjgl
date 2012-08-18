@@ -144,7 +144,7 @@ public interface OES_framebuffer_object {
 
 	@Alternate("glGetRenderbufferParameterivOES")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetRenderbufferParameterivOES2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	boolean glIsFramebufferOES(@GLuint int framebuffer);
@@ -174,7 +174,7 @@ public interface OES_framebuffer_object {
 
 	@Alternate("glGetFramebufferAttachmentParameterivOES")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetFramebufferAttachmentParameterivOES2(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGenerateMipmapOES(@GLenum int target);

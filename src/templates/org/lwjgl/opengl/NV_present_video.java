@@ -86,7 +86,7 @@ public interface NV_present_video {
 
 	@Alternate("glGetVideoivNV")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetVideoivNV2(@GLuint int video_slot, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -94,7 +94,7 @@ public interface NV_present_video {
 
 	@Alternate("glGetVideouivNV")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetVideouivNV2(@GLuint int video_slot, @GLenum int pname, @OutParameter @GLuint IntBuffer params);
 
 	@StripPostfix("params")

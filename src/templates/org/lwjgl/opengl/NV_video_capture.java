@@ -145,7 +145,7 @@ public interface NV_video_capture {
 
 	@Alternate("glGetVideoCaptureivNV")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetVideoCaptureivNV2(@GLuint int video_capture_slot, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")

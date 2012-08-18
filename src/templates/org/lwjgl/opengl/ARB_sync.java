@@ -97,7 +97,7 @@ public interface ARB_sync {
 	@Reuse("GL32")
 	@Alternate("glGetInteger64v")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetInteger64v2(@GLenum int pname, @OutParameter @GLint64 LongBuffer params);
 
 	@Reuse("GL32")

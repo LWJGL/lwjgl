@@ -413,7 +413,7 @@ public interface GLES30 {
 
 	@Alternate("glGetQueryiv")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetQueryiv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -662,7 +662,7 @@ public interface GLES30 {
 
 	@Alternate("glGetActiveUniformsiv")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetActiveUniformsiv(@GLuint int program, @Constant("1") @GLsizei int uniformCount,
 	                           @Constant(value = "MemoryUtil.getAddress(params.put(1, uniformIndex), 1)", keepParam = true) int uniformIndex, // Reuse params buffer
 	                           @GLenum int pname,
@@ -681,7 +681,7 @@ public interface GLES30 {
 
 	@Alternate("glGetActiveUniformBlockiv")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetActiveUniformBlockiv2(@GLuint int program, @GLuint int uniformBlockIndex, @GLenum int pname,
 	                                @OutParameter @GLint IntBuffer params);
 
@@ -742,7 +742,7 @@ public interface GLES30 {
 
 	@Alternate("glGetSynciv")
 	@GLreturn("values")
-	@StripPostfix("values")
+	@StripPostfix(value = "values", postfix = "v")
 	void glGetSynciv2(@PointerWrapper("GLsync") GLSync sync, @GLenum int pname, @Constant("1") @GLsizei int bufSize,
 	                  @OutParameter @GLsizei @Constant("0L") IntBuffer length,
 	                  @OutParameter IntBuffer values);
@@ -752,7 +752,7 @@ public interface GLES30 {
 
 	@Alternate("glGetBufferParameteri64v")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetBufferParameteri64v2(@GLenum int target, @GLenum int pname, @OutParameter LongBuffer params);
 
 	void glGenSamplers(@AutoSize("samplers") @GLsizei int count, @OutParameter @GLuint IntBuffer samplers);

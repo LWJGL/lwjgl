@@ -81,7 +81,7 @@ public interface ARB_occlusion_query {
 
 	@Alternate("glGetQueryivARB")
 	@GLreturn("params")
-	@StripPostfix("params")
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetQueryivARB2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
