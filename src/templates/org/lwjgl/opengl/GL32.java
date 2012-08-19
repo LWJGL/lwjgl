@@ -57,10 +57,18 @@ public interface GL32 {
 	@StripPostfix("params")
 	void glGetBufferParameteri64v(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") LongBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetBufferParameteri64} instead. */
+	@Alternate("glGetBufferParameteri64v")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GL32", method = "glGetBufferParameteri64")
+	@Deprecated
+	void glGetBufferParameteri64v2(@GLenum int target, @GLenum int pname, @OutParameter LongBuffer params);
+
 	@Alternate("glGetBufferParameteri64v")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetBufferParameteri64v2(@GLenum int target, @GLenum int pname, @OutParameter LongBuffer params);
+	void glGetBufferParameteri64v3(@GLenum int target, @GLenum int pname, @OutParameter LongBuffer params);
 
 	// ---------------------------------------------------------------------
 	// ----------------------[ ARB_vertex_array_bgra ]----------------------
@@ -336,10 +344,20 @@ public interface GL32 {
 	                 @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
 	                 @OutParameter IntBuffer values);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetSynci} instead. */
+	@Alternate("glGetSynciv")
+	@GLreturn("values")
+	@StripPostfix("values")
+	@Reuse(value = "GL32", method = "glGetSynci")
+	@Deprecated
+	void glGetSynciv2(@PointerWrapper("GLsync") GLSync sync, @GLenum int pname, @Constant("1") @GLsizei int bufSize,
+	                  @OutParameter @GLsizei @Constant("0L") IntBuffer length,
+	                  @OutParameter IntBuffer values);
+
 	@Alternate("glGetSynciv")
 	@GLreturn("values")
 	@StripPostfix(value = "values", postfix = "v")
-	void glGetSynciv2(@PointerWrapper("GLsync") GLSync sync, @GLenum int pname, @Constant("1") @GLsizei int bufSize,
+	void glGetSynciv3(@PointerWrapper("GLsync") GLSync sync, @GLenum int pname, @Constant("1") @GLsizei int bufSize,
 	                  @OutParameter @GLsizei @Constant("0L") IntBuffer length,
 	                  @OutParameter IntBuffer values);
 }

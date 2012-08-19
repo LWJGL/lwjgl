@@ -142,10 +142,18 @@ public interface OES_framebuffer_object {
 	@StripPostfix("params")
 	void glGetRenderbufferParameterivOES(@GLenum int target, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetRenderbufferParameteriOES} instead. */
+	@Alternate("glGetRenderbufferParameterivOES")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "OESFramebufferObject", method = "glGetRenderbufferParameteriOES")
+	@Deprecated
+	void glGetRenderbufferParameterivOES2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetRenderbufferParameterivOES")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetRenderbufferParameterivOES2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetRenderbufferParameterivOES3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	boolean glIsFramebufferOES(@GLuint int framebuffer);
 
@@ -172,10 +180,18 @@ public interface OES_framebuffer_object {
 	@StripPostfix("params")
 	void glGetFramebufferAttachmentParameterivOES(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetFramebufferAttachmentParameteriOES} instead. */
+	@Alternate("glGetFramebufferAttachmentParameterivOES")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "OESFramebufferObject", method = "glGetFramebufferAttachmentParameteriOES")
+	@Deprecated
+	void glGetFramebufferAttachmentParameterivOES2(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetFramebufferAttachmentParameterivOES")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetFramebufferAttachmentParameterivOES2(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetFramebufferAttachmentParameterivOES3(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGenerateMipmapOES(@GLenum int target);
 

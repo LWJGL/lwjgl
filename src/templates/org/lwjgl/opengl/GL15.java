@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
-import org.lwjgl.util.generator.Alternate;
 import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.Buffer;
@@ -167,10 +166,18 @@ public interface GL15 {
 	@StripPostfix("params")
 	void glGetBufferParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetBufferParameteri} instead. */
+	@Alternate("glGetBufferParameteriv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GL15", method = "glGetBufferParameteri")
+	@Deprecated
+	void glGetBufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetBufferParameteriv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetBufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetBufferParameteriv3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("pointer")
 	@AutoSize("GLChecks.getBufferObjectSize(caps, target)")
@@ -217,10 +224,18 @@ public interface GL15 {
 	@StripPostfix("params")
 	void glGetQueryiv(@GLenum int target, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetQueryi} instead. */
+	@Alternate("glGetQueryiv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GL15", method = "glGetQueryi")
+	@Deprecated
+	void glGetQueryiv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetQueryiv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetQueryiv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetQueryiv3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
 	void glGetQueryObjectiv(@GLenum int id, @GLenum int pname, @OutParameter @Check("1") @GLint IntBuffer params);

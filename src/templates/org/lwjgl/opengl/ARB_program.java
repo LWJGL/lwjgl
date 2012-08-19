@@ -171,10 +171,18 @@ public interface ARB_program {
 	@StripPostfix("params")
 	void glGetProgramivARB(@GLenum int target, @GLenum int parameterName, @OutParameter @Check("4") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetProgramiARB} instead. */
+	@Alternate("glGetProgramivARB")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "ARBProgram", method = "glGetProgramiARB")
+	@Deprecated
+	void glGetProgramivARB2(@GLenum int target, @GLenum int parameterName, @OutParameter IntBuffer params);
+
 	@Alternate("glGetProgramivARB")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetProgramivARB2(@GLenum int target, @GLenum int parameterName, @OutParameter IntBuffer params);
+	void glGetProgramivARB3(@GLenum int target, @GLenum int parameterName, @OutParameter IntBuffer params);
 
 	void glGetProgramStringARB(@GLenum int target, @GLenum int parameterName, @OutParameter @Check @GLbyte Buffer paramString);
 

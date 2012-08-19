@@ -45,5 +45,5 @@ import java.lang.annotation.Target;
 public @interface Reuse {
 	/** The extension Class that defines the method. */
 	String value();
-
+	String method() default "";
 }

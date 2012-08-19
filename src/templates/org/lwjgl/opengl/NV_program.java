@@ -80,10 +80,18 @@ public interface NV_program {
 	@StripPostfix("params")
 	void glGetProgramivNV(@GLuint int programID, @GLenum int parameterName, @OutParameter @Check @GLint IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetProgramiNV} instead. */
+	@Alternate("glGetProgramivNV")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "NVProgram", method = "glGetProgramiNV")
+	@Deprecated
+	void glGetProgramivNV2(@GLuint int programID, @GLenum int parameterName, @OutParameter @GLint IntBuffer params);
+
 	@Alternate("glGetProgramivNV")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetProgramivNV2(@GLuint int programID, @GLenum int parameterName, @OutParameter @GLint IntBuffer params);
+	void glGetProgramivNV3(@GLuint int programID, @GLenum int parameterName, @OutParameter @GLint IntBuffer params);
 
 	void glGetProgramStringNV(@GLuint int programID, @GLenum int parameterName, @OutParameter @Check @GLubyte Buffer paramString);
 

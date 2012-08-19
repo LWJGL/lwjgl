@@ -225,10 +225,19 @@ public interface GL40 {
 	void glGetActiveSubroutineUniformiv(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLenum int pname,
 	                                    @OutParameter @Check("1") IntBuffer values);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetActiveSubroutineUniformi} instead. */
+	@Alternate("glGetActiveSubroutineUniformiv")
+	@GLreturn("values")
+	@StripPostfix("values")
+	@Reuse(value = "GL40", method = "glGetActiveSubroutineUniformi")
+	@Deprecated
+	void glGetActiveSubroutineUniformiv2(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLenum int pname,
+	                                     @OutParameter IntBuffer values);
+
 	@Alternate("glGetActiveSubroutineUniformiv")
 	@GLreturn("values")
 	@StripPostfix(value = "values", postfix = "v")
-	void glGetActiveSubroutineUniformiv2(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLenum int pname,
+	void glGetActiveSubroutineUniformiv3(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLenum int pname,
 	                                     @OutParameter IntBuffer values);
 
 	void glGetActiveSubroutineUniformName(@GLuint int program, @GLenum int shadertype, @GLuint int index, @AutoSize("name") @GLsizei int bufsize,
@@ -257,18 +266,34 @@ public interface GL40 {
 	@StripPostfix("params")
 	void glGetUniformSubroutineuiv(@GLenum int shadertype, int location, @Check("1") @OutParameter @GLuint IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetUniformSubroutineui} instead. */
+	@Alternate("glGetUniformSubroutineuiv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GL40", method = "glGetUniformSubroutineui")
+	@Deprecated
+	void glGetUniformSubroutineuiv2(@GLenum int shadertype, int location, @OutParameter @GLuint IntBuffer params);
+
 	@Alternate("glGetUniformSubroutineuiv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetUniformSubroutineuiv2(@GLenum int shadertype, int location, @OutParameter @GLuint IntBuffer params);
+	void glGetUniformSubroutineuiv3(@GLenum int shadertype, int location, @OutParameter @GLuint IntBuffer params);
 
 	@StripPostfix("values")
 	void glGetProgramStageiv(@GLuint int program, @GLenum int shadertype, @GLenum int pname, @Check("1") @OutParameter IntBuffer values);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetProgramStagei} instead. */
+	@Alternate("glGetProgramStageiv")
+	@GLreturn("values")
+	@StripPostfix("values")
+	@Reuse(value = "GL40", method = "glGetProgramStagei")
+	@Deprecated
+	void glGetProgramStageiv2(@GLuint int program, @GLenum int shadertype, @GLenum int pname, @OutParameter IntBuffer values);
+
 	@Alternate("glGetProgramStageiv")
 	@GLreturn("values")
 	@StripPostfix(value = "values", postfix = "v")
-	void glGetProgramStageiv2(@GLuint int program, @GLenum int shadertype, @GLenum int pname, @OutParameter IntBuffer values);
+	void glGetProgramStageiv3(@GLuint int program, @GLenum int shadertype, @GLenum int pname, @OutParameter IntBuffer values);
 
 	// -----------------------------------------------------------------------
 	// ----------------------[ ARB_tessellation_shader ]----------------------
@@ -446,9 +471,17 @@ public interface GL40 {
 	@StripPostfix("params")
 	void glGetQueryIndexediv(@GLenum int target, @GLuint int index, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetQueryIndexedi} instead. */
+	@Alternate("glGetQueryIndexediv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GL40", method = "glGetQueryIndexedi")
+	@Deprecated
+	void glGetQueryIndexediv2(@GLenum int target, @GLuint int index, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetQueryIndexediv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetQueryIndexediv2(@GLenum int target, @GLuint int index, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetQueryIndexediv3(@GLenum int target, @GLuint int index, @GLenum int pname, @OutParameter IntBuffer params);
 
 }

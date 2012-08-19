@@ -220,11 +220,19 @@ public interface ARB_framebuffer_object {
 	@StripPostfix("params")
 	void glGetRenderbufferParameteriv(@GLenum int target, @GLenum int pname, @Check("4") @OutParameter IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetRenderbufferParameteri} instead. */
+	@Alternate("glGetRenderbufferParameteriv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "ARBFramebufferObject", method = "glGetRenderbufferParameteri")
+	@Deprecated
+	void glGetRenderbufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Reuse("GL30")
 	@Alternate("glGetRenderbufferParameteriv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetRenderbufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetRenderbufferParameteriv3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@Reuse("GL30")
 	boolean glIsFramebuffer(@GLuint int framebuffer);
@@ -277,11 +285,20 @@ public interface ARB_framebuffer_object {
 	void glGetFramebufferAttachmentParameteriv(@GLenum int target, @GLenum int attachment,
 	                                           @GLenum int pname, @Check("4") @OutParameter IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetFramebufferAttachmentParameteri} instead. */
+	@Alternate("glGetFramebufferAttachmentParameteriv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GL30", method = "glGetFramebufferAttachmentParameteri")
+	@Deprecated
+	void glGetFramebufferAttachmentParameteriv2(@GLenum int target, @GLenum int attachment,
+	                                            @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Reuse("GL30")
 	@Alternate("glGetFramebufferAttachmentParameteriv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetFramebufferAttachmentParameteriv2(@GLenum int target, @GLenum int attachment,
+	void glGetFramebufferAttachmentParameteriv3(@GLenum int target, @GLenum int attachment,
 	                                            @GLenum int pname, @OutParameter IntBuffer params);
 
 	@Reuse("GL30")

@@ -189,18 +189,34 @@ public interface GL20 {
 	@StripPostfix("params")
 	void glGetShaderiv(@GLuint int shader, @GLenum int pname, @OutParameter @Check IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetShaderi} instead. */
+	@Alternate("glGetShaderiv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GL20", method = "glGetShaderi")
+	@Deprecated
+	void glGetShaderiv2(@GLuint int shader, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetShaderiv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetShaderiv2(@GLuint int shader, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetShaderiv3(@GLuint int shader, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
 	void glGetProgramiv(@GLuint int program, @GLenum int pname, @OutParameter @Check IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetProgrami} instead. */
+	@Alternate("glGetProgramiv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GL20", method = "glGetProgrami")
+	@Deprecated
+	void glGetProgramiv2(@GLuint int program, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetProgramiv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetProgramiv2(@GLuint int program, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetProgramiv3(@GLuint int program, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGetShaderInfoLog(@GLuint int shader, @AutoSize("infoLog") @GLsizei int maxLength,
 	                        @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,

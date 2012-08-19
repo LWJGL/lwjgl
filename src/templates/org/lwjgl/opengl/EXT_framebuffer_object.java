@@ -149,10 +149,18 @@ public interface EXT_framebuffer_object {
 	@StripPostfix("params")
 	void glGetRenderbufferParameterivEXT(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetRenderbufferParameteriEXT} instead. */
+	@Alternate("glGetRenderbufferParameterivEXT")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "EXTFramebufferObject", method = "glGetRenderbufferParameteriEXT")
+	@Deprecated
+	void glGetRenderbufferParameterivEXT2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetRenderbufferParameterivEXT")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetRenderbufferParameterivEXT2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetRenderbufferParameterivEXT3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	boolean glIsFramebufferEXT(@GLuint int framebuffer);
 
@@ -183,10 +191,18 @@ public interface EXT_framebuffer_object {
 	@StripPostfix("params")
 	void glGetFramebufferAttachmentParameterivEXT(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetFramebufferAttachmentParameteriEXT} instead. */
+	@Alternate("glGetFramebufferAttachmentParameterivEXT")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "EXTFramebufferObject", method = "glGetFramebufferAttachmentParameteriEXT")
+	@Deprecated
+	void glGetFramebufferAttachmentParameterivEXT2(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetFramebufferAttachmentParameterivEXT")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetFramebufferAttachmentParameterivEXT2(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetFramebufferAttachmentParameterivEXT3(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGenerateMipmapEXT(@GLenum int target);
 }

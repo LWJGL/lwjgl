@@ -142,10 +142,18 @@ public interface ARB_buffer_object {
 	@StripPostfix("params")
 	void glGetBufferParameterivARB(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetBufferParameteriARB} instead. */
+	@Alternate("glGetBufferParameterivARB")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "ARBBufferObject", method = "glGetBufferParameteriARB")
+	@Deprecated
+	void glGetBufferParameterivARB2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetBufferParameterivARB")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetBufferParameterivARB2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetBufferParameterivARB3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("pointer")
 	@AutoSize("GLChecks.getBufferObjectSizeARB(caps, target)")

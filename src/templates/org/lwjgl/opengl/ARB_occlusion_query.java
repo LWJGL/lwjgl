@@ -79,10 +79,18 @@ public interface ARB_occlusion_query {
 	@StripPostfix("params")
 	void glGetQueryivARB(@GLenum int target, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetQueryiARB} instead. */
+	@Alternate("glGetQueryivARB")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "ARBOcclusionQuery", method = "glGetQueryiARB")
+	@Deprecated
+	void glGetQueryivARB2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetQueryivARB")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetQueryivARB2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetQueryivARB3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
 	void glGetQueryObjectivARB(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);

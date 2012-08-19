@@ -699,10 +699,18 @@ public interface GLES20 {
 	@StripPostfix("params")
 	void glGetBufferParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetBufferParameteri} instead. */
+	@Alternate("glGetBufferParameteriv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GLES20", method = "glGetBufferParameteri")
+	@Deprecated
+	void glGetBufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetBufferParameteriv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetBufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetBufferParameteriv3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@NoErrorCheck
 	@GLenum
@@ -719,10 +727,18 @@ public interface GLES20 {
 	@StripPostfix("params")
 	void glGetFramebufferAttachmentParameteriv(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetFramebufferAttachmentParameteri} instead. */
+	@Alternate("glGetFramebufferAttachmentParameteriv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GLES20", method = "glGetFramebufferAttachmentParameteri")
+	@Deprecated
+	void glGetFramebufferAttachmentParameteriv2(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetFramebufferAttachmentParameteriv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetFramebufferAttachmentParameteriv2(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetFramebufferAttachmentParameteriv3(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
 	void glGetIntegerv(@GLenum int pname, @OutParameter @Check("1") IntBuffer params);
@@ -735,10 +751,18 @@ public interface GLES20 {
 	@StripPostfix("params")
 	void glGetProgramiv(@GLuint int program, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetProgrami} instead. */
+	@Alternate("glGetProgramiv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GLES20", method = "glGetProgrami")
+	@Deprecated
+	void glGetProgramiv2(@GLuint int program, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetProgramiv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetProgramiv2(@GLuint int program, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetProgramiv3(@GLuint int program, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGetProgramInfoLog(@GLuint int program, @AutoSize("infoLog") @GLsizei int bufsize,
 	                         @OutParameter @Check(value = "1", canBeNull = true) @GLsizei IntBuffer length,
@@ -753,18 +777,34 @@ public interface GLES20 {
 	@StripPostfix("params")
 	void glGetRenderbufferParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetRenderbufferParameteri} instead. */
+	@Alternate("glGetRenderbufferParameteriv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GLES20", method = "glGetRenderbufferParameteri")
+	@Deprecated
+	void glGetRenderbufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetRenderbufferParameteriv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetRenderbufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetRenderbufferParameteriv3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
 	void glGetShaderiv(@GLuint int shader, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetShaderi} instead. */
+	@Alternate("glGetShaderiv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GLES20", method = "glGetShaderi")
+	@Deprecated
+	void glGetShaderiv2(@GLuint int shader, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetShaderiv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetShaderiv2(@GLuint int shader, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetShaderiv3(@GLuint int shader, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGetShaderInfoLog(@GLuint int shader, @AutoSize("infoLog") @GLsizei int bufsize,
 	                        @OutParameter @Check(value = "1", canBeNull = true) @GLsizei IntBuffer length,

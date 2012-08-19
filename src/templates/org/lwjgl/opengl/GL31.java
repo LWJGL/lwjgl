@@ -251,13 +251,24 @@ public interface GL31 {
 	                           @GLenum int pname,
 	                           @OutParameter @Check("uniformIndices.remaining()") @GLint IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetActiveUniformsi} instead. */
 	@Alternate("glGetActiveUniformsiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix("params")
+	@Reuse(value = "GL31", method = "glGetActiveUniformsi")
+	@Deprecated
 	void glGetActiveUniformsiv(@GLuint int program, @Constant("1") @GLsizei int uniformCount,
 	                           @Constant(value = "MemoryUtil.getAddress(params.put(1, uniformIndex), 1)", keepParam = true) int uniformIndex, // Reuse params buffer
 	                           @GLenum int pname,
 	                           @OutParameter @GLint IntBuffer params);
+
+	@Alternate("glGetActiveUniformsiv")
+	@GLreturn("params")
+	@StripPostfix(value = "params", postfix = "v")
+	void glGetActiveUniformsiv2(@GLuint int program, @Constant("1") @GLsizei int uniformCount,
+	                            @Constant(value = "MemoryUtil.getAddress(params.put(1, uniformIndex), 1)", keepParam = true) int uniformIndex, // Reuse params buffer
+	                            @GLenum int pname,
+	                            @OutParameter @GLint IntBuffer params);
 
 	void glGetActiveUniformName(@GLuint int program, @GLuint int uniformIndex, @AutoSize("uniformName") @GLsizei int bufSize,
 	                            @OutParameter @GLsizei @Check(value = "1", canBeNull = true) IntBuffer length,
@@ -280,10 +291,19 @@ public interface GL31 {
 	void glGetActiveUniformBlockiv(@GLuint int program, @GLuint int uniformBlockIndex, @GLenum int pname,
 	                               @OutParameter @Check(value = "16") @GLint IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetActiveUniformBlocki} instead. */
+	@Alternate("glGetActiveUniformBlockiv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GL31", method = "glGetActiveUniformBlocki")
+	@Deprecated
+	void glGetActiveUniformBlockiv2(@GLuint int program, @GLuint int uniformBlockIndex, @GLenum int pname,
+	                                @OutParameter @GLint IntBuffer params);
+
 	@Alternate("glGetActiveUniformBlockiv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetActiveUniformBlockiv2(@GLuint int program, @GLuint int uniformBlockIndex, @GLenum int pname,
+	void glGetActiveUniformBlockiv3(@GLuint int program, @GLuint int uniformBlockIndex, @GLenum int pname,
 	                                @OutParameter @GLint IntBuffer params);
 
 	void glGetActiveUniformBlockName(@GLuint int program, @GLuint int uniformBlockIndex, @AutoSize("uniformBlockName") @GLsizei int bufSize,

@@ -258,7 +258,7 @@ public class JavaMethodsGenerator {
 			if ( has_result || method.getAnnotation(GLreturn.class) != null )
 				writer.print("return ");
 
-			writer.print(reuse_annotation.value() + "." + method_name + "(");
+			writer.print(reuse_annotation.value() + "." + (reuse_annotation.method().length() > 0 ? reuse_annotation.method() : method_name) + "(");
 			generateParametersJava(writer, method, typeinfos_instance, false, false, mode);
 			writer.println(");\n\t}");
 			return;

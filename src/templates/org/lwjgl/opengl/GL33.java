@@ -209,18 +209,34 @@ public interface GL33 {
 	@StripPostfix("params")
 	void glGetQueryObjecti64v(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") @GLint64 LongBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetQueryObjecti64} instead. */
+	@Alternate("glGetQueryObjecti64v")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GL33", method = "glGetQueryObjecti64")
+	@Deprecated
+	void glGetQueryObjecti64v2(@GLuint int id, @GLenum int pname, @OutParameter @GLint64 LongBuffer params);
+
 	@Alternate("glGetQueryObjecti64v")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetQueryObjecti64v2(@GLuint int id, @GLenum int pname, @OutParameter @GLint64 LongBuffer params);
+	void glGetQueryObjecti64v3(@GLuint int id, @GLenum int pname, @OutParameter @GLint64 LongBuffer params);
 
 	@StripPostfix("params")
 	void glGetQueryObjectui64v(@GLuint int id, @GLenum int pname, @OutParameter @Check("1") @GLuint64 LongBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetQueryObjectui64} instead. */
+	@Alternate("glGetQueryObjectui64v")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GL33", method = "glGetQueryObjectui64")
+	@Deprecated
+	void glGetQueryObjectui64v2(@GLuint int id, @GLenum int pname, @OutParameter @GLuint64 LongBuffer params);
+
 	@Alternate("glGetQueryObjectui64v")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetQueryObjectui64v2(@GLuint int id, @GLenum int pname, @OutParameter @GLuint64 LongBuffer params);
+	void glGetQueryObjectui64v3(@GLuint int id, @GLenum int pname, @OutParameter @GLuint64 LongBuffer params);
 
 	// --------------------------------------------------------------------
 	// ----------------------[ ARB_instanced_arrays ]----------------------

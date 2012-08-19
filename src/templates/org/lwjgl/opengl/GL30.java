@@ -541,10 +541,18 @@ public interface GL30 {
 	@StripPostfix("params")
 	void glGetRenderbufferParameteriv(@GLenum int target, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetRenderbufferParameteri} instead. */
+	@Alternate("glGetRenderbufferParameteriv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GL30", method = "glGetRenderbufferParameteri")
+	@Deprecated
+	void glGetRenderbufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetRenderbufferParameteriv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetRenderbufferParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetRenderbufferParameteriv3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	boolean glIsFramebuffer(@GLuint int framebuffer);
 
@@ -575,10 +583,18 @@ public interface GL30 {
 	@StripPostfix("params")
 	void glGetFramebufferAttachmentParameteriv(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter @Check("4") IntBuffer params);
 
+	/** @deprecated Will be removed in 3.0. Use {@link #glGetFramebufferAttachmentParameteri} instead. */
+	@Alternate("glGetFramebufferAttachmentParameteriv")
+	@GLreturn("params")
+	@StripPostfix("params")
+	@Reuse(value = "GL30", method = "glGetFramebufferAttachmentParameteri")
+	@Deprecated
+	void glGetFramebufferAttachmentParameteriv2(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
+
 	@Alternate("glGetFramebufferAttachmentParameteriv")
 	@GLreturn("params")
 	@StripPostfix(value = "params", postfix = "v")
-	void glGetFramebufferAttachmentParameteriv2(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
+	void glGetFramebufferAttachmentParameteriv3(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGenerateMipmap(@GLenum int target);
 
