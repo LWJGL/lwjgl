@@ -49,8 +49,8 @@ final class WindowsKeyboard {
 	private static final int BUFFER_SIZE = 50;
 
 	private final long hwnd;
-	private final ByteBuffer keyboard_state;
 	private final byte[] key_down_buffer = new byte[Keyboard.KEYBOARD_SIZE];
+	private final byte[] virt_key_down_buffer = new byte[Keyboard.KEYBOARD_SIZE];
 	private final EventQueue event_queue = new EventQueue(Keyboard.EVENT_SIZE);
 	private final ByteBuffer tmp_event = ByteBuffer.allocate(Keyboard.EVENT_SIZE);
 
@@ -65,7 +65,6 @@ final class WindowsKeyboard {
 
 	WindowsKeyboard(long hwnd) throws LWJGLException {
 		this.hwnd = hwnd;
-		keyboard_state = BufferUtils.createByteBuffer(256);
 	}
 	private static native boolean isWindowsNT();
 
@@ -99,6 +98,7 @@ final class WindowsKeyboard {
 	private static native int ToAscii(int wVirtKey, int wScanCode, ByteBuffer lpKeyState, ByteBuffer lpChar, int flags);
 	private static native int GetKeyboardState(ByteBuffer lpKeyState);
 	private static native int GetKeyState(int virt_key);
+	private static native int GetAsyncKeyState(int virt_key);
 
 	private void putEvent(int keycode, byte state, int ch, long millis, boolean repeat) {
 		tmp_event.clear();
@@ -155,13 +155,23 @@ final class WindowsKeyboard {
 		flushRetained();
 		has_retained_event = true;
 		int keycode = WindowsKeycodes.mapVirtualKeyToLWJGLCode(virt_key);
-		if (keycode < key_down_buffer.length)
+		if (keycode < key_down_buffer.length) {
 			key_down_buffer[keycode] = event_state;
+			virt_key_down_buffer[virt_key] = event_state;
+		}
 		retained_key_code = keycode;
 		retained_state = event_state;
 		retained_millis = millis;
 		retained_char = 0;
 		retained_repeat = repeat;
+	}
+
+
+	public void fireLostKeyEvents() {
+		for ( int i = 0; i < virt_key_down_buffer.length; i++ ) {
+			if ( (virt_key_down_buffer[i] & 1) == 1 && (GetAsyncKeyState(i) & 1) == 0 )
+				handleKey(i, 0, false, (byte)0, System.currentTimeMillis(), false);
+		}
 	}
 
 	public void handleChar(int event_char, long millis, boolean repeat) {

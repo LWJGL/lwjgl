@@ -45,6 +45,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsKeyboard_GetKeyState(JNIEnv 
 	return GetKeyState(virt_key);
 }
 
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsKeyboard_GetAsyncKeyState(JNIEnv *env, jclass unused, jint virt_key) {
+	return GetAsyncKeyState(virt_key);
+}
+
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_WindowsKeyboard_MapVirtualKey(JNIEnv *env, jclass unused, jint uCode, jint uMapType) {
 	return MapVirtualKey(uCode, uMapType);
 }

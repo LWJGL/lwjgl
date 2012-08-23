@@ -345,6 +345,9 @@ final class WindowsDisplay implements DisplayImplementation {
 			redoMakeContextCurrent = true;
 			if (Display.isFullscreen())
 				updateClipping();
+
+			if ( keyboard != null )
+				keyboard.fireLostKeyEvents();
 		} else if (Display.isFullscreen()) {
 			showWindow(getHwnd(), SW_SHOWMINNOACTIVE);
 			resetDisplayMode();
@@ -1043,15 +1046,6 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	public int getHeight() {
 		return height;
-	}
-
-	private int firstMouseButtonDown() {
-		for(int i=0; i<Mouse.getButtonCount(); i++) {
-			if(Mouse.isButtonDown(i)) {
-				return i;
-			}
-		}
-		return -1;
 	}
 
 	private native boolean nTrackMouseEvent(long hwnd);
