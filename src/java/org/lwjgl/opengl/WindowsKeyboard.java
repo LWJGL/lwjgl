@@ -155,7 +155,7 @@ final class WindowsKeyboard {
 	}
 
 	public void handleKey(int virt_key, int scan_code, boolean extended, byte event_state, long millis, boolean repeat) {
-		if ( isKeyPressed(event_state) == isKeyPressed(virt_key_down_buffer[virt_key]) )
+		if ( !repeat && isKeyPressed(event_state) == isKeyPressed(virt_key_down_buffer[virt_key]) )
 			return;
 
 		virt_key = translateExtended(virt_key, scan_code, event_state, extended);

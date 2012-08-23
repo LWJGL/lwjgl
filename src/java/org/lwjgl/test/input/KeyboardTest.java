@@ -202,10 +202,7 @@ public class KeyboardTest {
 
       render();
 
-      try {
-        Thread.sleep(0);
-      } catch (Exception e) {
-      }
+      Display.sync(60);
     }
   }
 
