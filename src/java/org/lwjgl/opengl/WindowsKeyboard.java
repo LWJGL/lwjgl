@@ -150,7 +150,14 @@ final class WindowsKeyboard {
 		}
 	}
 
+	private static boolean isKeyPressed(int state) {
+		return (state & 1) == 1;
+	}
+
 	public void handleKey(int virt_key, int scan_code, boolean extended, byte event_state, long millis, boolean repeat) {
+		if ( isKeyPressed(event_state) == isKeyPressed(virt_key_down_buffer[virt_key]) )
+			return;
+
 		virt_key = translateExtended(virt_key, scan_code, event_state, extended);
 		flushRetained();
 		has_retained_event = true;
@@ -169,7 +176,7 @@ final class WindowsKeyboard {
 
 	public void fireLostKeyEvents() {
 		for ( int i = 0; i < virt_key_down_buffer.length; i++ ) {
-			if ( (virt_key_down_buffer[i] & 1) == 1 && (GetAsyncKeyState(i) & 1) == 0 )
+			if ( isKeyPressed(virt_key_down_buffer[i]) && !isKeyPressed(GetAsyncKeyState(i)) )
 				handleKey(i, 0, false, (byte)0, System.currentTimeMillis(), false);
 		}
 	}
