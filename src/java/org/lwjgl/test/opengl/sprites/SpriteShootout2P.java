@@ -48,10 +48,10 @@ import javax.imageio.ImageIO;
 
 import static org.lwjgl.opengl.EXTTransformFeedback.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL32.*;
 
 /**
  * Sprite rendering demo. In this version we're doing the animation
