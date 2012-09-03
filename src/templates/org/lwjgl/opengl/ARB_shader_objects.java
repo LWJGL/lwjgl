@@ -61,11 +61,9 @@ public interface ARB_shader_objects {
 	int GL_SHADER_OBJECT_ARB = 0x8B48;
 
 	/** Returned by the &lt;type&gt; parameter of GetActiveUniformARB: */
-	int GL_FLOAT = 0x1406;
 	int GL_FLOAT_VEC2_ARB = 0x8B50;
 	int GL_FLOAT_VEC3_ARB = 0x8B51;
 	int GL_FLOAT_VEC4_ARB = 0x8B52;
-	int GL_INT = 0x1404;
 	int GL_INT_VEC2_ARB = 0x8B53;
 	int GL_INT_VEC3_ARB = 0x8B54;
 	int GL_INT_VEC4_ARB = 0x8B55;

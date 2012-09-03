@@ -47,9 +47,7 @@ public interface AMD_performance_monitor {
 	 * Returned as a valid value in &lt;data&gt; parameter of
 	 * GetPerfMonitorCounterInfoAMD if &lt;pname&gt; = COUNTER_TYPE_AMD
 	 */
-	int GL_UNSIGNED_INT       = 0x1405,
-		GL_FLOAT              = 0x1406,
-		GL_UNSIGNED_INT64_AMD = 0x8BC2,
+	int GL_UNSIGNED_INT64_AMD = 0x8BC2,
 		GL_PERCENTAGE_AMD     = 0x8BC3;
 
 	/** Accepted by the &lt;pname&gt; parameter of GetPerfMonitorCounterDataAMD */

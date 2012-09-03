@@ -81,7 +81,6 @@ public interface ARB_vertex_shader {
 	int GL_VERTEX_ATTRIB_ARRAY_POINTER_ARB = 0x8645;
 
 	/** Returned by the &lt;type&gt; parameter of GetActiveAttribARB: */
-	int GL_FLOAT = 0x1406;
 	int GL_FLOAT_VEC2_ARB = 0x8B50;
 	int GL_FLOAT_VEC3_ARB = 0x8B51;
 	int GL_FLOAT_VEC4_ARB = 0x8B52;

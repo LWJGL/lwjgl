@@ -32,11 +32,4 @@
 package org.lwjgl.opengles;
 
 public interface OES_texture_float {
-
-	/**
-	 * Accepted by the &lt;type&gt; parameter of TexImage2D, TexSubImage2D,
-	 * TexImage3D, and TexSubImage3D:
-	 */
-	int GL_FLOAT = 0x1406;
-
 }
