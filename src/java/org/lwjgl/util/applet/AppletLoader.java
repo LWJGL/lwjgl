@@ -944,6 +944,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		String minimumVersion = getStringParameter("al_min_jre", "1.5");
 		String javaVersion = System.getProperty("java.version");
 		
+		// remove dash and anything after it (letters) from version string e.g. 1.5.0_01-ea
+		minimumVersion = javaVersion.split("-")[0];
+		javaVersion = minimumVersion.split("-")[0];
+		
 		// split version string into a string arrays
 		String[] jvmVersionData = javaVersion.split("[_\\.]");
 		String[] minVersionData = minimumVersion.split("[_\\.]");
