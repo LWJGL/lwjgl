@@ -119,6 +119,14 @@ public final class GLContext {
 	 * @return The current capabilities instance.
 	 */
 	public static ContextCapabilities getCapabilities() {
+		ContextCapabilities caps = getCapabilitiesImpl();
+		if ( caps == null )
+			throw new RuntimeException("No OpenGL context found in the current thread.");
+
+		return caps;
+	}
+
+	private static ContextCapabilities getCapabilitiesImpl() {
 		CapabilitiesCacheEntry recent_cache_entry = fast_path_cache;
 		// Check owner of cache entry
 		if ( recent_cache_entry.owner == Thread.currentThread() ) {
