@@ -216,7 +216,7 @@ public class Keyboard {
 	private static final int BUFFER_SIZE = 50;
 
 	/** Key names */
-	private static final String[] keyName = new String[255];
+	private static final String[] keyName = new String[KEYBOARD_SIZE];
 	private static final Map<String, Integer> keyMap = new HashMap<String, Integer>(253);
 	private static int counter;
 
