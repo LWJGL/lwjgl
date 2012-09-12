@@ -118,6 +118,7 @@ class Sync {
 				}
 			});
 			
+			timerAccuracyThread.setName("LWJGL Timer");
 			timerAccuracyThread.setDaemon(true);
 			timerAccuracyThread.start();
 		}
