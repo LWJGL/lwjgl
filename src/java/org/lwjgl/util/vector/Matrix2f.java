@@ -333,7 +333,7 @@ public class Matrix2f extends Matrix implements Serializable {
 	 * @return the negated matrix
 	 */
 	public Matrix2f negate(Matrix2f dest) {
-		return negate(this, this);
+		return negate(this, dest);
 	}
 
 	/**

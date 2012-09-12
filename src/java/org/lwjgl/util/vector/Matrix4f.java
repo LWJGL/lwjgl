@@ -814,7 +814,7 @@ public class Matrix4f extends Matrix implements Serializable {
 	 * @return the negated matrix
 	 */
 	public Matrix4f negate(Matrix4f dest) {
-		return negate(this, this);
+		return negate(this, dest);
 	}
 
 	/**

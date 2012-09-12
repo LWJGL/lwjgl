@@ -431,7 +431,7 @@ public class Matrix3f extends Matrix implements Serializable {
 	 * @return the negated matrix
 	 */
 	public Matrix3f negate(Matrix3f dest) {
-		return negate(this, this);
+		return negate(this, dest);
 	}
 
 	/**
