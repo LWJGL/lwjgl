@@ -21,7 +21,7 @@
 	<property name="lwjgl.src.templates.cl" location="${lwjgl.src.templates}/org/lwjgl/opencl"/>
 
 	<property name="openal-template-pattern" value="AL*.java,EFX*.java"/>
-	<property name="opengl-template-pattern" value="GL*.java,ARB*.java,EXT*.java,KHR*.java,AMD*.java,APPLE*.java,ATI*.java,NV*.java,NVX*.java,HP*.java,IBM*.java,SUN*.java,SGIS*.java,GREMEDY*.java"/>
+	<property name="opengl-template-pattern" value="GL*.java,ARB*.java,EXT*.java,KHR*.java,AMD*.java,APPLE*.java,ATI*.java,NV*.java,NVX*.java,HP*.java,IBM*.java,SUN*.java,SGIS*.java,GREMEDY*.java,INTEL*.java"/>
 	<property name="opengles-template-pattern" value="GLES*.java,ARB*.java,EXT*.java,KHR*.java,AMD*.java,ANGLE*.java,APPLE*.java,ARM*.java,DMP*.java,IMG*.java,NV*.java,OES*.java,QCOM*.java,VIV*.java"/>
     <property name="opencl-template-pattern-extensions" value="KHR*.java,EXT*.java,APPLE*.java,AMD*.java,INTEL*.java,NV*.java"/>
     <property name="opencl-template-pattern" value="CL*.java,${opencl-template-pattern-extensions}"/>
