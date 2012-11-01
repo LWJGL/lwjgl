@@ -53,6 +53,8 @@
 
 static NSOpenGLPixelFormat *default_format = nil;
 
+static NSAutoreleasePool *pool;
+
 @implementation MacOSXKeyableWindow
 - (BOOL)canBecomeKeyWindow;
 {
@@ -390,21 +392,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetResizable(JNIEnv 
     [window_info->window setStyleMask:style_mask];
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv *env, jobject this, jobject window_handle) {
-	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-    
-    if (window_info->window != nil) {
-        [window_info->window close];
-    }
-    window_info->window = nil;
-    
-    if (window_info->view != nil) {
-        [window_info->view release];
-    }
-    window_info->view = nil;
-    //[window_info->window release];
-}
-
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetTitle(JNIEnv *env, jobject this, jobject window_handle, jobject title_buffer) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 	const char *title_cstr = (const char *)(*env)->GetDirectBufferAddress(env, title_buffer);
@@ -421,6 +408,8 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
             return NULL;
         }
     }
+	
+	pool = [[NSAutoreleasePool alloc] init];
 
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
     MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
@@ -465,6 +454,22 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
     peer_info->window_info = window_info;
 
     return window_handle;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv *env, jobject this, jobject window_handle) {
+	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
+    
+    if (window_info->window != nil) {
+        [window_info->window close];
+    }
+    window_info->window = nil;
+    
+    if (window_info->view != nil) {
+        [window_info->view release];
+    }
+    window_info->view = nil;
+    //[window_info->window release];
+	[pool drain];
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getJNIVersion
