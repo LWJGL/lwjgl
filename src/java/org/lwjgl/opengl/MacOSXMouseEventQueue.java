@@ -44,13 +44,13 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 
 final class MacOSXMouseEventQueue extends MouseEventQueue {
-	private final IntBuffer delta_buffer = BufferUtils.createIntBuffer(2);
-
-	private boolean skip_event;
-	private static boolean is_grabbed;
+    private IntBuffer delta_buffer = BufferUtils.createIntBuffer(2);
+    
+    private boolean skip_event;
+    private static boolean is_grabbed;
 	
 	MacOSXMouseEventQueue(Component component) {
-		super(component);
+        super(component);
 	}
 
 	public void setGrabbed(boolean grab) {
@@ -96,18 +96,11 @@ final class MacOSXMouseEventQueue extends MouseEventQueue {
 			// If we're going to warp the cursor position, we'll skip the next event to avoid bogus delta values
 			skip_event = isGrabbed();
 		}
-/*		if (isGrabbed()) {
-			Rectangle bounds = getComponent().getBounds();
-			Point location_on_screen = getComponent().getLocationOnScreen();
-			int x = location_on_screen.x + bounds.width/2;
-			int y = location_on_screen.y + bounds.height/2;
-			nWarpCursor(x, y);
-		}*/
 	}
 
 	private static native void getMouseDeltas(IntBuffer delta_buffer);
 
-	private static native void nWarpCursor(int x, int y);
+	public static native void nWarpCursor(int x, int y);
 
-	static native void nGrabMouse(boolean grab);
+	public static native void nGrabMouse(boolean grab);
 }

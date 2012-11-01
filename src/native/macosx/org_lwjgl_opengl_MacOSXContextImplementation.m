@@ -47,7 +47,7 @@
 #import "common_tools.h"
 
 typedef struct {
-	NSOpenGLContext *context;
+    NSOpenGLContext *context;
     MacOSXPeerInfo *peer_info;
 } MacOSXContext;
 
@@ -57,8 +57,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCre
 	MacOSXPeerInfo *peer_info;
 	MacOSXContext *shared_context_info;
 	MacOSXContext *context_info;
-	NSOpenGLContext *context;
-	NSOpenGLContext *shared_context = NULL;
+    NSOpenGLContext *context;
+    NSOpenGLContext *shared_context;
+      printf("nCreate\n");
 	jobject context_handle = newJavaManagedByteBuffer(env, sizeof(MacOSXContext));
 	if (context_handle == NULL) {
 		throwException(env, "Could not create handle buffer");
@@ -67,16 +68,19 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCre
 	peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	if (shared_context_handle != NULL) {
 		shared_context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, shared_context_handle);
-		shared_context = shared_context_info->context;
+        shared_context = shared_context_info->context;
 	}
-	context = [[NSOpenGLContext alloc] initWithFormat:peer_info->pixel_format shareContext:shared_context];
-	if (context == NULL) {
-		throwException(env, "Could not create context");
-		return NULL;
-	}
+    context = [[NSOpenGLContext alloc] initWithFormat:peer_info->pixel_format shareContext:shared_context];
+    if (context == NULL) {
+        throwException(env, "Could not create context");
+        return NULL;
+    }
+    [peer_info->window_info->view setOpenGLContext:context];
+    peer_info->window_info->context = context;
 	context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	context_info->context = context;
+    context_info->context = context;
     context_info->peer_info = peer_info;
+    
 	[pool release];
 	return context_handle;
 }
@@ -84,19 +88,19 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCre
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_getCGLShareGroup
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	CGLContextObj cgl_context = [context_info->context CGLContextObj];
+    MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
+	CGLContextObj cgl_context = [[peer_info->window_info->view openGLContext] CGLContextObj];
 	CGLShareGroupObj share_group = CGLGetShareGroup(cgl_context);
 	[pool release];
-	return share_group;
+	return (jlong)share_group;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSwapBuffers
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	[context_info->context flushBuffer];
-    context_info->peer_info->canDrawGL = true;
+    MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
+	[[peer_info->window_info->view openGLContext] flushBuffer];
+    peer_info->canDrawGL = true;
 	[pool release];
 }
 
@@ -104,37 +108,35 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSwapBu
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nUpdate
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	[context_info->context update];
-    context_info->peer_info->canDrawGL = true;
+    MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
+	[[peer_info->window_info->view openGLContext] update];
+    peer_info->canDrawGL = true;
 	[pool release];
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_clearDrawable
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	[context_info->context clearDrawable];
+    MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
+      printf("clearDrawable\n");
+	[[peer_info->window_info->view openGLContext] clearDrawable];
 	[pool release];
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nReleaseCurrentContext
   (JNIEnv *env, jclass clazz) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+      printf("nReleaseCurrentContexta\n");
 	[NSOpenGLContext clearCurrentContext];
 	[pool release];
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_setView
-  (JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject context_handle) {
+  (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	if (peer_info->window) {
-		[context_info->context setView: peer_info->nsview];
-	} else {
-		[context_info->context setPixelBuffer:peer_info->pbuffer cubeMapFace:0 mipMapLevel:0 currentVirtualScreen:0];
-	}
+    MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+      printf("setView\n");
+    [[peer_info->window_info->view openGLContext] setView: peer_info->window_info->view];
     peer_info->canDrawGL = true;
 	[pool release];
 }
@@ -142,16 +144,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_setView
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nMakeCurrent
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	[context_info->context makeCurrentContext];
+    MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
+      printf("nMakeCurrent\n");
+	[[peer_info->window_info->view openGLContext] makeCurrentContext];
 	[pool release];
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nIsCurrent
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	bool result = context_info->context == [NSOpenGLContext currentContext];
+    MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
+	bool result = [peer_info->window_info->view openGLContext] == [NSOpenGLContext currentContext];
 	[pool release];
 	return result ? JNI_TRUE : JNI_FALSE;
 }
@@ -159,17 +162,18 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nIs
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSetSwapInterval
   (JNIEnv *env, jclass clazz, jobject context_handle, jint int_value) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
+    MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
 	GLint value = int_value;
-	[context_info->context setValues:&value forParameter:NSOpenGLCPSwapInterval];
+	[[peer_info->window_info->view openGLContext] setValues:&value forParameter:NSOpenGLCPSwapInterval];
 	[pool release];
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nDestroy
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	[context_info->context clearDrawable];
-	[context_info->context release];
+    MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
+    printf("nDestroy\n");
+	[[peer_info->window_info->view openGLContext] clearDrawable];
+	[[peer_info->window_info->view openGLContext] release];
 	[pool release];
 }

@@ -47,15 +47,65 @@
 #include <OpenGL/glext.h>
 #include "common_tools.h"
 
+@class NSOpenGLContext, NSOpenGLPixelFormat, MacOSXOpenGLView, MacOSXKeyableWindow;
+
 typedef struct {
-	NSOpenGLPixelFormat *pixel_format;
-	bool window;
+    MacOSXKeyableWindow *window;
+    
+    NSRect display_rect;
+
+    MacOSXOpenGLView *view;
+    NSOpenGLContext *context;
+    
+    // Native objects for Java callbacks
+    jobject jdisplay;
+    jobject jmouse;
+    jobject jkeyboard;
+    jboolean resized;
+    
+    // Cached for window creation
+    NSApplicationPresentationOptions window_options;
+} MacOSXWindowInfo;
+
+@interface MacOSXKeyableWindow : NSWindow
+
+- (BOOL)canBecomeKeyWindow;
+@end
+
+@interface MacOSXOpenGLView : NSView
+{
+    @public
+    MacOSXWindowInfo*       _parent;
+    
+    @private
+    NSOpenGLContext*        _openGLContext;
+    NSOpenGLPixelFormat*    _pixelFormat;
+    NSUInteger              _lastModifierFlags;
+    NSUInteger              _modifierFlags;
+}
+
++ (NSOpenGLPixelFormat*)defaultPixelFormat;
+- (id)initWithFrame:(NSRect)frameRect pixelFormat:(NSOpenGLPixelFormat*)format;
+- (void)setOpenGLContext:(NSOpenGLContext*)context;
+- (NSOpenGLContext*)openGLContext;
+- (void)clearGLContext;
+- (void)prepareOpenGL;
+- (void)update;
+- (void)lockFocus;
+- (void)setPixelFormat:(NSOpenGLPixelFormat*)pixelFormat;
+- (NSOpenGLPixelFormat*)pixelFormat;
+- (void)setParent:(MacOSXWindowInfo*)parent;
+- (BOOL)acceptsFirstResponder;
+@end
+
+typedef struct {
+	bool isWindowed;
     bool canDrawGL;
-	union {
-		NSView *nsview;
-		NSOpenGLPixelBuffer *pbuffer;
-	};
+    MacOSXWindowInfo *window_info;
+	NSOpenGLPixelFormat *pixel_format;
+    NSOpenGLPixelBuffer *pbuffer;
 } MacOSXPeerInfo;
+
 
 NSOpenGLPixelFormat *choosePixelFormat(JNIEnv *env, jobject pixel_format, bool gl32, bool use_display_bpp, bool support_window, bool support_pbuffer, bool double_buffered);
 #endif

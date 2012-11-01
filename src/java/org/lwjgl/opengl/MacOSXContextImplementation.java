@@ -90,7 +90,7 @@ final class MacOSXContextImplementation implements ContextImplementation {
 		try {
 			synchronized ( context ) {
 				clearDrawable(context.getHandle());
-				setView(peer_handle, context.getHandle());
+				setView(peer_handle);
 			}
 		} finally {
 			peer_info.unlock();
@@ -100,14 +100,14 @@ final class MacOSXContextImplementation implements ContextImplementation {
 	public void makeCurrent(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException {
 		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
 		try {
-			setView(peer_handle, handle);
+			setView(peer_handle);
 			nMakeCurrent(handle);
 		} finally {
 			peer_info.unlock();
 		}
 	}
 
-	private static native void setView(ByteBuffer peer_handle, ByteBuffer context_handle) throws LWJGLException;
+	private static native void setView(ByteBuffer peer_handle) throws LWJGLException;
 
 	private static native void nMakeCurrent(ByteBuffer context_handle) throws LWJGLException;
 

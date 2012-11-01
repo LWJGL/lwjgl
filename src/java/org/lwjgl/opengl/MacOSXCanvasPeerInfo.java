@@ -44,21 +44,15 @@ import org.lwjgl.LWJGLUtil;
  * $Id$
  */
 abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
-	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
-
 	protected MacOSXCanvasPeerInfo(PixelFormat pixel_format, ContextAttribs attribs, boolean support_pbuffer) throws LWJGLException {
 		super(pixel_format, attribs, true, true, support_pbuffer, true);
 	}
 
 	protected void initHandle(Canvas component) throws LWJGLException {
-		// Allow the use of a Core Animation Layer only when using non fullscreen Display.setParent() or AWTGLCanvas
-		final boolean allowCALayer = ((Display.getParent() != null && !Display.isFullscreen()) || component instanceof AWTGLCanvas) && awt_surface.isApplet(component) && LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 6);
-		
-		nInitHandle(awt_surface.lockAndGetHandle(component), getHandle(), allowCALayer);
+        nInitHandle(getHandle());
 	}
-	private static native void nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle, boolean allowCALayer) throws LWJGLException;
+	private static native void nInitHandle(ByteBuffer peer_info_handle) throws LWJGLException;
 
 	protected void doUnlock() throws LWJGLException {
-		awt_surface.unlock();
 	}
 }

@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002-2008 LWJGL Project
+ * Copyright (c) 2002-2012 LWJGL Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -31,28 +31,28 @@
  */
 
 /**
- * $Id$
+ * $Id: org_lwjgl_opengl_MacOSXNativeKeyboard.m 3055 2012-08-29 0:46:00Z mojang $
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
- * @author Pelle Johnsen
- * @version $Revision$
+ * Mac OS X native keyboard functions.
+ *
+ * @author mojang
+ * @version $Revision: 3055 $
  */
 
+#import <AppKit/NSApplication.h>
 #import <Cocoa/Cocoa.h>
-#import <JavaNativeFoundation.h>
+#import <jni.h>
+#import <unistd.h>
+#import "common_tools.h"
+#import "org_lwjgl_opengl_MacOSXNativeKeyboard.h"
+#import "context.h"
 
-#include <jni.h>
-#include "org_lwjgl_opengl_MacOSXCanvasPeerInfo.h"
-#include "context.h"
-#include "common_tools.h"
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeKeyboard_nRegisterKeyListener(JNIEnv *env, jobject this, jobject window_handle) {
+	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
+    window_info->jkeyboard = (*env)->NewGlobalRef(env, this);
+}
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
-(JNIEnv *env, jclass clazz, jobject peer_info_handle) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
-	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
- 
-    peer_info->isWindowed = true;
-    
-	[pool release];
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeKeyboard_nUnregisterKeyListener(JNIEnv *env, jobject this, jobject window_handle) {
+	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
+    window_info->jkeyboard = NULL;
 }
