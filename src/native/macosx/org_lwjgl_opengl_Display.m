@@ -315,7 +315,7 @@ static NSOpenGLPixelFormat *default_format = nil;
 }
 
 - (void)scrollWheel:(NSEvent *)event {
-    JNIEnv *env = attachCurrentThread();
+    /*JNIEnv *env = attachCurrentThread();
     if (env == nil || event == nil || _parent == nil) {
         return;
     }
@@ -328,6 +328,7 @@ static NSOpenGLPixelFormat *default_format = nil;
     jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
     NSPoint loc = [self convertPoint:[event locationInWindow] toView:self];
     (*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], dz, time);
+	 */
 }
 
 - (void)viewDidMoveToWindow
@@ -492,9 +493,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nHideUI(JNIEnv *env, 
     
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
     if(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_5) {
-        NSApplicationPresentationOptions options = NSApplicationPresentationDefault;
+        /*NSApplicationPresentationOptions options = NSApplicationPresentationDefault;
         if (hide == JNI_TRUE) {
-            options = NSApplicationPresentationFullScreen;
+            options = NSApplicationPresentationFullScreen; // this requires OS X 10.7+ to compile
             options |= NSApplicationPresentationHideDock;
             options |= NSApplicationPresentationHideMenuBar;
         }
@@ -502,7 +503,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nHideUI(JNIEnv *env, 
         window_info->window_options = options;
         if (window_info->window != nil) {
             [[NSApplication sharedApplication] setPresentationOptions:options];
-        }
+        }*/
     } else {
         if (hide == JNI_TRUE) {
             SetSystemUIMode(kUIModeContentSuppressed, 0);
