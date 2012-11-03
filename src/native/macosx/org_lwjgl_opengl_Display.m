@@ -497,7 +497,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nHideUI(JNIEnv *env, 
     }
     
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-    if(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_5) {
+    //if(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_5) {
         /*NSApplicationPresentationOptions options = NSApplicationPresentationDefault;
         if (hide == JNI_TRUE) {
             options = NSApplicationPresentationFullScreen; // this requires OS X 10.7+ to compile
@@ -509,11 +509,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nHideUI(JNIEnv *env, 
         if (window_info->window != nil) {
             [[NSApplication sharedApplication] setPresentationOptions:options];
         }*/
-    } else {
+    //} else {
         if (hide == JNI_TRUE) {
             SetSystemUIMode(kUIModeContentSuppressed, 0);
         } else {
             SetSystemUIMode(kUIModeNormal, 0);
         }
-    }
+    //}
 }

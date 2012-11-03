@@ -58,7 +58,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCre
 	MacOSXContext *shared_context_info;
 	MacOSXContext *context_info;
     NSOpenGLContext *context;
-    NSOpenGLContext *shared_context;
+    NSOpenGLContext *shared_context = NULL;
       printf("nCreate\n");
 	jobject context_handle = newJavaManagedByteBuffer(env, sizeof(MacOSXContext));
 	if (context_handle == NULL) {
