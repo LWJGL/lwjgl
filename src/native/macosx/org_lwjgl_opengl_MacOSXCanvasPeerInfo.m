@@ -39,7 +39,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import <JavaNativeFoundation.h>
+//#import <JavaNativeFoundation.h>
 
 #include <jni.h>
 #include "org_lwjgl_opengl_MacOSXCanvasPeerInfo.h"
