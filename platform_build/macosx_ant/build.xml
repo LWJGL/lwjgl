@@ -3,7 +3,6 @@
 	<property name="native" location="../../src/native"/>
 
 	<target name="init">
-		<!--mkdir dir="ppc"/-->
 		<mkdir dir="i386"/>
 		<mkdir dir="x86_64"/>
 	</target>
@@ -12,7 +11,6 @@
 		<delete failonerror="false">
 			<fileset dir="i386"/>
 			<fileset dir="x86_64"/>
-			<!--fileset dir="ppc"/-->
 			<fileset dir="." includes="liblwjgl.jnilib"/>
 			<fileset dir="." includes="lwjgl.symbols"/>
 		</delete>
@@ -20,7 +18,7 @@
 
 	<target name="compile">
 		<apply dir="${dstdir}" executable="${compiler}" os="Mac OS X" skipemptyfilesets="true" failonerror="true" dest="${dstdir}">
-			<arg line="${cflags} -ObjC -O2 -Wall -Wunused -c -fPIC -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers -I${native}/common -I${native}/common/opengl -I${native}/macosx -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks/JavaNativeFoundation.framework/Versions/A/Headers"/>
+			<arg line="${cflags} -ObjC -O2 -Wall -Wunused -c -fPIC -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers -I${native}/common -I${native}/common/opengl -I${native}/macosx"/>
 			<!-- Map from *.m and *.c to .o -->
 			<mapper type="regexp" from="^(.*)\.(c|m)" to="\1.o"/>
 			<fileset dir="${native}/macosx" includes="*.m"/>
@@ -35,7 +33,7 @@
 
 	<target name="link">
 		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
-			<arg line="${linkerflags} -exported_symbols_list ../lwjgl.symbols -dynamiclib -o ${libname} -framework Foundation -weak_framework AppKit -framework JavaVM -framework Carbon -framework OpenGL -framework QuartzCore -framework JavaNativeFoundation -F/System/Library/Frameworks/JavaVM.framework/Frameworks"/>
+			<arg line="${linkerflags} -exported_symbols_list ../lwjgl.symbols -dynamiclib -o ${libname} -framework Foundation -weak_framework AppKit -framework JavaVM -framework Carbon -framework OpenGL -framework QuartzCore -F/System/Library/Frameworks/JavaVM.framework/Frameworks"/>
 			<fileset dir="${objdir}" includes="*.o"/>
 		</apply>
 		<apply dir="${objdir}" executable="strip" os="Mac OS X" failonerror="true">
@@ -46,16 +44,8 @@
 
 	<target name="nativelibrary" depends="init">
 		<property name="universal_sdkroot" location="/Developer/SDKs/MacOSX10.6.sdk"/>
-		<!--property name="ppc_sdkroot" location="/Developer/SDKs/MacOSX10.6.sdk"/-->
 		<property name="x86_64_sdkroot" location="/Developer/SDKs/MacOSX10.6.sdk"/>
 		<property name="universal_flags" value="-isysroot ${universal_sdkroot}"/>
-		<!--property name="ppc_flags" value="-isysroot ${ppc_sdkroot}"/>
-		<antcall target="compile">
-			<param name="dstdir" location="ppc"/>
-			<param name="compiler" value="gcc-4.2"/>
-			<param name="sdkroot" location="${ppc_sdkroot}"/>
-			<param name="cflags" value="${universal_flags} -arch ppc -mmacosx-version-min=10.3"/>
-		</antcall-->
 		<antcall target="compile">
 			<param name="dstdir" location="i386"/>
 			<param name="compiler" value="gcc-4.2"/>
@@ -72,17 +62,11 @@
 			<arg path="../../platform_build/macosx_ant/build-symbol-list"/>
 			<arg path="i386"/>
 		</exec>
-		<!--antcall target="link">
-			<param name="objdir" location="ppc"/>
-			<param name="libname" value="liblwjgl-ppc.jnilib"/>
-			<param name="linker" value="gcc-4.2"/>
-			<param name="linkerflags" value="${universal_flags} -arch ppc -mmacosx-version-min=10.3"/>
-		</antcall-->
 		<antcall target="link">
 			<param name="objdir" location="i386"/>
 			<param name="libname" value="liblwjgl-i386.jnilib"/>
 			<param name="linker" value="gcc-4.2"/>
-			<param name="linkerflags" value="${universal_flags} -arch i386 -mmacosx-version-min=10.4"/>
+			<param name="linkerflags" value="${universal_flags} -arch i386 -mmacosx-version-min=10.5"/>
 		</antcall>
 		<antcall target="link">
 			<param name="objdir" location="x86_64"/>
@@ -95,7 +79,6 @@
 			<srcfile/>
 			<arg value="-output"/>
 			<arg path="liblwjgl.jnilib"/>
-			<!--fileset file="ppc/liblwjgl-ppc.jnilib"/-->
 			<fileset file="i386/liblwjgl-i386.jnilib"/>
 			<fileset file="x86_64/liblwjgl-i86_64.jnilib"/>
 		</apply>

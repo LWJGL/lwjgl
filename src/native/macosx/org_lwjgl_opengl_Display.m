@@ -317,20 +317,19 @@ static NSAutoreleasePool *pool;
 }
 
 - (void)scrollWheel:(NSEvent *)event {
-    /*JNIEnv *env = attachCurrentThread();
+    JNIEnv *env = attachCurrentThread();
     if (env == nil || event == nil || _parent == nil) {
         return;
     }
     long time = [event timestamp] * 1000000000;
-    float dz = [event scrollingDeltaY];
-    if (![event hasPreciseScrollingDeltas]) {
-        dz *= 12; // or so
-    }
-    jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
-    jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
-    NSPoint loc = [self convertPoint:[event locationInWindow] toView:self];
-    (*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], dz, time);
-	 */
+    //float dz = [event scrollingDeltaY]; // An OS X 10.7+ API
+    //if (![event hasPreciseScrollingDeltas]) { // Also an OS X 10.7 API
+	//    dz *= 12; // or so
+    //}
+    //jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
+    //jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
+    //NSPoint loc = [self convertPoint:[event locationInWindow] toView:self];
+    //(*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], dz, time);
 }
 
 - (void)viewDidMoveToWindow
