@@ -44,11 +44,6 @@ import com.apple.eio.FileManager;
 final class MacOSXSysImplementation extends J2SESysImplementation {
 	private static final int JNI_VERSION = 23;
 
-	static {
-		// Make sure AWT is properly initialized. This avoids hangs on Mac OS X 10.3
-		Toolkit.getDefaultToolkit();
-	}
-
 	public int getRequiredJNIVersion() {
 		return JNI_VERSION;
 	}
