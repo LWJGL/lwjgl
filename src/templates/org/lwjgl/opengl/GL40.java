@@ -218,8 +218,15 @@ public interface GL40 {
 
 	int glGetSubroutineUniformLocation(@GLuint int program, @GLenum int shadertype, @Const @NullTerminated ByteBuffer name);
 
+	@Alternate("glGetSubroutineUniformLocation")
+	int glGetSubroutineUniformLocation(@GLuint int program, @GLenum int shadertype, @NullTerminated CharSequence name);
+
 	@GLuint
 	int glGetSubroutineIndex(@GLuint int program, @GLenum int shadertype, @Const @NullTerminated ByteBuffer name);
+
+	@Alternate("glGetSubroutineIndex")
+	@GLuint
+	int glGetSubroutineIndex(@GLuint int program, @GLenum int shadertype, @NullTerminated CharSequence name);
 
 	@StripPostfix("values")
 	void glGetActiveSubroutineUniformiv(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLenum int pname,

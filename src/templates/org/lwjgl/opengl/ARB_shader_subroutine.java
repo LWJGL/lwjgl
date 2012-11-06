@@ -64,9 +64,17 @@ public interface ARB_shader_subroutine {
 	@Reuse("GL40")
 	int glGetSubroutineUniformLocation(@GLuint int program, @GLenum int shadertype, @Const @NullTerminated ByteBuffer name);
 
+	@Alternate("glGetSubroutineUniformLocation")
+	@Reuse("GL40")
+	int glGetSubroutineUniformLocation(@GLuint int program, @GLenum int shadertype, @NullTerminated CharSequence name);
+
 	@Reuse("GL40")
 	@GLuint
 	int glGetSubroutineIndex(@GLuint int program, @GLenum int shadertype, @Const @NullTerminated ByteBuffer name);
+
+	@Alternate("glGetSubroutineIndex")
+	@Reuse("GL40")
+	int glGetSubroutineIndex(@GLuint int program, @GLenum int shadertype, @NullTerminated CharSequence name);
 
 	@Reuse("GL40")
 	@StripPostfix("values")
