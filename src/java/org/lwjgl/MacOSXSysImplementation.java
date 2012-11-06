@@ -31,8 +31,6 @@
  */
 package org.lwjgl;
 
-import java.awt.Toolkit;
-
 import com.apple.eio.FileManager;
 
 /**
