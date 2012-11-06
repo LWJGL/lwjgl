@@ -79,7 +79,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include "extgl_types.h"
 
 /* KHR_debug callback function pointer. */
-typedef void (APIENTRY *GLDEBUGPROC)(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam);
+typedef void (GL_APIENTRY *GLDEBUGPROC)(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam);
 
 /* initializes everything, call this right after the rc is created. the function returns true if successful */
 extern bool extgl_Open(JNIEnv *env);

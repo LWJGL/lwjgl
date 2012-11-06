@@ -70,7 +70,4 @@ typedef khronos_uint64_t EGLuint64NV;
 // EGL_image_OES
 typedef void* GLeglImageOES;
 
-// We need this to compile OpenCL
-typedef struct __GLsync *   GLsync;
-
 #endif
