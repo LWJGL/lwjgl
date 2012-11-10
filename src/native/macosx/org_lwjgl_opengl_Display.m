@@ -78,16 +78,14 @@ static NSAutoreleasePool *pool;
     return default_format;
 }
 
-- (void) windowWillClose:(NSNotification *)notification
-{
-    MacOSXKeyableWindow *closingWindow = [notification object];
-    
-    if (_parent != nil && closingWindow == _parent->window) {
+- (BOOL)windowShouldClose:(id)sender {
+	if (_parent != nil) {
         JNIEnv *env = attachCurrentThread();
         jclass display_class = (*env)->GetObjectClass(env, _parent->jdisplay);
         jmethodID close_callback = (*env)->GetMethodID(env, display_class, "doHandleQuit", "()V");
         (*env)->CallVoidMethod(env, _parent->jdisplay, close_callback);
     }
+	return NO;
 }
 
 - (id)initWithFrame:(NSRect)frameRect pixelFormat:(NSOpenGLPixelFormat*)format
@@ -163,18 +161,10 @@ static NSAutoreleasePool *pool;
 }
 
 - (void)setParent:(MacOSXWindowInfo*)parent {
-    // Un-register for native window close events if we have a parent window already
-    if (_parent != nil) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                 name:NSWindowWillCloseNotification
-                                                   object:_parent->window];
-    }
     _parent = parent;
-    // Register for native window close events if we now have a parent window
+    // Set this NSView as delegate to get native window close events for windowShouldClose method
     if (_parent != nil) {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(windowWillClose:) name:NSWindowWillCloseNotification
-                                                   object:_parent->window];
+        [_parent->window setDelegate:self];
     }
 }
 
