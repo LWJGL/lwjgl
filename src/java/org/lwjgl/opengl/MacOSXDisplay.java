@@ -583,11 +583,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public boolean wasResized() {
-        if (native_mode) {
-            return nWasResized(window);
-        } else {
-            return canvas_listener.wasResized();
-        }
+        return nWasResized(window);
 	}
 
 }
