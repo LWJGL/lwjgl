@@ -121,6 +121,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private native void nResizeWindow(ByteBuffer window_handle, int x, int y, int width, int height);
     
 	private native boolean nWasResized(ByteBuffer window_handle);
+	
+	private native int nGetWidth(ByteBuffer window_handle);
+	
+	private native int nGetHeight(ByteBuffer window_handle);
     
 	private static boolean isUndecorated() {
 		return Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated");
@@ -561,11 +565,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public int getWidth() {
-        return width;
+        return nGetWidth(window);
 	}
-
+	
 	public int getHeight() {
-        return height;
+        return nGetHeight(window);
 	}
 
     public boolean isInsideWindow() {
