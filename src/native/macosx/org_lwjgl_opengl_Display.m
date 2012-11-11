@@ -430,10 +430,14 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
     [window_info->view setParent:window_info];
     
     [window_info->window setContentView:window_info->view];
-    [window_info->window makeKeyAndOrderFront:[NSApplication sharedApplication]];
-    [window_info->window makeFirstResponder:window_info->view];
-    [window_info->window setReleasedWhenClosed:YES];
-    [window_info->window setInitialFirstResponder:window_info->view];
+    //[window_info->window makeKeyAndOrderFront:[NSApplication sharedApplication]];
+    //[window_info->window makeFirstResponder:window_info->view];
+    //[window_info->window setReleasedWhenClosed:YES];
+    //[window_info->window setInitialFirstResponder:window_info->view];
+	[window_info->window performSelectorOnMainThread:@selector(makeKeyAndOrderFront:) withObject:[NSApplication sharedApplication] waitUntilDone:NO];
+    [window_info->window performSelectorOnMainThread:@selector(makeFirstResponder:) withObject:window_info->view waitUntilDone:NO];
+    [window_info->window performSelectorOnMainThread:@selector(setReleasedWhenClosed:) withObject:window_info->window waitUntilDone:NO];
+    [window_info->window performSelectorOnMainThread:@selector(setInitialFirstResponder:) withObject:window_info->view waitUntilDone:NO];
 
     if (window_info->window_options != NSApplicationPresentationDefault) {
         printf("Non-default\n"); fflush(stdout);
