@@ -92,6 +92,10 @@ final class MacOSXNativeMouse extends EventQueue {
         nRegisterMouseListener(window_handle);
     }
     
+    public synchronized void warpCursor(int x, int y) {
+    		nWarpCursor(window_handle, x, y);
+    }
+    
     public synchronized void unregister() {
         nUnregisterMouseListener(window_handle);
     }

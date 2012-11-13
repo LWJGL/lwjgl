@@ -70,7 +70,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private MacOSXCanvasListener canvas_listener;
 	private Canvas canvas;
 	private Robot robot;
-	private MacOSXMouseEventQueue mouse_queue;
+	//private MacOSXMouseEventQueue mouse_queue;
 	private KeyboardEventQueue keyboard_queue;
 	private java.awt.DisplayMode requested_mode;
     
@@ -84,30 +84,10 @@ final class MacOSXDisplay implements DisplayImplementation {
     private int width;
     private int height;
     
-    /* Whether we're using a native window or an AWT canvas */
-    private boolean native_mode;
-
-	private boolean close_requested;
+    private boolean close_requested;
 
 	MacOSXDisplay() {
-		try {
-			AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() {
-				public Object run() throws Exception {
-					Application.getApplication().addApplicationListener(new ApplicationAdapter() {
-						public void handleQuit(ApplicationEvent event) {
-							doHandleQuit();
-						}
-					});
-					return null;
-				}
-			});
-		} catch (Throwable e) {
-			/**
-			 * In an applet environment, referencing com.apple.eawt.Application can fail with
-			 * a native exception. So log any exceptions instead of re-throwing.
-			 */
-			LWJGLUtil.log("Failed to register quit handler: " + e.getMessage());
-		}
+		
 	}
 
 	private native ByteBuffer nCreateWindow(int x, int y, int width, int height, boolean fullscreen, boolean undecorated, ByteBuffer peer_info_handle, ByteBuffer window_handle) throws LWJGLException;
@@ -142,7 +122,6 @@ final class MacOSXDisplay implements DisplayImplementation {
             window = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(),
                                    fullscreen, isUndecorated(),
                                    peer_handle, window);
-            native_mode = true;
             this.x = x;
             this.y = y;
             this.width = mode.getWidth();
@@ -165,15 +144,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public native void nDestroyWindow(ByteBuffer window_handle);
 
 	public void destroyWindow() {
-        if (native_mode) {
-            nDestroyWindow(window);
-        } else {
-            if (canvas_listener != null) {
-                canvas_listener.disableListeners();
-                canvas_listener = null;
-            }
-        }
-		hideUI(false);
+        nDestroyWindow(window);
+        hideUI(false);
 	}
 
 	public int getGammaRampLength() {
@@ -213,11 +185,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void resetDisplayMode() {
-        if (!native_mode) {
-            if (getDevice().getFullScreenWindow() != null)
-                getDevice().setFullScreenWindow(null);
-        }
-		requested_mode = null;
+        requested_mode = null;
 		restoreGamma();
 	}
 
@@ -273,12 +241,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public boolean isActive() {
-        if (native_mode) {
-            boolean ret = nIsFocused(window);
-            return ret;
-        } else {
-            return canvas.isFocusOwner();
-        }
+        boolean ret = nIsFocused(window);
+        return ret;
 	}
 
 	public Canvas getCanvas() {
@@ -300,10 +264,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private static final IntBuffer current_viewport = BufferUtils.createIntBuffer(16);
 	public void update() {
 		boolean should_update = true;
-        if (!native_mode) {
-            should_update = canvas_listener.syncShouldUpdateContext();
-        }
-		/*
+        /*
 		 * Workaround for the "white screen in fullscreen mode" problem
 		 *
 		 * Sometimes, switching from windowed mode to fullscreen or simply creating the Display
@@ -331,14 +292,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 			glGetInteger(GL_VIEWPORT, current_viewport);
 			glViewport(current_viewport.get(0), current_viewport.get(1), current_viewport.get(2), current_viewport.get(3));
 		}
-        /*
-		if (frame != null && mouse_queue != null) {
-			if (frame.syncShouldReleaseCursor())
-				MacOSXMouseEventQueue.nGrabMouse(false);
-			if (frame.syncShouldWarpCursor())
-				mouse_queue.warpCursor();
-		}
-         */
 	}
 
 	/**
@@ -369,52 +322,29 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void createMouse() throws LWJGLException {
-        if (native_mode) {
-            mouse = new MacOSXNativeMouse(this, window);
-            mouse.register();
-        } else {
-            mouse_queue = new MacOSXMouseEventQueue(canvas);
-            mouse_queue.register();
-        }
+        mouse = new MacOSXNativeMouse(this, window);
+        mouse.register();
 	}
 
 	public void destroyMouse() {
-        MacOSXMouseEventQueue.nGrabMouse(false);
-        if (native_mode) {
-            if (mouse != null) {
-                mouse.unregister();
-            }
-            mouse = null;
-        } else {
-            if (mouse_queue != null) {
-                mouse_queue.unregister();
-            }
-            mouse_queue = null;
+        //MacOSXMouseEventQueue.nGrabMouse(false);
+        
+        if (mouse != null) {
+        		mouse.unregister();
         }
+        mouse = null;
 	}
 
 	public void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons_buffer) {
-        if (native_mode) {
-            mouse.poll(coord_buffer, buttons_buffer);
-        } else {
-            mouse_queue.poll(coord_buffer, buttons_buffer);
-        }
+		mouse.poll(coord_buffer, buttons_buffer);
 	}
 
 	public void readMouse(ByteBuffer buffer) {
-        if (native_mode) {
-            mouse.copyEvents(buffer);
-        } else {
-            mouse_queue.copyEvents(buffer);
-        }
+		mouse.copyEvents(buffer);
 	}
 
 	public void grabMouse(boolean grab) {
-        if (native_mode) {
-            mouse.setGrabbed(grab);
-        } else {
-            mouse_queue.setGrabbed(grab);
-        }
+		mouse.setGrabbed(grab);
 	}
 
 	public int getNativeCursorCapabilities() {
@@ -422,7 +352,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void setCursorPosition(int x, int y) {
-        MacOSXMouseEventQueue.nWarpCursor(x, y);
+		if (mouse != null) {
+			mouse.warpCursor(x, y);
+		}
+        //MacOSXMouseEventQueue.nWarpCursor(x, y);
 	}
 
 	public void setNativeCursor(Object handle) throws LWJGLException {
@@ -438,41 +371,23 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	/* Keyboard */
 	public void createKeyboard() throws LWJGLException {
-        if (native_mode) {
-            this.keyboard = new MacOSXNativeKeyboard(window);
-            keyboard.register();
-        } else {
-            this.keyboard_queue = new KeyboardEventQueue(canvas);
-            keyboard_queue.register();
-        }
+        this.keyboard = new MacOSXNativeKeyboard(window);
+        keyboard.register();
 	}
 
 	public void destroyKeyboard() {
-        if (native_mode) {
-            if (keyboard != null)
-                keyboard.unregister();
-            keyboard = null;
-        } else {
-            if (keyboard_queue != null)
-                keyboard_queue.unregister();
-            keyboard_queue = null;
-        }
+		if (keyboard != null) {
+			keyboard.unregister();
+		}
+		keyboard = null;
 	}
 
 	public void pollKeyboard(ByteBuffer keyDownBuffer) {
-        if (native_mode) {
-            keyboard.poll(keyDownBuffer);
-        } else {
-            keyboard_queue.poll(keyDownBuffer);
-        }
+		keyboard.poll(keyDownBuffer);
 	}
 
 	public void readKeyboard(ByteBuffer buffer) {
-        if (native_mode) {
-            keyboard.copyEvents(buffer);
-        } else {
-            keyboard_queue.copyEvents(buffer);
-        }
+		keyboard.copyEvents(buffer);
 	}
 
 	/** Native cursor handles */
@@ -577,9 +492,7 @@ final class MacOSXDisplay implements DisplayImplementation {
     }
 
     public void setResizable(boolean resizable) {
-        if (native_mode) {
-            nSetResizable(window, resizable);
-        }
+        nSetResizable(window, resizable);
 	}
 
 	public boolean wasResized() {
