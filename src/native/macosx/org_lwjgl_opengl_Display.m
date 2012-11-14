@@ -294,6 +294,30 @@ static NSAutoreleasePool *pool;
     (*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 0.0f, time);
 }
 
+- (void)rightMouseDragged:(NSEvent *)event {
+    JNIEnv *env = attachCurrentThread();
+    if (env == nil || event == nil || _parent == nil) {
+        return;
+    }
+    long time = [event timestamp] * 1000000000;
+    jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
+    jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
+    NSPoint loc = [self convertPoint:[event locationInWindow] toView:self];
+    (*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 0.0f, time);
+}
+
+- (void)otherMouseDragged:(NSEvent *)event {
+    JNIEnv *env = attachCurrentThread();
+    if (env == nil || event == nil || _parent == nil) {
+        return;
+    }
+    long time = [event timestamp] * 1000000000;
+    jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
+    jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
+    NSPoint loc = [self convertPoint:[event locationInWindow] toView:self];
+    (*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 0.0f, time);
+}
+
 - (void)mouseMoved:(NSEvent *)event {
     JNIEnv *env = attachCurrentThread();
     if (env == nil || event == nil || _parent == nil || _parent->jmouse == nil) {
