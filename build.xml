@@ -32,6 +32,7 @@
 		<mkdir dir="${lwjgl.temp}/native"           taskname="initialiazing temp/native folder" />
 		<mkdir dir="${lwjgl.temp}/native/windows"   taskname="initialiazing temp/windows folder" />
 		<mkdir dir="${lwjgl.temp}/native/linux"     taskname="initialiazing temp/linux folder" />
+		<mkdir dir="${lwjgl.temp}/native/freebsd"   taskname="initialiazing temp/freebsd folder" />
 		<mkdir dir="${lwjgl.temp}/native/macosx"    taskname="initialiazing temp/macosx folder" />
 		<mkdir dir="${lwjgl.temp}/native/solaris"   taskname="initialiazing temp/solaris folder" />
 	</target>
@@ -56,7 +57,7 @@
 	<!-- Creates a distribution of LWJGL -->
 	<target name="release" description="Creates a distribution of LWJGL using supplied native binaries">
 		<!-- Warn user -->
-		<echo message="Before running the release target, please manually compile all platforms and place required files in ${lwjgl.lib}/windows, ${lwjgl.lib}/linux and ${lwjgl.lib}/macosx${line.separator}Missing files will result in a successfull built, but with incomplete release zips"/>
+        <echo message="Before running the release target, please manually compile all platforms and place required files in ${lwjgl.lib}/windows, ${lwjgl.lib}/linux, ${lwjgl.lib}/freebsd and ${lwjgl.lib}/macosx${line.separator}Missing files will result in a successfull built, but with incomplete release zips"/>
         <input
             message="All data in the ${lwjgl.dist} folder will be deleted. Continue? "
             validargs="yes,no"
@@ -238,6 +239,11 @@
 				<patternset refid="lwjgl-linux.fileset" />
 			</fileset>
 		</copy>
+		<copy todir="${lwjgl.temp}/native/freebsd">
+			<fileset dir="${lwjgl.lib}/freebsd">
+				<patternset refid="lwjgl-freebsd.fileset" />
+			</fileset>
+		</copy>
 		<copy todir="${lwjgl.temp}/native/macosx">
 			<fileset dir="${lwjgl.lib}/macosx">
 				<patternset refid="lwjgl-macosx.fileset" />
@@ -408,6 +414,8 @@
 			lwjgl.native.windows.version = ${lwjgl.native.windows.version}
 			lwjgl.java.linux.version = ${lwjgl.java.linux.version}
 			lwjgl.native.linux.version = ${lwjgl.native.linux.version}
+			lwjgl.java.freebsd.version = ${lwjgl.java.linux.version}
+			lwjgl.native.freebsd.version = ${lwjgl.native.linux.version}
 			lwjgl.java.macosx.version = ${lwjgl.java.macosx.version}
 			lwjgl.native.macosx.version = ${lwjgl.native.macosx.version}
 		</echo>
@@ -467,6 +475,11 @@
 		</condition>
 		<antcall target="-compile_native_linux" />
 
+		<condition property="lwjgl.platform.freebsd">
+			<os name="FreeBSD" />
+		</condition>
+		<antcall target="-compile_native_freebsd" />
+
 		<condition property="lwjgl.platform.solaris">
 			<os name="SunOS" />
 		</condition>
@@ -494,6 +507,14 @@
 			<fileset dir="${lwjgl.bin}/lwjgl" includes="liblwjgl*.so"/>
 		</copy>
 		<!-- headless issues <version-check platform="linux"/> -->
+	</target>
+
+	<!-- Compiles LWJGL on FreeBSD platforms -->
+	<target name="-compile_native_freebsd" if="lwjgl.platform.freebsd">
+		<ant antfile="platform_build/bsd_ant/build.xml" inheritAll="false"/>
+		<copy todir="${lwjgl.lib}/freebsd">
+			<fileset dir="${lwjgl.bin}/lwjgl" includes="liblwjgl*.so"/>
+		</copy>
 	</target>
 
 	<!-- Compiles LWJGL on solaris platforms -->
