@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+
+<project name="lwjgl native code, linux" basedir="../../bin/lwjgl" default="compile">
+	<property name="native" location="../../src/native"/>
+	<property name="libname32" value="liblwjgl.so"/>
+	<property name="libname64" value="liblwjgl64.so"/>
+    <property name="libs32" value="-L/usr/X11R6/lib -L/usr/X11/lib -L/usr/local/lib -lm -lX11 -lXext -lXcursor -lXrandr -pthread -L${java.home}/lib/i386 -ljawt" />
+    <property name="libs64" value="-L/usr/X11R6/lib64 -L/usr/X11/lib64 -L/usr/local/lib -lm -lX11 -lXext -lXcursor -lXrandr -lXxf86vm -pthread -L${java.home}/lib/amd64 -ljawt" />
+    <property name="cflags32" value="-O2 -Wall -c -fPIC -std=c99 -Wunused"/>
+
+	<target name="clean">
+		<delete>
+			<fileset dir="x32"/>
+			<fileset dir="x64"/>
+			<fileset dir="." includes="*.o"/>
+			<fileset dir="." includes="*.so"/>
+		</delete>
+	</target>
+
+    <target name="compile">
+		<exec executable="uname" outputproperty="hwplatform">
+			<arg value="-m"/>
+		</exec>
+		<condition property="xf86vm_lib" value="-lXxf86vm" else="-Wl,-static,-lXxf86vm,-call_shared">
+			<os name="SunOS" />
+		</condition>
+		<condition property="cflags_pthread" value="-pthreads" else="-pthread">
+			<os name="SunOS" />
+		</condition>
+		<condition property="version_script_flags32" value="" else="-Wl,--version-script='${native}/linux/lwjgl.map'">
+			<os name="SunOS" />
+		</condition>
+		<condition property="version_script_flags64" value="-m64" else="-Wl,--version-script='${native}/linux/lwjgl.map'">
+			<and>
+				<os name="SunOS" />
+			</and>
+		</condition>
+    	<condition property="cflags64" value="-O2 -m64 -Wall -c -fPIC -std=c99 -Wunused" else="-O2 -Wall -c -fPIC -std=c99 -Wunused">
+    		<os name="SunOS" />
+    	</condition>
+
+		<property name="linker_flags32" value="${version_script_flags32} -shared -O2 -Wall -o ${libname32} ${libs32} ${xf86vm_lib}"/>
+		<property name="linker_flags64" value="${version_script_flags64} -shared -O2 -Wall -o ${libname64} ${libs64} ${xf86vm_lib}"/>
+
+    	<condition property="build.32bit.only">
+            <and>
+                <os name="FreeBSD"/>
+                <equals arg1="${hwplatform}" arg2="i386"/>
+            </and>
+        </condition>
+
+    	<!-- On linux, the 64 bit jre doesn't have the 32 bit libs -->
+    	<condition property="build.64bit.only">
+            <and>
+                <os name="FreeBSD"/>
+                <equals arg1="${hwplatform}" arg2="amd64"/>
+            </and>
+        </condition>
+
+    	<antcall target="compile32"/>
+    	<antcall target="compile64"/>
+    </target>
+
+    <target name="compile32" unless="build.64bit.only">
+    	<mkdir dir="x32"/>
+    	<apply dir="x32" executable="gcc" skipemptyfilesets="true" failonerror="true">
+			<arg line="${cflags32} ${cflags_pthread}"/>
+			<arg value="-I${java.home}/include"/>
+			<arg value="-I${java.home}/include/freebsd"/>
+			<arg value="-I${java.home}/../include"/>
+			<arg value="-I${java.home}/../include/freebsd"/>
+			<arg value="-I/usr/local/include"/>
+			<arg value="-I${native}/common"/>
+		    <arg value="-I${native}/common/opengl"/>
+			<arg value="-I${native}/linux"/>
+		    <arg value="-I${native}/linux/opengl"/>
+			<mapper type="glob" from="*.c" to="*.o"/>
+		    <fileset dir="${native}/common" includes="*.c"/>
+		    <fileset dir="${native}/common/opengl" includes="*.c"/>
+		    <fileset dir="${native}/generated/openal" includes="*.c"/>
+		    <fileset dir="${native}/generated/opencl" includes="*.c"/>
+		    <fileset dir="${native}/generated/opengl" includes="*.c"/>
+		    <fileset dir="${native}/linux" includes="*.c"/>
+		    <fileset dir="${native}/linux/opengl" includes="*.c"/>
+	    </apply>
+		<apply dir="." parallel="true" executable="gcc" failonerror="true">
+			<srcfile/>
+			<arg line="${linker_flags32}"/>
+			<fileset dir="x32" includes="*.o"/>
+		</apply>
+		<apply dir="." parallel="true" executable="strip" failonerror="true">
+			<fileset file="${libname32}"/>
+		</apply>
+    </target>
+
+    <target name="compile64" unless="build.32bit.only">
+    	<mkdir dir="x64"/>
+    	<apply dir="x64" executable="gcc" skipemptyfilesets="true" failonerror="true">
+			<arg line="${cflags64} ${cflags_pthread}"/>
+			<arg value="-I${java.home}/include"/>
+			<arg value="-I${java.home}/include/freebsd"/>
+			<arg value="-I${java.home}/../include"/>
+			<arg value="-I${java.home}/../include/freebsd"/>
+            <arg value="-I/usr/local/include"/>
+            <arg value="-I${native}/common"/>
+		    <arg value="-I${native}/common/opengl"/>
+			<arg value="-I${native}/linux"/>
+		    <arg value="-I${native}/linux/opengl"/>
+			<mapper type="glob" from="*.c" to="*.o"/>
+		    <fileset dir="${native}/common" includes="*.c"/>
+		    <fileset dir="${native}/common/opengl" includes="*.c"/>
+		    <fileset dir="${native}/generated/openal" includes="*.c"/>
+		    <fileset dir="${native}/generated/opencl" includes="*.c"/>    		
+		    <fileset dir="${native}/generated/opengl" includes="*.c"/>
+		    <fileset dir="${native}/linux" includes="*.c"/>
+		    <fileset dir="${native}/linux/opengl" includes="*.c"/>
+	    </apply>
+		<apply dir="." parallel="true" executable="gcc" failonerror="true">
+			<srcfile/>
+			<arg line="${linker_flags64}"/>
+			<fileset dir="x64" includes="*.o"/>
+		</apply>
+		<apply dir="." parallel="true" executable="strip" failonerror="true">
+			<fileset file="${libname64}"/>
+		</apply>
+    </target>
+</project>
