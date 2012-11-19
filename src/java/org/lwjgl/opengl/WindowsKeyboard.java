@@ -154,6 +154,10 @@ final class WindowsKeyboard {
 		return (state & 1) == 1;
 	}
 
+	private static boolean isKeyPressedAsync(int state) {
+		return (state >>> 31) == 1;
+	}
+
 	public void handleKey(int virt_key, int scan_code, boolean extended, byte event_state, long millis, boolean repeat) {
 		virt_key = translateExtended(virt_key, scan_code, event_state, extended);
 		if ( !repeat && isKeyPressed(event_state) == isKeyPressed(virt_key_down_buffer[virt_key]) )
@@ -176,7 +180,7 @@ final class WindowsKeyboard {
 
 	public void fireLostKeyEvents() {
 		for ( int i = 0; i < virt_key_down_buffer.length; i++ ) {
-			if ( isKeyPressed(virt_key_down_buffer[i]) && !isKeyPressed(GetAsyncKeyState(i)) )
+			if ( isKeyPressed(virt_key_down_buffer[i]) && !isKeyPressedAsync(GetAsyncKeyState(i)) )
 				handleKey(i, 0, false, (byte)0, System.currentTimeMillis(), false);
 		}
 	}
