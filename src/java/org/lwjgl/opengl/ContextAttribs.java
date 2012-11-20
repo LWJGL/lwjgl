@@ -157,73 +157,49 @@ public final class ContextAttribs {
 		if ( layerPlane < 0 )
 			throw new IllegalArgumentException("Invalid layer plane specified: " + layerPlane);
 
-		if ( layerPlane == this.layerPlane )
-			return this;
-
-		final ContextAttribs attribs = new ContextAttribs(this);
-		attribs.layerPlane = layerPlane;
-		return attribs;
+		this.layerPlane = layerPlane;
+		return this;
 	}
 
 	public ContextAttribs withDebug(final boolean debug) {
-		if ( debug == this.debug )
-			return this;
-
-		final ContextAttribs attribs = new ContextAttribs(this);
-		attribs.debug = debug;
-		return attribs;
+		this.debug = debug;
+		return this;
 	}
 
 	public ContextAttribs withForwardCompatible(final boolean forwardCompatible) {
-		if ( forwardCompatible == this.forwardCompatible )
-			return this;
-
-		final ContextAttribs attribs = new ContextAttribs(this);
-		attribs.forwardCompatible = forwardCompatible;
-		return attribs;
+		this.forwardCompatible = forwardCompatible;
+		return this;
 	}
 
 	public ContextAttribs withProfileCore(final boolean profileCore) {
 		if ( majorVersion < 3 || (majorVersion == 3 && minorVersion < 2) )
 			throw new IllegalArgumentException("Profiles are only supported on OpenGL version 3.2 or higher.");
 
-		if ( profileCore == this.profileCore )
-			return this;
-
-		final ContextAttribs attribs = new ContextAttribs(this);
-		attribs.profileCore = profileCore;
+		this.profileCore = profileCore;
 		if ( profileCore )
-			attribs.profileCompatibility = false;
+			this.profileCompatibility = false;
 
-		return attribs;
+		return this;
 	}
 
 	public ContextAttribs withProfileCompatibility(final boolean profileCompatibility) {
 		if ( majorVersion < 3 || (majorVersion == 3 && minorVersion < 2) )
 			throw new IllegalArgumentException("Profiles are only supported on OpenGL version 3.2 or higher.");
 
-		if ( profileCompatibility == this.profileCompatibility )
-			return this;
-
-		final ContextAttribs attribs = new ContextAttribs(this);
-		attribs.profileCompatibility = profileCompatibility;
+		this.profileCompatibility = profileCompatibility;
 		if ( profileCompatibility )
-			attribs.profileCore = false;
+			this.profileCore = false;
 
-		return attribs;
+		return this;
 	}
 
 	public ContextAttribs withProfileES(final boolean profileES) {
 		if ( !(majorVersion == 2 && minorVersion == 0) )
 			throw new IllegalArgumentException("The OpenGL ES profiles is only supported for OpenGL version 2.0.");
 
-		if ( profileES == this.profileES )
-			return this;
+		this.profileES = profileES;
 
-		final ContextAttribs attribs = new ContextAttribs(this);
-		attribs.profileES = profileES;
-
-		return attribs;
+		return this;
 	}
 
 	/**
@@ -236,21 +212,13 @@ public final class ContextAttribs {
 	 * @return the new ContextAttribs
 	 */
 	public ContextAttribs withLoseContextOnReset(final boolean loseContextOnReset) {
-		if ( loseContextOnReset == this.loseContextOnReset )
-			return this;
-
-		final ContextAttribs attribs = new ContextAttribs(this);
-		attribs.loseContextOnReset = loseContextOnReset;
-		return attribs;
+		this.loseContextOnReset = loseContextOnReset;
+		return this;
 	}
 
 	public ContextAttribs withContextResetIsolation(final boolean contextResetIsolation) {
-		if ( contextResetIsolation == this.contextResetIsolation )
-			return this;
-
-		final ContextAttribs attribs = new ContextAttribs(this);
-		attribs.contextResetIsolation = contextResetIsolation;
-		return attribs;
+		this.contextResetIsolation = contextResetIsolation;
+		return this;
 	}
 
 	private static ContextAttribsImplementation getImplementation() {
