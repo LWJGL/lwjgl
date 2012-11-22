@@ -34,7 +34,7 @@ package org.lwjgl.opengl;
 /**
  * This is the Display implementation interface. Display delegates
  * to implementors of this interface. There is one DisplayImplementation
- * for each supported platform. Git test
+ * for each supported platform.
  * @author elias_naur
  */
 

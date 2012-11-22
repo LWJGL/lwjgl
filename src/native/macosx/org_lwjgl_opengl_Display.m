@@ -139,7 +139,7 @@ static NSAutoreleasePool *pool;
     NSOpenGLContext* context = [self openGLContext];
     
     [super lockFocus];
-    if ([context view] != self) {
+    if ([context view] != self && [context view] != nil) {
         [context setView:self];
     }
     
