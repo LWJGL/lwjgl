@@ -65,45 +65,46 @@ public final class ContextAttribs {
 
 	private static final int CONTEXT_ROBUST_ACCESS_BIT_ARB           = 0x00000004;
 	private static final int CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB = 0x8256;
-	private static final int
-	                         NO_RESET_NOTIFICATION_ARB               = 0x8261,
-		LOSE_CONTEXT_ON_RESET_ARB                                    = 0x8252;
+	private static final int NO_RESET_NOTIFICATION_ARB               = 0x8261;
+	private static final int LOSE_CONTEXT_ON_RESET_ARB               = 0x8252;
 
 	private static final int CONTEXT_RESET_ISOLATION_BIT_ARB = 0x00000008;
 
-	private int majorVersion;
-	private int minorVersion;
+	private final int majorVersion;
+	private final int minorVersion;
 
-	private int layerPlane;
+	private final int layerPlane;
 
-	private boolean debug;
-	private boolean forwardCompatible;
-	private boolean robustAccess;
+	private final boolean debug;
+	private final boolean forwardCompatible;
+	private final boolean robustAccess;
 
-	private boolean profileCore;
-	private boolean profileCompatibility;
-	private boolean profileES;
+	private final boolean profileCore;
+	private final boolean profileCompatibility;
+	private final boolean profileES;
 
-	private boolean loseContextOnReset;
-	private boolean contextResetIsolation;
+	private final boolean loseContextOnReset;
+	private final boolean contextResetIsolation;
 
-	public ContextAttribs() {
-		this(1, 0);
+	
+	private ContextAttribs(Builder builder) {
+		this.majorVersion = builder.majorVersion;
+		this.minorVersion = builder.minorVersion;
+
+		this.layerPlane = builder.layerPlane;
+
+		this.debug = builder.debug;
+		this.forwardCompatible = builder.forwardCompatible;
+		this.robustAccess = builder.robustAccess;
+
+		this.profileCore = builder.profileCore;
+		this.profileCompatibility = builder.profileCompatibility;
+		this.profileES = builder.profileES;
+
+		this.loseContextOnReset = builder.loseContextOnReset;
+		this.contextResetIsolation = builder.contextResetIsolation;
 	}
-
-	public ContextAttribs(final int majorVersion, final int minorVersion) {
-		if ( majorVersion < 0 || 4 < majorVersion ||
-		     minorVersion < 0 ||
-		     (majorVersion == 4 && 3 < minorVersion) ||
-		     (majorVersion == 3 && 3 < minorVersion) ||
-		     (majorVersion == 2 && 1 < minorVersion) ||
-		     (majorVersion == 1 && 5 < minorVersion) )
-			throw new IllegalArgumentException("Invalid OpenGL version specified: " + majorVersion + '.' + minorVersion);
-
-		this.majorVersion = majorVersion;
-		this.minorVersion = minorVersion;
-	}
-
+	
 	private ContextAttribs(final ContextAttribs attribs) {
 		this.majorVersion = attribs.majorVersion;
 		this.minorVersion = attribs.minorVersion;
@@ -119,7 +120,117 @@ public final class ContextAttribs {
 		this.profileES = attribs.profileES;
 
 		this.loseContextOnReset = attribs.loseContextOnReset;
+		this.contextResetIsolation = attribs.contextResetIsolation;
 	}
+	
+	public static class Builder {
+		private int majorVersion;
+		private int minorVersion;
+
+		private int layerPlane;
+
+		private boolean debug;
+		private boolean forwardCompatible;
+		private boolean robustAccess;
+
+		private boolean profileCore;
+		private boolean profileCompatibility;
+		private boolean profileES;
+
+		private boolean loseContextOnReset;
+		private boolean contextResetIsolation;
+
+		
+		public Builder() {
+			this(1, 0);
+		}
+
+		public Builder(final int majorVersion, final int minorVersion) {
+			if ( majorVersion < 0 || 4 < majorVersion ||
+			     minorVersion < 0 ||
+			     (majorVersion == 4 && 3 < minorVersion) ||
+			     (majorVersion == 3 && 3 < minorVersion) ||
+			     (majorVersion == 2 && 1 < minorVersion) ||
+			     (majorVersion == 1 && 5 < minorVersion) )
+				throw new IllegalArgumentException("Invalid OpenGL version specified: " + majorVersion + '.' + minorVersion);
+
+			this.majorVersion = majorVersion;
+			this.minorVersion = minorVersion;
+		}
+
+		public Builder withLayer(final int layerPlane) {
+			if ( layerPlane < 0 )
+				throw new IllegalArgumentException("Invalid layer plane specified: " + layerPlane);
+
+			this.layerPlane = layerPlane;
+			return this;
+		}
+
+		public Builder withDebug(final boolean debug) {
+			this.debug = debug;
+			return this;
+		}
+
+		public Builder withForwardCompatible(final boolean forwardCompatible) {
+			this.forwardCompatible = forwardCompatible;
+			return this;
+		}
+
+		public Builder withProfileCore(final boolean profileCore) {
+			if ( majorVersion < 3 || (majorVersion == 3 && minorVersion < 2) )
+				throw new IllegalArgumentException("Profiles are only supported on OpenGL version 3.2 or higher.");
+
+			this.profileCore = profileCore;
+			if ( profileCore )
+				this.profileCompatibility = false;
+
+			return this;
+		}
+
+		public Builder withProfileCompatibility(final boolean profileCompatibility) {
+			if ( majorVersion < 3 || (majorVersion == 3 && minorVersion < 2) )
+				throw new IllegalArgumentException("Profiles are only supported on OpenGL version 3.2 or higher.");
+
+			this.profileCompatibility = profileCompatibility;
+			if ( profileCompatibility )
+				this.profileCore = false;
+
+			return this;
+		}
+
+		public Builder withProfileES(final boolean profileES) {
+			if ( !(majorVersion == 2 && minorVersion == 0) )
+				throw new IllegalArgumentException("The OpenGL ES profiles is only supported for OpenGL version 2.0.");
+
+			this.profileES = profileES;
+
+			return this;
+		}
+
+		/**
+		 * Returns a ContextAttribs instance with CONTEXT_RESET_NOTIFICATION_STRATEGY set
+		 * to LOSE_CONTEXT_ON_RESET if the parameter is true or to NO_RESET_NOTIFICATION
+		 * if the parameter is false.
+		 *
+		 * @param loseContextOnReset
+		 *
+		 * @return the new ContextAttribs
+		 */
+		public Builder withLoseContextOnReset(final boolean loseContextOnReset) {
+			this.loseContextOnReset = loseContextOnReset;
+			return this;
+		}
+
+		public Builder withContextResetIsolation(final boolean contextResetIsolation) {
+			this.contextResetIsolation = contextResetIsolation;
+			return this;
+		}
+		
+		public ContextAttribs build() {
+			return new ContextAttribs(this);
+		}
+	}
+	
 
 	public int getMajorVersion() {
 		return majorVersion;
@@ -151,74 +262,6 @@ public final class ContextAttribs {
 
 	public boolean isProfileES() {
 		return profileES;
-	}
-
-	public ContextAttribs withLayer(final int layerPlane) {
-		if ( layerPlane < 0 )
-			throw new IllegalArgumentException("Invalid layer plane specified: " + layerPlane);
-
-		this.layerPlane = layerPlane;
-		return this;
-	}
-
-	public ContextAttribs withDebug(final boolean debug) {
-		this.debug = debug;
-		return this;
-	}
-
-	public ContextAttribs withForwardCompatible(final boolean forwardCompatible) {
-		this.forwardCompatible = forwardCompatible;
-		return this;
-	}
-
-	public ContextAttribs withProfileCore(final boolean profileCore) {
-		if ( majorVersion < 3 || (majorVersion == 3 && minorVersion < 2) )
-			throw new IllegalArgumentException("Profiles are only supported on OpenGL version 3.2 or higher.");
-
-		this.profileCore = profileCore;
-		if ( profileCore )
-			this.profileCompatibility = false;
-
-		return this;
-	}
-
-	public ContextAttribs withProfileCompatibility(final boolean profileCompatibility) {
-		if ( majorVersion < 3 || (majorVersion == 3 && minorVersion < 2) )
-			throw new IllegalArgumentException("Profiles are only supported on OpenGL version 3.2 or higher.");
-
-		this.profileCompatibility = profileCompatibility;
-		if ( profileCompatibility )
-			this.profileCore = false;
-
-		return this;
-	}
-
-	public ContextAttribs withProfileES(final boolean profileES) {
-		if ( !(majorVersion == 2 && minorVersion == 0) )
-			throw new IllegalArgumentException("The OpenGL ES profiles is only supported for OpenGL version 2.0.");
-
-		this.profileES = profileES;
-
-		return this;
-	}
-
-	/**
-	 * Returns a ContextAttribs instance with CONTEXT_RESET_NOTIFICATION_STRATEGY set
-	 * to LOSE_CONTEXT_ON_RESET if the parameter is true or to NO_RESET_NOTIFICATION
-	 * if the parameter is false.
-	 *
-	 * @param loseContextOnReset
-	 *
-	 * @return the new ContextAttribs
-	 */
-	public ContextAttribs withLoseContextOnReset(final boolean loseContextOnReset) {
-		this.loseContextOnReset = loseContextOnReset;
-		return this;
-	}
-
-	public ContextAttribs withContextResetIsolation(final boolean contextResetIsolation) {
-		this.contextResetIsolation = contextResetIsolation;
-		return this;
 	}
 
 	private static ContextAttribsImplementation getImplementation() {
