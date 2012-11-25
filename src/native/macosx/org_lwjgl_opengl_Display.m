@@ -49,8 +49,6 @@
 #import "org_lwjgl_MacOSXSysImplementation.h"
 #import "context.h"
 
-#define WAIT_DELAY 100
-
 static NSOpenGLPixelFormat *default_format = nil;
 
 static NSAutoreleasePool *pool;
@@ -95,10 +93,10 @@ static NSAutoreleasePool *pool;
     _modifierFlags = 0;
     if (self != nil) {
         _pixelFormat = [format retain];
-        //[[NSNotificationCenter defaultCenter] addObserver:self
-        //                                         selector:@selector(_surfaceNeedsUpdate:)
-        //                                             name:NSViewGlobalFrameDidChangeNotification
-        //                                           object:self];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(_surfaceNeedsUpdate:)
+                                                     name:NSViewGlobalFrameDidChangeNotification
+                                                   object:self];
     }
     return self;
 }
@@ -336,10 +334,6 @@ static NSAutoreleasePool *pool;
         return;
     }
     long time = [event timestamp] * 1000000000;
-    //float dz = [event scrollingDeltaY]; // An OS X 10.7+ API
-    //if (![event hasPreciseScrollingDeltas]) { // Also an OS X 10.7 API
-	//    dz *= 12; // or so
-    //}
     jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
     jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
     NSPoint loc = [self convertPoint:[event locationInWindow] toView:self];
@@ -447,7 +441,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
     NSRect view_rect = NSMakeRect(0.0, 0.0, width, height);
     window_info->view = [[MacOSXOpenGLView alloc] initWithFrame:view_rect pixelFormat:peer_info->pixel_format];
     if (window_info->context != nil) {
-        printf("Setting context\n"); fflush(stdout);
         [window_info->view setOpenGLContext:window_info->context];
     }
     
@@ -484,10 +477,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	// Inform the view of its parent window info; used to register for window-close callbacks
     [window_info->view setParent:window_info];
 	
-	//[window_info->window makeKeyAndOrderFront:[NSApplication sharedApplication]];
-	//[window_info->window makeFirstResponder:window_info->view];
-	//[window_info->window setReleasedWhenClosed:YES];
-	//[window_info->window setInitialFirstResponder:window_info->view];
 	[window_info->window performSelectorOnMainThread:@selector(makeFirstResponder:) withObject:window_info->view waitUntilDone:NO];
 	[window_info->window performSelectorOnMainThread:@selector(setInitialFirstResponder:) withObject:window_info->view waitUntilDone:NO];
 	[window_info->window performSelectorOnMainThread:@selector(makeKeyAndOrderFront:) withObject:[NSApplication sharedApplication] waitUntilDone:NO];
@@ -515,13 +504,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv
 			[window_info->window close];
 		}
 	}
-    //window_info->window = nil;
-    
-    //if (window_info->view != nil) {
-    //    [window_info->view release];
-	//	window_info->view = nil;
-	//}
-    //[window_info->window release];
 	
 	//[pool drain];
 }
