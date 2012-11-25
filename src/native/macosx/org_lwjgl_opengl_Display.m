@@ -95,10 +95,10 @@ static NSAutoreleasePool *pool;
     _modifierFlags = 0;
     if (self != nil) {
         _pixelFormat = [format retain];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(_surfaceNeedsUpdate:)
-                                                     name:NSViewGlobalFrameDidChangeNotification
-                                                   object:self];
+        //[[NSNotificationCenter defaultCenter] addObserver:self
+        //                                         selector:@selector(_surfaceNeedsUpdate:)
+        //                                             name:NSViewGlobalFrameDidChangeNotification
+        //                                           object:self];
     }
     return self;
 }
