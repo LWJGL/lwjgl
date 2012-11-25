@@ -139,7 +139,7 @@ static NSAutoreleasePool *pool;
     NSOpenGLContext* context = [self openGLContext];
     
     [super lockFocus];
-	if ([context view] != nil && [context view] != self) {
+	if ([context view] != self && [context view] != nil) {
         [context setView:self];
     }
     
@@ -503,6 +503,10 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv *env, jobject this, jobject window_handle) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
     
+	if (window_info->view != nil) {
+		[window_info->view removeFromSuperviewWithoutNeedingDisplay];
+	}
+	
 	if (window_info->fullscreen) {
 		[window_info->view exitFullScreenModeWithOptions: nil];
 	}
