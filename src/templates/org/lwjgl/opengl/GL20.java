@@ -367,6 +367,13 @@ public interface GL20 {
 	                           @GLfloat
 	                           @GLdouble Buffer buffer);
 
+	@Alternate("glVertexAttribPointer")
+	void glVertexAttribPointer(@GLuint int index, int size, @GLenum int type, boolean normalized, @GLsizei int stride,
+	                           @CachedReference(index = "index", name = "glVertexAttribPointer_buffer")
+	                           @BufferObject(BufferKind.ArrayVBO)
+	                           @Check
+	                           @Const ByteBuffer buffer);
+
 	void glEnableVertexAttribArray(@GLuint int index);
 
 	void glDisableVertexAttribArray(@GLuint int index);
