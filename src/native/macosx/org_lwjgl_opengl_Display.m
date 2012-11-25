@@ -361,6 +361,13 @@ static NSAutoreleasePool *pool;
         _parent->resized = JNI_TRUE;
     }
 }
+
+- (void) drawRect:(NSRect)backgroundColor {
+	// set black as the default background color 
+	// for the nsview to avoid white flash on fullscreen
+    [[NSColor blackColor] setFill];
+    NSRectFill(backgroundColor);
+}
 @end
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nIsMiniaturized(JNIEnv *env, jobject this, jobject window_handle) {
