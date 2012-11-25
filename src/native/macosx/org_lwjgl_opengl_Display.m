@@ -139,7 +139,7 @@ static NSAutoreleasePool *pool;
     NSOpenGLContext* context = [self openGLContext];
     
     [super lockFocus];
-    if ([context view] != self && [context view] != nil) {
+	if ([context view] != nil && [context view] != self) {
         [context setView:self];
     }
     
@@ -424,7 +424,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetTitle(JNIEnv *env
     [window_info->window setTitle:title];
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIEnv *env, jobject this, jint x, jint y, jint width, jint height, jboolean fullscreen, jboolean undecorated, jobject peer_info_handle, jobject window_handle) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIEnv *env, jobject this, jint x, jint y, jint width, jint height, jboolean fullscreen, jboolean undecorated, jboolean resizable, jobject peer_info_handle, jobject window_handle) {
     
     if (window_handle == NULL) {
         window_handle = newJavaManagedByteBuffer(env, sizeof(MacOSXWindowInfo));
@@ -435,24 +435,13 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
     }
 	
 	pool = [[NSAutoreleasePool alloc] init];
-
+	
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
     MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
     
     // Cache the necessary info for window-close callbacks into the JVM
     if (window_info->jdisplay == NULL) {
         window_info->jdisplay = (*env)->NewGlobalRef(env, this);
-    }
-    
-    window_info->display_rect = NSMakeRect(x, y, width, height);
-    int default_window_mask = NSBorderlessWindowMask;
-    if (!undecorated && !fullscreen) {
-        printf("Resizeable\n"); fflush(stdout);
-        default_window_mask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
-    }
-    window_info->window = (MacOSXKeyableWindow*)[[NSApplication sharedApplication] mainWindow];
-    if (window_info->window == nil) {
-        window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:default_window_mask backing:NSBackingStoreBuffered defer:YES];
     }
     
     NSRect view_rect = NSMakeRect(0.0, 0.0, width, height);
@@ -462,43 +451,75 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
         [window_info->view setOpenGLContext:window_info->context];
     }
     
-    // Inform the view of its parent window info; used to register for window-close callbacks
+	[[NSApplication sharedApplication] setDelegate:window_info->view];
+	
+	
+	if (!fullscreen) {
+		
+		int default_window_mask = NSBorderlessWindowMask; // undecorated
+		
+		if (!undecorated) {
+			default_window_mask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
+		}
+		
+		if (resizable) {
+			default_window_mask |= NSResizableWindowMask;
+		}
+		
+		window_info->display_rect = NSMakeRect(x, y, width, height);
+		
+		window_info->window = (MacOSXKeyableWindow*)[[NSApplication sharedApplication] mainWindow];
+		if (window_info->window == nil) {
+			window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:default_window_mask backing:NSBackingStoreBuffered defer:YES];
+		}
+		
+		[window_info->window setContentView:window_info->view];
+		
+	}
+	else {
+		[window_info->view enterFullScreenMode: [NSScreen mainScreen] withOptions: nil ];
+		window_info->window = [window_info->view window];
+	}
+	
+	// Inform the view of its parent window info; used to register for window-close callbacks
     [window_info->view setParent:window_info];
-    
-    [window_info->window setContentView:window_info->view];
-    //[window_info->window makeKeyAndOrderFront:[NSApplication sharedApplication]];
-    //[window_info->window makeFirstResponder:window_info->view];
-    //[window_info->window setReleasedWhenClosed:YES];
-    //[window_info->window setInitialFirstResponder:window_info->view];
+	
+	//[window_info->window makeKeyAndOrderFront:[NSApplication sharedApplication]];
+	//[window_info->window makeFirstResponder:window_info->view];
+	//[window_info->window setReleasedWhenClosed:YES];
+	//[window_info->window setInitialFirstResponder:window_info->view];
+	[window_info->window performSelectorOnMainThread:@selector(makeFirstResponder:) withObject:window_info->view waitUntilDone:NO];
+	[window_info->window performSelectorOnMainThread:@selector(setInitialFirstResponder:) withObject:window_info->view waitUntilDone:NO];
 	[window_info->window performSelectorOnMainThread:@selector(makeKeyAndOrderFront:) withObject:[NSApplication sharedApplication] waitUntilDone:NO];
-    [window_info->window performSelectorOnMainThread:@selector(makeFirstResponder:) withObject:window_info->view waitUntilDone:NO];
-    [window_info->window performSelectorOnMainThread:@selector(setReleasedWhenClosed:) withObject:window_info->window waitUntilDone:NO];
-    [window_info->window performSelectorOnMainThread:@selector(setInitialFirstResponder:) withObject:window_info->view waitUntilDone:NO];
-
-    if (window_info->window_options != NSApplicationPresentationDefault) {
-        printf("Non-default\n"); fflush(stdout);
-        [[NSApplication sharedApplication] setPresentationOptions:window_info->window_options];
-    }
-    
+	[window_info->window performSelectorOnMainThread:@selector(setReleasedWhenClosed:) withObject:window_info->window waitUntilDone:NO];
+	
+	window_info->fullscreen = fullscreen;
+	
     peer_info->window_info = window_info;
-
+	
     return window_handle;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv *env, jobject this, jobject window_handle) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
     
-    if (window_info->window != nil) {
-        [window_info->window close];
-    }
-    window_info->window = nil;
+	if (window_info->fullscreen) {
+		[window_info->view exitFullScreenModeWithOptions: nil];
+	}
+	else {	
+		if (window_info->window != nil) {
+			[window_info->window close];
+		}
+	}
+    //window_info->window = nil;
     
-    if (window_info->view != nil) {
-        [window_info->view release];
-    }
-    window_info->view = nil;
+    //if (window_info->view != nil) {
+    //    [window_info->view release];
+	//	window_info->view = nil;
+	//}
     //[window_info->window release];
-	[pool drain];
+	
+	//[pool drain];
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getJNIVersion
@@ -525,7 +546,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nHideUI(JNIEnv *env, 
         return;
     }
     
-	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
+	//MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
     //if(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_5) {
         /*NSApplicationPresentationOptions options = NSApplicationPresentationDefault;
         if (hide == JNI_TRUE) {
@@ -539,10 +560,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nHideUI(JNIEnv *env, 
             [[NSApplication sharedApplication] setPresentationOptions:options];
         }*/
     //} else {
-        if (hide == JNI_TRUE) {
+        /*if (hide == JNI_TRUE) {
             SetSystemUIMode(kUIModeContentSuppressed, 0);
         } else {
             SetSystemUIMode(kUIModeNormal, 0);
-        }
+        }*/
     //}
 }

@@ -90,7 +90,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		
 	}
 
-	private native ByteBuffer nCreateWindow(int x, int y, int width, int height, boolean fullscreen, boolean undecorated, ByteBuffer peer_info_handle, ByteBuffer window_handle) throws LWJGLException;
+	private native ByteBuffer nCreateWindow(int x, int y, int width, int height, boolean fullscreen, boolean undecorated, boolean resizable, ByteBuffer peer_info_handle, ByteBuffer window_handle) throws LWJGLException;
 
 	private native boolean nIsMiniaturized(ByteBuffer window_handle);
     
@@ -112,6 +112,8 @@ final class MacOSXDisplay implements DisplayImplementation {
     
     public void createWindow(final DrawableLWJGL drawable, DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException {
 		boolean fullscreen = Display.isFullscreen();
+		boolean resizable = Display.isResizable();
+		
 		hideUI(fullscreen);
 		close_requested = false;
         
@@ -120,7 +122,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
 		try {
             window = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(),
-                                   fullscreen, isUndecorated(),
+                                   fullscreen, isUndecorated(), resizable,
                                    peer_handle, window);
             this.x = x;
             this.y = y;

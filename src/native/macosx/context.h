@@ -61,6 +61,7 @@ typedef struct {
     jobject jdisplay;
     jobject jmouse;
     jobject jkeyboard;
+	jboolean fullscreen;
     jboolean resized;
     
     // Cached for window creation
