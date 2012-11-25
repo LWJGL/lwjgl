@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.util.generator.*;
-import org.lwjgl.util.generator.Alternate;
 import org.lwjgl.util.generator.opengl.*;
 
 import java.nio.*;
@@ -810,6 +809,14 @@ public interface GL11 {
 	                    @GLbyte Buffer pointer);
 
 	@DeprecatedGL
+	@Alternate("glColorPointer")
+	void glColorPointer(int size, @GLenum int type, @GLsizei int stride,
+	                    @CachedReference
+	                    @Check
+	                    @BufferObject(BufferKind.ArrayVBO)
+	                    @Const ByteBuffer pointer);
+
+	@DeprecatedGL
 	void glColorMaterial(@GLenum int face, @GLenum int mode);
 
 	void glColorMask(boolean red, boolean green, boolean blue, boolean alpha);
@@ -1304,6 +1311,14 @@ public interface GL11 {
 	                     @GLfloat
 	                     @GLdouble Buffer pointer);
 
+	@DeprecatedGL
+	@Alternate("glNormalPointer")
+	void glNormalPointer(@GLenum int type, @GLsizei int stride,
+	                     @CachedReference
+	                     @BufferObject(BufferKind.ArrayVBO)
+	                     @Check
+	                     @Const ByteBuffer pointer);
+
 	@NoErrorCheck
 	@DeprecatedGL
 	void glNormal3b(byte nx, byte ny, byte nz);
@@ -1443,6 +1458,14 @@ public interface GL11 {
 	                     @GLfloat
 	                     @GLdouble Buffer pointer);
 
+	@DeprecatedGL
+	@Alternate("glVertexPointer")
+	void glVertexPointer(int size, @GLenum int type, @GLsizei int stride,
+	                     @CachedReference
+	                     @BufferObject(BufferKind.ArrayVBO)
+	                     @Check
+	                     @Const ByteBuffer pointer);
+
 	@NoErrorCheck
 	@DeprecatedGL
 	void glVertex2f(float x, float y);
@@ -1576,6 +1599,14 @@ public interface GL11 {
 	                       @GLshort
 	                       @GLfloat
 	                       @GLdouble Buffer pointer);
+
+	@DeprecatedGL
+	@Alternate("glTexCoordPointer")
+	void glTexCoordPointer(int size, @GLenum int type, @GLsizei int stride,
+	                       @CachedReference(index = "StateTracker.getReferences(caps).glClientActiveTexture", name = "glTexCoordPointer_buffer")
+	                       @BufferObject(BufferKind.ArrayVBO)
+	                       @Check
+	                       @Const ByteBuffer pointer);
 
 	@NoErrorCheck
 	@DeprecatedGL
