@@ -114,7 +114,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 		boolean fullscreen = Display.isFullscreen();
 		boolean resizable = Display.isResizable();
 		
-		hideUI(fullscreen);
 		close_requested = false;
         
         DrawableGL gl_drawable = (DrawableGL)Display.getDrawable();
@@ -147,7 +146,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public void destroyWindow() {
         nDestroyWindow(window);
-        hideUI(false);
 	}
 
 	public int getGammaRampLength() {
@@ -295,18 +293,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 			glViewport(current_viewport.get(0), current_viewport.get(1), current_viewport.get(2), current_viewport.get(3));
 		}
 	}
-
-	/**
-	 * This is an interface to the native Cocoa function,
-     * NSWindow:setStyleMask. It is used to set the window's border to
-     * undecorated.
-	 */
-	private void hideUI(boolean hide) {
-		//if (!LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 4))
-			nHideUI(window, hide);
-	}
-
-	private native void nHideUI(ByteBuffer window_handle, boolean hide);
 
 	public void reshape(int x, int y, int width, int height) {
         //if (native_mode) {

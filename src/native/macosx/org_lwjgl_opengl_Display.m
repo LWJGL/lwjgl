@@ -539,31 +539,3 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_setGammaRamp(JNIEnv *
 		throwException(env, "Could not set display gamma");
 	}
 }
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nHideUI(JNIEnv *env, jobject this, jobject window_handle, jboolean hide) {
-    if (window_handle == NULL) {
-        printf("Window handle is null\n");
-        return;
-    }
-    
-	//MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-    //if(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_5) {
-        /*NSApplicationPresentationOptions options = NSApplicationPresentationDefault;
-        if (hide == JNI_TRUE) {
-            options = NSApplicationPresentationFullScreen; // this requires OS X 10.7+ to compile
-            options |= NSApplicationPresentationHideDock;
-            options |= NSApplicationPresentationHideMenuBar;
-        }
-        printf("Setting options\n");
-        window_info->window_options = options;
-        if (window_info->window != nil) {
-            [[NSApplication sharedApplication] setPresentationOptions:options];
-        }*/
-    //} else {
-        /*if (hide == JNI_TRUE) {
-            SetSystemUIMode(kUIModeContentSuppressed, 0);
-        } else {
-            SetSystemUIMode(kUIModeNormal, 0);
-        }*/
-    //}
-}
