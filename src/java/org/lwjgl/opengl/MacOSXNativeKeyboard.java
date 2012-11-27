@@ -108,6 +108,7 @@ final class MacOSXNativeKeyboard extends EventQueue {
         nativeToLwjglMap.put((Short)(short)0x07, Keyboard.KEY_X);
         nativeToLwjglMap.put((Short)(short)0x10, Keyboard.KEY_Y);
         nativeToLwjglMap.put((Short)(short)0x06, Keyboard.KEY_Z);
+        nativeToLwjglMap.put((Short)(short)0x0A, Keyboard.KEY_SECTION);
         nativeToLwjglMap.put((Short)(short)0x2B, Keyboard.KEY_COMMA);
         nativeToLwjglMap.put((Short)(short)0x2C, Keyboard.KEY_SLASH);
         nativeToLwjglMap.put((Short)(short)0x2F, Keyboard.KEY_PERIOD);
@@ -115,6 +116,7 @@ final class MacOSXNativeKeyboard extends EventQueue {
         nativeToLwjglMap.put((Short)(short)0x29, Keyboard.KEY_SEMICOLON);
         nativeToLwjglMap.put((Short)(short)0x129, Keyboard.KEY_COLON);
         nativeToLwjglMap.put((Short)(short)0x2A, Keyboard.KEY_BACKSLASH);
+        nativeToLwjglMap.put((Short)(short)0x47, Keyboard.KEY_CLEAR);
         nativeToLwjglMap.put((Short)(short)0x52, Keyboard.KEY_NUMPAD0);
         nativeToLwjglMap.put((Short)(short)0x53, Keyboard.KEY_NUMPAD1);
         nativeToLwjglMap.put((Short)(short)0x54, Keyboard.KEY_NUMPAD2);
@@ -125,6 +127,7 @@ final class MacOSXNativeKeyboard extends EventQueue {
         nativeToLwjglMap.put((Short)(short)0x59, Keyboard.KEY_NUMPAD7);
         nativeToLwjglMap.put((Short)(short)0x5B, Keyboard.KEY_NUMPAD8);
         nativeToLwjglMap.put((Short)(short)0x5C, Keyboard.KEY_NUMPAD9);
+        nativeToLwjglMap.put((Short)(short)0x4C, Keyboard.KEY_NUMPADENTER);
         nativeToLwjglMap.put((Short)(short)0x7A, Keyboard.KEY_F1);
         nativeToLwjglMap.put((Short)(short)0x78, Keyboard.KEY_F2);
         nativeToLwjglMap.put((Short)(short)0x63, Keyboard.KEY_F3);
@@ -140,7 +143,14 @@ final class MacOSXNativeKeyboard extends EventQueue {
         nativeToLwjglMap.put((Short)(short)0x69, Keyboard.KEY_F13);
         nativeToLwjglMap.put((Short)(short)0x6B, Keyboard.KEY_F14);
         nativeToLwjglMap.put((Short)(short)0x71, Keyboard.KEY_F15);
-        nativeToLwjglMap.put((Short)(short)0x72, Keyboard.KEY_HOME);
+        nativeToLwjglMap.put((Short)(short)0x6A, Keyboard.KEY_F16);
+        nativeToLwjglMap.put((Short)(short)0x40, Keyboard.KEY_F17);
+        nativeToLwjglMap.put((Short)(short)0x4F, Keyboard.KEY_F18);
+        nativeToLwjglMap.put((Short)(short)0x50, Keyboard.KEY_F19);
+        nativeToLwjglMap.put((Short)(short)0x72, Keyboard.KEY_INSERT);
+        nativeToLwjglMap.put((Short)(short)0x73, Keyboard.KEY_HOME);
+        nativeToLwjglMap.put((Short)(short)0x77, Keyboard.KEY_END);
+        nativeToLwjglMap.put((Short)(short)0x75, Keyboard.KEY_DELETE);
         nativeToLwjglMap.put((Short)(short)0x18, Keyboard.KEY_EQUALS);
         nativeToLwjglMap.put((Short)(short)0x7B, Keyboard.KEY_LEFT);
         nativeToLwjglMap.put((Short)(short)0x7C, Keyboard.KEY_RIGHT);
@@ -170,7 +180,7 @@ final class MacOSXNativeKeyboard extends EventQueue {
         nativeToLwjglMap.put((Short)(short)0xF3, Keyboard.KEY_LMENU);
         nativeToLwjglMap.put((Short)(short)0x3A, Keyboard.KEY_LMENU);
         nativeToLwjglMap.put((Short)(short)0x3D, Keyboard.KEY_RMENU);
-        nativeToLwjglMap.put((Short)(short)0xF4, Keyboard.KEY_RETURN);
+        nativeToLwjglMap.put((Short)(short)0xF4, Keyboard.KEY_LMETA);
         nativeToLwjglMap.put((Short)(short)0xF5, Keyboard.KEY_NUMLOCK);
         nativeToLwjglMap.put((Short)(short)0x27, Keyboard.KEY_APOSTROPHE);
         
