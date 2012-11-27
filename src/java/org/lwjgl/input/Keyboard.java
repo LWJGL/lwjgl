@@ -229,7 +229,8 @@ public class Keyboard {
 				     && Modifier.isPublic(field.getModifiers())
 				     && Modifier.isFinal(field.getModifiers())
 				     && field.getType().equals(int.class)
-				     && field.getName().startsWith("KEY_") ) {
+				     && field.getName().startsWith("KEY_")
+				     && !field.getName().endsWith("WIN") ) { /* Don't use deprecated names */
 
 					int key = field.getInt(null);
 					String name = field.getName().substring(4);
