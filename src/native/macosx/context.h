@@ -81,8 +81,6 @@ typedef struct {
     @private
     NSOpenGLContext*        _openGLContext;
     NSOpenGLPixelFormat*    _pixelFormat;
-    NSUInteger              _lastModifierFlags;
-    NSUInteger              _modifierFlags;
 }
 
 + (NSOpenGLPixelFormat*)defaultPixelFormat;

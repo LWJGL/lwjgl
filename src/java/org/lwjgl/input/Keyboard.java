@@ -182,6 +182,7 @@ public class Keyboard {
 	public static final int KEY_DIVIDE          = 0xB5; /* / on numeric keypad */
 	public static final int KEY_SYSRQ           = 0xB7;
 	public static final int KEY_RMENU           = 0xB8; /* right Alt */
+	public static final int KEY_FUNCTION        = 0xC4; /* Function (Mac) */
 	public static final int KEY_PAUSE           = 0xC5; /* Pause */
 	public static final int KEY_HOME            = 0xC7; /* Home on arrow keypad */
 	public static final int KEY_UP              = 0xC8; /* UpArrow on arrow keypad */
@@ -194,7 +195,7 @@ public class Keyboard {
 	public static final int KEY_INSERT          = 0xD2; /* Insert on arrow keypad */
 	public static final int KEY_DELETE          = 0xD3; /* Delete on arrow keypad */
 	public static final int KEY_CLEAR           = 0xDA; /* Clear key (Mac) */
-	public static final int KEY_LMETA            = 0xDB; /* Left Windows/Option key */
+	public static final int KEY_LMETA           = 0xDB; /* Left Windows/Option key */
 	/**
 	 * The left windows key, mapped to KEY_LMETA
 	 *

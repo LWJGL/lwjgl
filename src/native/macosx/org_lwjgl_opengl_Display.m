@@ -89,8 +89,6 @@ static NSAutoreleasePool *pool;
 - (id)initWithFrame:(NSRect)frameRect pixelFormat:(NSOpenGLPixelFormat*)format
 {
     self = [super initWithFrame:frameRect];
-    _lastModifierFlags = 0;
-    _modifierFlags = 0;
     if (self != nil) {
         _pixelFormat = [format retain];
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -198,51 +196,35 @@ static NSAutoreleasePool *pool;
         return;
     }
     long time = [event timestamp] * 1000000000;
+
+    NSUInteger mask = ~0;
+    switch([event keyCode]) {
+        case kVK_Control     : mask = 0x0001; break;
+        case kVK_Shift       : mask = 0x0002; break;
+        case kVK_RightShift  : mask = 0x0004; break;
+        case kVK_Command     : mask = 0x0008; break;
+        case 0x36            : mask = 0x0010; break; // Should be: kVK_RightCommand -- missing O.o
+        case kVK_Option      : mask = 0x0020; break;
+        case kVK_RightOption : mask = 0x0040; break;
+        case kVK_RightControl: mask = 0x2000; break;
+        case kVK_CapsLock    : mask = NSAlphaShiftKeyMask; break;
+        case kVK_Function    : mask = NSFunctionKeyMask; break;
+     // case 0x??            : mask = NSNumericPadKeyMask; break; // Didn't have the keycode for this one :(
+        default:
+            printf("Unknown modifier with keycode: %d\n", [event keyCode]);
+            return;
+    }
+
     jclass keyboard_class = (*env)->GetObjectClass(env, _parent->jkeyboard);
-    jmethodID keydown = (*env)->GetMethodID(env, keyboard_class, "keyPressed", "(IIJ)V");
-    jmethodID keyup = (*env)->GetMethodID(env, keyboard_class, "keyReleased", "(IIJ)V");
-    _lastModifierFlags = _modifierFlags;
-    _modifierFlags = [event modifierFlags];
-    NSUInteger flagDown = ~_lastModifierFlags & _modifierFlags;
-    NSUInteger flagUp = _lastModifierFlags & ~_modifierFlags;
-    if (flagDown & NSAlphaShiftKeyMask) {
-        (*env)->CallVoidMethod(env, _parent->jkeyboard, keydown, 0xf0, 0, time);
+
+    jmethodID keyMethod;
+    if (([event modifierFlags] & mask) == mask) {
+        keyMethod = (*env)->GetMethodID(env, keyboard_class, "keyPressed", "(IIJ)V");
+    } else {
+        keyMethod = (*env)->GetMethodID(env, keyboard_class, "keyReleased", "(IIJ)V");
     }
-    if (flagUp & NSAlphaShiftKeyMask) {
-        (*env)->CallVoidMethod(env, _parent->jkeyboard, keyup, 0xf0, 0, time);
-    }
-    if (flagDown & NSShiftKeyMask) {
-        (*env)->CallVoidMethod(env, _parent->jkeyboard, keydown, 0xf1, 0, time);
-    }
-    if (flagUp & NSShiftKeyMask) {
-        (*env)->CallVoidMethod(env, _parent->jkeyboard, keyup, 0xf1, 0, time);
-    }
-    if (flagDown & NSControlKeyMask) {
-        (*env)->CallVoidMethod(env, _parent->jkeyboard, keydown, 0xf2, 0, time);
-    }
-    if (flagUp & NSControlKeyMask) {
-        (*env)->CallVoidMethod(env, _parent->jkeyboard, keyup, 0xf2, 0, time);
-    }
-    if (flagDown & NSAlternateKeyMask) {
-        (*env)->CallVoidMethod(env, _parent->jkeyboard, keydown, 0xf3, 0, time);
-    }
-    if (flagUp & NSAlternateKeyMask) {
-        (*env)->CallVoidMethod(env, _parent->jkeyboard, keyup, 0xf3, 0, time);
-    }
-    if (flagDown & NSCommandKeyMask) {
-        (*env)->CallVoidMethod(env, _parent->jkeyboard, keydown, 0xf4, 0, time);
-    }
-    if (flagUp & NSCommandKeyMask) {
-        (*env)->CallVoidMethod(env, _parent->jkeyboard, keyup, 0xf4, 0, time);
-    }
-    if (flagDown & NSNumericPadKeyMask) {
-        (*env)->CallVoidMethod(env, _parent->jkeyboard, keydown, 0xf5, 0, time);
-    }
-    if (flagUp & NSNumericPadKeyMask) {
-        (*env)->CallVoidMethod(env, _parent->jkeyboard, keyup, 0xf5, 0, time);
-    }
-    //const char* charbuf = [[event characters] cStringUsingEncoding:NSASCIIStringEncoding];
-    //(*env)->CallVoidMethod(env, _parent->jkeyboard, keymod, (jint)[event keyCode], (jint)charbuf[0], time);
+
+    (*env)->CallVoidMethod(env, _parent->jkeyboard, keyMethod, [event keyCode], 0, time);
 }
 
 - (void)mouseButtonState:(NSEvent *)event :(int)button :(int)state {
