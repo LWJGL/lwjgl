@@ -270,7 +270,7 @@ static NSAutoreleasePool *pool;
     long time = [event timestamp] * 1000000000;
     jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
     jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
-    NSPoint loc = [self convertPoint:[event locationInWindow] toView:self];
+    NSPoint loc = [self convertPoint:[event locationInWindow] toView:nil];
     (*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 0.0f, time);
 }
 
@@ -282,7 +282,7 @@ static NSAutoreleasePool *pool;
     long time = [event timestamp] * 1000000000;
     jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
     jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
-    NSPoint loc = [self convertPoint:[event locationInWindow] toView:self];
+    NSPoint loc = [self convertPoint:[event locationInWindow] toView:nil];
     (*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 0.0f, time);
 }
 
@@ -294,7 +294,7 @@ static NSAutoreleasePool *pool;
     long time = [event timestamp] * 1000000000;
     jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
     jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
-    NSPoint loc = [self convertPoint:[event locationInWindow] toView:self];
+    NSPoint loc = [self convertPoint:[event locationInWindow] toView:nil];
     (*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 0.0f, time);
 }
 
@@ -306,7 +306,7 @@ static NSAutoreleasePool *pool;
     long time = [event timestamp] * 1000000000;
     jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
     jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
-    NSPoint loc = [self convertPoint:[event locationInWindow] toView:self];
+    NSPoint loc = [self convertPoint:[event locationInWindow] toView:nil];
 	(*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 0.0f, time);
 }
 
@@ -318,7 +318,7 @@ static NSAutoreleasePool *pool;
     long time = [event timestamp] * 1000000000;
     jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
     jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
-    NSPoint loc = [self convertPoint:[event locationInWindow] toView:self];
+    NSPoint loc = [self convertPoint:[event locationInWindow] toView:nil];
     (*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 1.0f, time);
 }
 
@@ -344,11 +344,11 @@ static NSAutoreleasePool *pool;
     }
 }
 
-- (void) drawRect:(NSRect)backgroundColor {
+- (void) drawRect:(NSRect)rect {
 	// set black as the default background color 
 	// for the nsview to avoid white flash on fullscreen
     [[NSColor blackColor] setFill];
-    NSRectFill(backgroundColor);
+    NSRectFill(rect);
 }
 @end
 
@@ -461,6 +461,11 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	else {
 		[window_info->view enterFullScreenMode: [NSScreen mainScreen] withOptions: nil ];
 		window_info->window = [window_info->view window];
+		
+		// adjust the NSView bounds to correct mouse coordinates in fullscreen
+		NSSize windowSize = [window_info->window frame].size;
+		NSSize newBounds = NSMakeSize(windowSize.width/width*windowSize.width, windowSize.height/height*windowSize.height);
+		[window_info->view setBoundsSize:newBounds];
 	}
 	
 	// Inform the view of its parent window info; used to register for window-close callbacks
