@@ -457,8 +457,18 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 		
 		[window_info->window setContentView:window_info->view];
 		
+		// disable any fixed backbuffer size to allow resizing
+		CGLContextObj cgcontext = (CGLContextObj)[[window_info->view openGLContext] CGLContextObj];
+		CGLDisable(cgcontext, kCGLCESurfaceBackingSize);
 	}
 	else {
+		// set a fixed backbuffer size for fullscreen
+		CGLContextObj cgcontext = (CGLContextObj)[[window_info->view openGLContext] CGLContextObj];
+		GLint dim[2] = {width, height};
+		CGLSetParameter(cgcontext, kCGLCPSurfaceBackingSize, dim);
+        CGLEnable(cgcontext, kCGLCESurfaceBackingSize);
+		
+		// enter fullscreen mode
 		[window_info->view enterFullScreenMode: [NSScreen mainScreen] withOptions: nil ];
 		window_info->window = [window_info->view window];
 		
