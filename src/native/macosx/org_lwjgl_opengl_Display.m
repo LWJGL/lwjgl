@@ -487,7 +487,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
     
 	if (window_info->view != nil) {
-		[window_info->view removeFromSuperviewWithoutNeedingDisplay];
+		[window_info->view performSelectorOnMainThread:@selector(removeFromSuperviewWithoutNeedingDisplay) withObject:nil waitUntilDone:YES];
 	}
 	
 	if (window_info->fullscreen) {
