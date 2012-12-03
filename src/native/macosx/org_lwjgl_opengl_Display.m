@@ -158,10 +158,6 @@ static NSAutoreleasePool *pool;
 
 - (void)setParent:(MacOSXWindowInfo*)parent {
     _parent = parent;
-    // Set this NSView as delegate to get native window close events for windowShouldClose method
-    if (_parent != nil) {
-        [_parent->window setDelegate:self];
-    }
 }
 
 - (void)keyDown:(NSEvent *)event {
@@ -407,7 +403,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetTitle(JNIEnv *env
     [window_info->window setTitle:title];
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIEnv *env, jobject this, jint x, jint y, jint width, jint height, jboolean fullscreen, jboolean undecorated, jboolean resizable, jobject peer_info_handle, jobject window_handle) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIEnv *env, jobject this, jint x, jint y, jint width, jint height, jboolean fullscreen, jboolean undecorated, jboolean resizable, jboolean parented, jobject peer_info_handle, jobject window_handle) {
     
     if (window_handle == NULL) {
         window_handle = newJavaManagedByteBuffer(env, sizeof(MacOSXWindowInfo));
@@ -457,6 +453,11 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 		
 		[window_info->window setContentView:window_info->view];
 		
+		if (!parented) {
+			// set NSView as delegate of NSWindow to get windowShouldClose events
+			[window_info->window setDelegate:window_info->view];
+		}
+		
 		// disable any fixed backbuffer size to allow resizing
 		CGLContextObj cgcontext = (CGLContextObj)[[window_info->view openGLContext] CGLContextObj];
 		CGLDisable(cgcontext, kCGLCESurfaceBackingSize);
@@ -478,7 +479,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 		[window_info->view setBoundsSize:newBounds];
 	}
 	
-	// Inform the view of its parent window info; used to register for window-close callbacks
+	// Inform the view of its parent window info;
     [window_info->view setParent:window_info];
 	
 	[window_info->window performSelectorOnMainThread:@selector(makeFirstResponder:) withObject:window_info->view waitUntilDone:NO];
