@@ -239,7 +239,7 @@
 				<patternset refid="lwjgl-linux.fileset" />
 			</fileset>
 		</copy>
-		<copy todir="${lwjgl.temp}/native/freebsd">
+		<copy todir="${lwjgl.temp}/native/freebsd" failonerror="false">
 			<fileset dir="${lwjgl.lib}/freebsd">
 				<patternset refid="lwjgl-freebsd.fileset" />
 			</fileset>
