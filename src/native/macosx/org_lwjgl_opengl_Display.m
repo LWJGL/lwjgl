@@ -467,7 +467,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 		CGLContextObj cgcontext = (CGLContextObj)[[window_info->view openGLContext] CGLContextObj];
 		GLint dim[2] = {width, height};
 		CGLSetParameter(cgcontext, kCGLCPSurfaceBackingSize, dim);
-        CGLEnable(cgcontext, kCGLCESurfaceBackingSize);
+		CGLEnable(cgcontext, kCGLCESurfaceBackingSize);
 		
 		// enter fullscreen mode
 		[window_info->view enterFullScreenMode: [NSScreen mainScreen] withOptions: nil ];
@@ -480,12 +480,11 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	}
 	
 	// Inform the view of its parent window info;
-    [window_info->view setParent:window_info];
+	[window_info->view setParent:window_info];
 	
 	[window_info->window performSelectorOnMainThread:@selector(makeFirstResponder:) withObject:window_info->view waitUntilDone:NO];
 	[window_info->window performSelectorOnMainThread:@selector(setInitialFirstResponder:) withObject:window_info->view waitUntilDone:NO];
 	[window_info->window performSelectorOnMainThread:@selector(makeKeyAndOrderFront:) withObject:[NSApplication sharedApplication] waitUntilDone:NO];
-	[window_info->window performSelectorOnMainThread:@selector(setReleasedWhenClosed:) withObject:window_info->window waitUntilDone:NO];
 	
 	window_info->fullscreen = fullscreen;
 	
