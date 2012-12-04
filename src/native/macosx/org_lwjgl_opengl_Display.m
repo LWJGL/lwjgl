@@ -368,21 +368,21 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nResizeWindow(JNIEnv 
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nWasResized(JNIEnv *env, jobject this, jobject window_handle) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-    jboolean was_resized = window_info->resized;
-    window_info->resized = JNI_FALSE;
-    return was_resized;
+	jboolean was_resized = window_info->resized;
+	window_info->resized = JNI_FALSE;
+	return was_resized;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetWidth(JNIEnv *env, jobject this, jobject window_handle) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-    jint width = window_info->display_rect.size.width;
-    return width;
+	jint width = window_info->display_rect.size.width;
+	return width;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetHeight(JNIEnv *env, jobject this, jobject window_handle) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-    jint height = window_info->display_rect.size.height;
-    return height;
+	jint height = window_info->display_rect.size.height;
+	return height;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetResizable(JNIEnv *env, jobject this, jobject window_handle, jboolean resizable) {
@@ -519,7 +519,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_restoreGamma(JNIEnv *
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_setGammaRamp(JNIEnv *env, jobject this, jobject gamma_buffer) {
 	const CGGammaValue *values = (*env)->GetDirectBufferAddress(env, gamma_buffer);
-	CGTableCount table_size = (*env)->GetDirectBufferCapacity(env, gamma_buffer);
+	uint32_t table_size = (*env)->GetDirectBufferCapacity(env, gamma_buffer);
 	CGDisplayErr err = CGSetDisplayTransferByTable(kCGDirectMainDisplay, table_size, values, values, values);
 	if (err != CGDisplayNoErr) {
 		throwException(env, "Could not set display gamma");
