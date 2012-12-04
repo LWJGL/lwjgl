@@ -519,7 +519,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_restoreGamma(JNIEnv *
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_setGammaRamp(JNIEnv *env, jobject this, jobject gamma_buffer) {
 	const CGGammaValue *values = (*env)->GetDirectBufferAddress(env, gamma_buffer);
-	CGTableCount table_size = (*env)->GetDirectBufferCapacity(env, gamma_buffer);
+	uint32_t table_size = (*env)->GetDirectBufferCapacity(env, gamma_buffer);
 	CGDisplayErr err = CGSetDisplayTransferByTable(kCGDirectMainDisplay, table_size, values, values, values);
 	if (err != CGDisplayNoErr) {
 		throwException(env, "Could not set display gamma");
