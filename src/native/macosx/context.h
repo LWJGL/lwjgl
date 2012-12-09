@@ -63,9 +63,6 @@ typedef struct {
     jobject jkeyboard;
 	jboolean fullscreen;
     jboolean resized;
-    
-    // Cached for window creation
-    NSApplicationPresentationOptions window_options;
 } MacOSXWindowInfo;
 
 @interface MacOSXKeyableWindow : NSWindow
