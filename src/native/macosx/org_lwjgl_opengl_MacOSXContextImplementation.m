@@ -75,6 +75,21 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCre
         throwException(env, "Could not create context");
         return NULL;
     }
+	
+	if (peer_info->window_info->fullscreen) {
+		// set a fixed backbuffer size for fullscreen
+		CGLContextObj cgcontext = (CGLContextObj)[context CGLContextObj];
+		NSSize displaySize = peer_info->window_info->display_rect.size;
+		GLint dim[2] = {displaySize.width, displaySize.height};
+		CGLSetParameter(cgcontext, kCGLCPSurfaceBackingSize, dim);
+		CGLEnable(cgcontext, kCGLCESurfaceBackingSize);  
+	}
+	else {
+		// disable any fixed backbuffer size to allow resizing
+		CGLContextObj cgcontext = (CGLContextObj)[context CGLContextObj];
+		CGLDisable(cgcontext, kCGLCESurfaceBackingSize); 
+	}
+	  
     [peer_info->window_info->view setOpenGLContext:context];
     peer_info->window_info->context = context;
 	context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);

@@ -431,6 +431,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
     
 	[[NSApplication sharedApplication] setDelegate:window_info->view];
 	
+	window_info->display_rect = NSMakeRect(x, y, width, height);
 	
 	if (!fullscreen) {
 		
@@ -443,8 +444,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 		if (resizable) {
 			default_window_mask |= NSResizableWindowMask;
 		}
-		
-		window_info->display_rect = NSMakeRect(x, y, width, height);
 		
 		window_info->window = (MacOSXKeyableWindow*)[[NSApplication sharedApplication] mainWindow];
 		if (window_info->window == nil) {
@@ -464,7 +463,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	}
 	else {
 		// set a fixed backbuffer size for fullscreen
-		CGLContextObj cgcontext = (CGLContextObj)[[window_info->view openGLContext] CGLContextObj];
+		CGLContextObj cgcontext = (CGLContextObj)[window_info->context CGLContextObj];
 		GLint dim[2] = {width, height};
 		CGLSetParameter(cgcontext, kCGLCPSurfaceBackingSize, dim);
 		CGLEnable(cgcontext, kCGLCESurfaceBackingSize);
