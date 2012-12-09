@@ -110,7 +110,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		return Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated");
 	}
     
-    public void createWindow(final DrawableLWJGL drawable, DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException {
+	public void createWindow(final DrawableLWJGL drawable, DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException {
 		boolean fullscreen = Display.isFullscreen();
 		boolean resizable = Display.isResizable();
 		boolean parented = (parent != null);
@@ -129,6 +129,16 @@ final class MacOSXDisplay implements DisplayImplementation {
             this.width = mode.getWidth();
             this.height = mode.getHeight();
             this.canvas = parent;
+            
+            if (fullscreen) {
+            		// when going to fullscreen viewport is set to screen size by Cocoa, ignore this value
+            		skipViewportValue = true;
+            		// if starting in fullscreen then set initial viewport to displaymode size
+            		if (current_viewport.get(2) == 0 && current_viewport.get(3) == 0) {
+            			current_viewport.put(2, width);
+            			current_viewport.put(3, height);
+            		}
+            }
 		} catch (LWJGLException e) {
 			destroyWindow();
 			throw e;
@@ -262,35 +272,17 @@ final class MacOSXDisplay implements DisplayImplementation {
 		}
 	}
 
-	private static final IntBuffer current_viewport = BufferUtils.createIntBuffer(16);
+	private boolean skipViewportValue = false;
+    private static final IntBuffer current_viewport = BufferUtils.createIntBuffer(16);
 	public void update() {
 		boolean should_update = true;
-        /*
-		 * Workaround for the "white screen in fullscreen mode" problem
-		 *
-		 * Sometimes, switching from windowed mode to fullscreen or simply creating the Display
-		 * in fullscreen mode will result in the context not being bound to the window correctly.
-		 * The program runs fine, but the canvas background (white) is shown instead of the context
-		 * front buffer.
-		 *
-		 * I've discovered that re-binding the context with another setView() won't fix the problem, while a
-		 * clearDrawable() followed by a setView() does work. A straightforward workaround would be
-		 * to simply run the combination at every update(). This is not sufficient, since the clearDrawable()
-		 * call makes the the background appear shortly, causing visual artifacts.
-		 * What we really need is a way to detect that a setView() failed, and then do the magic combo. I've not
-		 * been able to find such a detection so alternatively I'm triggering the combo if the display is fullscreen
-		 * (I've not seen the white screen problem in windowed mode) and if the canvas has gotten a paint message or
-		 * if its update flag was set.
-		 *
-		 * My testing seems to indicate that the workaround works, since I've not seen the problem after the fix.
-		 *
-		 * - elias
-		 */
+        
 		DrawableGL drawable = (DrawableGL)Display.getDrawable();
 		if (should_update) {
 			drawable.context.update();
 			/* This is necessary to make sure the context won't "forget" about the view size */
-			glGetInteger(GL_VIEWPORT, current_viewport);
+			if (skipViewportValue) skipViewportValue = false;
+			else glGetInteger(GL_VIEWPORT, current_viewport);
 			glViewport(current_viewport.get(0), current_viewport.get(1), current_viewport.get(2), current_viewport.get(3));
 		}
 	}
