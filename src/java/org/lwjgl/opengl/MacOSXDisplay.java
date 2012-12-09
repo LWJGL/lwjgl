@@ -334,7 +334,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public void setCursorPosition(int x, int y) {
 		if (mouse != null) {
-			mouse.warpCursor(x, y);
+			mouse.setCursorPosition(x, y);
 		}
         //MacOSXMouseEventQueue.nWarpCursor(x, y);
 	}

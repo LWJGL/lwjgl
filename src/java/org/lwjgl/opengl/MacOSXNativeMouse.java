@@ -80,7 +80,7 @@ final class MacOSXNativeMouse extends EventQueue {
         this.window_handle = window_handle;
 	}
     
-    private native void nWarpCursor(ByteBuffer window_handle, int x, int y);
+    private native void nSetCursorPosition(ByteBuffer window_handle, int x, int y);
 
 	public static native void nGrabMouse(boolean grab);
 
@@ -92,8 +92,8 @@ final class MacOSXNativeMouse extends EventQueue {
         nRegisterMouseListener(window_handle);
     }
     
-    public synchronized void warpCursor(int x, int y) {
-    		nWarpCursor(window_handle, x, y);
+    public synchronized void setCursorPosition(int x, int y) {
+    		nSetCursorPosition(window_handle, x, y);
     }
     
     public synchronized void unregister() {

@@ -55,13 +55,25 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nGrabMouse(JNIEnv
 		CGDisplayShowCursor(kCGDirectMainDisplay);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nWarpCursor(JNIEnv *env, jclass this, jobject window_handle, jint x, jint y) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nSetCursorPosition(JNIEnv *env, jclass this, jobject window_handle, jint x, jint y) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-    NSPoint point = NSMakePoint(x, y);
-    point = [window_info->view convertPoint:point fromView:window_info->view];
+    
 	CGPoint p;
-	p.x = point.x;
-	p.y = point.y;
+	
+	if (window_info->fullscreen) {
+		NSSize screenSize = [[NSScreen mainScreen] frame].size;
+		NSSize displaySize = window_info->display_rect.size;
+		
+		p.x = (screenSize.width / displaySize.width) * x;
+		p.y = (screenSize.height / displaySize.height) * y;
+	}
+	else {
+		NSPoint point = NSMakePoint(x, y);
+		
+		p.x = point.x;
+		p.y = point.y;
+	}
+	
 	CGWarpMouseCursorPosition(p);
 }
 
