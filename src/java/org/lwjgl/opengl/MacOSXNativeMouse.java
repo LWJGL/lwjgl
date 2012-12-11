@@ -188,7 +188,7 @@ final class MacOSXNativeMouse extends EventQueue {
 			setCursorPos(x, y, nanos);
 		}
         if ( dz != 0 ) {
-            int wheel_amount = (int)(-dy * WHEEL_SCALE);
+            int wheel_amount = (int)(dy * WHEEL_SCALE);
             accum_dz += wheel_amount;
             putMouseEvent((byte)-1, (byte)0, wheel_amount, nanos);
         }
