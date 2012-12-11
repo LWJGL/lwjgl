@@ -447,7 +447,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 		
 		window_info->window = (MacOSXKeyableWindow*)[[NSApplication sharedApplication] mainWindow];
 		if (window_info->window == nil) {
-			window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:default_window_mask backing:NSBackingStoreBuffered defer:YES];
+			window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:default_window_mask backing:NSBackingStoreBuffered defer:NO];
 		}
 		
 		[window_info->window setContentView:window_info->view];
