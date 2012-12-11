@@ -61,17 +61,28 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nSetCursorPositio
 	CGPoint p;
 	
 	if (window_info->fullscreen) {
-		NSSize screenSize = [[NSScreen mainScreen] frame].size;
-		NSSize displaySize = window_info->display_rect.size;
-		
-		p.x = (screenSize.width / displaySize.width) * x;
-		p.y = (screenSize.height / displaySize.height) * y;
-	}
-	else {
 		NSPoint point = NSMakePoint(x, y);
+		
+		// convert point to window/screen coordinates
+		point = [window_info->view convertPoint:point fromView:nil];
 		
 		p.x = point.x;
 		p.y = point.y;
+	}
+	else {
+		NSRect screenRect = [[NSScreen mainScreen] frame];
+		NSRect viewRect = [window_info->view frame];
+		NSRect winRect = [window_info->window frame];
+		
+		// get window coords of the view origin
+		NSPoint viewPoint = [window_info->view convertPoint:viewRect.origin fromView:nil];
+		
+		// convert y to screen coordinates, origin bottom left
+		p.y = winRect.origin.y + viewPoint.y + (viewRect.size.height - y - 1);
+		
+		p.x = winRect.origin.x + viewPoint.x + x;
+		// flip y coordinates (origin top left) to allow use with CGWarpMouseCursorPosition
+		p.y = screenRect.size.height - p.y - 1;
 	}
 	
 	CGWarpMouseCursorPosition(p);
