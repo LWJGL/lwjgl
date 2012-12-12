@@ -550,9 +550,9 @@ public class PointerBuffer implements Comparable {
 	 */
 	public static void put(final ByteBuffer target, int index, long l) {
 		if ( is64Bit )
-			target.putLong(index * 8, l);
+			target.putLong(index, l);
 		else
-			target.putInt(index * 4, (int)l);
+			target.putInt(index, (int)l);
 	}
 
 	// -- Bulk get operations --
