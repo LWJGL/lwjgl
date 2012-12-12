@@ -234,6 +234,8 @@ public class JavaMethodsGenerator {
 
 	private static void printMethodWithMultiType(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, Mode mode, boolean generate_error_checks, boolean context_specific) {
 		Utils.printDocComment(writer, method);
+		if ( method.getAnnotation(Deprecated.class) != null )
+			writer.println("\t@Deprecated");
 		if ( interface_decl.getAnnotation(Private.class) == null && method.getAnnotation(Private.class) == null )
 			writer.print("\tpublic static ");
 		else
