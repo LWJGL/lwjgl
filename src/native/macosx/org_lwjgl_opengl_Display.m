@@ -354,9 +354,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nIsMiniaturized(J
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nIsFocused(JNIEnv *env, jobject this, jobject window_handle) {
-    return JNI_TRUE;
-	//MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-    //return (jboolean)([window_info->window isKeyWindow] || [window_info->window isMainWindow]);
+    MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
+	// Display is focused if nswindow is key window and nsview is first responder in that nswindow
+    return (jboolean)([[window_info->view window] isKeyWindow] && [[window_info->view window] firstResponder] == window_info->view);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nResizeWindow(JNIEnv *env, jobject this, jobject window_handle, jint x, jint y, jint width, jint height) {
