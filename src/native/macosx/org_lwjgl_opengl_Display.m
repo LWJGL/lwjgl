@@ -396,6 +396,23 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetResizable(JNIEnv 
     [window_info->window setStyleMask:style_mask];
 }
 
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetX(JNIEnv *env, jobject this, jobject window_handle) {
+	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
+	jint x = [[window_info->view window] frame].origin.x;
+	return x;
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetY(JNIEnv *env, jobject this, jobject window_handle) {
+	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
+	
+	NSRect screenRect = [[NSScreen mainScreen] frame];
+	NSRect winRect = [[window_info->view window] frame];
+	
+	// get top corner of window frame, also flip coords so origin is in top left
+	jint y = screenRect.size.height - (winRect.origin.y + winRect.size.height) - 1;
+	return y;
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetTitle(JNIEnv *env, jobject this, jobject window_handle, jobject title_buffer) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 	const char *title_cstr = (const char *)(*env)->GetDirectBufferAddress(env, title_buffer);

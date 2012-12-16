@@ -79,10 +79,6 @@ final class MacOSXDisplay implements DisplayImplementation {
     private MacOSXNativeKeyboard keyboard;
     private ByteBuffer window;
     private ByteBuffer context;
-    private int x;
-    private int y;
-    private int width;
-    private int height;
     
     private boolean close_requested;
 
@@ -101,6 +97,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private native void nResizeWindow(ByteBuffer window_handle, int x, int y, int width, int height);
     
 	private native boolean nWasResized(ByteBuffer window_handle);
+	
+	private native int nGetX(ByteBuffer window_handle);
+	
+	private native int nGetY(ByteBuffer window_handle);
 	
 	private native int nGetWidth(ByteBuffer window_handle);
 	
@@ -124,10 +124,6 @@ final class MacOSXDisplay implements DisplayImplementation {
             window = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(),
                                    fullscreen, isUndecorated(), resizable,
                                    parented, peer_handle, window);
-            this.x = x;
-            this.y = y;
-            this.width = mode.getWidth();
-            this.height = mode.getHeight();
             this.canvas = parent;
             
             if (fullscreen) {
@@ -135,8 +131,8 @@ final class MacOSXDisplay implements DisplayImplementation {
             		skipViewportValue = true;
             		// if starting in fullscreen then set initial viewport to displaymode size
             		if (current_viewport.get(2) == 0 && current_viewport.get(3) == 0) {
-            			current_viewport.put(2, width);
-            			current_viewport.put(3, height);
+            			current_viewport.put(2, mode.getWidth());
+            			current_viewport.put(3, mode.getHeight());
             		}
             }
 		} catch (LWJGLException e) {
@@ -453,11 +449,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 	
 	public int getX() {
-        return x;
+        return nGetX(window);
 	}
 
 	public int getY() {
-        return y;
+        return nGetY(window);
 	}
 
 	public int getWidth() {
