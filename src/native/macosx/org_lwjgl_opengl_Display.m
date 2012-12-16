@@ -446,8 +446,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
         [window_info->view setOpenGLContext:window_info->context];
     }
     
-	[[NSApplication sharedApplication] setDelegate:window_info->view];
-	
 	window_info->display_rect = NSMakeRect(x, y, width, height);
 	
 	if (!fullscreen) {
