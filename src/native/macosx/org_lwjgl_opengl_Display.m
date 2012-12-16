@@ -62,16 +62,15 @@ static NSAutoreleasePool *pool;
 
 @implementation MacOSXOpenGLView
 
-+ (NSOpenGLPixelFormat*)defaultPixelFormat
-{
-    NSOpenGLPixelFormatAttribute defaultAttribs[] = {
++ (NSOpenGLPixelFormat*)defaultPixelFormat {
+	NSOpenGLPixelFormatAttribute defaultAttribs[] = {
         NSOpenGLPFADoubleBuffer,
         NSOpenGLPFADepthSize, 16,
         NSOpenGLPFAColorSize, 32,
         0
     };
-    if (default_format == nil) {
-        default_format = [[NSOpenGLPixelFormat alloc] initWithAttributes:defaultAttribs];
+	if (default_format == nil) {
+		default_format = [[NSOpenGLPixelFormat alloc] initWithAttributes:defaultAttribs];
     }
     return default_format;
 }
@@ -86,91 +85,84 @@ static NSAutoreleasePool *pool;
 	return NO;
 }
 
-- (id)initWithFrame:(NSRect)frameRect pixelFormat:(NSOpenGLPixelFormat*)format
-{
-    self = [super initWithFrame:frameRect];
-    if (self != nil) {
-        _pixelFormat = [format retain];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(_surfaceNeedsUpdate:)
-                                                     name:NSViewGlobalFrameDidChangeNotification
-                                                   object:self];
+- (id)initWithFrame:(NSRect)frameRect pixelFormat:(NSOpenGLPixelFormat*)format {
+	self = [super initWithFrame:frameRect];
+	if (self != nil) {
+		_pixelFormat = [format retain];
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(_surfaceNeedsUpdate:)
+													 name:NSViewGlobalFrameDidChangeNotification
+												   object:self];
     }
     return self;
 }
 
-- (void) _surfaceNeedsUpdate:(NSNotification*)notification
-{
+- (void) _surfaceNeedsUpdate:(NSNotification*)notification {
     [self update];
 }
 
-- (void)setOpenGLContext:(NSOpenGLContext*)context
-{
+- (void)setOpenGLContext:(NSOpenGLContext*)context {
     _openGLContext = context;
 }
 
-- (NSOpenGLContext*)openGLContext
-{
+- (NSOpenGLContext*)openGLContext {
     return _openGLContext;
 }
 
-- (void)clearGLContext
-{
-    [_openGLContext release];
-    _openGLContext = nil;
+- (void)clearGLContext {
+	[_openGLContext release];
+	_openGLContext = nil;
 }
 
-- (void)prepareOpenGL
-{
-    
+- (void)prepareOpenGL {
+
 }
 
-- (void)update
-{
-    [_openGLContext update];
+- (void)update {
+	[_openGLContext update];
 }
 
-- (void)lockFocus
-{
-    NSOpenGLContext* context = [self openGLContext];
-    
-    [super lockFocus];
+- (void)lockFocus {
+	[super lockFocus];
+	
+	NSOpenGLContext* context = [self openGLContext];
+	
+	if (context == nil) return;
+	
 	if ([context view] != self) {
-        [context setView:self];
-    }
-    
-    [context makeCurrentContext];
+		[context setView:self];
+	}
+	
+	[context makeCurrentContext];
 }
 
-- (void)setPixelFormat:(NSOpenGLPixelFormat*)pixelFormat
-{
-    _pixelFormat = [pixelFormat retain];
+- (void)setPixelFormat:(NSOpenGLPixelFormat*)pixelFormat {
+	_pixelFormat = [pixelFormat retain];
 }
 
-- (NSOpenGLPixelFormat*)pixelFormat
-{
-    return _pixelFormat;
+- (NSOpenGLPixelFormat*)pixelFormat {
+	return _pixelFormat;
 }
 
 - (BOOL)acceptsFirstResponder {
-    return YES;
+	return YES;
 }
 
 - (void)setParent:(MacOSXWindowInfo*)parent {
-    _parent = parent;
+	_parent = parent;
 }
 
 - (void)keyDown:(NSEvent *)event {
-    JNIEnv *env = attachCurrentThread();
-    if (env == nil || event == nil || _parent == nil || _parent->jkeyboard == nil) {
-        return;
-    }
-    long time = [event timestamp] * 1000000000;
-    jclass keyboard_class = (*env)->GetObjectClass(env, _parent->jkeyboard);
-    jmethodID keydown = (*env)->GetMethodID(env, keyboard_class, "keyPressed", "(IIJ)V");
-    const char* charbuf = [[event characters] cStringUsingEncoding:NSASCIIStringEncoding];
-    int charcode = (charbuf == nil) ? 0 : charbuf[0];
-    (*env)->CallVoidMethod(env, _parent->jkeyboard, keydown, [event keyCode], charcode, time);
+	JNIEnv *env = attachCurrentThread();
+	if (env == nil || event == nil || _parent == nil || _parent->jkeyboard == nil) {
+		return;
+	}
+	long time = [event timestamp] * 1000000000;
+	jclass keyboard_class = (*env)->GetObjectClass(env, _parent->jkeyboard);
+	jmethodID keydown = (*env)->GetMethodID(env, keyboard_class, "keyPressed", "(IIJ)V");
+	const char* charbuf = [[event characters] cStringUsingEncoding:NSASCIIStringEncoding];
+	int charcode = (charbuf == nil) ? 0 : charbuf[0];
+	(*env)->CallVoidMethod(env, _parent->jkeyboard, keydown, [event keyCode], charcode, time);
 }
 
 - (void)keyUp:(NSEvent *)event {

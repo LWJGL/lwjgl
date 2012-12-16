@@ -182,10 +182,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSetSwa
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nDestroy
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
-    
+	
+	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	// clearDrawable on main thread to ensure its not in use
-	[[peer_info->window_info->view openGLContext] performSelectorOnMainThread:@selector(clearDrawable) withObject:nil waitUntilDone:YES];
-	[[peer_info->window_info->view openGLContext] release];
+	[context_info->context performSelectorOnMainThread:@selector(clearDrawable) withObject:nil waitUntilDone:YES];
+	[context_info->peer_info->window_info->view setOpenGLContext:nil];
+	[context_info->context release];
+	
 	[pool release];
 }
