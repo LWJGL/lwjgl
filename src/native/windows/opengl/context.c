@@ -224,7 +224,10 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extens
 		putAttrib(&attrib_list, WGL_ACCELERATION_ARB); putAttrib(&attrib_list, WGL_FULL_ACCELERATION_ARB);
 	}
 	putAttrib(&attrib_list, WGL_PIXEL_TYPE_ARB); putAttrib(&attrib_list, pixel_type);
-	putAttrib(&attrib_list, WGL_DOUBLE_BUFFER_ARB); putAttrib(&attrib_list, double_buffer ? TRUE : FALSE);
+	if ( double_buffer || samples == 0 ) {
+		// Skip this for FALSE + MSAA: NV drivers won't return any PixelFormat
+		putAttrib(&attrib_list, WGL_DOUBLE_BUFFER_ARB); putAttrib(&attrib_list, double_buffer ? TRUE : FALSE);
+	}
 	putAttrib(&attrib_list, WGL_SUPPORT_OPENGL_ARB); putAttrib(&attrib_list, TRUE);
 	putAttrib(&attrib_list, WGL_RED_BITS_ARB); putAttrib(&attrib_list, bpe);
 	putAttrib(&attrib_list, WGL_GREEN_BITS_ARB); putAttrib(&attrib_list, bpe);
