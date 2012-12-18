@@ -64,24 +64,24 @@ static NSAutoreleasePool *pool;
 
 + (NSOpenGLPixelFormat*)defaultPixelFormat {
 	NSOpenGLPixelFormatAttribute defaultAttribs[] = {
-        NSOpenGLPFADoubleBuffer,
-        NSOpenGLPFADepthSize, 16,
-        NSOpenGLPFAColorSize, 32,
-        0
-    };
+		NSOpenGLPFADoubleBuffer,
+		NSOpenGLPFADepthSize, 16,
+		NSOpenGLPFAColorSize, 32,
+		0
+	};
 	if (default_format == nil) {
 		default_format = [[NSOpenGLPixelFormat alloc] initWithAttributes:defaultAttribs];
-    }
-    return default_format;
+	}
+	return default_format;
 }
 
 - (BOOL)windowShouldClose:(id)sender {
 	if (_parent != nil) {
-        JNIEnv *env = attachCurrentThread();
-        jclass display_class = (*env)->GetObjectClass(env, _parent->jdisplay);
-        jmethodID close_callback = (*env)->GetMethodID(env, display_class, "doHandleQuit", "()V");
-        (*env)->CallVoidMethod(env, _parent->jdisplay, close_callback);
-    }
+		JNIEnv *env = attachCurrentThread();
+		jclass display_class = (*env)->GetObjectClass(env, _parent->jdisplay);
+		jmethodID close_callback = (*env)->GetMethodID(env, display_class, "doHandleQuit", "()V");
+		(*env)->CallVoidMethod(env, _parent->jdisplay, close_callback);
+	}
 	return NO;
 }
 
@@ -90,23 +90,23 @@ static NSAutoreleasePool *pool;
 	if (self != nil) {
 		_pixelFormat = [format retain];
 		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(_surfaceNeedsUpdate:)
-													 name:NSViewGlobalFrameDidChangeNotification
-												   object:self];
-    }
-    return self;
+												selector:@selector(_surfaceNeedsUpdate:)
+												name:NSViewGlobalFrameDidChangeNotification
+												object:self];
+	}
+	return self;
 }
 
 - (void) _surfaceNeedsUpdate:(NSNotification*)notification {
-    [self update];
+	[self update];
 }
 
 - (void)setOpenGLContext:(NSOpenGLContext*)context {
-    _openGLContext = context;
+	_openGLContext = context;
 }
 
 - (NSOpenGLContext*)openGLContext {
-    return _openGLContext;
+	return _openGLContext;
 }
 
 - (void)clearGLContext {
@@ -166,196 +166,194 @@ static NSAutoreleasePool *pool;
 }
 
 - (void)keyUp:(NSEvent *)event {
-    JNIEnv *env = attachCurrentThread();
-    if (env == nil || event == nil || _parent == nil || _parent->jkeyboard == nil) {
-        return;
-    }
-    long time = [event timestamp] * 1000000000;
-    jclass keyboard_class = (*env)->GetObjectClass(env, _parent->jkeyboard);
-    jmethodID keyup = (*env)->GetMethodID(env, keyboard_class, "keyReleased", "(IIJ)V");
-    const char* charbuf = [[event characters] cStringUsingEncoding:NSASCIIStringEncoding];
-    int charcode = (charbuf == nil) ? 0 : charbuf[0];
-    (*env)->CallVoidMethod(env, _parent->jkeyboard, keyup, [event keyCode], charcode, time);
+	JNIEnv *env = attachCurrentThread();
+	if (env == nil || event == nil || _parent == nil || _parent->jkeyboard == nil) {
+		return;
+	}
+	long time = [event timestamp] * 1000000000;
+	jclass keyboard_class = (*env)->GetObjectClass(env, _parent->jkeyboard);
+	jmethodID keyup = (*env)->GetMethodID(env, keyboard_class, "keyReleased", "(IIJ)V");
+	const char* charbuf = [[event characters] cStringUsingEncoding:NSASCIIStringEncoding];
+	int charcode = (charbuf == nil) ? 0 : charbuf[0];
+	(*env)->CallVoidMethod(env, _parent->jkeyboard, keyup, [event keyCode], charcode, time);
 }
 
 - (void)flagsChanged:(NSEvent *)event {
-    JNIEnv *env = attachCurrentThread();
-    if (env == nil || event == nil || _parent == nil || _parent->jkeyboard == nil) {
-        return;
-    }
-    long time = [event timestamp] * 1000000000;
+	JNIEnv *env = attachCurrentThread();
+	if (env == nil || event == nil || _parent == nil || _parent->jkeyboard == nil) {
+		return;
+	}
+	long time = [event timestamp] * 1000000000;
 
-    NSUInteger mask = ~0;
-    switch([event keyCode]) {
-        case kVK_Control     : mask = 0x0001; break;
-        case kVK_Shift       : mask = 0x0002; break;
-        case kVK_RightShift  : mask = 0x0004; break;
-        case kVK_Command     : mask = 0x0008; break;
-        case 0x36            : mask = 0x0010; break; // Should be: kVK_RightCommand -- missing O.o
-        case kVK_Option      : mask = 0x0020; break;
-        case kVK_RightOption : mask = 0x0040; break;
-        case kVK_RightControl: mask = 0x2000; break;
-        case kVK_CapsLock    : mask = NSAlphaShiftKeyMask; break;
-        case kVK_Function    : mask = NSFunctionKeyMask; break;
-     // case 0x??            : mask = NSNumericPadKeyMask; break; // Didn't have the keycode for this one :(
-        default:
-            printf("Unknown modifier with keycode: %d\n", [event keyCode]);
-            return;
-    }
+	NSUInteger mask = ~0;
+	switch([event keyCode]) {
+		case kVK_Control     : mask = 0x0001; break;
+		case kVK_Shift       : mask = 0x0002; break;
+		case kVK_RightShift  : mask = 0x0004; break;
+		case kVK_Command     : mask = 0x0008; break;
+		case 0x36            : mask = 0x0010; break; // Should be: kVK_RightCommand -- missing O.o
+		case kVK_Option      : mask = 0x0020; break;
+		case kVK_RightOption : mask = 0x0040; break;
+		case kVK_RightControl: mask = 0x2000; break;
+		case kVK_CapsLock    : mask = NSAlphaShiftKeyMask; break;
+		case kVK_Function    : mask = NSFunctionKeyMask; break;
+		// case 0x??            : mask = NSNumericPadKeyMask; break; // Didn't have the keycode for this one :(
+		default:
+			NSLog(@"Unknown modifier with keycode: %d\n", [event keyCode]);
+			return;
+	}
 
-    jclass keyboard_class = (*env)->GetObjectClass(env, _parent->jkeyboard);
+	jclass keyboard_class = (*env)->GetObjectClass(env, _parent->jkeyboard);
 
-    jmethodID keyMethod;
-    if (([event modifierFlags] & mask) == mask) {
-        keyMethod = (*env)->GetMethodID(env, keyboard_class, "keyPressed", "(IIJ)V");
-    } else {
-        keyMethod = (*env)->GetMethodID(env, keyboard_class, "keyReleased", "(IIJ)V");
-    }
+	jmethodID keyMethod;
+	if (([event modifierFlags] & mask) == mask) {
+		keyMethod = (*env)->GetMethodID(env, keyboard_class, "keyPressed", "(IIJ)V");
+	} else {
+		keyMethod = (*env)->GetMethodID(env, keyboard_class, "keyReleased", "(IIJ)V");
+	}
 
-    (*env)->CallVoidMethod(env, _parent->jkeyboard, keyMethod, [event keyCode], 0, time);
+	(*env)->CallVoidMethod(env, _parent->jkeyboard, keyMethod, [event keyCode], 0, time);
 }
 
 - (void)mouseButtonState:(NSEvent *)event :(int)button :(int)state {
-    JNIEnv *env = attachCurrentThread();
-    if (env == nil || event == nil || _parent == nil || _parent->jkeyboard == nil) {
-        return;
-    }
-    long time = [event timestamp] * 1000000000;
-    jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
-    jmethodID mousebutton = (*env)->GetMethodID(env, mouse_class, "setButton", "(IIJ)V");
-    (*env)->CallVoidMethod(env, _parent->jmouse, mousebutton, button, state, time);
+	JNIEnv *env = attachCurrentThread();
+	if (env == nil || event == nil || _parent == nil || _parent->jkeyboard == nil) {
+		return;
+	}
+	long time = [event timestamp] * 1000000000;
+	jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
+	jmethodID mousebutton = (*env)->GetMethodID(env, mouse_class, "setButton", "(IIJ)V");
+	(*env)->CallVoidMethod(env, _parent->jmouse, mousebutton, button, state, time);
 }
 
 - (void)mouseDown:(NSEvent *)event {
-    [self mouseButtonState:event :0 :1];
+	[self mouseButtonState:event :0 :1];
 }
 
 - (void)rightMouseDown:(NSEvent *)event {
-    [self mouseButtonState:event :1 :1];
+	[self mouseButtonState:event :1 :1];
 }
 
 - (void)otherMouseDown:(NSEvent *)event {
-    [self mouseButtonState:event :2 :1];
+	[self mouseButtonState:event :2 :1];
 }
 
 - (void)mouseUp:(NSEvent *)event {
-    [self mouseButtonState:event :0 :0];
+	[self mouseButtonState:event :0 :0];
 }
 
 - (void)rightMouseUp:(NSEvent *)event {
-    [self mouseButtonState:event :1 :0];
+	[self mouseButtonState:event :1 :0];
 }
 
 - (void)otherMouseUp:(NSEvent *)event {
-    [self mouseButtonState:event :2 :0];
+	[self mouseButtonState:event :2 :0];
 }
 
 - (void)mouseDragged:(NSEvent *)event {
-    JNIEnv *env = attachCurrentThread();
-    if (env == nil || event == nil || _parent == nil) {
-        return;
-    }
-    long time = [event timestamp] * 1000000000;
-    jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
-    jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
-    NSPoint loc = [self convertPoint:[event locationInWindow] toView:nil];
-    (*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 0.0f, time);
+	JNIEnv *env = attachCurrentThread();
+	if (env == nil || event == nil || _parent == nil) {
+		return;
+	}
+	long time = [event timestamp] * 1000000000;
+	jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
+	jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
+	NSPoint loc = [self convertPoint:[event locationInWindow] toView:nil];
+	(*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 0.0f, time);
 }
 
 - (void)rightMouseDragged:(NSEvent *)event {
-    JNIEnv *env = attachCurrentThread();
-    if (env == nil || event == nil || _parent == nil) {
-        return;
-    }
-    long time = [event timestamp] * 1000000000;
-    jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
-    jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
-    NSPoint loc = [self convertPoint:[event locationInWindow] toView:nil];
-    (*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 0.0f, time);
+	JNIEnv *env = attachCurrentThread();
+	if (env == nil || event == nil || _parent == nil) {
+		return;
+	}
+	long time = [event timestamp] * 1000000000;
+	jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
+	jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
+	NSPoint loc = [self convertPoint:[event locationInWindow] toView:nil];
+	(*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 0.0f, time);
 }
 
 - (void)otherMouseDragged:(NSEvent *)event {
-    JNIEnv *env = attachCurrentThread();
-    if (env == nil || event == nil || _parent == nil) {
-        return;
-    }
-    long time = [event timestamp] * 1000000000;
-    jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
-    jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
-    NSPoint loc = [self convertPoint:[event locationInWindow] toView:nil];
-    (*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 0.0f, time);
+	JNIEnv *env = attachCurrentThread();
+	if (env == nil || event == nil || _parent == nil) {
+		return;
+	}
+	long time = [event timestamp] * 1000000000;
+	jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
+	jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
+	NSPoint loc = [self convertPoint:[event locationInWindow] toView:nil];
+	(*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 0.0f, time);
 }
 
 - (void)mouseMoved:(NSEvent *)event {
-    JNIEnv *env = attachCurrentThread();
-    if (env == nil || event == nil || _parent == nil || _parent->jmouse == nil) {
-        return;
-    }
-    long time = [event timestamp] * 1000000000;
-    jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
-    jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
-    NSPoint loc = [self convertPoint:[event locationInWindow] toView:nil];
+	JNIEnv *env = attachCurrentThread();
+	if (env == nil || event == nil || _parent == nil || _parent->jmouse == nil) {
+		return;
+	}
+	long time = [event timestamp] * 1000000000;
+	jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
+	jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
+	NSPoint loc = [self convertPoint:[event locationInWindow] toView:nil];
 	(*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 0.0f, time);
 }
 
 - (void)scrollWheel:(NSEvent *)event {
-    JNIEnv *env = attachCurrentThread();
-    if (env == nil || event == nil || _parent == nil) {
-        return;
-    }
-    long time = [event timestamp] * 1000000000;
-    jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
-    jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
-    NSPoint loc = [self convertPoint:[event locationInWindow] toView:nil];
-    (*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 1.0f, time);
+	JNIEnv *env = attachCurrentThread();
+	if (env == nil || event == nil || _parent == nil) {
+		return;
+	}
+	long time = [event timestamp] * 1000000000;
+	jclass mouse_class = (*env)->GetObjectClass(env, _parent->jmouse);
+	jmethodID mousemove = (*env)->GetMethodID(env, mouse_class, "mouseMoved", "(FFFFFJ)V");
+	NSPoint loc = [self convertPoint:[event locationInWindow] toView:nil];
+	(*env)->CallVoidMethod(env, _parent->jmouse, mousemove, loc.x, loc.y, [event deltaX], [event deltaY], 1.0f, time);
 }
 
-- (void)viewDidMoveToWindow
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(windowResized:)
-                                                 name:NSWindowDidResizeNotification
-                                               object:[self window]];
+- (void)viewDidMoveToWindow {
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											selector:@selector(windowResized:)
+											name:NSWindowDidResizeNotification
+											object:[self window]];
 }
 
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super dealloc];
+- (void)dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super dealloc];
 }
 
-- (void)windowResized:(NSNotification *)notification;
+- (void)windowResized:(NSNotification *)notification; 
 {
-    if (_parent != nil) {
-        _parent->display_rect = [[self window] frame];
-        _parent->resized = JNI_TRUE;
-    }
+	if (_parent != nil) {
+		_parent->display_rect = [[self window] frame];
+		_parent->resized = JNI_TRUE;
+	}
 }
 
 - (void) drawRect:(NSRect)rect {
 	// set black as the default background color 
 	// for the nsview to avoid white flash on fullscreen
-    [[NSColor blackColor] setFill];
-    NSRectFill(rect);
+	[[NSColor blackColor] setFill];
+	NSRectFill(rect);
 }
 @end
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nIsMiniaturized(JNIEnv *env, jobject this, jobject window_handle) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-    return (jboolean)[window_info->window isMiniaturized];
+	return (jboolean)[window_info->window isMiniaturized];
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nIsFocused(JNIEnv *env, jobject this, jobject window_handle) {
-    MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
+	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 	// Display is focused if nswindow is key window and nsview is first responder in that nswindow
-    return (jboolean)([[window_info->view window] isKeyWindow] && [[window_info->view window] firstResponder] == window_info->view);
+	return (jboolean)([[window_info->view window] isKeyWindow] && [[window_info->view window] firstResponder] == window_info->view);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nResizeWindow(JNIEnv *env, jobject this, jobject window_handle, jint x, jint y, jint width, jint height) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-    window_info->display_rect = NSMakeRect(x, y, width, height);
-    [window_info->window setFrame:window_info->display_rect display:false];
-    [window_info->view update];
+	window_info->display_rect = NSMakeRect(x, y, width, height);
+	[window_info->window setFrame:window_info->display_rect display:false];
+	[window_info->view update];
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nWasResized(JNIEnv *env, jobject this, jobject window_handle) {
@@ -379,13 +377,13 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetHeight(JNIEnv *en
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetResizable(JNIEnv *env, jobject this, jobject window_handle, jboolean resizable) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-    NSUInteger style_mask = [window_info->window styleMask];
-    if (resizable == true) {
-        style_mask |= NSResizableWindowMask;
-    } else {
-        style_mask &= ~NSResizableWindowMask;
-    }
-    [window_info->window setStyleMask:style_mask];
+	NSUInteger style_mask = [window_info->window styleMask];
+	if (resizable == true) {
+		style_mask |= NSResizableWindowMask;
+	} else {
+		style_mask &= ~NSResizableWindowMask;
+	}
+	[window_info->window setStyleMask:style_mask];
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetX(JNIEnv *env, jobject this, jobject window_handle) {
@@ -408,35 +406,30 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetY(JNIEnv *env, jo
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetTitle(JNIEnv *env, jobject this, jobject window_handle, jobject title_buffer) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 	const char *title_cstr = (const char *)(*env)->GetDirectBufferAddress(env, title_buffer);
-    NSString *title = [[NSString alloc] initWithUTF8String:title_cstr];
-    [window_info->window setTitle:title];
+	NSString *title = [[NSString alloc] initWithUTF8String:title_cstr];
+	[window_info->window setTitle:title];
 }
 
 JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIEnv *env, jobject this, jint x, jint y, jint width, jint height, jboolean fullscreen, jboolean undecorated, jboolean resizable, jboolean parented, jobject peer_info_handle, jobject window_handle) {
-    
-    if (window_handle == NULL) {
-        window_handle = newJavaManagedByteBuffer(env, sizeof(MacOSXWindowInfo));
-        if (window_handle == NULL) {
-            throwException(env, "Could not create handle buffer");
-            return NULL;
-        }
-    }
+
+	if (window_handle == NULL) {
+		window_handle = newJavaManagedByteBuffer(env, sizeof(MacOSXWindowInfo));
+		if (window_handle == NULL) {
+			throwException(env, "Could not create handle buffer");
+			return NULL;
+		}
+	}
 	
 	pool = [[NSAutoreleasePool alloc] init];
 	
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-    MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-    
-    // Cache the necessary info for window-close callbacks into the JVM
-    if (window_info->jdisplay == NULL) {
-        window_info->jdisplay = (*env)->NewGlobalRef(env, this);
-    }
-    
-    NSRect view_rect = NSMakeRect(0.0, 0.0, width, height);
-    window_info->view = [[MacOSXOpenGLView alloc] initWithFrame:view_rect pixelFormat:peer_info->pixel_format];
-    if (window_info->context != nil) {
-        [window_info->view setOpenGLContext:window_info->context];
-    }
+	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	
+	NSRect view_rect = NSMakeRect(0.0, 0.0, width, height);
+	window_info->view = [[MacOSXOpenGLView alloc] initWithFrame:view_rect pixelFormat:peer_info->pixel_format];
+	if (window_info->context != nil) {
+		[window_info->view setOpenGLContext:window_info->context];
+	}
     
 	window_info->display_rect = NSMakeRect(x, y, width, height);
 	
@@ -452,14 +445,21 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 			default_window_mask |= NSResizableWindowMask;
 		}
 		
-		window_info->window = (MacOSXKeyableWindow*)[[NSApplication sharedApplication] mainWindow];
-		if (window_info->window == nil) {
-			window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:default_window_mask backing:NSBackingStoreBuffered defer:NO];
+		if (parented) {
+			window_info->window = (MacOSXKeyableWindow*)[[NSApplication sharedApplication] mainWindow];
+			
+			[window_info->window setContentView:window_info->view];
 		}
-		
-		[window_info->window setContentView:window_info->view];
-		
-		if (!parented) {
+		else {
+			window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:default_window_mask backing:NSBackingStoreBuffered defer:NO];
+			
+			[window_info->window setContentView:window_info->view];
+			
+			// Cache the necessary info for window-close callbacks into the JVM
+			if (window_info->jdisplay == NULL) {
+				window_info->jdisplay = (*env)->NewGlobalRef(env, this);
+			}
+			
 			// set NSView as delegate of NSWindow to get windowShouldClose events
 			[window_info->window setDelegate:window_info->view];
 		}
@@ -494,9 +494,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	
 	window_info->fullscreen = fullscreen;
 	
-    peer_info->window_info = window_info;
+	peer_info->window_info = window_info;
 	
-    return window_handle;
+	return window_handle;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv *env, jobject this, jobject window_handle) {
@@ -514,8 +514,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv
 	[pool drain];
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getJNIVersion
-  (JNIEnv *env, jobject ignored) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getJNIVersion(JNIEnv *env, jobject ignored) {
 	return org_lwjgl_MacOSXSysImplementation_JNI_VERSION;
 }
 

@@ -113,7 +113,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public void createWindow(final DrawableLWJGL drawable, DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException {
 		boolean fullscreen = Display.isFullscreen();
 		boolean resizable = Display.isResizable();
-		boolean parented = (parent != null);
+		boolean parented = (parent != null) && !fullscreen;
 		
 		close_requested = false;
         
