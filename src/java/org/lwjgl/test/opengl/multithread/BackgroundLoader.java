@@ -40,26 +40,33 @@ package org.lwjgl.test.opengl.multithread;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Drawable;
+import org.lwjgl.opengl.GLContext;
+import org.lwjgl.opengl.GLSync;
 import org.lwjgl.util.Color;
 import org.lwjgl.util.ReadableColor;
 
 import java.nio.ByteBuffer;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL32.*;
 
 abstract class BackgroundLoader {
 
-	private static final int WIDTH = 32;
+	private static final int WIDTH  = 32;
 	private static final int HEIGHT = 32;
 
-	private static final Object lock = new Object();
+	// CPU synchronization
+	private final ReentrantLock lock = new ReentrantLock();
+	// GPU synchronization
+	private GLSync fence;
 
 	private Drawable drawable;
 
 	private boolean running;
 
 	private ByteBuffer texture;
-	private int texID;
+	private int        texID;
 
 	protected BackgroundLoader() {
 		running = true;
@@ -73,6 +80,9 @@ abstract class BackgroundLoader {
 	}
 
 	void start() throws LWJGLException {
+		// The shared context must be created on the main thread.
+		drawable = getDrawable();
+
 		new Thread(new Runnable() {
 			public void run() {
 				System.out.println("-- Background Thread started --");
@@ -86,7 +96,7 @@ abstract class BackgroundLoader {
 				}
 
 				try {
-					drawable = getDrawable();
+					// Make the shared context current in the worker thread
 					drawable.makeCurrent();
 				} catch (LWJGLException e) {
 					throw new RuntimeException(e);
@@ -94,19 +104,29 @@ abstract class BackgroundLoader {
 
 				System.out.println("** Drawable created **");
 
-				synchronized ( lock ) {
-					// Create a "dummy" texture while we wait for texture IO
-					createCheckerTexture(Color.RED, Color.WHITE, 2);
+				// Create a "dummy" texture while we wait for texture IO
+				createCheckerTexture(Color.RED, Color.WHITE, 2);
 
-					texID = glGenTextures();
-					glBindTexture(GL_TEXTURE_2D, texID);
-					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WIDTH, HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, texture);
+				lock.lock();
 
-					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+				texID = glGenTextures();
+				glBindTexture(GL_TEXTURE_2D, texID);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WIDTH, HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, texture);
 
-					glBindTexture(GL_TEXTURE_2D, 0);
-				}
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+				glBindTexture(GL_TEXTURE_2D, 0);
+
+				// OpenGL commands from different contexts may be executed in any order. So we need a way to synchronize
+				final boolean useFences = GLContext.getCapabilities().OpenGL32;
+
+				if ( useFences )
+					fence = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+				else
+					glFlush(); // Best we can do without fences. This will force rendering on the main thread to happen after we upload the texture.
+
+				lock.unlock();
 
 				System.out.println("** Dummy texture created **");
 
@@ -129,13 +149,22 @@ abstract class BackgroundLoader {
 					else
 						createGradientTexture(Color.GREEN, Color.YELLOW);
 
+					lock.lock();
+
 					glBindTexture(GL_TEXTURE_2D, texID);
 					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WIDTH, HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, texture);
 
-					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 					glBindTexture(GL_TEXTURE_2D, 0);
+
+					if ( useFences )
+						fence = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+					else
+						glFlush();
+
+					lock.unlock();
 
 					System.out.println("** Created new gradient texture **");
 
@@ -151,8 +180,15 @@ abstract class BackgroundLoader {
 	}
 
 	int getTexID() {
-		synchronized ( lock ) {
+		lock.lock();
+		try {
+			if ( fence != null ) {
+				glWaitSync(fence, 0, GL_TIMEOUT_IGNORED);
+				fence = null;
+			}
 			return texID;
+		} finally {
+			lock.unlock();
 		}
 	}
 
