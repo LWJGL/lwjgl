@@ -54,7 +54,7 @@ typedef struct {
     
     NSRect display_rect;
 
-    MacOSXOpenGLView *view;
+	MacOSXOpenGLView *view;
     NSOpenGLContext *context;
     
     // Native objects for Java callbacks
@@ -100,6 +100,7 @@ typedef struct {
     MacOSXWindowInfo *window_info;
 	NSOpenGLPixelFormat *pixel_format;
     NSOpenGLPixelBuffer *pbuffer;
+	NSView *parent;
 } MacOSXPeerInfo;
 
 

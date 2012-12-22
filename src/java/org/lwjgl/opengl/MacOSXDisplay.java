@@ -115,6 +115,9 @@ final class MacOSXDisplay implements DisplayImplementation {
 		boolean resizable = Display.isResizable();
 		boolean parented = (parent != null) && !fullscreen;
 		
+		if (parented) this.canvas = parent;
+		else this.canvas = null;
+		
 		close_requested = false;
         
         DrawableGL gl_drawable = (DrawableGL)Display.getDrawable();
@@ -124,7 +127,7 @@ final class MacOSXDisplay implements DisplayImplementation {
             window = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(),
                                    fullscreen, isUndecorated(), resizable,
                                    parented, peer_handle, window);
-            this.canvas = parent;
+            
             
             if (fullscreen) {
             		// when going to fullscreen viewport is set to screen size by Cocoa, ignore this value

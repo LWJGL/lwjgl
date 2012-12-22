@@ -42,17 +42,23 @@
 //#import <JavaNativeFoundation.h>
 
 #include <jni.h>
+#include <jawt_md.h>
+#include "awt_tools.h"
 #include "org_lwjgl_opengl_MacOSXCanvasPeerInfo.h"
 #include "context.h"
 #include "common_tools.h"
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
-(JNIEnv *env, jclass clazz, jobject peer_info_handle) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+(JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
- 
-    peer_info->isWindowed = true;
-    
+	
+	AWTSurfaceLock *surface = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
+	JAWT_MacOSXDrawingSurfaceInfo *macosx_dsi = (JAWT_MacOSXDrawingSurfaceInfo *)surface->dsi->platformInfo;
+	peer_info->parent = macosx_dsi->cocoaViewRef;
+	
+	peer_info->isWindowed = true;
+	
 	[pool release];
 }

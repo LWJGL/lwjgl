@@ -44,15 +44,18 @@ import org.lwjgl.LWJGLUtil;
  * $Id$
  */
 abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
+	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
+	
 	protected MacOSXCanvasPeerInfo(PixelFormat pixel_format, ContextAttribs attribs, boolean support_pbuffer) throws LWJGLException {
 		super(pixel_format, attribs, true, true, support_pbuffer, true);
 	}
 
 	protected void initHandle(Canvas component) throws LWJGLException {
-        nInitHandle(getHandle());
+        nInitHandle(awt_surface.lockAndGetHandle(component), getHandle());
 	}
-	private static native void nInitHandle(ByteBuffer peer_info_handle) throws LWJGLException;
+	private static native void nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle) throws LWJGLException;
 
 	protected void doUnlock() throws LWJGLException {
+		awt_surface.unlock();
 	}
 }
