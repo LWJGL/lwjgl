@@ -82,7 +82,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCre
 		NSSize displaySize = peer_info->window_info->display_rect.size;
 		GLint dim[2] = {displaySize.width, displaySize.height};
 		CGLSetParameter(cgcontext, kCGLCPSurfaceBackingSize, dim);
-		CGLEnable(cgcontext, kCGLCESurfaceBackingSize);  
+		CGLEnable(cgcontext, kCGLCESurfaceBackingSize);
 	}
 	else {
 		// disable any fixed backbuffer size to allow resizing

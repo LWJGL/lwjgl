@@ -446,8 +446,13 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 		}
 		
 		if (parented) {
-			window_info->window = [peer_info->parent window];
-			
+			if (peer_info->parent != nil) {
+				window_info->window = [peer_info->parent window];
+			}
+			else {
+				window_info->window = nil;
+			}
+				
 			if (window_info->window != nil) {
 				[peer_info->parent addSubview:window_info->view];
 				[window_info->view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];

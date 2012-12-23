@@ -39,8 +39,6 @@
  */
 
 #import <Cocoa/Cocoa.h>
-//#import <JavaNativeFoundation.h>
-
 #include <jni.h>
 #include <jawt_md.h>
 #include "awt_tools.h"
@@ -48,17 +46,91 @@
 #include "context.h"
 #include "common_tools.h"
 
+
+@interface GLLayer : NSOpenGLLayer {}
+- (void) attachLayer;
+- (void) removeLayer;
+@end
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 (JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	
 	AWTSurfaceLock *surface = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
 	JAWT_MacOSXDrawingSurfaceInfo *macosx_dsi = (JAWT_MacOSXDrawingSurfaceInfo *)surface->dsi->platformInfo;
-	peer_info->parent = macosx_dsi->cocoaViewRef;
 	
+	// check for CALayer support
+	if(surface->awt.version & 0x80000000) { //JAWT_MACOSX_USE_CALAYER) {
+		
+		if (macosx_dsi != NULL) {
+			// get the root layer of the AWT Canvas
+			id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;
+			GLLayer *glLayer = [[GLLayer new] autorelease];
+			[glLayer performSelectorOnMainThread:@selector(attachLayer:) withObject:surfaceLayers waitUntilDone:NO];
+		}
+		
+		peer_info->isWindowed = true;
+		peer_info->parent = nil;
+		
+		[pool release];
+		return;
+	}
+	
+	// no CALayer support, fallback to using legacy method of getting the NSView of an AWT Canvas
+	peer_info->parent = macosx_dsi->cocoaViewRef;
 	peer_info->isWindowed = true;
 	
 	[pool release];
 }
+
+@implementation GLLayer
+
+- (void) attachLayer:(id<JAWT_SurfaceLayers>)surfaceLayers {
+	self.asynchronous = YES;
+	self.needsDisplayOnBoundsChange = YES;
+	self.opaque = NO;
+	self.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
+	surfaceLayers.layer = self;
+}
+
+- (void) removeLayer:(id<JAWT_SurfaceLayers>)surfaceLayers {
+	surfaceLayers.layer = nil;
+}
+
+-(void)drawInCGLContext:(CGLContextObj)glContext
+						pixelFormat:(CGLPixelFormatObj)pixelFormat
+						forLayerTime:(CFTimeInterval)timeInterval
+						displayTime:(const CVTimeStamp *)timeStamp {
+	
+	// set the current context
+	CGLSetCurrentContext(glContext);
+	
+	// draw a single red quad spinning around based on the current time
+	GLfloat rotate = timeInterval * 60.0; // 60 degrees per second
+	glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glRotatef(rotate, 0.0, 0.0, 1.0);
+	glBegin(GL_QUADS);
+	glColor3f(1.0, 1.0, 0.0);
+	glVertex2f(-0.5, -0.5);
+	glVertex2f(-0.5,  0.5);
+	glVertex2f( 0.5,  0.5);
+	glVertex2f( 0.5, -0.5);
+	glEnd();
+	glPopMatrix();
+	
+	// call super to finalize the drawing - by default all it does is call glFlush()
+	[super drawInCGLContext:glContext pixelFormat:pixelFormat forLayerTime:timeInterval displayTime:timeStamp];
+}
+
+-(BOOL)canDrawInCGLContext:(CGLContextObj)glContext
+							pixelFormat:(CGLPixelFormatObj)pixelFormat
+							forLayerTime:(CFTimeInterval)timeInterval
+							displayTime:(const CVTimeStamp *)timeStamp {
+    return YES;
+}
+
+@end
