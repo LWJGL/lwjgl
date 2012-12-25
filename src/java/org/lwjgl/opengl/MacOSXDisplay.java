@@ -73,14 +73,17 @@ final class MacOSXDisplay implements DisplayImplementation {
 	//private MacOSXMouseEventQueue mouse_queue;
 	private KeyboardEventQueue keyboard_queue;
 	private java.awt.DisplayMode requested_mode;
-    
-    /* Members for native window use */
-    private MacOSXNativeMouse mouse;
-    private MacOSXNativeKeyboard keyboard;
-    private ByteBuffer window;
-    private ByteBuffer context;
-    
-    private boolean close_requested;
+	
+	/* Members for native window use */
+	private MacOSXNativeMouse mouse;
+	private MacOSXNativeKeyboard keyboard;
+	private ByteBuffer window;
+	private ByteBuffer context;
+	
+	private boolean skipViewportValue = false;
+	private static final IntBuffer current_viewport = BufferUtils.createIntBuffer(16);
+	
+	private boolean close_requested;
 
 	MacOSXDisplay() {
 		
@@ -119,31 +122,31 @@ final class MacOSXDisplay implements DisplayImplementation {
 		else this.canvas = null;
 		
 		close_requested = false;
-        
-        DrawableGL gl_drawable = (DrawableGL)Display.getDrawable();
-        PeerInfo peer_info = gl_drawable.peer_info;
+		
+		DrawableGL gl_drawable = (DrawableGL)Display.getDrawable();
+		PeerInfo peer_info = gl_drawable.peer_info;
 		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
 		try {
-            window = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(),
-                                   fullscreen, isUndecorated(), resizable,
-                                   parented, peer_handle, window);
+			window = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(),
+									fullscreen, isUndecorated(), resizable,
+									parented, peer_handle, window);
             
             
-            if (fullscreen) {
-            		// when going to fullscreen viewport is set to screen size by Cocoa, ignore this value
-            		skipViewportValue = true;
-            		// if starting in fullscreen then set initial viewport to displaymode size
-            		if (current_viewport.get(2) == 0 && current_viewport.get(3) == 0) {
-            			current_viewport.put(2, mode.getWidth());
-            			current_viewport.put(3, mode.getHeight());
-            		}
-            }
+			if (fullscreen) {
+				// when going to fullscreen viewport is set to screen size by Cocoa, ignore this value
+				skipViewportValue = true;
+				// if starting in fullscreen then set initial viewport to displaymode size
+				if (current_viewport.get(2) == 0 && current_viewport.get(3) == 0) {
+					current_viewport.put(2, mode.getWidth());
+					current_viewport.put(3, mode.getHeight());
+				}
+			}
 		} catch (LWJGLException e) {
 			destroyWindow();
 			throw e;
-        } finally {
-            peer_info.unlock();
-        }
+		} finally {
+			peer_info.unlock();
+		}
 	}
 
 	public void doHandleQuit() {
@@ -271,11 +274,9 @@ final class MacOSXDisplay implements DisplayImplementation {
 		}
 	}
 
-	private boolean skipViewportValue = false;
-    private static final IntBuffer current_viewport = BufferUtils.createIntBuffer(16);
 	public void update() {
 		boolean should_update = true;
-        
+		
 		DrawableGL drawable = (DrawableGL)Display.getDrawable();
 		if (should_update) {
 			drawable.context.update();
@@ -351,8 +352,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	/* Keyboard */
 	public void createKeyboard() throws LWJGLException {
-        this.keyboard = new MacOSXNativeKeyboard(window);
-        keyboard.register();
+		this.keyboard = new MacOSXNativeKeyboard(window);
+		keyboard.register();
 	}
 
 	public void destroyKeyboard() {
@@ -376,13 +377,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void destroyCursor(Object cursor_handle) {
+		
 	}
 
 	public int getPbufferCapabilities() {
-		if (LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 3))
-			return Pbuffer.PBUFFER_SUPPORTED;
-		else
-			return 0;
+		return Pbuffer.PBUFFER_SUPPORTED;
 	}
 
 	public boolean isBufferLost(PeerInfo handle) {
@@ -420,7 +419,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	 * @return number of icons used.
 	 */
 	public int setIcon(ByteBuffer[] icons) {
-/*		int size = 0;
+		/*int size = 0;
 		int biggest = -1;
 
 		for (int i=0;i<icons.length;i++) {
@@ -452,31 +451,31 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 	
 	public int getX() {
-        return nGetX(window);
+		return nGetX(window);
 	}
 
 	public int getY() {
-        return nGetY(window);
+		return nGetY(window);
 	}
 
 	public int getWidth() {
-        return nGetWidth(window);
+		return nGetWidth(window);
 	}
 	
 	public int getHeight() {
-        return nGetHeight(window);
+		return nGetHeight(window);
 	}
 
-    public boolean isInsideWindow() {
-    		return true;
-    }
+	public boolean isInsideWindow() {
+		return true;
+	}
 
-    public void setResizable(boolean resizable) {
-        nSetResizable(window, resizable);
+	public void setResizable(boolean resizable) {
+		nSetResizable(window, resizable);
 	}
 
 	public boolean wasResized() {
-        return nWasResized(window);
+		return nWasResized(window);
 	}
 
 }
