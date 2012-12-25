@@ -70,7 +70,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nSetCursorPositio
 		p.y = point.y;
 	}
 	else {
-		NSRect screenRect = [[NSScreen mainScreen] frame];
+		NSRect screenRect = [[window_info->window screen] frame];
 		NSRect viewRect = [window_info->view frame];
 		NSRect winRect = [window_info->window frame];
 		
@@ -81,11 +81,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nSetCursorPositio
 		p.y = winRect.origin.y + viewPoint.y + (viewRect.size.height - y - 1);
 		
 		p.x = winRect.origin.x + viewPoint.x + x;
-		// flip y coordinates (origin top left) to allow use with CGWarpMouseCursorPosition
+		// flip y coordinates (origin top left) to allow use with CGDisplayMoveCursorToPoint
 		p.y = screenRect.size.height - p.y - 1;
 	}
 	
-	CGWarpMouseCursorPosition(p);
+	CGDisplayMoveCursorToPoint(CGMainDisplayID(), p);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nRegisterMouseListener(JNIEnv *env, jobject _this, jobject window_handle) {

@@ -395,7 +395,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetX(JNIEnv *env, jo
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetY(JNIEnv *env, jobject this, jobject window_handle) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 	
-	NSRect screenRect = [[[window_info->view window] screen] frame];
+	NSRect screenRect = [[window_info->window screen] frame];
 	NSRect winRect = [[window_info->view window] frame];
 	
 	// get top corner of window frame, also flip coords so origin is in top left
