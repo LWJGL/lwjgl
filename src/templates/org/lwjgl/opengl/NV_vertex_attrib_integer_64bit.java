@@ -92,7 +92,7 @@ public interface NV_vertex_attrib_integer_64bit {
 	@StripPostfix("params")
 	void glGetVertexAttribLui64vNV(@GLuint int index, @GLenum int pname, @OutParameter @GLuint64EXT @Check("4") LongBuffer params);
 
-	@Dependent("NV_vertex_buffer_unified_memory")
+	@Dependent("GL_NV_vertex_buffer_unified_memory")
 	void glVertexAttribLFormatNV(@GLuint int index, int size, @GLenum int type, @GLsizei int stride);
 
 }

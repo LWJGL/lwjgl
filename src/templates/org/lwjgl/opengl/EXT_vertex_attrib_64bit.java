@@ -83,7 +83,7 @@ public interface EXT_vertex_attrib_64bit {
 	void glGetVertexAttribLdvEXT(@GLuint int index, @GLenum int pname, @OutParameter @Check("4") DoubleBuffer params);
 
 	@Reuse("ARBVertexAttrib64bit")
-	@Dependent("EXT_direct_state_access")
+	@Dependent("GL_EXT_direct_state_access")
 	void glVertexArrayVertexAttribLOffsetEXT(@GLuint int vaobj, @GLuint int buffer, @GLuint int index, int size, @GLenum int type, @GLsizei int stride, @GLintptr long offset);
 
 }

@@ -60,17 +60,17 @@ public interface ARB_texture_storage {
 	                    @GLenum int internalformat,
 	                    @GLsizei int width, @GLsizei int height, @GLsizei int depth);
 
-	@Dependent("EXT_direct_state_access")
+	@Dependent("GL_EXT_direct_state_access")
 	void glTextureStorage1DEXT(@GLuint int texture, @GLenum int target, @GLsizei int levels,
 	                           @GLenum int internalformat,
 	                           @GLsizei int width);
 
-	@Dependent("EXT_direct_state_access")
+	@Dependent("GL_EXT_direct_state_access")
 	void glTextureStorage2DEXT(@GLuint int texture, @GLenum int target, @GLsizei int levels,
 	                           @GLenum int internalformat,
 	                           @GLsizei int width, @GLsizei int height);
 
-	@Dependent("EXT_direct_state_access")
+	@Dependent("GL_EXT_direct_state_access")
 	void glTextureStorage3DEXT(@GLuint int texture, @GLenum int target, @GLsizei int levels,
 	                           @GLenum int internalformat,
 	                           @GLsizei int width, @GLsizei int height, @GLsizei int depth);

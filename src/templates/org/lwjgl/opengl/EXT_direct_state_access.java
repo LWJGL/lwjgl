@@ -1353,13 +1353,13 @@ public interface EXT_direct_state_access {
     framebuffer"
 	 */
 
-	@Dependent("GL_EXT_geometry_shader4,NV_geometry_program4")
+	@Dependent("GL_EXT_geometry_shader4,GL_NV_geometry_program4")
 	void glNamedFramebufferTextureEXT(@GLuint int framebuffer, @GLenum int attachment, @GLuint int texture, int level);
 
-	@Dependent("GL_EXT_geometry_shader4,NV_geometry_program4")
+	@Dependent("GL_EXT_geometry_shader4,GL_NV_geometry_program4")
 	void glNamedFramebufferTextureLayerEXT(@GLuint int framebuffer, @GLenum int attachment, @GLuint int texture, int level, int layer);
 
-	@Dependent("GL_EXT_geometry_shader4,NV_geometry_program4")
+	@Dependent("GL_EXT_geometry_shader4,GL_NV_geometry_program4")
 	void glNamedFramebufferTextureFaceEXT(@GLuint int framebuffer, @GLenum int attachment, @GLuint int texture, int level, @GLenum int face);
 
 	/*

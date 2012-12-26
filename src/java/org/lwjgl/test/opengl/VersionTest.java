@@ -120,6 +120,7 @@ public final class VersionTest {
 		boolean deprecated = false;
 		try {
 			glVertex3f(0.0f, 0.0f, 0.0f);
+			Util.checkGLError();
 			deprecated = true;
 		} catch (Throwable t) {}
 
