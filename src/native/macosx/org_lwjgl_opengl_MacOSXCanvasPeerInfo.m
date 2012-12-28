@@ -47,9 +47,14 @@
 #include "common_tools.h"
 
 
-@interface GLLayer : NSOpenGLLayer {}
-- (void) attachLayer;
-- (void) removeLayer;
+@interface GLLayer : NSOpenGLLayer {
+	MacOSXPeerInfo *peer_info;
+}
+- (void) attachLayer: (id<JAWT_SurfaceLayers>)surfaceLayers;
+- (void) removeLayer: (id<JAWT_SurfaceLayers>)surfaceLayers;
+
+- (MacOSXPeerInfo*) peer_info;
+- (void) setPeer_info: (MacOSXPeerInfo*)input;
 @end
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
@@ -67,7 +72,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 			// get the root layer of the AWT Canvas
 			id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;
 			GLLayer *glLayer = [[GLLayer new] autorelease];
-			[glLayer performSelectorOnMainThread:@selector(attachLayer:) withObject:surfaceLayers waitUntilDone:NO];
+			[glLayer performSelectorOnMainThread:@selector(attachLayer:) withObject:surfaceLayers waitUntilDone:YES];
+			[glLayer setPeer_info:peer_info];
 		}
 		
 		peer_info->isWindowed = true;
@@ -98,15 +104,47 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	surfaceLayers.layer = nil;
 }
 
+- (MacOSXPeerInfo*) peer_info {
+	return peer_info;
+}
+
+- (void) setPeer_info: (MacOSXPeerInfo*)input {
+	peer_info = input;
+}
+
 -(void)drawInCGLContext:(CGLContextObj)glContext
 						pixelFormat:(CGLPixelFormatObj)pixelFormat
 						forLayerTime:(CFTimeInterval)timeInterval
 						displayTime:(const CVTimeStamp *)timeStamp {
 	
+	if(!peer_info) {
+		return;
+	}
+	
 	// set the current context
 	CGLSetCurrentContext(glContext);
 	
-	// draw a single red quad spinning around based on the current time
+	GLint originalFBO;
+	GLint originalReadFBO;
+	GLint originalDrawFBO;
+	
+	// get and save the current fbo values
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING_EXT, &originalFBO);
+	glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING_EXT, &originalReadFBO);
+	glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING_EXT, &originalDrawFBO);
+	
+	// copy/blit the LWJGL FBO to this CALayers FBO
+	// TODO
+	/*glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, lwjglFBO);
+	glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, originalFBO);
+	
+	glBlitFramebufferEXT(0, 0, width, height,
+						 0, 0, width, height,
+						 GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
+						 GL_NEAREST);*/
+	
+	
+	// for testing, draw a single yellow quad spinning around based on the current time
 	GLfloat rotate = timeInterval * 60.0; // 60 degrees per second
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -121,6 +159,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	glVertex2f( 0.5, -0.5);
 	glEnd();
 	glPopMatrix();
+	
+	
+	// restore original fbo read and draw values
+	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, originalReadFBO);
+	glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, originalDrawFBO);
 	
 	// call super to finalize the drawing - by default all it does is call glFlush()
 	[super drawInCGLContext:glContext pixelFormat:pixelFormat forLayerTime:timeInterval displayTime:timeStamp];
