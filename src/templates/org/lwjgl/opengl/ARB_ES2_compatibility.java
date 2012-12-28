@@ -65,6 +65,9 @@ public interface ARB_ES2_compatibility {
 		GL_MEDIUM_INT = 0x8DF4,
 		GL_HIGH_INT = 0x8DF5;
 
+	/** Accepted by the &lt;format&gt; parameter of most commands taking sized internal formats: */
+	int GL_RGB565 = 0x8D62;
+
 	@Reuse("GL41")
 	void glReleaseShaderCompiler();
 
