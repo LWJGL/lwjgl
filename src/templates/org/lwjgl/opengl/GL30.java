@@ -319,7 +319,7 @@ public interface GL30 {
 	void glClampColor(@GLenum int target, @GLenum int clamp);
 
 	// ----------------------------------------------------------------------
-	// ----------------------[ NV_depth_buffer_float ]----------------------
+	// ----------------------[ ARB_depth_buffer_float ]----------------------
 	// ----------------------------------------------------------------------
 
 	/**
@@ -328,8 +328,8 @@ public interface GL30 {
 	 * and returned in the &lt;data&gt; parameter of GetTexLevelParameter and
 	 * GetRenderbufferParameterivEXT:
 	 */
-	int GL_DEPTH_COMPONENT32F = 0x8DAB;
-	int GL_DEPTH32F_STENCIL8 = 0x8DAC;
+	int GL_DEPTH_COMPONENT32F = 0x8CAC;
+	int GL_DEPTH32F_STENCIL8 = 0x8CAD;
 
 	/**
 	 * Accepted by the &lt;type&gt; parameter of DrawPixels, ReadPixels, TexImage1D,
