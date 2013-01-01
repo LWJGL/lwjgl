@@ -233,6 +233,10 @@ public class Utils {
 	}
 
 	public static String getQualifiedNativeMethodName(String qualified_class_name, String method_name) {
+		// Escape '_' in method name
+		if ( method_name.indexOf('_') != -1 )
+			method_name = method_name.replace("_", "_1");
+
 		return "Java_" + getNativeQualifiedName(qualified_class_name) + "_" + method_name;
 	}
 
