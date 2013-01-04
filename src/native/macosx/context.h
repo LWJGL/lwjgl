@@ -46,6 +46,7 @@
 #include <OpenGL/gl.h>
 #include <OpenGL/glext.h>
 #include "common_tools.h"
+#include <jawt_md.h>
 
 @class NSOpenGLContext, NSOpenGLPixelFormat, MacOSXOpenGLView, MacOSXKeyableWindow;
 
@@ -94,15 +95,29 @@ typedef struct {
 - (BOOL)acceptsFirstResponder;
 @end
 
+@interface GLLayer : CAOpenGLLayer {
+	@public
+	JAWT_MacOSXDrawingSurfaceInfo *macosx_dsi;
+	MacOSXWindowInfo *window_info;
+	
+	@private
+	CGLContextObj contextObject;
+}
+
+- (void) attachLayer;
+- (void) removeLayer;
+
+@end
+
 typedef struct {
+	bool isCALayer;
 	bool isWindowed;
-    bool canDrawGL;
     MacOSXWindowInfo *window_info;
 	NSOpenGLPixelFormat *pixel_format;
     NSOpenGLPixelBuffer *pbuffer;
 	NSView *parent;
+	GLLayer *glLayer;
 } MacOSXPeerInfo;
-
 
 NSOpenGLPixelFormat *choosePixelFormat(JNIEnv *env, jobject pixel_format, bool gl32, bool use_display_bpp, bool support_window, bool support_pbuffer, bool double_buffered);
 #endif

@@ -46,17 +46,6 @@
 #include "context.h"
 #include "common_tools.h"
 
-
-@interface GLLayer : NSOpenGLLayer {
-	MacOSXPeerInfo *peer_info;
-}
-- (void) attachLayer: (id<JAWT_SurfaceLayers>)surfaceLayers;
-- (void) removeLayer: (id<JAWT_SurfaceLayers>)surfaceLayers;
-
-- (MacOSXPeerInfo*) peer_info;
-- (void) setPeer_info: (MacOSXPeerInfo*)input;
-@end
-
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 (JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -69,13 +58,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	if(surface->awt.version & 0x80000000) { //JAWT_MACOSX_USE_CALAYER) {
 		
 		if (macosx_dsi != NULL) {
-			// get the root layer of the AWT Canvas
-			id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;
-			GLLayer *glLayer = [[GLLayer new] autorelease];
-			[glLayer performSelectorOnMainThread:@selector(attachLayer:) withObject:surfaceLayers waitUntilDone:YES];
-			[glLayer setPeer_info:peer_info];
+			peer_info->glLayer = [GLLayer new];
+			peer_info->glLayer->macosx_dsi = macosx_dsi;
+			peer_info->glLayer->window_info = peer_info->window_info;
 		}
 		
+		peer_info->isCALayer = true;
 		peer_info->isWindowed = true;
 		peer_info->parent = nil;
 		
@@ -85,6 +73,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	
 	// no CALayer support, fallback to using legacy method of getting the NSView of an AWT Canvas
 	peer_info->parent = macosx_dsi->cocoaViewRef;
+	peer_info->isCALayer = false;
 	peer_info->isWindowed = true;
 	
 	[pool release];
@@ -92,34 +81,27 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 
 @implementation GLLayer
 
-- (void) attachLayer:(id<JAWT_SurfaceLayers>)surfaceLayers {
+- (void) attachLayer {
 	self.asynchronous = YES;
 	self.needsDisplayOnBoundsChange = YES;
 	self.opaque = NO;
 	self.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
+	
+	// get root layer of the AWT Canvas and add self to it
+	id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;
 	surfaceLayers.layer = self;
 }
 
-- (void) removeLayer:(id<JAWT_SurfaceLayers>)surfaceLayers {
+- (void) removeLayer {
+	// remove self from root layer
+	id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;
 	surfaceLayers.layer = nil;
-}
-
-- (MacOSXPeerInfo*) peer_info {
-	return peer_info;
-}
-
-- (void) setPeer_info: (MacOSXPeerInfo*)input {
-	peer_info = input;
 }
 
 -(void)drawInCGLContext:(CGLContextObj)glContext
 						pixelFormat:(CGLPixelFormatObj)pixelFormat
 						forLayerTime:(CFTimeInterval)timeInterval
 						displayTime:(const CVTimeStamp *)timeStamp {
-	
-	if(!peer_info) {
-		return;
-	}
 	
 	// set the current context
 	CGLSetCurrentContext(glContext);
@@ -133,16 +115,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING_EXT, &originalReadFBO);
 	glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING_EXT, &originalDrawFBO);
 	
+	/*glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	
 	// copy/blit the LWJGL FBO to this CALayers FBO
 	// TODO
-	/*glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, lwjglFBO);
+	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, 1);//lwjglFBO);
 	glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, originalFBO);
-	
-	glBlitFramebufferEXT(0, 0, width, height,
-						 0, 0, width, height,
-						 GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
-						 GL_NEAREST);*/
-	
+ 
+	glBlitFramebufferEXT(0, 0, 640, 480,//width, height,
+	0, 0, 640, 480,//width, height,
+	GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
+	GL_NEAREST);*/
 	
 	// for testing, draw a single yellow quad spinning around based on the current time
 	GLfloat rotate = timeInterval * 60.0; // 60 degrees per second
@@ -173,7 +157,24 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 							pixelFormat:(CGLPixelFormatObj)pixelFormat
 							forLayerTime:(CFTimeInterval)timeInterval
 							displayTime:(const CVTimeStamp *)timeStamp {
-    return YES;
+	return YES;
+}
+
+- (CGLContextObj)copyCGLContextForPixelFormat:(CGLPixelFormatObj)pixelFormat {
+	CGLCreateContext(pixelFormat, [window_info->context CGLContextObj], &contextObject);
+	return contextObject;
+}
+
+- (void)releaseCGLContext:(CGLContextObj)glContext {
+	CGLDestroyContext(contextObject);
+}
+
+- (CGLPixelFormatObj)copyCGLPixelFormatForDisplayMask:(uint32_t)mask {
+	return CGLGetPixelFormat([window_info->context CGLContextObj]);
+}
+
+- (void)releaseCGLPixelFormat:(CGLPixelFormatObj)pixelFormat {
+	
 }
 
 @end

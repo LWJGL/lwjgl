@@ -71,10 +71,10 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCre
         shared_context = shared_context_info->context;
 	}
     context = [[NSOpenGLContext alloc] initWithFormat:peer_info->pixel_format shareContext:shared_context];
-    if (context == NULL) {
-        throwException(env, "Could not create context");
-        return NULL;
-    }
+	if (context == NULL) {
+		throwException(env, "Could not create context");
+		return NULL;
+	}
 	
 	if (peer_info->window_info->fullscreen) {
 		// set a fixed backbuffer size for fullscreen
@@ -90,12 +90,12 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCre
 		CGLDisable(cgcontext, kCGLCESurfaceBackingSize); 
 	}
 	  
-    [peer_info->window_info->view setOpenGLContext:context];
-    peer_info->window_info->context = context;
+	[peer_info->window_info->view setOpenGLContext:context];
+	peer_info->window_info->context = context;
 	context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-    context_info->context = context;
-    context_info->peer_info = peer_info;
-    
+	context_info->context = context;
+	context_info->peer_info = peer_info;
+	
 	[pool release];
 	return context_handle;
 }
@@ -115,8 +115,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSwapBu
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
 	[[peer_info->window_info->view openGLContext] flushBuffer];
-    peer_info->canDrawGL = true;
-	[pool release];
+    [pool release];
 }
 
 
@@ -125,8 +124,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nUpdate
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
 	[[peer_info->window_info->view openGLContext] update];
-    peer_info->canDrawGL = true;
-	[pool release];
+    [pool release];
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_clearDrawable
@@ -147,9 +145,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nReleas
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_setView
   (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-    [[peer_info->window_info->view openGLContext] setView: peer_info->window_info->view];
-    peer_info->canDrawGL = true;
+	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	[[peer_info->window_info->view openGLContext] setView: peer_info->window_info->view];
+	
+	if (peer_info->isCALayer) {
+		// if using a CALayer, attach it to AWT Canvas and create a shared opengl context with current context 
+		[peer_info->glLayer performSelectorOnMainThread:@selector(attachLayer) withObject:nil waitUntilDone:NO];
+	}
+	
 	[pool release];
 }
 
