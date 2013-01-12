@@ -58,17 +58,17 @@ public interface ARB_draw_indirect {
 	int GL_DRAW_INDIRECT_BUFFER_BINDING = 0x8F43;
 
 	@Reuse("GL40")
-	void glDrawArraysIndirect(@GLenum int mode, @BufferObject(BufferKind.IndirectBO) @Check("4") @NullTerminated @Const @GLvoid ByteBuffer indirect);
+	void glDrawArraysIndirect(@GLenum int mode, @BufferObject(BufferKind.IndirectBO) @Check("4 * 4") @Const @GLvoid ByteBuffer indirect);
 
 	@Reuse("GL40")
 	@Alternate("glDrawArraysIndirect")
-	void glDrawArraysIndirect(@GLenum int mode, @BufferObject(BufferKind.IndirectBO) @Check("4") @NullTerminated @Const @GLvoid(PrimitiveType.Kind.INT) IntBuffer indirect);
+	void glDrawArraysIndirect(@GLenum int mode, @BufferObject(BufferKind.IndirectBO) @Check("4") @Const @GLvoid(PrimitiveType.Kind.INT) IntBuffer indirect);
 
 	@Reuse("GL40")
-	void glDrawElementsIndirect(@GLenum int mode, @GLenum int type, @BufferObject(BufferKind.IndirectBO) @Check("5") @NullTerminated @Const @GLvoid ByteBuffer indirect);
+	void glDrawElementsIndirect(@GLenum int mode, @GLenum int type, @BufferObject(BufferKind.IndirectBO) @Check("5 * 4") @Const @GLvoid ByteBuffer indirect);
 
 	@Reuse("GL40")
 	@Alternate("glDrawElementsIndirect")
-	void glDrawElementsIndirect(@GLenum int mode, @GLenum int type, @BufferObject(BufferKind.IndirectBO) @Check("5") @NullTerminated @Const @GLvoid(PrimitiveType.Kind.INT) IntBuffer indirect);
+	void glDrawElementsIndirect(@GLenum int mode, @GLenum int type, @BufferObject(BufferKind.IndirectBO) @Check("5") @Const @GLvoid(PrimitiveType.Kind.INT) IntBuffer indirect);
 
 }

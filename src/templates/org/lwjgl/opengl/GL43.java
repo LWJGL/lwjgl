@@ -568,26 +568,26 @@ public interface GL43 {
 	// -----------------------------------------------------------------------
 
 	void glMultiDrawArraysIndirect(@GLenum int mode,
-	                               @BufferObject(BufferKind.IndirectBO) @Check("4 * 4 * primcount") @Const @GLvoid ByteBuffer indirect,
+	                               @BufferObject(BufferKind.IndirectBO) @Check("(stride == 0 ? 4 * 4 : stride) * primcount") @Const @GLvoid ByteBuffer indirect,
 	                               @GLsizei int primcount,
 	                               @GLsizei int stride);
 
 	@Alternate("glMultiDrawArraysIndirect")
 	void glMultiDrawArraysIndirect(@GLenum int mode,
-	                               @BufferObject(BufferKind.IndirectBO) @Check("4 * primcount") @Const @GLvoid(PrimitiveType.Kind.INT) IntBuffer indirect,
+	                               @BufferObject(BufferKind.IndirectBO) @Check("(stride == 0 ? 4 : stride >> 2) * primcount") @Const @GLvoid(PrimitiveType.Kind.INT) IntBuffer indirect,
 	                               @GLsizei int primcount,
 	                               @GLsizei int stride);
 
 	void glMultiDrawElementsIndirect(@GLenum int mode,
 	                                 @GLenum int type,
-	                                 @BufferObject(BufferKind.IndirectBO) @Check("5 * primcount") @Const @GLvoid ByteBuffer indirect,
+	                                 @BufferObject(BufferKind.IndirectBO) @Check("(stride == 0 ? 5 * 4 : stride) * primcount") @Const @GLvoid ByteBuffer indirect,
 	                                 @GLsizei int primcount,
 	                                 @GLsizei int stride);
 
 	@Alternate("glMultiDrawElementsIndirect")
 	void glMultiDrawElementsIndirect(@GLenum int mode,
 	                                 @GLenum int type,
-	                                 @BufferObject(BufferKind.IndirectBO) @Check("5 * primcount") @Const @GLvoid(PrimitiveType.Kind.INT) IntBuffer indirect,
+	                                 @BufferObject(BufferKind.IndirectBO) @Check("(stride == 0 ? 5 : stride >> 2) * primcount") @Const @GLvoid(PrimitiveType.Kind.INT) IntBuffer indirect,
 	                                 @GLsizei int primcount,
 	                                 @GLsizei int stride);
 
