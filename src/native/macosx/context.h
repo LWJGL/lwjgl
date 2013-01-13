@@ -102,10 +102,16 @@ typedef struct {
 	
 	@private
 	CGLContextObj contextObject;
+	int fboID;
+	int imageRenderBufferID;
+	int depthRenderBufferID;
+	int fboWidth;
+	int fboHeight;
 }
 
 - (void) attachLayer;
 - (void) removeLayer;
+- (void) blitFrameBuffer;
 
 @end
 

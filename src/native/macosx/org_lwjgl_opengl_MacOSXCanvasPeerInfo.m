@@ -98,6 +98,68 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	surfaceLayers.layer = nil;
 }
 
+- (void) blitFrameBuffer {
+	
+	// get the size of the CALayer/AWT Canvas
+	int width = self.bounds.size.width;
+	int height = self.bounds.size.height;
+	
+	if (width != fboWidth || height != fboHeight) {
+		
+		// store current fbo/renderbuffers for later deletion
+		int oldFboID = fboID;
+		int oldImageRenderBufferID = imageRenderBufferID;
+		int oldDepthRenderBufferID = depthRenderBufferID;
+		
+		// set the size of the offscreen frame buffer window
+		window_info->display_rect = NSMakeRect(0, 0, width, height);
+		[window_info->window setFrame:window_info->display_rect display:false];
+		
+		// create new fbo
+		int tempFBO;
+		glGenFramebuffersEXT(1, &tempFBO);
+		
+		// create new render buffers
+		glGenRenderbuffersEXT(1, &imageRenderBufferID);
+		glGenRenderbuffersEXT(1, &depthRenderBufferID);
+		
+		// switch to new fbo to attach render buffers
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, tempFBO);
+		
+		// initialize and attach image render buffer
+		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, imageRenderBufferID);
+		glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_RGB, width, height);
+		glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_RENDERBUFFER_EXT, imageRenderBufferID);
+		
+		// initialize and attach depth render buffer
+		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthRenderBufferID);
+		glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24, width, height);
+		glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthRenderBufferID);
+		
+		// set new fbo and its sizes
+		fboID = tempFBO;
+		fboWidth = width;
+		fboHeight = height;
+		
+		// clean up the old fbo and renderBuffers
+		glDeleteFramebuffersEXT(1, &oldFboID);
+		glDeleteRenderbuffersEXT(1, &oldImageRenderBufferID);
+		glDeleteRenderbuffersEXT(1, &oldDepthRenderBufferID);
+	}
+	else {
+		glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, 0);
+		glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, fboID);
+		
+		glBlitFramebufferEXT(0, 0, width, height,
+							 0, 0, width, height,
+							 GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
+							 GL_NEAREST);
+	}
+	
+	// restore default framebuffer
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+}
+
 -(void)drawInCGLContext:(CGLContextObj)glContext
 						pixelFormat:(CGLPixelFormatObj)pixelFormat
 						forLayerTime:(CFTimeInterval)timeInterval
@@ -106,48 +168,30 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	// set the current context
 	CGLSetCurrentContext(glContext);
 	
-	GLint originalFBO;
+	if (fboID == 0) {
+		// clear garbage background before lwjgl fbo is set
+		glClearColor(0.0, 0.0, 0.0, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+	
+	// get the size of the CALayer
+	int width = fboWidth;
+	int height = fboHeight;
+	
 	GLint originalReadFBO;
-	GLint originalDrawFBO;
 	
 	// get and save the current fbo values
-	glGetIntegerv(GL_FRAMEBUFFER_BINDING_EXT, &originalFBO);
 	glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING_EXT, &originalReadFBO);
-	glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING_EXT, &originalDrawFBO);
 	
-	/*glClearColor(0.0, 0.0, 0.0, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT);
+	// read the LWJGL FBO and blit it into this CALayers FBO
+	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, fboID);
+	glBlitFramebufferEXT(0, 0, width, height,
+						 0, 0, width, height,
+						 GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
+						 GL_NEAREST);
 	
-	// copy/blit the LWJGL FBO to this CALayers FBO
-	// TODO
-	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, 1);//lwjglFBO);
-	glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, originalFBO);
- 
-	glBlitFramebufferEXT(0, 0, 640, 480,//width, height,
-	0, 0, 640, 480,//width, height,
-	GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
-	GL_NEAREST);*/
-	
-	// for testing, draw a single yellow quad spinning around based on the current time
-	GLfloat rotate = timeInterval * 60.0; // 60 degrees per second
-	glClearColor(0.0, 0.0, 0.0, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glRotatef(rotate, 0.0, 0.0, 1.0);
-	glBegin(GL_QUADS);
-	glColor3f(1.0, 1.0, 0.0);
-	glVertex2f(-0.5, -0.5);
-	glVertex2f(-0.5,  0.5);
-	glVertex2f( 0.5,  0.5);
-	glVertex2f( 0.5, -0.5);
-	glEnd();
-	glPopMatrix();
-	
-	
-	// restore original fbo read and draw values
+	// restore original fbo read value
 	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, originalReadFBO);
-	glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, originalDrawFBO);
 	
 	// call super to finalize the drawing - by default all it does is call glFlush()
 	[super drawInCGLContext:glContext pixelFormat:pixelFormat forLayerTime:timeInterval displayTime:timeStamp];

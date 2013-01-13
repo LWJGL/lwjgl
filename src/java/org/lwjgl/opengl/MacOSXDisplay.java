@@ -84,6 +84,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private static final IntBuffer current_viewport = BufferUtils.createIntBuffer(16);
 	
 	private boolean close_requested;
+	
+	private boolean native_mode = true;
 
 	MacOSXDisplay() {
 		
@@ -123,6 +125,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 		
 		close_requested = false;
 		
+		native_mode = isNativeMode();
+		
 		DrawableGL gl_drawable = (DrawableGL)Display.getDrawable();
 		PeerInfo peer_info = gl_drawable.peer_info;
 		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
@@ -147,6 +151,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 		} finally {
 			peer_info.unlock();
 		}
+	}
+	
+	private boolean isNativeMode() {
+		return true;
 	}
 
 	public void doHandleQuit() {

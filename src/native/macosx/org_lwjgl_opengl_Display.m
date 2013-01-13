@@ -435,35 +435,29 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	
 	if (!fullscreen) {
 		
-		int default_window_mask = NSBorderlessWindowMask; // undecorated
-		
-		if (!undecorated) {
-			default_window_mask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
-		}
-		
-		if (resizable) {
-			default_window_mask |= NSResizableWindowMask;
-		}
-		
 		if (parented) {
-			if (peer_info->parent != nil) {
-				window_info->window = [peer_info->parent window];
+			if (peer_info->isCALayer) {
+				window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
+				[window_info->window setContentView:window_info->view];
 			}
 			else {
-				window_info->window = nil;
-			}
-				
-			if (window_info->window != nil) {
+				window_info->window = [peer_info->parent window];
 				[peer_info->parent addSubview:window_info->view];
 				[window_info->view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 			}
-			else {
-				// failed to get parent window, create a new window
-				window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:default_window_mask backing:NSBackingStoreBuffered defer:NO];
-				[window_info->window setContentView:window_info->view];
-			}
 		}
 		else {
+			
+			int default_window_mask = NSBorderlessWindowMask; // undecorated
+			
+			if (!undecorated) {
+				default_window_mask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
+			}
+			
+			if (resizable) {
+				default_window_mask |= NSResizableWindowMask;
+			}
+			
 			window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:default_window_mask backing:NSBackingStoreBuffered defer:NO];
 			
 			[window_info->window setContentView:window_info->view];
@@ -501,9 +495,15 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	// Inform the view of its parent window info;
 	[window_info->view setParent:window_info];
 	
-	[window_info->window performSelectorOnMainThread:@selector(makeFirstResponder:) withObject:window_info->view waitUntilDone:NO];
-	[window_info->window performSelectorOnMainThread:@selector(setInitialFirstResponder:) withObject:window_info->view waitUntilDone:NO];
-	[window_info->window performSelectorOnMainThread:@selector(makeKeyAndOrderFront:) withObject:[NSApplication sharedApplication] waitUntilDone:NO];
+	if (peer_info->isCALayer) {
+		// hidden window when using CALayer
+		[window_info->window orderOut:nil];
+	}
+	else {
+		[window_info->window performSelectorOnMainThread:@selector(makeFirstResponder:) withObject:window_info->view waitUntilDone:NO];
+		[window_info->window performSelectorOnMainThread:@selector(setInitialFirstResponder:) withObject:window_info->view waitUntilDone:NO];
+		[window_info->window performSelectorOnMainThread:@selector(makeKeyAndOrderFront:) withObject:[NSApplication sharedApplication] waitUntilDone:NO];
+	}
 	
 	window_info->fullscreen = fullscreen;
 	
@@ -525,7 +525,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv
 				[window_info->window close];
 			}
 			else {
-				// the nsview has a parent, so remove it from there
+				// the nsview has a parent, remove it from there
 				[window_info->view removeFromSuperviewWithoutNeedingDisplay];
 			}
 		}

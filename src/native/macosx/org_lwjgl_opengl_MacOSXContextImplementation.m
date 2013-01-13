@@ -115,9 +115,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSwapBu
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
 	[[peer_info->window_info->view openGLContext] flushBuffer];
+	  
+	if (peer_info->isCALayer) {
+		// blit the contents of buffer to CALayer
+		[peer_info->glLayer blitFrameBuffer];
+	}
+	  
     [pool release];
 }
-
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nUpdate
   (JNIEnv *env, jclass clazz, jobject context_handle) {
@@ -128,7 +133,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nUpdate
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_clearDrawable
-  (JNIEnv *env, jclass clazz, jobject context_handle) {
+(JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
 	[[peer_info->window_info->view openGLContext] clearDrawable];
