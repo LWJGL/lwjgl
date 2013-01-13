@@ -136,6 +136,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 		glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24, width, height);
 		glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthRenderBufferID);
 		
+		// clear garbage background on new fbo
+		glClearColor(0.0, 0.0, 0.0, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT);
+		
+		// blit previous fbo to the new fbo
+		glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, fboID);
+		glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, tempFBO);
+		glBlitFramebufferEXT(0, 0, width, height,
+							 0, 0, width, height,
+							 GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
+							 GL_NEAREST);
+		
 		// set new fbo and its sizes
 		fboID = tempFBO;
 		fboWidth = width;
