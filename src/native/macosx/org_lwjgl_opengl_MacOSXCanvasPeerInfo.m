@@ -111,10 +111,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 		int oldImageRenderBufferID = imageRenderBufferID;
 		int oldDepthRenderBufferID = depthRenderBufferID;
 		
-		// set the size of the offscreen frame buffer window
-		window_info->display_rect = NSMakeRect(0, 0, width, height);
-		[window_info->window setFrame:window_info->display_rect display:false];
-		
 		// create new fbo
 		int tempFBO;
 		glGenFramebuffersEXT(1, &tempFBO);
@@ -140,18 +136,24 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 		glClearColor(0.0, 0.0, 0.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
-		// blit previous fbo to the new fbo
-		glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, fboID);
+		// blit frameBuffer to the new fbo
+		glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, 0);
 		glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, tempFBO);
 		glBlitFramebufferEXT(0, 0, width, height,
 							 0, 0, width, height,
 							 GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
 							 GL_NEAREST);
 		
+		glFinish(); // finish before using new fbo and resizing the window
+		
 		// set new fbo and its sizes
 		fboID = tempFBO;
 		fboWidth = width;
 		fboHeight = height;
+		
+		// set the size of the offscreen frame buffer window
+		window_info->display_rect = NSMakeRect(0, 0, width, height);
+		[window_info->window setFrame:window_info->display_rect display:false];
 		
 		// clean up the old fbo and renderBuffers
 		glDeleteFramebuffersEXT(1, &oldFboID);
@@ -180,15 +182,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	// set the current context
 	CGLSetCurrentContext(glContext);
 	
-	if (fboID == 0) {
-		// clear garbage background before lwjgl fbo is set
+	// get the size of the CALayer/AWT Canvas
+	int width = self.bounds.size.width;
+	int height = self.bounds.size.height;
+	
+	if (width != fboWidth || height != fboHeight) {
+		// clear garbage background before lwjgl fbo blit
 		glClearColor(0.0, 0.0, 0.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
-	
-	// get the size of the CALayer
-	int width = fboWidth;
-	int height = fboHeight;
 	
 	GLint originalReadFBO;
 	
