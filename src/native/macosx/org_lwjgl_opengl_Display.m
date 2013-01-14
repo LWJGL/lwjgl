@@ -495,7 +495,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	// Inform the view of its parent window info;
 	[window_info->view setParent:window_info];
 	
-	if (peer_info->isCALayer) {
+	if (!fullscreen && peer_info->isCALayer) {
 		// hidden window when using CALayer
 		[window_info->window orderOut:nil];
 	}
@@ -514,7 +514,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv *env, jobject this, jobject window_handle) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-    
+	
 	if (window_info->fullscreen) {
 		[window_info->view exitFullScreenModeWithOptions: nil];
 	}
@@ -532,6 +532,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv
 	}
 	
 	[pool drain];
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyCALayer(JNIEnv *env, jobject this, jobject peer_info_handle) {
+	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	if (peer_info->isCALayer) {
+		peer_info->isCALayer = false;
+		[peer_info->glLayer performSelectorOnMainThread:@selector(removeLayer) withObject:nil waitUntilDone:YES];
+		[peer_info->glLayer release];
+	}
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getJNIVersion(JNIEnv *env, jobject ignored) {

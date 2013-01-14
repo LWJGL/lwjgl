@@ -70,7 +70,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private MacOSXCanvasListener canvas_listener;
 	private Canvas canvas;
 	private Robot robot;
-	//private MacOSXMouseEventQueue mouse_queue;
+	private MacOSXMouseEventQueue mouse_queue;
 	private KeyboardEventQueue keyboard_queue;
 	private java.awt.DisplayMode requested_mode;
 	
@@ -154,7 +154,13 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 	
 	private boolean isNativeMode() {
-		return true;
+		//return true;
+		
+		if (Display.isFullscreen() || Display.getParent() == null) {
+			return true;
+		}
+		
+		return false;
 	}
 
 	public void doHandleQuit() {
@@ -163,10 +169,22 @@ final class MacOSXDisplay implements DisplayImplementation {
 		}
 	}
 
+	public native void nDestroyCALayer(ByteBuffer peer_info_handle);
+	
 	public native void nDestroyWindow(ByteBuffer window_handle);
 
 	public void destroyWindow() {
-        nDestroyWindow(window);
+		
+		if (!native_mode) {
+			DrawableGL gl_drawable = (DrawableGL)Display.getDrawable();
+			PeerInfo peer_info = gl_drawable.peer_info;
+			if (peer_info != null) {
+				ByteBuffer peer_handle = peer_info.getHandle();
+				nDestroyCALayer(peer_handle);
+			}
+		}
+		
+		nDestroyWindow(window);
 	}
 
 	public int getGammaRampLength() {
@@ -262,8 +280,12 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public boolean isActive() {
-        boolean ret = nIsFocused(window);
-        return ret;
+		if (native_mode) {
+			return nIsFocused(window);
+		}
+		else {
+			return Display.getParent().hasFocus();
+		}
 	}
 
 	public Canvas getCanvas() {
@@ -311,29 +333,57 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void createMouse() throws LWJGLException {
-        mouse = new MacOSXNativeMouse(this, window);
-        mouse.register();
+		if (native_mode) {
+			mouse = new MacOSXNativeMouse(this, window);
+			mouse.register();
+		}
+		else {
+			this.mouse_queue = new MacOSXMouseEventQueue(canvas);
+			mouse_queue.register();
+		}
 	}
 
 	public void destroyMouse() {
-        //MacOSXMouseEventQueue.nGrabMouse(false);
-        
-        if (mouse != null) {
-        		mouse.unregister();
-        }
-        mouse = null;
+		if (native_mode) {
+			if (mouse != null) {
+				mouse.unregister();
+			}
+			mouse = null;
+		}
+		else {
+			if (mouse_queue != null) {
+				MacOSXMouseEventQueue.nGrabMouse(false);
+				mouse_queue.unregister();
+			}
+			this.mouse_queue = null;
+		}
 	}
 
 	public void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons_buffer) {
-		mouse.poll(coord_buffer, buttons_buffer);
+		if (native_mode) {
+			mouse.poll(coord_buffer, buttons_buffer);
+		}
+		else {
+			mouse_queue.poll(coord_buffer, buttons_buffer);
+		}
 	}
 
 	public void readMouse(ByteBuffer buffer) {
-		mouse.copyEvents(buffer);
+		if (native_mode) {
+			mouse.copyEvents(buffer);
+		}
+		else {
+			mouse_queue.copyEvents(buffer);
+		}
 	}
 
 	public void grabMouse(boolean grab) {
-		mouse.setGrabbed(grab);
+		if (native_mode) {
+			mouse.setGrabbed(grab);
+		}
+		else {
+			mouse_queue.setGrabbed(grab);
+		}
 	}
 
 	public int getNativeCursorCapabilities() {
@@ -341,10 +391,14 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void setCursorPosition(int x, int y) {
-		if (mouse != null) {
-			mouse.setCursorPosition(x, y);
+		if (native_mode) {
+			if (mouse != null) {
+				mouse.setCursorPosition(x, y);
+			}
 		}
-        //MacOSXMouseEventQueue.nWarpCursor(x, y);
+		else {
+			//MacOSXMouseEventQueue.nWarpCursor(x, y);
+		}
 	}
 
 	public void setNativeCursor(Object handle) throws LWJGLException {
@@ -360,23 +414,47 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	/* Keyboard */
 	public void createKeyboard() throws LWJGLException {
-		this.keyboard = new MacOSXNativeKeyboard(window);
-		keyboard.register();
+		if (native_mode) {
+			this.keyboard = new MacOSXNativeKeyboard(window);
+			keyboard.register();
+		}
+		else {
+			this.keyboard_queue = new KeyboardEventQueue(canvas);
+			keyboard_queue.register();
+		}
 	}
 
 	public void destroyKeyboard() {
-		if (keyboard != null) {
-			keyboard.unregister();
+		if (native_mode) {
+			if (keyboard != null) {
+				keyboard.unregister();
+			}
+			keyboard = null;
 		}
-		keyboard = null;
+		else {
+			if (keyboard_queue != null) {
+				keyboard_queue.unregister();
+			}
+			this.keyboard_queue = null;
+		}
 	}
 
 	public void pollKeyboard(ByteBuffer keyDownBuffer) {
-		keyboard.poll(keyDownBuffer);
+		if (native_mode) {
+			keyboard.poll(keyDownBuffer);
+		}
+		else {
+			keyboard_queue.poll(keyDownBuffer);
+		}
 	}
 
 	public void readKeyboard(ByteBuffer buffer) {
-		keyboard.copyEvents(buffer);
+		if (native_mode) {
+			keyboard.copyEvents(buffer);
+		}
+		else {
+			keyboard_queue.copyEvents(buffer);
+		}
 	}
 
 	/** Native cursor handles */

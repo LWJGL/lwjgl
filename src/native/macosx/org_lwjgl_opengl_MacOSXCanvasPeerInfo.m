@@ -195,7 +195,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	GLint originalReadFBO;
 	
 	// get and save the current fbo values
-	glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING_EXT, &originalReadFBO);
+	//glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING_EXT, &originalReadFBO);
 	
 	// read the LWJGL FBO and blit it into this CALayers FBO
 	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, fboID);
@@ -205,7 +205,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 						 GL_NEAREST);
 	
 	// restore original fbo read value
-	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, originalReadFBO);
+	//glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, originalReadFBO);
 	
 	// call super to finalize the drawing - by default all it does is call glFlush()
 	[super drawInCGLContext:glContext pixelFormat:pixelFormat forLayerTime:timeInterval displayTime:timeStamp];

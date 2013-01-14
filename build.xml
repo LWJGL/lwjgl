@@ -323,6 +323,7 @@
 			<class name="org.lwjgl.opengl.MacOSXContextImplementation" />
 			<class name="org.lwjgl.opengl.MacOSXNativeKeyboard" />
 			<class name="org.lwjgl.opengl.MacOSXNativeMouse" />
+			<class name="org.lwjgl.opengl.MacOSXMouseEventQueue" />
 		</javah>
 
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}" force="yes">
