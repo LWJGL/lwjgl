@@ -543,6 +543,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyCALayer(JNIEn
 	}
 }
 
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nIsNativeMode(JNIEnv *env, jobject this, jobject peer_info_handle) {
+	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	if (peer_info->isCALayer) {
+		return JNI_FALSE;
+	}
+	else {
+		return JNI_TRUE;
+	}
+}
+
 JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getJNIVersion(JNIEnv *env, jobject ignored) {
 	return org_lwjgl_MacOSXSysImplementation_JNI_VERSION;
 }

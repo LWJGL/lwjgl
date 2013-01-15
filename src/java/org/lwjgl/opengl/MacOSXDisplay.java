@@ -110,6 +110,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private native int nGetWidth(ByteBuffer window_handle);
 	
 	private native int nGetHeight(ByteBuffer window_handle);
+	
+	private native boolean nIsNativeMode(ByteBuffer peer_info_handle);
     
 	private static boolean isUndecorated() {
 		return Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated");
@@ -124,8 +126,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 		else this.canvas = null;
 		
 		close_requested = false;
-		
-		native_mode = isNativeMode();
 		
 		DrawableGL gl_drawable = (DrawableGL)Display.getDrawable();
 		PeerInfo peer_info = gl_drawable.peer_info;
@@ -145,22 +145,15 @@ final class MacOSXDisplay implements DisplayImplementation {
 					current_viewport.put(3, mode.getHeight());
 				}
 			}
+			
+			native_mode = nIsNativeMode(peer_handle);
+			
 		} catch (LWJGLException e) {
 			destroyWindow();
 			throw e;
 		} finally {
 			peer_info.unlock();
 		}
-	}
-	
-	private boolean isNativeMode() {
-		//return true;
-		
-		if (Display.isFullscreen() || Display.getParent() == null) {
-			return true;
-		}
-		
-		return false;
 	}
 
 	public void doHandleQuit() {
