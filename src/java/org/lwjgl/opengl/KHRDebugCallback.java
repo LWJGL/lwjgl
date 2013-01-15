@@ -196,9 +196,9 @@ public final class KHRDebugCallback extends PointerWrapperAbstract {
 		/**
 		 * This method will be called when an ARB_debug_output message is generated.
 		 *
-		 * @param id       the message ID
 		 * @param source   the message source
 		 * @param type     the message type
+		 * @param id       the message ID
 		 * @param severity the message severity
 		 * @param message  the string representation of the message.
 		 */
