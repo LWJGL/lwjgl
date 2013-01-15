@@ -113,7 +113,7 @@ public final class ARBDebugOutputCallback extends PointerWrapperAbstract {
 						description = "OTHER";
 						break;
 					default:
-						description = "Unknown (" + Integer.toHexString(source) + ")";
+						description = printUnknownToken(source);
 				}
 				System.err.println("\tSource: " + description);
 
@@ -137,7 +137,7 @@ public final class ARBDebugOutputCallback extends PointerWrapperAbstract {
 						description = "OTHER";
 						break;
 					default:
-						description = "Unknown (" + Integer.toHexString(source) + ")";
+						description = printUnknownToken(type);
 				}
 				System.err.println("\tType: " + description);
 
@@ -152,11 +152,15 @@ public final class ARBDebugOutputCallback extends PointerWrapperAbstract {
 						description = "LOW";
 						break;
 					default:
-						description = "Unknown (" + Integer.toHexString(source) + ")";
+						description = printUnknownToken(severity);
 				}
 				System.err.println("\tSeverity: " + description);
 
 				System.err.println("\tMessage: " + message);
+			}
+
+			private  String printUnknownToken(final int token) {
+				return "Unknown (0x" + Integer.toHexString(token).toUpperCase() + ")";
 			}
 		});
 	}

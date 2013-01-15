@@ -110,7 +110,7 @@ public final class AMDDebugOutputCallback extends PointerWrapperAbstract {
 						description = "OTHER";
 						break;
 					default:
-						description = "Unknown (" + Integer.toHexString(category) + ")";
+						description = printUnknownToken(category);
 				}
 				System.err.println("\tCategory: " + description);
 
@@ -125,11 +125,15 @@ public final class AMDDebugOutputCallback extends PointerWrapperAbstract {
 						description = "LOW";
 						break;
 					default:
-						description = "Unknown (" + Integer.toHexString(category) + ")";
+						description = printUnknownToken(severity);
 				}
 				System.err.println("\tSeverity: " + description);
 
 				System.err.println("\tMessage: " + message);
+			}
+
+			private String printUnknownToken(final int token) {
+				return "Unknown (0x" + Integer.toHexString(token).toUpperCase() + ")";
 			}
 		});
 	}
