@@ -93,6 +93,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 }
 
 - (void) removeLayer {
+	// finish any pending blits before destroying the offscreen window to prevent crashes
+	glFinish();
+	
 	// remove self from root layer
 	id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;
 	surfaceLayers.layer = nil;
