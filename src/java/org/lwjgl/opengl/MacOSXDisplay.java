@@ -67,7 +67,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private static final int PBUFFER_HANDLE_SIZE = 24;
 	private static final int GAMMA_LENGTH = 256;
 
-	private MacOSXCanvasListener canvas_listener;
+	//private MacOSXCanvasListener canvas_listener;
 	private Canvas canvas;
 	private Robot robot;
 	private MacOSXMouseEventQueue mouse_queue;
@@ -148,6 +148,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 			
 			native_mode = nIsNativeMode(peer_handle);
 			
+			if (!native_mode) {
+				robot = AWTUtil.createRobot(canvas);
+			}
+			
 		} catch (LWJGLException e) {
 			destroyWindow();
 			throw e;
@@ -175,6 +179,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 				ByteBuffer peer_handle = peer_info.getHandle();
 				nDestroyCALayer(peer_handle);
 			}
+			robot = null;
 		}
 		
 		nDestroyWindow(window);
