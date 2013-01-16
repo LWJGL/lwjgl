@@ -58,6 +58,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	if(surface->awt.version & 0x80000000) { //JAWT_MACOSX_USE_CALAYER) {
 		
 		if (macosx_dsi != NULL) {
+			if (peer_info->isCALayer) {
+				[peer_info->glLayer release];
+			}
 			peer_info->glLayer = [GLLayer new];
 			peer_info->glLayer->macosx_dsi = macosx_dsi;
 			peer_info->glLayer->window_info = peer_info->window_info;
