@@ -516,6 +516,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 	
 	if (window_info->fullscreen) {
+		[window_info->view setParent:nil];
 		[window_info->view exitFullScreenModeWithOptions: nil];
 	}
 	else {
