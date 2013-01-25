@@ -173,7 +173,11 @@ public class Cursor {
 		CursorElement[] cursors;
 		switch (LWJGLUtil.getPlatform()) {
 			case LWJGLUtil.PLATFORM_MACOSX:
-				/* Fall through */
+				// create our cursor elements
+				Object handle_mac = Mouse.getImplementation().createCursor(width, height, xHotspot, yHotspot, numImages, images_copy, delays);
+				CursorElement cursor_element_mac = new CursorElement(handle_mac, -1, -1);
+				cursors = new CursorElement[]{cursor_element_mac};
+				break;
 			case LWJGLUtil.PLATFORM_WINDOWS:
 				// create our cursor elements
 				cursors = new CursorElement[numImages];

@@ -400,6 +400,9 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void setNativeCursor(Object handle) throws LWJGLException {
+		if (native_mode) {
+			MacOSXNativeMouse.setCursor(handle);
+		}
 	}
 
 	public int getMinCursorSize() {
@@ -457,7 +460,12 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	/** Native cursor handles */
 	public Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
-		return AWTUtil.createCursor(width, height, xHotspot, yHotspot, numImages, images, delays);
+		if (native_mode) {
+			return MacOSXNativeMouse.createCursor(width, height, xHotspot, yHotspot, numImages, images, delays);
+		}
+		else {
+			return AWTUtil.createCursor(width, height, xHotspot, yHotspot, numImages, images, delays);
+		}
 	}
 
 	public void destroyCursor(Object cursor_handle) {

@@ -79,6 +79,7 @@ typedef struct {
     @private
     NSOpenGLContext*        _openGLContext;
     NSOpenGLPixelFormat*    _pixelFormat;
+	NSTrackingArea *		_trackingArea;
 }
 
 + (NSOpenGLPixelFormat*)defaultPixelFormat;

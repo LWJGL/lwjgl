@@ -330,6 +330,35 @@ static NSAutoreleasePool *pool;
 	}
 }
 
+-(void)updateTrackingAreas {
+	if(_trackingArea != nil) {
+		[self removeTrackingArea:_trackingArea];
+		[_trackingArea release];
+	}
+	
+	int options = (NSTrackingMouseEnteredAndExited | NSTrackingCursorUpdate | NSTrackingActiveAlways);
+	_trackingArea = [[NSTrackingArea alloc] initWithRect:[self bounds]
+															options:options
+															owner:self
+															userInfo:nil];
+	[self addTrackingArea:_trackingArea];
+}
+
+-(void)mouseEntered:(NSEvent *)event {
+	// TODO
+	NSLog(@"MOUSE ENTERED");
+}
+
+-(void)mouseExited:(NSEvent *)event {
+	// TODO
+	NSLog(@"MOUSE EXITED");
+}
+
+-(void)cursorUpdate:(NSEvent *)event {
+	// TODO
+	NSLog(@"CURSOR UPDATE");
+}
+
 - (void) drawRect:(NSRect)rect {
 	// set black as the default background color 
 	// for the nsview to avoid white flash on fullscreen

@@ -40,6 +40,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.LWJGLException;
 
 import java.lang.reflect.*;
 import java.lang.Integer;
@@ -87,11 +88,41 @@ final class MacOSXNativeMouse extends EventQueue {
 	private native void nRegisterMouseListener(ByteBuffer window_handle);
     
 	private native void nUnregisterMouseListener(ByteBuffer window_handle);
+	
+	private static native Object nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
+	
+	private static native void nDestroyCursor(Object handle) throws LWJGLException;
+	
+	private static native void nSetCursor(Object handle) throws LWJGLException;
     
-    public synchronized void register() {
-        nRegisterMouseListener(window_handle);
-    }
-    
+	public synchronized void register() {
+		nRegisterMouseListener(window_handle);
+	}
+	
+	public static Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
+		try {
+			return nCreateCursor(width, height, xHotspot, yHotspot, numImages, images, images.position(), delays, delays != null ? delays.position() : -1);
+		} catch (LWJGLException e) {
+			throw e;
+		}
+	}
+	
+	public static void destroyCursor(Object handle) throws LWJGLException {
+		try {
+			nDestroyCursor(handle);
+		} catch (LWJGLException e) {
+			throw e;
+		}
+	}
+	
+	public static void setCursor(Object handle) throws LWJGLException {
+		try {
+			nSetCursor(handle);
+		} catch (LWJGLException e) {
+			throw e;
+		}
+	}
+	
     public synchronized void setCursorPosition(int x, int y) {
     		nSetCursorPosition(window_handle, x, y);
     }

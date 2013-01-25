@@ -90,12 +90,54 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nSetCursorPositio
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nRegisterMouseListener(JNIEnv *env, jobject _this, jobject window_handle) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-    [window_info->window setAcceptsMouseMovedEvents:YES];
-    window_info->jmouse = (*env)->NewGlobalRef(env, _this);
+	[window_info->window setAcceptsMouseMovedEvents:YES];
+	window_info->jmouse = (*env)->NewGlobalRef(env, _this);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nUnregisterMouseListener(JNIEnv *env, jobject this, jobject window_handle) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-    [window_info->window setAcceptsMouseMovedEvents:NO];
-    window_info->jmouse = nil;
+	[window_info->window setAcceptsMouseMovedEvents:NO];
+	window_info->jmouse = nil;
+}
+
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nCreateCursor(JNIEnv *env, jobject _this, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset) {
+	NSLog(@"nCreateCursor");
+	
+	char *bytes = (char *)(*env)->GetDirectBufferAddress(env, image_buffer);
+	
+	NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc]
+								initWithBitmapDataPlanes:(char *)&bytes
+								pixelsWide:width pixelsHigh:height
+								bitsPerSample:8
+								samplesPerPixel:4
+								hasAlpha:YES
+								isPlanar:NO
+								colorSpaceName:NSDeviceRGBColorSpace
+								bitmapFormat:0
+								bytesPerRow:0
+								bitsPerPixel:0];
+	
+	NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(width, height)];
+	
+	[image addRepresentation:bitmap];
+	
+	
+	NSCursor *cursor = [[NSCursor alloc] initWithImage:image hotSpot:NSMakePoint(x_hotspot, y_hotspot)];
+	
+	[cursor set]; // temporarily set the cursor here as returning the handle doesn't work yet
+	
+	return cursor;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nDestroyCursor(JNIEnv *env, jobject _this, jobject handle) {
+	// TODO
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nSetCursor(JNIEnv *env, jobject _this, jobject handle) {
+	NSLog(@"nSetCursor");
+	
+	// TODO - this method should get the cursor from the handle and set it
+	
+	//NSCursor *cursor = (NSCursor *)(*env)->GetDirectBufferAddress(env, handle);
+	//[cursor set];
 }
