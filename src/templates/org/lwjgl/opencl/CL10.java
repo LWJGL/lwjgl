@@ -1149,11 +1149,11 @@ public interface CL10 {
 
 	@Private
 	@PointerWrapper("void *")
-	CLFunctionAddress clGetExtensionFunctionAddress(@Check("1") @Const @cl_char ByteBuffer func_name);
+	CLFunctionAddress clGetExtensionFunctionAddress(@NullTerminated @Const @cl_char ByteBuffer func_name);
 
 	@Alternate("clGetExtensionFunctionAddress")
 	@Private
 	@PointerWrapper("void *")
-	CLFunctionAddress clGetExtensionFunctionAddress(CharSequence func_name);
+	CLFunctionAddress clGetExtensionFunctionAddress(@NullTerminated CharSequence func_name);
 
 }

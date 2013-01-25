@@ -435,12 +435,12 @@ public interface CL12 {
 	@Private
 	@PointerWrapper("void *")
 	CLFunctionAddress clGetExtensionFunctionAddressForPlatform(@PointerWrapper("cl_platform_id") CLPlatform platform,
-	                                                           @Check("1") @Const @cl_char ByteBuffer func_name);
+	                                                           @NullTerminated @Const @cl_char ByteBuffer func_name);
 
 	@Alternate("clGetExtensionFunctionAddressForPlatform")
 	@Private
 	@PointerWrapper("void *")
 	CLFunctionAddress clGetExtensionFunctionAddressForPlatform(@PointerWrapper("cl_platform_id") CLPlatform platform,
-	                                                           CharSequence func_name);
+	                                                           @NullTerminated CharSequence func_name);
 
 }
