@@ -113,9 +113,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nCreateCursor(
 								hasAlpha:YES
 								isPlanar:NO
 								colorSpaceName:NSDeviceRGBColorSpace
-								bitmapFormat:0
-								bytesPerRow:0
-								bitsPerPixel:0];
+								bitmapFormat:NSAlphaNonpremultipliedBitmapFormat
+								bytesPerRow:width*4
+								bitsPerPixel:32];
 	
 	NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(width, height)];
 	
