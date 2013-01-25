@@ -39,7 +39,6 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 
@@ -97,8 +96,8 @@ final class WindowsKeyboard {
 	private static native int ToUnicode(int wVirtKey, int wScanCode, ByteBuffer lpKeyState, CharBuffer pwszBuff, int cchBuff, int flags);
 	private static native int ToAscii(int wVirtKey, int wScanCode, ByteBuffer lpKeyState, ByteBuffer lpChar, int flags);
 	private static native int GetKeyboardState(ByteBuffer lpKeyState);
-	private static native int GetKeyState(int virt_key);
-	private static native int GetAsyncKeyState(int virt_key);
+	private static native short GetKeyState(int virt_key);
+	private static native short GetAsyncKeyState(int virt_key);
 
 	private void putEvent(int keycode, byte state, int ch, long millis, boolean repeat) {
 		tmp_event.clear();
@@ -154,10 +153,6 @@ final class WindowsKeyboard {
 		return (state & 1) == 1;
 	}
 
-	private static boolean isKeyPressedAsync(int state) {
-		return (state >>> 31) == 1;
-	}
-
 	public void handleKey(int virt_key, int scan_code, boolean extended, byte event_state, long millis, boolean repeat) {
 		virt_key = translateExtended(virt_key, scan_code, event_state, extended);
 		if ( !repeat && isKeyPressed(event_state) == isKeyPressed(virt_key_down_buffer[virt_key]) )
@@ -180,7 +175,7 @@ final class WindowsKeyboard {
 
 	public void fireLostKeyEvents() {
 		for ( int i = 0; i < virt_key_down_buffer.length; i++ ) {
-			if ( isKeyPressed(virt_key_down_buffer[i]) && !isKeyPressedAsync(GetAsyncKeyState(i)) )
+			if ( isKeyPressed(virt_key_down_buffer[i]) && (GetAsyncKeyState(i) & 0x8000) == 0 )
 				handleKey(i, 0, false, (byte)0, System.currentTimeMillis(), false);
 		}
 	}
