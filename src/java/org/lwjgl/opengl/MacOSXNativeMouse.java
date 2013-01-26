@@ -89,17 +89,17 @@ final class MacOSXNativeMouse extends EventQueue {
     
 	private native void nUnregisterMouseListener(ByteBuffer window_handle);
 	
-	private static native Object nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
+	private static native long nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
 	
-	private static native void nDestroyCursor(Object handle) throws LWJGLException;
+	private static native void nDestroyCursor(long handle) throws LWJGLException;
 	
-	private static native void nSetCursor(Object handle) throws LWJGLException;
+	private static native void nSetCursor(long handle) throws LWJGLException;
     
 	public synchronized void register() {
 		nRegisterMouseListener(window_handle);
 	}
 	
-	public static Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
+	public static long createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
 		try {
 			return nCreateCursor(width, height, xHotspot, yHotspot, numImages, images, images.position(), delays, delays != null ? delays.position() : -1);
 		} catch (LWJGLException e) {
@@ -107,7 +107,7 @@ final class MacOSXNativeMouse extends EventQueue {
 		}
 	}
 	
-	public static void destroyCursor(Object handle) throws LWJGLException {
+	public static void destroyCursor(long handle) throws LWJGLException {
 		try {
 			nDestroyCursor(handle);
 		} catch (LWJGLException e) {
@@ -115,7 +115,7 @@ final class MacOSXNativeMouse extends EventQueue {
 		}
 	}
 	
-	public static void setCursor(Object handle) throws LWJGLException {
+	public static void setCursor(long handle) throws LWJGLException {
 		try {
 			nSetCursor(handle);
 		} catch (LWJGLException e) {

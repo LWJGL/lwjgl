@@ -401,7 +401,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public void setNativeCursor(Object handle) throws LWJGLException {
 		if (native_mode) {
-			MacOSXNativeMouse.setCursor(handle);
+			MacOSXNativeMouse.setCursor(getCursorHandle(handle));
 		}
 	}
 
@@ -457,11 +457,12 @@ final class MacOSXDisplay implements DisplayImplementation {
 			keyboard_queue.copyEvents(buffer);
 		}
 	}
-
+	
 	/** Native cursor handles */
 	public Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
 		if (native_mode) {
-			return MacOSXNativeMouse.createCursor(width, height, xHotspot, yHotspot, numImages, images, delays);
+			long cursor = MacOSXNativeMouse.createCursor(width, height, xHotspot, yHotspot, numImages, images, delays);
+			return cursor;
 		}
 		else {
 			return AWTUtil.createCursor(width, height, xHotspot, yHotspot, numImages, images, delays);
@@ -470,6 +471,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public void destroyCursor(Object cursor_handle) {
 		
+	}
+	
+	private static long getCursorHandle(Object cursor_handle) {
+		return cursor_handle != null ? (Long)cursor_handle : 0;
 	}
 
 	public int getPbufferCapabilities() {
