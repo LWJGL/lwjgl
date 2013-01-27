@@ -83,6 +83,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private boolean skipViewportValue = false;
 	private static final IntBuffer current_viewport = BufferUtils.createIntBuffer(16);
 	
+	private boolean mouseInsideWindow;
+	
 	private boolean close_requested;
 	
 	private boolean native_mode = true;
@@ -163,6 +165,18 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public void doHandleQuit() {
 		synchronized (this) {
 			close_requested = true;
+		}
+	}
+	
+	public void mouseInsideWindow() {
+		synchronized (this) {
+			mouseInsideWindow = true;
+		}
+	}
+	
+	public void mouseOutsideWindow() {
+		synchronized (this) {
+			mouseInsideWindow = false;
 		}
 	}
 
@@ -564,7 +578,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public boolean isInsideWindow() {
-		return true;
+		return mouseInsideWindow;
 	}
 
 	public void setResizable(boolean resizable) {

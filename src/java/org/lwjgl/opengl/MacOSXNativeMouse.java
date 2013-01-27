@@ -91,9 +91,9 @@ final class MacOSXNativeMouse extends EventQueue {
 	
 	private static native long nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
 	
-	private static native void nDestroyCursor(long handle) throws LWJGLException;
+	private static native void nDestroyCursor(long cursor_handle) throws LWJGLException;
 	
-	private static native void nSetCursor(long handle) throws LWJGLException;
+	private static native void nSetCursor(long cursor_handle) throws LWJGLException;
     
 	public synchronized void register() {
 		nRegisterMouseListener(window_handle);
@@ -107,17 +107,17 @@ final class MacOSXNativeMouse extends EventQueue {
 		}
 	}
 	
-	public static void destroyCursor(long handle) throws LWJGLException {
+	public static void destroyCursor(long cursor_handle) throws LWJGLException {
 		try {
-			nDestroyCursor(handle);
+			nDestroyCursor(cursor_handle);
 		} catch (LWJGLException e) {
 			throw e;
 		}
 	}
 	
-	public static void setCursor(long handle) throws LWJGLException {
+	public static void setCursor(long cursor_handle) throws LWJGLException {
 		try {
-			nSetCursor(handle);
+			nSetCursor(cursor_handle);
 		} catch (LWJGLException e) {
 			throw e;
 		}

@@ -336,7 +336,7 @@ static NSAutoreleasePool *pool;
 		[_trackingArea release];
 	}
 	
-	int options = (NSTrackingMouseEnteredAndExited | NSTrackingCursorUpdate | NSTrackingActiveAlways);
+	int options = (NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways);
 	_trackingArea = [[NSTrackingArea alloc] initWithRect:[self bounds]
 															options:options
 															owner:self
@@ -345,18 +345,25 @@ static NSAutoreleasePool *pool;
 }
 
 -(void)mouseEntered:(NSEvent *)event {
-	// TODO
-	NSLog(@"MOUSE ENTERED");
+	JNIEnv *env = attachCurrentThread();
+	if (env == nil || event == nil || _parent == nil || _parent->jdisplay == nil) {
+		return;
+	}
+	
+	jclass display_class = (*env)->GetObjectClass(env, _parent->jdisplay);
+	jmethodID mouseInsideWindow_callback = (*env)->GetMethodID(env, display_class, "mouseInsideWindow", "()V");
+	(*env)->CallVoidMethod(env, _parent->jdisplay, mouseInsideWindow_callback);
 }
 
 -(void)mouseExited:(NSEvent *)event {
-	// TODO
-	NSLog(@"MOUSE EXITED");
-}
-
--(void)cursorUpdate:(NSEvent *)event {
-	// TODO
-	NSLog(@"CURSOR UPDATE");
+	JNIEnv *env = attachCurrentThread();
+	if (env == nil || event == nil || _parent == nil || _parent->jdisplay == nil) {
+		return;
+	}
+	
+	jclass display_class = (*env)->GetObjectClass(env, _parent->jdisplay);
+	jmethodID mouseOutsideWindow_callback = (*env)->GetMethodID(env, display_class, "mouseOutsideWindow", "()V");
+	(*env)->CallVoidMethod(env, _parent->jdisplay, mouseOutsideWindow_callback);
 }
 
 - (void) drawRect:(NSRect)rect {
@@ -473,6 +480,10 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 				window_info->window = [peer_info->parent window];
 				[peer_info->parent addSubview:window_info->view];
 				[window_info->view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+				
+				if (window_info->jdisplay == NULL) {
+					window_info->jdisplay = (*env)->NewGlobalRef(env, this);
+				}
 			}
 		}
 		else {
