@@ -88,6 +88,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private boolean close_requested;
 	
 	private boolean native_mode = true;
+	
+	private boolean updateNativeCursor = false;
+	
+	private long currentNativeCursor = 0;
 
 	MacOSXDisplay() {
 		
@@ -172,12 +176,15 @@ final class MacOSXDisplay implements DisplayImplementation {
 		synchronized (this) {
 			mouseInsideWindow = true;
 		}
+		updateNativeCursor = true;
 	}
 	
 	public void mouseOutsideWindow() {
 		synchronized (this) {
 			mouseInsideWindow = false;
 		}
+		
+		updateNativeCursor = true;
 	}
 
 	public native void nDestroyCALayer(ByteBuffer peer_info_handle);
@@ -327,6 +334,21 @@ final class MacOSXDisplay implements DisplayImplementation {
 			else glGetInteger(GL_VIEWPORT, current_viewport);
 			glViewport(current_viewport.get(0), current_viewport.get(1), current_viewport.get(2), current_viewport.get(3));
 		}
+		
+		if (native_mode && updateNativeCursor) {
+			updateNativeCursor = false;
+			try {
+				if (mouseInsideWindow) {
+					setNativeCursor(currentNativeCursor);
+				}
+				else {
+					// restore default cursor if outside Display
+					MacOSXNativeMouse.setCursor(0);
+				}
+			} catch (LWJGLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void reshape(int x, int y, int width, int height) {
@@ -415,7 +437,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public void setNativeCursor(Object handle) throws LWJGLException {
 		if (native_mode) {
-			MacOSXNativeMouse.setCursor(getCursorHandle(handle));
+			currentNativeCursor = getCursorHandle(handle);
+			MacOSXNativeMouse.setCursor(currentNativeCursor);
 		}
 	}
 
