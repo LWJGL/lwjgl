@@ -101,10 +101,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nUnregisterMouseL
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nCreateCursor(JNIEnv *env, jobject _this, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset) {
-	jint *bytes = (jint *)(*env)->GetDirectBufferAddress(env, image_buffer);
+	jlong *bytes = (jint *)(*env)->GetDirectBufferAddress(env, image_buffer) + images_offset;
 	
 	NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc]
-								initWithBitmapDataPlanes:(jint *)&bytes
+								initWithBitmapDataPlanes:(jlong *)&bytes
 								pixelsWide:width pixelsHigh:height
 								bitsPerSample:8
 								samplesPerPixel:4
