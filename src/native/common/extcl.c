@@ -59,7 +59,7 @@ void extcl_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMet
 	ext_InitializeClass(env, clazz, &extcl_GetProcAddress, num_functions, functions);
 }
 
-int extcl_CalculateImageSize(const size_t *region, size_t row_pitch, size_t slice_pitch) {
+size_t extcl_CalculateImageSize(const size_t *region, size_t row_pitch, size_t slice_pitch) {
     if ( slice_pitch == 0 )
         return region[1] * row_pitch;
     else

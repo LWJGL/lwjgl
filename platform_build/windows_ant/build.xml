@@ -6,8 +6,8 @@
 	<property name="sdkhome" location="${env.MSSDK}"/>
 
 	<target name="compile_dir">
-		<apply dir="." failonerror="true" executable="cl" dest="." skipemptyfilesets="true">
-			<arg line="/Ox /W2 /nologo /Ox /Ob2 /Oi /Ot /Oy /FD /EHsc /MT /Gy /W2 /nologo /c"/>
+		<apply dir="." failonerror="true" executable="cl" dest="." skipemptyfilesets="true" parallel="true">
+			<arg line="/c /W3 /EHsc /Ox /Gy /MT /MP /nologo"/>
 			<arg value="/I${sdkhome}\include"/>
 			<arg value="/I${java.home}\..\include"/>
 			<arg value="/I${java.home}\..\include\win32"/>

@@ -83,7 +83,7 @@ static alcGetEnumValuePROC alcGetEnumValue;
  */
 static jobject JNICALL Java_org_lwjgl_openal_ALC10_nalcGetString (JNIEnv *env, jclass clazz, jlong deviceaddress, jint token) {
 	char* alcString = (char*) alcGetString((ALCdevice*)((intptr_t)deviceaddress), (ALenum) token);
-	int length;
+	size_t length;
 	int i=1;
 
 	if (alcString == NULL) {

@@ -203,7 +203,7 @@ jobject convertToNativeRamp(JNIEnv *env, jobject float_gamma_obj) {
 	float scaledRampEntry;
 	WORD rampEntry;
 	const float *gammaRamp = (const float *)(*env)->GetDirectBufferAddress(env, float_gamma_obj);
-	jint gamma_ramp_length = (*env)->GetDirectBufferCapacity(env, float_gamma_obj);
+	jint gamma_ramp_length = (jint)(*env)->GetDirectBufferCapacity(env, float_gamma_obj);
 	jobject native_ramp;
 	WORD *native_ramp_buffer;
 

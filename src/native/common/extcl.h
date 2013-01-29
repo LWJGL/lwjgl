@@ -70,7 +70,7 @@ typedef void (CL_CALLBACK * cl_printf_callback)(cl_context context, cl_uint prin
 
 void* extcl_GetProcAddress(const char* function);
 void extcl_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions);
-int extcl_CalculateImageSize(const size_t *region, size_t row_pitch, size_t slice_pitch);
+size_t extcl_CalculateImageSize(const size_t *region, size_t row_pitch, size_t slice_pitch);
 
 // -----------------[ Platform dependent functions ]-----------------
 

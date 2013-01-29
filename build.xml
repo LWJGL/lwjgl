@@ -284,7 +284,7 @@
 
 	<!-- Generates the native headers from source files -->
 	<target name="headers" description="invokes javah on java classes" depends="compile">
-		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/linux" force="yes">
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/linux">
 			<class name="org.lwjgl.LinuxSysImplementation" />
 			<class name="org.lwjgl.opengl.LinuxEvent" />
 			<class name="org.lwjgl.opengl.LinuxMouse" />
@@ -293,7 +293,7 @@
 			<class name="org.lwjgl.opengl.LinuxPeerInfo" />
 		</javah>
 
-		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/linux/opengl" force="yes">
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/linux/opengl">
 			<class name="org.lwjgl.opengl.LinuxPbufferPeerInfo"/>
 			<class name="org.lwjgl.opengl.LinuxDisplayPeerInfo"/>
 			<class name="org.lwjgl.opengl.LinuxAWTGLCanvasPeerInfo"/>
@@ -301,7 +301,7 @@
 			<class name="org.lwjgl.opengl.LinuxCanvasImplementation"/>
 		</javah>
 
-		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/windows" force="yes">
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/windows">
 			<class name="org.lwjgl.WindowsSysImplementation"/>
 			<class name="org.lwjgl.opengl.WindowsKeyboard" />
 			<class name="org.lwjgl.opengl.WindowsRegistry" />
@@ -310,17 +310,17 @@
 			<class name="org.lwjgl.opengl.WindowsAWTGLCanvasPeerInfo"/>
 		</javah>
 
-		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/windows/opengl" force="yes">
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/windows/opengl">
 			<class name="org.lwjgl.opengl.WindowsPbufferPeerInfo"/>
 			<class name="org.lwjgl.opengl.WindowsPeerInfo"/>
 			<class name="org.lwjgl.opengl.WindowsContextImplementation"/>
 		</javah>
 
-		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/windows/opengles" force="yes">
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/windows/opengles">
 			<class name="org.lwjgl.opengl.WindowsPeerInfo"/>
 		</javah>
 
-		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/macosx" force="yes">
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/macosx">
 			<class name="org.lwjgl.MacOSXSysImplementation" />
 			<class name="org.lwjgl.opengl.MacOSXMouseEventQueue" />
 			<class name="org.lwjgl.opengl.MacOSXCanvasPeerInfo" />
@@ -330,7 +330,7 @@
 			<class name="org.lwjgl.opengl.MacOSXContextImplementation" />
 		</javah>
 
-		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}" force="yes">
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}">
 			<class name="org.lwjgl.opengl.AWTSurfaceLock" />
 			<class name="org.lwjgl.DefaultSysImplementation" />
 			<class name="org.lwjgl.input.Cursor" />
@@ -342,7 +342,7 @@
             <class name="org.lwjgl.BufferUtils" />
 		</javah>
 
-		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}/opengl" force="yes">
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}/opengl">
 			<class name="org.lwjgl.opengl.GLContext"/>
 			<class name="org.lwjgl.opengl.Pbuffer"/>
 			<class name="org.lwjgl.opengl.CallbackUtil"/>
@@ -350,7 +350,7 @@
 			<class name="org.lwjgl.opengl.NVVideoCaptureUtil"/>
 		</javah>
 
-		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}/opengles" force="yes">
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}/opengles">
 			<class name="org.lwjgl.opengles.EGL"/>
 			<class name="org.lwjgl.opengles.EGLKHRFenceSync"/>
 			<class name="org.lwjgl.opengles.EGLKHRReusableSync"/>

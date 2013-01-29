@@ -90,7 +90,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_WindowsSysImplementation_nGetClipboard
 			return NULL;
 		}
 		str = (const wchar_t *)clipboard_data;
-		ret = (*env)->NewString(env, str, wcslen(str));
+		ret = (*env)->NewString(env, str, (jsize)wcslen(str));
 	} else if (textAvailable) {
 		if (!OpenClipboard(NULL))
 			return NULL;
@@ -104,7 +104,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_WindowsSysImplementation_nGetClipboard
 			CloseClipboard();
 			return NULL;
 		}
-		ret = NewStringNativeWithLength(env, (const char *) clipboard_data, strlen(clipboard_data));
+		ret = NewStringNativeWithLength(env, (const char *) clipboard_data, (jsize)strlen(clipboard_data));
 	} else {
 		return NULL;
 	}

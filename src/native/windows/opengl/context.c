@@ -118,7 +118,7 @@ void getWindowFlags(DWORD *windowflags_return, DWORD *exstyle_return, bool undec
 		windowflags = WS_POPUP;
 	} else if (child_window) {
 		exstyle = 0;
-		windowflags = WS_CHILDWINDOW;
+		windowflags = WS_POPUP;
 	} else {
 		exstyle = WS_EX_APPWINDOW;
 		windowflags = WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;

@@ -93,7 +93,7 @@ static jstring queryRegistrationKey(JNIEnv *env, HKEY root_key, LPCTSTR subkey, 
 				return NULL;
 			}
 			result[buf_size - 1] = '\0';
-			java_result = NewStringNativeWithLength(env, result, strlen(result));
+			java_result = NewStringNativeWithLength(env, result, (jsize)strlen(result));
 			free(result);
 			return java_result;
 		}

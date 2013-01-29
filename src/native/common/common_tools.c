@@ -227,11 +227,11 @@ jstring NewStringNativeUnsigned(JNIEnv *env, const unsigned char *ustr) {
 	const char *str = (const char *)ustr;
 	if (str == NULL)
 		return NULL;
-	return NewStringNativeWithLength(env, str, strlen(str));
+	return NewStringNativeWithLength(env, str, (jsize)strlen(str));
 }
 
 // creates locale specific string
-jstring NewStringNativeWithLength(JNIEnv *env, const char *str, int length) {
+jstring NewStringNativeWithLength(JNIEnv *env, const char *str, jsize length) {
   jclass jcls_str;
   jmethodID jmethod_str;
   jstring result;
@@ -330,7 +330,7 @@ void ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, i
 }
 
 bool getBooleanProperty(JNIEnv *env, const char* propertyName) {
-  jstring property = NewStringNativeWithLength(env, propertyName, strlen(propertyName));
+  jstring property = NewStringNativeWithLength(env, propertyName, (jsize)strlen(propertyName));
   jclass org_lwjgl_LWJGLUtil_class;
   jmethodID getBoolean;
   if (property == NULL)

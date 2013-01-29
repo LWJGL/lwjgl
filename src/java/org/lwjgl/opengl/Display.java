@@ -58,6 +58,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.HashSet;
+import javax.swing.*;
 
 public final class Display {
 
@@ -121,6 +122,12 @@ public final class Display {
 	private static float r, g, b;
 
 	private static final ComponentListener component_listener = new ComponentAdapter() {
+		public void componentMoved(ComponentEvent e) {
+			synchronized ( GlobalLock.lock ) {
+				parent_resized = true;
+			}
+		}
+
 		public void componentResized(ComponentEvent e) {
 			synchronized ( GlobalLock.lock ) {
 				parent_resized = true;
@@ -298,6 +305,7 @@ public final class Display {
 			throw new LWJGLException("Parent.isDisplayable() must be true");
 		if ( tmp_parent != null ) {
 			tmp_parent.addComponentListener(component_listener);
+			SwingUtilities.windowForComponent(parent).addComponentListener(component_listener);
 		}
 		DisplayMode mode = getEffectiveMode();
 		display_impl.createWindow(drawable, mode, tmp_parent, getWindowX(), getWindowY());
@@ -335,6 +343,7 @@ public final class Display {
 		}
 		if ( parent != null ) {
 			parent.removeComponentListener(component_listener);
+			SwingUtilities.windowForComponent(parent).removeComponentListener(component_listener);
 		}
 		releaseDrawable();
 
@@ -401,7 +410,7 @@ public final class Display {
 	/**
 	 * An accurate sync method that will attempt to run at a constant frame rate.
 	 * It should be called once every frame.
-	 * 
+	 *
 	 * @param fps - the desired frame rate, in frames per second
 	 */
 	public static void sync(int fps) {
@@ -1257,7 +1266,7 @@ public final class Display {
 	 * @return this method will return the x position (top-left) of the Display window.
 	 *
 	 * If running in fullscreen mode it will return 0.
-	 * If Display.setParent(Canvas parent) is being used, the x position of 
+	 * If Display.setParent(Canvas parent) is being used, the x position of
 	 * the parent will be returned.
 	 */
 	public static int getX() {
@@ -1272,12 +1281,12 @@ public final class Display {
 
 		return display_impl.getX();
 	}
-	
+
 	/**
 	 * @return this method will return the y position (top-left) of the Display window.
 	 *
 	 * If running in fullscreen mode it will return 0.
-	 * If Display.setParent(Canvas parent) is being used, the y position of 
+	 * If Display.setParent(Canvas parent) is being used, the y position of
 	 * the parent will be returned.
 	 */
 	public static int getY() {
@@ -1292,7 +1301,7 @@ public final class Display {
 
 		return display_impl.getY();
 	}
-	
+
 	/**
 	 * @return this method will return the width of the Display window.
 	 *

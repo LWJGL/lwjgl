@@ -67,7 +67,7 @@ static void CL_CALLBACK contextCallback(const char *errinfo, const void *private
             private_info_buffer = NewReadOnlyDirectByteBuffer(env, private_info, cb);
 
         (*env)->CallVoidMethod(env, (jobject)user_data, contextCallbackJ,
-            NewStringNativeWithLength(env, errinfo, strlen(errinfo)),
+            NewStringNativeWithLength(env, errinfo, (jsize)strlen(errinfo)),
             private_info_buffer
         );
     }

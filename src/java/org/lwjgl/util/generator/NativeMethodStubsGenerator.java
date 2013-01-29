@@ -324,7 +324,7 @@ public class NativeMethodStubsGenerator {
 
 				// Declare loop counters and allocate object array
 				if ( !ptrLoopDeclared ) {
-					writer.println("\tunsigned int " + n + "_i;");
+					writer.println("\tint " + n + "_i;");
 					writer.println("\tjobject " + n + "_object;");
 					ptrLoopDeclared = true;
 				}
@@ -336,7 +336,7 @@ public class NativeMethodStubsGenerator {
 
 				// Declare loop counters and allocate string array
 				if ( !strLoopDeclared ) {
-					writer.println("\tunsigned int " + n + "_i;");
+					writer.println("\tint " + n + "_i;");
 					writer.println("\t" + arrayType + n + "_address;");
 					strLoopDeclared = true;
 				}

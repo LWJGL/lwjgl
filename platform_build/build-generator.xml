@@ -1,5 +1,7 @@
 <project name="generator">
 
+	<import file="build-definitions.xml"/>
+
 	<!-- clean the generated files -->
 	<target name="clean-generated" description="Deletes the generated java source">
 		<delete quiet="true" failonerror="false">
@@ -20,7 +22,7 @@
             <include name="org/lwjgl/util/generator/opengl/**.java"/>
 			<include name="org/lwjgl/util/generator/opengles/**.java"/>
             <include name="org/lwjgl/util/generator/opencl/**.java"/>
-			<compilerarg value="-Xlint:all"/>
+			<compilerarg value="-Xlint:none"/>
 		</javac>
         <!-- Compile helper classes used by the templates -->
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" source="1.5" target="1.5" taskname="generator">
