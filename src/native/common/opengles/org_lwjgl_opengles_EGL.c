@@ -62,7 +62,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_opengles_EGL_neglQueryString(JNIEnv *en
    	if ( __result == NULL )
    		return NULL;
 
-   	return NewStringNativeWithLength(env, __result, strlen(__result));
+   	return NewStringNativeWithLength(env, __result, (jsize)strlen(__result));
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengles_EGL_neglGetConfigs(JNIEnv *env, jclass clazz, jlong dpy_ptr, jlong configs, jint config_size, jlong num_config) {

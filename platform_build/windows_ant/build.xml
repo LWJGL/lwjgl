@@ -7,7 +7,7 @@
 
 	<target name="compile_dir">
 		<apply dir="." failonerror="true" executable="cl" dest="." skipemptyfilesets="true" parallel="true">
-			<arg line="/c /W3 /EHsc /Ox /Gy /MT /MP /nologo"/>
+			<arg line="/c /W2 /EHsc /Ox /Gy /MT /MP /nologo"/>
 			<arg value="/I${sdkhome}\include"/>
 			<arg value="/I${java.home}\..\include"/>
 			<arg value="/I${java.home}\..\include\win32"/>
