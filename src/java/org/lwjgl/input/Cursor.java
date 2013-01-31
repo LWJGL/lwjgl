@@ -173,6 +173,10 @@ public class Cursor {
 		CursorElement[] cursors;
 		switch (LWJGLUtil.getPlatform()) {
 			case LWJGLUtil.PLATFORM_MACOSX:
+				
+				// OS X requires the image format to be in ABGR format
+				convertARGBtoABGR(images_copy);
+				
 				// create our cursor elements
 				cursors = new CursorElement[numImages];
 				for(int i=0; i<numImages; i++) {
@@ -219,6 +223,26 @@ public class Cursor {
 				throw new RuntimeException("Unknown OS");
 		}
 		return cursors;
+	}
+	
+	/**
+	 * Convert an IntBuffer image of ARGB format into ABGR
+	 *
+	 * @param imageBuffer image to convert
+	 */
+	private static void convertARGBtoABGR(IntBuffer imageBuffer) {
+		for (int i = 0; i < imageBuffer.limit(); i++) {
+			int argbColor = imageBuffer.get(i);
+			
+			byte alpha = (byte)(argbColor >>> 24);
+	        byte blue = (byte)(argbColor >>> 16);
+	        byte green = (byte)(argbColor >>> 8);
+	        byte red = (byte)argbColor;
+	        
+	        int abgrColor = ((alpha & 0xff) << 24 ) + ((red & 0xff) << 16 ) + ((green & 0xff) << 8 ) + ((blue & 0xff) ); 
+	        
+	        imageBuffer.put(i, abgrColor);
+		}
 	}
 
 	/**
