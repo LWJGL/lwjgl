@@ -51,9 +51,19 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 	}
 
 	protected void initHandle(Canvas component) throws LWJGLException {
-        nInitHandle(awt_surface.lockAndGetHandle(component), getHandle());
+		boolean forceCALayer = true;
+		String javaVersion = System.getProperty("java.version");
+		
+		if (javaVersion.startsWith("1.5") || javaVersion.startsWith("1.6")) {
+			// On Java 7 and newer CALayer mode is the only way to use OpenGL with AWT
+			// therefore force it on all JVM's except for the older Java 5 and Java 6
+			// where the older cocoaViewRef NSView method maybe be available.
+			forceCALayer = false;
+		}
+		
+        nInitHandle(awt_surface.lockAndGetHandle(component), getHandle(), forceCALayer);
 	}
-	private static native void nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle) throws LWJGLException;
+	private static native void nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle, boolean forceCALayer) throws LWJGLException;
 
 	protected void doUnlock() throws LWJGLException {
 		awt_surface.unlock();

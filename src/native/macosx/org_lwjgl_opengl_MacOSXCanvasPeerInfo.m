@@ -47,15 +47,15 @@
 #include "common_tools.h"
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
-(JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle) {
+(JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle, jboolean forceCALayer) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	AWTSurfaceLock *surface = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
 	JAWT_MacOSXDrawingSurfaceInfo *macosx_dsi = (JAWT_MacOSXDrawingSurfaceInfo *)surface->dsi->platformInfo;
 	
-	// check for CALayer support
-	if(surface->awt.version & 0x80000000) { //JAWT_MACOSX_USE_CALAYER) {
+	// force CALayer usage or check if CALayer is supported (i.e. on Java 5 and Java 6)
+	if(forceCALayer || (surface->awt.version & 0x80000000)) { //JAWT_MACOSX_USE_CALAYER) {
 		
 		if (macosx_dsi != NULL) {
 			if (peer_info->isCALayer) {
