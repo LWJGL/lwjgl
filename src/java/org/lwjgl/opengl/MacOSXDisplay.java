@@ -39,7 +39,6 @@ package org.lwjgl.opengl;
  */
 
 import java.awt.Canvas;
-import java.awt.Cursor;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Robot;
@@ -52,6 +51,7 @@ import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Cursor;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.MemoryUtil;
 import org.lwjgl.LWJGLException;
@@ -154,6 +154,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 			
 			native_mode = nIsNativeMode(peer_handle);
 			mouseInsideWindow = true;
+			updateNativeCursor = true;
 			
 			if (!native_mode) {
 				robot = AWTUtil.createRobot(canvas);
@@ -422,6 +423,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public int getNativeCursorCapabilities() {
+		if (native_mode) {
+			return Cursor.CURSOR_ONE_BIT_TRANSPARENCY;
+		}
+		
 		return AWTUtil.getNativeCursorCapabilities();
 	}
 
@@ -439,7 +444,9 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public void setNativeCursor(Object handle) throws LWJGLException {
 		if (native_mode) {
 			currentNativeCursor = getCursorHandle(handle);
-			MacOSXNativeMouse.setCursor(currentNativeCursor);
+			if (Display.isCreated()) {
+				MacOSXNativeMouse.setCursor(currentNativeCursor);
+			}
 		}
 	}
 
