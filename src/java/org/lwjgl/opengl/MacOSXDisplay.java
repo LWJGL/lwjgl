@@ -424,7 +424,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public int getNativeCursorCapabilities() {
 		if (native_mode) {
-			return Cursor.CURSOR_ONE_BIT_TRANSPARENCY;
+			return Cursor.CURSOR_ONE_BIT_TRANSPARENCY | Cursor.CURSOR_8_BIT_ALPHA | Cursor.CURSOR_ANIMATION;
 		}
 		
 		return AWTUtil.getNativeCursorCapabilities();
