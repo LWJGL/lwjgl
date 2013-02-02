@@ -325,7 +325,7 @@ static NSAutoreleasePool *pool;
 - (void)windowResized:(NSNotification *)notification; 
 {
 	if (_parent != nil) {
-		_parent->display_rect = [[self window] frame];
+		_parent->display_rect = [self frame];
 		_parent->resized = JNI_TRUE;
 	}
 }
@@ -463,6 +463,8 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	
 	NSRect view_rect = NSMakeRect(0.0, 0.0, width, height);
 	window_info->view = [[MacOSXOpenGLView alloc] initWithFrame:view_rect pixelFormat:peer_info->pixel_format];
+	[window_info->view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+	
 	if (window_info->context != nil) {
 		[window_info->view setOpenGLContext:window_info->context];
 	}
@@ -479,7 +481,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 			else {
 				window_info->window = [peer_info->parent window];
 				[peer_info->parent addSubview:window_info->view];
-				[window_info->view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 				
 				if (window_info->jdisplay == NULL) {
 					window_info->jdisplay = (*env)->NewGlobalRef(env, this);
@@ -555,8 +556,10 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv *env, jobject this, jobject window_handle) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 	
+	// remove parent to stop receiving input
+	[window_info->view setParent:nil];
+	
 	if (window_info->fullscreen) {
-		[window_info->view setParent:nil];
 		[window_info->view exitFullScreenModeWithOptions: nil];
 	}
 	else {
