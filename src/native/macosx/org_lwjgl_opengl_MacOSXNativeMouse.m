@@ -101,9 +101,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nUnregisterMouseL
 }
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nCreateCursor(JNIEnv *env, jobject _this, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
 	jlong *bytes = (jint *)(*env)->GetDirectBufferAddress(env, image_buffer) + images_offset;
 	
-	NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc]
+	NSBitmapImageRep *bitmap = [[[NSBitmapImageRep alloc]
 								initWithBitmapDataPlanes:(jlong *)&bytes
 								pixelsWide:width pixelsHigh:height
 								bitsPerSample:8
@@ -113,20 +115,25 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nCreateCursor(JN
 								colorSpaceName:NSDeviceRGBColorSpace
 								bitmapFormat:NSAlphaNonpremultipliedBitmapFormat
 								bytesPerRow:width*4
-								bitsPerPixel:32];
+								bitsPerPixel:32] autorelease];
 	
-	NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(width, height)];
+	NSImage *image = [[[NSImage alloc] initWithSize:NSMakeSize(width, height)] autorelease];
 	
 	[image addRepresentation:bitmap];
 	
 	
 	NSCursor *cursor = [[NSCursor alloc] initWithImage:image hotSpot:NSMakePoint(x_hotspot, y_hotspot)];
 	
+	[pool release];
+	
 	return (jlong)cursor;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nDestroyCursor(JNIEnv *env, jobject _this, jlong handle) {
-	// TODO
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nDestroyCursor(JNIEnv *env, jobject _this, jlong cursor_pointer) {
+	if (cursor_pointer != 0) {
+		NSCursor *cursor = (NSCursor *)cursor_pointer;
+		[cursor release];
+	}
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nSetCursor(JNIEnv *env, jobject _this, jlong cursor_pointer) {

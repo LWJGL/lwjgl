@@ -441,9 +441,9 @@ final class MacOSXDisplay implements DisplayImplementation {
 				mouse.setCursorPosition(x, y);
 			}
 		}
-		else {
+		//else {
 			//MacOSXMouseEventQueue.nWarpCursor(x, y);
-		}
+		//}
 	}
 
 	public void setNativeCursor(Object handle) throws LWJGLException {
@@ -520,7 +520,14 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void destroyCursor(Object cursor_handle) {
+		long handle = getCursorHandle(cursor_handle);
 		
+		// reset current cursor if same
+		if (currentNativeCursor == handle) {
+			currentNativeCursor = 0;
+		}
+		
+		MacOSXNativeMouse.destroyCursor(handle);
 	}
 	
 	private static long getCursorHandle(Object cursor_handle) {
