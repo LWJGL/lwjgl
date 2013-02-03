@@ -349,10 +349,10 @@ static NSAutoreleasePool *pool;
     mouseLocation = [self convertPoint:mouseLocation fromView:nil];
 	
     if (NSPointInRect(mouseLocation, [self bounds])) {
-		[self mouseEntered: nil];
+		[self mouseEntered:nil];
 	}
 	else {
-		[self mouseExited: nil];
+		[self mouseExited:nil];
 	}
 }
 
@@ -578,8 +578,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv
 				[window_info->window close];
 			}
 			
-			// release the nsview and remove it from any parent nsview
-			[window_info->view removeFromSuperviewWithoutNeedingDisplay];
+			// release the nsview and remove it from any parent nsview using main thread
+			[window_info->view performSelectorOnMainThread:@selector(removeFromSuperviewWithoutNeedingDisplay) withObject:window_info->view waitUntilDone:YES];
 		}
 	}
 	
