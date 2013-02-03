@@ -153,8 +153,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 			}
 			
 			native_mode = nIsNativeMode(peer_handle);
-			mouseInsideWindow = true;
-			updateNativeCursor = true;
 			
 			if (!native_mode) {
 				robot = AWTUtil.createRobot(canvas);

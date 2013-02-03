@@ -342,11 +342,23 @@ static NSAutoreleasePool *pool;
 															owner:self
 															userInfo:nil];
 	[self addTrackingArea:_trackingArea];
+	
+	// since nstrackingarea's don't know if mouse is inside or outside on creation
+	// manually detect this and send a fake mouse entered/exited message
+	NSPoint mouseLocation = [[self window] mouseLocationOutsideOfEventStream];
+    mouseLocation = [self convertPoint:mouseLocation fromView:nil];
+	
+    if (NSPointInRect(mouseLocation, [self bounds])) {
+		[self mouseEntered: nil];
+	}
+	else {
+		[self mouseExited: nil];
+	}
 }
 
 -(void)mouseEntered:(NSEvent *)event {
 	JNIEnv *env = attachCurrentThread();
-	if (env == nil || event == nil || _parent == nil || _parent->jdisplay == nil) {
+	if (env == nil || _parent == nil || _parent->jdisplay == nil) {
 		return;
 	}
 	
@@ -357,7 +369,7 @@ static NSAutoreleasePool *pool;
 
 -(void)mouseExited:(NSEvent *)event {
 	JNIEnv *env = attachCurrentThread();
-	if (env == nil || event == nil || _parent == nil || _parent->jdisplay == nil) {
+	if (env == nil || _parent == nil || _parent->jdisplay == nil) {
 		return;
 	}
 	
