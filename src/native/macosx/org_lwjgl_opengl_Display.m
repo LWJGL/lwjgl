@@ -252,7 +252,7 @@ static NSAutoreleasePool *pool;
 
 - (void)mouseDragged:(NSEvent *)event {
 	JNIEnv *env = attachCurrentThread();
-	if (env == nil || event == nil || _parent == nil) {
+	if (env == nil || event == nil || _parent == nil || _parent->jmouse == nil) {
 		return;
 	}
 	long time = [event timestamp] * 1000000000;
@@ -264,7 +264,7 @@ static NSAutoreleasePool *pool;
 
 - (void)rightMouseDragged:(NSEvent *)event {
 	JNIEnv *env = attachCurrentThread();
-	if (env == nil || event == nil || _parent == nil) {
+	if (env == nil || event == nil || _parent == nil || _parent->jmouse == nil) {
 		return;
 	}
 	long time = [event timestamp] * 1000000000;
@@ -276,7 +276,7 @@ static NSAutoreleasePool *pool;
 
 - (void)otherMouseDragged:(NSEvent *)event {
 	JNIEnv *env = attachCurrentThread();
-	if (env == nil || event == nil || _parent == nil) {
+	if (env == nil || event == nil || _parent == nil || _parent->jmouse == nil) {
 		return;
 	}
 	long time = [event timestamp] * 1000000000;
@@ -555,9 +555,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv *env, jobject this, jobject window_handle) {
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-	
-	// remove parent to stop receiving input
-	[window_info->view setParent:nil];
 	
 	if (window_info->fullscreen) {
 		[window_info->view exitFullScreenModeWithOptions: nil];
