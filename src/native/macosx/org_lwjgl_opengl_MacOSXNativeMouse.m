@@ -92,6 +92,24 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nRegisterMouseLis
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 	[window_info->window setAcceptsMouseMovedEvents:YES];
 	window_info->jmouse = (*env)->NewGlobalRef(env, _this);
+	
+	// since initial mouse is reported until mouse is moved, manually
+	// get the mouse location and report it with a fake event
+	NSPoint mouseLocation = [window_info->window mouseLocationOutsideOfEventStream];
+    mouseLocation = [window_info->view convertPoint:mouseLocation fromView:nil];
+	
+	NSEvent *mouseLocationEvent = [NSEvent
+								   mouseEventWithType:NSMouseMoved
+								   location:mouseLocation
+								   modifierFlags:NSMouseMovedMask
+								   timestamp:0
+								   windowNumber:[window_info->window windowNumber]
+								   context:nil
+								   eventNumber:0
+								   clickCount:0
+								   pressure:0];
+	
+	[window_info->view mouseMoved:mouseLocationEvent];
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nUnregisterMouseListener(JNIEnv *env, jobject this, jobject window_handle) {
