@@ -381,6 +381,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public void destroyMouse() {
 		if (native_mode) {
+			// restore default native cursor
+			try {
+				MacOSXNativeMouse.setCursor(0);
+			} catch (LWJGLException e) {};
+			
 			if (mouse != null) {
 				mouse.unregister();
 			}
