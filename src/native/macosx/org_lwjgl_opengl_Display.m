@@ -178,6 +178,19 @@ static NSAutoreleasePool *pool;
 	(*env)->CallVoidMethod(env, _parent->jkeyboard, keyup, [event keyCode], charcode, time);
 }
 
+- (BOOL)performKeyEquivalent:(NSEvent *)event {
+	// if command key down
+	if (([event modifierFlags] & NSDeviceIndependentModifierFlagsMask) == NSCommandKeyMask) {
+        // and if q key down
+		if ([[event charactersIgnoringModifiers] isEqualToString:@"q"]) {
+			[self windowShouldClose:nil];
+			return YES;
+        }
+    }
+	
+    return NO;
+}
+
 - (void)flagsChanged:(NSEvent *)event {
 	JNIEnv *env = attachCurrentThread();
 	if (env == nil || event == nil || _parent == nil || _parent->jkeyboard == nil) {
@@ -529,6 +542,11 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 		CGLDisable(cgcontext, kCGLCESurfaceBackingSize);
 	}
 	else {
+		// Cache the necessary info for window-close callbacks into the JVM
+		if (window_info->jdisplay == NULL) {
+			window_info->jdisplay = (*env)->NewGlobalRef(env, this);
+		}
+		
 		// set a fixed backbuffer size for fullscreen
 		CGLContextObj cgcontext = (CGLContextObj)[window_info->context CGLContextObj];
 		GLint dim[2] = {width, height};
