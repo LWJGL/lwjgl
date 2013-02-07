@@ -85,6 +85,11 @@ static NSAutoreleasePool *pool;
 	return NO;
 }
 
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
+	[self windowShouldClose:nil];
+	return NSTerminateCancel;
+}
+
 - (id)initWithFrame:(NSRect)frameRect pixelFormat:(NSOpenGLPixelFormat*)format {
 	self = [super initWithFrame:frameRect];
 	if (self != nil) {
@@ -176,19 +181,6 @@ static NSAutoreleasePool *pool;
 	const char* charbuf = [[event characters] cStringUsingEncoding:NSASCIIStringEncoding];
 	int charcode = (charbuf == nil) ? 0 : charbuf[0];
 	(*env)->CallVoidMethod(env, _parent->jkeyboard, keyup, [event keyCode], charcode, time);
-}
-
-- (BOOL)performKeyEquivalent:(NSEvent *)event {
-	// if command key down
-	if (([event modifierFlags] & NSDeviceIndependentModifierFlagsMask) == NSCommandKeyMask) {
-        // and if q key down
-		if ([[event charactersIgnoringModifiers] isEqualToString:@"q"]) {
-			[self windowShouldClose:nil];
-			return YES;
-        }
-    }
-	
-    return NO;
 }
 
 - (void)flagsChanged:(NSEvent *)event {
@@ -489,6 +481,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	NSRect view_rect = NSMakeRect(0.0, 0.0, width, height);
 	window_info->view = [[MacOSXOpenGLView alloc] initWithFrame:view_rect pixelFormat:peer_info->pixel_format];
 	[window_info->view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+	
+	// set nsapp delegate for catching app quit events
+	[NSApp setDelegate:window_info->view];
 	
 	if (window_info->context != nil) {
 		[window_info->view setOpenGLContext:window_info->context];
