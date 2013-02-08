@@ -39,8 +39,6 @@ package org.lwjgl.opengl;
  */
 
 import java.awt.Canvas;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Robot;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -57,10 +55,6 @@ import org.lwjgl.MemoryUtil;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 
-import com.apple.eawt.Application;
-import com.apple.eawt.ApplicationAdapter;
-import com.apple.eawt.ApplicationEvent;
-
 import static org.lwjgl.opengl.GL11.*;
 
 final class MacOSXDisplay implements DisplayImplementation {
@@ -72,7 +66,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private Robot robot;
 	private MacOSXMouseEventQueue mouse_queue;
 	private KeyboardEventQueue keyboard_queue;
-	private java.awt.DisplayMode requested_mode;
+	private DisplayMode requested_mode;
 	
 	/* Members for native window use */
 	private MacOSXNativeMouse mouse;
@@ -99,6 +93,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	private native ByteBuffer nCreateWindow(int x, int y, int width, int height, boolean fullscreen, boolean undecorated, boolean resizable, boolean parented, ByteBuffer peer_info_handle, ByteBuffer window_handle) throws LWJGLException;
 
+	private native Object nGetCurrentDisplayMode();
+	
+	private native void nGetDisplayModes(Object modesList);
+	
 	private native boolean nIsMiniaturized(ByteBuffer window_handle);
     
 	private native boolean nIsFocused(ByteBuffer window_handle);
@@ -219,27 +217,23 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public String getVersion() {
 		return null;
 	}
-
-	private static boolean equals(java.awt.DisplayMode awt_mode, DisplayMode mode) {
-		return awt_mode.getWidth() == mode.getWidth() && awt_mode.getHeight() == mode.getHeight()
-			&& awt_mode.getBitDepth() == mode.getBitsPerPixel() && awt_mode.getRefreshRate() == mode.getFrequency();
+	
+	private static boolean equals(DisplayMode mode1, DisplayMode mode2) {
+		return mode1.getWidth() == mode2.getWidth() && mode1.getHeight() == mode2.getHeight()
+			&& mode1.getBitsPerPixel() == mode2.getBitsPerPixel() && mode1.getFrequency() == mode2.getFrequency();
 	}
 
 	public void switchDisplayMode(DisplayMode mode) throws LWJGLException {
-		java.awt.DisplayMode[] awt_modes = getDevice().getDisplayModes();
-		for ( java.awt.DisplayMode awt_mode : awt_modes ) {
-			if (equals(awt_mode, mode)) {
-				requested_mode = awt_mode;
+		DisplayMode[] modes = getAvailableDisplayModes();
+		
+		for (DisplayMode available_mode : modes) {
+			if (equals(available_mode, mode)) {
+				requested_mode = available_mode;
 				return;
 			}
 		}
+		
 		throw new LWJGLException(mode + " is not supported");
-	}
-
-	private static GraphicsDevice getDevice() {
-		GraphicsEnvironment g_env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice device = g_env.getDefaultScreenDevice();
-		return device;
 	}
 
 	public void resetDisplayMode() {
@@ -249,32 +243,24 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	private native void restoreGamma();
 
-	private static DisplayMode createLWJGLDisplayMode(java.awt.DisplayMode awt_mode) {
-		int bit_depth;
-		int refresh_rate;
-		int awt_bit_depth = awt_mode.getBitDepth();
-		int awt_refresh_rate = awt_mode.getRefreshRate();
-		if (awt_bit_depth != java.awt.DisplayMode.BIT_DEPTH_MULTI)
-			bit_depth = awt_bit_depth;
-		else
-			bit_depth = 32; // Assume the best bit depth
-		if (awt_refresh_rate != java.awt.DisplayMode.REFRESH_RATE_UNKNOWN)
-			refresh_rate = awt_refresh_rate;
-		else
-			refresh_rate = 0;
-		return new DisplayMode(awt_mode.getWidth(), awt_mode.getHeight(), bit_depth, refresh_rate);
+	public Object createDisplayMode(int width, int height, int bitsPerPixel, int refreshRate) {
+		return new DisplayMode(width, height, bitsPerPixel, refreshRate);
 	}
-
+	
 	public DisplayMode init() throws LWJGLException {
-		return createLWJGLDisplayMode(getDevice().getDisplayMode());
+		java.awt.Toolkit.getDefaultToolkit(); // force start AWT Application loop
+		return (DisplayMode) nGetCurrentDisplayMode();
+	}
+	
+	public void addDisplayMode(Object modesList, int width, int height, int bitsPerPixel, int refreshRate) {
+		List<DisplayMode> modes = (List<DisplayMode>) modesList;
+		DisplayMode displayMode = new DisplayMode(width, height, bitsPerPixel, refreshRate);
+		modes.add(displayMode);
 	}
 
 	public DisplayMode[] getAvailableDisplayModes() throws LWJGLException {
-		java.awt.DisplayMode[] awt_modes = getDevice().getDisplayModes();
 		List<DisplayMode> modes = new ArrayList<DisplayMode>();
-		for ( java.awt.DisplayMode awt_mode : awt_modes )
-			if ( awt_mode.getBitDepth() >= 16 )
-				modes.add(createLWJGLDisplayMode(awt_mode));
+		nGetDisplayModes(modes); // will populate the above list
 		return modes.toArray(new DisplayMode[modes.size()]);
 	}
 

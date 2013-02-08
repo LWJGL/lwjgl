@@ -618,6 +618,65 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nIsNativeMode(JNI
 	}
 }
 
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetCurrentDisplayMode(JNIEnv *env, jobject this) {
+	
+	jclass displayClass = (*env)->GetObjectClass(env, this);
+	jmethodID createDisplayModeMethod = (*env)->GetMethodID(env, displayClass, "createDisplayMode", "(IIII)Ljava/lang/Object;");
+	
+	CGDisplayModeRef mode = CGDisplayCopyDisplayMode(kCGDirectMainDisplay);
+	
+	int width = (int) CGDisplayModeGetWidth(mode);
+	int height = (int) CGDisplayModeGetHeight(mode);
+	int refreshRate = (int)CGDisplayModeGetRefreshRate(mode);
+	int bitsPerPixel;
+	
+	// get bitsPerPixel
+	CFStringRef pixelEncoding = CGDisplayModeCopyPixelEncoding(mode);
+	
+	if(CFStringCompare(pixelEncoding, CFSTR(IO16BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+		bitsPerPixel = 16;
+	}
+	else {
+		bitsPerPixel = 32;
+	}
+	
+	jobject displayMode = (*env)->CallObjectMethod(env, this, createDisplayModeMethod, width, height, bitsPerPixel, refreshRate);
+	
+	return displayMode;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetDisplayModes(JNIEnv *env, jobject this, jobject modesList) {
+	CFArrayRef modes = CGDisplayCopyAllDisplayModes(kCGDirectMainDisplay, NULL);
+	
+	jclass displayClass = (*env)->GetObjectClass(env, this);
+	jmethodID addDisplayModeMethod = (*env)->GetMethodID(env, displayClass, "addDisplayMode", "(Ljava/lang/Object;IIII)V");
+	
+	int i = 0;
+	
+	for (i = 0; i < CFArrayGetCount(modes); i++) {
+		CGDisplayModeRef mode = (CGDisplayModeRef)CFArrayGetValueAtIndex(modes, i);
+		
+		int width = (int) CGDisplayModeGetWidth(mode);
+		int height = (int) CGDisplayModeGetHeight(mode);
+		int refreshRate = (int)CGDisplayModeGetRefreshRate(mode);
+		int bitsPerPixel;
+		
+		// get bitsPerPixel
+		CFStringRef pixelEncoding = CGDisplayModeCopyPixelEncoding(mode);
+		if(CFStringCompare(pixelEncoding, CFSTR(IO32BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+			bitsPerPixel = 32;
+		}
+		else if(CFStringCompare(pixelEncoding, CFSTR(IO16BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+			bitsPerPixel = 16;
+		}
+		else {
+			continue; // ignore DisplayMode of other bitsPerPixel rates
+		}
+		
+		(*env)->CallVoidMethod(env, this, addDisplayModeMethod, modesList, width, height, bitsPerPixel, refreshRate);
+    }
+}
+
 JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getJNIVersion(JNIEnv *env, jobject ignored) {
 	return org_lwjgl_MacOSXSysImplementation_JNI_VERSION;
 }

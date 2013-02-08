@@ -83,6 +83,8 @@ typedef struct {
 }
 
 + (NSOpenGLPixelFormat*)defaultPixelFormat;
+- (BOOL)windowShouldClose:(id)sender;
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender;
 - (id)initWithFrame:(NSRect)frameRect pixelFormat:(NSOpenGLPixelFormat*)format;
 - (void)setOpenGLContext:(NSOpenGLContext*)context;
 - (NSOpenGLContext*)openGLContext;
