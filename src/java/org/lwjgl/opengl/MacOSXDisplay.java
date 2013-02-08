@@ -324,13 +324,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		if (native_mode && updateNativeCursor) {
 			updateNativeCursor = false;
 			try {
-				if (mouseInsideWindow) {
-					setNativeCursor(currentNativeCursor);
-				}
-				else {
-					// restore default cursor if outside Display
-					MacOSXNativeMouse.setCursor(0);
-				}
+				setNativeCursor(currentNativeCursor);
 			} catch (LWJGLException e) {
 				e.printStackTrace();
 			}
@@ -434,7 +428,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 		if (native_mode) {
 			currentNativeCursor = getCursorHandle(handle);
 			if (Display.isCreated()) {
-				MacOSXNativeMouse.setCursor(currentNativeCursor);
+				if (mouseInsideWindow) MacOSXNativeMouse.setCursor(currentNativeCursor);
+				else MacOSXNativeMouse.setCursor(0); // restore default cursor if outside Display
 			}
 		}
 	}
