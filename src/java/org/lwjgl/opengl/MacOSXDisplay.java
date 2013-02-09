@@ -248,7 +248,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 	
 	public DisplayMode init() throws LWJGLException {
-		java.awt.Toolkit.getDefaultToolkit(); // force start AWT Application loop
 		return (DisplayMode) nGetCurrentDisplayMode();
 	}
 	

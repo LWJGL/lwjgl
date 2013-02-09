@@ -42,6 +42,11 @@ import com.apple.eio.FileManager;
 final class MacOSXSysImplementation extends J2SESysImplementation {
 	private static final int JNI_VERSION = 23;
 
+	static {
+		// Manually start the AWT Application Loop
+		java.awt.Toolkit.getDefaultToolkit();
+	}
+	
 	public int getRequiredJNIVersion() {
 		return JNI_VERSION;
 	}
