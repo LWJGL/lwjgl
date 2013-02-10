@@ -76,22 +76,25 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCre
 		return NULL;
 	}
 	
-	if (peer_info->window_info->fullscreen) {
-		// set a fixed backbuffer size for fullscreen
-		CGLContextObj cgcontext = (CGLContextObj)[context CGLContextObj];
-		NSSize displaySize = peer_info->window_info->display_rect.size;
-		GLint dim[2] = {displaySize.width, displaySize.height};
-		CGLSetParameter(cgcontext, kCGLCPSurfaceBackingSize, dim);
-		CGLEnable(cgcontext, kCGLCESurfaceBackingSize);
-	}
-	else {
-		// disable any fixed backbuffer size to allow resizing
-		CGLContextObj cgcontext = (CGLContextObj)[context CGLContextObj];
-		CGLDisable(cgcontext, kCGLCESurfaceBackingSize); 
+	if (peer_info->isWindowed) {
+		if (peer_info->window_info->fullscreen) {
+			// set a fixed backbuffer size for fullscreen
+			CGLContextObj cgcontext = (CGLContextObj)[context CGLContextObj];
+			NSSize displaySize = peer_info->window_info->display_rect.size;
+			GLint dim[2] = {displaySize.width, displaySize.height};
+			CGLSetParameter(cgcontext, kCGLCPSurfaceBackingSize, dim);
+			CGLEnable(cgcontext, kCGLCESurfaceBackingSize);
+		}
+		else {
+			// disable any fixed backbuffer size to allow resizing
+			CGLContextObj cgcontext = (CGLContextObj)[context CGLContextObj];
+			CGLDisable(cgcontext, kCGLCESurfaceBackingSize); 
+		}
+		
+		[peer_info->window_info->view setOpenGLContext:context];
+		peer_info->window_info->context = context;
 	}
 	
-	[peer_info->window_info->view setOpenGLContext:context];
-	peer_info->window_info->context = context;
 	context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	context_info->context = context;
 	context_info->peer_info = peer_info;
@@ -153,7 +156,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_setView
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	[context_info->context setView: peer_info->window_info->view];
+	
+	if (peer_info->isWindowed) {
+		[context_info->context setView: peer_info->window_info->view];
+	}
+	else {
+		[context_info->context setPixelBuffer:peer_info->pbuffer cubeMapFace:0 mipMapLevel:0 currentVirtualScreen:0];
+	}
 	
 	if (peer_info->isCALayer) {
 		// if using a CALayer, attach it to AWT Canvas and create a shared opengl context with current context 
@@ -200,11 +209,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nDestro
 		[context_info->peer_info->glLayer performSelectorOnMainThread:@selector(removeLayer) withObject:nil waitUntilDone:YES];
 		[context_info->peer_info->glLayer release];
 	}
-	  
+	
 	// clearDrawable on main thread to ensure its not in use
 	[context_info->context performSelectorOnMainThread:@selector(clearDrawable) withObject:nil waitUntilDone:YES];
-	[context_info->peer_info->window_info->view setOpenGLContext:nil];
-	[context_info->context release];
+	
+	if (context_info->peer_info->isWindowed) {
+		[context_info->context release];
+	}
 	
 	[pool release];
 }
