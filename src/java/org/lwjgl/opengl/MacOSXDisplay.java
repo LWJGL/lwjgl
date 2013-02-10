@@ -363,6 +363,9 @@ final class MacOSXDisplay implements DisplayImplementation {
 				MacOSXNativeMouse.setCursor(0);
 			} catch (LWJGLException e) {};
 			
+			// release any mouse grab
+			grabMouse(false);
+			
 			if (mouse != null) {
 				mouse.unregister();
 			}
