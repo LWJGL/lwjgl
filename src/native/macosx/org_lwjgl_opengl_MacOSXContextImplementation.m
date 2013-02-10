@@ -89,7 +89,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCre
 		CGLContextObj cgcontext = (CGLContextObj)[context CGLContextObj];
 		CGLDisable(cgcontext, kCGLCESurfaceBackingSize); 
 	}
-	  
+	
 	[peer_info->window_info->view setOpenGLContext:context];
 	peer_info->window_info->context = context;
 	context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
@@ -103,8 +103,8 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCre
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_getCGLShareGroup
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
-	CGLContextObj cgl_context = [[peer_info->window_info->view openGLContext] CGLContextObj];
+	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
+	CGLContextObj cgl_context = [context_info->context CGLContextObj];
 	CGLShareGroupObj share_group = CGLGetShareGroup(cgl_context);
 	[pool release];
 	return (jlong)share_group;
@@ -113,12 +113,12 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_getCGL
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSwapBuffers
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
-	[[peer_info->window_info->view openGLContext] flushBuffer];
+	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
+	[context_info->context flushBuffer];
 	  
-	if (peer_info->isCALayer) {
+	if (context_info->peer_info->isCALayer) {
 		// blit the contents of buffer to CALayer
-		[peer_info->glLayer blitFrameBuffer];
+		[context_info->peer_info->glLayer blitFrameBuffer];
 	}
 	  
     [pool release];
@@ -127,16 +127,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSwapBu
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nUpdate
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
-	[[peer_info->window_info->view openGLContext] update];
-    [pool release];
+	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
+	[context_info->context update];
+	[pool release];
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_clearDrawable
 (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
-	[[peer_info->window_info->view openGLContext] clearDrawable];
+	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
+	[context_info->context clearDrawable];
 	[pool release];
 }
 
@@ -148,32 +148,34 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nReleas
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_setView
-  (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
+	//(JNIEnv *env, jclass clazz, jobject peer_info_handle) {
+  (JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	[[peer_info->window_info->view openGLContext] setView: peer_info->window_info->view];
+	[context_info->context setView: peer_info->window_info->view];
 	
 	if (peer_info->isCALayer) {
 		// if using a CALayer, attach it to AWT Canvas and create a shared opengl context with current context 
 		[peer_info->glLayer performSelectorOnMainThread:@selector(attachLayer) withObject:nil waitUntilDone:NO];
 	}
-	
+	  
 	[pool release];
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nMakeCurrent
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
-    [[peer_info->window_info->view openGLContext] makeCurrentContext];
+    MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
+	[context_info->context makeCurrentContext];
 	[pool release];
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nIsCurrent
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
-	bool result = [peer_info->window_info->view openGLContext] == [NSOpenGLContext currentContext];
+    MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
+	bool result = context_info->context == [NSOpenGLContext currentContext];
 	[pool release];
 	return result ? JNI_TRUE : JNI_FALSE;
 }
@@ -181,9 +183,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nIs
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSetSwapInterval
   (JNIEnv *env, jclass clazz, jobject context_handle, jint int_value) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    MacOSXPeerInfo *peer_info = ((MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle))->peer_info;
+	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	GLint value = int_value;
-	[[peer_info->window_info->view openGLContext] setValues:&value forParameter:NSOpenGLCPSwapInterval];
+	[context_info->context setValues:&value forParameter:NSOpenGLCPSwapInterval];
 	[pool release];
 }
 
