@@ -575,6 +575,8 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	
 	peer_info->window_info = window_info;
 	
+	peer_info->isWindowed = true;
+	
 	return window_handle;
 }
 
