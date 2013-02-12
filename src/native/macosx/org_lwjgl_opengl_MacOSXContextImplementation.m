@@ -215,6 +215,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nDestro
 	
 	if (context_info->peer_info->isWindowed) {
 		[context_info->context release];
+		context_info->context = nil;
 	}
 	
 	[pool release];
