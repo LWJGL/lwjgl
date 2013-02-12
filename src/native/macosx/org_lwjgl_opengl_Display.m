@@ -590,7 +590,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv
 		if (window_info->window != nil) {
 			// if the nsview has no parent then close window
 			if ([window_info->window contentView] == window_info->view) {
-				[window_info->window close];
+				[window_info->window performSelectorOnMainThread:@selector(close) withObject:nil waitUntilDone:YES];
 			}
 			
 			// release the nsview and remove it from any parent nsview using main thread
