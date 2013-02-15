@@ -170,18 +170,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 		}
 	}
 	
-	public void mouseInsideWindow() {
+	public void mouseInsideWindow(boolean inside) {
 		synchronized (this) {
-			mouseInsideWindow = true;
+			mouseInsideWindow = inside;
 		}
-		updateNativeCursor = true;
-	}
-	
-	public void mouseOutsideWindow() {
-		synchronized (this) {
-			mouseInsideWindow = false;
-		}
-		
 		updateNativeCursor = true;
 	}
 

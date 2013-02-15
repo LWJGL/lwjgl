@@ -59,7 +59,7 @@ static MacOSXPeerInfo *peer_info;
 
 + (void) createWindow {
 	MacOSXWindowInfo *window_info = peer_info->window_info;
-	//
+	
 	int width = window_info->display_rect.size.width;
 	int height = window_info->display_rect.size.height;
 	
@@ -476,8 +476,8 @@ static MacOSXPeerInfo *peer_info;
 	}
 	
 	jclass display_class = (*env)->GetObjectClass(env, _parent->jdisplay);
-	jmethodID mouseInsideWindow_callback = (*env)->GetMethodID(env, display_class, "mouseInsideWindow", "()V");
-	(*env)->CallVoidMethod(env, _parent->jdisplay, mouseInsideWindow_callback);
+	jmethodID mouseInsideWindow_callback = (*env)->GetMethodID(env, display_class, "mouseInsideWindow", "(Z)V");
+	(*env)->CallVoidMethod(env, _parent->jdisplay, mouseInsideWindow_callback, JNI_TRUE);
 }
 
 -(void)mouseExited:(NSEvent *)event {
@@ -487,8 +487,8 @@ static MacOSXPeerInfo *peer_info;
 	}
 	
 	jclass display_class = (*env)->GetObjectClass(env, _parent->jdisplay);
-	jmethodID mouseOutsideWindow_callback = (*env)->GetMethodID(env, display_class, "mouseOutsideWindow", "()V");
-	(*env)->CallVoidMethod(env, _parent->jdisplay, mouseOutsideWindow_callback);
+	jmethodID mouseInsideWindow_callback = (*env)->GetMethodID(env, display_class, "mouseInsideWindow", "(Z)V");
+	(*env)->CallVoidMethod(env, _parent->jdisplay, mouseInsideWindow_callback, JNI_FALSE);
 }
 
 - (void) drawRect:(NSRect)rect {
