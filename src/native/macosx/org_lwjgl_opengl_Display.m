@@ -53,7 +53,115 @@ static NSOpenGLPixelFormat *default_format = nil;
 
 static NSAutoreleasePool *pool;
 
+static MacOSXPeerInfo *peer_info;
+
 @implementation MacOSXKeyableWindow
+
++ (void) createWindow {
+	MacOSXWindowInfo *window_info = peer_info->window_info;
+	
+	int width = window_info->display_rect.size.width;
+	int height = window_info->display_rect.size.height;
+	
+	NSRect view_rect = NSMakeRect(0.0, 0.0, width, height);
+	window_info->view = [[MacOSXOpenGLView alloc] initWithFrame:view_rect pixelFormat:peer_info->pixel_format];
+	[window_info->view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+	
+	// set nsapp delegate for catching app quit events
+	[NSApp setDelegate:window_info->view];
+	
+	if (window_info->context != nil) {
+		[window_info->view setOpenGLContext:window_info->context];
+	}
+	
+	if (!window_info->fullscreen) {
+		
+		if (window_info->parented) {
+			if (peer_info->isCALayer) {
+				window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
+				[window_info->window setContentView:window_info->view];
+			}
+			else {
+				window_info->window = [peer_info->parent window];
+				[peer_info->parent addSubview:window_info->view];
+			}
+		}
+		else {
+			
+			int default_window_mask = NSBorderlessWindowMask; // undecorated
+			
+			if (!window_info->undecorated) {
+				default_window_mask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
+			}
+			
+			if (window_info->resizable) {
+				default_window_mask |= NSResizableWindowMask;
+			}
+			
+			window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:default_window_mask backing:NSBackingStoreBuffered defer:NO];
+			
+			[window_info->window setContentView:window_info->view];
+			[window_info->window setContentView:window_info->view]; // call twice to fix issue
+			
+			// set NSView as delegate of NSWindow to get windowShouldClose events
+			[window_info->window setDelegate:window_info->view];
+		}
+		
+		// disable any fixed backbuffer size to allow resizing
+		CGLContextObj cgcontext = (CGLContextObj)[[window_info->view openGLContext] CGLContextObj];
+		CGLDisable(cgcontext, kCGLCESurfaceBackingSize);
+	}
+	else {
+		// set a fixed backbuffer size for fullscreen
+		CGLContextObj cgcontext = (CGLContextObj)[window_info->context CGLContextObj];
+		GLint dim[2] = {width, height};
+		CGLSetParameter(cgcontext, kCGLCPSurfaceBackingSize, dim);
+		CGLEnable(cgcontext, kCGLCESurfaceBackingSize);
+		
+		// enter fullscreen mode
+		[window_info->view enterFullScreenMode: [NSScreen mainScreen] withOptions: nil ];
+		window_info->window = [window_info->view window];
+		
+		// adjust the NSView bounds to correct mouse coordinates in fullscreen
+		NSSize windowSize = [window_info->window frame].size;
+		NSSize newBounds = NSMakeSize(windowSize.width/width*windowSize.width, windowSize.height/height*windowSize.height);
+		[window_info->view setBoundsSize:newBounds];
+	}
+	
+	// Inform the view of its parent window info;
+	[window_info->view setParent:window_info];
+	
+	if (!window_info->fullscreen && peer_info->isCALayer) {
+		// hidden window when using CALayer
+		[window_info->window orderOut:nil];
+	}
+	else {
+		[window_info->window makeFirstResponder:window_info->view];
+		[window_info->window setInitialFirstResponder:window_info->view];
+		[window_info->window makeKeyAndOrderFront:[NSApplication sharedApplication]];
+	}
+}
+
++ (void) destroyWindow {
+	
+	MacOSXWindowInfo *window_info = peer_info->window_info;
+	
+	if (window_info->fullscreen) {
+		[window_info->view exitFullScreenModeWithOptions: nil];
+	}
+	else {
+		if (window_info->window != nil) {
+			// if the nsview has no parent then close window
+			if ([window_info->window contentView] == window_info->view) {
+				[window_info->window close];
+			}
+			
+			// release the nsview and remove it from any parent nsview
+			[window_info->view removeFromSuperviewWithoutNeedingDisplay];
+		}
+	}
+}
+
 - (BOOL)canBecomeKeyWindow;
 {
     return YES;
@@ -473,130 +581,36 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 		}
 	}
 	
-	pool = [[NSAutoreleasePool alloc] init];
-	
+	peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
-	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	
-	NSRect view_rect = NSMakeRect(0.0, 0.0, width, height);
-	window_info->view = [[MacOSXOpenGLView alloc] initWithFrame:view_rect pixelFormat:peer_info->pixel_format];
-	[window_info->view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-	
-	// set nsapp delegate for catching app quit events
-	[NSApp setDelegate:window_info->view];
-	
-	if (window_info->context != nil) {
-		[window_info->view setOpenGLContext:window_info->context];
-	}
-    
-	window_info->display_rect = NSMakeRect(x, y, width, height);
-	
-	if (!fullscreen) {
-		
-		if (parented) {
-			if (peer_info->isCALayer) {
-				window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
-				[window_info->window setContentView:window_info->view];
-			}
-			else {
-				window_info->window = [peer_info->parent window];
-				[peer_info->parent addSubview:window_info->view];
-				
-				if (window_info->jdisplay == NULL) {
-					window_info->jdisplay = (*env)->NewGlobalRef(env, this);
-				}
-			}
-		}
-		else {
-			
-			int default_window_mask = NSBorderlessWindowMask; // undecorated
-			
-			if (!undecorated) {
-				default_window_mask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
-			}
-			
-			if (resizable) {
-				default_window_mask |= NSResizableWindowMask;
-			}
-			
-			window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:default_window_mask backing:NSBackingStoreBuffered defer:NO];
-			
-			[window_info->window setContentView:window_info->view];
-			
-			// Cache the necessary info for window-close callbacks into the JVM
-			if (window_info->jdisplay == NULL) {
-				window_info->jdisplay = (*env)->NewGlobalRef(env, this);
-			}
-			
-			// set NSView as delegate of NSWindow to get windowShouldClose events
-			[window_info->window setDelegate:window_info->view];
-		}
-		
-		// disable any fixed backbuffer size to allow resizing
-		CGLContextObj cgcontext = (CGLContextObj)[[window_info->view openGLContext] CGLContextObj];
-		CGLDisable(cgcontext, kCGLCESurfaceBackingSize);
-	}
-	else {
-		// Cache the necessary info for window-close callbacks into the JVM
-		if (window_info->jdisplay == NULL) {
-			window_info->jdisplay = (*env)->NewGlobalRef(env, this);
-		}
-		
-		// set a fixed backbuffer size for fullscreen
-		CGLContextObj cgcontext = (CGLContextObj)[window_info->context CGLContextObj];
-		GLint dim[2] = {width, height};
-		CGLSetParameter(cgcontext, kCGLCPSurfaceBackingSize, dim);
-		CGLEnable(cgcontext, kCGLCESurfaceBackingSize);
-		
-		// enter fullscreen mode
-		[window_info->view enterFullScreenMode: [NSScreen mainScreen] withOptions: nil ];
-		window_info->window = [window_info->view window];
-		
-		// adjust the NSView bounds to correct mouse coordinates in fullscreen
-		NSSize windowSize = [window_info->window frame].size;
-		NSSize newBounds = NSMakeSize(windowSize.width/width*windowSize.width, windowSize.height/height*windowSize.height);
-		[window_info->view setBoundsSize:newBounds];
-	}
-	
-	// Inform the view of its parent window info;
-	[window_info->view setParent:window_info];
-	
-	if (!fullscreen && peer_info->isCALayer) {
-		// hidden window when using CALayer
-		[window_info->window orderOut:nil];
-	}
-	else {
-		[window_info->window performSelectorOnMainThread:@selector(makeFirstResponder:) withObject:window_info->view waitUntilDone:NO];
-		[window_info->window performSelectorOnMainThread:@selector(setInitialFirstResponder:) withObject:window_info->view waitUntilDone:NO];
-		[window_info->window performSelectorOnMainThread:@selector(makeKeyAndOrderFront:) withObject:[NSApplication sharedApplication] waitUntilDone:NO];
-	}
 	
 	window_info->fullscreen = fullscreen;
+	window_info->undecorated = undecorated;
+	window_info->resizable = resizable;
+	window_info->parented = parented;
 	
 	peer_info->window_info = window_info;
-	
 	peer_info->isWindowed = true;
+	
+	window_info->display_rect = NSMakeRect(x, y, width, height);
+	
+	// Cache the necessary info for window-close callbacks into the JVM
+	if (!peer_info->isCALayer && window_info->jdisplay == NULL) {
+		window_info->jdisplay = (*env)->NewGlobalRef(env, this);
+	}
+	
+	pool = [[NSAutoreleasePool alloc] init];
+	
+	// create window on main thread
+	[MacOSXKeyableWindow performSelectorOnMainThread:@selector(createWindow) withObject:nil waitUntilDone:YES];
 	
 	return window_handle;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyWindow(JNIEnv *env, jobject this, jobject window_handle) {
-	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 	
-	if (window_info->fullscreen) {
-		[window_info->view exitFullScreenModeWithOptions: nil];
-	}
-	else {
-		if (window_info->window != nil) {
-			// if the nsview has no parent then close window
-			if ([window_info->window contentView] == window_info->view) {
-				[window_info->window performSelectorOnMainThread:@selector(close) withObject:nil waitUntilDone:YES];
-			}
-			
-			// release the nsview and remove it from any parent nsview using main thread
-			[window_info->view performSelectorOnMainThread:@selector(removeFromSuperviewWithoutNeedingDisplay) withObject:window_info->view waitUntilDone:YES];
-		}
-	}
+	// destroy window on main thread
+	[MacOSXKeyableWindow performSelectorOnMainThread:@selector(destroyWindow) withObject:nil waitUntilDone:YES];
 	
 	[pool drain];
 }

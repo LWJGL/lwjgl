@@ -157,10 +157,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nDestroyCursor(JN
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nSetCursor(JNIEnv *env, jobject _this, jlong cursor_pointer) {
 	if (cursor_pointer == 0) {
 		// restore default cursor
-		[[NSCursor arrowCursor] set];
+		[[NSCursor arrowCursor] performSelectorOnMainThread:@selector(set) withObject:nil waitUntilDone:NO];
 	}
 	else {
 		NSCursor *cursor = (NSCursor *)cursor_pointer;
-		[cursor set];
+		[cursor performSelectorOnMainThread:@selector(set) withObject:nil waitUntilDone:NO];
 	}
 }

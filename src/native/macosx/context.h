@@ -62,14 +62,15 @@ typedef struct {
     jobject jdisplay;
     jobject jmouse;
     jobject jkeyboard;
+	
 	jboolean fullscreen;
+	jboolean undecorated;
+	jboolean resizable;
+	jboolean parented;
+	
     jboolean resized;
+	
 } MacOSXWindowInfo;
-
-@interface MacOSXKeyableWindow : NSWindow
-
-- (BOOL)canBecomeKeyWindow;
-@end
 
 @interface MacOSXOpenGLView : NSView
 {
@@ -127,6 +128,12 @@ typedef struct {
 	NSView *parent;
 	GLLayer *glLayer;
 } MacOSXPeerInfo;
+
+@interface MacOSXKeyableWindow : NSWindow
++ (void)createWindow;
++ (void)destroyWindow;
+- (BOOL)canBecomeKeyWindow;
+@end
 
 NSOpenGLPixelFormat *choosePixelFormat(JNIEnv *env, jobject pixel_format, bool gl32, bool use_display_bpp, bool support_window, bool support_pbuffer, bool double_buffered);
 #endif
