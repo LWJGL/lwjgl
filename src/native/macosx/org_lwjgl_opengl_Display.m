@@ -59,7 +59,7 @@ static MacOSXPeerInfo *peer_info;
 
 + (void) createWindow {
 	MacOSXWindowInfo *window_info = peer_info->window_info;
-	
+	//
 	int width = window_info->display_rect.size.width;
 	int height = window_info->display_rect.size.height;
 	
