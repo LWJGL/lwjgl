@@ -49,10 +49,12 @@
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nGrabMouse(JNIEnv *env, jclass this, jboolean grab) {
 	CGAssociateMouseAndMouseCursorPosition(grab == JNI_TRUE ? FALSE : TRUE);
-	if (grab)
+	if (grab) {
 		CGDisplayHideCursor(kCGDirectMainDisplay);
-	else
+	}
+	else {
 		CGDisplayShowCursor(kCGDirectMainDisplay);
+	}
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nSetCursorPosition(JNIEnv *env, jclass this, jobject window_handle, jint x, jint y) {
@@ -93,8 +95,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nRegisterMouseLis
 	[window_info->window setAcceptsMouseMovedEvents:YES];
 	window_info->jmouse = (*env)->NewGlobalRef(env, _this);
 	
-	// since initial mouse is reported until mouse is moved, manually
-	// get the mouse location and report it with a fake event
+	// since initial mouse location is not reported until mouse is moved 
+	// manually get the mouse location and report it with a fake event
 	NSPoint mouseLocation = [window_info->window mouseLocationOutsideOfEventStream];
     mouseLocation = [window_info->view convertPoint:mouseLocation fromView:nil];
 	
