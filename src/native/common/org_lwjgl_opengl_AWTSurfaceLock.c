@@ -58,8 +58,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_AWTSurfaceLock_lockAndInitHandl
     jboolean result = JNI_FALSE;
 	
 	#ifdef __MACH__
-	if (allowCALayer) {
-        //first try CALAYER
+	// try to get JAWT for Java 7+
+	awt.version = 0x00010007;//JAWT_VERSION_1_7
+	result = JAWT_GetAWT(env, &awt);
+	
+	if (result == JNI_FALSE && allowCALayer) {
+        // try with JAWT 1_4 WITH CALAYER Opt In
         awt.version = JAWT_VERSION_1_4 | 0x80000000;//JAWT_MACOSX_USE_CALAYER;
         result = JAWT_GetAWT(env, &awt);
     }
