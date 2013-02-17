@@ -78,7 +78,7 @@ static MacOSXPeerInfo *peer_info;
 		
 		if (window_info->parented) {
 			if (peer_info->isCALayer) {
-				window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
+				window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:[[NSScreen mainScreen] frame] styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
 				[window_info->window setContentView:window_info->view];
 			}
 			else {

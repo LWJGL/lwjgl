@@ -159,7 +159,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 		
 		// set the size of the offscreen frame buffer window
 		window_info->display_rect = NSMakeRect(0, 0, width, height);
-		[window_info->window setFrame:window_info->display_rect display:false];
+		//[window_info->window setFrame:window_info->display_rect display:false];
 		
 		// clean up the old fbo and renderBuffers
 		glDeleteFramebuffersEXT(1, &oldFboID);
