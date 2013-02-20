@@ -214,14 +214,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nDestro
 	[context_info->context performSelectorOnMainThread:@selector(clearDrawable) withObject:nil waitUntilDone:YES];
 	
 	if (context_info->peer_info->isWindowed) {
-		if (context_info->peer_info->window_info->view != nil) {
-			[context_info->peer_info->window_info->view setOpenGLContext:nil];
-		}
-		
 		[context_info->context release];
 		context_info->context = nil;
 		context_info->peer_info->window_info->context = nil;
 	}
+	else [context_info->context release];
 	
 	[pool release];
 }
