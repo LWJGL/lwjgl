@@ -199,8 +199,9 @@ public interface CL12 {
 	CLMem clCreateImage(@PointerWrapper("cl_context") CLContext context,
 	                    @NativeType("cl_mem_flags") long flags,
 	                    @Check("2 * 4") @Const @NativeType("cl_image_format") ByteBuffer image_format,
-	                    @Check("3 * 4 + 7 * PointerBuffer.getPointerSize()") @Const @NativeType("cl_image_desc") ByteBuffer image_desc,
-	                    @Check
+	                    // On x64 there's 4 byte padding after image_type (to align image_width)
+	                    @Check("7 * PointerBuffer.getPointerSize() + 2 * 4 + PointerBuffer.getPointerSize()") @Const @NativeType("cl_image_desc") ByteBuffer image_desc,
+	                    @Check(canBeNull = true)
 	                    @cl_byte
 	                    @cl_short
 	                    @cl_int
