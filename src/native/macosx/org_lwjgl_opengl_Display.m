@@ -77,14 +77,8 @@ static MacOSXPeerInfo *peer_info;
 	if (!window_info->fullscreen) {
 		
 		if (window_info->parented) {
-			if (peer_info->isCALayer) {
-				window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:[[NSScreen mainScreen] frame] styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
-				[window_info->window setContentView:window_info->view];
-			}
-			else {
-				window_info->window = [peer_info->parent window];
-				[peer_info->parent addSubview:window_info->view];
-			}
+			window_info->window = [peer_info->parent window];
+			[peer_info->parent addSubview:window_info->view];
 		}
 		else {
 			
@@ -131,31 +125,30 @@ static MacOSXPeerInfo *peer_info;
 	// Inform the view of its parent window info;
 	[window_info->view setParent:window_info];
 	
-	if (!window_info->fullscreen && peer_info->isCALayer) {
-		// hidden window when using CALayer
-		[window_info->window orderOut:nil];
-	}
-	else {
-		[window_info->window makeFirstResponder:window_info->view];
-		[window_info->window setInitialFirstResponder:window_info->view];
-		[window_info->window makeKeyAndOrderFront:[NSApplication sharedApplication]];
-	}
+	[window_info->window makeFirstResponder:window_info->view];
+	[window_info->window setInitialFirstResponder:window_info->view];
+	[window_info->window makeKeyAndOrderFront:[NSApplication sharedApplication]];
 }
 
 + (void) destroyWindow {
-	
 	MacOSXWindowInfo *window_info = peer_info->window_info;
 	
 	if (window_info->fullscreen) {
 		[window_info->view exitFullScreenModeWithOptions: nil];
+		window_info->window = nil;
 	}
 	else {
+		if (peer_info->isCALayer) {
+			[peer_info->glLayer removeLayer];
+		}
+		
 		if (window_info->window != nil) {
 			// if the nsview has no parent then close window
 			if ([window_info->window contentView] == window_info->view) {
 				// release the nsview and remove it from any parent nsview
 				[window_info->view removeFromSuperviewWithoutNeedingDisplay];
 				[window_info->window close];
+				window_info->window = nil;
 			}
 			else {
 				// release the nsview and remove it from any parent nsview
@@ -575,7 +568,20 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetTitle(JNIEnv *env
 }
 
 JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIEnv *env, jobject this, jint x, jint y, jint width, jint height, jboolean fullscreen, jboolean undecorated, jboolean resizable, jboolean parented, jobject peer_info_handle, jobject window_handle) {
-
+	
+	pool = [[NSAutoreleasePool alloc] init];
+	
+	peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	
+	if (peer_info->isCALayer && !fullscreen) {
+		MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
+		window_info->fullscreen = fullscreen;
+		window_info->undecorated = undecorated;
+		window_info->parented = parented;
+		
+		return window_handle;
+	}
+	
 	if (window_handle == NULL) {
 		window_handle = newJavaManagedByteBuffer(env, sizeof(MacOSXWindowInfo));
 		if (window_handle == NULL) {
@@ -584,7 +590,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 		}
 	}
 	
-	peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 	
 	window_info->fullscreen = fullscreen;
@@ -598,11 +603,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	window_info->display_rect = NSMakeRect(x, y, width, height);
 	
 	// Cache the necessary info for window-close callbacks into the JVM
-	if (!peer_info->isCALayer && window_info->jdisplay == NULL) {
+	if (window_info->jdisplay == NULL) {
 		window_info->jdisplay = (*env)->NewGlobalRef(env, this);
 	}
-	
-	pool = [[NSAutoreleasePool alloc] init];
 	
 	// create window on main thread
 	[MacOSXKeyableWindow performSelectorOnMainThread:@selector(createWindow) withObject:nil waitUntilDone:YES];

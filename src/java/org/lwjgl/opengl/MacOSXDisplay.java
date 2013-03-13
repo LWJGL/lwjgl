@@ -134,11 +134,13 @@ final class MacOSXDisplay implements DisplayImplementation {
 		DrawableGL gl_drawable = (DrawableGL)Display.getDrawable();
 		PeerInfo peer_info = gl_drawable.peer_info;
 		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
+		ByteBuffer window_handle = parented ? ((MacOSXCanvasPeerInfo)peer_info).window_handle : window;
+		
 		try {
+			
 			window = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(),
-									fullscreen, isUndecorated(), resizable,
-									parented, peer_handle, window);
-            
+					fullscreen, isUndecorated(), resizable,
+					parented, peer_handle, window_handle);
             
 			if (fullscreen) {
 				// when going to fullscreen viewport is set to screen size by Cocoa, ignore this value

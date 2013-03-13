@@ -151,8 +151,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nReleas
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_setView
-	//(JNIEnv *env, jclass clazz, jobject peer_info_handle) {
-  (JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject context_handle) {
+	(JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
@@ -165,7 +164,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_setView
 	}
 	
 	if (peer_info->isCALayer) {
-		// if using a CALayer, attach it to AWT Canvas and create a shared opengl context with current context 
+		peer_info->glLayer->setViewport = YES;
+		// if using a CALayer, attach it to AWT Canvas and create a shared opengl context with current context
 		[peer_info->glLayer performSelectorOnMainThread:@selector(attachLayer) withObject:nil waitUntilDone:NO];
 	}
 	  
@@ -177,6 +177,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nMakeCu
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	[context_info->context makeCurrentContext];
+	
+	if (context_info->peer_info->isCALayer && context_info->peer_info->glLayer->setViewport) {
+		context_info->peer_info->glLayer->setViewport = NO;
+		glViewport(0, 0, [context_info->peer_info->glLayer getWidth], [context_info->peer_info->glLayer getHeight]);
+	}
+	  
 	[pool release];
 }
 
@@ -208,6 +214,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nDestro
 		context_info->peer_info->isCALayer = false;
 		[context_info->peer_info->glLayer performSelectorOnMainThread:@selector(removeLayer) withObject:nil waitUntilDone:YES];
 		[context_info->peer_info->glLayer release];
+		context_info->peer_info->glLayer = nil;
 	}
 	
 	// clearDrawable on main thread to ensure its not in use
@@ -218,7 +225,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nDestro
 		context_info->context = nil;
 		context_info->peer_info->window_info->context = nil;
 	}
-	else [context_info->context release];
 	
 	[pool release];
 }

@@ -45,6 +45,7 @@ import org.lwjgl.LWJGLUtil;
  */
 abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
+	public ByteBuffer window_handle;
 	
 	protected MacOSXCanvasPeerInfo(PixelFormat pixel_format, ContextAttribs attribs, boolean support_pbuffer) throws LWJGLException {
 		super(pixel_format, attribs, true, true, support_pbuffer, true);
@@ -61,9 +62,9 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 			forceCALayer = false;
 		}
 		
-        nInitHandle(awt_surface.lockAndGetHandle(component), getHandle(), forceCALayer);
+		window_handle = nInitHandle(awt_surface.lockAndGetHandle(component), getHandle(), window_handle, forceCALayer);
 	}
-	private static native void nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle, boolean forceCALayer) throws LWJGLException;
+	private static native ByteBuffer nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle, ByteBuffer window_handle, boolean forceCALayer) throws LWJGLException;
 
 	protected void doUnlock() throws LWJGLException {
 		awt_surface.unlock();

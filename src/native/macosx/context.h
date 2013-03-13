@@ -103,6 +103,7 @@ typedef struct {
 	@public
 	JAWT_MacOSXDrawingSurfaceInfo *macosx_dsi;
 	MacOSXWindowInfo *window_info;
+	bool setViewport;
 	
 	@private
 	CGLContextObj contextObject;
@@ -117,6 +118,8 @@ typedef struct {
 - (void) removeLayer;
 - (void) blitFrameBuffer;
 
+- (int) getWidth;
+- (int) getHeight;
 @end
 
 typedef struct {

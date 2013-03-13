@@ -46,8 +46,8 @@
 #include "context.h"
 #include "common_tools.h"
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
-(JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle, jboolean forceCALayer) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
+(JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle, jobject window_handle, jboolean forceCALayer) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
@@ -58,20 +58,35 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	if(forceCALayer || (surface->awt.version & 0x80000000)) { //JAWT_MACOSX_USE_CALAYER) {
 		
 		if (macosx_dsi != NULL) {
+			
+			if (window_handle == NULL) {
+				window_handle = newJavaManagedByteBuffer(env, sizeof(MacOSXWindowInfo));
+				if (window_handle == NULL) {
+					throwException(env, "Could not create handle buffer");
+				}
+			} else if (peer_info->window_info->window != nil) {
+				return window_handle;
+			}
+			
 			if (peer_info->isCALayer) {
 				[peer_info->glLayer release];
 			}
+			
 			peer_info->glLayer = [GLLayer new];
+			
 			peer_info->glLayer->macosx_dsi = macosx_dsi;
+			peer_info->window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 			peer_info->glLayer->window_info = peer_info->window_info;
+			
+			[peer_info->glLayer performSelectorOnMainThread:@selector(createWindow:) withObject:peer_info->pixel_format waitUntilDone:YES];
+			
+			peer_info->isCALayer = true;
+			peer_info->isWindowed = true;
+			peer_info->parent = nil;
+			
+			[pool release];
+			return window_handle;
 		}
-		
-		peer_info->isCALayer = true;
-		peer_info->isWindowed = true;
-		peer_info->parent = nil;
-		
-		[pool release];
-		return;
 	}
 	
 	// no CALayer support, fallback to using legacy method of getting the NSView of an AWT Canvas
@@ -80,6 +95,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	peer_info->isWindowed = true;
 	
 	[pool release];
+	return NULL;
 }
 
 @implementation GLLayer
@@ -102,6 +118,29 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	// remove self from root layer
 	id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;
 	surfaceLayers.layer = nil;
+}
+
+- (int) getWidth {
+	return self.bounds.size.width;
+}
+
+- (int) getHeight {
+	return self.bounds.size.height;
+}
+
+- (void) createWindow:(NSOpenGLPixelFormat*)pixel_format {
+	if (window_info->window != nil) {
+		[window_info->window close];
+	}
+	
+	window_info->display_rect = [[NSScreen mainScreen] frame];
+	
+	window_info->view = [[MacOSXOpenGLView alloc] initWithFrame:window_info->display_rect pixelFormat:pixel_format];
+	
+	window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
+	[window_info->window setContentView:window_info->view];
+	
+	[window_info->window orderOut:nil];
 }
 
 - (void) blitFrameBuffer {
@@ -198,20 +237,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 	
-	GLint originalReadFBO;
-	
-	// get and save the current fbo values
-	//glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING_EXT, &originalReadFBO);
-	
 	// read the LWJGL FBO and blit it into this CALayers FBO
 	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, fboID);
 	glBlitFramebufferEXT(0, 0, width, height,
 						 0, 0, width, height,
 						 GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
 						 GL_NEAREST);
-	
-	// restore original fbo read value
-	//glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, originalReadFBO);
 	
 	// call super to finalize the drawing - by default all it does is call glFlush()
 	[super drawInCGLContext:glContext pixelFormat:pixelFormat forLayerTime:timeInterval displayTime:timeStamp];
