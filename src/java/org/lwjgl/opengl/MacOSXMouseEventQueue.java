@@ -96,13 +96,13 @@ final class MacOSXMouseEventQueue extends MouseEventQueue {
 			// If we're going to warp the cursor position, we'll skip the next event to avoid bogus delta values
 			skip_event = isGrabbed();
 		}
-/*		if (isGrabbed()) {
+		if (isGrabbed()) {
 			Rectangle bounds = getComponent().getBounds();
 			Point location_on_screen = getComponent().getLocationOnScreen();
 			int x = location_on_screen.x + bounds.width/2;
 			int y = location_on_screen.y + bounds.height/2;
 			nWarpCursor(x, y);
-		}*/
+		}
 	}
 
 	private static native void getMouseDeltas(IntBuffer delta_buffer);

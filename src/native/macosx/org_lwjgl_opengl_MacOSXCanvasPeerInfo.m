@@ -39,8 +39,6 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import <JavaNativeFoundation.h>
-
 #include <jni.h>
 #include <jawt_md.h>
 #include "awt_tools.h"
@@ -48,211 +46,232 @@
 #include "context.h"
 #include "common_tools.h"
 
-@interface AttachLayerOnMainThread : NSObject {
-    MacOSXPeerInfo *peer_info;
-    JAWT_MacOSXDrawingSurfaceInfo *macosx_dsi;
-}
-
-- (void) attachLayer;
-
-- (MacOSXPeerInfo*) peer_info;
-- (JAWT_MacOSXDrawingSurfaceInfo) macosx_dsi;
-
-- (void) setPeer_info: (MacOSXPeerInfo*)input;
-- (void) setMacosx_dsi: (JAWT_MacOSXDrawingSurfaceInfo*)input;
-
-@end
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
-(JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle, jboolean allowCALayer) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
+(JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle, jobject window_handle, jboolean forceCALayer) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	AWTSurfaceLock *surface = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
 	JAWT_MacOSXDrawingSurfaceInfo *macosx_dsi = (JAWT_MacOSXDrawingSurfaceInfo *)surface->dsi->platformInfo;
-    
-    if (allowCALayer) {
-		// check for CALayer support
-		if(surface->awt.version & 0x80000000) { //JAWT_MACOSX_USE_CALAYER) {
-			jint width = surface->dsi->bounds.width;
-			jint height = surface->dsi->bounds.height;
+	
+	// force CALayer usage or check if CALayer is supported (i.e. on Java 5 and Java 6)
+	if(forceCALayer || (surface->awt.version & 0x80000000)) { //JAWT_MACOSX_USE_CALAYER) {
+		
+		if (macosx_dsi != NULL) {
 			
-			if(peer_info->pbuffer == NULL || peer_info->window || width != [peer_info->pbuffer pixelsWide] || height != [peer_info->pbuffer pixelsHigh]) {
-				if(peer_info->pbuffer != NULL) {
-					[peer_info->pbuffer release];
+			if (window_handle == NULL) {
+				window_handle = newJavaManagedByteBuffer(env, sizeof(MacOSXWindowInfo));
+				if (window_handle == NULL) {
+					throwException(env, "Could not create handle buffer");
 				}
-            
-				// make pbuffer
-				NSOpenGLPixelBuffer *pbuffer = nil;
-				NSLog(@"Make pbuffer: %d x %d", width, height);
-				pbuffer = [[NSOpenGLPixelBuffer alloc] initWithTextureTarget:GL_TEXTURE_RECTANGLE_EXT
-													   textureInternalFormat:GL_RGBA
-													   textureMaxMipMapLevel:0
-														pixelsWide:width
-														pixelsHigh:height];
-            
-				peer_info->pbuffer = pbuffer;
-				peer_info->window = false;
-				peer_info->canDrawGL = true;
+			} else if (peer_info->window_info->window != nil) {
+				return window_handle;
 			}
-        
-			if (macosx_dsi != NULL) {
-				
-				AttachLayerOnMainThread *attachLayerOnMainThread = [[AttachLayerOnMainThread new] autorelease];
-				attachLayerOnMainThread.peer_info = peer_info;
-				attachLayerOnMainThread.macosx_dsi = macosx_dsi;
-				
-				[JNFRunLoop performOnMainThread:@selector(attachLayer)
-													on:attachLayerOnMainThread
-													withObject:nil
-													waitUntilDone:YES];
+			
+			if (peer_info->isCALayer) {
+				[peer_info->glLayer release];
 			}
+			
+			peer_info->glLayer = [GLLayer new];
+			
+			peer_info->glLayer->macosx_dsi = macosx_dsi;
+			peer_info->glLayer->canvasBounds = (JAWT_Rectangle)surface->dsi->bounds;
+			peer_info->window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
+			peer_info->glLayer->window_info = peer_info->window_info;
+			
+			[peer_info->glLayer performSelectorOnMainThread:@selector(createWindow:) withObject:peer_info->pixel_format waitUntilDone:YES];
+			
+			peer_info->isCALayer = true;
+			peer_info->isWindowed = true;
+			peer_info->parent = nil;
 			
 			[pool release];
-			return;
+			return window_handle;
 		}
 	}
 	
-	peer_info->nsview = macosx_dsi->cocoaViewRef;
-    peer_info->window = true;
-    
+	// no CALayer support, fallback to using legacy method of getting the NSView of an AWT Canvas
+	peer_info->parent = macosx_dsi->cocoaViewRef;
+	peer_info->isCALayer = false;
+	peer_info->isWindowed = true;
+	
 	[pool release];
+	return NULL;
 }
 
-@interface PBufferGLLayer : NSOpenGLLayer {
-    MacOSXPeerInfo *peer_info;
-    GLuint textureID;
-}
-
-- (MacOSXPeerInfo*) peer_info;
-- (GLuint) textureID;
-
-- (void) setPeer_info: (MacOSXPeerInfo*)input;
-- (void) setTextureID: (GLuint)input;
-
-@end
-
-// Object class to CALayer on AppKit Thread
-@implementation AttachLayerOnMainThread
+@implementation GLLayer
 
 - (void) attachLayer {
-    // attach the "root layer" to the AWT Canvas surface layers
-	id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;//dsi->platformInfo;
-	if(surfaceLayers.layer == NULL) {
-		PBufferGLLayer *caGLLayer = [[PBufferGLLayer new] autorelease];
-		caGLLayer.peer_info = peer_info;
-		caGLLayer.asynchronous = YES;
-		caGLLayer.needsDisplayOnBoundsChange = YES;
-		caGLLayer.opaque = YES;
-		surfaceLayers.layer = caGLLayer;                
+	self.asynchronous = YES;
+	self.needsDisplayOnBoundsChange = YES;
+	self.opaque = NO;
+	self.contentsGravity = kCAGravityTopLeft;
+	self.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
+	
+	// get root layer of the AWT Canvas and add self to it
+	id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;
+	surfaceLayers.layer = self;
+}
+
+- (void) removeLayer {
+	// finish any pending blits before destroying the offscreen window to prevent crashes
+	glFinish();
+	
+	// remove self from root layer
+	id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;
+	surfaceLayers.layer = nil;
+}
+
+- (int) getWidth {
+	return canvasBounds.width;
+}
+
+- (int) getHeight {
+	return canvasBounds.height;
+}
+
+- (void) createWindow:(NSOpenGLPixelFormat*)pixel_format {
+	if (window_info->window != nil) {
+		[window_info->window close];
 	}
+	
+	window_info->display_rect = [[NSScreen mainScreen] frame];
+	
+	window_info->view = [[MacOSXOpenGLView alloc] initWithFrame:window_info->display_rect pixelFormat:pixel_format];
+	
+	window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
+	[window_info->window setContentView:window_info->view];
+	
+	[window_info->window orderOut:nil];
 }
 
-- (MacOSXPeerInfo*) peer_info {
-    return peer_info;
+- (void) blitFrameBuffer {
+	
+	// get the size of the CALayer/AWT Canvas
+	int width = self.bounds.size.width;
+	int height = self.bounds.size.height;
+	
+	if (width != fboWidth || height != fboHeight) {
+		
+		// store current fbo/renderbuffers for later deletion
+		int oldFboID = fboID;
+		int oldImageRenderBufferID = imageRenderBufferID;
+		int oldDepthRenderBufferID = depthRenderBufferID;
+		
+		// create new fbo
+		int tempFBO;
+		glGenFramebuffersEXT(1, &tempFBO);
+		
+		// create new render buffers
+		glGenRenderbuffersEXT(1, &imageRenderBufferID);
+		glGenRenderbuffersEXT(1, &depthRenderBufferID);
+		
+		// switch to new fbo to attach render buffers
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, tempFBO);
+		
+		// initialize and attach image render buffer
+		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, imageRenderBufferID);
+		glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_RGB, width, height);
+		glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_RENDERBUFFER_EXT, imageRenderBufferID);
+		
+		// initialize and attach depth render buffer
+		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthRenderBufferID);
+		glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24, width, height);
+		glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthRenderBufferID);
+		
+		// clear garbage background on new fbo
+		glClearColor(0.0, 0.0, 0.0, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT);
+		
+		// blit frameBuffer to the new fbo
+		glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, 0);
+		glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, tempFBO);
+		glBlitFramebufferEXT(0, 0, width, height,
+							 0, 0, width, height,
+							 GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
+							 GL_NEAREST);
+		
+		glFinish(); // finish before using new fbo and resizing the window
+		
+		// set new fbo and its sizes
+		fboID = tempFBO;
+		fboWidth = width;
+		fboHeight = height;
+		
+		// set the size of the offscreen frame buffer window
+		window_info->display_rect = NSMakeRect(0, 0, width, height);
+		//[window_info->window setFrame:window_info->display_rect display:false];
+		
+		// clean up the old fbo and renderBuffers
+		glDeleteFramebuffersEXT(1, &oldFboID);
+		glDeleteRenderbuffersEXT(1, &oldImageRenderBufferID);
+		glDeleteRenderbuffersEXT(1, &oldDepthRenderBufferID);
+	}
+	else {
+		glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, 0);
+		glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, fboID);
+		
+		glBlitFramebufferEXT(0, 0, width, height,
+							 0, 0, width, height,
+							 GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
+							 GL_NEAREST);
+	}
+	
+	// restore default framebuffer
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 }
 
-- (JAWT_MacOSXDrawingSurfaceInfo*) macosx_dsi {
-    return macosx_dsi;
-}
-
-- (void) setPeer_info: (MacOSXPeerInfo*)input {
-    peer_info = input;
-}
-
-- (void) setMacosx_dsi: (JAWT_MacOSXDrawingSurfaceInfo*)input {
-    macosx_dsi = input;
-}
-
-@end
-
-// rotates a red square when asked to draw
-@implementation PBufferGLLayer
-
-// override to draw custom GL content
 -(void)drawInCGLContext:(CGLContextObj)glContext
-			pixelFormat:(CGLPixelFormatObj)pixelFormat
-		   forLayerTime:(CFTimeInterval)timeInterval
-			displayTime:(const CVTimeStamp *)timeStamp {
+						pixelFormat:(CGLPixelFormatObj)pixelFormat
+						forLayerTime:(CFTimeInterval)timeInterval
+						displayTime:(const CVTimeStamp *)timeStamp {
 	
-    if(!peer_info || !peer_info->pbuffer) {
-        return;
-    }
-    
-    peer_info->canDrawGL = false;
-    
-    NSOpenGLPixelBuffer *pbuffer = self.peer_info->pbuffer;
-    
-    // set the current context
-    CGLSetCurrentContext(glContext);
+	// set the current context
+	CGLSetCurrentContext(glContext);
 	
-    GLsizei width = [pbuffer pixelsWide];
-    GLsizei height = [pbuffer pixelsHigh];
+	// get the size of the CALayer/AWT Canvas
+	int width = self.bounds.size.width;
+	int height = self.bounds.size.height;
 	
-    if(textureID == 0) {
-        glGenTextures(1, &textureID);
-    }
-    glBindTexture(GL_TEXTURE_RECTANGLE_EXT, self.textureID);
-    CGLTexImagePBuffer(glContext,[pbuffer CGLPBufferObj], GL_FRONT);
+	if (width != fboWidth || height != fboHeight) {
+		// clear garbage background before lwjgl fbo blit
+		glClearColor(0.0, 0.0, 0.0, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
 	
-    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	// read the LWJGL FBO and blit it into this CALayers FBO
+	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, fboID);
+	glBlitFramebufferEXT(0, 0, width, height,
+						 0, height - fboHeight, width, height,
+						 GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
+						 GL_NEAREST);
 	
-    glEnable(GL_TEXTURE_RECTANGLE_EXT);
-	
-    static GLfloat verts[] = {
-        -1.0, -1.0,
-        -1.0,  1.0,
-		1.0,  1.0,
-		1.0, -1.0
-    };
-    
-    GLfloat tex[] = {
-        0.0, 0.0,
-        0.0, height,
-        width, height,
-        width, 0.0
-    };
-    
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    glVertexPointer(2, GL_FLOAT, 0, verts);
-    glTexCoordPointer(2, GL_FLOAT, 0, tex);
-    
-    glDrawArrays(GL_QUADS, 0, 4);
-    
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    
-    glDisable(GL_TEXTURE_RECTANGLE_EXT);
-	
-    // call super to finalize the drawing - by default all it does is call glFlush()
-    [super drawInCGLContext:glContext pixelFormat:pixelFormat forLayerTime:timeInterval displayTime:timeStamp];
+	// call super to finalize the drawing - by default all it does is call glFlush()
+	[super drawInCGLContext:glContext pixelFormat:pixelFormat forLayerTime:timeInterval displayTime:timeStamp];
 }
 
 -(BOOL)canDrawInCGLContext:(CGLContextObj)glContext
-			   pixelFormat:(CGLPixelFormatObj)pixelFormat
-			  forLayerTime:(CFTimeInterval)timeInterval
-			   displayTime:(const CVTimeStamp *)timeStamp {
-    return (peer_info->canDrawGL && !peer_info->window) ? YES : NO;
+							pixelFormat:(CGLPixelFormatObj)pixelFormat
+							forLayerTime:(CFTimeInterval)timeInterval
+							displayTime:(const CVTimeStamp *)timeStamp {
+	return YES;
 }
 
-- (MacOSXPeerInfo*) peer_info {
-    return peer_info;
+- (CGLContextObj)copyCGLContextForPixelFormat:(CGLPixelFormatObj)pixelFormat {
+	CGLCreateContext(pixelFormat, [window_info->context CGLContextObj], &contextObject);
+	return contextObject;
 }
 
-- (GLuint) textureID {
-    return textureID;
+- (void)releaseCGLContext:(CGLContextObj)glContext {
+	CGLDestroyContext(contextObject);
 }
 
-- (void) setPeer_info: (MacOSXPeerInfo*)input {
-    peer_info = input;
+- (CGLPixelFormatObj)copyCGLPixelFormatForDisplayMask:(uint32_t)mask {
+	return CGLGetPixelFormat([window_info->context CGLContextObj]);
 }
 
-- (void) setTextureID: (GLuint)input {
-    textureID = input;
+- (void)releaseCGLPixelFormat:(CGLPixelFormatObj)pixelFormat {
+	
 }
 
 @end

@@ -163,17 +163,32 @@ public class Cursor {
 		IntBuffer images_copy = BufferUtils.createIntBuffer(images.remaining());
 		flipImages(width, height, numImages, images, images_copy);
 
-		// Win32 doesn't (afaik) allow for animation based cursors, except when they're
-		// in the .ani format, which we don't support.
+		// Mac and Windows doesn't (afaik) allow for animation based cursors, except in the .ani
+		// format on Windows, which we don't support.
 		// The cursor animation was therefor developed using java side time tracking.
 		// unfortunately X flickers when changing cursor. We therefore check for either
-		// Win32 or X and do accordingly. This hasn't been implemented on Mac, but we
-		// might want to split it into a X/Win/Mac cursor if it gets too cluttered
+		// Windows, Mac or X and do accordingly.
+		// we might want to split it into a X/Win/Mac cursor if it gets too cluttered
 
 		CursorElement[] cursors;
 		switch (LWJGLUtil.getPlatform()) {
 			case LWJGLUtil.PLATFORM_MACOSX:
-				/* Fall through */
+				
+				// OS X requires the image format to be in ABGR format
+				convertARGBtoABGR(images_copy);
+				
+				// create our cursor elements
+				cursors = new CursorElement[numImages];
+				for(int i=0; i<numImages; i++) {
+					Object handle = Mouse.getImplementation().createCursor(width, height, xHotspot, yHotspot, 1, images_copy, null);
+					long delay = (delays != null) ? delays.get(i) : 0;
+					long timeout = System.currentTimeMillis();
+					cursors[i] = new CursorElement(handle, delay, timeout);
+
+					// offset to next image
+					images_copy.position(width*height*(i+1));
+				}
+				break;
 			case LWJGLUtil.PLATFORM_WINDOWS:
 				// create our cursor elements
 				cursors = new CursorElement[numImages];
@@ -208,6 +223,26 @@ public class Cursor {
 				throw new RuntimeException("Unknown OS");
 		}
 		return cursors;
+	}
+	
+	/**
+	 * Convert an IntBuffer image of ARGB format into ABGR
+	 *
+	 * @param imageBuffer image to convert
+	 */
+	private static void convertARGBtoABGR(IntBuffer imageBuffer) {
+		for (int i = 0; i < imageBuffer.limit(); i++) {
+			int argbColor = imageBuffer.get(i);
+			
+			byte alpha = (byte)(argbColor >>> 24);
+	        byte blue = (byte)(argbColor >>> 16);
+	        byte green = (byte)(argbColor >>> 8);
+	        byte red = (byte)argbColor;
+	        
+	        int abgrColor = ((alpha & 0xff) << 24 ) + ((red & 0xff) << 16 ) + ((green & 0xff) << 8 ) + ((blue & 0xff) ); 
+	        
+	        imageBuffer.put(i, abgrColor);
+		}
 	}
 
 	/**

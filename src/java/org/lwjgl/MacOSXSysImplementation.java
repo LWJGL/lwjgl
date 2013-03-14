@@ -31,9 +31,11 @@
  */
 package org.lwjgl;
 
-import java.awt.Toolkit;
-
 import com.apple.eio.FileManager;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedExceptionAction;
+import java.lang.UnsatisfiedLinkError;
 
 /**
  *
@@ -45,10 +47,23 @@ final class MacOSXSysImplementation extends J2SESysImplementation {
 	private static final int JNI_VERSION = 23;
 
 	static {
-		// Make sure AWT is properly initialized. This avoids hangs on Mac OS X 10.3
-		Toolkit.getDefaultToolkit();
+		// Manually start the AWT Application Loop
+		java.awt.Toolkit.getDefaultToolkit();
+		
+		// manually load libjawt.dylib into vm, needed since Java 7
+		AccessController.doPrivileged(new PrivilegedAction<Object>() {
+			public Object run() {
+				try {
+					System.loadLibrary("jawt");
+				} catch (UnsatisfiedLinkError e) {
+					// catch and ignore an already loaded in another classloader 
+					// exception, as vm already has it loaded
+				}
+				return null;
+			}
+		});
 	}
-
+	
 	public int getRequiredJNIVersion() {
 		return JNI_VERSION;
 	}

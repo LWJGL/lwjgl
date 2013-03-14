@@ -45,18 +45,26 @@ import org.lwjgl.LWJGLUtil;
  */
 abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
-
+	public ByteBuffer window_handle;
+	
 	protected MacOSXCanvasPeerInfo(PixelFormat pixel_format, ContextAttribs attribs, boolean support_pbuffer) throws LWJGLException {
 		super(pixel_format, attribs, true, true, support_pbuffer, true);
 	}
 
 	protected void initHandle(Canvas component) throws LWJGLException {
-		// Allow the use of a Core Animation Layer only when using non fullscreen Display.setParent() or AWTGLCanvas
-		final boolean allowCALayer = ((Display.getParent() != null && !Display.isFullscreen()) || component instanceof AWTGLCanvas) && awt_surface.isApplet(component) && LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 6);
+		boolean forceCALayer = true;
+		String javaVersion = System.getProperty("java.version");
 		
-		nInitHandle(awt_surface.lockAndGetHandle(component), getHandle(), allowCALayer);
+		if (javaVersion.startsWith("1.5") || javaVersion.startsWith("1.6")) {
+			// On Java 7 and newer CALayer mode is the only way to use OpenGL with AWT
+			// therefore force it on all JVM's except for the older Java 5 and Java 6
+			// where the older cocoaViewRef NSView method maybe be available.
+			forceCALayer = false;
+		}
+		
+		window_handle = nInitHandle(awt_surface.lockAndGetHandle(component), getHandle(), window_handle, forceCALayer);
 	}
-	private static native void nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle, boolean allowCALayer) throws LWJGLException;
+	private static native ByteBuffer nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle, ByteBuffer window_handle, boolean forceCALayer) throws LWJGLException;
 
 	protected void doUnlock() throws LWJGLException {
 		awt_surface.unlock();

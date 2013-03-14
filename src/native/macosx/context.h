@@ -46,16 +46,98 @@
 #include <OpenGL/gl.h>
 #include <OpenGL/glext.h>
 #include "common_tools.h"
+#include <jawt_md.h>
+
+@class NSOpenGLContext, NSOpenGLPixelFormat, MacOSXOpenGLView, MacOSXKeyableWindow;
 
 typedef struct {
+    MacOSXKeyableWindow *window;
+    
+    NSRect display_rect;
+
+	MacOSXOpenGLView *view;
+    NSOpenGLContext *context;
+    
+    // Native objects for Java callbacks
+    jobject jdisplay;
+    jobject jmouse;
+    jobject jkeyboard;
+	
+	jboolean fullscreen;
+	jboolean undecorated;
+	jboolean resizable;
+	jboolean parented;
+	
+    jboolean resized;
+	
+} MacOSXWindowInfo;
+
+@interface MacOSXOpenGLView : NSView
+{
+    @public
+    MacOSXWindowInfo*       _parent;
+    
+    @private
+    NSOpenGLContext*        _openGLContext;
+    NSOpenGLPixelFormat*    _pixelFormat;
+	NSTrackingArea *		_trackingArea;
+}
+
++ (NSOpenGLPixelFormat*)defaultPixelFormat;
+- (BOOL)windowShouldClose:(id)sender;
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender;
+- (id)initWithFrame:(NSRect)frameRect pixelFormat:(NSOpenGLPixelFormat*)format;
+- (void)setOpenGLContext:(NSOpenGLContext*)context;
+- (NSOpenGLContext*)openGLContext;
+- (void)clearGLContext;
+- (void)prepareOpenGL;
+- (void)update;
+- (void)lockFocus;
+- (void)setPixelFormat:(NSOpenGLPixelFormat*)pixelFormat;
+- (NSOpenGLPixelFormat*)pixelFormat;
+- (void)setParent:(MacOSXWindowInfo*)parent;
+- (BOOL)acceptsFirstResponder;
+@end
+
+@interface GLLayer : CAOpenGLLayer {
+	@public
+	JAWT_MacOSXDrawingSurfaceInfo *macosx_dsi;
+	JAWT_Rectangle canvasBounds;
+	MacOSXWindowInfo *window_info;
+	bool setViewport;
+	
+	@private
+	CGLContextObj contextObject;
+	int fboID;
+	int imageRenderBufferID;
+	int depthRenderBufferID;
+	int fboWidth;
+	int fboHeight;
+}
+
+- (void) attachLayer;
+- (void) removeLayer;
+- (void) blitFrameBuffer;
+
+- (int) getWidth;
+- (int) getHeight;
+@end
+
+typedef struct {
+	bool isCALayer;
+	bool isWindowed;
+    MacOSXWindowInfo *window_info;
 	NSOpenGLPixelFormat *pixel_format;
-	bool window;
-    bool canDrawGL;
-	union {
-		NSView *nsview;
-		NSOpenGLPixelBuffer *pbuffer;
-	};
+    NSOpenGLPixelBuffer *pbuffer;
+	NSView *parent;
+	GLLayer *glLayer;
 } MacOSXPeerInfo;
+
+@interface MacOSXKeyableWindow : NSWindow
++ (void)createWindow;
++ (void)destroyWindow;
+- (BOOL)canBecomeKeyWindow;
+@end
 
 NSOpenGLPixelFormat *choosePixelFormat(JNIEnv *env, jobject pixel_format, bool gl32, bool use_display_bpp, bool support_window, bool support_pbuffer, bool double_buffered);
 #endif

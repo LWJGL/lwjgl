@@ -39,7 +39,6 @@ package org.lwjgl.opengl;
  */
 
 import java.awt.Canvas;
-import java.awt.Cursor;
 import java.awt.Robot;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -50,13 +49,11 @@ import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Cursor;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.MemoryUtil;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
-
-import com.apple.eawt.Application;
-import com.apple.eawt.ApplicationAdapter;
-import com.apple.eawt.ApplicationEvent;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -64,82 +61,141 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private static final int PBUFFER_HANDLE_SIZE = 24;
 	private static final int GAMMA_LENGTH = 256;
 
-	private MacOSXCanvasListener canvas_listener;
-	private MacOSXFrame frame;
+	//private MacOSXCanvasListener canvas_listener;
 	private Canvas canvas;
 	private Robot robot;
 	private MacOSXMouseEventQueue mouse_queue;
 	private KeyboardEventQueue keyboard_queue;
-	private java.awt.DisplayMode requested_mode;
-
-	/* States */
+	private DisplayMode requested_mode;
+	
+	/* Members for native window use */
+	private MacOSXNativeMouse mouse;
+	private MacOSXNativeKeyboard keyboard;
+	private ByteBuffer window;
+	private ByteBuffer context;
+	
+	private boolean skipViewportValue = false;
+	private static final IntBuffer current_viewport = BufferUtils.createIntBuffer(16);
+	
+	private boolean mouseInsideWindow;
+	
 	private boolean close_requested;
+	
+	private boolean native_mode = true;
+	
+	private boolean updateNativeCursor = false;
+	
+	private long currentNativeCursor = 0;
 
 	MacOSXDisplay() {
-		try {
-			AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() {
-				public Object run() throws Exception {
-					Application.getApplication().addApplicationListener(new ApplicationAdapter() {
-						public void handleQuit(ApplicationEvent event) {
-							doHandleQuit();
-						}
-					});
-					return null;
-				}
-			});
-		} catch (Throwable e) {
-			/**
-			 * In an applet environment, referencing com.apple.eawt.Application can fail with
-			 * a native exception. So log any exceptions instead of re-throwing.
-			 */
-			LWJGLUtil.log("Failed to register quit handler: " + e.getMessage());
-		}
+		
 	}
 
+	private native ByteBuffer nCreateWindow(int x, int y, int width, int height, boolean fullscreen, boolean undecorated, boolean resizable, boolean parented, ByteBuffer peer_info_handle, ByteBuffer window_handle) throws LWJGLException;
+
+	private native Object nGetCurrentDisplayMode();
+	
+	private native void nGetDisplayModes(Object modesList);
+	
+	private native boolean nIsMiniaturized(ByteBuffer window_handle);
+    
+	private native boolean nIsFocused(ByteBuffer window_handle);
+    
+	private native void nSetResizable(ByteBuffer window_handle, boolean resizable);
+    
+	private native void nResizeWindow(ByteBuffer window_handle, int x, int y, int width, int height);
+    
+	private native boolean nWasResized(ByteBuffer window_handle);
+	
+	private native int nGetX(ByteBuffer window_handle);
+	
+	private native int nGetY(ByteBuffer window_handle);
+	
+	private native int nGetWidth(ByteBuffer window_handle);
+	
+	private native int nGetHeight(ByteBuffer window_handle);
+	
+	private native boolean nIsNativeMode(ByteBuffer peer_info_handle);
+    
+	private static boolean isUndecorated() {
+		return Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated");
+	}
+    
 	public void createWindow(final DrawableLWJGL drawable, DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException {
 		boolean fullscreen = Display.isFullscreen();
-		hideUI(fullscreen);
+		boolean resizable = Display.isResizable();
+		boolean parented = (parent != null) && !fullscreen;
+		
+		if (parented) this.canvas = parent;
+		else this.canvas = null;
+		
 		close_requested = false;
+		
+		DrawableGL gl_drawable = (DrawableGL)Display.getDrawable();
+		PeerInfo peer_info = gl_drawable.peer_info;
+		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
+		ByteBuffer window_handle = parented ? ((MacOSXCanvasPeerInfo)peer_info).window_handle : window;
+		
 		try {
-			if (parent == null) {
-				frame = new MacOSXFrame(mode, requested_mode, fullscreen, x, y);
-				canvas = frame.getCanvas();
-			} else {
-				frame = null;
-				canvas = parent;
+			
+			window = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(),
+					fullscreen, isUndecorated(), resizable,
+					parented, peer_handle, window_handle);
+            
+			if (fullscreen) {
+				// when going to fullscreen viewport is set to screen size by Cocoa, ignore this value
+				skipViewportValue = true;
+				// if starting in fullscreen then set initial viewport to displaymode size
+				if (current_viewport.get(2) == 0 && current_viewport.get(3) == 0) {
+					current_viewport.put(2, mode.getWidth());
+					current_viewport.put(3, mode.getHeight());
+				}
 			}
-			canvas_listener = new MacOSXCanvasListener(canvas);
-			robot = AWTUtil.createRobot(canvas);
+			
+			native_mode = nIsNativeMode(peer_handle);
+			
+			if (!native_mode) {
+				robot = AWTUtil.createRobot(canvas);
+			}
+			
 		} catch (LWJGLException e) {
 			destroyWindow();
 			throw e;
+		} finally {
+			peer_info.unlock();
 		}
 	}
 
-	private void doHandleQuit() {
+	public void doHandleQuit() {
 		synchronized (this) {
 			close_requested = true;
 		}
 	}
+	
+	public void mouseInsideWindow(boolean inside) {
+		synchronized (this) {
+			mouseInsideWindow = inside;
+		}
+		updateNativeCursor = true;
+	}
+
+	public native void nDestroyCALayer(ByteBuffer peer_info_handle);
+	
+	public native void nDestroyWindow(ByteBuffer window_handle);
 
 	public void destroyWindow() {
-		if (canvas_listener != null) {
-			canvas_listener.disableListeners();
-			canvas_listener = null;
+		
+		if (!native_mode) {
+			DrawableGL gl_drawable = (DrawableGL)Display.getDrawable();
+			PeerInfo peer_info = gl_drawable.peer_info;
+			if (peer_info != null) {
+				ByteBuffer peer_handle = peer_info.getHandle();
+				nDestroyCALayer(peer_handle);
+			}
+			robot = null;
 		}
-		if (frame != null) {
-			AccessController.doPrivileged(new PrivilegedAction<Object>() {
-				public Object run() {
-					if (MacOSXFrame.getDevice().getFullScreenWindow() == frame)
-						MacOSXFrame.getDevice().setFullScreenWindow(null);
-					return null;
-				}
-			});
-			if (frame.isDisplayable())
-				frame.dispose();
-			frame = null;
-		}
-		hideUI(false);
+		
+		nDestroyWindow(window);
 	}
 
 	public int getGammaRampLength() {
@@ -155,81 +211,79 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public String getVersion() {
 		return null;
 	}
-
-	private static boolean equals(java.awt.DisplayMode awt_mode, DisplayMode mode) {
-		return awt_mode.getWidth() == mode.getWidth() && awt_mode.getHeight() == mode.getHeight()
-			&& awt_mode.getBitDepth() == mode.getBitsPerPixel() && awt_mode.getRefreshRate() == mode.getFrequency();
+	
+	private static boolean equals(DisplayMode mode1, DisplayMode mode2) {
+		return mode1.getWidth() == mode2.getWidth() && mode1.getHeight() == mode2.getHeight()
+			&& mode1.getBitsPerPixel() == mode2.getBitsPerPixel() && mode1.getFrequency() == mode2.getFrequency();
 	}
 
 	public void switchDisplayMode(DisplayMode mode) throws LWJGLException {
-		java.awt.DisplayMode[] awt_modes = MacOSXFrame.getDevice().getDisplayModes();
-		for ( java.awt.DisplayMode awt_mode : awt_modes ) {
-			if (equals(awt_mode, mode)) {
-				requested_mode = awt_mode;
+		DisplayMode[] modes = getAvailableDisplayModes();
+		
+		for (DisplayMode available_mode : modes) {
+			if (equals(available_mode, mode)) {
+				requested_mode = available_mode;
 				return;
 			}
 		}
+		
 		throw new LWJGLException(mode + " is not supported");
 	}
 
 	public void resetDisplayMode() {
-		if (MacOSXFrame.getDevice().getFullScreenWindow() != null)
-			MacOSXFrame.getDevice().setFullScreenWindow(null);
-		requested_mode = null;
+        requested_mode = null;
 		restoreGamma();
 	}
 
 	private native void restoreGamma();
 
-	private static DisplayMode createLWJGLDisplayMode(java.awt.DisplayMode awt_mode) {
-		int bit_depth;
-		int refresh_rate;
-		int awt_bit_depth = awt_mode.getBitDepth();
-		int awt_refresh_rate = awt_mode.getRefreshRate();
-		if (awt_bit_depth != java.awt.DisplayMode.BIT_DEPTH_MULTI)
-			bit_depth = awt_bit_depth;
-		else
-			bit_depth = 32; // Assume the best bit depth
-		if (awt_refresh_rate != java.awt.DisplayMode.REFRESH_RATE_UNKNOWN)
-			refresh_rate = awt_refresh_rate;
-		else
-			refresh_rate = 0;
-		return new DisplayMode(awt_mode.getWidth(), awt_mode.getHeight(), bit_depth, refresh_rate);
+	public Object createDisplayMode(int width, int height, int bitsPerPixel, int refreshRate) {
+		return new DisplayMode(width, height, bitsPerPixel, refreshRate);
 	}
-
+	
 	public DisplayMode init() throws LWJGLException {
-		return createLWJGLDisplayMode(MacOSXFrame.getDevice().getDisplayMode());
+		return (DisplayMode) nGetCurrentDisplayMode();
+	}
+	
+	public void addDisplayMode(Object modesList, int width, int height, int bitsPerPixel, int refreshRate) {
+		List<DisplayMode> modes = (List<DisplayMode>) modesList;
+		DisplayMode displayMode = new DisplayMode(width, height, bitsPerPixel, refreshRate);
+		modes.add(displayMode);
 	}
 
 	public DisplayMode[] getAvailableDisplayModes() throws LWJGLException {
-		java.awt.DisplayMode[] awt_modes = MacOSXFrame.getDevice().getDisplayModes();
 		List<DisplayMode> modes = new ArrayList<DisplayMode>();
-		for ( java.awt.DisplayMode awt_mode : awt_modes )
-			if ( awt_mode.getBitDepth() >= 16 )
-				modes.add(createLWJGLDisplayMode(awt_mode));
+		nGetDisplayModes(modes); // will populate the above list
 		return modes.toArray(new DisplayMode[modes.size()]);
 	}
 
+	private native void nSetTitle(ByteBuffer window_handle, ByteBuffer title_buffer);
+
 	public void setTitle(String title) {
-		if (frame != null)
-			frame.setTitle(title);
+		ByteBuffer buffer = MemoryUtil.encodeUTF8(title);
+		nSetTitle(window, buffer);
 	}
 
 	public boolean isCloseRequested() {
 		boolean result;
 		synchronized (this) {
-			result = close_requested || (frame != null && frame.syncIsCloseRequested());
+			result = close_requested;
 			close_requested = false;
 		}
 		return result;
 	}
 
 	public boolean isVisible() {
-		return frame == null || frame.syncIsVisible();
+        return true;
 	}
 
 	public boolean isActive() {
-		return canvas.isFocusOwner();
+		if (native_mode) {
+			return nIsFocused(window);
+		}
+		else {
+			return Display.getParent().hasFocus();
+		}
 	}
 
 	public Canvas getCanvas() {
@@ -237,7 +291,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public boolean isDirty() {
-		return frame != null && frame.getCanvas().syncIsDirty();
+		return false;
 	}
 
 	public PeerInfo createPeerInfo(PixelFormat pixel_format, ContextAttribs attribs) throws LWJGLException {
@@ -248,71 +302,32 @@ final class MacOSXDisplay implements DisplayImplementation {
 		}
 	}
 
-	private static final IntBuffer current_viewport = BufferUtils.createIntBuffer(16);
 	public void update() {
-		boolean should_update = canvas_listener.syncShouldUpdateContext();
-		/*
-		 * Workaround for the "white screen in fullscreen mode" problem
-		 *
-		 * Sometimes, switching from windowed mode to fullscreen or simply creating the Display
-		 * in fullscreen mode will result in the context not being bound to the window correctly.
-		 * The program runs fine, but the canvas background (white) is shown instead of the context
-		 * front buffer.
-		 *
-		 * I've discovered that re-binding the context with another setView() won't fix the problem, while a
-		 * clearDrawable() followed by a setView() does work. A straightforward workaround would be
-		 * to simply run the combination at every update(). This is not sufficient, since the clearDrawable()
-		 * call makes the the background appear shortly, causing visual artifacts.
-		 * What we really need is a way to detect that a setView() failed, and then do the magic combo. I've not
-		 * been able to find such a detection so alternatively I'm triggering the combo if the display is fullscreen
-		 * (I've not seen the white screen problem in windowed mode) and if the canvas has gotten a paint message or
-		 * if its update flag was set.
-		 *
-		 * My testing seems to indicate that the workaround works, since I've not seen the problem after the fix.
-		 *
-		 * - elias
-		 */
+		boolean should_update = true;
+		
 		DrawableGL drawable = (DrawableGL)Display.getDrawable();
-		if (Display.isFullscreen() && (frame != null && frame.getCanvas().syncCanvasPainted() || should_update)) {
-			try {
-				MacOSXContextImplementation.resetView(drawable.peer_info, drawable.context);
-			} catch (LWJGLException e) {
-				LWJGLUtil.log("Failed to reset context: " + e);
-			}
-		}
 		if (should_update) {
 			drawable.context.update();
 			/* This is necessary to make sure the context won't "forget" about the view size */
-			glGetInteger(GL_VIEWPORT, current_viewport);
+			if (skipViewportValue) skipViewportValue = false;
+			else glGetInteger(GL_VIEWPORT, current_viewport);
 			glViewport(current_viewport.get(0), current_viewport.get(1), current_viewport.get(2), current_viewport.get(3));
 		}
-		if (frame != null && mouse_queue != null) {
-			if (frame.syncShouldReleaseCursor())
-				MacOSXMouseEventQueue.nGrabMouse(false);
-			if (frame.syncShouldWarpCursor())
-				mouse_queue.warpCursor();
+		
+		if (native_mode && updateNativeCursor) {
+			updateNativeCursor = false;
+			try {
+				setNativeCursor(currentNativeCursor);
+			} catch (LWJGLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
-	/**
-	 * This is an interface to the native Carbon call
-	 * SetSystemUIMode. It is used to hide the dock in a way
-	 * that will prevent AWT from shifting the fullscreen window
-	 *
-	 * The workaround is not necessary on 10.4, and since 10.4 shows
-	 * instability problems calling SetSystemUIMode, we'll only call it
-	 * when the OS version is 10.3 or lower.
-	 */
-	private void hideUI(boolean hide) {
-		if (!LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 4))
-			nHideUI(hide);
-	}
-
-	private native void nHideUI(boolean hide);
-
 	public void reshape(int x, int y, int width, int height) {
-		if (frame != null)
-			frame.resize(x, y, width, height);
+        //if (native_mode) {
+        //    nResizeWindow(window, x, y, width, height);
+        //}
 	}
 
 	/* Mouse */
@@ -325,42 +340,94 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void createMouse() throws LWJGLException {
-		this.mouse_queue = new MacOSXMouseEventQueue(canvas);
-		mouse_queue.register();
+		if (native_mode) {
+			mouse = new MacOSXNativeMouse(this, window);
+			mouse.register();
+		}
+		else {
+			this.mouse_queue = new MacOSXMouseEventQueue(canvas);
+			mouse_queue.register();
+		}
 	}
 
 	public void destroyMouse() {
-		if (mouse_queue != null) {
-			MacOSXMouseEventQueue.nGrabMouse(false);
-			mouse_queue.unregister();
+		if (native_mode) {
+			// restore default native cursor
+			try {
+				MacOSXNativeMouse.setCursor(0);
+			} catch (LWJGLException e) {};
+			
+			// release any mouse grab
+			grabMouse(false);
+			
+			if (mouse != null) {
+				mouse.unregister();
+			}
+			mouse = null;
 		}
-		this.mouse_queue = null;
+		else {
+			if (mouse_queue != null) {
+				MacOSXMouseEventQueue.nGrabMouse(false);
+				mouse_queue.unregister();
+			}
+			this.mouse_queue = null;
+		}
 	}
 
 	public void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons_buffer) {
-		mouse_queue.poll(coord_buffer, buttons_buffer);
+		if (native_mode) {
+			mouse.poll(coord_buffer, buttons_buffer);
+		}
+		else {
+			mouse_queue.poll(coord_buffer, buttons_buffer);
+		}
 	}
 
 	public void readMouse(ByteBuffer buffer) {
-		mouse_queue.copyEvents(buffer);
+		if (native_mode) {
+			mouse.copyEvents(buffer);
+		}
+		else {
+			mouse_queue.copyEvents(buffer);
+		}
 	}
 
 	public void grabMouse(boolean grab) {
-		mouse_queue.setGrabbed(grab);
+		if (native_mode) {
+			mouse.setGrabbed(grab);
+		}
+		else {
+			mouse_queue.setGrabbed(grab);
+		}
 	}
 
 	public int getNativeCursorCapabilities() {
+		if (native_mode) {
+			return Cursor.CURSOR_ONE_BIT_TRANSPARENCY | Cursor.CURSOR_8_BIT_ALPHA | Cursor.CURSOR_ANIMATION;
+		}
+		
 		return AWTUtil.getNativeCursorCapabilities();
 	}
 
 	public void setCursorPosition(int x, int y) {
-		AWTUtil.setCursorPosition(canvas, robot, x, y);
+		if (native_mode) {
+			if (mouse != null) {
+				mouse.setCursorPosition(x, y);
+			}
+		}
+		//else {
+			//MacOSXMouseEventQueue.nWarpCursor(x, y);
+		//}
 	}
 
 	public void setNativeCursor(Object handle) throws LWJGLException {
-		Cursor awt_cursor = (Cursor)handle;
-		if (frame != null)
-			frame.setCursor(awt_cursor);
+		if (native_mode) {
+			currentNativeCursor = getCursorHandle(handle);
+			if (Display.isCreated()) {
+				if (mouseInsideWindow) MacOSXNativeMouse.setCursor(currentNativeCursor);
+				else MacOSXNativeMouse.setCursor(0); // restore default cursor if outside Display
+			}
+		}
 	}
 
 	public int getMinCursorSize() {
@@ -373,61 +440,77 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	/* Keyboard */
 	public void createKeyboard() throws LWJGLException {
-		this.keyboard_queue = new KeyboardEventQueue(canvas);
-		keyboard_queue.register();
+		if (native_mode) {
+			this.keyboard = new MacOSXNativeKeyboard(window);
+			keyboard.register();
+		}
+		else {
+			this.keyboard_queue = new KeyboardEventQueue(canvas);
+			keyboard_queue.register();
+		}
 	}
 
 	public void destroyKeyboard() {
-		if (keyboard_queue != null)
-			keyboard_queue.unregister();
-		this.keyboard_queue = null;
+		if (native_mode) {
+			if (keyboard != null) {
+				keyboard.unregister();
+			}
+			keyboard = null;
+		}
+		else {
+			if (keyboard_queue != null) {
+				keyboard_queue.unregister();
+			}
+			this.keyboard_queue = null;
+		}
 	}
 
 	public void pollKeyboard(ByteBuffer keyDownBuffer) {
-		keyboard_queue.poll(keyDownBuffer);
+		if (native_mode) {
+			keyboard.poll(keyDownBuffer);
+		}
+		else {
+			keyboard_queue.poll(keyDownBuffer);
+		}
 	}
 
 	public void readKeyboard(ByteBuffer buffer) {
-		keyboard_queue.copyEvents(buffer);
-	}
-
-/*	public int isStateKeySet(int key) {
-		int awt_key;
-		switch (key) {
-			case Keyboard.KEY_CAPITAL:
-				awt_key = KeyEvent.VK_CAPS_LOCK;
-				break;
-			case Keyboard.KEY_NUMLOCK:
-				awt_key = KeyEvent.VK_NUM_LOCK;
-				break;
-			case Keyboard.KEY_SYSRQ:
-				awt_key = KeyEvent.VK_SCROLL_LOCK;
-				break;
-			default:
-				return Keyboard.STATE_UNKNOWN;
+		if (native_mode) {
+			keyboard.copyEvents(buffer);
 		}
-		try {
-			boolean state = Toolkit.getDefaultToolkit().getLockingKeyState(awt_key);
-			return state ? Keyboard.STATE_ON : Keyboard.STATE_OFF;
-		} catch (Exception e) {
-			LWJGLUtil.log("Failed to query key state: " + e);
-			return Keyboard.STATE_UNKNOWN;
+		else {
+			keyboard_queue.copyEvents(buffer);
 		}
 	}
-*/
+	
 	/** Native cursor handles */
 	public Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
-		return AWTUtil.createCursor(width, height, xHotspot, yHotspot, numImages, images, delays);
+		if (native_mode) {
+			long cursor = MacOSXNativeMouse.createCursor(width, height, xHotspot, yHotspot, numImages, images, delays);
+			return cursor;
+		}
+		else {
+			return AWTUtil.createCursor(width, height, xHotspot, yHotspot, numImages, images, delays);
+		}
 	}
 
 	public void destroyCursor(Object cursor_handle) {
+		long handle = getCursorHandle(cursor_handle);
+		
+		// reset current cursor if same
+		if (currentNativeCursor == handle) {
+			currentNativeCursor = 0;
+		}
+		
+		MacOSXNativeMouse.destroyCursor(handle);
+	}
+	
+	private static long getCursorHandle(Object cursor_handle) {
+		return cursor_handle != null ? (Long)cursor_handle : 0;
 	}
 
 	public int getPbufferCapabilities() {
-		if (LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 3))
-			return Pbuffer.PBUFFER_SUPPORTED;
-		else
-			return 0;
+		return Pbuffer.PBUFFER_SUPPORTED;
 	}
 
 	public boolean isBufferLost(PeerInfo handle) {
@@ -465,7 +548,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	 * @return number of icons used.
 	 */
 	public int setIcon(ByteBuffer[] icons) {
-/*		int size = 0;
+		/*int size = 0;
 		int biggest = -1;
 
 		for (int i=0;i<icons.length;i++) {
@@ -497,31 +580,31 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 	
 	public int getX() {
-		return frame.getX();
+		return nGetX(window);
 	}
 
 	public int getY() {
-		return frame.getY();
+		return nGetY(window);
 	}
 
 	public int getWidth() {
-		return frame.getWidth();
+		return nGetWidth(window);
 	}
-
+	
 	public int getHeight() {
-		return frame.getHeight();
+		return nGetHeight(window);
 	}
 
-    public boolean isInsideWindow() {
-    		return true;
-    }
+	public boolean isInsideWindow() {
+		return mouseInsideWindow;
+	}
 
-    public void setResizable(boolean resizable) {
-		frame.setResizable(resizable);
+	public void setResizable(boolean resizable) {
+		nSetResizable(window, resizable);
 	}
 
 	public boolean wasResized() {
-		return canvas_listener.wasResized();
+		return nWasResized(window);
 	}
 
 }
