@@ -322,12 +322,14 @@
 
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/macosx">
 			<class name="org.lwjgl.MacOSXSysImplementation" />
-			<class name="org.lwjgl.opengl.MacOSXMouseEventQueue" />
 			<class name="org.lwjgl.opengl.MacOSXCanvasPeerInfo" />
 			<class name="org.lwjgl.opengl.MacOSXPeerInfo" />
 			<class name="org.lwjgl.opengl.MacOSXPbufferPeerInfo" />
 			<class name="org.lwjgl.opengl.MacOSXDisplay" />
 			<class name="org.lwjgl.opengl.MacOSXContextImplementation" />
+			<class name="org.lwjgl.opengl.MacOSXNativeKeyboard" />
+			<class name="org.lwjgl.opengl.MacOSXNativeMouse" />
+			<class name="org.lwjgl.opengl.MacOSXMouseEventQueue" />
 		</javah>
 
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}">

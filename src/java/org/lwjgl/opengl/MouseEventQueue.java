@@ -81,15 +81,19 @@ class MouseEventQueue extends EventQueue implements MouseListener, MouseMotionLi
 
 	public synchronized void register() {
 		resetCursorToCenter();
-		component.addMouseListener(this);
-		component.addMouseMotionListener(this);
-		component.addMouseWheelListener(this);
+        if (component != null) {
+            component.addMouseListener(this);
+            component.addMouseMotionListener(this);
+            component.addMouseWheelListener(this);
+        }
 	}
 
 	public synchronized void unregister() {
-		component.removeMouseListener(this);
-		component.removeMouseMotionListener(this);
-		component.removeMouseWheelListener(this);
+        if (component != null) {
+            component.removeMouseListener(this);
+            component.removeMouseMotionListener(this);
+            component.removeMouseWheelListener(this);
+        }
 	}
 
 	protected Component getComponent() {
@@ -105,18 +109,23 @@ class MouseEventQueue extends EventQueue implements MouseListener, MouseMotionLi
 		return grabbed;
 	}
 
-	private int transformY(int y) {
-		return component.getHeight() - 1 - y;
+	protected int transformY(int y) {
+        if (component != null) {
+            return component.getHeight() - 1 - y;
+        }
+        return y;
 	}
 
 	protected void resetCursorToCenter() {
 		clearEvents();
 		accum_dx = accum_dy = 0;
-		Point cursor_location = AWTUtil.getCursorPosition(component);
-		if (cursor_location != null) {
-			last_x = cursor_location.x;
-			last_y = cursor_location.y;
-		}
+        if (component != null) {
+            Point cursor_location = AWTUtil.getCursorPosition(component);
+            if (cursor_location != null) {
+                last_x = cursor_location.x;
+                last_y = cursor_location.y;
+            }
+        }
 	}
 
 	private void putMouseEvent(byte button, byte state, int dz, long nanos) {

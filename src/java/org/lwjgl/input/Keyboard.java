@@ -158,7 +158,11 @@ public class Keyboard {
 	public static final int KEY_F13             = 0x64; /*                     (NEC PC98) */
 	public static final int KEY_F14             = 0x65; /*                     (NEC PC98) */
 	public static final int KEY_F15             = 0x66; /*                     (NEC PC98) */
+	public static final int KEY_F16             = 0x67; /* Extended Function keys - (Mac) */
+	public static final int KEY_F17             = 0x68;
+	public static final int KEY_F18             = 0x69;
 	public static final int KEY_KANA            = 0x70; /* (Japanese keyboard)            */
+	public static final int KEY_F19             = 0x71; /* Extended Function keys - (Mac) */
 	public static final int KEY_CONVERT         = 0x79; /* (Japanese keyboard)            */
 	public static final int KEY_NOCONVERT       = 0x7B; /* (Japanese keyboard)            */
 	public static final int KEY_YEN             = 0x7D; /* (Japanese keyboard)            */
@@ -173,10 +177,12 @@ public class Keyboard {
 	public static final int KEY_UNLABELED       = 0x97; /*                        (J3100) */
 	public static final int KEY_NUMPADENTER     = 0x9C; /* Enter on numeric keypad */
 	public static final int KEY_RCONTROL        = 0x9D;
+	public static final int KEY_SECTION         = 0xA7; /* Section symbol (Mac) */
 	public static final int KEY_NUMPADCOMMA     = 0xB3; /* , on numeric keypad (NEC PC98) */
 	public static final int KEY_DIVIDE          = 0xB5; /* / on numeric keypad */
 	public static final int KEY_SYSRQ           = 0xB7;
 	public static final int KEY_RMENU           = 0xB8; /* right Alt */
+	public static final int KEY_FUNCTION        = 0xC4; /* Function (Mac) */
 	public static final int KEY_PAUSE           = 0xC5; /* Pause */
 	public static final int KEY_HOME            = 0xC7; /* Home on arrow keypad */
 	public static final int KEY_UP              = 0xC8; /* UpArrow on arrow keypad */
@@ -188,7 +194,8 @@ public class Keyboard {
 	public static final int KEY_NEXT            = 0xD1; /* PgDn on arrow keypad */
 	public static final int KEY_INSERT          = 0xD2; /* Insert on arrow keypad */
 	public static final int KEY_DELETE          = 0xD3; /* Delete on arrow keypad */
-	public static final int KEY_LMETA            = 0xDB; /* Left Windows/Option key */
+	public static final int KEY_CLEAR           = 0xDA; /* Clear key (Mac) */
+	public static final int KEY_LMETA           = 0xDB; /* Left Windows/Option key */
 	/**
 	 * The left windows key, mapped to KEY_LMETA
 	 *
@@ -229,7 +236,8 @@ public class Keyboard {
 				     && Modifier.isPublic(field.getModifiers())
 				     && Modifier.isFinal(field.getModifiers())
 				     && field.getType().equals(int.class)
-				     && field.getName().startsWith("KEY_") ) {
+				     && field.getName().startsWith("KEY_")
+				     && !field.getName().endsWith("WIN") ) { /* Don't use deprecated names */
 
 					int key = field.getInt(null);
 					String name = field.getName().substring(4);

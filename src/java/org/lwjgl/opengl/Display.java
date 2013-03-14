@@ -249,7 +249,7 @@ public final class Display {
 				try {
 					if ( was_fullscreen && !isFullscreen() )
 						display_impl.resetDisplayMode();
-					else if ( isFullscreen() )
+                    else if ( isFullscreen() )
 						switchDisplayMode();
 					createWindow();
 					makeCurrentAndSetSwapInterval();

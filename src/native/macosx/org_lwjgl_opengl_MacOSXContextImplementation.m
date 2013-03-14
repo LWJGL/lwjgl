@@ -47,7 +47,7 @@
 #import "common_tools.h"
 
 typedef struct {
-	NSOpenGLContext *context;
+    NSOpenGLContext *context;
     MacOSXPeerInfo *peer_info;
 } MacOSXContext;
 
@@ -57,8 +57,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCre
 	MacOSXPeerInfo *peer_info;
 	MacOSXContext *shared_context_info;
 	MacOSXContext *context_info;
-	NSOpenGLContext *context;
-	NSOpenGLContext *shared_context = NULL;
+    NSOpenGLContext *context;
+    NSOpenGLContext *shared_context = NULL;
+
 	jobject context_handle = newJavaManagedByteBuffer(env, sizeof(MacOSXContext));
 	if (context_handle == NULL) {
 		throwException(env, "Could not create handle buffer");
@@ -67,16 +68,37 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nCre
 	peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	if (shared_context_handle != NULL) {
 		shared_context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, shared_context_handle);
-		shared_context = shared_context_info->context;
+        shared_context = shared_context_info->context;
 	}
-	context = [[NSOpenGLContext alloc] initWithFormat:peer_info->pixel_format shareContext:shared_context];
+    context = [[NSOpenGLContext alloc] initWithFormat:peer_info->pixel_format shareContext:shared_context];
 	if (context == NULL) {
 		throwException(env, "Could not create context");
 		return NULL;
 	}
+	
+	if (peer_info->isWindowed) {
+		if (peer_info->window_info->fullscreen) {
+			// set a fixed backbuffer size for fullscreen
+			CGLContextObj cgcontext = (CGLContextObj)[context CGLContextObj];
+			NSSize displaySize = peer_info->window_info->display_rect.size;
+			GLint dim[2] = {displaySize.width, displaySize.height};
+			CGLSetParameter(cgcontext, kCGLCPSurfaceBackingSize, dim);
+			CGLEnable(cgcontext, kCGLCESurfaceBackingSize);
+		}
+		else {
+			// disable any fixed backbuffer size to allow resizing
+			CGLContextObj cgcontext = (CGLContextObj)[context CGLContextObj];
+			CGLDisable(cgcontext, kCGLCESurfaceBackingSize); 
+		}
+		
+		[peer_info->window_info->view setOpenGLContext:context];
+		peer_info->window_info->context = context;
+	}
+	
 	context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	context_info->context = context;
-    context_info->peer_info = peer_info;
+	context_info->peer_info = peer_info;
+	
 	[pool release];
 	return context_handle;
 }
@@ -88,7 +110,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_getCGL
 	CGLContextObj cgl_context = [context_info->context CGLContextObj];
 	CGLShareGroupObj share_group = CGLGetShareGroup(cgl_context);
 	[pool release];
-	return share_group;
+	return (jlong)share_group;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSwapBuffers
@@ -96,22 +118,25 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSwapBu
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	[context_info->context flushBuffer];
-    context_info->peer_info->canDrawGL = true;
-	[pool release];
+	  
+	if (context_info->peer_info->isCALayer) {
+		// blit the contents of buffer to CALayer
+		[context_info->peer_info->glLayer blitFrameBuffer];
+	}
+	  
+    [pool release];
 }
-
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nUpdate
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	[context_info->context update];
-    context_info->peer_info->canDrawGL = true;
 	[pool release];
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_clearDrawable
-  (JNIEnv *env, jclass clazz, jobject context_handle) {
+(JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	[context_info->context clearDrawable];
@@ -121,36 +146,50 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_clearDr
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nReleaseCurrentContext
   (JNIEnv *env, jclass clazz) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	[NSOpenGLContext clearCurrentContext];
+    [NSOpenGLContext clearCurrentContext];
 	[pool release];
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_setView
-  (JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject context_handle) {
+	(JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	if (peer_info->window) {
-		[context_info->context setView: peer_info->nsview];
-	} else {
+	
+	if (peer_info->isWindowed) {
+		[context_info->context setView: peer_info->window_info->view];
+	}
+	else {
 		[context_info->context setPixelBuffer:peer_info->pbuffer cubeMapFace:0 mipMapLevel:0 currentVirtualScreen:0];
 	}
-    peer_info->canDrawGL = true;
+	
+	if (peer_info->isCALayer) {
+		peer_info->glLayer->setViewport = YES;
+		// if using a CALayer, attach it to AWT Canvas and create a shared opengl context with current context
+		[peer_info->glLayer performSelectorOnMainThread:@selector(attachLayer) withObject:nil waitUntilDone:NO];
+	}
+	  
 	[pool release];
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nMakeCurrent
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
+    MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	[context_info->context makeCurrentContext];
+	
+	if (context_info->peer_info->isCALayer && context_info->peer_info->glLayer->setViewport) {
+		context_info->peer_info->glLayer->setViewport = NO;
+		glViewport(0, 0, [context_info->peer_info->glLayer getWidth], [context_info->peer_info->glLayer getHeight]);
+	}
+	  
 	[pool release];
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nIsCurrent
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
+    MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
 	bool result = context_info->context == [NSOpenGLContext currentContext];
 	[pool release];
 	return result ? JNI_TRUE : JNI_FALSE;
@@ -168,8 +207,24 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nSetSwa
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nDestroy
   (JNIEnv *env, jclass clazz, jobject context_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
 	MacOSXContext *context_info = (MacOSXContext *)(*env)->GetDirectBufferAddress(env, context_handle);
-	[context_info->context clearDrawable];
-	[context_info->context release];
+	
+	if (context_info->peer_info->isCALayer) {
+		context_info->peer_info->isCALayer = false;
+		[context_info->peer_info->glLayer performSelectorOnMainThread:@selector(removeLayer) withObject:nil waitUntilDone:YES];
+		[context_info->peer_info->glLayer release];
+		context_info->peer_info->glLayer = nil;
+	}
+	
+	// clearDrawable on main thread to ensure its not in use
+	[context_info->context performSelectorOnMainThread:@selector(clearDrawable) withObject:nil waitUntilDone:YES];
+	
+	if (context_info->peer_info->isWindowed) {
+		[context_info->context release];
+		context_info->context = nil;
+		context_info->peer_info->window_info->context = nil;
+	}
+	
 	[pool release];
 }
