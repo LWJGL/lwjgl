@@ -75,6 +75,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 			peer_info->glLayer = [GLLayer new];
 			
 			peer_info->glLayer->macosx_dsi = macosx_dsi;
+			peer_info->glLayer->canvasBounds = (JAWT_Rectangle)surface->dsi->bounds;
 			peer_info->window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 			peer_info->glLayer->window_info = peer_info->window_info;
 			
@@ -104,6 +105,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	self.asynchronous = YES;
 	self.needsDisplayOnBoundsChange = YES;
 	self.opaque = NO;
+	self.contentsGravity = kCAGravityTopLeft;
 	self.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
 	
 	// get root layer of the AWT Canvas and add self to it
@@ -121,11 +123,11 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 }
 
 - (int) getWidth {
-	return self.bounds.size.width;
+	return canvasBounds.width;
 }
 
 - (int) getHeight {
-	return self.bounds.size.height;
+	return canvasBounds.height;
 }
 
 - (void) createWindow:(NSOpenGLPixelFormat*)pixel_format {
@@ -240,7 +242,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	// read the LWJGL FBO and blit it into this CALayers FBO
 	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, fboID);
 	glBlitFramebufferEXT(0, 0, width, height,
-						 0, 0, width, height,
+						 0, height - fboHeight, width, height,
 						 GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
 						 GL_NEAREST);
 	
