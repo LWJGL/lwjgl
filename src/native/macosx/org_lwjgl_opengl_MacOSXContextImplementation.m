@@ -157,6 +157,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_setView
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	
 	if (peer_info->isWindowed) {
+		if (peer_info->isCALayer && [context_info->context view] != peer_info->window_info->view) {
+			// mark glViewport to be set manually when setting a new context view
+			peer_info->glLayer->setViewport = YES;
+		}
+		
 		[context_info->context setView: peer_info->window_info->view];
 	}
 	else {
@@ -164,7 +169,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_setView
 	}
 	
 	if (peer_info->isCALayer) {
-		peer_info->glLayer->setViewport = YES;
 		// if using a CALayer, attach it to AWT Canvas and create a shared opengl context with current context
 		[peer_info->glLayer performSelectorOnMainThread:@selector(attachLayer) withObject:nil waitUntilDone:NO];
 	}
