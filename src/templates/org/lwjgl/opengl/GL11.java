@@ -742,7 +742,7 @@ public interface GL11 {
 	@DeprecatedGL
 	void glBitmap(@GLsizei int width, @GLsizei int height, float xorig, float yorig, float xmove, float ymove,
 	              @BufferObject(BufferKind.UnpackPBO)
-	              @Check("(((width + 7)/8)*height)")
+	              @Check(value = "(((width + 7)/8)*height)", canBeNull = true)
 	              @Const
 	              @GLubyte ByteBuffer bitmap);
 
