@@ -49,19 +49,6 @@ final class MacOSXSysImplementation extends J2SESysImplementation {
 	static {
 		// Manually start the AWT Application Loop
 		java.awt.Toolkit.getDefaultToolkit();
-		
-		// manually load libjawt.dylib into vm, needed since Java 7
-		AccessController.doPrivileged(new PrivilegedAction<Object>() {
-			public Object run() {
-				try {
-					System.loadLibrary("jawt");
-				} catch (UnsatisfiedLinkError e) {
-					// catch and ignore an already loaded in another classloader 
-					// exception, as vm already has it loaded
-				}
-				return null;
-			}
-		});
 	}
 	
 	public int getRequiredJNIVersion() {

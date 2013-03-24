@@ -40,7 +40,7 @@
 
 #import <Cocoa/Cocoa.h>
 #include <jni.h>
-#include <jawt_md.h>
+#include <JavaVM/jawt_md.h>
 #include "awt_tools.h"
 #include "org_lwjgl_opengl_MacOSXCanvasPeerInfo.h"
 #include "context.h"
