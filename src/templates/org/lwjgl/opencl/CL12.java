@@ -143,7 +143,8 @@ public interface CL12 {
 	int CL_KERNEL_ARG_ADDRESS_QUALIFIER = 0x1196,
 		CL_KERNEL_ARG_ACCESS_QUALIFIER  = 0x1197,
 		CL_KERNEL_ARG_TYPE_NAME         = 0x1198,
-		CL_KERNEL_ARG_NAME              = 0x1199;
+		CL_KERNEL_ARG_TYPE_QUALIFIER    = 0x1199,
+		CL_KERNEL_ARG_NAME              = 0x119A;
 
 	/* cl_kernel_arg_address_qualifier */
 	int CL_KERNEL_ARG_ADDRESS_GLOBAL   = 0x119A,
@@ -156,6 +157,12 @@ public interface CL12 {
 		CL_KERNEL_ARG_ACCESS_WRITE_ONLY = 0x11A1,
 		CL_KERNEL_ARG_ACCESS_READ_WRITE = 0x11A2,
 		CL_KERNEL_ARG_ACCESS_NONE       = 0x11A3;
+
+	/* cl_kernel_arg_type_qualifer */
+	int CL_KERNEL_ARG_TYPE_NONE     = 0,
+		CL_KERNEL_ARG_TYPE_CONST    = (1 << 0),
+		CL_KERNEL_ARG_TYPE_RESTRICT = (1 << 1),
+		CL_KERNEL_ARG_TYPE_VOLATILE = (1 << 2);
 
 	/* cl_kernel_work_group_info */
 	int CL_KERNEL_GLOBAL_WORK_SIZE = 0x11B5;
