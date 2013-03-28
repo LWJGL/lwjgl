@@ -81,7 +81,7 @@ public class HelloOpenCL {
 					System.out.println(caps);
 					System.out.println("\t-------------------------");
 
-					System.out.println("\tCL_DEVICE_TYPE = " + device.getInfoInt(CL_DEVICE_TYPE));
+					System.out.println("\tCL_DEVICE_TYPE = " + device.getInfoLong(CL_DEVICE_TYPE));
 					System.out.println("\tCL_DEVICE_VENDOR_ID = " + device.getInfoInt(CL_DEVICE_VENDOR_ID));
 					System.out.println("\tCL_DEVICE_MAX_COMPUTE_UNITS = " + device.getInfoInt(CL_DEVICE_MAX_COMPUTE_UNITS));
 					System.out.println("\tCL_DEVICE_MAX_WORK_ITEM_DIMENSIONS = " + device.getInfoInt(CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS));
