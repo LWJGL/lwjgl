@@ -39,6 +39,6 @@ import org.lwjgl.util.generator.opencl.CLDeviceExtension;
 public interface KHR_gl_msaa_sharing {
 
 	/** cl_gl_texture_info */
-	int CL_GL_NUM_SAMPLES = 0x2006;
+	int CL_GL_NUM_SAMPLES = 0x2012;
 
 }
