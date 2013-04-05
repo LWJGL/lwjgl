@@ -105,12 +105,14 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	self.asynchronous = YES;
 	self.needsDisplayOnBoundsChange = YES;
 	self.opaque = NO;
-	self.contentsGravity = kCAGravityTopLeft;
 	self.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
 	
 	// get root layer of the AWT Canvas and add self to it
 	id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;
 	surfaceLayers.layer = self;
+    
+    // ensure the CALayer size is correct, needed for Java 7+
+    self.frame = CGRectMake(0, 0, [self getWidth], [self getHeight]);
 }
 
 - (void) removeLayer {
@@ -120,6 +122,11 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	// remove self from root layer
 	id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;
 	surfaceLayers.layer = nil;
+}
+
+- (void)setNeedsLayout {
+    // make sure the CALayer remains in bottom corner during resize
+    self.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
 }
 
 - (int) getWidth {
@@ -200,7 +207,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 		
 		// set the size of the offscreen frame buffer window
 		window_info->display_rect = NSMakeRect(0, 0, width, height);
-		//[window_info->window setFrame:window_info->display_rect display:false];
 		
 		// clean up the old fbo and renderBuffers
 		glDeleteFramebuffersEXT(1, &oldFboID);
@@ -242,7 +248,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	// read the LWJGL FBO and blit it into this CALayers FBO
 	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, fboID);
 	glBlitFramebufferEXT(0, 0, width, height,
-						 0, height - fboHeight, width, height,
+						 0, 0, width, height,
 						 GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
 						 GL_NEAREST);
 	
