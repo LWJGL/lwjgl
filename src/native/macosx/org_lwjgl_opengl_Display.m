@@ -564,7 +564,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetTitle(JNIEnv *env
 	MacOSXWindowInfo *window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 	const char *title_cstr = (const char *)(*env)->GetDirectBufferAddress(env, title_buffer);
 	NSString *title = [[NSString alloc] initWithUTF8String:title_cstr];
-	[window_info->window setTitle:title];
+	[window_info->window performSelectorOnMainThread:@selector(setTitle:) withObject:title waitUntilDone:NO];
 }
 
 JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIEnv *env, jobject this, jint x, jint y, jint width, jint height, jboolean fullscreen, jboolean undecorated, jboolean resizable, jboolean parented, jobject peer_info_handle, jobject window_handle) {
