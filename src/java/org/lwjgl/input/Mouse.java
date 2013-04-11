@@ -433,8 +433,8 @@ public class Mouse {
 	/**
 	 * Gets the next mouse event. You can query which button caused the event by using
 	 * <code>getEventButton()</code> (if any). To get the state of that key, for that event, use
-	 * <code>getEventButtonState</code>. To get the current mouse delta values use <code>getEventDX()</code>,
-	 * <code>getEventDY()</code> and <code>getEventDZ()</code>.
+	 * <code>getEventButtonState</code>. To get the current mouse delta values use <code>getEventDX()</code>
+	 * and <code>getEventDY()</code>.
 	 * @see org.lwjgl.input.Mouse#getEventButton()
 	 * @see org.lwjgl.input.Mouse#getEventButtonState()
 	 * @return true if a mouse event was read, false otherwise
