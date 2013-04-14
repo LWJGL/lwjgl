@@ -44,7 +44,7 @@ import java.lang.UnsatisfiedLinkError;
  * $Id$
  */
 final class MacOSXSysImplementation extends J2SESysImplementation {
-	private static final int JNI_VERSION = 24;
+	private static final int JNI_VERSION = 25;
 
 	static {
 		// Manually start the AWT Application Loop
