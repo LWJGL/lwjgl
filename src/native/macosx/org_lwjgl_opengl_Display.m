@@ -139,7 +139,11 @@ static MacOSXPeerInfo *peer_info;
 	}
 	else {
 		if (peer_info->isCALayer) {
-			[peer_info->glLayer removeLayer];
+			peer_info->isCALayer = false;
+            [peer_info->glLayer removeLayer];
+            [peer_info->glLayer release];
+            peer_info->glLayer = nil;
+            return;
 		}
 		
 		if (window_info->window != nil) {
@@ -627,6 +631,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nDestroyCALayer(JNIEn
 		peer_info->isCALayer = false;
 		[peer_info->glLayer performSelectorOnMainThread:@selector(removeLayer) withObject:nil waitUntilDone:YES];
 		[peer_info->glLayer release];
+        peer_info->glLayer = nil;
 	}
 }
 
