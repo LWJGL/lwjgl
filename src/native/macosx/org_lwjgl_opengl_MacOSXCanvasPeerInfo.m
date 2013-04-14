@@ -109,10 +109,13 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	
 	// get root layer of the AWT Canvas and add self to it
 	id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;
-	surfaceLayers.layer = self;
-    
-    // ensure the CALayer size is correct, needed for Java 7+
-    self.frame = CGRectMake(0, 0, [self getWidth], [self getHeight]);
+	
+	if (surfaceLayers.layer != self) {
+		surfaceLayers.layer = self;
+        
+		// ensure the CALayer size is correct, needed for Java 7+
+		self.frame = CGRectMake(0, 0, [self getWidth], [self getHeight]);
+	}
 }
 
 - (void) removeLayer {
