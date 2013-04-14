@@ -285,7 +285,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 }
 
 - (void)releaseCGLContext:(CGLContextObj)glContext {
-	CGLDestroyContext(contextObject);
+	CGLClearDrawable(contextObject);
+    // disable releasing context due to nvidia crash bug when releasing shared contexts
+    //CGLDestroyContext(contextObject);
 }
 
 - (CGLPixelFormatObj)copyCGLPixelFormatForDisplayMask:(uint32_t)mask {
