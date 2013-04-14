@@ -116,6 +116,12 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 }
 
 - (void) removeLayer {
+    
+    // clean up resources
+    glDeleteFramebuffersEXT(1, &fboID);
+    glDeleteRenderbuffersEXT(1, &imageRenderBufferID);
+    glDeleteRenderbuffersEXT(1, &depthRenderBufferID);
+    
 	// finish any pending blits before destroying the offscreen window to prevent crashes
 	glFinish();
     
