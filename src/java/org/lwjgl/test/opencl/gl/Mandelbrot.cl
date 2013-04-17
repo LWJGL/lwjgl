@@ -2,7 +2,9 @@
     #ifdef AMD_FP
         #pragma OPENCL EXTENSION cl_amd_fp64 : enable
     #else
-        #pragma OPENCL EXTENSION cl_khr_fp64 : enable
+        #ifndef CL_VERSION_1_2
+	        #pragma OPENCL EXTENSION cl_khr_fp64 : enable
+        #endif
     #endif
     #define varfloat double
     #define _255 255.0

@@ -186,10 +186,6 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEn
 	return (INT_PTR)hwnd;
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nGetParent(JNIEnv *env, jclass clazz, jlong hwnd_ptr) {
-	return (INT_PTR)GetParent((HWND)(INT_PTR)hwnd_ptr);
-}
-
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nReleaseDC(JNIEnv *env, jclass clazz, jlong hwnd_ptr, jlong hdc_ptr) {
 	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
 	HDC hdc = (HDC)(INT_PTR)hdc_ptr;
@@ -332,7 +328,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nGetVersion(JNIEn
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nReshape(JNIEnv *env, jclass unused, jlong hwnd_ptr, jint x, jint y, jint width, jint height, jboolean undecorated, jboolean child) {
 	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
-	/*
 	DWORD exstyle, windowflags;
 	RECT clientSize;
 
@@ -351,10 +346,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nReshape(JNIEnv *env
 	  FALSE,          // menu-present option
 	  exstyle         // extended window style
 	);
-
 	SetWindowPos(hwnd, HWND_TOP, x, y, clientSize.right - clientSize.left, clientSize.bottom - clientSize.top, SWP_NOZORDER);
-	*/
-	SetWindowPos(hwnd, HWND_TOP, x, y, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
 }
 
 static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height) {
