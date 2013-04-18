@@ -256,7 +256,7 @@ final class WindowsDisplay implements DisplayImplementation {
 				}
 				setForegroundWindow(getHwnd());
 			}
-			setFocus(getHwnd());
+			grabFocus();
 		} catch (LWJGLException e) {
 			nReleaseDC(hwnd, hdc);
 			nDestroyWindow(hwnd);
@@ -372,6 +372,17 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static native void showWindow(long hwnd, int mode);
 	private static native void setForegroundWindow(long hwnd);
 	private static native void setFocus(long hwnd);
+
+	private void grabFocus() {
+		if ( parent == null )
+			setFocus(getHwnd());
+		else
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					parent.requestFocus();
+				}
+			});
+	}
 
 	private void restoreDisplayMode() {
 		try {
@@ -510,9 +521,10 @@ final class WindowsDisplay implements DisplayImplementation {
 	public void update() {
 		nUpdate();
 
-		// This happens when we alt-tab to the frame that contains the parent. The WM_ACTIVATE event is received by AWT instead of our window proc.
-		if ( !isFocused && parent != null && SwingUtilities.isDescendingFrom(parent, KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner()) )
+		if ( !isFocused && parent != null && parent.isFocusOwner() ) {
+			KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
 			setFocus(getHwnd());
+		}
 
 		if (redoMakeContextCurrent) {
 			redoMakeContextCurrent = false;
@@ -935,7 +947,7 @@ final class WindowsDisplay implements DisplayImplementation {
 				return 0L;
 			case WM_MOUSEACTIVATE:
 				if ( !isFocused )
-					setFocus(getHwnd());
+					grabFocus();
 
 				return 3L; // MA_NOACTIVATE
 			case WM_MOUSEMOVE:
