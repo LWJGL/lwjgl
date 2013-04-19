@@ -113,8 +113,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	if (surfaceLayers.layer != self) {
 		surfaceLayers.layer = self;
         
-		// ensure the CALayer size is correct, needed for Java 7+
-		self.frame = CGRectMake(0, 0, [self getWidth], [self getHeight]);
+        // ensure the CALayer size and position is correct, needed for Java 7+
+		self.bounds = CGRectMake(0, 0, [self getWidth], [self getHeight]);
+        self.position = CGPointMake([self getWidth]+[self getWidth]/2.0, [self getHeight]+[self getHeight]/2.0);
 	}
 }
 
@@ -136,8 +137,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 }
 
 - (void)setNeedsLayout {
-    // make sure the CALayer remains in bottom corner during resize
-    self.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+    // make sure the CALayer remains in correct location during resize
+    self.bounds = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+    self.position = CGPointMake(self.superlayer.position.x, self.superlayer.position.y);
 }
 
 - (int) getWidth {
