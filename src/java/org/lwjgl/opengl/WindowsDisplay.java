@@ -83,6 +83,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static final int WM_SYSKEYDOWN					  = 260;
 	private static final int WM_SYSCHAR                          = 262;
 	private static final int WM_CHAR                          = 258;
+	private static final int WM_GETICON						  = 0x007F;
 	private static final int WM_SETICON						  = 0x0080;
 	private static final int WM_SETCURSOR                     = 0x0020;
 	private static final int WM_MOUSEACTIVATE                 = 0x0021;
@@ -198,6 +199,7 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private long small_icon;
 	private long large_icon;
+		private boolean iconsLoaded;
 
 	private int captureMouse = -1;
         private boolean trackingMouse;
@@ -779,6 +781,23 @@ final class WindowsDisplay implements DisplayImplementation {
 				large_icon = large_new_icon;
 				used++;
 				done_large = true;
+
+				// Problem: The taskbar icon won't update until Windows sends a WM_GETICON to our window proc and we reply. But this method is usually called
+				// on init and it might take a while before the next call to nUpdate (because of resources being loaded, etc). So we wait for the next
+				// WM_GETICON message (usually received about 100ms after WM_SETICON) to make sure the taskbar icon has updated before we return to the user.
+				// (We wouldn't need to do this if the event loop was running continuously on its own thread.)
+				iconsLoaded = false;
+
+				// Track how long the wait takes and give up at 500ms, just in case.
+				long time = System.nanoTime();
+				long MAX_WAIT = 500L * 1000L * 1000L;
+				while ( true ) {
+					nUpdate();
+					if ( iconsLoaded || MAX_WAIT < System.nanoTime() - time )
+						break;
+
+					Thread.yield();
+				}
 			}
 		}
 
@@ -1059,6 +1078,9 @@ final class WindowsDisplay implements DisplayImplementation {
 				} else {
 					LWJGLUtil.log("WM_WINDOWPOSCHANGED: Unable to get window rect");
 				}
+				break;
+			case WM_GETICON:
+				iconsLoaded = true;
 				break;
 		}
 
