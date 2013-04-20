@@ -32,6 +32,11 @@
 package org.lwjgl.opengl;
 
 import java.awt.Canvas;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.Insets;
+import java.awt.Container;
+import java.awt.Component;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
@@ -62,11 +67,85 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 			forceCALayer = false;
 		}
 		
-		window_handle = nInitHandle(awt_surface.lockAndGetHandle(component), getHandle(), window_handle, forceCALayer);
+		Insets insets = getInsets(component);
+		
+		int top = insets != null ? insets.top : 0;
+		int left = insets != null ? insets.left : 0;
+		
+		window_handle = nInitHandle(awt_surface.lockAndGetHandle(component), getHandle(), window_handle, forceCALayer, component.getX()-left, component.getY()-top);
+		
+		if (javaVersion.startsWith("1.7")) {
+			// fix for CALayer position not covering Canvas due to a Java 7 bug
+			// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7172187
+			addComponentListener(component);
+		}
 	}
-	private static native ByteBuffer nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle, ByteBuffer window_handle, boolean forceCALayer) throws LWJGLException;
+	
+	private void addComponentListener(final Canvas component) {
+		
+		ComponentListener[] components = component.getComponentListeners();
+		
+		// avoid adding duplicate listners by checking if one has already been added
+		for (int i = 0; i < components.length; i++) {
+			ComponentListener c = components[i];
+			if (c.toString() == "CanvasPeerInfoListener") {
+				return; // already contains the listner below return without adding
+			}
+		}
+		
+		ComponentListener comp = new ComponentListener() {
+			public void componentHidden(ComponentEvent e) {
+				
+			}
 
+			public void componentMoved(ComponentEvent e) {
+				Insets insets = getInsets(component);
+				
+				int top = insets != null ? insets.top : 0;
+				int left = insets != null ? insets.left : 0;
+				
+				nSetLayerPosition(getHandle(), component.getX()-left, component.getY()-top);
+			}
+
+			public void componentResized(ComponentEvent e) {
+				Insets insets = getInsets(component);
+				
+				int top = insets != null ? insets.top : 0;
+				int left = insets != null ? insets.left : 0;
+				
+				nSetLayerPosition(getHandle(), component.getX()-left, component.getY()-top);
+			}
+
+			public void componentShown(ComponentEvent e) {
+				
+			}
+			
+			public String toString() {
+				return "CanvasPeerInfoListener";
+			}
+		};
+		
+		component.addComponentListener(comp);
+	}
+	
+	private static native ByteBuffer nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle, ByteBuffer window_handle, boolean forceCALayer, int x, int y) throws LWJGLException;
+
+	private static native void nSetLayerPosition(ByteBuffer peer_info_handle, int x, int y);
+	
 	protected void doUnlock() throws LWJGLException {
 		awt_surface.unlock();
+	}
+	
+	private Insets getInsets(Canvas component) {
+		Component parent = component.getParent();
+
+		while (parent != null) {
+			if (parent instanceof Container) {
+				return ((Container)parent).getInsets();
+			}
+			parent = parent.getParent();
+		}
+		
+		return null;
 	}
 }

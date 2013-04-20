@@ -47,7 +47,7 @@
 #include "common_tools.h"
 
 JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
-(JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle, jobject window_handle, jboolean forceCALayer) {
+(JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle, jobject window_handle, jboolean forceCALayer, jint x, jint y) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
@@ -78,6 +78,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 			peer_info->glLayer->canvasBounds = (JAWT_Rectangle)surface->dsi->bounds;
 			peer_info->window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 			peer_info->glLayer->window_info = peer_info->window_info;
+            
+			// ensure the CALayer size is correct, needed for Java 7+
+            peer_info->glLayer.frame = CGRectMake(x, y, peer_info->glLayer->canvasBounds.width, peer_info->glLayer->canvasBounds.height);
 			
 			[peer_info->glLayer performSelectorOnMainThread:@selector(createWindow:) withObject:peer_info->pixel_format waitUntilDone:YES];
 			
@@ -99,6 +102,17 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	return NULL;
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerPosition
+(JNIEnv *env, jclass clazz, jobject peer_info_handle, jint x, jint y) {
+	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	
+	if (peer_info->glLayer != nil) {
+		NSPoint point = NSMakePoint(x, y);
+		NSValue *value = [NSValue valueWithPoint:point];
+		[peer_info->glLayer performSelectorOnMainThread:@selector(updatePosition:) withObject:value waitUntilDone:NO];
+	}
+}
+
 @implementation GLLayer
 
 - (void) attachLayer {
@@ -113,8 +127,10 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	if (surfaceLayers.layer != self) {
 		surfaceLayers.layer = self;
         
-		// ensure the CALayer size is correct, needed for Java 7+
-		self.frame = CGRectMake(0, 0, [self getWidth], [self getHeight]);
+		// flip CALayer y position, needed for Java 7 workaround
+		self.frame = CGRectMake(self.frame.origin.x,
+								self.superlayer.bounds.size.height - self.frame.origin.y - self.frame.size.height,
+								self.frame.size.width, self.frame.size.height);
 	}
 }
 
@@ -135,9 +151,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	[self removeFromSuperlayer];
 }
 
-- (void)setNeedsLayout {
-    // make sure the CALayer remains in bottom corner during resize
-    self.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+- (void)updatePosition:(NSValue*)value {
+	NSPoint point = [value pointValue];
+	self.position = CGPointMake(point.x, self.superlayer.bounds.size.height - point.y - self.bounds.size.height);
 }
 
 - (int) getWidth {
