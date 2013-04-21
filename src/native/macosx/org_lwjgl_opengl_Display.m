@@ -36,6 +36,8 @@
  * Mac OS X specific display functions.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author mojang
+ * @author kappaOne <one.kappa@gmail.com>
  * @version $Revision$
  */
 

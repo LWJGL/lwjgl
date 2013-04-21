@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 /**
  * A Cocoa implementation of a LWJGL compatible Mouse.
  * @author mojang
+ * @author kappaOne <one.kappa@gmail.com>
  */
 
 import java.nio.ByteBuffer;

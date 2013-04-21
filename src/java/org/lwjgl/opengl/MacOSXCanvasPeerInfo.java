@@ -45,6 +45,7 @@ import org.lwjgl.LWJGLUtil;
 /**
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author kappaOne <one.kappa@gmail.com>
  * @version $Revision$
  * $Id$
  */

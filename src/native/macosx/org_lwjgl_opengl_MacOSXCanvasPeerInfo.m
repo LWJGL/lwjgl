@@ -35,6 +35,7 @@
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @author Pelle Johnsen
+ * @author kappaOne <one.kappa@gmail.com>
  * @version $Revision$
  */
 

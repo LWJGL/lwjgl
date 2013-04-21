@@ -35,7 +35,10 @@ package org.lwjgl.opengl;
  * This is the Display implementation interface. Display delegates
  * to implementors of this interface. There is one DisplayImplementation
  * for each supported platform.
- * @author elias_naur
+ * 
+ * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author mojang
+ * @author kappaOne <one.kappa@gmail.com>
  */
 
 import java.awt.Canvas;

@@ -36,6 +36,7 @@
  * Mac OS X native keyboard functions.
  *
  * @author mojang
+ * @author kappaOne <one.kappa@gmail.com>
  * @version $Revision: 3055 $
  */
 

@@ -32,8 +32,9 @@
 package org.lwjgl.opengl;
 
 /**
- * An AWT implementation of a LWJGL compatible Keyboard event queue.
+ * A native implementation of a LWJGL compatible Keyboard event queue.
  * @author elias_naur
+ * @author mojang
  */
 
 import java.awt.event.KeyEvent;

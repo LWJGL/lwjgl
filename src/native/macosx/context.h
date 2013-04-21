@@ -36,6 +36,8 @@
  * Base Win32 display
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
+ * @author mojang
+ * @author kappaOne <one.kappa@gmail.com>
  * @version $Revision$
  */
 
