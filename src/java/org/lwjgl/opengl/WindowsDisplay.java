@@ -381,6 +381,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		else
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
+					MenuSelectionManager.defaultManager().clearSelectedPath();
 					parent.requestFocus();
 				}
 			});
@@ -524,7 +525,11 @@ final class WindowsDisplay implements DisplayImplementation {
 		nUpdate();
 
 		if ( !isFocused && parent != null && parent.isFocusOwner() ) {
-			KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
+				}
+			});
 			setFocus(getHwnd());
 		}
 
