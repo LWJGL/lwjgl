@@ -980,8 +980,11 @@ final class WindowsDisplay implements DisplayImplementation {
 				appActivate(true);
 				return 0L;
 			case WM_MOUSEACTIVATE:
-				if ( parent != null )
+				if ( parent != null ) {
+					if ( !isFocused )
+						grabFocus();
 					return 3L; // MA_NOACTIVATE
+				}
 				break;
 			case WM_MOUSEMOVE:
 				int xPos = (int)(short)(lParam & 0xFFFF);
