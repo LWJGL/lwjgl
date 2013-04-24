@@ -170,6 +170,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	private Object current_cursor;
 	private Canvas parent;
 	private static boolean hasParent;
+	private long parent_hwnd;
 
 	private WindowsKeyboard keyboard;
 	private WindowsMouse mouse;
@@ -227,7 +228,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		maximized = false;
 		this.parent = parent;
 		hasParent = parent != null;
-		long parent_hwnd = parent != null ? getHwnd(parent) : 0;
+		parent_hwnd = parent != null ? getHwnd(parent) : 0;
 		this.hwnd = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(), Display.isFullscreen() || isUndecorated(), parent != null, parent_hwnd);
 		this.resizable=false;
 		if (hwnd == 0) {
@@ -381,7 +382,6 @@ final class WindowsDisplay implements DisplayImplementation {
 		else
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					MenuSelectionManager.defaultManager().clearSelectedPath();
 					parent.requestFocus();
 				}
 			});
@@ -922,6 +922,16 @@ final class WindowsDisplay implements DisplayImplementation {
 				WindowsEventDebug.printMessage(msg, wParam, lParam);
 		}*/
 
+		if ( parent != null && !isFocused ) {
+			switch ( msg ) {
+				case WM_LBUTTONDOWN:
+				case WM_RBUTTONDOWN:
+				case WM_MBUTTONDOWN:
+				case WM_XBUTTONDOWN:
+					sendMessage(parent_hwnd, msg, wParam, lParam);
+			}
+		}
+
 		switch (msg) {
 			// disable screen saver and monitor power down messages which wreak havoc
 			case WM_ACTIVATE:
@@ -970,10 +980,9 @@ final class WindowsDisplay implements DisplayImplementation {
 				appActivate(true);
 				return 0L;
 			case WM_MOUSEACTIVATE:
-				if ( !isFocused )
-					grabFocus();
-
-				return 3L; // MA_NOACTIVATE
+				if ( parent != null )
+					return 3L; // MA_NOACTIVATE
+				break;
 			case WM_MOUSEMOVE:
 				int xPos = (int)(short)(lParam & 0xFFFF);
 				int yPos = transformY(getHwnd(), (int)(short)((lParam >> 16) & 0xFFFF));
