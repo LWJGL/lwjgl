@@ -39,8 +39,11 @@ package org.lwjgl.opengl;
  */
 
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.lang.reflect.Method;
 import java.nio.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
@@ -168,9 +171,13 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static boolean cursor_clipped;
 	private WindowsDisplayPeerInfo peer_info;
 	private Object current_cursor;
-	private Canvas parent;
+
 	private static boolean hasParent;
+
+	private Canvas parent;
 	private long parent_hwnd;
+	private FocusAdapter parent_focus_tracker;
+	private AtomicBoolean parent_focused;
 
 	private WindowsKeyboard keyboard;
 	private WindowsMouse mouse;
@@ -258,6 +265,20 @@ final class WindowsDisplay implements DisplayImplementation {
 					setResizable(true);
 				}
 				setForegroundWindow(getHwnd());
+			} else {
+				parent_focused = new AtomicBoolean(false);
+				parent.addFocusListener(parent_focus_tracker = new FocusAdapter() {
+					public void focusGained(FocusEvent e) {
+						parent_focused.set(true);
+
+						// This is needed so that the last focused component AWT remembers is NOT our Canvas
+						WindowsDisplay.this.parent.setFocusable(false);
+						WindowsDisplay.this.parent.setFocusable(true);
+
+						// Clear AWT focus owner
+						KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
+					}
+				});
 			}
 			grabFocus();
 		} catch (LWJGLException e) {
@@ -292,6 +313,11 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public void destroyWindow() {
+		if ( parent != null ) {
+			parent.removeFocusListener(parent_focus_tracker);
+			parent_focus_tracker = null;
+		}
+
 		nReleaseDC(hwnd, hdc);
 		nDestroyWindow(hwnd);
 		freeLargeIcon();
@@ -524,12 +550,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	public void update() {
 		nUpdate();
 
-		if ( !isFocused && parent != null && parent.isFocusOwner() ) {
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
-				}
-			});
+		if ( !isFocused && parent != null && parent_focused.compareAndSet(true, false) ) {
 			setFocus(getHwnd());
 		}
 
@@ -914,6 +935,7 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private long doHandleMessage(long hwnd, int msg, long wParam, long lParam, long millis) {
 		/*switch ( msg ) {
+			case 0x0:
 			case 0x0020:
 			case 0x0084:
 			case WM_MOUSEMOVE:
