@@ -86,7 +86,7 @@ public class XRandR
 						name = sa[ 0 ];
 
 						// record the current config
-						parseScreen( currentList, name, sa[ 2 ] );
+						parseScreen( currentList, name, "primary".equals(sa[ 2 ]) ? sa[ 3 ] : sa[ 2 ] );
 					}
 					else if( Pattern.matches( "\\d*x\\d*", sa[ 0 ] ) )
 					{
