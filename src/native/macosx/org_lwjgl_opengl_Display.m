@@ -606,7 +606,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	peer_info->window_info = window_info;
 	peer_info->isWindowed = true;
 	
-	window_info->display_rect = NSMakeRect(x, y, width, height);
+    window_info->display_rect = NSMakeRect(x, [[NSScreen mainScreen] frame].size.height - y - height, width, height);
 	
 	// Cache the necessary info for window-close callbacks into the JVM
 	if (window_info->jdisplay == NULL) {
