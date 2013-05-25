@@ -127,7 +127,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nCreateCursor(JN
 	jlong *bytes = (jint *)(*env)->GetDirectBufferAddress(env, image_buffer) + images_offset;
 	
 	NSBitmapImageRep *bitmap = [[[NSBitmapImageRep alloc]
-								initWithBitmapDataPlanes:(jlong *)&bytes
+								initWithBitmapDataPlanes:NULL
 								pixelsWide:width pixelsHigh:height
 								bitsPerSample:8
 								samplesPerPixel:4
@@ -137,6 +137,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_MacOSXNativeMouse_nCreateCursor(JN
 								bitmapFormat:NSAlphaNonpremultipliedBitmapFormat
 								bytesPerRow:width*4
 								bitsPerPixel:32] autorelease];
+	memcpy((void*)bitmap.bitmapData, (void*)bytes, width*height*4);
 	
 	NSImage *image = [[[NSImage alloc] initWithSize:NSMakeSize(width, height)] autorelease];
 	
