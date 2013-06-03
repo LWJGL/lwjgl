@@ -390,7 +390,7 @@ public interface GL20 {
 	@StripPostfix("pointer")
 	void glGetVertexAttribPointerv(@GLuint int index, @GLenum int pname, @Result @GLvoid ByteBuffer pointer);
 
-	@Alternate("glGetVertexAttribPointerv")
+	@Alternate(value = "glGetVertexAttribPointerv", nativeAlt = true)
 	@StripPostfix("pointer")
 	void glGetVertexAttribPointerv2(@GLuint int index, @GLenum int pname, @OutParameter @Check("PointerBuffer.getPointerSize()") @GLvoid ByteBuffer pointer);
 
