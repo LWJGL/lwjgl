@@ -390,6 +390,10 @@ public interface GL20 {
 	@StripPostfix("pointer")
 	void glGetVertexAttribPointerv(@GLuint int index, @GLenum int pname, @Result @GLvoid ByteBuffer pointer);
 
+	@Alternate("glGetVertexAttribPointerv")
+	@StripPostfix("pointer")
+	void glGetVertexAttribPointerv2(@GLuint int index, @GLenum int pname, @OutParameter @Check("PointerBuffer.getPointerSize()") @GLvoid ByteBuffer pointer);
+
 	// -----------------------------------------------------------------
 	// ----------------------[ ARB_vertex_shader ]----------------------
 	// -----------------------------------------------------------------
