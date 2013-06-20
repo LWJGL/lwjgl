@@ -279,7 +279,7 @@ public interface GL20 {
 	/** Overloads glGetActiveUniform. This version returns only the uniform size. */
 	@Alternate(value = "glGetActiveUniform", javaAlt = true)
 	@GLreturn(value = "size")
-	void glGetActiveUniformSize(@GLuint int program, @GLuint int index, @Constant("0") @GLsizei int maxLength,
+	void glGetActiveUniformSize(@GLuint int program, @GLuint int index, @Constant("1") @GLsizei int maxLength,
 	                            @OutParameter @GLsizei @Constant("0L") IntBuffer length,
 	                            @OutParameter IntBuffer size,
 	                            @OutParameter @GLenum @Constant("MemoryUtil.getAddress(size, 1)") IntBuffer type, // Reuse size buffer and ignore
