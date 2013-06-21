@@ -139,5 +139,5 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_CallbackUtil_getDebugCallbackKHR(J
             debugCallbackKHRJ = (*env)->GetMethodID(env, callbackClass, "handleMessage", "(IIIILjava/lang/String;)V");
     }
 
-    return (jlong)(intptr_t)&debugCallbackKHRJ;
+    return (jlong)(intptr_t)&debugCallbackKHR;
 }
