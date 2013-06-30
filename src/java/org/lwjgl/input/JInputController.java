@@ -208,7 +208,7 @@ class JInputController implements Controller {
 				buttonState[buttonIndex] = event.getValue() != 0;
 
 				// fire button pressed event
-				Controllers.addEvent(new ControllerEvent(this,event.getNanos(),ControllerEvent.BUTTON,buttonIndex,false,false));
+				Controllers.addEvent(new ControllerEvent(this,event.getNanos(),ControllerEvent.BUTTON,buttonIndex,buttonState[buttonIndex],false,false,0,0));
 			}
 
 			// handle pov events
@@ -232,6 +232,8 @@ class JInputController implements Controller {
 				Component axis = event.getComponent();
 				int axisIndex = axes.indexOf(axis);
 				float value = axis.getPollData();
+				float xaxisValue = 0;
+				float yaxisValue = 0;
 
 				// fixed dead zone since most axis don't report it :(
 				if (Math.abs(value) < deadZones[axisIndex]) {
@@ -246,9 +248,17 @@ class JInputController implements Controller {
 
 				// normalize the value based on maximum value read in the past
 				value /= axesMax[axisIndex];
+
+				if (axisIndex == xaxis) {
+					xaxisValue = value;
+				}
+				if (axisIndex == yaxis) {
+					yaxisValue = value;
+				}
+
 				// fire event
-				Controllers.addEvent(new ControllerEvent(this,event.getNanos(),ControllerEvent.AXIS,axisIndex,
-														 axisIndex == xaxis,axisIndex == yaxis));
+				Controllers.addEvent(new ControllerEvent(this,event.getNanos(),ControllerEvent.AXIS,axisIndex,false,
+														 axisIndex == xaxis,axisIndex == yaxis,xaxisValue,yaxisValue));
 				axesValue[axisIndex] = value;
 			}
 		}
