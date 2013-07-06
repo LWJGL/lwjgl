@@ -651,7 +651,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetCurrentDisplay
 	
 	jclass displayClass = (*env)->GetObjectClass(env, this);
 	jmethodID createDisplayModeMethod = (*env)->GetMethodID(env, displayClass, "createDisplayMode", "(IIII)Ljava/lang/Object;");
-	
+
+#if defined(MAC_OS_X_VERSION_10_6) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_6
+    
 	CGDisplayModeRef mode = CGDisplayCopyDisplayMode(kCGDirectMainDisplay);
 	
 	int width = (int) CGDisplayModeGetWidth(mode);
@@ -670,7 +672,34 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetCurrentDisplay
 	}
 	
 	jobject displayMode = (*env)->CallObjectMethod(env, this, createDisplayModeMethod, width, height, bitsPerPixel, refreshRate);
-	
+
+#else
+    
+    CFDictionaryRef mode = CGDisplayCurrentMode(CGMainDisplayID());
+    
+    long bitsPerPixel = 0;
+    long width = 0;
+    long height = 0;
+    long refreshRate = 0;
+    
+    CFNumberRef value;
+    
+    value = CFDictionaryGetValue(mode, kCGDisplayBitsPerPixel);
+    CFNumberGetValue(value, kCFNumberLongType, &bitsPerPixel);
+    
+    value = CFDictionaryGetValue(mode, kCGDisplayWidth);
+    CFNumberGetValue(value, kCFNumberLongType, &width);
+    
+    value = CFDictionaryGetValue(mode, kCGDisplayHeight);
+    CFNumberGetValue(value, kCFNumberLongType, &height);
+    
+    value = CFDictionaryGetValue(mode, kCGDisplayRefreshRate);
+    CFNumberGetValue(value, kCFNumberLongType, &refreshRate);
+    
+    jobject displayMode = (*env)->CallObjectMethod(env, this, createDisplayModeMethod, width, height, bitsPerPixel, refreshRate);
+    
+#endif
+    
 	return displayMode;
 }
 
@@ -680,6 +709,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetDisplayModes(JNIE
 	jclass displayClass = (*env)->GetObjectClass(env, this);
 	jmethodID addDisplayModeMethod = (*env)->GetMethodID(env, displayClass, "addDisplayMode", "(Ljava/lang/Object;IIII)V");
 	
+#if defined(MAC_OS_X_VERSION_10_6) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_6
+    
 	int i = 0;
 	
 	for (i = 0; i < CFArrayGetCount(modes); i++) {
@@ -704,6 +735,42 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetDisplayModes(JNIE
 		
 		(*env)->CallVoidMethod(env, this, addDisplayModeMethod, modesList, width, height, bitsPerPixel, refreshRate);
     }
+
+#else
+    
+    CFArrayRef modesL = CGDisplayAvailableModes(CGMainDisplayID());
+    CFIndex index, count;
+    CFDictionaryRef mode1;
+    
+    count = CFArrayGetCount(modesL);
+    
+    for (index = 0; index < count; index++) {
+        mode1 = CFArrayGetValueAtIndex(modesL, index);
+        
+        long bitsPerPixel = 0;
+        long width = 0;
+        long height = 0;
+        long refreshRate = 0;
+        
+        CFNumberRef value;
+        
+        value = CFDictionaryGetValue(mode1, kCGDisplayBitsPerPixel);
+        CFNumberGetValue(value, kCFNumberLongType, &bitsPerPixel);
+        
+        value = CFDictionaryGetValue(mode1, kCGDisplayWidth);
+        CFNumberGetValue(value, kCFNumberLongType, &width);
+        
+        value = CFDictionaryGetValue(mode1, kCGDisplayHeight);
+        CFNumberGetValue(value, kCFNumberLongType, &height);
+        
+        value = CFDictionaryGetValue(mode1, kCGDisplayRefreshRate);
+        CFNumberGetValue(value, kCFNumberLongType, &refreshRate);
+        
+        (*env)->CallVoidMethod(env, this, addDisplayModeMethod, modesList, width, height, bitsPerPixel, refreshRate);
+    }
+
+#endif
+
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_DefaultSysImplementation_getJNIVersion(JNIEnv *env, jobject ignored) {
