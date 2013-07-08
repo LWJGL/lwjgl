@@ -749,7 +749,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetDisplayModes(JNIE
     count = CFArrayGetCount(modes);
     
     for (index = 0; index < count; index++) {
-        mode1 = CFArrayGetValueAtIndex(modes, index);
+        mode = CFArrayGetValueAtIndex(modes, index);
         
         long bitsPerPixel = 0;
         long width = 0;
