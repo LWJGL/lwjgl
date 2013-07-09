@@ -34,6 +34,8 @@ package org.lwjgl.util.vector;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
 
+import org.lwjgl.util.vector.Vector2f;
+
 /**
  *
  * Holds a 2-tuple vector.
@@ -285,6 +287,17 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f, 
 	 */
 	public final void setY(float y) {
 		this.y = y;
+	}	
+	
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Vector2f other = (Vector2f)obj;
+		
+		if (x == other.x && y == other.y) return true;
+		
+		return false;
 	}
-
+	
 }

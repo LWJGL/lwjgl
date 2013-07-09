@@ -34,6 +34,8 @@ package org.lwjgl.util.vector;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
 
+import org.lwjgl.util.vector.Vector3f;
+
 /**
  *
  * Holds a 3-tuple vector.
@@ -343,5 +345,16 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 	 */
 	public float getZ() {
 		return z;
+	}
+	
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Vector3f other = (Vector3f)obj;
+		
+		if (x == other.x && y == other.y && z == other.z) return true;
+		
+		return false;
 	}
 }

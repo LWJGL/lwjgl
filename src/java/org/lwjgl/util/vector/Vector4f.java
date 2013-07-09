@@ -34,6 +34,8 @@ package org.lwjgl.util.vector;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
 
+import org.lwjgl.util.vector.Vector4f;
+
 /**
  *
  * Holds a 4-tuple vector.
@@ -336,5 +338,14 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 		return w;
 	}
 
-
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Vector4f other = (Vector4f)obj;
+		
+		if (x == other.x && y == other.y && z == other.z && w == other.w) return true;
+		
+		return false;
+	}
 }
