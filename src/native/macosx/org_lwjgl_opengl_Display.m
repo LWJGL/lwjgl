@@ -652,104 +652,32 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetCurrentDisplay
 	jclass displayClass = (*env)->GetObjectClass(env, this);
 	jmethodID createDisplayModeMethod = (*env)->GetMethodID(env, displayClass, "createDisplayMode", "(IIII)Ljava/lang/Object;");
 
-#if defined(MAC_OS_X_VERSION_10_6) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_6
+    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_5) { // if OS X 10.6+ use newer api
     
-	CGDisplayModeRef mode = CGDisplayCopyDisplayMode(kCGDirectMainDisplay);
+        CGDisplayModeRef mode = CGDisplayCopyDisplayMode(kCGDirectMainDisplay);
 	
-	int width = (int) CGDisplayModeGetWidth(mode);
-	int height = (int) CGDisplayModeGetHeight(mode);
-	int refreshRate = (int)CGDisplayModeGetRefreshRate(mode);
-	int bitsPerPixel;
-	
-	// get bitsPerPixel
-	CFStringRef pixelEncoding = CGDisplayModeCopyPixelEncoding(mode);
-	
-	if(CFStringCompare(pixelEncoding, CFSTR(IO16BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
-		bitsPerPixel = 16;
-	}
-	else {
-		bitsPerPixel = 32;
-	}
-	
-	jobject displayMode = (*env)->CallObjectMethod(env, this, createDisplayModeMethod, width, height, bitsPerPixel, refreshRate);
-
-    return displayMode;
+        int width = (int) CGDisplayModeGetWidth(mode);
+        int height = (int) CGDisplayModeGetHeight(mode);
+        int refreshRate = (int)CGDisplayModeGetRefreshRate(mode);
+        int bitsPerPixel;
+        
+        // get bitsPerPixel
+        CFStringRef pixelEncoding = CGDisplayModeCopyPixelEncoding(mode);
+        
+        if(CFStringCompare(pixelEncoding, CFSTR(IO16BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+            bitsPerPixel = 16;
+        }
+        else {
+            bitsPerPixel = 32;
+        }
+        
+        jobject displayMode = (*env)->CallObjectMethod(env, this, createDisplayModeMethod, width, height, bitsPerPixel, refreshRate);
+        
+        return displayMode;
     
-#else
-    
-    CFDictionaryRef mode = CGDisplayCurrentMode(CGMainDisplayID());
-    
-    long bitsPerPixel = 0;
-    long width = 0;
-    long height = 0;
-    long refreshRate = 0;
-    
-    CFNumberRef value;
-    
-    value = CFDictionaryGetValue(mode, kCGDisplayBitsPerPixel);
-    CFNumberGetValue(value, kCFNumberLongType, &bitsPerPixel);
-    
-    value = CFDictionaryGetValue(mode, kCGDisplayWidth);
-    CFNumberGetValue(value, kCFNumberLongType, &width);
-    
-    value = CFDictionaryGetValue(mode, kCGDisplayHeight);
-    CFNumberGetValue(value, kCFNumberLongType, &height);
-    
-    value = CFDictionaryGetValue(mode, kCGDisplayRefreshRate);
-    CFNumberGetValue(value, kCFNumberLongType, &refreshRate);
-    
-    jobject displayMode = (*env)->CallObjectMethod(env, this, createDisplayModeMethod, width, height, bitsPerPixel, refreshRate);
-    
-    return displayMode;
-    
-#endif
-    
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetDisplayModes(JNIEnv *env, jobject this, jobject modesList) {
-	
-	jclass displayClass = (*env)->GetObjectClass(env, this);
-	jmethodID addDisplayModeMethod = (*env)->GetMethodID(env, displayClass, "addDisplayMode", "(Ljava/lang/Object;IIII)V");
-	
-#if defined(MAC_OS_X_VERSION_10_6) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_6
-    
-    CFArrayRef modes = CGDisplayCopyAllDisplayModes(kCGDirectMainDisplay, NULL);
-	
-	int i = 0;
-	
-	for (i = 0; i < CFArrayGetCount(modes); i++) {
-		CGDisplayModeRef mode = (CGDisplayModeRef)CFArrayGetValueAtIndex(modes, i);
-		
-		int width = (int) CGDisplayModeGetWidth(mode);
-		int height = (int) CGDisplayModeGetHeight(mode);
-		int refreshRate = (int)CGDisplayModeGetRefreshRate(mode);
-		int bitsPerPixel;
-		
-		// get bitsPerPixel
-		CFStringRef pixelEncoding = CGDisplayModeCopyPixelEncoding(mode);
-		if(CFStringCompare(pixelEncoding, CFSTR(IO32BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
-			bitsPerPixel = 32;
-		}
-		else if(CFStringCompare(pixelEncoding, CFSTR(IO16BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
-			bitsPerPixel = 16;
-		}
-		else {
-			continue; // ignore DisplayMode of other bitsPerPixel rates
-		}
-		
-		(*env)->CallVoidMethod(env, this, addDisplayModeMethod, modesList, width, height, bitsPerPixel, refreshRate);
-    }
-
-#else
-    
-    CFArrayRef modes = CGDisplayAvailableModes(CGMainDisplayID());
-    CFIndex index, count;
-    CFDictionaryRef mode;
-    
-    count = CFArrayGetCount(modes);
-    
-    for (index = 0; index < count; index++) {
-        mode = CFArrayGetValueAtIndex(modes, index);
+    } else {
+        
+        CFDictionaryRef mode = CGDisplayCurrentMode(CGMainDisplayID());
         
         long bitsPerPixel = 0;
         long width = 0;
@@ -769,11 +697,80 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetDisplayModes(JNIE
         
         value = CFDictionaryGetValue(mode, kCGDisplayRefreshRate);
         CFNumberGetValue(value, kCFNumberLongType, &refreshRate);
-        
-        (*env)->CallVoidMethod(env, this, addDisplayModeMethod, modesList, width, height, bitsPerPixel, refreshRate);
+    
+        jobject displayMode = (*env)->CallObjectMethod(env, this, createDisplayModeMethod, width, height, bitsPerPixel, refreshRate);
+    
+        return displayMode;
     }
+}
 
-#endif
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetDisplayModes(JNIEnv *env, jobject this, jobject modesList) {
+	
+	jclass displayClass = (*env)->GetObjectClass(env, this);
+	jmethodID addDisplayModeMethod = (*env)->GetMethodID(env, displayClass, "addDisplayMode", "(Ljava/lang/Object;IIII)V");
+	   
+    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_5) { // if OS X 10.6+ use newer api
+        
+        CFArrayRef modes = CGDisplayCopyAllDisplayModes(kCGDirectMainDisplay, NULL);
+        
+        int i = 0;
+	
+        for (i = 0; i < CFArrayGetCount(modes); i++) {
+            CGDisplayModeRef mode = (CGDisplayModeRef)CFArrayGetValueAtIndex(modes, i);
+            
+            int width = (int) CGDisplayModeGetWidth(mode);
+            int height = (int) CGDisplayModeGetHeight(mode);
+            int refreshRate = (int)CGDisplayModeGetRefreshRate(mode);
+            int bitsPerPixel;
+		
+            // get bitsPerPixel
+            CFStringRef pixelEncoding = CGDisplayModeCopyPixelEncoding(mode);
+            if(CFStringCompare(pixelEncoding, CFSTR(IO32BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+                bitsPerPixel = 32;
+            }
+            else if(CFStringCompare(pixelEncoding, CFSTR(IO16BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+                bitsPerPixel = 16;
+            }
+            else {
+                continue; // ignore DisplayMode of other bitsPerPixel rates
+            }
+		
+            (*env)->CallVoidMethod(env, this, addDisplayModeMethod, modesList, width, height, bitsPerPixel, refreshRate);
+        }
+
+    } else {
+        
+        CFArrayRef modes = CGDisplayAvailableModes(CGMainDisplayID());
+        CFIndex index, count;
+        CFDictionaryRef mode;
+        
+        count = CFArrayGetCount(modes);
+    
+        for (index = 0; index < count; index++) {
+            mode = CFArrayGetValueAtIndex(modes, index);
+            
+            long bitsPerPixel = 0;
+            long width = 0;
+            long height = 0;
+            long refreshRate = 0;
+            
+            CFNumberRef value;
+            
+            value = CFDictionaryGetValue(mode, kCGDisplayBitsPerPixel);
+            CFNumberGetValue(value, kCFNumberLongType, &bitsPerPixel);
+            
+            value = CFDictionaryGetValue(mode, kCGDisplayWidth);
+            CFNumberGetValue(value, kCFNumberLongType, &width);
+            
+            value = CFDictionaryGetValue(mode, kCGDisplayHeight);
+            CFNumberGetValue(value, kCFNumberLongType, &height);
+            
+            value = CFDictionaryGetValue(mode, kCGDisplayRefreshRate);
+            CFNumberGetValue(value, kCFNumberLongType, &refreshRate);
+            
+            (*env)->CallVoidMethod(env, this, addDisplayModeMethod, modesList, width, height, bitsPerPixel, refreshRate);
+        }
+    }
 
 }
 
