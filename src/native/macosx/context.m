@@ -91,16 +91,20 @@ NSOpenGLPixelFormat *choosePixelFormat(JNIEnv *env, jobject pixel_format, bool g
 	int bpp;
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
 	if (use_display_bpp)
-    {
-        CGDisplayModeRef mode = CGDisplayCopyDisplayMode(kCGDirectMainDisplay);
-        CFStringRef pixEnc = CGDisplayModeCopyPixelEncoding(mode);
-        if (CFStringCompare(pixEnc, CFSTR(IO32BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
-            bpp = 32;
-        else if(CFStringCompare(pixEnc, CFSTR(IO16BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
-            bpp = 16;
-        else if(CFStringCompare(pixEnc, CFSTR(IO8BitIndexedPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
-            bpp = 8;
-    }
+	{
+		if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_5) { // if OS X 10.6+ use newer api
+			CGDisplayModeRef mode = CGDisplayCopyDisplayMode(kCGDirectMainDisplay);
+			CFStringRef pixEnc = CGDisplayModeCopyPixelEncoding(mode);
+			if (CFStringCompare(pixEnc, CFSTR(IO32BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
+				bpp = 32;
+			else if(CFStringCompare(pixEnc, CFSTR(IO16BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
+				bpp = 16;
+			else if(CFStringCompare(pixEnc, CFSTR(IO8BitIndexedPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
+				bpp = 8;
+		} else {
+			bpp = CGDisplayBitsPerPixel(kCGDirectMainDisplay);
+		}
+	}
 	else
 		bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "bpp", "I"));
 
