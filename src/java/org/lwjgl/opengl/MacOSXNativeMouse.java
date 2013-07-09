@@ -199,29 +199,30 @@ final class MacOSXNativeMouse extends EventQueue {
 	}
     
 	public synchronized void mouseMoved(float x, float y, float dx, float dy, float dz, long nanos) {
-        if (skip_event > 0) {
-            skip_event--;
-            if (skip_event == 0) {
-                last_x = x;
-                last_y = y;
-            }
-            return;
-        }
-		if (grabbed) {
-            if ( dx != 0 || dy != 0 ) {
-                putMouseEventWithCoords((byte)-1, (byte)0, (int)dx, (int)-dy, 0, nanos);
-                addDelta(dx, dy);
-            }
+		if (skip_event > 0) {
+			skip_event--;
+			if (skip_event == 0) {
+				last_x = x;
+				last_y = y;
+			}
+			return;
+		}
+		
+		if ( dz != 0 ) { // if scroll wheel event
+			// if no vertical wheel events, then map the horizontal wheel event to it
+			if (dy == 0) dy = dx;
+
+			int wheel_amount = (int)(dy * WHEEL_SCALE);
+			accum_dz += wheel_amount;
+			putMouseEvent((byte)-1, (byte)0, wheel_amount, nanos);
+		}
+		else if (grabbed) {
+			if ( dx != 0 || dy != 0 ) {
+				putMouseEventWithCoords((byte)-1, (byte)0, (int)dx, (int)-dy, 0, nanos);
+				addDelta(dx, dy);
+			}
 		} else {
 			setCursorPos(x, y, nanos);
 		}
-        if ( dz != 0 ) {
-        		// if no vertical wheel events, then map the horizontal wheel event to it
-        		if (dy == 0) dy = dx;
-        		
-        		int wheel_amount = (int)(dy * WHEEL_SCALE);
-            accum_dz += wheel_amount;
-            putMouseEvent((byte)-1, (byte)0, wheel_amount, nanos);
-        }
 	}
 }
