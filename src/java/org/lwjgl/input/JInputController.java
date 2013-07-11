@@ -208,7 +208,8 @@ class JInputController implements Controller {
 				buttonState[buttonIndex] = event.getValue() != 0;
 
 				// fire button pressed event
-				Controllers.addEvent(new ControllerEvent(this,event.getNanos(),ControllerEvent.BUTTON,buttonIndex,buttonState[buttonIndex],false,false,0,0));
+				Controllers.addEvent(new ControllerEvent(this,event.getNanos(),ControllerEvent.BUTTON,buttonIndex,
+														 buttonState[buttonIndex],false,false,0,0));
 			}
 
 			// handle pov events

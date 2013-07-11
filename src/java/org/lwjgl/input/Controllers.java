@@ -262,7 +262,7 @@ public class Controllers {
 	/**
 	 * Get the timestamp assigned to the current event
 	 *
-	 * @return The timestamp assigned at the current event
+	 * @return The timestamp assigned to the current event
 	 */
 	public static long getEventNanoseconds() {
 		return event.getTimeStamp();
