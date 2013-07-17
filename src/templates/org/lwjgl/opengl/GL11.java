@@ -921,6 +921,9 @@ public interface GL11 {
 	                    @GLushort
 	                    @GLuint Buffer indices);
 
+	@Alternate("glDrawElements")
+	void glDrawElements(@GLenum int mode, @GLsizei int count, @GLenum int type, @BufferObject(BufferKind.ElementVBO) @Const @Check("count") ByteBuffer indices);
+
 	void glDrawBuffer(@GLenum int mode);
 
 	void glDrawArrays(@GLenum int mode, int first, @GLsizei int count);
