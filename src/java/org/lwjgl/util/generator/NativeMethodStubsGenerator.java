@@ -381,11 +381,12 @@ public class NativeMethodStubsGenerator {
 					writer.println("\t" + n + "_i = 0;");
 					// Fill pointer array with the buffer pointers
 					writer.println("\twhile ( " + n + "_i < " + pointerArray_annotation.value() + " ) {");
-					if ( component_type.isAssignableFrom(Buffer.class) )
-						writer.println("\t\t" + n + "_object = (*env)->GetObjectArrayElement(env, " + param.getSimpleName() + ", " + n + "_i);");
+					writer.println("\t\t" + n + "_object = (*env)->GetObjectArrayElement(env, " + param.getSimpleName() + ", " + n + "_i);");
+					writer.print("\t\t" + param.getSimpleName() + n + "[" + n + "_i++] = (" + translator.getSignature(true) + ")");
+					if ( Buffer.class.isAssignableFrom(component_type) )
+						writer.println("(*env)->GetDirectBufferAddress(env, " + n + "_object);");
 					else
-						writer.println("\t\t" + n + "_object = (*env)->GetObjectArrayElement(env, " + param.getSimpleName() + ", " + n + "_i);");
-					writer.println("\t\t" + param.getSimpleName() + n + "[" + n + "_i++] = (" + translator.getSignature(true) + ")(intptr_t)getPointerWrapperAddress(env, " + n + "_object);");
+						writer.println("(intptr_t)getPointerWrapperAddress(env, " + n + "_object);");
 					writer.println("\t}");
 				} else {
 					final String lengths = pointerArray_annotation.lengths();
