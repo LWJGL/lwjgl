@@ -547,7 +547,7 @@ final class InfoUtilFactory {
 
 				target = new ByteBuffer[sizes.remaining()];
 				for ( int i = 0; i < sizes.remaining(); i++ )
-					target[i] = BufferUtils.createByteBuffer((int)sizes.get(0));
+					target[i] = BufferUtils.createByteBuffer((int)sizes.get(i));
 			} else if ( LWJGLUtil.DEBUG ) {
 				final PointerBuffer sizes = getSizesBuffer(program, CL_PROGRAM_BINARY_SIZES);
 
