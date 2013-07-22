@@ -32,14 +32,12 @@
 package org.lwjgl.opencl;
 
 import org.lwjgl.util.generator.*;
-import org.lwjgl.util.generator.opencl.CLDeviceExtension;
-import org.lwjgl.util.generator.opencl.cl_char;
-import org.lwjgl.util.generator.opencl.cl_void;
-import org.lwjgl.util.generator.opencl.size_t;
+import org.lwjgl.util.generator.opencl.*;
 
 import java.nio.ByteBuffer;
 
 @Private
+@CLPlatformExtension
 @CLDeviceExtension
 public interface APPLE_ContextLoggingFunctions {
 

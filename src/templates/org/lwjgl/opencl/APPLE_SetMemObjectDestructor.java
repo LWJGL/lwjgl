@@ -35,8 +35,10 @@ import org.lwjgl.util.generator.Code;
 import org.lwjgl.util.generator.Constant;
 import org.lwjgl.util.generator.PointerWrapper;
 import org.lwjgl.util.generator.opencl.CLDeviceExtension;
+import org.lwjgl.util.generator.opencl.CLPlatformExtension;
 import org.lwjgl.util.generator.opencl.cl_int;
 
+@CLPlatformExtension
 @CLDeviceExtension
 public interface APPLE_SetMemObjectDestructor {
 

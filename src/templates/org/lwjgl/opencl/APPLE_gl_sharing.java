@@ -33,13 +33,11 @@ package org.lwjgl.opencl;
 
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.util.generator.*;
-import org.lwjgl.util.generator.opencl.CLDeviceExtension;
-import org.lwjgl.util.generator.opencl.cl_int;
-import org.lwjgl.util.generator.opencl.cl_void;
-import org.lwjgl.util.generator.opencl.size_t;
+import org.lwjgl.util.generator.opencl.*;
 
 import java.nio.ByteBuffer;
 
+@CLPlatformExtension
 @CLDeviceExtension
 @Extension(postfix = "APPLE", className = "APPLEGLSharing")
 public interface APPLE_gl_sharing {
