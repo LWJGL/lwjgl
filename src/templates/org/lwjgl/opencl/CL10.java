@@ -918,9 +918,10 @@ public interface CL10 {
 	@cl_int
 	int clGetProgramInfo2(@PointerWrapper("cl_program") CLProgram program,
 	                      @Constant("CL_PROGRAM_BINARIES") @NativeType("cl_program_info") int param_name,
-	                      @Constant("sizes.remainingByte()") @size_t long param_value_size,
+	                      @Constant(value = "sizes_len * sizeof(cl_uchar *)", isNative = true) @size_t long param_value_size,
+	                      @Constant("sizes.remaining()") @Helper(passToNative = true) @size_t long sizes_len,
 	                      @Helper(passToNative = true) @Check("1") @Const @NativeType("size_t") PointerBuffer sizes,
-	                      @OutParameter @Check("APIUtil.getSize(sizes)") @PointerArray(value = "param_value_size", lengths = "sizes") @NativeType("cl_uchar") ByteBuffer param_value,
+	                      @OutParameter @Check("APIUtil.getSize(sizes)") @PointerArray(value = "sizes_len", lengths = "sizes") @NativeType("cl_uchar") ByteBuffer param_value,
 	                      @OutParameter @Check(value = "1", canBeNull = true) @NativeType("size_t") PointerBuffer param_value_size_ret);
 
 	/**
@@ -939,8 +940,9 @@ public interface CL10 {
 	@cl_int
 	int clGetProgramInfo3(@PointerWrapper("cl_program") CLProgram program,
 	                      @Constant("CL_PROGRAM_BINARIES") @NativeType("cl_program_info") int param_name,
-	                      @Constant("param_value.length * PointerBuffer.getPointerSize()") @size_t long param_value_size,
-	                      @PointerArray("param_value_size") @NativeType("cl_uchar") ByteBuffer[] param_value,
+	                      @Constant(value = "param_value_len * sizeof(cl_uchar *)", isNative = true) @size_t long param_value_size,
+	                      @Constant("param_value.length") @Helper(passToNative = true) @size_t long param_value_len,
+	                      @PointerArray("param_value_len") @NativeType("cl_uchar") ByteBuffer[] param_value,
 	                      @OutParameter @Check(value = "1", canBeNull = true) @NativeType("size_t") PointerBuffer param_value_size_ret);
 
 	@cl_int
