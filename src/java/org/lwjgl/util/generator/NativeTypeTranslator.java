@@ -168,12 +168,9 @@ public class NativeTypeTranslator implements TypeVisitor {
 		} else if ( Buffer.class.equals(c) ) {
 			native_types = new ArrayList<Class>();
 			native_types.add(type_map.getVoidType());
-		} else if ( Buffer.class.isAssignableFrom(c) ) {
+		} else if ( Buffer.class.isAssignableFrom(c) || PointerBuffer.class.isAssignableFrom(c) ) {
 			PrimitiveType.Kind kind = getPrimitiveKindFromBufferClass(c);
 			getNativeTypeFromAnnotatedPrimitiveType(kind);
-		} else if ( PointerBuffer.class.isAssignableFrom(c) ) {
-			native_types = new ArrayList<Class>();
-			native_types.add(PointerBuffer.class);
 		} else if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(c) ) {
 			native_types = new ArrayList<Class>();
 			native_types.add(PointerWrapper.class);

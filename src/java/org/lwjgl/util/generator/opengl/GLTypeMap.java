@@ -41,6 +41,7 @@ package org.lwjgl.util.generator.opengl;
  * $Id: GLTypeMap.java 3392 2010-07-27 15:33:22Z spasi $
  */
 
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.util.generator.NativeTypeTranslator;
 import org.lwjgl.util.generator.PointerWrapper;
 import org.lwjgl.util.generator.Signedness;
@@ -274,6 +275,8 @@ public class GLTypeMap implements TypeMap {
 			valid_types = new Class[] { PointerWrapper.class };
 		else if (void.class.equals(type) )
 			valid_types = new Class[] { GLreturn.class };
+		else if ( PointerBuffer.class.equals(type) )
+			valid_types = new Class[] { GLintptr.class, GLintptrARB.class, GLsizeiptr.class, GLsizeiptrARB.class };
 		else
 			valid_types = new Class[] { };
 		return valid_types;

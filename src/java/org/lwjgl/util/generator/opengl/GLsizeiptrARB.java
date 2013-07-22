@@ -39,11 +39,13 @@ package org.lwjgl.util.generator.opengl;
  */
 
 import org.lwjgl.util.generator.NativeType;
+import org.lwjgl.util.generator.PointerType;
 
 import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 
 @NativeType
+@PointerType
 @Target({ElementType.PARAMETER, ElementType.METHOD})
 public @interface GLsizeiptrARB {
 }

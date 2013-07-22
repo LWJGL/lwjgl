@@ -41,6 +41,7 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.util.generator.opengl.GLvoid;
 
 import com.sun.mirror.declaration.*;
@@ -107,7 +108,7 @@ public class TypeInfo {
 		return type;
 	}
 
-	private static Class getBufferTypeFromPrimitiveKind(PrimitiveType.Kind kind) {
+	private static Class getBufferTypeFromPrimitiveKind(PrimitiveType.Kind kind, AnnotationMirror annotation) {
 		Class type;
 		switch (kind) {
 			case INT:
@@ -123,7 +124,10 @@ public class TypeInfo {
 				type = ShortBuffer.class;
 				break;
 			case LONG:
-				type = LongBuffer.class;
+				if ( annotation.getAnnotationType().getDeclaration().getAnnotation(PointerType.class) != null )
+					type = PointerBuffer.class;
+				else
+					type = LongBuffer.class;
 				break;
 			case BYTE: /* fall through */
 			case BOOLEAN:
@@ -178,7 +182,7 @@ public class TypeInfo {
 				GLvoid void_annotation = param.getAnnotation(GLvoid.class);
 				kind = void_annotation == null ? type_map.getPrimitiveTypeFromNativeType(annotation_type) : void_annotation.value();
 				if (Utils.getNIOBufferType(decl_type) != null)
-					type = getBufferTypeFromPrimitiveKind(kind);
+					type = getBufferTypeFromPrimitiveKind(kind, annotation);
 				else
 					type = getTypeFromPrimitiveKind(kind);
 				TypeInfo type_info = new TypeInfo(type, signedness, auto_type);
