@@ -87,6 +87,9 @@ typedef cl_ulong            cl_device_partition_property_ext;
 // EXT_migrate_memobject
 typedef cl_bitfield         cl_mem_migration_flags_ext;
 
+// KHR_subgroups
+typedef cl_uint             cl_kernel_sub_group_info;
+
 // -----------------[ Convenience typedefs ]-----------------
 
 typedef void                cl_void;
