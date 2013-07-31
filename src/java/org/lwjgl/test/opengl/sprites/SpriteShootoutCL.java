@@ -39,10 +39,10 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opencl.*;
 import org.lwjgl.opencl.api.Filter;
+import org.lwjgl.opengl.ContextCapabilities;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GLContext;
-import org.lwjgl.opengl.Util;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
@@ -140,19 +140,23 @@ public final class SpriteShootoutCL {
 		if ( platforms == null )
 			throw new RuntimeException("No OpenCL platforms found.");
 
-		final CLPlatform platform = platforms.get(0);
-
-		final PointerBuffer ctxProps = BufferUtils.createPointerBuffer(3);
-		ctxProps.put(CL_CONTEXT_PLATFORM).put(platform.getPointer()).put(0).flip();
-
-		// Find devices with GL sharing support
 		final Filter<CLDevice> glSharingFilter = new Filter<CLDevice>() {
 			public boolean accept(final CLDevice device) {
 				final CLDeviceCapabilities caps = CLCapabilities.getDeviceCapabilities(device);
 				return caps.CL_KHR_gl_sharing;
 			}
 		};
-		final List<CLDevice> devices = platform.getDevices(CL_DEVICE_TYPE_GPU, glSharingFilter);
+
+		CLPlatform platform = null;
+		List<CLDevice> devices = null;
+		for ( CLPlatform p : platforms ) {
+			// Find devices with GL sharing support
+			devices = p.getDevices(CL_DEVICE_TYPE_GPU, glSharingFilter);
+			if ( devices != null ) {
+				platform = p;
+				break;
+			}
+		}
 
 		if ( devices == null )
 			throw new RuntimeException("No OpenCL GPU device found.");
@@ -180,7 +184,8 @@ public final class SpriteShootoutCL {
 		Display.setTitle("Sprite Shootout - CL");
 		Display.create();
 
-		if ( !GLContext.getCapabilities().OpenGL20 )
+		final ContextCapabilities caps = GLContext.getCapabilities();
+		if ( !caps.OpenGL20 )
 			throw new RuntimeException("OpenGL 2.0 is required for this demo.");
 
 		// Setup viewport
@@ -218,9 +223,12 @@ public final class SpriteShootoutCL {
 		glDepthMask(false);
 		glDisable(GL_DEPTH_TEST);
 
+		if ( caps.GL_ARB_compatibility || !caps.OpenGL31 )
+			glEnable(GL_POINT_SPRITE);
+
 		// Setup geometry
 
-		Util.checkGLError();
+		org.lwjgl.opengl.Util.checkGLError();
 	}
 
 	private static int createTexture(final String path) throws IOException {
@@ -541,7 +549,7 @@ public final class SpriteShootoutCL {
 
 			createProgram(vshID);
 
-			Util.checkGLError();
+			org.lwjgl.opengl.Util.checkGLError();
 
 			createKernel("kernel void animate(\n" +
 			             "        const int WIDTH,\n" +

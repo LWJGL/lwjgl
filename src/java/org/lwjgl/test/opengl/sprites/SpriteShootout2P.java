@@ -166,6 +166,9 @@ public final class SpriteShootout2P {
 		glDepthFunc(GL_LESS);
 		glClearDepth(1.0f);
 
+		if ( caps.GL_ARB_compatibility || !caps.OpenGL31 )
+			glEnable(GL_POINT_SPRITE);
+
 		// Setup geometry
 
 		glEnableClientState(GL_VERTEX_ARRAY);

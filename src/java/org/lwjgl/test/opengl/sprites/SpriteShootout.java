@@ -129,6 +129,7 @@ public final class SpriteShootout {
 		//Display.create(new PixelFormat(), new ContextAttribs(4, 1).withProfileCompatibility(true).withDebug(true));
 		//AMDDebugOutput.glDebugMessageCallbackAMD(new AMDDebugOutputCallback());
 
+		final ContextCapabilities caps = GLContext.getCapabilities();
 		if ( !GLContext.getCapabilities().OpenGL20 )
 			throw new RuntimeException("OpenGL 2.0 is required for this demo.");
 
@@ -166,6 +167,9 @@ public final class SpriteShootout {
 		glColorMask(colorMask, colorMask, colorMask, false);
 		glDepthMask(false);
 		glDisable(GL_DEPTH_TEST);
+
+		if ( caps.GL_ARB_compatibility || !caps.OpenGL31 )
+			glEnable(GL_POINT_SPRITE);
 
 		// Setup geometry
 
