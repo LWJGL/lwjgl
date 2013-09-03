@@ -218,7 +218,7 @@ public class WaveData {
 				&& total < buf.length) {
 				total += read;
 			}
-			buffer = convertAudioBytes(buf, audioformat.getSampleSizeInBits() == 16);
+			buffer = convertAudioBytes(buf, audioformat.getSampleSizeInBits() == 16, audioformat.isBigEndian() ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN);
 		} catch (IOException ioe) {
 			return null;
 		}
@@ -237,11 +237,11 @@ public class WaveData {
 		return wavedata;
 	}
 
-	private static ByteBuffer convertAudioBytes(byte[] audio_bytes, boolean two_bytes_data) {
+	private static ByteBuffer convertAudioBytes(byte[] audio_bytes, boolean two_bytes_data, ByteOrder order) {
 		ByteBuffer dest = ByteBuffer.allocateDirect(audio_bytes.length);
 		dest.order(ByteOrder.nativeOrder());
 		ByteBuffer src = ByteBuffer.wrap(audio_bytes);
-		src.order(ByteOrder.LITTLE_ENDIAN);
+		src.order(order);
 		if (two_bytes_data) {
 			ShortBuffer dest_short = dest.asShortBuffer();
 			ShortBuffer src_short = src.asShortBuffer();
