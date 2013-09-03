@@ -440,7 +440,7 @@ public class LWJGLUtil {
 				}
 			}
 		} catch (Exception e) {
-			log("Failure locating " + e + " using classloader:" + e);
+			log("Failure locating " + e + " using classloader:" + c);
 		}
 		return null;
 	}
