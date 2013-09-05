@@ -420,9 +420,11 @@ public class LWJGLUtil {
 	 * @return Absolute path to library if found, otherwise null
 	 */
 	private static String getPathFromClassLoader(final String libname, final ClassLoader classloader) {
+		Class<?> c = null;
+		
 		try {
 			log("getPathFromClassLoader: searching for: " + libname);
-			Class<?> c = classloader.getClass();
+			c = classloader.getClass();
 			while (c != null) {
 				final Class<?> clazz = c;
 				try {
