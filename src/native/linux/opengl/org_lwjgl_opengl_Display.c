@@ -702,17 +702,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIconifyWindow(JNIEnv 
 	XIconifyWindow(disp, win, screen);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setClassHint(JNIEnv *env, jobject unused, jstring res_name, jstring res_class) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetClassHint(JNIEnv *env, jobject unused, jlong display_ptr, jlong window_ptr, jstring res_name, jstring res_class) {
 	Display *disp = (Display *)(intptr_t)display_ptr;
 	Window win = (Window)window_ptr;
 
 	char *res_name_c = GetStringNativeChars(env, res_name);
 	char *res_class_c = GetStringNativeChars(env, res_class);
-	XClassHint* hint = XAllocClassHint(disp, win);
+	XClassHint hint = XAllocClassHint();
 	hint.res_name = res_name_c;
 	hint.res_class = res_class_c;
 
-	XSetClassHint(dis, win, hint);
+	XSetClassHint(disp, win, hint);
 
 	free(res_name_c);
 	free(res_class_c);
