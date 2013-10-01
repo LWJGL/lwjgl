@@ -610,4 +610,5 @@ final class MacOSXDisplay implements DisplayImplementation {
 		return nWasResized(window);
 	}
 
+	public void setClassHint(String res_name, String res_class) {};
 }

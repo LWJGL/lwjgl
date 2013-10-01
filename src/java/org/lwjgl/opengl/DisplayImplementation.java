@@ -192,4 +192,10 @@ interface DisplayImplementation extends InputImplementation {
 	 * @return this method will return the top-left y position of the Display window.
 	 */
 	int getY();
+
+	/**
+	 * Sets the class hint given to X11. On platforms not utilizing an X11
+	 * display server this method should do nothing.
+	 */
+	void setClassHint(String res_name, String res_class);
 }

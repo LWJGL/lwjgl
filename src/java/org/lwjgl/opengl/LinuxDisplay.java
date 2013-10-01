@@ -1427,6 +1427,8 @@ final class LinuxDisplay implements DisplayImplementation {
 		return false;
 	}
 
+	public native void setClassHint(String res_name, String res_class);
+
 	/**
 	 * Helper class for managing Compiz's workarounds. We need this to enable Legacy
 	 * Fullscreen Support in Compiz, else we'll have trouble with fullscreen windows
