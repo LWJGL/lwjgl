@@ -708,9 +708,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetClassHint(JNIEnv *
 
 	char *res_name_c = GetStringNativeChars(env, res_name);
 	char *res_class_c = GetStringNativeChars(env, res_class);
-	XClassHint hint = XAllocClassHint();
-	hint.res_name = res_name_c;
-	hint.res_class = res_class_c;
+	XClassHint *hint = XAllocClassHint();
+	hint->res_name = res_name_c;
+	hint->res_class = res_class_c;
 
 	XSetClassHint(disp, win, hint);
 
