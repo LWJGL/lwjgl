@@ -283,13 +283,13 @@ final class MacOSXNativeKeyboard extends EventQueue {
 
 	public void keyPressed(int key_code, String chars, long nanos) {
 		// use only first character of chars returned for key press
-		int character = (chars == null) ? 0 : (int)chars.charAt(0);
+		int character = (chars == null || chars.length() == 0) ? 0 : (int)chars.charAt(0);
 		handleKey(key_code, (byte)1, character, nanos);
 	}
 
 	public void keyReleased(int key_code, String chars, long nanos) {
 		// use only first character of chars returned for key release
-		int character = (chars == null) ? 0 : (int)chars.charAt(0);
+		int character = (chars == null || chars.length() == 0) ? 0 : (int)chars.charAt(0);
 		handleKey(key_code, (byte)0, character, nanos);
 	}
 
