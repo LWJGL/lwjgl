@@ -274,10 +274,13 @@ static MacOSXPeerInfo *peer_info;
 	}
 	long time = [event timestamp] * 1000000000;
 	jclass keyboard_class = (*env)->GetObjectClass(env, _parent->jkeyboard);
-	jmethodID keydown = (*env)->GetMethodID(env, keyboard_class, "keyPressed", "(IIJ)V");
-	const char* charbuf = [[event characters] cStringUsingEncoding:NSASCIIStringEncoding];
-	int charcode = (charbuf == nil) ? 0 : charbuf[0];
-	(*env)->CallVoidMethod(env, _parent->jkeyboard, keydown, [event keyCode], charcode, time);
+	jmethodID keydown = (*env)->GetMethodID(env, keyboard_class, "keyPressed", "(ILjava/lang/String;J)V");
+	
+	// convert key characters from NSString to jstring
+	const char *unichars = [[event characters] UTF8String];
+	jstring characters = (*env)->NewStringUTF(env, unichars);
+	
+	(*env)->CallVoidMethod(env, _parent->jkeyboard, keydown, [event keyCode], characters, time);
 }
 
 - (void)keyUp:(NSEvent *)event {
@@ -287,10 +290,13 @@ static MacOSXPeerInfo *peer_info;
 	}
 	long time = [event timestamp] * 1000000000;
 	jclass keyboard_class = (*env)->GetObjectClass(env, _parent->jkeyboard);
-	jmethodID keyup = (*env)->GetMethodID(env, keyboard_class, "keyReleased", "(IIJ)V");
-	const char* charbuf = [[event characters] cStringUsingEncoding:NSASCIIStringEncoding];
-	int charcode = (charbuf == nil) ? 0 : charbuf[0];
-	(*env)->CallVoidMethod(env, _parent->jkeyboard, keyup, [event keyCode], charcode, time);
+	jmethodID keyup = (*env)->GetMethodID(env, keyboard_class, "keyReleased", "(ILjava/lang/String;J)V");
+	
+	// convert key characters from NSString to jstring
+	const char *unichars = [[event characters] UTF8String];
+	jstring characters = (*env)->NewStringUTF(env, unichars);
+	
+	(*env)->CallVoidMethod(env, _parent->jkeyboard, keyup, [event keyCode], characters, time);
 }
 
 - (void)flagsChanged:(NSEvent *)event {
@@ -322,12 +328,12 @@ static MacOSXPeerInfo *peer_info;
 
 	jmethodID keyMethod;
 	if (([event modifierFlags] & mask) == mask) {
-		keyMethod = (*env)->GetMethodID(env, keyboard_class, "keyPressed", "(IIJ)V");
+		keyMethod = (*env)->GetMethodID(env, keyboard_class, "keyPressed", "(ILjava/lang/String;J)V");
 	} else {
-		keyMethod = (*env)->GetMethodID(env, keyboard_class, "keyReleased", "(IIJ)V");
+		keyMethod = (*env)->GetMethodID(env, keyboard_class, "keyReleased", "(ILjava/lang/String;J)V");
 	}
 
-	(*env)->CallVoidMethod(env, _parent->jkeyboard, keyMethod, [event keyCode], 0, time);
+	(*env)->CallVoidMethod(env, _parent->jkeyboard, keyMethod, [event keyCode], NULL, time);
 }
 
 - (void)mouseButtonState:(NSEvent *)event :(int)button :(int)state {
