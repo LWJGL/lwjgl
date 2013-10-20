@@ -690,11 +690,10 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	/* Keyboard */
 	public void createKeyboard() throws LWJGLException {
-		keyboard = new WindowsKeyboard(getHwnd());
+		keyboard = new WindowsKeyboard();
 	}
 
 	public void destroyKeyboard() {
-		keyboard.destroy();
 		keyboard = null;
 	}
 
@@ -883,14 +882,16 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	private void handleKeyButton(long wParam, long lParam, long millis) {
+		if ( keyboard == null )
+			return;
+
 		byte previous_state = (byte)((lParam >>> 30) & 0x1);
 		byte state = (byte)(1 - ((lParam >>> 31) & 0x1));
 		boolean repeat = state == previous_state; // Repeat message
 		byte extended = (byte)((lParam >>> 24) & 0x1);
 		int scan_code = (int)((lParam >>> 16) & 0xFF);
-		if (keyboard != null) {
-			keyboard.handleKey((int)wParam, scan_code, extended != 0, state, millis, repeat);
-		}
+
+		keyboard.handleKey((int)wParam, scan_code, extended != 0, state, millis, repeat);
 	}
 
 	private static int transformY(long hwnd, int y) {

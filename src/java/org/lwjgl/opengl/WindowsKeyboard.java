@@ -43,17 +43,11 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 
 final class WindowsKeyboard {
-	private static final int MAPVK_VK_TO_VSC = 0;
 
-	private static final int BUFFER_SIZE = 50;
-
-	private final long hwnd;
 	private final byte[] key_down_buffer = new byte[Keyboard.KEYBOARD_SIZE];
 	private final byte[] virt_key_down_buffer = new byte[Keyboard.KEYBOARD_SIZE];
 	private final EventQueue event_queue = new EventQueue(Keyboard.EVENT_SIZE);
 	private final ByteBuffer tmp_event = ByteBuffer.allocate(Keyboard.EVENT_SIZE);
-
-	private boolean grabbed;
 
 	private boolean has_retained_event; // Indicates if we're waiting for a WM_CHAR
 	private int retained_key_code;
@@ -62,31 +56,26 @@ final class WindowsKeyboard {
 	private long retained_millis;
 	private boolean retained_repeat;
 
-	WindowsKeyboard(long hwnd) throws LWJGLException {
-		this.hwnd = hwnd;
+	WindowsKeyboard() throws LWJGLException {
 	}
-	private static native boolean isWindowsNT();
 
-	public void destroy() {
-	}
+	private static native boolean isWindowsNT();
 
 	boolean isKeyDown(int lwjgl_keycode) {
 		return key_down_buffer[lwjgl_keycode] == 1;
 	}
 
-	public void grab(boolean grab) {
-		if(grab) {
-			if (!grabbed) {
-				grabbed = true;
-			}
-		} else {
-			if (grabbed) {
-				grabbed = false;
-			}
-		}
-	}
+	void poll(ByteBuffer keyDownBuffer) {
+		// Handle shift key release while both are pressed.
+		// Windows will not send an up event for the first button that was released in this case.
+		// There will only be one up event, for the last button only. We handle this problem
+		// here, using asynchronous state queries.
+		if ( isKeyDown(Keyboard.KEY_LSHIFT) && !isKeyPressedAsync(WindowsKeycodes.VK_LSHIFT) )
+			handleKey(WindowsKeycodes.VK_SHIFT, Keyboard.KEY_LSHIFT, false, (byte)0, 0L, false);
 
-	public void poll(ByteBuffer keyDownBuffer) {
+		if ( isKeyDown(Keyboard.KEY_RSHIFT) && !isKeyPressedAsync(WindowsKeycodes.VK_RSHIFT) )
+			handleKey(WindowsKeycodes.VK_SHIFT, Keyboard.KEY_RSHIFT, false, (byte)0, 0L, false);
+
 		int old_position = keyDownBuffer.position();
 		keyDownBuffer.put(key_down_buffer);
 		keyDownBuffer.position(old_position);
@@ -106,33 +95,10 @@ final class WindowsKeyboard {
 		event_queue.putEvent(tmp_event);
 	}
 
-	private boolean checkShiftKey(int virt_key, byte state) {
-		int key_state = (GetKeyState(virt_key) >>> 15) & 0x1;
-		int lwjgl_code = WindowsKeycodes.mapVirtualKeyToLWJGLCode(virt_key);
-		return (key_down_buffer[lwjgl_code] == 1 - state) && (key_state == state);
-	}
-
-	private int translateShift(int scan_code, byte state) {
-		if (checkShiftKey(WindowsKeycodes.VK_LSHIFT, state)) {
-			return WindowsKeycodes.VK_LSHIFT;
-		} else if (checkShiftKey(WindowsKeycodes.VK_RSHIFT, state)) {
-			return WindowsKeycodes.VK_RSHIFT;
-		} else {
-			if (scan_code== 0x2A)
-				return WindowsKeycodes.VK_LSHIFT;
-			else {
-				if (scan_code == 0x36)
-					return WindowsKeycodes.VK_RSHIFT;
-				else
-					return WindowsKeycodes.VK_LSHIFT;
-			}
-		}
-	}
-
-	private int translateExtended(int virt_key, int scan_code, byte state, boolean extended) {
+	private static int translateExtended(int virt_key, int scan_code, boolean extended) {
 		switch (virt_key) {
 			case WindowsKeycodes.VK_SHIFT:
-				return translateShift(scan_code, state);
+				return scan_code == 0x36 ? WindowsKeycodes.VK_RSHIFT : WindowsKeycodes.VK_LSHIFT;
 			case WindowsKeycodes.VK_CONTROL:
 				return extended ? WindowsKeycodes.VK_RCONTROL : WindowsKeycodes.VK_LCONTROL;
 			case WindowsKeycodes.VK_MENU:
@@ -153,8 +119,12 @@ final class WindowsKeyboard {
 		return (state & 1) == 1;
 	}
 
-	public void handleKey(int virt_key, int scan_code, boolean extended, byte event_state, long millis, boolean repeat) {
-		virt_key = translateExtended(virt_key, scan_code, event_state, extended);
+	private static boolean isKeyPressedAsync(int virt_key) {
+		return (GetAsyncKeyState(virt_key) & 0x8000) != 0;
+	}
+
+	void handleKey(int virt_key, int scan_code, boolean extended, byte event_state, long millis, boolean repeat) {
+		virt_key = translateExtended(virt_key, scan_code, extended);
 		if ( !repeat && isKeyPressed(event_state) == isKeyPressed(virt_key_down_buffer[virt_key]) )
 			return;
 
@@ -172,15 +142,14 @@ final class WindowsKeyboard {
 		retained_repeat = repeat;
 	}
 
-
-	public void fireLostKeyEvents() {
+	void fireLostKeyEvents() {
 		for ( int i = 0; i < virt_key_down_buffer.length; i++ ) {
-			if ( isKeyPressed(virt_key_down_buffer[i]) && (GetAsyncKeyState(i) & 0x8000) == 0 )
-				handleKey(i, 0, false, (byte)0, System.currentTimeMillis(), false);
+			if ( isKeyPressed(virt_key_down_buffer[i]) && !isKeyPressedAsync(i) )
+				handleKey(i, 0, false, (byte)0, 0L, false);
 		}
 	}
 
-	public void handleChar(int event_char, long millis, boolean repeat) {
+	void handleChar(int event_char, long millis, boolean repeat) {
 		if (has_retained_event && retained_char != 0)
 			flushRetained();
 		if (!has_retained_event) {
@@ -189,7 +158,7 @@ final class WindowsKeyboard {
 			retained_char = event_char;
 	}
 
-	public void read(ByteBuffer buffer) {
+	void read(ByteBuffer buffer) {
 		flushRetained();
 		event_queue.copyEvents(buffer);
 	}
