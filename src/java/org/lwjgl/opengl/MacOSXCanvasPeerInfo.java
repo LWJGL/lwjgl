@@ -37,7 +37,11 @@ import java.awt.event.ComponentListener;
 import java.awt.Insets;
 import java.awt.Container;
 import java.awt.Component;
+import java.awt.Point;
+import java.awt.Window;
 import java.nio.ByteBuffer;
+
+import javax.swing.SwingUtilities;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
@@ -100,21 +104,25 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 			}
 
 			public void componentMoved(ComponentEvent e) {
-				Insets insets = getInsets(component);
+				Insets insets = getWindowInsets(component);
 				
 				int top = insets != null ? insets.top : 0;
 				int left = insets != null ? insets.left : 0;
 				
-				nSetLayerPosition(getHandle(), component.getX()-left, component.getY()-top);
+				Point p = SwingUtilities.convertPoint(component, component.getLocation(), null);
+	            
+				nSetLayerPosition(getHandle(), (int)p.getX()-left, (int)p.getY()-top);
 			}
 
 			public void componentResized(ComponentEvent e) {
-				Insets insets = getInsets(component);
+				Insets insets = getWindowInsets(component);
 				
 				int top = insets != null ? insets.top : 0;
 				int left = insets != null ? insets.left : 0;
 				
-				nSetLayerPosition(getHandle(), component.getX()-left, component.getY()-top);
+				Point p = SwingUtilities.convertPoint(component, component.getLocation(), null);
+	            
+				nSetLayerPosition(getHandle(), (int)p.getX()-left, (int)p.getY()-top);
 			}
 
 			public void componentShown(ComponentEvent e) {
@@ -127,6 +135,24 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 		};
 		
 		component.addComponentListener(comp);
+	}
+	
+	/**
+	 * Return the Insets of the Window holding the Canvas
+	 */
+	private Insets getWindowInsets(Canvas canvas) {
+		Container parent = canvas.getParent();
+
+		while (parent != null) {
+			if(parent instanceof Window || parent instanceof java.applet.Applet) {
+				return parent.getInsets();
+			}
+			
+			parent = parent.getParent();
+		}
+		
+		// if no parent Window or Applet found, return null
+		return null;
 	}
 	
 	private static native ByteBuffer nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle, ByteBuffer window_handle, boolean forceCALayer, int x, int y) throws LWJGLException;
