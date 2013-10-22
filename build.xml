@@ -33,6 +33,7 @@
 		<mkdir dir="${lwjgl.temp}/native/windows"   taskname="initialiazing temp/windows folder" />
 		<mkdir dir="${lwjgl.temp}/native/linux"     taskname="initialiazing temp/linux folder" />
 		<mkdir dir="${lwjgl.temp}/native/freebsd"   taskname="initialiazing temp/freebsd folder" />
+		<mkdir dir="${lwjgl.temp}/native/openbsd"   taskname="initialiazing temp/openbsd folder" />
 		<mkdir dir="${lwjgl.temp}/native/macosx"    taskname="initialiazing temp/macosx folder" />
 		<mkdir dir="${lwjgl.temp}/native/solaris"   taskname="initialiazing temp/solaris folder" />
 	</target>
@@ -244,6 +245,11 @@
 				<patternset refid="lwjgl-freebsd.fileset" />
 			</fileset>
 		</copy>
+		<copy todir="${lwjgl.temp}/native/openbsd" failonerror="false">
+			<fileset dir="${lwjgl.lib}/openbsd">
+				<patternset refid="lwjgl-openbsd.fileset" />
+			</fileset>
+		</copy>
 		<copy todir="${lwjgl.temp}/native/macosx">
 			<fileset dir="${lwjgl.lib}/macosx">
 				<patternset refid="lwjgl-macosx.fileset" />
@@ -418,6 +424,8 @@
 			lwjgl.native.linux.version = ${lwjgl.native.linux.version}
 			lwjgl.java.freebsd.version = ${lwjgl.java.linux.version}
 			lwjgl.native.freebsd.version = ${lwjgl.native.linux.version}
+			lwjgl.java.openbsd.version = ${lwjgl.java.linux.version}
+			lwjgl.native.openbsd.version = ${lwjgl.native.linux.version}
 			lwjgl.java.macosx.version = ${lwjgl.java.macosx.version}
 			lwjgl.native.macosx.version = ${lwjgl.native.macosx.version}
 		</echo>
@@ -482,6 +490,11 @@
 		</condition>
 		<antcall target="-compile_native_freebsd" />
 
+		<condition property="lwjgl.platform.openbsd">
+			<os name="OpenBSD" />
+		</condition>
+		<antcall target="-compile_native_openbsd" />
+
 		<condition property="lwjgl.platform.solaris">
 			<os name="SunOS" />
 		</condition>
@@ -518,6 +531,15 @@
 			<fileset dir="${lwjgl.bin}/lwjgl" includes="liblwjgl*.so"/>
 		</copy>
 	</target>
+
+	<!-- Compiles LWJGL on OpenBSD platforms -->
+	<target name="-compile_native_openbsd" if="lwjgl.platform.openbsd">
+		<ant antfile="platform_build/bsd_ant/build.xml" inheritAll="false"/>
+		<copy todir="${lwjgl.lib}/openbsd">
+			<fileset dir="${lwjgl.bin}/lwjgl" includes="liblwjgl*.so"/>
+		</copy>
+	</target>
+
 
 	<!-- Compiles LWJGL on solaris platforms -->
 	<target name="-compile_native_solaris" if="lwjgl.platform.solaris">
