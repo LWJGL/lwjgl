@@ -114,6 +114,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerPosit
 	}
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerBounds
+(JNIEnv *env, jclass clazz, jobject peer_info_handle, jint x, jint y, jint width, jint height) {
+	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	
+	if (peer_info->glLayer != nil) {
+		NSRect rect = NSMakeRect(x, y, width, height);
+		NSValue *value = [NSValue valueWithRect:rect];
+		[peer_info->glLayer performSelectorOnMainThread:@selector(updateBounds:) withObject:value waitUntilDone:NO];
+	}
+}
+
 @implementation GLLayer
 
 - (void) attachLayer {
@@ -155,6 +166,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerPosit
 - (void)updatePosition:(NSValue*)value {
 	NSPoint point = [value pointValue];
 	self.position = CGPointMake(point.x, self.superlayer.bounds.size.height - point.y - self.bounds.size.height);
+}
+
+- (void)updateBounds:(NSValue*)value {
+	NSRect rect = [value rectValue];
+	self.frame = CGRectMake(rect.origin.x, self.superlayer.bounds.size.height - rect.origin.y - self.bounds.size.height, rect.size.width, rect.size.height);
 }
 
 - (int) getWidth {

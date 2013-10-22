@@ -104,25 +104,37 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 			}
 
 			public void componentMoved(ComponentEvent e) {
-				Insets insets = getWindowInsets(component);
+				Point componentPosition = SwingUtilities.convertPoint(component, component.getLocation(), null);
+				Point parentPosition = SwingUtilities.convertPoint(component.getParent(), component.getLocation(), null);
 				
-				int top = insets != null ? insets.top : 0;
-				int left = insets != null ? insets.left : 0;
-				
-				Point p = SwingUtilities.convertPoint(component, component.getLocation(), null);
-	            
-				nSetLayerPosition(getHandle(), (int)p.getX()-left, (int)p.getY()-top);
+				if (componentPosition.getX() == parentPosition.getX() && componentPosition.getY() == parentPosition.getY()) {
+					Insets insets = getWindowInsets(component);
+					
+					int top = insets != null ? insets.top : 0;
+					int left = insets != null ? insets.left : 0;
+					
+					nSetLayerBounds(getHandle(), (int)componentPosition.getX()-left, (int)componentPosition.getY()-top, component.getWidth(), component.getHeight());
+				}
+				else {
+					nSetLayerPosition(getHandle(), component.getX(), component.getY());
+				}
 			}
 
 			public void componentResized(ComponentEvent e) {
-				Insets insets = getWindowInsets(component);
+				Point componentPosition = SwingUtilities.convertPoint(component, component.getLocation(), null);
+				Point parentPosition = SwingUtilities.convertPoint(component.getParent(), component.getLocation(), null);
 				
-				int top = insets != null ? insets.top : 0;
-				int left = insets != null ? insets.left : 0;
-				
-				Point p = SwingUtilities.convertPoint(component, component.getLocation(), null);
-	            
-				nSetLayerPosition(getHandle(), (int)p.getX()-left, (int)p.getY()-top);
+				if (componentPosition.getX() == parentPosition.getX() && componentPosition.getY() == parentPosition.getY()) {
+					Insets insets = getWindowInsets(component);
+					
+					int top = insets != null ? insets.top : 0;
+					int left = insets != null ? insets.left : 0;
+					
+					nSetLayerBounds(getHandle(), (int)componentPosition.getX()-left, (int)componentPosition.getY()-top, component.getWidth(), component.getHeight());
+				}
+				else {
+					nSetLayerPosition(getHandle(), component.getX(), component.getY());
+				}
 			}
 
 			public void componentShown(ComponentEvent e) {
@@ -135,6 +147,16 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 		};
 		
 		component.addComponentListener(comp);
+	}
+	
+	private static native ByteBuffer nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle, ByteBuffer window_handle, boolean forceCALayer, int x, int y) throws LWJGLException;
+
+	private static native void nSetLayerPosition(ByteBuffer peer_info_handle, int x, int y);
+	
+	private static native void nSetLayerBounds(ByteBuffer peer_info_handle, int x, int y, int width, int height);
+	
+	protected void doUnlock() throws LWJGLException {
+		awt_surface.unlock();
 	}
 	
 	/**
@@ -153,14 +175,6 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 		
 		// if no parent Window or Applet found, return null
 		return null;
-	}
-	
-	private static native ByteBuffer nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle, ByteBuffer window_handle, boolean forceCALayer, int x, int y) throws LWJGLException;
-
-	private static native void nSetLayerPosition(ByteBuffer peer_info_handle, int x, int y);
-	
-	protected void doUnlock() throws LWJGLException {
-		awt_surface.unlock();
 	}
 	
 	private Insets getInsets(Canvas component) {
