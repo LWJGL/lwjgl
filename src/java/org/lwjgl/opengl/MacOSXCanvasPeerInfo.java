@@ -125,7 +125,8 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 				int top = insets != null ? insets.top : 0;
 				int left = insets != null ? insets.left : 0;
 				
-				nSetLayerPosition(getHandle(), component.getX() - left, component.getY() - top);
+				//nSetLayerPosition(getHandle(), component.getX() - left, component.getY() - top);
+				nSetLayerBounds(getHandle(), component.getX() - left, component.getY() - top, component.getWidth(), component.getHeight());
 			}
 
 			public void componentResized(ComponentEvent e) {
@@ -150,7 +151,8 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 				int top = insets != null ? insets.top : 0;
 				int left = insets != null ? insets.left : 0;
 				
-				nSetLayerPosition(getHandle(), component.getX() - left, component.getY() - top);
+				//nSetLayerPosition(getHandle(), component.getX() - left, component.getY() - top);
+				nSetLayerBounds(getHandle(), component.getX() - left, component.getY() - top, component.getWidth(), component.getHeight());
 			}
 
 			public void componentShown(ComponentEvent e) {
