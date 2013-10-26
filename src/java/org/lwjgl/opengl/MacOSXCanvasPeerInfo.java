@@ -104,37 +104,53 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 			}
 
 			public void componentMoved(ComponentEvent e) {
-				Point componentPosition = SwingUtilities.convertPoint(component, component.getLocation(), null);
-				Point parentPosition = SwingUtilities.convertPoint(component.getParent(), component.getLocation(), null);
 				
-				if (componentPosition.getX() == parentPosition.getX() && componentPosition.getY() == parentPosition.getY()) {
-					Insets insets = getWindowInsets(component);
+				if (SwingUtilities.getWindowAncestor(component.getParent()) != null) {
+					Point componentPosition = SwingUtilities.convertPoint(component, component.getLocation(), null);
+					Point parentPosition = SwingUtilities.convertPoint(component.getParent(), component.getLocation(), null);
 					
-					int top = insets != null ? insets.top : 0;
-					int left = insets != null ? insets.left : 0;
-					
-					nSetLayerBounds(getHandle(), (int)componentPosition.getX()-left, (int)componentPosition.getY()-top, component.getWidth(), component.getHeight());
+					if (componentPosition.getX() == parentPosition.getX() && componentPosition.getY() == parentPosition.getY()) {
+						Insets insets = getWindowInsets(component);
+						
+						int top = insets != null ? insets.top : 0;
+						int left = insets != null ? insets.left : 0;
+						
+						nSetLayerBounds(getHandle(), (int)componentPosition.getX()-left, (int)componentPosition.getY()-top, component.getWidth(), component.getHeight());
+						return;
+					}
 				}
-				else {
-					nSetLayerPosition(getHandle(), component.getX(), component.getY());
-				}
+				
+				Insets insets = getInsets(component);
+				
+				int top = insets != null ? insets.top : 0;
+				int left = insets != null ? insets.left : 0;
+				
+				nSetLayerPosition(getHandle(), component.getX() - left, component.getY() - top);
 			}
 
 			public void componentResized(ComponentEvent e) {
-				Point componentPosition = SwingUtilities.convertPoint(component, component.getLocation(), null);
-				Point parentPosition = SwingUtilities.convertPoint(component.getParent(), component.getLocation(), null);
 				
-				if (componentPosition.getX() == parentPosition.getX() && componentPosition.getY() == parentPosition.getY()) {
-					Insets insets = getWindowInsets(component);
+				if (SwingUtilities.getWindowAncestor(component.getParent()) != null) {
+					Point componentPosition = SwingUtilities.convertPoint(component, component.getLocation(), null);
+					Point parentPosition = SwingUtilities.convertPoint(component.getParent(), component.getLocation(), null);
 					
-					int top = insets != null ? insets.top : 0;
-					int left = insets != null ? insets.left : 0;
-					
-					nSetLayerBounds(getHandle(), (int)componentPosition.getX()-left, (int)componentPosition.getY()-top, component.getWidth(), component.getHeight());
+					if (componentPosition.getX() == parentPosition.getX() && componentPosition.getY() == parentPosition.getY()) {
+						Insets insets = getWindowInsets(component);
+						
+						int top = insets != null ? insets.top : 0;
+						int left = insets != null ? insets.left : 0;
+						
+						nSetLayerBounds(getHandle(), (int)componentPosition.getX()-left, (int)componentPosition.getY()-top, component.getWidth(), component.getHeight());
+						return;
+					}
 				}
-				else {
-					nSetLayerPosition(getHandle(), component.getX(), component.getY());
-				}
+				
+				Insets insets = getInsets(component);
+				
+				int top = insets != null ? insets.top : 0;
+				int left = insets != null ? insets.left : 0;
+				
+				nSetLayerPosition(getHandle(), component.getX() - left, component.getY() - top);
 			}
 
 			public void componentShown(ComponentEvent e) {
