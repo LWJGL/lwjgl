@@ -187,11 +187,11 @@ static void setWindowTitle(Display *disp, Window window, jlong title, jint len) 
 					len);
 }
 
-static void setClassHint(Display *disp, Window window, jlong title) {
+static void setClassHint(Display *disp, Window window, jlong wm_name, jlong wm_class) {
 	XClassHint* hint = XAllocClassHint();
 	
-	hint->res_name = (const unsigned char *)(intptr_t)title;
-	hint->res_class = (const unsigned char *)(intptr_t)title;
+	hint->res_name = (const unsigned char *)(intptr_t)wm_name;
+	hint->res_class = (const unsigned char *)(intptr_t)wm_class;
 	
 	XSetClassHint(disp, window, hint);
 	
@@ -224,7 +224,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetTitle(JNIEnv * env
 	Display *disp = (Display *)(intptr_t)display;
 	Window window = (Window)window_ptr;
 	setWindowTitle(disp, window, title, len);
-	setClassHint(disp, window, title);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetClassHint(JNIEnv * env, jclass clazz, jlong display, jlong window_ptr, jlong wm_name, jlong wm_class) {
+	Display *disp = (Display *)(intptr_t)display;
+	Window window = (Window)window_ptr;
+	setClassHint(disp, window, wm_name, wm_class);
 }
 
 static void freeIconPixmap(Display *disp) {

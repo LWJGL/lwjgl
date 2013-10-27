@@ -1048,6 +1048,15 @@ public final class Display {
 			}
 		});
 	}
+	
+	/** Gets a string property as a privileged action. */
+	static String getPrivilegedString(final String property_name) {
+		return AccessController.doPrivileged(new PrivilegedAction<String>() {
+			public String run() {
+				return System.getProperty(property_name);
+			}
+		});
+	}
 
 	private static void initControls() {
 		// Automatically create mouse, keyboard and controller

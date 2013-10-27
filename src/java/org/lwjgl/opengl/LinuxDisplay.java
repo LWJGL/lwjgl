@@ -159,6 +159,8 @@ final class LinuxDisplay implements DisplayImplementation {
 
 	private LinuxKeyboard keyboard;
 	private LinuxMouse mouse;
+	
+	private String wm_class;
 
 	private final FocusListener focus_listener = new FocusListener() {
 		public void focusGained(FocusEvent e) {
@@ -460,15 +462,18 @@ final class LinuxDisplay implements DisplayImplementation {
 				ByteBuffer handle = peer_info.lockAndGetHandle();
 				try {
 					current_window_mode = getWindowMode(Display.isFullscreen());
+					
 					// Try to enable Lecagy FullScreen Support in Compiz, else
 					// we may have trouble with stuff overlapping our fullscreen window.
 					if ( current_window_mode != WINDOWED )
 						Compiz.setLegacyFullscreenSupport(true);
+					
 					// Setting _MOTIF_WM_HINTS in fullscreen mode is problematic for certain window
 					// managers. We do not set MWM_HINTS_DECORATIONS in fullscreen mode anymore,
 					// unless org.lwjgl.opengl.Window.undecorated_fs has been specified.
 					// See native/linux/org_lwjgl_opengl_Display.c, createWindow function.
 					boolean undecorated = Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated") || (current_window_mode != WINDOWED && Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated_fs"));
+					
 					this.parent = parent;
 					parent_window = parent != null ? getHandle(parent) : getRootWindow(getDisplay(), getDefaultScreen());
 					resizable = Display.isResizable();
@@ -477,7 +482,14 @@ final class LinuxDisplay implements DisplayImplementation {
 					window_y = y;
 					window_width = mode.getWidth();
 					window_height = mode.getHeight();
+					
 					current_window = nCreateWindow(getDisplay(), getDefaultScreen(), handle, mode, current_window_mode, x, y, undecorated, parent_window, resizable);
+					
+					// Set the WM_CLASS hint which is needed by some WM's e.g. Gnome Shell
+					wm_class = Display.getPrivilegedString("LWJGL_WM_CLASS");
+					if (wm_class == null) wm_class = Display.getTitle();
+					setClassHint(Display.getTitle(), wm_class);
+					
 					mapRaised(getDisplay(), current_window);
 					xembedded = parent != null && isAncestorXEmbedded(parent_window);
 					blank_cursor = createBlankCursor();
@@ -761,8 +773,25 @@ final class LinuxDisplay implements DisplayImplementation {
 		} finally {
 			unlockAWT();
 		}
+		
+		// also update the class hint value as some WM's use it for the window title
+		if (Display.isCreated()) setClassHint(title, wm_class);
 	}
 	private static native void nSetTitle(long display, long window, long title, int len);
+	
+	/** the WM_CLASS hint is needed by some WM's e.g. gnome shell */
+	private void setClassHint(String wm_name, String wm_class) {
+		lockAWT();
+		try {
+			final ByteBuffer nameText = MemoryUtil.encodeUTF8(wm_name);
+			final ByteBuffer classText = MemoryUtil.encodeUTF8(wm_class);
+			
+			nSetClassHint(getDisplay(), getWindow(), MemoryUtil.getAddress(nameText), MemoryUtil.getAddress(classText));
+		} finally {
+			unlockAWT();
+		}
+	}
+	private static native void nSetClassHint(long display, long window, long wm_name, long wm_class);
 
 	public boolean isCloseRequested() {
 		boolean result = close_requested;
