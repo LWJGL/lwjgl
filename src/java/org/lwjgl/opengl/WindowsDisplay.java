@@ -1189,6 +1189,8 @@ final class WindowsDisplay implements DisplayImplementation {
 		return false;
 	}
 
+	public void setClassHint(String res_name, String res_class) {};
+
 	private static final class Rect {
 		public int top;
 		public int bottom;

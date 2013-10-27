@@ -123,6 +123,15 @@ public final class Display {
 	/** Initial Background Color of Display */
 	private static float r, g, b;
 
+	/**
+	 * X11 hint.
+	 */
+	private static String res_name = "LWJGL";
+	/**
+	 * X11 hint.
+	 */
+	private static String res_class = "org-lwjgl-opengl-Display";
+
 	private static final ComponentListener component_listener = new ComponentAdapter() {
 		public void componentResized(ComponentEvent e) {
 			synchronized ( GlobalLock.lock ) {
@@ -318,6 +327,8 @@ public final class Display {
 		} else {
 			setIcon(new ByteBuffer[] { LWJGLUtil.LWJGLIcon32x32, LWJGLUtil.LWJGLIcon16x16 });
 		}
+
+		setClassHint(res_name, res_class);
 	}
 
 	private static void releaseDrawable() {
@@ -1338,5 +1349,19 @@ public final class Display {
 		}
 
 		return height;
+	}
+
+	/**
+	 * Sets the class hint given to X11. On platforms not utilizing an X11
+	 * display server this method should do nothing.
+	 */
+	public static void setClassHint(String res_name, String res_class) {
+		synchronized (GlobalLock.lock) {
+			Display.res_name = res_name;
+			Display.res_class = res_class;
+			if (Display.isCreated()) {
+				display_impl.setClassHint(res_name, res_class);
+			}
+		}
 	}
 }
