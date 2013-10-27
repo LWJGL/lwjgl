@@ -53,6 +53,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Cursor;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.MemoryUtil;
 import org.lwjgl.LWJGLException;
@@ -434,11 +436,14 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public int getMinCursorSize() {
-		return AWTUtil.getMinCursorSize();
+		return 1;
 	}
 
 	public int getMaxCursorSize() {
-		return AWTUtil.getMaxCursorSize();
+		// as there is no max cursor size limit on OS X
+		// return the max cursor size as half the screen resolution
+		DisplayMode dm = Display.getDesktopDisplayMode();
+		return Math.min(dm.getWidth(), dm.getHeight()) / 2;
 	}
 
 	/* Keyboard */
