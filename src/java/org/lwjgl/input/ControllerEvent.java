@@ -31,6 +31,8 @@
  */
 package org.lwjgl.input;
 
+import org.lwjgl.Sys;
+
 /**
  * An event occuring on a controller.
  *
@@ -52,12 +54,18 @@ class ControllerEvent {
 	private int index;
 	/** Type of control that generated the event */
 	private int type;
+	/** True when a button is pressed, if this event was caused by the button */
+	private boolean buttonState;
 	/** True if this event was caused by the x axis */
 	private boolean xaxis;
 	/** True if this event was caused by the y axis */
 	private boolean yaxis;
 	/** The time stamp of this event */
 	private long timeStamp;
+	/** The value on a specified axis, if this event was caused by the x-axis */
+	private float xaxisValue;
+	/** The value on a specified axis, if this event was caused by the y-axis */
+	private float yaxisValue;
 
 	/**
 	 * Create a new event
@@ -70,12 +78,32 @@ class ControllerEvent {
 	 * @param yaxis True if this event was caused by the y-axis
 	 */
 	ControllerEvent(Controller source,long timeStamp, int type,int index,boolean xaxis,boolean yaxis) {
+		this(source, timeStamp, type, index, false, xaxis, yaxis, 0, 0);
+	}
+
+	/**
+	 * Create a new event
+	 *
+	 * @param source The source of the event
+	 * @param timeStamp The time stamp given for this event
+	 * @param type The type of control generating this event
+	 * @param index The index of the input that generated the event
+	 * @param buttonState True when a button is pressed, if this event was caused by the button
+	 * @param xaxis True if this event was caused by the x-axis
+	 * @param yaxis True if this event was caused by the y-axis
+	 * @param xaxisValue The value on a specified axis, if this event was caused by the x-axis
+	 * @param yaxisValue The value on a specified axis, if this event was caused by the y-axis
+	 */
+	ControllerEvent(Controller source,long timeStamp, int type,int index,boolean buttonState,boolean xaxis,boolean yaxis,float xaxisValue,float yaxisValue) {
 		this.source = source;
 		this.timeStamp = timeStamp;
 		this.type = type;
 		this.index = index;
+		this.buttonState = buttonState;
 		this.xaxis = xaxis;
 		this.yaxis = yaxis;
+		this.xaxisValue = xaxisValue;
+		this.yaxisValue = yaxisValue;
 	}
 
 	/**
@@ -113,6 +141,15 @@ class ControllerEvent {
 	 */
 	public boolean isButton() {
 		return type == BUTTON;
+	}
+
+	/**
+	 * Check the button is pressed or not, when this event was caused
+	 *  
+	 * @return True when a button is pressed, if this event was caused by the button
+	 */
+	public boolean getButtonState() {
+		return buttonState;
 	}
 
 	/**
@@ -158,6 +195,24 @@ class ControllerEvent {
 	 */
 	public boolean isYAxis() {
 		return yaxis;
+	}
+	
+	/**
+	 * Get the value on an X axis when this event was caused
+	 *  
+	 * @return The value on a specified axis, if this event was caused by the x-axis
+	 */
+	public float getXAxisValue() {
+		return xaxisValue;
+	}
+
+	/**
+	 * Get the value on an Y axis when this event was caused
+	 *  
+	 * @return The value on a specified axis, if this event was caused by the y-axis
+	 */
+	public float getYAxisValue() {
+		return yaxisValue;
 	}
 
 	/*
