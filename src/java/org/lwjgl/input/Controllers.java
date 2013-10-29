@@ -269,11 +269,11 @@ public class Controllers {
 	}
 
 	/**
-	 * Check the button is pressed or not at the current event
+	 * Gets the state of the button that generated the current event
 	 *  
-	 * @return True when a button is pressed at the current event
+	 * @return True if button was down, or false if released
 	 */
-	public static boolean getEventButtonStatus() {
+	public static boolean getEventButtonState() {
 		return event.getButtonState();
 	}
 

@@ -31,8 +31,6 @@
  */
 package org.lwjgl.input;
 
-import org.lwjgl.Sys;
-
 /**
  * An event occuring on a controller.
  *
