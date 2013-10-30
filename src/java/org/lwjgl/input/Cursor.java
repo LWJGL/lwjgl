@@ -33,10 +33,10 @@ package org.lwjgl.input;
 
 import java.nio.IntBuffer;
 
+import org.lwjgl.BufferChecks;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
-import org.lwjgl.NondirectBufferWrapper;
 import org.lwjgl.Sys;
 
 /**
@@ -86,9 +86,9 @@ public class Cursor {
 		synchronized (OpenGLPackageAccess.global_lock) {
 			if ((getCapabilities() & CURSOR_ONE_BIT_TRANSPARENCY) == 0)
 				throw new LWJGLException("Native cursors not supported");
-			images = NondirectBufferWrapper.wrapBuffer(images, width*height*numImages);
+			BufferChecks.checkBufferSize(images, width*height*numImages);
 			if (delays != null)
-				delays = NondirectBufferWrapper.wrapBuffer(delays, numImages);
+				BufferChecks.checkBufferSize(delays, numImages);
 			if (!Mouse.isCreated())
 				throw new IllegalStateException("Mouse must be created before creating cursor objects");
 			if (width*height*numImages > images.remaining())
