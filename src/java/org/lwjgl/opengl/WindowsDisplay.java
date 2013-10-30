@@ -376,11 +376,6 @@ final class WindowsDisplay implements DisplayImplementation {
 				restoreDisplayMode();
 			}
 			if (parent == null) {
-				if(maximized) {
-					showWindow(getHwnd(), SW_MAXIMIZE);
-				} else {
-					showWindow(getHwnd(), SW_RESTORE);
-				}
 				setForegroundWindow(getHwnd());
 			}
 			setFocus(getHwnd());
