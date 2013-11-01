@@ -29,7 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl;
+package net.donizyo.basket.test;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -67,7 +67,7 @@ public final class BufferUtils {
 	 * @return a ShortBuffer
 	 */
 	public static ShortBuffer createShortBuffer(int size) {
-		return createByteBuffer(size << 1).asShortBuffer();
+		return createByteBuffer(size * Short.SIZE / Byte.SIZE).asShortBuffer();
 	}
 
 	/**
@@ -77,7 +77,7 @@ public final class BufferUtils {
 	 * @return an CharBuffer
 	 */
 	public static CharBuffer createCharBuffer(int size) {
-		return createByteBuffer(size << 1).asCharBuffer();
+		return createByteBuffer(size * Character.SIZE / Byte.SIZE).asCharBuffer();
 	}
 
 	/**
@@ -87,7 +87,7 @@ public final class BufferUtils {
 	 * @return an IntBuffer
 	 */
 	public static IntBuffer createIntBuffer(int size) {
-		return createByteBuffer(size << 2).asIntBuffer();
+		return createByteBuffer(size * Integer.SIZE / Byte.SIZE).asIntBuffer();
 	}
 
 	/**
@@ -97,7 +97,7 @@ public final class BufferUtils {
 	 * @return an LongBuffer
 	 */
 	public static LongBuffer createLongBuffer(int size) {
-		return createByteBuffer(size << 3).asLongBuffer();
+		return createByteBuffer(size * Long.SIZE / Byte.SIZE).asLongBuffer();
 	}
 
 	/**
@@ -107,7 +107,7 @@ public final class BufferUtils {
 	 * @return a FloatBuffer
 	 */
 	public static FloatBuffer createFloatBuffer(int size) {
-		return createByteBuffer(size << 2).asFloatBuffer();
+		return createByteBuffer(size * Float.SIZE / Byte.SIZE).asFloatBuffer();
 	}
 
 	/**
@@ -117,7 +117,7 @@ public final class BufferUtils {
 	 * @return a FloatBuffer
 	 */
 	public static DoubleBuffer createDoubleBuffer(int size) {
-		return createByteBuffer(size << 3).asDoubleBuffer();
+		return createByteBuffer(size * Double.SIZE / Byte.SIZE).asDoubleBuffer();
 	}
 
 	/**
