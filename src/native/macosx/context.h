@@ -118,6 +118,7 @@ typedef struct {
 	JAWT_Rectangle canvasBounds;
 	MacOSXWindowInfo *window_info;
 	bool setViewport;
+	bool autoResizable;
 	
 	@private
 	CGLContextObj contextObject;

@@ -63,6 +63,8 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 
 	protected void initHandle(Canvas component) throws LWJGLException {
 		boolean forceCALayer = true;
+		boolean autoResizable = true; // set the CALayer to autoResize
+		
 		String javaVersion = System.getProperty("java.version");
 		
 		if (javaVersion.startsWith("1.5") || javaVersion.startsWith("1.6")) {
@@ -71,13 +73,16 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 			// where the older cocoaViewRef NSView method maybe be available.
 			forceCALayer = false;
 		}
+		else if (javaVersion.startsWith("1.7")) {
+			autoResizable = false;
+		}
 		
 		Insets insets = getInsets(component);
 		
 		int top = insets != null ? insets.top : 0;
 		int left = insets != null ? insets.left : 0;
 		
-		window_handle = nInitHandle(awt_surface.lockAndGetHandle(component), getHandle(), window_handle, forceCALayer, component.getX()-left, component.getY()-top);
+		window_handle = nInitHandle(awt_surface.lockAndGetHandle(component), getHandle(), window_handle, forceCALayer, autoResizable, component.getX()-left, component.getY()-top);
 		
 		if (javaVersion.startsWith("1.7")) {
 			// fix for CALayer position not covering Canvas due to a Java 7 bug
@@ -187,7 +192,7 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 		component.addComponentListener(comp);
 	}
 	
-	private static native ByteBuffer nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle, ByteBuffer window_handle, boolean forceCALayer, int x, int y) throws LWJGLException;
+	private static native ByteBuffer nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle, ByteBuffer window_handle, boolean forceCALayer, boolean autoResizable, int x, int y) throws LWJGLException;
 
 	private static native void nSetLayerPosition(ByteBuffer peer_info_handle, int x, int y);
 	

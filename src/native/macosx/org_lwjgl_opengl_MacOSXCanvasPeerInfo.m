@@ -48,7 +48,7 @@
 #include "common_tools.h"
 
 JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
-(JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle, jobject window_handle, jboolean forceCALayer, jint x, jint y) {
+(JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle, jobject window_handle, jboolean forceCALayer, jboolean autoResizable, jint x, jint y) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
@@ -79,7 +79,8 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 			peer_info->glLayer->canvasBounds = (JAWT_Rectangle)surface->dsi->bounds;
 			peer_info->window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 			peer_info->glLayer->window_info = peer_info->window_info;
-            
+			peer_info->glLayer->autoResizable = autoResizable;
+
 			// ensure the CALayer size is correct, needed for Java 7+
             peer_info->glLayer.frame = CGRectMake(x, y, peer_info->glLayer->canvasBounds.width, peer_info->glLayer->canvasBounds.height);
 			
@@ -131,7 +132,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerBound
 	self.asynchronous = YES;
 	self.needsDisplayOnBoundsChange = YES;
 	self.opaque = NO;
-	self.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
+	if (autoResizable) {
+		self.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
+	}
+	else {
+		self.autoresizingMask = kCALayerNotSizable;
+	}
 	
 	// get root layer of the AWT Canvas and add self to it
 	id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;
