@@ -83,6 +83,26 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 			// fix for CALayer position not covering Canvas due to a Java 7 bug
 			// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7172187
 			addComponentListener(component);
+			
+			if (SwingUtilities.getWindowAncestor(component.getParent()) != null) {
+				Point componentPosition = SwingUtilities.convertPoint(component, component.getLocation(), null);
+				Point parentPosition = SwingUtilities.convertPoint(component.getParent(), component.getLocation(), null);
+				
+				if (componentPosition.getX() == parentPosition.getX() && componentPosition.getY() == parentPosition.getY()) {
+					insets = getWindowInsets(component);
+					
+					top = insets != null ? insets.top : 0;
+					left = insets != null ? insets.left : 0;
+					
+					int x = (int)componentPosition.getX()-left;
+					int y = (int)-componentPosition.getY()+top-component.getHeight();
+					
+					int width = component.getWidth();
+					int height = component.getHeight();
+					
+					nSetLayerBounds(getHandle(), x, y, width, height);
+				}
+			}
 		}
 	}
 	

@@ -52,13 +52,13 @@
 
 enum {
 	NSControlLeftKeyMask =      0x0001,
-    NSControlRightKeyMask =     0x2000,
-    NSShiftLeftKeyMask =        0x0002,
-    NSShiftRightKeyMask =       0x0004,
-    NSCommandLeftKeyMask =		0x0008,
+	NSControlRightKeyMask =     0x2000,
+	NSShiftLeftKeyMask =        0x0002,
+	NSShiftRightKeyMask =       0x0004,
+	NSCommandLeftKeyMask =		0x0008,
 	NSCommandRightKeyMask =		0x0010,
-    NSAlternateLeftKeyMask =    0x0020,
-    NSAlternateRightKeyMask =   0x0040
+	NSAlternateLeftKeyMask =    0x0020,
+	NSAlternateRightKeyMask =   0x0040
 };
 
 @class NSOpenGLContext, NSOpenGLPixelFormat, MacOSXOpenGLView, MacOSXKeyableWindow;
