@@ -60,6 +60,8 @@ static MacOSXPeerInfo *peer_info;
 static bool leftMouseDown = false;
 static bool rightMouseDown = false;
 
+static NSUInteger lastModifierFlags = 0;
+
 @implementation MacOSXKeyableWindow
 
 + (void) createWindow {
@@ -309,34 +311,51 @@ static bool rightMouseDown = false;
 	}
 	long time = [event timestamp] * 1000000000;
 
+	NSUInteger modifierFlags = [event modifierFlags];
+	unsigned short keyCode = [event keyCode];
+    
 	NSUInteger mask = ~0;
-	switch([event keyCode]) {
-		case kVK_Control     : mask = 0x0001; break;
-		case kVK_Shift       : mask = 0x0002; break;
-		case kVK_RightShift  : mask = 0x0004; break;
-		case kVK_Command     : mask = 0x0008; break;
-		case 0x36            : mask = 0x0010; break; // Should be: kVK_RightCommand -- missing O.o
-		case kVK_Option      : mask = 0x0020; break;
-		case kVK_RightOption : mask = 0x0040; break;
-		case kVK_RightControl: mask = 0x2000; break;
+	
+	switch(keyCode) {
+		case kVK_Control     : mask = NSControlLeftKeyMask; break;
+		case kVK_Shift       : mask = NSShiftLeftKeyMask; break;
+		case kVK_RightShift  : mask = NSShiftRightKeyMask; break;
+		case kVK_Command     : mask = NSCommandLeftKeyMask; break;
+		case 0x36            : mask = NSCommandRightKeyMask; break; // Should be: kVK_RightCommand -- missing O.o
+		case kVK_Option      : mask = NSAlternateLeftKeyMask; break;
+		case kVK_RightOption : mask = NSAlternateRightKeyMask; break;
+		case kVK_RightControl: mask = NSControlRightKeyMask; break;
 		case kVK_CapsLock    : mask = NSAlphaShiftKeyMask; break;
 		case kVK_Function    : mask = NSFunctionKeyMask; break;
 		// case 0x??            : mask = NSNumericPadKeyMask; break; // Didn't have the keycode for this one :(
 		default:
-			NSLog(@"Unknown modifier with keycode: %d\n", [event keyCode]);
-			return;
+			// key code not specified when left Command key + Tab moves focus to another Window, therefore manually detect and specify correct key code
+			if (((lastModifierFlags & NSCommandLeftKeyMask) == NSCommandLeftKeyMask) && ((modifierFlags & NSCommandLeftKeyMask) != NSCommandLeftKeyMask)) {
+				keyCode = kVK_Command; // left command key code
+			}
+			// key code not specified when right Command key + Tab moves focus to another Window, therefore manually detect and specify correct key code
+			else if (((lastModifierFlags & NSCommandLeftKeyMask) == NSCommandLeftKeyMask) && ((modifierFlags & NSCommandLeftKeyMask) != NSCommandLeftKeyMask)) {
+				keyCode = 0x36; // right command key code
+			}
+			else {
+				NSLog(@"Unknown modifier with keycode: %d\n", [event keyCode]);
+				return;
+			}
 	}
 
+	// save current modifierFlags for next use
+	lastModifierFlags = [event modifierFlags];
+    
 	jclass keyboard_class = (*env)->GetObjectClass(env, _parent->jkeyboard);
 
 	jmethodID keyMethod;
-	if (([event modifierFlags] & mask) == mask) {
+	if ((modifierFlags & mask) == mask) {
 		keyMethod = (*env)->GetMethodID(env, keyboard_class, "keyPressed", "(ILjava/lang/String;J)V");
 	} else {
 		keyMethod = (*env)->GetMethodID(env, keyboard_class, "keyReleased", "(ILjava/lang/String;J)V");
 	}
 
-	(*env)->CallVoidMethod(env, _parent->jkeyboard, keyMethod, [event keyCode], NULL, time);
+	(*env)->CallVoidMethod(env, _parent->jkeyboard, keyMethod, keyCode, NULL, time);
 }
 
 - (void)mouseButtonState:(NSEvent *)event :(int)button :(int)state {
