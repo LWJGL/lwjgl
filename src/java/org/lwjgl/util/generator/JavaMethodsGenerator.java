@@ -599,22 +599,6 @@ public class JavaMethodsGenerator {
 		}
 	}
 
-	private static void printNondirectParameterCopies(PrintWriter writer, MethodDeclaration method, Mode mode) {
-		for (ParameterDeclaration param : method.getParameters()) {
-			Class java_type = Utils.getJavaType(param.getType());
-			if (Utils.isAddressableType(java_type) &&
-					(mode != Mode.BUFFEROBJECT || param.getAnnotation(BufferObject.class) == null) &&
-					(mode != Mode.AUTOS || getAutoTypeParameter(method, param) == null) &&
-					param.getAnnotation(Result.class) == null) {
-				if (Buffer.class.isAssignableFrom(java_type)) {
-					boolean out_parameter = param.getAnnotation(OutParameter.class) != null;
-					if (out_parameter)
-						writer.println("\t\tNondirectBufferWrapper.copy(" + param.getSimpleName() + ", " + param.getSimpleName() + SAVED_PARAMETER_POSTFIX + ");");
-				}
-			}
-		}
-	}
-
 	private static void printParameterChecks(PrintWriter writer, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos, Mode mode, final boolean generate_error_checks) {
 		if ( mode == Mode.NORMAL ) {
 			final GenerateAutos gen_autos_annotation = method.getAnnotation(GenerateAutos.class);
@@ -650,10 +634,9 @@ public class JavaMethodsGenerator {
 					can_be_null = check_annotation.canBeNull();
 				}
 				if ((Buffer.class.isAssignableFrom(java_type) || PointerBuffer.class.isAssignableFrom(java_type)) && param.getAnnotation(Constant.class) == null) {
-					boolean indirect_buffer_allowed = false && param.getAnnotation(CachedReference.class) == null; // DISABLED: indirect buffer support
 					boolean out_parameter = param.getAnnotation(OutParameter.class) != null;
 					TypeInfo typeinfo = typeinfos.get(param);
-					printParameterCheck(writer, method, param.getSimpleName(), typeinfo.getType().getSimpleName(), check_value, can_be_null, param.getAnnotation(NullTerminated.class), indirect_buffer_allowed, out_parameter, generate_error_checks);
+					printParameterCheck(writer, method, param.getSimpleName(), typeinfo.getType().getSimpleName(), check_value, can_be_null, param.getAnnotation(NullTerminated.class), out_parameter, generate_error_checks);
 				} else if ( String.class.equals(java_type)) {
 					if (!can_be_null)
 						writer.println("\t\tBufferChecks.checkNotNull(" + param.getSimpleName() + ");");
@@ -664,13 +647,10 @@ public class JavaMethodsGenerator {
 			}
 		}
 		if (method.getAnnotation(CachedResult.class) != null)
-			printParameterCheck(writer, method, Utils.CACHED_BUFFER_NAME, null, null, true, null, false, false, generate_error_checks);
+			printParameterCheck(writer, method, Utils.CACHED_BUFFER_NAME, null, null, true, null, false, generate_error_checks);
 	}
 
-	private static void printParameterCheck(PrintWriter writer, MethodDeclaration method, String name, String type, String check_value, boolean can_be_null, NullTerminated null_terminated, boolean indirect_buffer_allowed, boolean out_parameter, final boolean generate_error_checks) {
-		if (indirect_buffer_allowed && out_parameter) {
-			writer.println("\t\t" + type + " " + name + SAVED_PARAMETER_POSTFIX + " = " + name + ";");
-		}
+	private static void printParameterCheck(PrintWriter writer, MethodDeclaration method, String name, String type, String check_value, boolean can_be_null, NullTerminated null_terminated, boolean out_parameter, boolean generate_error_checks) {
 		String tabs;
 		if (can_be_null) {
 			writer.print("\t\tif (" + name + " != null)");
@@ -681,12 +661,7 @@ public class JavaMethodsGenerator {
 			tabs = "\t\t\t";
 		} else
 			tabs = "\t\t";
-		if (indirect_buffer_allowed) {
-			writer.print(tabs + name + " = NondirectBufferWrapper.wrap");
-			if (out_parameter)
-				writer.print("NoCopy");
-		} else
-			writer.print(tabs + "BufferChecks.check");
+		writer.print(tabs + "BufferChecks.check");
 		if (check_value != null && check_value.length() > 0) {
 			writer.print("Buffer");
 			if ( "Buffer".equals(type) )

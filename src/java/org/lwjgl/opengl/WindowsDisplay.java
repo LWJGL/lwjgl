@@ -270,15 +270,10 @@ final class WindowsDisplay implements DisplayImplementation {
 				parent.addFocusListener(parent_focus_tracker = new FocusAdapter() {
 					public void focusGained(FocusEvent e) {
 						parent_focused.set(true);
-
-						// This is needed so that the last focused component AWT remembers is NOT our Canvas
-						WindowsDisplay.this.parent.setFocusable(false);
-						WindowsDisplay.this.parent.setFocusable(true);
-
-						// Clear AWT focus owner
-						KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
+						clearAWTFocus();
 					}
 				});
+				clearAWTFocus();
 			}
 			grabFocus();
 		} catch (LWJGLException e) {
@@ -376,11 +371,6 @@ final class WindowsDisplay implements DisplayImplementation {
 				restoreDisplayMode();
 			}
 			if (parent == null) {
-				if(maximized) {
-					showWindow(getHwnd(), SW_MAXIMIZE);
-				} else {
-					showWindow(getHwnd(), SW_RESTORE);
-				}
 				setForegroundWindow(getHwnd());
 			}
 			setFocus(getHwnd());
@@ -401,6 +391,15 @@ final class WindowsDisplay implements DisplayImplementation {
 	private static native void showWindow(long hwnd, int mode);
 	private static native void setForegroundWindow(long hwnd);
 	private static native void setFocus(long hwnd);
+
+	private void clearAWTFocus() {
+		// This is needed so that the last focused component AWT remembers is NOT our Canvas
+		WindowsDisplay.this.parent.setFocusable(false);
+		WindowsDisplay.this.parent.setFocusable(true);
+
+		// Clear AWT focus owner
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
+	}
 
 	private void grabFocus() {
 		if ( parent == null )

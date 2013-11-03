@@ -262,10 +262,37 @@ public class Controllers {
 	/**
 	 * Get the timestamp assigned to the current event
 	 *
-	 * @return The timestamp assigned ot the current event
+	 * @return The timestamp assigned to the current event
 	 */
 	public static long getEventNanoseconds() {
 		return event.getTimeStamp();
+	}
+
+	/**
+	 * Gets the state of the button that generated the current event
+	 *  
+	 * @return True if button was down, or false if released
+	 */
+	public static boolean getEventButtonState() {
+		return event.getButtonState();
+	}
+
+	/**
+	 * Get the value on an X axis of the current event 
+	 *  
+	 * @return The value on a x axis of the current event
+	 */
+	public static float getEventXAxisValue() {
+		return event.getXAxisValue();
+	}
+
+	/**
+	 * Get the value on an Y axis of the current event 
+	 *  
+	 * @return The value on a y axis of the current event
+	 */
+	public static float getEventYAxisValue() {
+		return event.getYAxisValue();
 	}
 
 	/**
