@@ -96,7 +96,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		
 	}
 
-	private native ByteBuffer nCreateWindow(int x, int y, int width, int height, boolean fullscreen, boolean undecorated, boolean resizable, boolean parented, ByteBuffer peer_info_handle, ByteBuffer window_handle) throws LWJGLException;
+	private native ByteBuffer nCreateWindow(int x, int y, int width, int height, boolean fullscreen, boolean undecorated, boolean resizable, boolean parented, boolean enableFullscreenModeAPI, ByteBuffer peer_info_handle, ByteBuffer window_handle) throws LWJGLException;
 
 	private native Object nGetCurrentDisplayMode();
 	
@@ -131,6 +131,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 		boolean resizable = Display.isResizable();
 		boolean parented = (parent != null) && !fullscreen;
 		
+		// OS X fullscreen mode API is only available on OS X 10.7+
+		boolean enableFullscreenModeAPI = LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 7) && parent == null &&
+											Display.getPrivilegedBoolean("org.lwjgl.opengl.Display.enableOSXFullscreenModeAPI");
+		
 		if (parented) this.canvas = parent;
 		else this.canvas = null;
 		
@@ -145,7 +149,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 			
 			window = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(),
 					fullscreen, isUndecorated(), resizable,
-					parented, peer_handle, window_handle);
+					parented, enableFullscreenModeAPI, peer_handle, window_handle);
             
 			if (fullscreen) {
 				// when going to fullscreen viewport is set to screen size by Cocoa, ignore this value

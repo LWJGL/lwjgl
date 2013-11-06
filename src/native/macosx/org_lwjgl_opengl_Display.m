@@ -122,7 +122,7 @@ static NSUInteger lastModifierFlags = 0;
 		// enter fullscreen mode
 		[window_info->view enterFullScreenMode: [NSScreen mainScreen] withOptions: nil ];
 		window_info->window = [window_info->view window];
-		
+        
 		// adjust the NSView bounds to correct mouse coordinates in fullscreen
 		NSSize windowSize = [window_info->window frame].size;
 		NSSize newBounds = NSMakeSize(windowSize.width/width*windowSize.width, windowSize.height/height*windowSize.height);
@@ -132,9 +132,18 @@ static NSUInteger lastModifierFlags = 0;
 	// Inform the view of its parent window info;
 	[window_info->view setParent:window_info];
 	
+	if (window_info->enableFullscreenModeAPI) {
+		// manually create OS X 10.7+ mask to allow compilation on previous OS X versions
+		NSUInteger NSWindowCollectionBehaviorFullScreenPrimary = 1 << 7;
+		[window_info->window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
+	}
+	
 	[window_info->window makeFirstResponder:window_info->view];
 	[window_info->window setInitialFirstResponder:window_info->view];
 	[window_info->window makeKeyAndOrderFront:[NSApplication sharedApplication]];
+	
+	// call method using runtime selector as its a 10.7+ api and allows compiling on older SDK's
+	//[window_info->window performSelector:NSSelectorFromString(@"toggleFullScreen:") withObject:nil];
 }
 
 + (void) destroyWindow {
@@ -616,7 +625,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetTitle(JNIEnv *env
 	[window_info->window performSelectorOnMainThread:@selector(setTitle:) withObject:title waitUntilDone:NO];
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIEnv *env, jobject this, jint x, jint y, jint width, jint height, jboolean fullscreen, jboolean undecorated, jboolean resizable, jboolean parented, jobject peer_info_handle, jobject window_handle) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIEnv *env, jobject this, jint x, jint y, jint width, jint height, jboolean fullscreen, jboolean undecorated, jboolean resizable, jboolean parented, jboolean enableFullscreenModeAPI, jobject peer_info_handle, jobject window_handle) {
 	
 	pool = [[NSAutoreleasePool alloc] init];
 	
@@ -627,6 +636,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 		window_info->fullscreen = fullscreen;
 		window_info->undecorated = undecorated;
 		window_info->parented = parented;
+        window_info->enableFullscreenModeAPI = enableFullscreenModeAPI;
 		
 		return window_handle;
 	}
@@ -645,6 +655,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	window_info->undecorated = undecorated;
 	window_info->resizable = resizable;
 	window_info->parented = parented;
+    window_info->enableFullscreenModeAPI = enableFullscreenModeAPI;
 	
 	peer_info->window_info = window_info;
 	peer_info->isWindowed = true;

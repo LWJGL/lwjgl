@@ -80,6 +80,7 @@ typedef struct {
 	jboolean undecorated;
 	jboolean resizable;
 	jboolean parented;
+    jboolean enableFullscreenModeAPI;
 	
     jboolean resized;
 	
