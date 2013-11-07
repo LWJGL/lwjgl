@@ -273,7 +273,11 @@ final class WindowsDisplay implements DisplayImplementation {
 						clearAWTFocus();
 					}
 				});
-				clearAWTFocus();
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						clearAWTFocus();
+					}
+				});
 			}
 			grabFocus();
 		} catch (LWJGLException e) {
