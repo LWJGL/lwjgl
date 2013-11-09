@@ -1202,7 +1202,7 @@ public final class Display {
 	 * <li>Linux (and similar platforms) expect one 32x32 icon.</li>
 	 * <li>Mac OS X should be supplied one 128x128 icon</li>
 	 * </ul>
-	 * The implementation will use the supplied ByteBuffers with image data in RGBA and perform any conversions nescesarry for the specific platform.
+	 * The implementation will use the supplied ByteBuffers with image data in RGBA (size must be a power of two) and perform any conversions nescesarry for the specific platform.
 	 * <p/>
 	 * <b>NOTE:</b> The display will make a deep copy of the supplied byte buffer array, for the purpose
 	 * of recreating the icons when you go back and forth fullscreen mode. You therefore only need to

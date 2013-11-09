@@ -45,6 +45,7 @@ import java.awt.event.FocusEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.ByteOrder;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -1331,50 +1332,58 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void releaseTexImageFromPbuffer(PeerInfo handle, int buffer) {
 		throw new UnsupportedOperationException();
 	}
-
-	private static ByteBuffer convertIcon(ByteBuffer icon, int width, int height) {
-		ByteBuffer icon_rgb = BufferUtils.createByteBuffer(icon.capacity());
-		int x;
-		int y;
-		byte r,g,b;
-
-		int depth = 4;
-
-		for (y = 0; y < height; y++) {
-			for (x = 0; x < width; x++) {
-				r = icon.get((x*4)+(y*width*4));
-				g = icon.get((x*4)+(y*width*4)+1);
-				b = icon.get((x*4)+(y*width*4)+2);
-
-				icon_rgb.put((x*depth)+(y*width*depth), b); // blue
-				icon_rgb.put((x*depth)+(y*width*depth)+1, g); // green
-				icon_rgb.put((x*depth)+(y*width*depth)+2, r);
+	
+	/**
+	 * This method will convert icon bytebuffers into a single bytebuffer
+	 * as the icon format required by _NET_WM_ICON should be in a cardinal
+	 * 32 bit ARGB format i.e. all icons in a single buffer the data starting
+	 * with 32 bit width & height followed by the color data as 32bit ARGB.
+	 * 
+	 * @param icons Array of icons in RGBA format
+	 */
+	private static ByteBuffer convertIcons(ByteBuffer[] icons) {
+		
+		int bufferSize = 0;
+		
+		// calculate size of bytebuffer
+		for ( ByteBuffer icon : icons ) {
+			int size = icon.limit() / 4;
+			int dimension = (int)Math.sqrt(size);
+			if ( dimension > 0 ) {
+				bufferSize += 2 * 4; // add 32 bit width & height, 4 bytes each
+				bufferSize += dimension * dimension * 4;
 			}
 		}
-		return icon_rgb;
-	}
-
-	private static ByteBuffer convertIconMask(ByteBuffer icon, int width, int height) {
-		ByteBuffer icon_mask = BufferUtils.createByteBuffer((icon.capacity()/4)/8);
-		int x;
-		int y;
-		byte a;
-
-		int depth = 4;
-
-		for (y = 0; y < height; y++) {
-			for (x = 0; x < width; x++) {
-				a = icon.get((x*4)+(y*width*4)+3);
-
-				int mask_index = x + y*width;
-				int mask_byte_index = mask_index/8;
-				int mask_bit_index = mask_index%8;
-				byte bit = (((int)a) & 0xff) >= 127 ? (byte)1 : (byte)0;
-				byte new_byte = (byte)((icon_mask.get(mask_byte_index) | (bit<<mask_bit_index)) & 0xff);
-				icon_mask.put(mask_byte_index, new_byte);
+		
+		if (bufferSize == 0) return null;
+		
+		ByteBuffer icon_argb = BufferUtils.createByteBuffer(bufferSize);//icon.capacity()+(2*4));
+		icon_argb.order(ByteOrder.BIG_ENDIAN);
+		
+		for ( ByteBuffer icon : icons ) {
+			int size = icon.limit() / 4;
+			int dimension = (int)Math.sqrt(size);
+			
+			icon_argb.putInt(dimension); // width
+			icon_argb.putInt(dimension); // height
+			
+			for (int y = 0; y < dimension; y++) {
+				for (int x = 0; x < dimension; x++) {
+					
+					byte r = icon.get((x*4)+(y*dimension*4));
+					byte g = icon.get((x*4)+(y*dimension*4)+1);
+					byte b = icon.get((x*4)+(y*dimension*4)+2);
+					byte a = icon.get((x*4)+(y*dimension*4)+3);
+					
+					icon_argb.put(a);
+					icon_argb.put(r);
+					icon_argb.put(g);
+					icon_argb.put(b);
+				}
 			}
 		}
-		return icon_mask;
+		
+		return icon_argb;
 	}
 
 	/**
@@ -1394,17 +1403,11 @@ final class LinuxDisplay implements DisplayImplementation {
 		try {
 			incDisplay();
 			try {
-				for ( ByteBuffer icon : icons ) {
-					int size = icon.limit() / 4;
-					int dimension = (int)Math.sqrt(size);
-					if ( dimension > 0 ) {
-						ByteBuffer icon_rgb = convertIcon(icon, dimension, dimension);
-						ByteBuffer icon_mask = convertIconMask(icon, dimension, dimension);
-						nSetWindowIcon(getDisplay(), getWindow(), icon_rgb, icon_rgb.capacity(), icon_mask, icon_mask.capacity(), dimension, dimension);
-						return 1;
-					}
-				}
-				return 0;
+				// get icons as cardinal ARGB format
+				ByteBuffer icons_data = convertIcons(icons);
+				if (icons_data == null) return 0;
+				nSetWindowIcon(getDisplay(), getWindow(), icons_data, icons_data.capacity());//, icon_mask, icon_mask.capacity(), dimension, dimension);
+				return icons.length;
 			} finally {
 				decDisplay();
 			}
@@ -1416,7 +1419,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		}
 	}
 
-	private static native void nSetWindowIcon(long display, long window, ByteBuffer icon_rgb, int icon_rgb_size, ByteBuffer icon_mask, int icon_mask_size, int width, int height);
+	private static native void nSetWindowIcon(long display, long window, ByteBuffer icons_data, int icons_size);
 
 	public int getX() {
 		return window_x;
