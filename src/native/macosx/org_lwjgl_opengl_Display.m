@@ -132,7 +132,7 @@ static NSUInteger lastModifierFlags = 0;
 	// Inform the view of its parent window info;
 	[window_info->view setParent:window_info];
 	
-	if (window_info->enableFullscreenModeAPI) {
+	if (window_info->enableFullscreenModeAPI && window_info->resizable) {
 		// manually create OS X 10.7+ mask to allow compilation on previous OS X versions
 		NSUInteger NSWindowCollectionBehaviorFullScreenPrimary = 1 << 7;
 		[window_info->window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
@@ -141,9 +141,6 @@ static NSUInteger lastModifierFlags = 0;
 	[window_info->window makeFirstResponder:window_info->view];
 	[window_info->window setInitialFirstResponder:window_info->view];
 	[window_info->window makeKeyAndOrderFront:[NSApplication sharedApplication]];
-	
-	// call method using runtime selector as its a 10.7+ api and allows compiling on older SDK's
-	//[window_info->window performSelector:NSSelectorFromString(@"toggleFullScreen:") withObject:nil];
 }
 
 + (void) destroyWindow {
@@ -599,6 +596,24 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetResizable(JNIEnv 
 		style_mask &= ~NSResizableWindowMask;
 	}
 	[window_info->window setStyleMask:style_mask];
+
+	if (window_info->enableFullscreenModeAPI) {
+		if (resizable) {
+			// manually create OS X 10.7+ mask to allow compilation on previous OS X versions
+			NSUInteger NSWindowCollectionBehaviorFullScreenPrimary = 1 << 7;
+			[window_info->window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
+		}
+		else {
+			// manually create OS X 10.7+ mask to allow compilation on previous OS X versions
+			NSUInteger NSFullScreenWindowMask = 1 << 14;
+			// on disabling resizing exit fullscreen mode exit otherwise will be stuck in it
+			if ((style_mask & NSFullScreenWindowMask) == NSFullScreenWindowMask) {
+				// call method using runtime selector as its a 10.7+ api and allows compiling on older SDK's
+				[window_info->window performSelector:NSSelectorFromString(@"toggleFullScreen:") withObject:nil];
+			}
+			[window_info->window setCollectionBehavior:NSWindowCollectionBehaviorDefault];
+		}
+	}
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGetX(JNIEnv *env, jobject this, jobject window_handle) {
