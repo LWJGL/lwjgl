@@ -133,7 +133,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		
 		// OS X fullscreen mode API is only available on OS X 10.7+
 		boolean enableFullscreenModeAPI = LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 7) && parent == null &&
-											Display.getPrivilegedBoolean("org.lwjgl.opengl.Display.enableOSXFullscreenModeAPI");
+											!Display.getPrivilegedBoolean("org.lwjgl.opengl.Display.disableOSXFullscreenModeAPI");
 		
 		if (parented) this.canvas = parent;
 		else this.canvas = null;
