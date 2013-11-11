@@ -1191,6 +1191,10 @@ final class WindowsDisplay implements DisplayImplementation {
 		}
 		return false;
 	}
+	
+	public float getPixelScaleFactor() {
+		return 1f;
+	}
 
 	private static final class Rect {
 		public int top;

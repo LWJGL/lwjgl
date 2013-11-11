@@ -622,5 +622,9 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public boolean wasResized() {
 		return nWasResized(window);
 	}
+	
+	public float getPixelScaleFactor() {
+		return 1f;
+	}
 
 }

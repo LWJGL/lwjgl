@@ -192,4 +192,9 @@ interface DisplayImplementation extends InputImplementation {
 	 * @return this method will return the top-left y position of the Display window.
 	 */
 	int getY();
+	
+	/**
+	 * @return this method will return the pixel scale factor of the Display window useful for high resolution modes.
+	 */
+	float getPixelScaleFactor();
 }
