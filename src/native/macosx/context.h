@@ -64,36 +64,38 @@ enum {
 @class NSOpenGLContext, NSOpenGLPixelFormat, MacOSXOpenGLView, MacOSXKeyableWindow;
 
 typedef struct {
-    MacOSXKeyableWindow *window;
-    
-    NSRect display_rect;
+	MacOSXKeyableWindow *window;
+
+	NSRect display_rect;
 
 	MacOSXOpenGLView *view;
-    NSOpenGLContext *context;
-    
-    // Native objects for Java callbacks
-    jobject jdisplay;
-    jobject jmouse;
-    jobject jkeyboard;
+	NSOpenGLContext *context;
+	
+	// Native objects for Java callbacks
+	jobject jdisplay;
+	jobject jmouse;
+	jobject jkeyboard;
 	
 	jboolean fullscreen;
 	jboolean undecorated;
 	jboolean resizable;
 	jboolean parented;
-    jboolean enableFullscreenModeAPI;
+
+	jboolean enableFullscreenModeAPI;
+	jboolean enableHighDPI;
 	
-    jboolean resized;
+	jboolean resized;
 	
 } MacOSXWindowInfo;
 
 @interface MacOSXOpenGLView : NSView
 {
-    @public
-    MacOSXWindowInfo*       _parent;
-    
-    @private
-    NSOpenGLContext*        _openGLContext;
-    NSOpenGLPixelFormat*    _pixelFormat;
+	@public
+	MacOSXWindowInfo*       _parent;
+
+	@private
+	NSOpenGLContext*        _openGLContext;
+	NSOpenGLPixelFormat*    _pixelFormat;
 	NSTrackingArea *		_trackingArea;
 }
 
@@ -141,9 +143,9 @@ typedef struct {
 typedef struct {
 	bool isCALayer;
 	bool isWindowed;
-    MacOSXWindowInfo *window_info;
+	MacOSXWindowInfo *window_info;
 	NSOpenGLPixelFormat *pixel_format;
-    NSOpenGLPixelBuffer *pbuffer;
+	NSOpenGLPixelBuffer *pbuffer;
 	NSView *parent;
 	GLLayer *glLayer;
 } MacOSXPeerInfo;

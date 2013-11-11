@@ -73,6 +73,11 @@ static NSUInteger lastModifierFlags = 0;
 	NSRect view_rect = NSMakeRect(0.0, 0.0, width, height);
 	window_info->view = [[MacOSXOpenGLView alloc] initWithFrame:view_rect pixelFormat:peer_info->pixel_format];
 	[window_info->view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+
+	if (window_info->enableHighDPI) {
+		// call method using runtime selector as its a 10.7+ api and allows compiling on older SDK's
+		[window_info->view performSelector:NSSelectorFromString(@"setWantsBestResolutionOpenGLSurface:") withObject:YES];
+	}
 	
 	// set nsapp delegate for catching app quit events
 	[NSApp setDelegate:window_info->view];
@@ -640,7 +645,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nSetTitle(JNIEnv *env
 	[window_info->window performSelectorOnMainThread:@selector(setTitle:) withObject:title waitUntilDone:NO];
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIEnv *env, jobject this, jint x, jint y, jint width, jint height, jboolean fullscreen, jboolean undecorated, jboolean resizable, jboolean parented, jboolean enableFullscreenModeAPI, jobject peer_info_handle, jobject window_handle) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIEnv *env, jobject this, jint x, jint y, jint width, jint height, jboolean fullscreen, jboolean undecorated, jboolean resizable, jboolean parented, jboolean enableFullscreenModeAPI, jboolean enableHighDPI, jobject peer_info_handle, jobject window_handle) {
 	
 	pool = [[NSAutoreleasePool alloc] init];
 	
@@ -670,7 +675,8 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	window_info->undecorated = undecorated;
 	window_info->resizable = resizable;
 	window_info->parented = parented;
-    window_info->enableFullscreenModeAPI = enableFullscreenModeAPI;
+	window_info->enableFullscreenModeAPI = enableFullscreenModeAPI;
+	window_info->enableHighDPI = enableHighDPI;
 	
 	peer_info->window_info = window_info;
 	peer_info->isWindowed = true;
