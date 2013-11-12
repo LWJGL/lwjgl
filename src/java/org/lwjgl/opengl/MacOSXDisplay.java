@@ -91,6 +91,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private boolean updateNativeCursor = false;
 	
 	private long currentNativeCursor = 0;
+	
+	private boolean enableHighDPI = false;
+	
+	private float scaleFactor = 1.0f;
 
 	MacOSXDisplay() {
 		
@@ -136,7 +140,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 											!Display.getPrivilegedBoolean("org.lwjgl.opengl.Display.disableOSXFullscreenModeAPI");
 		
 		// OS X high DPI mode is only available on OS X 10.7+
-		boolean enableHighDPI = LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 7) && parent == null &&
+		enableHighDPI = LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 7) && parent == null &&
 											Display.getPrivilegedBoolean("org.lwjgl.opengl.Display.enableHighDPI");
 		
 		if (parented) this.canvas = parent;
@@ -190,6 +194,12 @@ final class MacOSXDisplay implements DisplayImplementation {
 			mouseInsideWindow = inside;
 		}
 		updateNativeCursor = true;
+	}
+	
+	public void setScaleFactor(float scale) {
+		synchronized (this) {
+			scaleFactor = scale;
+		}
 	}
 
 	public native void nDestroyCALayer(ByteBuffer peer_info_handle);
@@ -624,7 +634,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 	
 	public float getPixelScaleFactor() {
-		return 1f;
+		return (enableHighDPI && !Display.isFullscreen()) ? scaleFactor : 1f;
 	}
 
 }

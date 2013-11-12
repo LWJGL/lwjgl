@@ -74,6 +74,9 @@ static NSUInteger lastModifierFlags = 0;
 	window_info->view = [[MacOSXOpenGLView alloc] initWithFrame:view_rect pixelFormat:peer_info->pixel_format];
 	[window_info->view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 
+    // Inform the view of its parent window info;
+	[window_info->view setParent:window_info];
+	
 	if (window_info->enableHighDPI) {
 		// call method using runtime selector as its a 10.7+ api and allows compiling on older SDK's
 		[window_info->view performSelector:NSSelectorFromString(@"setWantsBestResolutionOpenGLSurface:") withObject:YES];
@@ -133,9 +136,6 @@ static NSUInteger lastModifierFlags = 0;
 		NSSize newBounds = NSMakeSize(windowSize.width/width*windowSize.width, windowSize.height/height*windowSize.height);
 		[window_info->view setBoundsSize:newBounds];
 	}
-	
-	// Inform the view of its parent window info;
-	[window_info->view setParent:window_info];
 	
 	if (window_info->enableFullscreenModeAPI && window_info->resizable) {
 		// manually create OS X 10.7+ mask to allow compilation on previous OS X versions
@@ -497,6 +497,30 @@ static NSUInteger lastModifierFlags = 0;
 		_parent->display_rect = [self frame];
 		_parent->resized = JNI_TRUE;
 	}
+}
+
+- (void)viewDidChangeBackingProperties {
+	JNIEnv *env = attachCurrentThread();
+	if (env == nil || _parent == nil || _parent->jdisplay == nil) {
+		return;
+	}
+	
+	jclass display_class = (*env)->GetObjectClass(env, _parent->jdisplay);
+	jmethodID setScaleFactor_callback = (*env)->GetMethodID(env, display_class, "setScaleFactor", "(F)V");
+	
+	CGFloat scaleFactor;
+	
+	// call method using runtime selector as its a 10.7+ api and allows compiling on older SDK's
+	SEL selector = NSSelectorFromString(@"backingScaleFactor");
+	
+	// as we are using a runtime selector, we need to use NSInvocations to get a CGFloat value back from it
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[[[self window] class] instanceMethodSignatureForSelector:selector]];
+	[invocation setSelector:selector];
+	[invocation setTarget:[self window]];
+	[invocation invoke];
+	[invocation getReturnValue:&scaleFactor];
+	
+	(*env)->CallVoidMethod(env, _parent->jdisplay, setScaleFactor_callback, scaleFactor);
 }
 
 -(void)updateTrackingAreas {

@@ -23,3 +23,6 @@ Whether to create an undecorated window (no title bar)
 
 org.lwjgl.input.Mouse.allowNegativeMouseCoords
 Usually mouse is clamped to 0,0 - setting this to true will cause you to get negative values if dragging outside and below or left of window
+
+org.lwjgl.opengl.Display.enableHighDPI
+Enable high DPI mode where available

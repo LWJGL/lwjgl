@@ -1358,8 +1358,9 @@ public final class Display {
 	 * not be scaled to match the Display window size.
 	 * 
 	 * OpenGL methods that require pixel dependent values e.g. glViewport, glTexImage2D,
-	 * glReadPixels, etc can convert the scaled Display and Mouse coordinates to the 
-	 * correct high resolution value by multiplying them by the pixel scale factor.
+	 * glReadPixels, glScissor, glLineWidth, glRenderbufferStorage, etc can convert the 
+	 * scaled Display and Mouse coordinates to the correct high resolution value by 
+	 * multiplying them by the pixel scale factor.
 	 * 
 	 * e.g. Display.getWidth() * Display.getPixelScaleFactor() will return the high DPI
 	 * width of the OpenGL frame buffer. Whereas Display.getWidth() will be the same as
