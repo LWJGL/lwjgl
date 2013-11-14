@@ -141,7 +141,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		
 		// OS X high DPI mode is only available on OS X 10.7+
 		enableHighDPI = LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 7) && parent == null &&
-											Display.getPrivilegedBoolean("org.lwjgl.opengl.Display.enableHighDPI");
+											(Display.getPrivilegedBoolean("org.lwjgl.opengl.Display.enableHighDPI") || fullscreen);
 		
 		if (parented) this.canvas = parent;
 		else this.canvas = null;
