@@ -158,6 +158,11 @@
 			<fileset refid="lwjgl_util_applet.fileset" />
 			<manifest>
 				<attribute name="Sealed" value="true"/>
+				<attribute name="Trusted-Library" value="true"/>
+				<attribute name="Permissions" value="all-permissions"/>
+				<attribute name="Codebase" value="*"/>
+				<attribute name="Caller-Allowable-Codebase" value="*"/>
+				<attribute name="Application-Library-Allowable-Codebase" value="true"/>
 			</manifest>
 		</jar>
 
