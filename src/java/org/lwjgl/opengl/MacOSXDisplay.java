@@ -277,6 +277,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public DisplayMode[] getAvailableDisplayModes() throws LWJGLException {
 		List<DisplayMode> modes = new ArrayList<DisplayMode>();
 		nGetDisplayModes(modes); // will populate the above list
+		modes.add(Display.getDesktopDisplayMode()); // add desktop resolution as scaled resolutions do not appear
 		return modes.toArray(new DisplayMode[modes.size()]);
 	}
 
