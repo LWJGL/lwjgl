@@ -95,7 +95,7 @@ jobjectArray getAvailableDisplayModes(JNIEnv * env) {
 		while(EnumDisplaySettings((const char *) DisplayDevice.DeviceName, j++, &DevMode) != 0) {*/
 		while(EnumDisplaySettings(NULL, j++, &DevMode) != 0) {
 			// Filter out indexed modes
-			if (DevMode.dmBitsPerPel > 8 && ChangeDisplaySettings(&DevMode, CDS_FULLSCREEN | CDS_TEST) == DISP_CHANGE_SUCCESSFUL) {
+			if (DevMode.dmBitsPerPel > 8) {
 				jobject displayMode;
 				if (list_size <= n) {
 					list_size += 1;
