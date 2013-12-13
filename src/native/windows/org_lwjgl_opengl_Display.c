@@ -245,10 +245,10 @@ static void copyBufferToRect(JNIEnv *env, jobject buffer_handle, RECT *rect) {
 		throwFormattedRuntimeException(env, "Buffer size < 4", size);
 		return;
 	}
-	rect->top = buffer[0];
-	rect->bottom = buffer[1];
-	rect->left = buffer[2];
-	rect->right = buffer[3];
+	rect->left = buffer[0];
+	rect->top = buffer[1];
+	rect->right = buffer[2];
+	rect->bottom = buffer[3];
 }
 
 static void copyRectToBuffer(JNIEnv *env, RECT *rect, jobject buffer_handle) {
@@ -258,10 +258,10 @@ static void copyRectToBuffer(JNIEnv *env, RECT *rect, jobject buffer_handle) {
 		throwFormattedRuntimeException(env, "Buffer size < 4", size);
 		return;
 	}
-	buffer[0] = rect->top;
-	buffer[1] = rect->bottom;
-	buffer[2] = rect->left;
-	buffer[3] = rect->right;
+	buffer[0] = rect->left;
+	buffer[1] = rect->top;
+	buffer[2] = rect->right;
+	buffer[3] = rect->bottom;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_clipCursor(JNIEnv *env, jclass unused, jobject handle_buffer) {

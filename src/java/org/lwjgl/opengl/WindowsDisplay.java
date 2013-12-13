@@ -43,6 +43,8 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.lang.reflect.Method;
 import java.nio.*;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.lwjgl.LWJGLException;
@@ -196,7 +198,6 @@ final class WindowsDisplay implements DisplayImplementation {
 	private boolean inAppActivate;
 	private boolean resized;
 	private boolean resizable;
-	private boolean maximized;
 	private int x;
 	private int y;
 	private int width;
@@ -212,6 +213,8 @@ final class WindowsDisplay implements DisplayImplementation {
 	private int captureMouse = -1;
         private boolean trackingMouse;
         private boolean mouseInside;
+
+	private List<Runnable> deferredActions = new ArrayList<Runnable>();
 
 	static {
 		try {
@@ -232,12 +235,14 @@ final class WindowsDisplay implements DisplayImplementation {
 		isMinimized = false;
 		isFocused = false;
 		redoMakeContextCurrent = false;
-		maximized = false;
 		this.parent = parent;
 		hasParent = parent != null;
 		parent_hwnd = parent != null ? getHwnd(parent) : 0;
 		this.hwnd = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(), Display.isFullscreen() || isUndecorated(), parent != null, parent_hwnd);
-		this.resizable=false;
+		if ( Display.isResizable() && parent == null ) {
+			setResizable(true, false);
+		}
+
 		if (hwnd == 0) {
 			throw new LWJGLException("Failed to create window");
 		}
@@ -261,9 +266,6 @@ final class WindowsDisplay implements DisplayImplementation {
 			updateWidthAndHeight();
 
 			if ( parent == null ) {
-				if(Display.isResizable()) {
-					setResizable(true);
-				}
 				setForegroundWindow(getHwnd());
 			} else {
 				parent_focused = new AtomicBoolean(false);
@@ -551,6 +553,12 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public void update() {
+		if ( !deferredActions.isEmpty() ) {
+			for ( Runnable r : deferredActions )
+				r.run();
+			deferredActions.clear();
+		}
+
 		nUpdate();
 
 		if ( !isFocused && parent != null && parent_focused.compareAndSet(true, false) ) {
@@ -975,7 +983,6 @@ final class WindowsDisplay implements DisplayImplementation {
 				switch ((int)wParam) {
 					case SIZE_RESTORED:
 					case SIZE_MAXIMIZED:
-						maximized = ((int)wParam) == SIZE_MAXIMIZED;
 						resized = true;
 						updateWidthAndHeight();
 						setMinimized(false);
@@ -1155,31 +1162,59 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public void setResizable(boolean resizable) {
-		if(this.resizable != resizable) {
-			int style = (int)getWindowLongPtr(hwnd, GWL_STYLE);
-			int styleex = (int)getWindowLongPtr(hwnd, GWL_EXSTYLE);
+		if ( this.resizable == resizable )
+			return;
 
-			// update frame style
-			if(resizable && !Display.isFullscreen()) {
-				setWindowLongPtr(hwnd, GWL_STYLE, style |= (WS_THICKFRAME | WS_MAXIMIZEBOX));
-			} else {
-				setWindowLongPtr(hwnd, GWL_STYLE, style &= ~(WS_THICKFRAME | WS_MAXIMIZEBOX));
-			}
+		setResizable(resizable, true);
+	}
 
-			// from the existing client rect, determine the new window rect
-			// based on the style changes - using AdjustWindowRectEx.
-			getClientRect(hwnd, rect_buffer);
-			rect.copyFromBuffer(rect_buffer);
-			adjustWindowRectEx(rect_buffer, style, false, styleex);
-			rect.copyFromBuffer(rect_buffer);
-
-			// force a frame update and resize accordingly
-			setWindowPos(hwnd, HWND_TOP, 0, 0, rect.right - rect.left, rect.bottom - rect.top, SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
-
-			updateWidthAndHeight();
-			resized = false;
-		}
+	private void setResizable(boolean resizable, boolean defer) {
+		this.resized = false;
 		this.resizable = resizable;
+
+		int style = (int)getWindowLongPtr(hwnd, GWL_STYLE);
+		int styleex = (int)getWindowLongPtr(hwnd, GWL_EXSTYLE);
+
+		// update frame style
+		setWindowLongPtr(
+			hwnd,
+			GWL_STYLE,
+			style = resizable && !Display.isFullscreen()
+			        ? (style | (WS_THICKFRAME | WS_MAXIMIZEBOX))
+			        : (style & ~(WS_THICKFRAME | WS_MAXIMIZEBOX))
+		);
+
+		// from the existing client rect, determine the new window rect
+		// based on the style changes - using AdjustWindowRectEx.
+		getGlobalClientRect(hwnd, rect);
+		rect.copyToBuffer(rect_buffer);
+		adjustWindowRectEx(rect_buffer, style, false, styleex);
+		rect.copyFromBuffer(rect_buffer);
+
+		final int x = rect.left;
+		final int y = rect.top;
+		final int cx = rect.right - rect.left;
+		final int cy = rect.bottom - rect.top;
+
+		if ( defer ) {
+			// SWP_FRAMECHANGED does not play nice with WS_THICKFRAME on/off, the OpenGL client area
+			// ends up in the wrong position. Reshape the window later, this will reset the client
+			// area to the correct position.
+			deferredActions.add(new Runnable() {
+				public void run() {
+					setWindowPos(hwnd, 0L, x, y, cx, cy, SWP_NOZORDER);
+					updateWidthAndHeight();
+				}
+			});
+
+			// apply the style changes
+			setWindowPos(hwnd, 0L, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+		} else {
+			// apply the style changes
+			setWindowPos(hwnd, 0L, x, y, cx, cy, SWP_NOZORDER | SWP_FRAMECHANGED);
+		}
+
+		updateWidthAndHeight();
 	}
 
 	private native boolean adjustWindowRectEx(IntBuffer rectBuffer, int style, boolean menu, int styleex);
@@ -1191,44 +1226,50 @@ final class WindowsDisplay implements DisplayImplementation {
 		}
 		return false;
 	}
-	
+
 	public float getPixelScaleFactor() {
 		return 1f;
 	}
 
 	private static final class Rect {
-		public int top;
-		public int bottom;
-		public int left;
-		public int right;
+
+		public int
+			left,
+			top,
+			right,
+			bottom;
 
 		public void copyToBuffer(IntBuffer buffer) {
-			buffer.put(0, top).put(1, bottom).put(2, left).put(3, right);
+			buffer
+				.put(0, left)
+				.put(1, top)
+				.put(2, right)
+				.put(3, bottom);
 		}
 
 		public void copyFromBuffer(IntBuffer buffer) {
-			top = buffer.get(0);
-			bottom = buffer.get(1);
-			left  = buffer.get(2);
-			right = buffer.get(3);
+			left = buffer.get(0);
+			top = buffer.get(1);
+			right = buffer.get(2);
+			bottom = buffer.get(3);
 		}
 
 		public void offset(int offset_x, int offset_y) {
 			left += offset_x;
-			right += offset_x;
 			top += offset_y;
+			right += offset_x;
 			bottom += offset_y;
 		}
 
 		public static void intersect(Rect r1, Rect r2, Rect dst) {
-			dst.top = Math.max(r1.top, r2.top);
-			dst.bottom = Math.min(r1.bottom, r2.bottom);
 			dst.left = Math.max(r1.left, r2.left);
+			dst.top = Math.max(r1.top, r2.top);
 			dst.right = Math.min(r1.right, r2.right);
+			dst.bottom = Math.min(r1.bottom, r2.bottom);
 		}
 
 		public String toString() {
-			return "Rect: top = " + top + " bottom = " + bottom + " left = " + left + " right = " + right + ", width: " + (right - left) + ", height: " + (bottom - top);
+			return "Rect: left = " + left + " top = " + top + " right = " + right + " bottom = " + bottom + ", width: " + (right - left) + ", height: " + (bottom - top);
 		}
 	}
 }
