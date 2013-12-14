@@ -553,13 +553,15 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public void update() {
-		if ( !deferredActions.isEmpty() ) {
+		nUpdate();
+
+		while ( !deferredActions.isEmpty() ) {
 			for ( Runnable r : deferredActions )
 				r.run();
 			deferredActions.clear();
-		}
 
-		nUpdate();
+			nUpdate();
+		}
 
 		if ( !isFocused && parent != null && parent_focused.compareAndSet(true, false) ) {
 			setFocus(getHwnd());
@@ -1207,10 +1209,10 @@ final class WindowsDisplay implements DisplayImplementation {
 				}
 			});
 
-			// apply the style changes
-			setWindowPos(hwnd, 0L, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+			// Apply the style changes. We add 1 to make sure the client area layout is invalidated.
+			setWindowPos(hwnd, 0L, x, y, cx + 1, cy, SWP_NOZORDER | SWP_FRAMECHANGED);
 		} else {
-			// apply the style changes
+			// Apply the style changes
 			setWindowPos(hwnd, 0L, x, y, cx, cy, SWP_NOZORDER | SWP_FRAMECHANGED);
 		}
 
