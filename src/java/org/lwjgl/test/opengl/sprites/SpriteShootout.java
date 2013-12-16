@@ -174,7 +174,6 @@ public final class SpriteShootout {
 		// Setup geometry
 
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 		Util.checkGLError();
 	}
@@ -416,8 +415,6 @@ public final class SpriteShootout {
 			glUniform1i(glGetUniformLocation(progID, "COLOR_MAP"), 0);
 
 			updateBallSize();
-
-			glEnableClientState(GL_VERTEX_ARRAY);
 		}
 
 		public void updateBallSize() {

@@ -181,7 +181,6 @@ public final class SpriteShootoutMapped {
 		// Setup geometry
 
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 		Util.checkGLError();
 	}

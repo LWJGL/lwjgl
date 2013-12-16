@@ -172,7 +172,6 @@ public final class SpriteShootout2P {
 		// Setup geometry
 
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 		Util.checkGLError();
 	}
