@@ -43,8 +43,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.lang.reflect.Method;
 import java.nio.*;
-import java.util.*;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.lwjgl.LWJGLException;
@@ -214,8 +212,6 @@ final class WindowsDisplay implements DisplayImplementation {
         private boolean trackingMouse;
         private boolean mouseInside;
 
-	private List<Runnable> deferredActions = new ArrayList<Runnable>();
-
 	static {
 		try {
 			Method windowProc = WindowsDisplay.class.getDeclaredMethod("handleMessage", long.class, int.class, long.class, long.class, long.class);
@@ -240,7 +236,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		parent_hwnd = parent != null ? getHwnd(parent) : 0;
 		this.hwnd = nCreateWindow(x, y, mode.getWidth(), mode.getHeight(), Display.isFullscreen() || isUndecorated(), parent != null, parent_hwnd);
 		if ( Display.isResizable() && parent == null ) {
-			setResizable(true, false);
+			setResizable(true);
 		}
 
 		if (hwnd == 0) {
@@ -554,14 +550,6 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	public void update() {
 		nUpdate();
-
-		while ( !deferredActions.isEmpty() ) {
-			for ( Runnable r : deferredActions )
-				r.run();
-			deferredActions.clear();
-
-			nUpdate();
-		}
 
 		if ( !isFocused && parent != null && parent_focused.compareAndSet(true, false) ) {
 			setFocus(getHwnd());
@@ -1167,10 +1155,6 @@ final class WindowsDisplay implements DisplayImplementation {
 		if ( this.resizable == resizable )
 			return;
 
-		setResizable(resizable, true);
-	}
-
-	private void setResizable(boolean resizable, boolean defer) {
 		this.resized = false;
 		this.resizable = resizable;
 
@@ -1193,28 +1177,15 @@ final class WindowsDisplay implements DisplayImplementation {
 		adjustWindowRectEx(rect_buffer, style, false, styleex);
 		rect.copyFromBuffer(rect_buffer);
 
-		final int x = rect.left;
-		final int y = rect.top;
-		final int cx = rect.right - rect.left;
-		final int cy = rect.bottom - rect.top;
-
-		if ( defer ) {
-			// SWP_FRAMECHANGED does not play nice with WS_THICKFRAME on/off, the OpenGL client area
-			// ends up in the wrong position. Reshape the window later, this will reset the client
-			// area to the correct position.
-			deferredActions.add(new Runnable() {
-				public void run() {
-					setWindowPos(hwnd, 0L, x, y, cx, cy, SWP_NOZORDER);
-					updateWidthAndHeight();
-				}
-			});
-
-			// Apply the style changes. We add 1 to make sure the client area layout is invalidated.
-			setWindowPos(hwnd, 0L, x, y, cx + 1, cy, SWP_NOZORDER | SWP_FRAMECHANGED);
-		} else {
-			// Apply the style changes
-			setWindowPos(hwnd, 0L, x, y, cx, cy, SWP_NOZORDER | SWP_FRAMECHANGED);
-		}
+		// Apply the style changes
+		setWindowPos(
+			hwnd, 0L,
+			rect.left,
+			rect.top,
+			rect.right - rect.left,
+			rect.bottom - rect.top,
+			SWP_NOZORDER | SWP_FRAMECHANGED
+		);
 
 		updateWidthAndHeight();
 	}
