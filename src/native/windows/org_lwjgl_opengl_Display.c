@@ -114,7 +114,7 @@ static LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_setWindowProc(JNIEnv *env, jclass clazz, jobject method) {
-	windowsDisplayClass = clazz;
+	windowsDisplayClass = (*env)->NewGlobalRef(env, clazz);
 	javaWindowProc = (*env)->FromReflectedMethod(env, method);
 }
 
@@ -536,4 +536,3 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nTrackMouseEvent
 		tme.hwndTrack = hwnd;
 		return TrackMouseEvent(&tme);
 }
-

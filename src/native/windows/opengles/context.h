@@ -54,7 +54,7 @@ typedef struct {
  * Register the LWJGL window class.
  * Returns true for success, or false for failure
  */
-extern bool registerWindow();
+extern bool registerWindow(WNDPROC win_proc, LPCTSTR class_name);
 
 //extern bool applyPixelFormat(JNIEnv *env, HDC hdc, int iPixelFormat);
 
