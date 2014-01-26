@@ -283,6 +283,13 @@ public class Keyboard {
 	private static InputImplementation implementation;
 
 	/**
+	 *  Input method
+	 *	input method is disable at default, for backward compatibility.
+	 **/
+	private static int imKeyboardBufferSize = 50;
+	private static String imLocaleModifiers = "@im=none";
+
+	/**
 	 * Keyboard cannot be constructed.
 	 */
 	private Keyboard() {
@@ -584,6 +591,47 @@ public class Keyboard {
 		}
 	}
 
+	/**
+	 *	returns the byte size of keyborad buffer which receives string from Input method.
+	 */
+	public static int getImKeyboardBufferSize() {
+		return imKeyboardBufferSize;
+	}
+
+	/**
+	 *	Set the byte size of keyborad buffer which receives string from Input method.
+	 *	Can receive a long string at a time, so that this value becomes big.
+	 *
+	 *	To support long sentence of Japanease or other multibytes languages by Input method,
+	 *	It is recommended to set this value to 1000 or more.
+	 *
+	 *	@param imKeyboardBufferSize keyborad buffer size for Input mehotd.
+	 */
+	public static void setImKeyboardBufferSize(int imKeyboardBufferSize) {
+		Keyboard.imKeyboardBufferSize = imKeyboardBufferSize;
+	}
+
+	/**
+	 *	returns the Input method locale modifiers.
+	 */
+	public static String getImLocaleModifiers() {
+		return imLocaleModifiers;
+	}
+
+	/**
+	 *	Set the Input method locale modifiers which is specified to XSetLocaleModifiers() 
+	 *	argument on Linux Xlib.
+	 *	"@im=none" is set to this value from old days,
+	 *	but to support Japanease or other multibytes languages, this value must be empty string.
+	 *	when a empty string is specified to the argument of XSetLocaleModifiers(), 
+	 *	default Input method is used on the environment.
+	 *
+	 *	@param imLocaleModifiers the Input method locale modifiers.
+	 */
+	public static void setImLocaleModifiers(String imLocaleModifiers) {
+		Keyboard.imLocaleModifiers = imLocaleModifiers;
+	}
+
 	private static final class KeyEvent {
 		/** The current keyboard character being examined */
 		private int character;
@@ -607,4 +655,5 @@ public class Keyboard {
 			repeat = false;
 		}
 	}
+
 }

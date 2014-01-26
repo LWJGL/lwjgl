@@ -55,6 +55,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.MemoryUtil;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.XRandR.Screen;
 import org.lwjgl.opengles.EGL;
 
@@ -864,7 +865,9 @@ final class LinuxDisplay implements DisplayImplementation {
 			event_buffer.nextEvent(getDisplay());
 			long event_window = event_buffer.getWindow();
 			relayEventToParent(event_buffer);
-			if (event_window != getWindow() || event_buffer.filterEvent(event_window) ||
+			//	Regardless of a window where the event occurred, XFilterEvent must send all events to IM.
+			//	So first of all, call org.lwjgl.opengl.LinuxEvent.filterEvent(long).
+			if (event_buffer.filterEvent(event_window, keyboard) || event_window != getWindow() ||
 					(mouse != null && mouse.filterEvent(grab, shouldWarpPointer(), event_buffer)) ||
 					 (keyboard != null && keyboard.filterEvent(event_buffer)))
 				continue;
@@ -1252,7 +1255,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void createKeyboard() throws LWJGLException {
 		lockAWT();
 		try {
-			keyboard = new LinuxKeyboard(getDisplay(), getWindow());
+			keyboard = new LinuxKeyboard(getDisplay(), getWindow(), Keyboard.getImKeyboardBufferSize(), Keyboard.getImLocaleModifiers());
 		} finally {
 			unlockAWT();
 		}

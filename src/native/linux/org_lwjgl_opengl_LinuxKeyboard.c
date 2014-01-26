@@ -82,9 +82,11 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxKeyboard_keycodeToKeySym(JNIE
 	return key_sym;
 }
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxKeyboard_openIM(JNIEnv *env, jclass unused, jlong display_ptr) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_LinuxKeyboard_openIM(JNIEnv *env, jclass unused, jlong display_ptr, jstring locale_modifiers_ptr) {
 	Display *disp = (Display *)(intptr_t)display_ptr;
-	XSetLocaleModifiers ("@im=none");
+	const char *locale_modifiers = GetStringNativeChars(env, locale_modifiers_ptr);
+
+	XSetLocaleModifiers(locale_modifiers);
 	XIM xim = XOpenIM(disp, NULL, NULL, NULL);
 	return (intptr_t)xim;
 }
@@ -151,3 +153,17 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxKeyboard_utf8LookupString(JNIE
 	positionBuffer(env, buffer_obj, num_bytes);
 	return status;
 }
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxKeyboard_nSetICFocus(JNIEnv *env, jclass unused, jlong xic_ptr) {
+	XIC xic = (XIC)(intptr_t)xic_ptr;
+
+	XSetICFocus(xic);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxKeyboard_nUnsetICFocus(JNIEnv *env, jclass unused, jlong xic_ptr) {
+	XIC xic = (XIC)(intptr_t)xic_ptr;
+
+	XUnsetICFocus(xic);
+}
+
+

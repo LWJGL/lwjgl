@@ -78,8 +78,27 @@ final class LinuxEvent {
 	}
 	private static native void nSendEvent(ByteBuffer event_buffer, long display, long window, boolean propagate, long event_mask);
 
-	public boolean filterEvent(long window) {
-		return nFilterEvent(event_buffer, window);
+	public boolean filterEvent(long window, LinuxKeyboard keyboard) {
+		//	If nFilterEvent() returns True, then some input method has filtered the event, 
+		//	and the client should discard the event. 
+		//	If nFilterEvent() returns False, then the client should continue processing the event. 
+		if (nFilterEvent(event_buffer, window)) {
+			return true;
+		}
+
+		//	setICFocus() and unsetICFocus() must be called 
+		//	whenever FocusIn/FocusOut events are caused.
+		//	Because Input method must know that the receiver of inputed string changed. 
+		switch (getType()) {
+			case LinuxEvent.FocusIn:
+				keyboard.setICFocus();
+				break;
+			case LinuxEvent.FocusOut:
+				keyboard.unsetICFocus();
+				break;
+		}
+
+		return false;
 	}
 	private static native boolean nFilterEvent(ByteBuffer event_buffer, long window);
 
@@ -205,4 +224,5 @@ final class LinuxEvent {
 		return nGetKeyState(event_buffer);
 	}
 	private static native int nGetKeyState(ByteBuffer event_buffer);
+
 }
