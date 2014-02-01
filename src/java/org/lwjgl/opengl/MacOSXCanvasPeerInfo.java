@@ -88,26 +88,8 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 			// fix for CALayer position not covering Canvas due to a Java 7 bug
 			// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7172187
 			addComponentListener(component);
-			
-			if (SwingUtilities.getWindowAncestor(component.getParent()) != null) {
-				Point componentPosition = SwingUtilities.convertPoint(component, component.getLocation(), null);
-				Point parentPosition = SwingUtilities.convertPoint(component.getParent(), component.getLocation(), null);
-				
-				if (componentPosition.getX() == parentPosition.getX() && componentPosition.getY() == parentPosition.getY()) {
-					insets = getWindowInsets(component);
 					
-					top = insets != null ? insets.top : 0;
-					left = insets != null ? insets.left : 0;
-					
-					int x = (int)componentPosition.getX()-left;
-					int y = (int)-componentPosition.getY()+top-component.getHeight();
-					
-					int width = component.getWidth();
-					int height = component.getHeight();
-					
-					nSetLayerBounds(getHandle(), x, y, width, height);
-				}
-			}
+                        reSetLayerBounds(component, getHandle());
 		}
 	}
 	
@@ -130,54 +112,14 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 
 			public void componentMoved(ComponentEvent e) {
 				
-				if (SwingUtilities.getWindowAncestor(component.getParent()) != null) {
-					Point componentPosition = SwingUtilities.convertPoint(component, component.getLocation(), null);
-					Point parentPosition = SwingUtilities.convertPoint(component.getParent(), component.getLocation(), null);
-					
-					if (componentPosition.getX() == parentPosition.getX() && componentPosition.getY() == parentPosition.getY()) {
-						Insets insets = getWindowInsets(component);
-						
-						int top = insets != null ? insets.top : 0;
-						int left = insets != null ? insets.left : 0;
-						
-						nSetLayerBounds(getHandle(), (int)componentPosition.getX()-left, (int)componentPosition.getY()-top, component.getWidth(), component.getHeight());
-						return;
-					}
-				}
-				
-				Insets insets = getInsets(component);
-				
-				int top = insets != null ? insets.top : 0;
-				int left = insets != null ? insets.left : 0;
-				
 				//nSetLayerPosition(getHandle(), component.getX() - left, component.getY() - top);
-				nSetLayerBounds(getHandle(), component.getX() - left, component.getY() - top, component.getWidth(), component.getHeight());
+				reSetLayerBounds(component, getHandle());
 			}
 
 			public void componentResized(ComponentEvent e) {
 				
-				if (SwingUtilities.getWindowAncestor(component.getParent()) != null) {
-					Point componentPosition = SwingUtilities.convertPoint(component, component.getLocation(), null);
-					Point parentPosition = SwingUtilities.convertPoint(component.getParent(), component.getLocation(), null);
-					
-					if (componentPosition.getX() == parentPosition.getX() && componentPosition.getY() == parentPosition.getY()) {
-						Insets insets = getWindowInsets(component);
-						
-						int top = insets != null ? insets.top : 0;
-						int left = insets != null ? insets.left : 0;
-						
-						nSetLayerBounds(getHandle(), (int)componentPosition.getX()-left, (int)componentPosition.getY()-top, component.getWidth(), component.getHeight());
-						return;
-					}
-				}
-				
-				Insets insets = getInsets(component);
-				
-				int top = insets != null ? insets.top : 0;
-				int left = insets != null ? insets.left : 0;
-				
 				//nSetLayerPosition(getHandle(), component.getX() - left, component.getY() - top);
-				nSetLayerBounds(getHandle(), component.getX() - left, component.getY() - top, component.getWidth(), component.getHeight());
+				reSetLayerBounds(component, getHandle());
 			}
 
 			public void componentShown(ComponentEvent e) {
@@ -198,6 +140,36 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 	
 	private static native void nSetLayerBounds(ByteBuffer peer_info_handle, int x, int y, int width, int height);
 	
+        /**
+         * fix for CALayer position not covering Canvas due to a Java 7 bug
+         * {@link http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7172187}
+         * @param component
+         * @param peer_info_handle 
+         */
+        private static void reSetLayerBounds(Canvas component, ByteBuffer peer_info_handle) {
+
+                int x = (int) component.getX(), y = (int) component.getY();
+
+                Insets insets = getInsets(component);
+
+                if (SwingUtilities.getWindowAncestor(component.getParent()) != null) {
+                        Point componentPosition = SwingUtilities.convertPoint(component, component.getLocation(), null);
+                        Point parentPosition = SwingUtilities.convertPoint(component.getParent(), component.getLocation(), null);
+
+                        if (componentPosition.getX() == parentPosition.getX() && componentPosition.getY() == parentPosition.getY()) {
+                                insets = getWindowInsets(component);
+                        }
+                }
+
+                x -= insets != null ? insets.left : 0;
+                y -= insets != null ? insets.top : 0;
+
+                // http://hg.openjdk.java.net/jdk8/awt/jdk/rev/65d874d16d59
+                y = (int) component.getParent().getHeight() - y - (int) component.getHeight();
+
+                nSetLayerBounds(peer_info_handle, x, y, component.getWidth(), component.getHeight());
+        }
+        
 	protected void doUnlock() throws LWJGLException {
 		awt_surface.unlock();
 	}
@@ -205,7 +177,7 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 	/**
 	 * Return the Insets of the Window holding the Canvas
 	 */
-	private Insets getWindowInsets(Canvas canvas) {
+	private static Insets getWindowInsets(Canvas canvas) {
 		Container parent = canvas.getParent();
 
 		while (parent != null) {
@@ -220,7 +192,7 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 		return null;
 	}
 	
-	private Insets getInsets(Canvas component) {
+	private static Insets getInsets(Canvas component) {
 		Component parent = component.getParent();
 
 		while (parent != null) {
