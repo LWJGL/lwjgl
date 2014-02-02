@@ -147,25 +147,18 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
          * @param peer_info_handle 
          */
         private static void reSetLayerBounds(Canvas component, ByteBuffer peer_info_handle) {
-
-                int x = (int) component.getX(), y = (int) component.getY();
-
+                // report the root parent (peer).
+                Component peer = SwingUtilities.getRoot(component);
+                
+                Point rtLoc = SwingUtilities.convertPoint(component.getParent(), component.getLocation(), peer);
+                int x = (int) rtLoc.getX(), y = (int) rtLoc.getY();
+                
                 Insets insets = getInsets(component);
-
-                if (SwingUtilities.getWindowAncestor(component.getParent()) != null) {
-                        Point componentPosition = SwingUtilities.convertPoint(component, component.getLocation(), null);
-                        Point parentPosition = SwingUtilities.convertPoint(component.getParent(), component.getLocation(), null);
-
-                        if (componentPosition.getX() == parentPosition.getX() && componentPosition.getY() == parentPosition.getY()) {
-                                insets = getWindowInsets(component);
-                        }
-                }
-
                 x -= insets != null ? insets.left : 0;
                 y -= insets != null ? insets.top : 0;
-
+                
                 // http://hg.openjdk.java.net/jdk8/awt/jdk/rev/65d874d16d59
-                y = (int) component.getParent().getHeight() - y - (int) component.getHeight();
+                y = (int) peer.getHeight() - y - (int) component.getHeight();
 
                 nSetLayerBounds(peer_info_handle, x, y, component.getWidth(), component.getHeight());
         }
@@ -174,34 +167,16 @@ abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
 		awt_surface.unlock();
 	}
 	
-	/**
-	 * Return the Insets of the Window holding the Canvas
-	 */
-	private static Insets getWindowInsets(Canvas canvas) {
-		Container parent = canvas.getParent();
-
-		while (parent != null) {
-			if(parent instanceof Window || parent instanceof java.applet.Applet) {
-				return parent.getInsets();
-			}
-			
-			parent = parent.getParent();
-		}
-		
-		// if no parent Window or Applet found, return null
-		return null;
-	}
-	
+        /**
+         * @return rootpane insets (peer insets) values.
+         */
 	private static Insets getInsets(Canvas component) {
-		Component parent = component.getParent();
-
-		while (parent != null) {
-			if (parent instanceof Container) {
-				return ((Container)parent).getInsets();
-			}
-			parent = parent.getParent();
-		}
-		
-		return null;
+		Container c = SwingUtilities.getRootPane(component);
+                
+                if(c != null) {
+                        return c.getInsets();
+                } else {
+                        return new Insets(0, 0, 0, 0);
+                }                
 	}
 }
