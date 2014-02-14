@@ -595,6 +595,8 @@ public class Matrix4f extends Matrix implements Serializable {
 		if (dest == null)
 			dest = new Matrix4f();
 
+		if (src != dest) dest.load(src);
+		
 		dest.m30 += src.m00 * vec.x + src.m10 * vec.y + src.m20 * vec.z;
 		dest.m31 += src.m01 * vec.x + src.m11 * vec.y + src.m21 * vec.z;
 		dest.m32 += src.m02 * vec.x + src.m12 * vec.y + src.m22 * vec.z;
@@ -624,6 +626,8 @@ public class Matrix4f extends Matrix implements Serializable {
 		if (dest == null)
 			dest = new Matrix4f();
 
+		if (src != dest) dest.load(src);
+		
 		dest.m30 += src.m00 * vec.x + src.m10 * vec.y;
 		dest.m31 += src.m01 * vec.x + src.m11 * vec.y;
 		dest.m32 += src.m02 * vec.x + src.m12 * vec.y;
