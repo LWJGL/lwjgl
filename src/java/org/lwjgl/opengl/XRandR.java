@@ -31,12 +31,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.lwjgl.LWJGLUtil;
 
 /**
@@ -83,15 +83,20 @@ public class XRandR
 							screens.put( name, possibles.toArray( new Screen[ possibles.size() ] ) );
 							possibles.clear();
 						}
-						name = sa[ 0 ];
-
-						// record the current config
-						parseScreen( currentList, name, "primary".equals(sa[ 2 ]) ? sa[ 3 ] : sa[ 2 ] );
+//						name = sa[ 0 ];
+//
+//						// todo: get freq
+//						parseScreen( currentList, name, "primary".equals(sa[ 2 ]) ? sa[ 3 ] : sa[ 2 ] );
 					}
 					else if( Pattern.matches( "\\d*x\\d*", sa[ 0 ] ) )
 					{
 						// found a new mode line
-						parseScreen( possibles, name, sa[ 0 ] );
+                                                // current mode contains a star (*)
+                                                if (sa[1].contains("*")) {
+                                                    parseScreenModeline( currentList, name, sa[ 0 ], Arrays.copyOfRange(sa, 1, sa.length) );
+                                                }
+                                                // normal parsing
+						parseScreenModeline( possibles, name, sa[ 0 ], Arrays.copyOfRange(sa, 1, sa.length) );
 					}
 				}
 
@@ -203,7 +208,9 @@ public class XRandR
 
 	private static final Pattern SCREEN_PATTERN2 = Pattern.compile( "^(\\d+)x(\\d+)$" );
 
-	/**
+        private static final Pattern FREQ_PATTERN = Pattern.compile("^(\\d+).(\\d+)\\*?\\+?$");
+
+        /**
 	 * Parses a screen configuration and adds it to the list if it's
 	 * valid.
 	 *
@@ -215,37 +222,34 @@ public class XRandR
 	 *           config string, format either widthxheight or
 	 *           widthxheight+xPos+yPos
 	 */
-	private static void parseScreen( List<Screen> list, String name, String what )
+	private static void parseScreenModeline( List<Screen> list, String name, String res, String[] freqs )
 	{
-		Matcher m = SCREEN_PATTERN1.matcher( what );
-		if( !m.matches() )
-		{
-			m = SCREEN_PATTERN2.matcher( what );
-			if( !m.matches() )
-			{
-				LWJGLUtil.log( "Did not match: " + what );
-				return;
-			}
-		}
+		Matcher m = SCREEN_PATTERN2.matcher( res );
+                if( !m.matches() )
+                {
+                        LWJGLUtil.log( "Did not match: " + res );
+                        return;
+                }
 		int width = Integer.parseInt( m.group( 1 ) );
 		int height = Integer.parseInt( m.group( 2 ) );
-		int xpos, ypos;
-		if( m.groupCount() > 3 )
-		{
-			xpos = Integer.parseInt( m.group( 3 ) );
-			ypos = Integer.parseInt( m.group( 4 ) );
-		}
-		else
-		{
-			xpos = 0;
-			ypos = 0;
-		}
-		list.add( new Screen( name, width, height, xpos, ypos ) );
+		int xpos = 0;
+                int ypos = 0;
+
+                for (String freqS : freqs) {
+                    m = FREQ_PATTERN.matcher(freqS);
+                    if( !m.matches() )
+                    {
+                        LWJGLUtil.log( "Did not match: " + res );
+                        return;
+                    }
+                    int freq = Integer.parseInt(m.group(1));
+                    list.add( new Screen( name, width, height, freq, xpos, ypos ) );
+                }
 	}
 
 	/**
-	 * Encapsulates the configuration of a monitor. Resolution is
-	 * fixed, position is mutable
+	 * Encapsulates the configuration of a monitor.
+         * Resolution and freq are fixed, position is mutable
 	 *
 	 * @author ryanm
 	 */
@@ -266,6 +270,11 @@ public class XRandR
 		 */
 		public final int height;
 
+                /**
+                 * Frequency in Hz
+                 */
+                public final int freq;
+
 		/**
 		 * Position on the x-axis, in pixels
 		 */
@@ -276,11 +285,12 @@ public class XRandR
 		 */
 		public int yPos;
 
-		private Screen( String name, int width, int height, int xPos, int yPos )
+		Screen( String name, int width, int height, int freq, int xPos, int yPos )
 		{
 			this.name = name;
 			this.width = width;
 			this.height = height;
+                        this.freq = freq;
 			this.xPos = xPos;
 			this.yPos = yPos;
 		}
@@ -291,6 +301,8 @@ public class XRandR
 			argList.add( name );
 			argList.add( "--mode" );
 			argList.add( width + "x" + height );
+                        argList.add( "--rate" );
+                        argList.add( freq + "");//"" autoboxes freq as String
 			argList.add( "--pos" );
 			argList.add( xPos + "x" + yPos );
 		}
@@ -298,7 +310,7 @@ public class XRandR
 		//@Override
 		public String toString()
 		{
-			return name + " " + width + "x" + height + " @ " + xPos + "x" + yPos;
+			return name + " " + width + "x" + height + " @ " + xPos + "x" + yPos + " with " + freq + "Hz";
 		}
 	}
 }
