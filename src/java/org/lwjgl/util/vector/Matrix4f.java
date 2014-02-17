@@ -481,6 +481,7 @@ public class Matrix4f extends Matrix implements Serializable {
 	public static Matrix4f scale(Vector3f vec, Matrix4f src, Matrix4f dest) {
 		if (dest == null)
 			dest = new Matrix4f();
+		
 		dest.m00 = src.m00 * vec.x;
 		dest.m01 = src.m01 * vec.x;
 		dest.m02 = src.m02 * vec.x;
@@ -493,6 +494,14 @@ public class Matrix4f extends Matrix implements Serializable {
 		dest.m21 = src.m21 * vec.z;
 		dest.m22 = src.m22 * vec.z;
 		dest.m23 = src.m23 * vec.z;
+		
+		if (src != dest) {
+			dest.m30 = src.m30;
+			dest.m31 = src.m31;
+			dest.m32 = src.m32;
+			dest.m33 = src.m33;
+		}
+		
 		return dest;
 	}
 
@@ -529,6 +538,7 @@ public class Matrix4f extends Matrix implements Serializable {
 	public static Matrix4f rotate(float angle, Vector3f axis, Matrix4f src, Matrix4f dest) {
 		if (dest == null)
 			dest = new Matrix4f();
+		
 		float c = (float) Math.cos(angle);
 		float s = (float) Math.sin(angle);
 		float oneminusc = 1.0f - c;
@@ -571,6 +581,14 @@ public class Matrix4f extends Matrix implements Serializable {
 		dest.m11 = t11;
 		dest.m12 = t12;
 		dest.m13 = t13;
+		
+		if (src != dest) {
+			dest.m30 = src.m30;
+			dest.m31 = src.m31;
+			dest.m32 = src.m32;
+			dest.m33 = src.m33;
+		}
+		
 		return dest;
 	}
 
