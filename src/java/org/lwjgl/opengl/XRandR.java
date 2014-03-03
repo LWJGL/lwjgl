@@ -67,6 +67,9 @@ public class XRandR
 				List<Screen> currentList = new ArrayList<Screen>();
 				List<Screen> possibles = new ArrayList<Screen>();
 				String name = null;
+                                // saves the position of the current screen. this is specified in the header of the screen block,
+                                // but required later when parsing the screen modelines
+                                int[] currentScreenPosition = new int[2];
 
 				BufferedReader br = new BufferedReader( new InputStreamReader( p.getInputStream() ) );
 				String line;
@@ -83,20 +86,20 @@ public class XRandR
 							screens.put( name, possibles.toArray( new Screen[ possibles.size() ] ) );
 							possibles.clear();
 						}
-//						name = sa[ 0 ];
-//
-//						// todo: get freq
-//						parseScreen( currentList, name, "primary".equals(sa[ 2 ]) ? sa[ 3 ] : sa[ 2 ] );
+						name = sa[ 0 ];
+
+                                                // save position of this screen, will be used later when current modeline is parsed
+                                                parseScreenHeader(currentScreenPosition, "primary".equals(sa[ 2 ]) ? sa[ 3 ] : sa[ 2 ]);
 					}
 					else if( Pattern.matches( "\\d*x\\d*", sa[ 0 ] ) )
 					{
 						// found a new mode line
                                                 // current mode contains a star (*)
                                                 if (sa[1].contains("*")) {
-                                                    parseScreenModeline( currentList, name, sa[ 0 ], Arrays.copyOfRange(sa, 1, sa.length) );
+                                                    parseScreenModeline( currentList, name, sa[ 0 ], Arrays.copyOfRange(sa, 1, sa.length), currentScreenPosition);
                                                 }
                                                 // normal parsing
-						parseScreenModeline( possibles, name, sa[ 0 ], Arrays.copyOfRange(sa, 1, sa.length) );
+						parseScreenModeline( possibles, name, sa[ 0 ], Arrays.copyOfRange(sa, 1, sa.length), null);
 					}
 				}
 
@@ -203,10 +206,10 @@ public class XRandR
 		return screens.get(name).clone();
 	}
 
-	private static final Pattern SCREEN_PATTERN1 =
+	private static final Pattern SCREEN_HEADER_PATTERN =
 			Pattern.compile( "^(\\d+)x(\\d+)\\+(\\d+)\\+(\\d+)$" );
 
-	private static final Pattern SCREEN_PATTERN2 = Pattern.compile( "^(\\d+)x(\\d+)$" );
+	private static final Pattern SCREEN_MODELINE_PATTERN = Pattern.compile( "^(\\d+)x(\\d+)$" );
 
         private static final Pattern FREQ_PATTERN = Pattern.compile("^(\\d+).(\\d+)\\*?\\+?$");
 
@@ -218,13 +221,16 @@ public class XRandR
 	 *           the list to add the Screen to if it's valid
 	 * @param name
 	 *           the name of this screen
-	 * @param what
-	 *           config string, format either widthxheight or
-	 *           widthxheight+xPos+yPos
+	 * @param res
+	 *           config string, format widthxheight
+         * @param freqs
+         *           config strings, frequency as float, with optional * and +
+         * @param screenPosition
+         *           position of this screen, null defaults to 0,0
 	 */
-	private static void parseScreenModeline( List<Screen> list, String name, String res, String[] freqs )
+	private static void parseScreenModeline( List<Screen> list, String name, String res, String[] freqs, int[] screenPosition)
 	{
-		Matcher m = SCREEN_PATTERN2.matcher( res );
+		Matcher m = SCREEN_MODELINE_PATTERN.matcher( res );
                 if( !m.matches() )
                 {
                         LWJGLUtil.log( "Did not match: " + res );
@@ -234,6 +240,10 @@ public class XRandR
 		int height = Integer.parseInt( m.group( 2 ) );
 		int xpos = 0;
                 int ypos = 0;
+                if (screenPosition != null) {
+                    xpos = screenPosition[0];
+                    ypos = screenPosition[1];
+                }
 
                 for (String freqS : freqs) {
                     m = FREQ_PATTERN.matcher(freqS);
@@ -246,6 +256,24 @@ public class XRandR
                     list.add( new Screen( name, width, height, freq, xpos, ypos ) );
                 }
 	}
+
+        /**
+         * Parses a screen configuration header and extracts information about the position of the screen.
+         *
+         * @param screenPosition the int-array to write the position into
+         * @param resPos String containing resolution and position, from xrandr
+         */
+        private static void parseScreenHeader(int[] screenPosition, String resPos) {
+            Matcher m = SCREEN_HEADER_PATTERN.matcher(resPos);
+            if (!m.matches()) {
+                // screen not active!
+                screenPosition[0] = 0;
+                screenPosition[1] = 0;
+                return;
+            }
+            screenPosition[0] = Integer.parseInt(m.group(3));
+            screenPosition[1] = Integer.parseInt(m.group(4));
+        }
 
 	/**
 	 * Encapsulates the configuration of a monitor.
