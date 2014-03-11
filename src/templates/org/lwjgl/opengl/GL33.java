@@ -53,7 +53,6 @@ public interface GL33 {
 	 * parameters of BlendFuncSeparate and BlendFuncSeparatei:
 	 */
 	int GL_SRC1_COLOR = 0x88F9;
-	int GL_SRC1_ALPHA = GL15.GL_SRC1_ALPHA;
 	int GL_ONE_MINUS_SRC1_COLOR = 0x88FA;
 	int GL_ONE_MINUS_SRC1_ALPHA = 0x88FB;
 

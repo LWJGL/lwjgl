@@ -356,20 +356,6 @@ public interface GL41 {
 	// ----------------------[ ARB_vertex_attrib_64bit ]----------------------
 	// -----------------------------------------------------------------------
 
-	/** Returned in the &lt;type&gt; parameter of GetActiveAttrib: */
-	int GL_DOUBLE_VEC2   = 0x8FFC;
-	int GL_DOUBLE_VEC3   = 0x8FFD;
-	int GL_DOUBLE_VEC4   = 0x8FFE;
-	int GL_DOUBLE_MAT2   = 0x8F46;
-	int GL_DOUBLE_MAT3   = 0x8F47;
-	int GL_DOUBLE_MAT4   = 0x8F48;
-	int GL_DOUBLE_MAT2x3 = 0x8F49;
-	int GL_DOUBLE_MAT2x4 = 0x8F4A;
-	int GL_DOUBLE_MAT3x2 = 0x8F4B;
-	int GL_DOUBLE_MAT3x4 = 0x8F4C;
-	int GL_DOUBLE_MAT4x2 = 0x8F4D;
-	int GL_DOUBLE_MAT4x3 = 0x8F4E;
-
 	void glVertexAttribL1d(@GLuint int index, double x);
 
 	void glVertexAttribL2d(@GLuint int index, double x, double y);
@@ -412,26 +398,11 @@ public interface GL41 {
 		GL_LAYER_PROVOKING_VERTEX          = 0x825E,
 		GL_VIEWPORT_INDEX_PROVOKING_VERTEX = 0x825F;
 
-	/** Accepted by the &lt;pname&gt; parameter of GetIntegeri_v: */
-	int GL_SCISSOR_BOX = 0x0C10;
-
-	/** Accepted by the &lt;pname&gt; parameter of GetFloati_v: */
-	int GL_VIEWPORT = 0x0BA2;
-
-	/** Accepted by the &lt;pname&gt; parameter of GetDoublei_v: */
-	int GL_DEPTH_RANGE = 0x0B70;
-
-	/** Accepted by the &lt;pname&gt; parameter of Enablei, Disablei, and IsEnabledi: */
-	int GL_SCISSOR_TEST = 0x0C11;
-
 	/**
 	 * Returned in the &lt;data&gt; parameter from a Get query with a &lt;pname&gt; of
 	 * LAYER_PROVOKING_VERTEX or VIEWPORT_INDEX_PROVOKING_VERTEX:
 	 */
-	int GL_FIRST_VERTEX_CONVENTION = 0x8E4D,
-		GL_LAST_VERTEX_CONVENTION  = 0x8E4E,
-		GL_PROVOKING_VERTEX        = 0x8E4F,
-		GL_UNDEFINED_VERTEX        = 0x8260;
+	int GL_UNDEFINED_VERTEX = 0x8260;
 
 	@StripPostfix("v")
 	void glViewportArrayv(@GLuint int first, @AutoSize(value = "v", expression = " >> 2") @GLsizei int count, @Const FloatBuffer v);

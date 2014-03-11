@@ -235,7 +235,6 @@ public interface GL32 {
 	int GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS     = 0x8C29;
 	//int GL_MAX_GEOMETRY_VARYING_COMPONENTS = 0x8DDD; -- Missing from 3.2 spec
 	//int GL_MAX_VERTEX_VARYING_COMPONENTS = 0x8DDE; -- Missing from 3.2 spec
-	int GL_MAX_VARYING_COMPONENTS               = 0x8B4B;
 	int GL_MAX_GEOMETRY_UNIFORM_COMPONENTS      = 0x8DDF;
 	int GL_MAX_GEOMETRY_OUTPUT_VERTICES         = 0x8DE0;
 	int GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS = 0x8DE1;
@@ -258,7 +257,6 @@ public interface GL32 {
 	 * ParameterivEXT:
 	 */
 	int GL_FRAMEBUFFER_ATTACHMENT_LAYERED       = 0x8DA7;
-	int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER = 0x8CD4;
 
 	/**
 	 * Accepted by the &lt;cap&gt; parameter of Enable, Disable, and IsEnabled,

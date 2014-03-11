@@ -244,10 +244,6 @@ public interface GL43 {
 		GL_DEBUG_SEVERITY_LOW          = 0x9148,
 		GL_DEBUG_SEVERITY_NOTIFICATION = 0x826B;
 
-	/** Returned by GetError: */
-	int GL_STACK_UNDERFLOW = 0x0504,
-		GL_STACK_OVERFLOW  = 0x0503;
-
 	/**
 	 * Tokens accepted or provided by the &lt;identifier&gt; parameters of
 	 * ObjectLabel and GetObjectLabel:
@@ -401,29 +397,10 @@ public interface GL43 {
 	// -----------------------------------------------------------------------------
 
 	/**
-	 * Accepted by the &lt;target&gt; parameter of GetInternalformativ
-	 * and GetInternalformati64v:
-	 */
-	int GL_TEXTURE_1D                   = 0x0DE0,
-		GL_TEXTURE_1D_ARRAY             = 0x8C18,
-		GL_TEXTURE_2D                   = 0x0DE1,
-		GL_TEXTURE_2D_ARRAY             = 0x8C1A,
-		GL_TEXTURE_3D                   = 0x806F,
-		GL_TEXTURE_CUBE_MAP             = 0x8513,
-		GL_TEXTURE_CUBE_MAP_ARRAY       = 0x9009,
-		GL_TEXTURE_RECTANGLE            = 0x84F5,
-		GL_TEXTURE_BUFFER               = 0x8C2A,
-		GL_RENDERBUFFER                 = 0x8D41,
-		GL_TEXTURE_2D_MULTISAMPLE       = 0x9100,
-		GL_TEXTURE_2D_MULTISAMPLE_ARRAY = 0x9102;
-
-	/**
 	 * Accepted by the &lt;pname&gt; parameter of GetInternalformativ
 	 * and GetInternalformati64v:
 	 */
-	int GL_SAMPLES                                = 0x80A9,
-		GL_NUM_SAMPLE_COUNTS                      = 0x9380,
-		GL_INTERNALFORMAT_SUPPORTED               = 0x826F,
+	int GL_INTERNALFORMAT_SUPPORTED               = 0x826F,
 		GL_INTERNALFORMAT_PREFERRED               = 0x8270,
 		GL_INTERNALFORMAT_RED_SIZE                = 0x8271,
 		GL_INTERNALFORMAT_GREEN_SIZE              = 0x8272,
@@ -483,12 +460,10 @@ public interface GL43 {
 		GL_IMAGE_COMPATIBILITY_CLASS              = 0x82A8,
 		GL_IMAGE_PIXEL_FORMAT                     = 0x82A9,
 		GL_IMAGE_PIXEL_TYPE                       = 0x82AA,
-		GL_IMAGE_FORMAT_COMPATIBILITY_TYPE        = 0x90C7,
 		GL_SIMULTANEOUS_TEXTURE_AND_DEPTH_TEST    = 0x82AC,
 		GL_SIMULTANEOUS_TEXTURE_AND_STENCIL_TEST  = 0x82AD,
 		GL_SIMULTANEOUS_TEXTURE_AND_DEPTH_WRITE   = 0x82AE,
 		GL_SIMULTANEOUS_TEXTURE_AND_STENCIL_WRITE = 0x82AF,
-		GL_TEXTURE_COMPRESSED                     = 0x86A1,
 		GL_TEXTURE_COMPRESSED_BLOCK_WIDTH         = 0x82B1,
 		GL_TEXTURE_COMPRESSED_BLOCK_HEIGHT        = 0x82B2,
 		GL_TEXTURE_COMPRESSED_BLOCK_SIZE          = 0x82B3,
