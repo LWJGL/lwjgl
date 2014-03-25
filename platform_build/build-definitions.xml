@@ -147,12 +147,12 @@
 	<!-- Files to include in mac os x package -->
 	<patternset id="lwjgl-macosx.fileset">
 		<patternset id="lwjgl-macosx-lwjgl.fileset">
-			<include name="liblwjgl.jnilib" />
+			<include name="liblwjgl.dylib" />
 			<include name="openal.dylib" />
 		</patternset>
 		<patternset id="lwjgl-macosx-jinput.fileset">
-		    <include name="libjinput-osx.jnilib" />
-		    <include name="libjinput-osx-legacy.jnilib" />
+		    <include name="libjinput-osx.dylib" />
+		    <include name="libjinput-osx-legacy.dylib" />
 		</patternset>
 	</patternset>
 
