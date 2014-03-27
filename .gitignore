@@ -17,3 +17,6 @@
 /src/native/*/org_lwjgl_*.h
 /src/native/*/*/org_lwjgl_*.h
 /src/native/linux/org_lwjgl_opengl_Display.c
+
+nbproject/project.xml
+/nbproject/private/

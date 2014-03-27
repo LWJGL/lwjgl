@@ -76,13 +76,12 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 			peer_info->glLayer = [GLLayer new];
 			
 			peer_info->glLayer->macosx_dsi = macosx_dsi;
-			peer_info->glLayer->canvasBounds = (JAWT_Rectangle)surface->dsi->bounds;
 			peer_info->window_info = (MacOSXWindowInfo *)(*env)->GetDirectBufferAddress(env, window_handle);
 			peer_info->glLayer->window_info = peer_info->window_info;
 			peer_info->glLayer->autoResizable = autoResizable;
 
-			// ensure the CALayer size is correct, needed for Java 7+
-            peer_info->glLayer.frame = CGRectMake(x, y, peer_info->glLayer->canvasBounds.width, peer_info->glLayer->canvasBounds.height);
+			/* we set bounds as requested w/ frame function */
+                        peer_info->glLayer.frame = CGRectMake(x, y, surface->dsi->bounds.width, surface->dsi->bounds.height);
 			
 			[peer_info->glLayer performSelectorOnMainThread:@selector(createWindow:) withObject:peer_info->pixel_format waitUntilDone:YES];
 			
@@ -144,11 +143,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerBound
 	
 	if (surfaceLayers.layer != self) {
 		surfaceLayers.layer = self;
-        
-		// flip CALayer y position, needed for Java 7 workaround
-		self.frame = CGRectMake(self.frame.origin.x,
-								self.superlayer.bounds.size.height - self.frame.origin.y - self.frame.size.height,
-								self.frame.size.width, self.frame.size.height);
 	}
 }
 
@@ -171,12 +165,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerBound
 
 - (void)updatePosition:(NSValue*)value {
 	NSPoint point = [value pointValue];
-	self.position = CGPointMake(point.x, self.superlayer.bounds.size.height - point.y - self.bounds.size.height);
+    self.position = CGPointMake(point.x, point.y);
 }
 
 - (void)updateBounds:(NSValue*)value {
 	NSRect rect = [value rectValue];
-	self.frame = CGRectMake(rect.origin.x, self.superlayer.bounds.size.height - rect.origin.y - self.bounds.size.height, rect.size.width, rect.size.height);
+	self.frame = CGRectMake(rect.origin.x, rect.origin.y,
+                            rect.size.width, rect.size.height);
 }
 
 - (int) getWidth {
