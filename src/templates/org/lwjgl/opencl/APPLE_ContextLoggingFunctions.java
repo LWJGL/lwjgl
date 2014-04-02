@@ -39,6 +39,7 @@ import java.nio.ByteBuffer;
 @Private
 @CLPlatformExtension
 @CLDeviceExtension
+@Extension(postfix = "APPLE", nativeName = "cl_APPLE_ContextLoggingFunctions")
 public interface APPLE_ContextLoggingFunctions {
 
 	@Extern

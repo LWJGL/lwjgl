@@ -33,6 +33,7 @@
 package org.lwjgl.util.generator.opencl;
 
 import org.lwjgl.PointerWrapper;
+import org.lwjgl.util.generator.Extension;
 import org.lwjgl.util.generator.Private;
 
 import java.io.PrintWriter;
@@ -108,7 +109,12 @@ public class CLPDCapabilitiesGenerator {
 
 			final String extName = CLGeneratorProcessorFactory.getExtensionName(t.getSimpleName());
 
-			writer.print("\t\t" + extName + " = extensions.contains(\"" + extName.toLowerCase() + "\")");
+			String nativeName = extName.toLowerCase();
+			Extension ext = t.getAnnotation(Extension.class);
+			if ( ext != null && !ext.nativeName().isEmpty() )
+				nativeName = ext.nativeName();
+
+			writer.print("\t\t" + extName + " = extensions.contains(\"" + nativeName + "\")");
 			if ( !t.getMethods().isEmpty() )
 				writer.print(" && CLCapabilities." + extName);
 			writer.println(";");

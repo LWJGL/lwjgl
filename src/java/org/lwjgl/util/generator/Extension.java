@@ -46,4 +46,7 @@ public @interface Extension {
 	String className() default "";
 	boolean isFinal() default true;
 	String postfix();
+
+	/** The extension name as it appears in the extension string. The default is the API prefix followed by the interface name, converted to lower-case. */
+	String nativeName() default "";
 }

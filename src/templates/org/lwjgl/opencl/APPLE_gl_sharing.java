@@ -39,7 +39,7 @@ import java.nio.ByteBuffer;
 
 @CLPlatformExtension
 @CLDeviceExtension
-@Extension(postfix = "APPLE", className = "APPLEGLSharing")
+@Extension(postfix = "APPLE", className = "APPLEGLSharing", nativeName = "cl_APPLE_gl_sharing")
 public interface APPLE_gl_sharing {
 
 	/**

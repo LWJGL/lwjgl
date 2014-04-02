@@ -33,6 +33,7 @@ package org.lwjgl.opencl;
 
 import org.lwjgl.util.generator.Code;
 import org.lwjgl.util.generator.Constant;
+import org.lwjgl.util.generator.Extension;
 import org.lwjgl.util.generator.PointerWrapper;
 import org.lwjgl.util.generator.opencl.CLDeviceExtension;
 import org.lwjgl.util.generator.opencl.CLPlatformExtension;
@@ -40,6 +41,7 @@ import org.lwjgl.util.generator.opencl.cl_int;
 
 @CLPlatformExtension
 @CLDeviceExtension
+@Extension(postfix = "APPLE", nativeName = "cl_APPLE_SetMemObjectDestructor")
 public interface APPLE_SetMemObjectDestructor {
 
 	@Code(
