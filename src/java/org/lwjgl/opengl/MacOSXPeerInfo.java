@@ -46,9 +46,9 @@ abstract class MacOSXPeerInfo extends PeerInfo {
 	MacOSXPeerInfo(PixelFormat pixel_format, ContextAttribs attribs, boolean use_display_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException {
 		super(createHandle());
 		
-		boolean gl32 = attribs != null && attribs.getMajorVersion() == 3 && attribs.getMinorVersion() == 2 && attribs.isProfileCore();
+		boolean gl32 = attribs != null && ((attribs.getMajorVersion() == 3 && attribs.getMinorVersion() >= 2) || attribs.getMajorVersion() > 3) && attribs.isProfileCore();
 		if ( gl32 && !LWJGLUtil.isMacOSXEqualsOrBetterThan(10, 7) )
-			throw new LWJGLException("OpenGL 3.2 requested, but it requires MacOS X 10.7 or newer");
+			throw new LWJGLException("OpenGL 3.2+ requested, but it requires MacOS X 10.7 or newer");
 
 		choosePixelFormat(pixel_format, gl32, use_display_bpp, support_window, support_pbuffer, double_buffered);
 	}
