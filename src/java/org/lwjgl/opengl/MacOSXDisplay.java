@@ -163,10 +163,8 @@ final class MacOSXDisplay implements DisplayImplementation {
 				// when going to fullscreen viewport is set to screen size by Cocoa, ignore this value
 				skipViewportValue = true;
 				// if starting in fullscreen then set initial viewport to displaymode size
-				if (current_viewport.get(2) == 0 && current_viewport.get(3) == 0) {
-					current_viewport.put(2, mode.getWidth());
-					current_viewport.put(3, mode.getHeight());
-				}
+				current_viewport.put(2, mode.getWidth());
+				current_viewport.put(3, mode.getHeight());
 			}
 			
 			native_mode = nIsNativeMode(peer_handle);
@@ -331,10 +329,15 @@ final class MacOSXDisplay implements DisplayImplementation {
 		
 		DrawableGL drawable = (DrawableGL)Display.getDrawable();
 		if (should_update) {
-			drawable.context.update();
-			/* This is necessary to make sure the context won't "forget" about the view size */
+			
+			// Save the current viewport size as cocoa will automatically
+			// set the viewport size to the window size on context update
 			if (skipViewportValue) skipViewportValue = false;
 			else glGetInteger(GL_VIEWPORT, current_viewport);
+			
+			drawable.context.update();
+			
+			// restore the original viewport size that was set before the update
 			glViewport(current_viewport.get(0), current_viewport.get(1), current_viewport.get(2), current_viewport.get(3));
 		}
 		
