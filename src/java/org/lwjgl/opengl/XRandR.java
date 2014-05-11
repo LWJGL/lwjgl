@@ -49,6 +49,18 @@ public class XRandR
 {
 	private static Screen[] current;
 
+        /**
+         * Either the screen marked as "primary" (if it is turned on)
+         * or the one with the largest (current) resolution.
+         */
+        private static String primaryScreenIdentifier;
+
+        /**
+         * Used to save the configuration of all output devices to
+         * restore it on exit or in case of crash.
+         */
+        private static Screen[] savedConfiguration;
+
 	private static Map<String, Screen[]> screens;
 
 	private static void populate()
@@ -89,7 +101,13 @@ public class XRandR
 						name = sa[ 0 ];
 
                                                 // save position of this screen, will be used later when current modeline is parsed
-                                                parseScreenHeader(currentScreenPosition, "primary".equals(sa[ 2 ]) ? sa[ 3 ] : sa[ 2 ]);
+                                                if ("primary".equals(sa[ 2 ])) {
+                                                    parseScreenHeader(currentScreenPosition, sa[ 3 ]);
+                                                    // save primary
+                                                    primaryScreenIdentifier = name;
+                                                } else {
+                                                    parseScreenHeader(currentScreenPosition, sa[ 2 ]);
+                                                }
 					}
 					else if( Pattern.matches( "\\d*x\\d*", sa[ 0 ] ) )
 					{
@@ -106,6 +124,17 @@ public class XRandR
 				screens.put( name, possibles.toArray( new Screen[ possibles.size() ] ) );
 
 				current = currentList.toArray(new Screen[currentList.size()]);
+
+                                // set primary to largest screen if not set yet
+                                if (primaryScreenIdentifier == null) {
+                                    long totalPixels = Long.MIN_VALUE;
+                                    for (Screen screen : current) {
+                                        if (1l * screen.width * screen.height > totalPixels) {
+                                            primaryScreenIdentifier = screen.name;
+                                            totalPixels = 1l * screen.width * screen.height;
+                                        }
+                                    }
+                                }
 			}
 			catch( Throwable e )
 			{
@@ -117,13 +146,22 @@ public class XRandR
 	}
 
 	/**
-	 * @return The current screen configuration, or an empty array if
-	 *         xrandr is not supported
+	 * @return The current screen configuration of the primary device,
+         * or an empty array if xrandr is not supported
 	 */
 	public static Screen[] getConfiguration()
 	{
 		populate();
 
+                // find and return primary
+                for (Screen screen : current) {
+                    if (screen.name.equals(primaryScreenIdentifier)) {
+                        System.out.println("getConfiguration returned " + screen.width + "x" + screen.height + " @" + screen.freq);
+                        return new Screen[]{screen};
+                    }
+                }
+
+                // problem with primary device, fall back to old behaviour
 		return current.clone();
 	}
 
@@ -183,6 +221,25 @@ public class XRandR
 			LWJGLUtil.log( "XRandR exception in setConfiguration(): " + e.getMessage() );
 		}
 	}
+
+        /**
+         * Saves the current configuration for all connected display devices.
+         * This configuration can be restored on exit/crash by calling
+         * restoreConfiguration()
+         */
+        public static void saveConfiguration() {
+                savedConfiguration = current.clone();
+        }
+
+        /**
+         * Restores the configuration for all connected display devices.
+         * Used on exit or in case of a crash to reset all devices.
+         */
+        public static void restoreConfiguration() {
+                if (savedConfiguration != null) {
+                        setConfiguration(savedConfiguration);
+                }
+        }
 
 	/**
 	 * @return the name of connected screens, or an empty array if
@@ -273,6 +330,18 @@ public class XRandR
             }
             screenPosition[0] = Integer.parseInt(m.group(3));
             screenPosition[1] = Integer.parseInt(m.group(4));
+        }
+
+        static Screen toScreen(DisplayMode mode) {
+                populate();
+                // test: use first screen in list
+                // TODO: replace with "primary"
+                return new Screen(current[0].name, mode.getWidth(), mode.getHeight(), mode.getFrequency(), current[0].xPos, current[0].yPos);
+        }
+
+        static DisplayMode toDisplayMode(Screen... screens) {
+            // todo: use "primary" screen
+            return new DisplayMode(screens[0].width, screens[0].height, 24, screens[0].freq);
         }
 
 	/**

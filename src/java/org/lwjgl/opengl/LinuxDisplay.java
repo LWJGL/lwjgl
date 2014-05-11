@@ -129,7 +129,6 @@ final class LinuxDisplay implements DisplayImplementation {
 	private DisplayMode saved_mode;
 	private DisplayMode current_mode;
 
-	private Screen[] savedXrandrConfig;
 
 	private boolean keyboard_grabbed;
 	private boolean pointer_grabbed;
@@ -603,12 +602,17 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 
 	private void switchDisplayModeOnTmpDisplay(DisplayMode mode) throws LWJGLException {
-		incDisplay();
-		try {
-			nSwitchDisplayMode(getDisplay(), getDefaultScreen(), current_displaymode_extension, mode);
-		} finally {
-			decDisplay();
-		}
+                if (current_displaymode_extension == XRANDR) {
+                        // let Xrandr set the display mode
+                        XRandR.setConfiguration(XRandR.toScreen(mode));
+                } else {
+                        incDisplay();
+                        try {
+                                nSwitchDisplayMode(getDisplay(), getDefaultScreen(), current_displaymode_extension, mode);
+                        } finally {
+                                decDisplay();
+                        }
+                }
 	}
 	private static native void nSwitchDisplayMode(long display, int screen, int extension, DisplayMode mode) throws LWJGLException;
 
@@ -625,11 +629,11 @@ final class LinuxDisplay implements DisplayImplementation {
 	public void resetDisplayMode() {
 		lockAWT();
 		try {
-			if( current_displaymode_extension == XRANDR && savedXrandrConfig.length > 0 )
+			if( current_displaymode_extension == XRANDR )
 			{
 				AccessController.doPrivileged(new PrivilegedAction<Object>() {
 					public Object run() {
-						XRandR.setConfiguration( savedXrandrConfig );
+						XRandR.restoreConfiguration();
 						return null;
 					}
 				});
@@ -727,12 +731,12 @@ final class LinuxDisplay implements DisplayImplementation {
 				throw new LWJGLException("No modes available");
 			switch (current_displaymode_extension) {
 				case XRANDR:
-					savedXrandrConfig = AccessController.doPrivileged(new PrivilegedAction<Screen[]>() {
-						public Screen[] run() {
-							return XRandR.getConfiguration();
+					saved_mode = AccessController.doPrivileged(new PrivilegedAction<DisplayMode>() {
+						public DisplayMode run() {
+							XRandR.saveConfiguration();
+                                                        return XRandR.toDisplayMode(XRandR.getConfiguration());
 						}
 					});
-					saved_mode = getCurrentXRandrMode();
 					break;
 				case XF86VIDMODE:
 					saved_mode = modes[0];
@@ -929,13 +933,24 @@ final class LinuxDisplay implements DisplayImplementation {
 	public DisplayMode[] getAvailableDisplayModes() throws LWJGLException {
 		lockAWT();
 		try {
-			incDisplay();
-			try {
-				DisplayMode[] modes = nGetAvailableDisplayModes(getDisplay(), getDefaultScreen(), current_displaymode_extension);
-				return modes;
-			} finally {
-				decDisplay();
-			}
+                        incDisplay();
+                        if (current_displaymode_extension == XRANDR) {
+                                // nGetAvailableDisplayModes cannot be trusted. Use xrandr
+                                Screen[] resolutions = XRandR.getResolutions(XRandR.getScreenNames()[0]);
+                                // quick hack, copy Screens to DisplayModes (todo: get bpp from somewhere, instead of using 24 as default)
+                                DisplayMode[] modes = new DisplayMode[resolutions.length];
+                                for (int i = 0; i < modes.length; i++) {
+                                    modes[i] = new DisplayMode(resolutions[i].width, resolutions[i].height, 24, resolutions[i].freq);
+                                }
+                                return modes;
+                        } else {
+                                try {
+                                        DisplayMode[] modes = nGetAvailableDisplayModes(getDisplay(), getDefaultScreen(), current_displaymode_extension);
+                                        return modes;
+                                } finally {
+                                        decDisplay();
+                                }
+                        }
 		} finally {
 			unlockAWT();
 		}
@@ -1101,11 +1116,11 @@ final class LinuxDisplay implements DisplayImplementation {
 		if (current_window_mode == FULLSCREEN_NETWM) {
 			nIconifyWindow(getDisplay(), getWindow(), getDefaultScreen());
 			try {
-				if( current_displaymode_extension == XRANDR && savedXrandrConfig.length > 0 )
+				if( current_displaymode_extension == XRANDR )
 				{
 					AccessController.doPrivileged(new PrivilegedAction<Object>() {
 						public Object run() {
-							XRandR.setConfiguration( savedXrandrConfig );
+							XRandR.restoreConfiguration();
 							return null;
 						}
 					});
