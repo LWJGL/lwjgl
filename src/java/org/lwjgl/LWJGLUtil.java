@@ -605,7 +605,7 @@ public class LWJGLUtil {
 		 * @param field the Field to test
 		 * @param value the integer value of the field
 		 *
-		 * @result true if the Field is accepted
+		 * @return true if the Field is accepted
 		 */
 		boolean accept(Field field, int value);
 

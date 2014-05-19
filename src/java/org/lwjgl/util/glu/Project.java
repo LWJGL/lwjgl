@@ -98,7 +98,7 @@ public class Project extends Util {
 	 * @param src
 	 * @param inverse
 	 *
-	 * @return
+	 * @return true if the matrix was succesfully inverted
 	 */
 	private static boolean __gluInvertMatrixf(FloatBuffer src, FloatBuffer inverse) {
 		int i, j, k, swap;

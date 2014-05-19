@@ -52,14 +52,14 @@ public @interface CacheLinePad {
 	/**
 	 * When true, cache-line padding will be inserted before the field.
 	 *
-	 * @return
+	 * @return true if cache-line padding will be inserted before the field
 	 */
 	boolean before() default false;
 
 	/**
 	 * When true, cache-line padding will be inserted after the field.
 	 *
-	 * @return
+	 * @return true if cache-line padding will be inserted after the field
 	 */
 	boolean after() default true;
 

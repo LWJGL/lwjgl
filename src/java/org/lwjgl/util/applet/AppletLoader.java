@@ -1867,8 +1867,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/**
 	 * Compare two certificate chains to see if they match
 	 *
-	 * @param cert1 first chain of certificates
-	 * @param cert2 second chain of certificates
+	 * @param certs1 first chain of certificates
+	 * @param certs2 second chain of certificates
 	 * 
 	 * @return true if the certificate chains are the same
 	 */
@@ -2224,7 +2224,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/** 
 	 * set the state of applet loader 
-	 * @param new state of applet loader
+	 * @param state new state of applet loader
 	 * */
 	protected void setState(int state) {
 		this.state = state;

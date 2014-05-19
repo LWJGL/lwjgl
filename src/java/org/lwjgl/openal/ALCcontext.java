@@ -82,7 +82,7 @@ public final class ALCcontext {
 	 * @param contextFrequency Frequency to add
 	 * @param contextRefresh Refresh rate to add
 	 * @param contextSynchronized Whether to synchronize the context
-	 * @return
+	 * @return attribute list
 	 */
 	static IntBuffer createAttributeList(int contextFrequency, int contextRefresh, int contextSynchronized) {
 		IntBuffer attribList = BufferUtils.createIntBuffer(7);
