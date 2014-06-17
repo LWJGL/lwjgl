@@ -1113,8 +1113,8 @@ final class WindowsDisplay implements DisplayImplementation {
 			case WM_WINDOWPOSCHANGED:
 				if(getWindowRect(hwnd, rect_buffer)) {
 					rect.copyFromBuffer(rect_buffer);
-					x = rect.top;
-					y = rect.bottom;
+					x = rect.left;
+					y = rect.top;
 				} else {
 					LWJGLUtil.log("WM_WINDOWPOSCHANGED: Unable to get window rect");
 				}
