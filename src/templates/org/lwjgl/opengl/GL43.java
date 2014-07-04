@@ -89,10 +89,10 @@ public interface GL43 {
 	void glClearBufferSubData(@GLenum int target,
 	                          @GLenum int internalformat,
 	                          @GLintptr long offset,
-	                          @AutoSize("data") @GLsizeiptr long size,
+	                          @GLsizeiptr long size,
 	                          @GLenum int format,
 	                          @GLenum int type,
-	                          @Const @GLvoid ByteBuffer data);
+	                          @Check("1") @Const @GLvoid ByteBuffer data);
 
 	// ------------------------------------------------------------------
 	// ----------------------[ ARB_compute_shader ]----------------------
