@@ -50,10 +50,10 @@ public interface ARB_clear_buffer_object {
 	void glClearBufferSubData(@GLenum int target,
 	                          @GLenum int internalformat,
 	                          @GLintptr long offset,
-	                          @AutoSize("data") @GLsizeiptr long size,
+	                          @GLsizeiptr long size,
 	                          @GLenum int format,
 	                          @GLenum int type,
-	                          @Const @GLvoid ByteBuffer data);
+	                          @Check("1") @Const @GLvoid ByteBuffer data);
 
 	@Dependent("GL_EXT_direct_state_access")
 	void glClearNamedBufferDataEXT(@GLuint int buffer,
@@ -66,9 +66,9 @@ public interface ARB_clear_buffer_object {
 	void glClearNamedBufferSubDataEXT(@GLuint int buffer,
 	                                  @GLenum int internalformat,
 	                                  @GLintptr long offset,
-	                                  @AutoSize("data") @GLsizeiptr long size,
+	                                  @GLsizeiptr long size,
 	                                  @GLenum int format,
 	                                  @GLenum int type,
-	                                  @Const @GLvoid ByteBuffer data);
+	                                  @Check("1") @GLvoid ByteBuffer data);
 
 }
