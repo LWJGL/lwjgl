@@ -162,7 +162,7 @@
 				<attribute name="Permissions" value="all-permissions"/>
 				<attribute name="Codebase" value="*"/>
 				<attribute name="Caller-Allowable-Codebase" value="*"/>
-				<attribute name="Application-Library-Allowable-Codebase" value="true"/>
+				<attribute name="Application-Library-Allowable-Codebase" value="*"/>
 			</manifest>
 		</jar>
 
