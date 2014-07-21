@@ -1060,6 +1060,11 @@ final class WindowsDisplay implements DisplayImplementation {
 				handleChar(wParam, lParam, millis);
 				return 0L;
 			case WM_SYSKEYUP:
+				// Disable WM_SYSCOMMAND/SC_KEYMENU
+				if ( wParam == WindowsKeycodes.VK_MENU || wParam == WindowsKeycodes.VK_F10 ) {
+					handleKeyButton(wParam, lParam, millis);
+					return 0L;
+				}
 				/* Fall through */
 			case WM_KEYUP:
 				// SysRq apparently only generates WM_KEYUP, so we'll fake a WM_KEYDOWN
@@ -1082,16 +1087,12 @@ final class WindowsDisplay implements DisplayImplementation {
 				return 0L;
 			case WM_SYSCOMMAND:
 				switch ((int)(wParam & 0xfff0)) {
-					case SC_KEYMENU:
-					case SC_MOUSEMENU:
 					case SC_SCREENSAVE:
 					case SC_MONITORPOWER:
 						return 0L;
 					case SC_CLOSE:
 						close_requested = true;
 						return 0L;
-					default:
-						break;
 				}
 				break;
 			case WM_PAINT:
