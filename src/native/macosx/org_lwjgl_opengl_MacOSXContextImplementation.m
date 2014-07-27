@@ -220,22 +220,26 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nDestro
 		[context_info->peer_info->glLayer performSelectorOnMainThread:@selector(removeLayer) withObject:nil waitUntilDone:YES];
 		[context_info->peer_info->glLayer release];
 		context_info->peer_info->glLayer = nil;
-        // don't release context due to nvidia driver bug when releasing shared contexts
-        [context_info->context retain];
+        // don't release context due to bug when releasing shared contexts
+        if([context_info->context CGLGetContextRetainCount] < 1) {
+            [context_info->context retain];
+        }
 	}
 	
 	[context_info->context clearDrawable];
 	
 	if (context_info->peer_info->isWindowed) {
         [context_info->peer_info->window_info->view setOpenGLContext:nil];
-		[context_info->context release];
+        [context_info->context release];
 		context_info->context = nil;
 		context_info->peer_info->window_info->context = nil;
 	}
     else {
-        // don't release context due to nvidia driver bug when releasing shared contexts
-        //[context_info->context release];
-		//context_info->context = nil;
+        // don't release context due to bug when releasing shared contexts
+        if([context_info->context CGLGetContextRetainCount] > 1) {
+            [context_info->context release];
+            context_info->context = nil;
+        }
     }
 	
 	[pool release];
