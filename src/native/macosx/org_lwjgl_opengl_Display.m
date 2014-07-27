@@ -79,7 +79,10 @@ static NSUInteger lastModifierFlags = 0;
 	
 	if (window_info->enableHighDPI) {
 		// call method using runtime selector as its a 10.7+ api and allows compiling on older SDK's
-		[window_info->view performSelector:NSSelectorFromString(@"setWantsBestResolutionOpenGLSurface:") withObject:YES];
+		// WORK IN PROGRESS [window_info->view performSelector:NSSelectorFromString(@"setWantsBestResolutionOpenGLSurface:") withObject:YES];
+		// the above call leads to incorrect behaviour of furhter glViewport()calls from NSView
+		// https://developer.apple.com/library/mac/documentation/AppKit/Reference/NSViewOpenGLAdditions/Reference/Reference.html#jumpTo_3
+		// NSRect highDPIBounds = [self convertRectToBacking:[self bounds]];
 	}
 	
 	// set nsapp delegate for catching app quit events
