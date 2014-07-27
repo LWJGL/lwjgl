@@ -166,7 +166,7 @@ static NSUInteger lastModifierFlags = 0;
 		
 		if (window_info->window != nil) {
             // release the nsview and remove it from any parent nsview
-            [window_info->view removeFromSuperviewWithoutNeedingDisplay];
+            [window_info->view removeFromSuperview];
 			// if the nsview has no parent then close window
 			if ([window_info->window contentView] == window_info->view) {
 				[window_info->window close];
