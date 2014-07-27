@@ -221,7 +221,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nDestro
 		[context_info->peer_info->glLayer release];
 		context_info->peer_info->glLayer = nil;
         // don't release context due to bug when releasing shared contexts
-        if([context_info->context CGLGetContextRetainCount] < 1) {
+        if(CGLGetContextRetainCount([context_info->peer_info->window_info->view CGLContextObj]) < 1) {
             [context_info->context retain];
         }
 	}
@@ -236,7 +236,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXContextImplementation_nDestro
 	}
     else {
         // don't release context due to bug when releasing shared contexts
-        if([context_info->context CGLGetContextRetainCount] > 1) {
+        if(CGLGetContextRetainCount([context_info->peer_info->window_info->view CGLContextObj]) > 1) {
             [context_info->context release];
             context_info->context = nil;
         }
