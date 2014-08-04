@@ -188,8 +188,8 @@ static void setWindowTitle(Display *disp, Window window, jlong title, jint len) 
 static void setClassHint(Display *disp, Window window, jlong wm_name, jlong wm_class) {
 	XClassHint* hint = XAllocClassHint();
 	
-	hint->res_name = (const unsigned char *)(intptr_t)wm_name;
-	hint->res_class = (const unsigned char *)(intptr_t)wm_class;
+	hint->res_name = (char *)(intptr_t)wm_name;
+	hint->res_class = (char *)(intptr_t)wm_class;
 	
 	XSetClassHint(disp, window, hint);
 	
