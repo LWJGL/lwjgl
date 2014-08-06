@@ -52,18 +52,6 @@ public interface ARB_viewport_array {
 		GL_LAYER_PROVOKING_VERTEX = 0x825E,
 		GL_VIEWPORT_INDEX_PROVOKING_VERTEX = 0x825F;
 
-	/** Accepted by the &lt;pname&gt; parameter of GetIntegeri_v: */
-	int GL_SCISSOR_BOX = 0x0C10;
-
-	/** Accepted by the &lt;pname&gt; parameter of GetFloati_v: */
-	int GL_VIEWPORT = 0x0BA2;
-
-	/** Accepted by the &lt;pname&gt; parameter of GetDoublei_v: */
-	int GL_DEPTH_RANGE = 0x0B70;
-
-	/** Accepted by the &lt;pname&gt; parameter of Enablei, Disablei, and IsEnabledi: */
-	int GL_SCISSOR_TEST = 0x0C11;
-
 	/**
 	 * Returned in the &lt;data&gt; parameter from a Get query with a &lt;pname&gt; of
 	 * LAYER_PROVOKING_VERTEX or VIEWPORT_INDEX_PROVOKING_VERTEX:

@@ -41,12 +41,6 @@ public interface AMD_stencil_operation_extended {
 	 * and StencilOpSeparate:
 	 */
 	int GL_SET_AMD           = 0x874A,
-		GL_AND               = 0x1501,
-		GL_XOR               = 0x1506,
-		GL_OR                = 0x1507,
-		GL_NOR               = 0x1508,
-		GL_EQUIV             = 0x1509,
-		GL_NAND              = 0x150E,
 		GL_REPLACE_VALUE_AMD = 0x874B;
 
 	/**

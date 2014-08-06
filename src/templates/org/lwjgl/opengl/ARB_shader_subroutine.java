@@ -58,8 +58,6 @@ public interface ARB_shader_subroutine {
 	/** Accepted by the &lt;pname&gt; parameter of GetActiveSubroutineUniformiv: */
 	int GL_NUM_COMPATIBLE_SUBROUTINES = 0x8E4A;
 	int GL_COMPATIBLE_SUBROUTINES = 0x8E4B;
-	int GL_UNIFORM_SIZE = GL31.GL_UNIFORM_SIZE;
-	int GL_UNIFORM_NAME_LENGTH = GL31.GL_UNIFORM_NAME_LENGTH;
 
 	@Reuse("GL40")
 	int glGetSubroutineUniformLocation(@GLuint int program, @GLenum int shadertype, @Const @NullTerminated ByteBuffer name);

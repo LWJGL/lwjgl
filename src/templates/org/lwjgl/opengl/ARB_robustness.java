@@ -41,8 +41,7 @@ import java.nio.*;
 public interface ARB_robustness {
 
 	/** Returned by GetGraphicsResetStatusARB: */
-	int GL_NO_ERROR = 0x0000,
-		GL_GUILTY_CONTEXT_RESET_ARB = 0x8253,
+	int GL_GUILTY_CONTEXT_RESET_ARB = 0x8253,
 		GL_INNOCENT_CONTEXT_RESET_ARB = 0x8254,
 		GL_UNKNOWN_CONTEXT_RESET_ARB = 0x8255;
 

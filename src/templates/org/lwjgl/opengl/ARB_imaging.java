@@ -49,10 +49,6 @@ import java.nio.*;
 @DeprecatedGL
 public interface ARB_imaging {
 
-	int GL_CONSTANT_COLOR = 0x8001;
-	int GL_ONE_MINUS_CONSTANT_COLOR = 0x8002;
-	int GL_CONSTANT_ALPHA = 0x8003;
-	int GL_ONE_MINUS_CONSTANT_ALPHA = 0x8004;
 	int GL_BLEND_COLOR = 0x8005;
 	int GL_FUNC_ADD = 0x8006;
 	int GL_MIN = 0x8007;
