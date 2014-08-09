@@ -482,7 +482,16 @@ final class LinuxDisplay implements DisplayImplementation {
 					window_y = y;
 					window_width = mode.getWidth();
 					window_height = mode.getHeight();
-					
+
+                                        // overwrite arguments x and y - superclass always uses 0,0 for fullscreen windows
+                                        // use the coordinates of XRandRs primary screen instead
+                                        // this is required to let the fullscreen window appear on the primary screen
+                                        if (mode.isFullscreenCapable()  && current_displaymode_extension == XRANDR) {
+                                            Screen primaryScreen = XRandR.DisplayModetoScreen(Display.getDisplayMode());
+                                            x = primaryScreen.xPos;
+                                            y = primaryScreen.yPos;
+                                        }
+
 					current_window = nCreateWindow(getDisplay(), getDefaultScreen(), handle, mode, current_window_mode, x, y, undecorated, parent_window, resizable);
 					
 					// Set the WM_CLASS hint which is needed by some WM's e.g. Gnome Shell
@@ -604,7 +613,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	private void switchDisplayModeOnTmpDisplay(DisplayMode mode) throws LWJGLException {
                 if (current_displaymode_extension == XRANDR) {
                         // let Xrandr set the display mode
-                        XRandR.setConfiguration(XRandR.toScreen(mode));
+                        XRandR.setConfiguration(false, XRandR.DisplayModetoScreen(mode));
                 } else {
                         incDisplay();
                         try {
@@ -734,7 +743,7 @@ final class LinuxDisplay implements DisplayImplementation {
 					saved_mode = AccessController.doPrivileged(new PrivilegedAction<DisplayMode>() {
 						public DisplayMode run() {
 							XRandR.saveConfiguration();
-                                                        return XRandR.toDisplayMode(XRandR.getConfiguration());
+                                                        return XRandR.ScreentoDisplayMode(XRandR.getConfiguration());
 						}
 					});
 					break;
@@ -935,12 +944,17 @@ final class LinuxDisplay implements DisplayImplementation {
 		try {
                         incDisplay();
                         if (current_displaymode_extension == XRANDR) {
-                                // nGetAvailableDisplayModes cannot be trusted. Use xrandr
+                                // nGetAvailableDisplayModes cannot be trusted. Use it only for bitsPerPixel
+                                DisplayMode[] nDisplayModes = nGetAvailableDisplayModes(getDisplay(), getDefaultScreen(), current_displaymode_extension);
+                                int bpp = 24;
+                                if (nDisplayModes.length > 0) {
+                                    bpp = nDisplayModes[0].getBitsPerPixel();
+                                }
+                                // get the resolutions and frequencys from XRandR
                                 Screen[] resolutions = XRandR.getResolutions(XRandR.getScreenNames()[0]);
-                                // quick hack, copy Screens to DisplayModes (todo: get bpp from somewhere, instead of using 24 as default)
                                 DisplayMode[] modes = new DisplayMode[resolutions.length];
                                 for (int i = 0; i < modes.length; i++) {
-                                    modes[i] = new DisplayMode(resolutions[i].width, resolutions[i].height, 24, resolutions[i].freq);
+                                    modes[i] = new DisplayMode(resolutions[i].width, resolutions[i].height, bpp, resolutions[i].freq);
                                 }
                                 return modes;
                         } else {

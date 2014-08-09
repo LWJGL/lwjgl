@@ -156,7 +156,6 @@ public class XRandR
                 // find and return primary
                 for (Screen screen : current) {
                     if (screen.name.equals(primaryScreenIdentifier)) {
-                        System.out.println("getConfiguration returned " + screen.width + "x" + screen.height + " @" + screen.freq);
                         return new Screen[]{screen};
                     }
                 }
@@ -166,12 +165,14 @@ public class XRandR
 	}
 
 	/**
+         * @param disableOthers
+         *           if screens not included in screens should be turned off (true) or left alone (false)
 	 * @param screens
 	 *           The desired screen set, may not be <code>null</code>
 	 * @throws IllegalArgumentException
 	 *            if no screens are specified
 	 */
-	public static void setConfiguration(Screen... screens)
+	public static void setConfiguration(boolean disableOthers, Screen... screens)
 	{
 		if( screens.length == 0 )
 			throw new IllegalArgumentException( "Must specify at least one screen" );
@@ -179,22 +180,24 @@ public class XRandR
 		List<String> cmd = new ArrayList<String>();
 		cmd.add( "xrandr" );
 
-		// switch off those in the current set not in the new set
-		for ( Screen screen : current ) {
-			boolean found = false;
-			for ( Screen screen1 : screens ) {
-				if ( screen1.name.equals(screen.name) ) {
-					found = true;
-					break;
-				}
-			}
+                if (disableOthers) {
+                    // switch off those in the current set not in the new set
+                    for ( Screen screen : current ) {
+                            boolean found = false;
+                            for ( Screen screen1 : screens ) {
+                                    if ( screen1.name.equals(screen.name) ) {
+                                            found = true;
+                                            break;
+                                    }
+                            }
 
-			if ( !found ) {
-				cmd.add("--output");
-				cmd.add(screen.name);
-				cmd.add("--off");
-			}
-		}
+                            if ( !found ) {
+                                    cmd.add("--output");
+                                    cmd.add(screen.name);
+                                    cmd.add("--off");
+                            }
+                    }
+                }
 
 		// set up new set
 		for ( Screen screen : screens )
@@ -237,7 +240,7 @@ public class XRandR
          */
         public static void restoreConfiguration() {
                 if (savedConfiguration != null) {
-                        setConfiguration(savedConfiguration);
+                        setConfiguration(true, savedConfiguration);
                 }
         }
 
@@ -332,16 +335,26 @@ public class XRandR
             screenPosition[1] = Integer.parseInt(m.group(4));
         }
 
-        static Screen toScreen(DisplayMode mode) {
+        static Screen DisplayModetoScreen(DisplayMode mode) {
                 populate();
-                // test: use first screen in list
-                // TODO: replace with "primary"
-                return new Screen(current[0].name, mode.getWidth(), mode.getHeight(), mode.getFrequency(), current[0].xPos, current[0].yPos);
+                Screen primary = findPrimary(current);
+                return new Screen(primary.name, mode.getWidth(), mode.getHeight(), mode.getFrequency(), primary.xPos, primary.yPos);
         }
 
-        static DisplayMode toDisplayMode(Screen... screens) {
-            // todo: use "primary" screen
-            return new DisplayMode(screens[0].width, screens[0].height, 24, screens[0].freq);
+        static DisplayMode ScreentoDisplayMode(Screen... screens) {
+            populate();
+            Screen primary = findPrimary(screens);
+            return new DisplayMode(primary.width, primary.height, 24, primary.freq);
+        }
+
+        private static Screen findPrimary(Screen... screens) {
+            for (Screen screen : screens) {
+                if (screen.name.equals(primaryScreenIdentifier)) {
+                    return screen;
+                }
+            }
+            // fallback
+            return screens[0];
         }
 
 	/**
