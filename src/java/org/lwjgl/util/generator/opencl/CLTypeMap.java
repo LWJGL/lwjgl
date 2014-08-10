@@ -39,60 +39,64 @@ package org.lwjgl.util.generator.opencl;
  * @author Spasi
  */
 
-import org.lwjgl.PointerBuffer;
-import org.lwjgl.util.generator.*;
-import org.lwjgl.util.generator.opengl.GLreturn;
-
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.nio.*;
 import java.util.HashMap;
 import java.util.Map;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLreturn;
 
-import com.sun.mirror.declaration.AnnotationMirror;
-import com.sun.mirror.declaration.MethodDeclaration;
-import com.sun.mirror.declaration.ParameterDeclaration;
-import com.sun.mirror.type.PrimitiveType;
 
 public class CLTypeMap implements TypeMap {
 
-	private static final Map<Class, PrimitiveType.Kind> native_types_to_primitive;
+	private static final Map<Class, TypeKind> native_types_to_primitive;
 
 	static {
-		native_types_to_primitive = new HashMap<Class, PrimitiveType.Kind>();
-		native_types_to_primitive.put(cl_void.class, PrimitiveType.Kind.BYTE);
-		native_types_to_primitive.put(cl_byte.class, PrimitiveType.Kind.BYTE);
-		native_types_to_primitive.put(cl_char.class, PrimitiveType.Kind.BYTE);
-		native_types_to_primitive.put(cl_uchar.class, PrimitiveType.Kind.BYTE);
-		native_types_to_primitive.put(cl_short.class, PrimitiveType.Kind.SHORT);
-		native_types_to_primitive.put(cl_bool.class, PrimitiveType.Kind.INT);
-		native_types_to_primitive.put(cl_int.class, PrimitiveType.Kind.INT);
-		native_types_to_primitive.put(cl_uint.class, PrimitiveType.Kind.INT);
-		native_types_to_primitive.put(cl_long.class, PrimitiveType.Kind.LONG);
-		native_types_to_primitive.put(size_t.class, PrimitiveType.Kind.LONG);
-		native_types_to_primitive.put(cl_bitfield.class, PrimitiveType.Kind.LONG);
-		native_types_to_primitive.put(cl_float.class, PrimitiveType.Kind.FLOAT);
-		native_types_to_primitive.put(cl_double.class, PrimitiveType.Kind.DOUBLE);
+		native_types_to_primitive = new HashMap<Class, TypeKind>();
+		native_types_to_primitive.put(cl_void.class, TypeKind.BYTE);
+		native_types_to_primitive.put(cl_byte.class, TypeKind.BYTE);
+		native_types_to_primitive.put(cl_char.class, TypeKind.BYTE);
+		native_types_to_primitive.put(cl_uchar.class, TypeKind.BYTE);
+		native_types_to_primitive.put(cl_short.class, TypeKind.SHORT);
+		native_types_to_primitive.put(cl_bool.class, TypeKind.INT);
+		native_types_to_primitive.put(cl_int.class, TypeKind.INT);
+		native_types_to_primitive.put(cl_uint.class, TypeKind.INT);
+		native_types_to_primitive.put(cl_long.class, TypeKind.LONG);
+		native_types_to_primitive.put(size_t.class, TypeKind.LONG);
+		native_types_to_primitive.put(cl_bitfield.class, TypeKind.LONG);
+		native_types_to_primitive.put(cl_float.class, TypeKind.FLOAT);
+		native_types_to_primitive.put(cl_double.class, TypeKind.DOUBLE);
 	}
 
-	public PrimitiveType.Kind getPrimitiveTypeFromNativeType(Class native_type) {
-		PrimitiveType.Kind kind = native_types_to_primitive.get(native_type);
+        @Override
+	public TypeKind getPrimitiveTypeFromNativeType(Class native_type) {
+		TypeKind kind = native_types_to_primitive.get(native_type);
 		if ( kind == null )
 			throw new RuntimeException("Unsupported type " + native_type);
 		return kind;
 	}
 
+        @Override
 	public void printCapabilitiesInit(final PrintWriter writer) {
 	}
 
+        @Override
 	public String getCapabilities() {
 		return "CLCapabilities";
 	}
 
+        @Override
 	public String getAPIUtilParam(boolean comma) {
 		return "";
 	}
 
+        @Override
 	public void printErrorCheckMethod(final PrintWriter writer, final ExecutableElement method, final String tabs) {
 		final Check check = method.getAnnotation(Check.class);
 		if ( check != null ) // Get the error code from an IntBuffer output parameter
@@ -104,7 +108,7 @@ public class CLTypeMap implements TypeMap {
 			else {
 				boolean hasErrCodeParam = false;
 				for ( final VariableElement param : method.getParameters() ) {
-					if ( "errcode_ret".equals(param.getSimpleName()) && Utils.getJavaType(param.getType()) == IntBuffer.class ) {
+					if ( "errcode_ret".equals(param.getSimpleName()) && Utils.getJavaType(param.asType()) == IntBuffer.class ) {
 						hasErrCodeParam = true;
 						break;
 					}
@@ -115,10 +119,12 @@ public class CLTypeMap implements TypeMap {
 		}
 	}
 
+        @Override
 	public String getRegisterNativesFunctionName() {
 		return "extcl_InitializeClass";
 	}
 
+        @Override
 	public Signedness getSignednessFromType(Class type) {
 		if ( cl_uint.class.equals(type) )
 			return Signedness.UNSIGNED;
@@ -128,6 +134,7 @@ public class CLTypeMap implements TypeMap {
 			return Signedness.NONE;
 	}
 
+        @Override
 	public String translateAnnotation(Class annotation_type) {
 		if ( annotation_type.equals(cl_uint.class) || annotation_type.equals(cl_int.class) )
 			return "i";
@@ -143,7 +150,8 @@ public class CLTypeMap implements TypeMap {
 			throw new RuntimeException(annotation_type + " is not allowed");
 	}
 
-	public Class getNativeTypeFromPrimitiveType(PrimitiveType.Kind kind) {
+        @Override
+	public Class getNativeTypeFromPrimitiveType(TypeKind kind) {
 		Class type;
 		switch ( kind ) {
 			case INT:
@@ -173,18 +181,22 @@ public class CLTypeMap implements TypeMap {
 		return type;
 	}
 
+        @Override
 	public Class<? extends Annotation> getVoidType() {
 		return cl_void.class;
 	}
 
+        @Override
 	public Class<? extends Annotation> getStringElementType() {
 		return cl_char.class;
 	}
 
+        @Override
 	public Class<? extends Annotation> getStringArrayType() {
 		return cl_char.class;
 	}
 
+        @Override
 	public Class<? extends Annotation> getByteBufferArrayType() {
 		return cl_uchar.class;
 	}
@@ -229,18 +241,22 @@ public class CLTypeMap implements TypeMap {
 			return new Class[] { };
 	}
 
+        @Override
 	public String getTypedefPostfix() {
 		return "CL_API_ENTRY ";
 	}
 
+        @Override
 	public String getFunctionPrefix() {
 		return "CL_API_CALL";
 	}
 
+        @Override
 	public void printNativeIncludes(PrintWriter writer) {
 		writer.println("#include \"extcl.h\"");
 	}
 
+        @Override
 	public Class[] getValidAnnotationTypes(Class type) {
 		Class[] valid_types;
 		if ( Buffer.class.isAssignableFrom(type) || PointerBuffer.class.isAssignableFrom(type) )
@@ -260,10 +276,12 @@ public class CLTypeMap implements TypeMap {
 		return valid_types;
 	}
 
+        @Override
 	public Class<? extends Annotation> getInverseType(Class type) {
 		return null;
 	}
 
+        @Override
 	public String getAutoTypeFromAnnotation(AnnotationMirror annotation) {
 		return null;
 	}

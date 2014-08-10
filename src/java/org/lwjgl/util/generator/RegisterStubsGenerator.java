@@ -78,7 +78,7 @@ public class RegisterStubsGenerator {
 
 	private static String getTypeSignature(TypeMirror type, boolean add_position_signature) {
 		SignatureTranslator v = new SignatureTranslator(add_position_signature);
-		type.accept(v);
+		type.accept(v, null);
 		return v.getSignature();
 	}
 

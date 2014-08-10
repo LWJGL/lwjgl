@@ -41,8 +41,6 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.*;
 
 import java.io.*;
 import java.lang.annotation.Annotation;

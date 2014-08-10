@@ -40,6 +40,7 @@ import javax.lang.model.element.TypeElement;
 import org.lwjgl.PointerWrapper;
 import org.lwjgl.util.generator.Extension;
 import org.lwjgl.util.generator.Private;
+import org.lwjgl.util.generator.Utils;
 
 /**
  * CL platform/device capabilities generator.

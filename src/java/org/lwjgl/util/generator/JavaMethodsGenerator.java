@@ -59,7 +59,7 @@ public class JavaMethodsGenerator {
 	private static final String SAVED_PARAMETER_POSTFIX = "_saved";
 
 	public static void generateMethodsJava(ProcessingEnvironment env, TypeMap type_map, PrintWriter writer, TypeElement interface_decl, boolean generate_error_checks, boolean context_specific) {
-		for (ExecutableElement method : interface_decl.getMethods())
+		for (ExecutableElement method : Utils.getMethods(interface_decl))
 			generateMethodJava(env, type_map, writer, interface_decl, method, generate_error_checks, context_specific);
 	}
 
@@ -85,21 +85,21 @@ public class JavaMethodsGenerator {
 				throw new RuntimeException("An alternate function with native code should have a different name than the main function.");
 
 			if ( reuse_annotation == null )
-				printJavaNativeStub(writer, method, Mode.NORMAL, generate_error_checks, context_specific);
+				printJavaNativeStub(env, writer, method, Mode.NORMAL, generate_error_checks, context_specific);
 
 			if (Utils.hasMethodBufferObjectParameter(method)) {
 				printMethodWithMultiType(env, type_map, writer, interface_decl, method, TypeInfo.getDefaultTypeInfoMap(method), Mode.BUFFEROBJECT, generate_error_checks, context_specific);
 				if ( reuse_annotation == null )
-					printJavaNativeStub(writer, method, Mode.BUFFEROBJECT, generate_error_checks, context_specific);
+					printJavaNativeStub(env, writer, method, Mode.BUFFEROBJECT, generate_error_checks, context_specific);
 			}
 		}
 	}
 
-	private static void printJavaNativeStub(PrintWriter writer, ExecutableElement method, Mode mode, boolean generate_error_checks, boolean context_specific) {
+	private static void printJavaNativeStub(ProcessingEnvironment env, PrintWriter writer, ExecutableElement method, Mode mode, boolean generate_error_checks, boolean context_specific) {
 		if (Utils.isMethodIndirect(generate_error_checks, context_specific, method)) {
 			writer.print("\tstatic native ");
 		} else {
-			Utils.printDocComment(writer, method);
+			Utils.printDocComment(writer, method,env);
 			writer.print("\tpublic static native ");
 		}
 		writer.print(getResultType(method, true));
@@ -236,7 +236,7 @@ public class JavaMethodsGenerator {
 	}
 
 	private static void printMethodWithMultiType(ProcessingEnvironment env, TypeMap type_map, PrintWriter writer, TypeElement interface_decl, ExecutableElement method, Map<VariableElement, TypeInfo> typeinfos_instance, Mode mode, boolean generate_error_checks, boolean context_specific) {
-		Utils.printDocComment(writer, method);
+		Utils.printDocComment(writer, method, env);
 		if ( method.getAnnotation(Deprecated.class) != null )
 			writer.println("\t@Deprecated");
 		if ( interface_decl.getAnnotation(Private.class) == null && method.getAnnotation(Private.class) == null )
@@ -401,7 +401,7 @@ public class JavaMethodsGenerator {
 		String postfix = strip_annotation.postfix();
 		if ( "NULL".equals(postfix) ) {
 			PostfixTranslator translator = new PostfixTranslator(type_map, postfix_parameter);
-			postfix_parameter.asType().accept(translator);
+			postfix_parameter.asType().accept(translator, null);
 			postfix = translator.getSignature();
 		}
 		String method_name;

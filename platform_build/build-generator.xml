@@ -17,7 +17,7 @@
 
 	<!-- Compiles the Java generator source code -->
 	<target name="generators" description="Compiles the native method generators">
-		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/util/generator/**.java" source="1.5" target="1.5" taskname="generator">
+		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/util/generator/**.java" taskname="generator">
             <include name="org/lwjgl/util/generator/openal/**.java"/>
             <include name="org/lwjgl/util/generator/opengl/**.java"/>
 			<include name="org/lwjgl/util/generator/opengles/**.java"/>

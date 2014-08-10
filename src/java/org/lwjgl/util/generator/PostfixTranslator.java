@@ -42,19 +42,21 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
-
 import java.lang.annotation.Annotation;
 import java.nio.*;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.util.SimpleTypeVisitor6;
 
-public class PostfixTranslator implements TypeVisitor {
+public class PostfixTranslator extends SimpleTypeVisitor6 {
 	private final StringBuilder signature = new StringBuilder();
-	private final Declaration declaration;
+	private final Element declaration;
 	private final TypeMap type_map;
 
-	public PostfixTranslator(TypeMap type_map, Declaration declaration) {
+	public PostfixTranslator(TypeMap type_map, Element declaration) {
 		this.declaration = declaration;
 		this.type_map = type_map;
 	}
@@ -63,47 +65,34 @@ public class PostfixTranslator implements TypeVisitor {
 		return signature.toString();
 	}
 
-	public void visitAnnotationType(AnnotationType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitArrayType(ArrayType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	private static PrimitiveType.Kind getPrimitiveKindFromBufferClass(Class c) {
+	private static TypeKind getPrimitiveKindFromBufferClass(Class c) {
 		if (IntBuffer.class.equals(c) || int.class.equals(c) )
-			return PrimitiveType.Kind.INT;
+			return TypeKind.INT;
 		else if (DoubleBuffer.class.equals(c) || double.class.equals(c) )
-			return PrimitiveType.Kind.DOUBLE;
+			return TypeKind.DOUBLE;
 		else if (ShortBuffer.class.equals(c) || short.class.equals(c) )
-			return PrimitiveType.Kind.SHORT;
+			return TypeKind.SHORT;
 		else if (ByteBuffer.class.equals(c) || byte.class.equals(c) )
-			return PrimitiveType.Kind.BYTE;
+			return TypeKind.BYTE;
 		else if (FloatBuffer.class.equals(c) || float.class.equals(c))
-			return PrimitiveType.Kind.FLOAT;
+			return TypeKind.FLOAT;
 		else if (LongBuffer.class.equals(c) || long.class.equals(c) )
-			return PrimitiveType.Kind.LONG;
+			return TypeKind.LONG;
 		else
 			throw new RuntimeException(c + " is not allowed");
 	}
 
-	public void visitClassType(ClassType t) {
+	private void visitClassType(DeclaredType t) {
 		Class<?> c = NativeTypeTranslator.getClassFromType(t);
-		PrimitiveType.Kind kind = getPrimitiveKindFromBufferClass(c);
+		TypeKind kind = getPrimitiveKindFromBufferClass(c);
 		visitPrimitiveTypeKind(kind);
 	}
 
-	public void visitDeclaredType(DeclaredType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitEnumType(EnumType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitInterfaceType(InterfaceType t) {
-		throw new RuntimeException(t + " is not allowed");
+        @Override
+	public Object visitDeclared(DeclaredType t, Object o) {
+            if(t.asElement().getKind().isClass())
+                visitClassType(t);
+            return signature;
 	}
 
 	private boolean translateAnnotation(AnnotationMirror annotation) {
@@ -127,11 +116,13 @@ public class PostfixTranslator implements TypeVisitor {
 		return result;
 	}
 
-	public void visitPrimitiveType(PrimitiveType t) {
+        @Override
+	public Object visitPrimitive(PrimitiveType t, Object o) {
 		visitPrimitiveTypeKind(t.getKind());
+                return signature;
 	}
 
-	private void visitPrimitiveTypeKind(PrimitiveType.Kind kind) {
+	private void visitPrimitiveTypeKind(TypeKind kind) {
 		boolean annotated_translation = translateAnnotations();
 		if (annotated_translation)
 			return;
@@ -160,24 +151,5 @@ public class PostfixTranslator implements TypeVisitor {
 				throw new RuntimeException(kind + " is not allowed");
 		}
 		signature.append(type);
-	}
-
-	public void visitReferenceType(ReferenceType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitTypeMirror(TypeMirror t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitTypeVariable(TypeVariable t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitVoidType(VoidType t) {
-	}
-
-	public void visitWildcardType(WildcardType t) {
-		throw new RuntimeException(t + " is not allowed");
 	}
 }

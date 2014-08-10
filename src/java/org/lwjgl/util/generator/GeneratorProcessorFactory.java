@@ -33,14 +33,12 @@
 package org.lwjgl.util.generator;
 
 
-import com.sun.mirror.apt.*;
-
-import static com.sun.mirror.util.DeclarationVisitors.*;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
 import java.util.Collection;
 import static java.util.Collections.*;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
@@ -63,60 +61,28 @@ public class GeneratorProcessorFactory {
 	private static boolean first_round = true;
 
 	// Process any set of annotations
-	private static final Collection<String> supportedAnnotations =
-		unmodifiableCollection(Arrays.asList("*"));
+	private static final Set<String> supportedAnnotations =
+		unmodifiableSet(new HashSet<>(Arrays.asList("*")));
 
-	private static final Collection<String> supportedOptions =
-		unmodifiableCollection(Arrays.asList("-Atypemap", "-Ageneratechecks", "-Acontextspecific"));
+	private static final Set<String> supportedOptions =
+		unmodifiableSet(new HashSet<>(Arrays.asList("-Atypemap", "-Ageneratechecks", "-Acontextspecific")));
 
-    /* deprecated as of Java 8 standardized API
-    public Collection<String> supportedAnnotationTypes() {
-    return supportedAnnotations;
-    }
-    public Collection<String> supportedOptions() {
-    return supportedOptions;
-    }
-    public void roundComplete(RoundCompleteEvent event) {
-    first_round = false;
-    AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds,
-    AnnotationProcessorEnvironment env) {
-    // Only process the initial types, not the generated ones
-    if ( first_round ) {
-    env.addListener(this);
-    return new GeneratorProcessor(env);
-    } else
-    return AnnotationProcessors.NO_OP;
-    }*/
-        private Processor proc;
-        public GeneratorProcessorFactory(ProcessingEnvironment env) {
-            proc = new GeneratorProcessor(env);
-        }
+        Processor processor;
 
         public Processor getProcessor() {
-            return proc;
+                return first_round ? processor : new AbstractProcessor() {
+
+                        @Override
+                        public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+                            return true;
+                        }
+                };
         }
         
+        public GeneratorProcessorFactory(ProcessingEnvironment env) {
+                processor = new GeneratorProcessor(env);
+        }
 
-    	/* deprecated as of Java 8 standardized API 
-        public Collection<String> supportedAnnotationTypes() {
-		return supportedAnnotations;
-	}
-
-	public Collection<String> supportedOptions() {
-		return supportedOptions;
-	}
-        
-        public void roundComplete(RoundCompleteEvent event) {
-		first_round = false;
-	AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds,
-                                  AnnotationProcessorEnvironment env) {
-            // Only process the initial types, not the generated ones
-		if ( first_round ) {
-			env.addListener(this);
-			return new GeneratorProcessor(env);
-		} else
-			return AnnotationProcessors.NO_OP;
-	}*/
         
 	private static class GeneratorProcessor extends AbstractProcessor {
 
@@ -125,6 +91,16 @@ public class GeneratorProcessorFactory {
 		GeneratorProcessor(ProcessingEnvironment env) {
 			this.env = env;
 		}
+
+                @Override
+                public Set<String> getSupportedOptions() {
+                        return supportedOptions;
+                }
+
+                @Override
+                public Set<String> getSupportedAnnotationTypes() {
+                        return supportedAnnotations;
+                }
 
                 @Override
                 public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -159,7 +135,7 @@ public class GeneratorProcessorFactory {
 					lastFile = typedecl;
 					typedecl.accept(getDeclarationScanner(new GeneratorVisitor(env, type_map, generate_error_checks, context_specific, generatorLM), NO_OP));
 				}*/
-                                return true;
+                                return first_round = roundEnv.processingOver();        		
                         } catch (Exception e) {
 				if ( lastFile == null )
 					throw new RuntimeException(e);

@@ -45,9 +45,12 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleElementVisitor6;
 import javax.tools.Diagnostic;
+import javax.tools.Diagnostic.Kind;
+import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
 /**
@@ -88,10 +91,10 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
 			VariableElement postfix_param = Utils.findParameter(method, postfix_param_name);
 			if (Utils.isParameterMultiTyped(postfix_param))
 				throw new RuntimeException("Postfix parameter can't be the same as a multityped parameter in method " + method);
-			if (Utils.getNIOBufferType(postfix_param.getType()) == null)
+			if (Utils.getNIOBufferType(postfix_param.asType()) == null)
 				throw new RuntimeException("Postfix parameter type must be a nio Buffer");
 		}
-		if (Utils.getResultParameter(method) != null && !method.getReturnType().equals(env.getTypeUtils().getVoidType()))
+		if (Utils.getResultParameter(method) != null && !method.getReturnType().equals(env.getTypeUtils().getNoType(TypeKind.VOID)))
 			throw new RuntimeException(method + " return type is not void but a parameter is annotated with Result");
 		if (method.getAnnotation(CachedResult.class) != null) {
 			if (Utils.getNIOBufferType(Utils.getMethodReturnType(method)) == null)
@@ -111,7 +114,7 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
 				" in method " + method);
 	}
 
-	private void validateTypes(ExecutableElement method, Collection<AnnotationMirror> annotations, TypeMirror type_mirror) {
+	private void validateTypes(ExecutableElement method, List<? extends AnnotationMirror> annotations, TypeMirror type_mirror) {
 		for (AnnotationMirror annotation : annotations) {
 			NativeType native_type_annotation = NativeTypeTranslator.getAnnotation(annotation, NativeType.class);
 			if (native_type_annotation != null) {
@@ -164,7 +167,7 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
 		}
 	}
 
-	private static void generateMethodsNativePointers(PrintWriter writer, Collection<? extends ExecutableElement> methods) {
+	private static void generateMethodsNativePointers(PrintWriter writer, List<? extends ExecutableElement> methods) {
 		for (ExecutableElement method : methods) {
 			if ( method.getAnnotation(Alternate.class) == null )
 				generateMethodNativePointers(writer, method);
@@ -190,14 +193,14 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
 				java_writer.println("import " + i + ";");
 		}
 		java_writer.println();
-		Utils.printDocComment(java_writer, d);
+		Utils.printDocComment(java_writer, d, env);
 		if ( d.getAnnotation(Private.class) == null )
 			java_writer.print("public ");
 		boolean is_final = Utils.isFinal(d);
 		if (is_final)
 			java_writer.write("final ");
 		java_writer.print("class " + Utils.getSimpleClassName(d));
-		List<DeclaredType> super_interfaces = (List<DeclaredType>) d.getInterfaces();
+		List<DeclaredType> super_interfaces = (List<DeclaredType>) env.getTypeUtils().directSupertypes(d.asType());
 		if (super_interfaces.size() > 1)
 			throw new RuntimeException(d + " extends more than one interface");
 		if (super_interfaces.size() == 1) {
@@ -205,7 +208,7 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
 			java_writer.print(" extends " + Utils.getSimpleClassName(super_interface));
 		}
 		java_writer.println(" {");
-                FieldsGenerator.generateFields(java_writer, Utils.getFields(d));
+                FieldsGenerator.generateFields(env, java_writer, Utils.getFields(d));
 		java_writer.println();
 		if (is_final) {
 			// Write private constructor to avoid instantiation
@@ -251,28 +254,29 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
 			native_writer.println("}");
 		}
 		native_writer.close();
-		env.getMessager().printNotice("Generated C source " + qualified_interface_name);
+		env.getMessager().printMessage(Kind.NOTE, "Generated C source " + qualified_interface_name);
 	}
 
-	public void visitInterfaceDeclaration(TypeElement d) {
-		final File input = d.getPosition().file();
-		final File outputJava = new File(env.getOptions().get("-s") + '/' + new StringBuffer(d.getEnclosingElement().getSimpleName()).toString().replace('.', '/'), Utils.getSimpleClassName(d) + ".java");
+        @Override
+        public Object visitType(TypeElement e, Object p) {
+                PrintWriter java_writer = null;
+                File outputJava = null;
+                try {
+                        final FileObject input = env.getFiler().getResource(StandardLocation.SOURCE_PATH, env.getElementUtils().getPackageOf(e).getQualifiedName(), e.getSimpleName());
+                        outputJava = new File(env.getOptions().get("-s") + '/' + env.getElementUtils().getPackageOf(e).getQualifiedName().toString().replace('.', '/'), Utils.getSimpleClassName(e) + ".java");
 
-		PrintWriter java_writer = null;
-
-		try {
-			final Collection<? extends ExecutableElement> methods = Utils.getMethods(d);
-			if ( methods.size() == 0 && Utils.getFields(d).size() == 0 )
-				return;
+                        final Collection<? extends ExecutableElement> methods = Utils.getMethods(e);
+			if ( methods.size() == 0 && Utils.getFields(e).size() == 0 )
+				return DEFAULT_VALUE;
 
 			// Skip this class if the output exists and the input has not been modified.
-			if ( outputJava.exists() && Math.max(input.lastModified(), generatorLM) < outputJava.lastModified() )
-				return;
+			if ( outputJava.exists() && Math.max(input.getLastModified(), generatorLM) < outputJava.lastModified() )
+				return DEFAULT_VALUE;
 
 			for ( final ExecutableElement method : methods )
 				validateMethod(method);
-			java_writer = new PrintWriter(env.getFiler().createSourceFile(Utils.getSimpleClassName(d) + ".java", d.getEnclosingElement()).openWriter());
-			generateJavaSource(d, java_writer);
+			java_writer = new PrintWriter(env.getFiler().createSourceFile(Utils.getSimpleClassName(e) + ".java", env.getElementUtils().getPackageOf(e)).openWriter());
+			generateJavaSource(e, java_writer);
 
 			if ( methods.size() > 0 ) {
 				boolean noNative = true;
@@ -284,9 +288,9 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
 					}
 				}
 				if ( noNative )
-					return;
+					return DEFAULT_VALUE;
 
-				final String outputPath = env.getOptions().get("-d") + '/' + Utils.getNativeQualifiedName(Utils.getQualifiedClassName(d));
+				final String outputPath = env.getOptions().get("-d") + '/' + Utils.getNativeQualifiedName(Utils.getQualifiedClassName(e));
 				final File outputNative = new File(outputPath + ".c");
 				final File outputBackup = new File(outputPath + "_backup.c");
 
@@ -299,7 +303,7 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
 					nativeBefore = null;
 
 				try {
-					generateNativeSource(d);
+					generateNativeSource(e);
 
 					// If the native file did exist, compare with the new file. If they're the same,
 					// reset the last modified time to avoid ridiculous C compilation times.
@@ -323,12 +327,13 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
 						outputBackup.delete();
 				}
 			}
-		} catch (Exception e) {
+                        return DEFAULT_VALUE;
+		} catch (Exception ex) {
 			// If anything goes wrong mid-gen, delete output to allow regen next time we run.
 			if ( java_writer != null ) java_writer.close();
-			if ( outputJava.exists() ) outputJava.delete();
+			if ( outputJava != null && outputJava.exists() ) outputJava.delete();
 
-			throw new RuntimeException(e);
+			throw new RuntimeException(ex);
 		}
 	}
 

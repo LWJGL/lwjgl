@@ -32,26 +32,24 @@
 
 package org.lwjgl.util.generator.opengl;
 
-import org.lwjgl.util.generator.Utils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-
-import com.sun.mirror.apt.*;
-import com.sun.mirror.declaration.AnnotationTypeDeclaration;
-import com.sun.mirror.declaration.InterfaceDeclaration;
-import com.sun.mirror.declaration.TypeDeclaration;
-import com.sun.mirror.util.DeclarationFilter;
 
 import static java.util.Collections.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Filer;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.Processor;
+import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
+import org.lwjgl.util.generator.Utils;
 
 /**
  * Generator tool for creating the ContexCapabilities class
@@ -60,56 +58,62 @@ import javax.lang.model.util.ElementFilter;
  * @version $Revision: 3316 $
  *          $Id: ContextGeneratorProcessorFactory.java 3316 2010-04-09 23:57:40Z spasi $
  */
-public class GLESGeneratorProcessorFactory implements AnnotationProcessorFactory, RoundCompleteListener {
+public class GLESGeneratorProcessorFactory {
 
 	private static boolean first_round = true;
 
 	// Process any set of annotations
-	private static final Collection<String> supportedAnnotations =
-		unmodifiableCollection(Arrays.asList("*"));
+	private static final Set<String> supportedAnnotations =
+		unmodifiableSet(new HashSet(Arrays.asList("*")));
 
-	public Collection<String> supportedAnnotationTypes() {
+	public Set<String> supportedAnnotationTypes() {
 		return supportedAnnotations;
 	}
 
-	public Collection<String> supportedOptions() {
-		return unmodifiableCollection(Arrays.asList("-Acontextspecific", "-Ageneratechecks"));
+	public Set<String> supportedOptions() {
+		return unmodifiableSet(new HashSet(Arrays.asList("-Acontextspecific", "-Ageneratechecks")));
 	}
 
-	public void roundComplete(RoundCompleteEvent event) {
-		first_round = false;
-	}
+        Processor processor;
 
-	public AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds, AnnotationProcessorEnvironment env) {
-		// Only process the initial types, not the generated ones
-		if ( first_round ) {
-			env.addListener(this);
-			return new GeneratorProcessor(env);
-		} else
-			return AnnotationProcessors.NO_OP;
-	}
+        public Processor getProcessor() {
+                return first_round ? processor : new AbstractProcessor() {
 
-	private static class GeneratorProcessor implements AnnotationProcessor {
+                        @Override
+                        public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+                            return true;
+                        }
+                };
+        }
+        
+        public GLESGeneratorProcessorFactory(ProcessingEnvironment env) {
+                processor = new GeneratorProcessor(env);
+        }
 
-		private final AnnotationProcessorEnvironment env;
+        
+	private static class GeneratorProcessor extends AbstractProcessor {
 
-		GeneratorProcessor(AnnotationProcessorEnvironment env) {
+		private final ProcessingEnvironment env;
+
+		GeneratorProcessor(ProcessingEnvironment env) {
 			this.env = env;
 		}
 
-		public void process() {
+                @Override
+                public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 			Map<String, String> options = env.getOptions();
 			boolean generate_error_checks = options.containsKey("-Ageneratechecks");
 			boolean context_specific = options.containsKey("-Acontextspecific");
 			try {
 				generateContextCapabilitiesSource(context_specific, generate_error_checks);
+                                return first_round = roundEnv.processingOver();        		
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
 
 		private void generateContextCapabilitiesSource(boolean context_specific, boolean generate_error_checks) throws IOException {
-			PrintWriter writer = env.getFiler().createTextFile(Filer.Location.SOURCE_TREE, "org.lwjgl.opengles", new File(Utils.CONTEXT_CAPS_CLASS_NAME + ".java"), null);
+			PrintWriter writer = new PrintWriter(env.getFiler().createSourceFile(Utils.CONTEXT_CAPS_CLASS_NAME + ".java", env.getElementUtils().getPackageElement("org.lwjgl.opengles")).openWriter());
 			writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
 			writer.println();
 			writer.println("package org.lwjgl.opengles;");
@@ -120,21 +124,18 @@ public class GLESGeneratorProcessorFactory implements AnnotationProcessorFactory
 			writer.println("import java.util.HashSet;");
 			writer.println();
 			GLESCapabilitiesGenerator.generateClassPrologue(writer, context_specific, generate_error_checks);
-			List<TypeElement> interface_decls = ElementFilter.typesIn(env.getElementUtils().getAllMembers((TypeElement) env.getTypeUtils().getNullType()));
-			for ( TypeDeclaration typedecl : interface_decls ) {
-				TypeElementinterface_decl = (TypeElement)typedecl;
+			List<TypeElement> interface_decls = ElementFilter.typesIn(env.getElementUtils().getAllMembers(env.getElementUtils().getTypeElement("org.lwjgl.opengles."+Utils.CONTEXT_CAPS_CLASS_NAME)));
+			for ( TypeElement interface_decl : interface_decls ) {
 				if ( Utils.isFinal(interface_decl) )
 					GLESCapabilitiesGenerator.generateField(writer, interface_decl);
 			}
 			writer.println();
 			if ( context_specific ) {
-				for ( TypeDeclaration typedecl : interface_decls ) {
-					TypeElementinterface_decl = (TypeElement)typedecl;
+				for ( TypeElement interface_decl : interface_decls ) {
 					GLESCapabilitiesGenerator.generateSymbolAddresses(writer, interface_decl);
 				}
 				writer.println();
-				for ( TypeDeclaration typedecl : interface_decls ) {
-					TypeElementinterface_decl = (TypeElement)typedecl;
+				for ( TypeElement interface_decl : interface_decls ) {
 					GLESCapabilitiesGenerator.generateAddressesInitializers(writer, interface_decl);
 				}
 				writer.println();
@@ -148,12 +149,10 @@ public class GLESGeneratorProcessorFactory implements AnnotationProcessorFactory
 			}
 
 			GLESCapabilitiesGenerator.generateInitStubsPrologue(writer, context_specific);
-			for ( TypeDeclaration typedecl : interface_decls ) {
-				TypeElementinterface_decl = (TypeElement)typedecl;
-				GLESCapabilitiesGenerator.generateSuperClassAdds(writer, interface_decl);
+				for ( TypeElement interface_decl : interface_decls ) {
+				GLESCapabilitiesGenerator.generateSuperClassAdds(writer, interface_decl, env);
 			}
-			for ( TypeDeclaration typedecl : interface_decls ) {
-				TypeElementinterface_decl = (TypeElement)typedecl;
+				for ( TypeElement interface_decl : interface_decls ) {
 				if ( "GLES20".equals(interface_decl.getSimpleName()) )
 					continue;
 				GLESCapabilitiesGenerator.generateInitStubs(writer, interface_decl, context_specific);
@@ -164,8 +163,7 @@ public class GLESGeneratorProcessorFactory implements AnnotationProcessorFactory
 			if ( !context_specific ) {
 				writer.println("\t\tif (!loaded_stubs)");
 				writer.println("\t\t\treturn;");
-				for ( TypeDeclaration typedecl : interface_decls ) {
-					TypeElementinterface_decl = (TypeElement)typedecl;
+				for ( TypeElement interface_decl : interface_decls ) {
 					GLESCapabilitiesGenerator.generateUnloadStubs(writer, interface_decl);
 				}
 				writer.println("\t\tloaded_stubs = false;");
@@ -173,14 +171,14 @@ public class GLESGeneratorProcessorFactory implements AnnotationProcessorFactory
 			writer.println("\t}");
 			writer.println();
 			GLESCapabilitiesGenerator.generateInitializerPrologue(writer);
-			for ( TypeDeclaration typedecl : interface_decls ) {
-				TypeElementinterface_decl = (TypeElement)typedecl;
+				for ( TypeElement interface_decl : interface_decls ) {
 				if ( Utils.isFinal(interface_decl) )
-					GLESCapabilitiesGenerator.generateInitializer(writer, interface_decl);
+					GLESCapabilitiesGenerator.generateInitializer(writer, interface_decl, env);
 			}
 			writer.println("\t}");
 			writer.println("}");
 			writer.close();
 		}
+
 	}
 }

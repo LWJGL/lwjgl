@@ -36,7 +36,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import static java.util.Collections.unmodifiableCollection;
+import static java.util.Collections.unmodifiableSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
@@ -67,12 +70,17 @@ public class GLReferencesGeneratorProcessorFactory {
 	private static boolean first_round = true;
 
 	// Process any set of annotations
-	private static final Collection<String> supportedAnnotations =
-		unmodifiableCollection(Arrays.asList("*"));
+	private static final Set<String> supportedAnnotations =
+		unmodifiableSet(new HashSet(Arrays.asList("*")));
 
         private Processor processor;
+
+        public Processor getProcessor() {
+            return processor;
+        }
+        
         public GLReferencesGeneratorProcessorFactory(ProcessingEnvironment env) {
-            processor = new GeneratorProcessor(env);
+                processor = new GeneratorProcessor(env);
         }
 
 	
@@ -84,10 +92,19 @@ public class GLReferencesGeneratorProcessorFactory {
 		}
 
 
+                @Override
+                public Set<String> getSupportedOptions() {
+                        return Collections.emptySet();
+                }
+
+                @Override
+                public Set<String> getSupportedAnnotationTypes() {
+                        return supportedAnnotations;
+                }
         @Override
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {			try {
 				generateReferencesSource();
-                                return true;
+                                return first_round = roundEnv.processingOver();        		
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -158,7 +175,7 @@ public class GLReferencesGeneratorProcessorFactory {
 		}
 
 		private void generateReferencesSource() throws IOException {
-			PrintWriter writer = new PrintWriter(env.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "org.lwjgl.opengl",REFERENCES_CLASS_NAME + ".java").openWriter());
+			PrintWriter writer = new PrintWriter(env.getFiler().createSourceFile(REFERENCES_CLASS_NAME + ".java", env.getElementUtils().getPackageElement("org.lwjgl.opengl")).openWriter());
 			writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
 			writer.println();
 			writer.println("package org.lwjgl.opengl;");
@@ -167,11 +184,11 @@ public class GLReferencesGeneratorProcessorFactory {
                         writer.println("\t" + REFERENCES_CLASS_NAME + "(ContextCapabilities caps) {");
                         writer.println("\t\tsuper(caps);");
                         writer.println("\t}");
-			List<TypeElement> interface_decls = ElementFilter.typesIn(env.getElementUtils().getAllMembers((TypeElement) env.getTypeUtils().getNullType()));
-			for (TypeElement typedecl : interface_decls) {
-				TypeElement interface_decl = (TypeElement)typedecl;
-				generateReferencesFromMethods(writer, interface_decl);
-			}
+			final List<TypeElement> interface_decls = ElementFilter.typesIn(env.getElementUtils().getAllMembers(env.getElementUtils().getTypeElement("org.lwjgl.opengl."+REFERENCES_CLASS_NAME)));
+                        for (TypeElement typedecl : interface_decls) {
+                                TypeElement interface_decl = (TypeElement)typedecl;
+                                generateReferencesFromMethods(writer, interface_decl);
+                        }
 			writer.println();
 			writer.println("\tvoid copy(" + REFERENCES_CLASS_NAME + " " + REFERENCES_PARAMETER_NAME + ", int mask) {");
 			writer.println("\t\tsuper.copy(" + REFERENCES_PARAMETER_NAME + ", mask);");

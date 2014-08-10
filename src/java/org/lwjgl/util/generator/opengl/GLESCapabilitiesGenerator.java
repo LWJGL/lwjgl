@@ -38,9 +38,11 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 import org.lwjgl.util.generator.*;
 
 /**
@@ -80,32 +82,32 @@ public class GLESCapabilitiesGenerator {
 			return EXTENSION_PREFIX + interface_name;
 	}
 
-	public static void generateSuperClassAdds(PrintWriter writer, TypeElement d) {
-		List<DeclaredType> super_interfaces = (List<DeclaredType>) d.getInterfaces();
+	public static void generateSuperClassAdds(PrintWriter writer, TypeElement d, ProcessingEnvironment env) {
+		List<? extends TypeMirror> super_interfaces = env.getTypeUtils().directSupertypes(d.asType());
 		if ( super_interfaces.size() > 1 )
 			throw new RuntimeException(d + " extends more than one other interface");
 		if ( super_interfaces.size() == 1 ) {
-			InterfaceType super_interface = super_interfaces.iterator().next();
+			TypeMirror super_interface = super_interfaces.iterator().next();
 			writer.print("\t\tif (" + CACHED_EXTS_VAR_NAME + ".contains(\"");
 			writer.println(translateFieldName(new StringBuffer(d.getSimpleName()).toString() + "\"))"));
 			writer.print("\t\t\t");
-			generateAddExtension(writer, super_interface.getDeclaration());
+			generateAddExtension(writer, env.getElementUtils().getTypeElement(super_interface.toString()));
 		}
 	}
 
-	public static void generateInitializer(PrintWriter writer, TypeElement d) {
+	public static void generateInitializer(PrintWriter writer, TypeElement d,ProcessingEnvironment env) {
 		String translated_field_name = translateFieldName(new StringBuffer(d.getSimpleName()).toString());
 		writer.print("\t\tthis." + translated_field_name + " = ");
 		writer.print(CACHED_EXTS_VAR_NAME + ".contains(\"");
 		writer.print(translated_field_name + "\")");
-		List<DeclaredType> super_interfaces = (List<DeclaredType>) d.getInterfaces();
+		List<? extends TypeMirror> super_interfaces = env.getTypeUtils().directSupertypes(d.asType());
 		if ( super_interfaces.size() > 1 )
 			throw new RuntimeException(d + " extends more than one other interface");
 		if ( super_interfaces.size() == 1 ) {
-			DeclaredType super_interface = super_interfaces.iterator().next();
+			TypeMirror super_interface = super_interfaces.iterator().next();
 			writer.println();
 			writer.print("\t\t\t&& " + CACHED_EXTS_VAR_NAME + ".contains(\"");
-			writer.print(translateFieldName(new StringBuffer(super_interface.asElement().getSimpleName()) + "\")"));
+			writer.print(translateFieldName(new StringBuffer(env.getElementUtils().getTypeElement(super_interface.toString()).getSimpleName()) + "\")"));
 		}
 		Alias alias_annotation = d.getAnnotation(Alias.class);
 		if ( alias_annotation != null ) {
@@ -202,7 +204,7 @@ public class GLESCapabilitiesGenerator {
 	}
 
 	public static void generateAddressesInitializers(PrintWriter writer, TypeElement d) {
-		Iterator<? extends MethodDeclaration> methods = Utils.getMethods(d).iterator();
+		Iterator<? extends ExecutableElement> methods = Utils.getMethods(d).iterator();
 		if ( !methods.hasNext() )
 			return;
 

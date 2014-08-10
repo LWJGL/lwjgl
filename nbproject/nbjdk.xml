@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="LWJGL">
+    <property file="nbproject/nbjdk.properties"/>
+    <property location="${netbeans.user}/build.properties" name="user.properties.file"/>
+    <property file="${user.properties.file}"/>
+    <import file="jdk.xml"/>
+    <target depends="-jdk-init" name="compile">
+        <ant inheritall="false" target="compile"/>
+    </target>
+    <target depends="-jdk-init" name="clean">
+        <ant inheritall="false" target="clean"/>
+    </target>
+    <target depends="-jdk-init" name="javadoc">
+        <ant inheritall="false" target="javadoc"/>
+    </target>
+    <target depends="-jdk-init" name="compile_native">
+        <ant inheritall="false" target="compile_native"/>
+    </target>
+    <target depends="-jdk-init" name="runtest">
+        <ant inheritall="false" target="runtest"/>
+    </target>
+</project>

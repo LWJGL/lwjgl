@@ -100,7 +100,7 @@ public class Utils {
 			return alt_annotation.value();
 	}
 
-	public static boolean isFinal(VariableElement d) {
+	public static boolean isFinal(Element d) {
 		Extension extension_annotation = d.getAnnotation(Extension.class);
 		return extension_annotation == null || extension_annotation.isFinal();
 	}
@@ -119,7 +119,7 @@ public class Utils {
 		}
 	}
 
-	public static List<AnnotationMirror> getSortedAnnotations(List<AnnotationMirror> annotations) {
+	public static List<AnnotationMirror> getSortedAnnotations(List<? extends AnnotationMirror> annotations) {
 		List<AnnotationMirror> annotation_list = new ArrayList<AnnotationMirror>(annotations);
 		Collections.sort(annotation_list, new AnnotationMirrorComparator());
 		return annotation_list;

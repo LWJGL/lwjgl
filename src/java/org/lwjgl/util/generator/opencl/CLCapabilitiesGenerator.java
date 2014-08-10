@@ -32,16 +32,12 @@
 
 package org.lwjgl.util.generator.opencl;
 
-import org.lwjgl.util.generator.*;
-
 import java.io.PrintWriter;
-import java.util.Collection;
 import java.util.Iterator;
-
-import com.sun.mirror.declaration.MethodDeclaration;
-import com.sun.mirror.declaration.TypeDeclaration;
+import java.util.List;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import org.lwjgl.util.generator.*;
 
 /**
  * CLCapabilities generator.
@@ -81,25 +77,25 @@ public class CLCapabilitiesGenerator {
 			writer.println();
 	}
 
-	static void generateConstructor(final PrintWriter writer, final Collection<TypeDeclaration> interface_decls) {
+	static void generateConstructor(final PrintWriter writer, final List<TypeElement> interface_decls) {
 		writer.println("\tprivate " + CLGeneratorProcessorFactory.CLCAPS_CLASS_NAME + "() {}");
 		writer.println();
 		writer.println("\tstatic {");
 
-		for ( final TypeDeclaration d : interface_decls ) {
-			if ( d.getMethods().isEmpty() )
+		for ( final TypeElement d : interface_decls ) {
+			if ( Utils.getMethods(d).isEmpty() )
 				continue;
 
 			//writer.println("\t\tif ( " + getExtensionSupportedName(d.getSimpleName()) + "() )");
 			//writer.println("\t\t\t" + SUPPORTED_EXTS + ".add(\"" + CLGeneratorProcessorFactory.getExtensionName(d.getSimpleName()) + "\");");
-			writer.println("\t\t" + CLGeneratorProcessorFactory.getExtensionName(d.getSimpleName()) + " = " + getExtensionSupportedName(d.getSimpleName()) + "();");
+			writer.println("\t\t" + CLGeneratorProcessorFactory.getExtensionName(d.getSimpleName().toString()) + " = " + getExtensionSupportedName(d.getSimpleName().toString()) + "();");
 		}
 
 		writer.println("\t}\n");
 	}
 
 	static void generateExtensionChecks(final PrintWriter writer, final TypeElement d) {
-		Iterator<? extends MethodDeclaration> methods = Utils.getMethods(d).iterator();
+		Iterator<? extends ExecutableElement> methods = Utils.getMethods(d).iterator();
 		if ( !methods.hasNext() )
 			return;
 

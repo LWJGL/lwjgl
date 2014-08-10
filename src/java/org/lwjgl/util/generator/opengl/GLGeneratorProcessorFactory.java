@@ -32,29 +32,21 @@
 
 package org.lwjgl.util.generator.opengl;
 
-import org.lwjgl.util.generator.Utils;
-
-import static java.util.Collections.unmodifiableCollection;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.Collection;
+import static java.util.Collections.unmodifiableSet;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.sun.mirror.apt.AnnotationProcessor;
-import com.sun.mirror.apt.AnnotationProcessorEnvironment;
-import com.sun.mirror.apt.AnnotationProcessorFactory;
-import com.sun.mirror.apt.AnnotationProcessors;
-import com.sun.mirror.apt.Filer;
-import com.sun.mirror.apt.RoundCompleteEvent;
-import com.sun.mirror.apt.RoundCompleteListener;
-import com.sun.mirror.declaration.AnnotationTypeDeclaration;
-import com.sun.mirror.declaration.InterfaceDeclaration;
-import com.sun.mirror.declaration.TypeDeclaration;
-import com.sun.mirror.util.DeclarationFilter;
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.Processor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.ElementFilter;
+import org.lwjgl.util.generator.Utils;
 
 /**
  *
@@ -64,54 +56,55 @@ import com.sun.mirror.util.DeclarationFilter;
  * @version $Revision: 3316 $
  * $Id: ContextGeneratorProcessorFactory.java 3316 2010-04-09 23:57:40Z spasi $
  */
-public class GLGeneratorProcessorFactory implements AnnotationProcessorFactory, RoundCompleteListener {
+public class GLGeneratorProcessorFactory  {
 	private static boolean first_round = true;
 
 	// Process any set of annotations
-	private static final Collection<String> supportedAnnotations =
-		unmodifiableCollection(Arrays.asList("*"));
+	private static final Set<String> supportedAnnotations =
+		unmodifiableSet(new HashSet(Arrays.asList("*")));
 
-	public Collection<String> supportedAnnotationTypes() {
+	public Set<String> supportedAnnotationTypes() {
 		return supportedAnnotations;
 	}
 
-	public Collection<String> supportedOptions() {
-		return unmodifiableCollection(Arrays.asList("-Acontextspecific", "-Ageneratechecks"));
+	public Set<String> supportedOptions() {
+		return unmodifiableSet(new HashSet(Arrays.asList("-Acontextspecific", "-Ageneratechecks")));
 	}
 
-	public void roundComplete(RoundCompleteEvent event) {
-		first_round = false;
-	}
+	
+        Processor processor;
 
-	public AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds, AnnotationProcessorEnvironment env) {
-		// Only process the initial types, not the generated ones
-		if (first_round) {
-			env.addListener(this);
-			return new GeneratorProcessor(env);
-		} else
-			return AnnotationProcessors.NO_OP;
-	}
+        public Processor getProcessor() {
+                return first_round ? processor : new AbstractProcessor() {
 
-	private static class GeneratorProcessor implements AnnotationProcessor {
-		private final AnnotationProcessorEnvironment env;
+                        @Override
+                        public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+                            return true;
+                        }
+                };
+        }
+	private static class GeneratorProcessor extends AbstractProcessor {
+		private final ProcessingEnvironment env;
 
-		GeneratorProcessor(AnnotationProcessorEnvironment env) {
+		GeneratorProcessor(ProcessingEnvironment env) {
 			this.env = env;
 		}
 
-		public void process() {
-			Map<String, String> options = env.getOptions();
+		@Override
+                public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {	
+                        Map<String, String> options = env.getOptions();
 			boolean generate_error_checks = options.containsKey("-Ageneratechecks");
 			boolean context_specific = options.containsKey("-Acontextspecific");
 			try {
 				generateContextCapabilitiesSource(context_specific, generate_error_checks);
+                                return first_round = roundEnv.processingOver();        		
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
 
 		private void generateContextCapabilitiesSource(boolean context_specific, boolean generate_error_checks) throws IOException {
-			PrintWriter writer = env.getFiler().createTextFile(Filer.Location.SOURCE_TREE, "org.lwjgl.opengl", new File(Utils.CONTEXT_CAPS_CLASS_NAME + ".java"), null);
+			PrintWriter writer = new PrintWriter(env.getFiler().createSourceFile(Utils.CONTEXT_CAPS_CLASS_NAME + ".java", env.getElementUtils().getPackageElement("org.lwjgl.opengl")).openWriter());
 			writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
 			writer.println();
 			writer.println("package org.lwjgl.opengl;");
@@ -122,22 +115,18 @@ public class GLGeneratorProcessorFactory implements AnnotationProcessorFactory, 
 			writer.println("import java.util.HashSet;");
 			writer.println();
 			GLCapabilitiesGenerator.generateClassPrologue(writer, context_specific, generate_error_checks);
-			DeclarationFilter filter = DeclarationFilter.getFilter(InterfaceDeclaration.class);
-			Collection<TypeDeclaration> interface_decls = filter.filter(env.getSpecifiedTypeDeclarations());
-			for (TypeDeclaration typedecl : interface_decls) {
-				TypeElementinterface_decl = (TypeElement)typedecl;
+			List<TypeElement> interface_decls = ElementFilter.typesIn(env.getElementUtils().getAllMembers(env.getElementUtils().getTypeElement("org.lwjgl.opengl."+Utils.CONTEXT_CAPS_CLASS_NAME)));
+			for ( TypeElement interface_decl : interface_decls ) {
 				if (Utils.isFinal(interface_decl))
 					GLCapabilitiesGenerator.generateField(writer, interface_decl);
 			}
 			writer.println();
-			for (TypeDeclaration typedecl : interface_decls) {
-				TypeElementinterface_decl = (TypeElement)typedecl;
+			for ( TypeElement interface_decl : interface_decls ) {
 				GLCapabilitiesGenerator.generateSymbolAddresses(writer, interface_decl);
 			}
 			writer.println();
 			if (context_specific) {
-				for (TypeDeclaration typedecl : interface_decls) {
-					TypeElementinterface_decl = (TypeElement)typedecl;
+                                for ( TypeElement interface_decl : interface_decls ) {
 					GLCapabilitiesGenerator.generateAddressesInitializers(writer, interface_decl);
 				}
 				writer.println();
@@ -149,13 +138,11 @@ public class GLGeneratorProcessorFactory implements AnnotationProcessorFactory, 
 			writer.println("\t}\n");
 
 			GLCapabilitiesGenerator.generateInitStubsPrologue(writer, context_specific);
-			for (TypeDeclaration typedecl : interface_decls) {
-				TypeElementinterface_decl = (TypeElement)typedecl;
-				GLCapabilitiesGenerator.generateSuperClassAdds(writer, interface_decl);
+			for ( TypeElement interface_decl : interface_decls ) {
+				GLCapabilitiesGenerator.generateSuperClassAdds(writer, interface_decl, env);
 			}
-			for (TypeDeclaration typedecl : interface_decls) {
-				TypeElementinterface_decl = (TypeElement)typedecl;
-				String simple_name = interface_decl.getSimpleName();
+			for ( TypeElement interface_decl : interface_decls ) {
+				String simple_name = interface_decl.getSimpleName().toString();
 				if ( "GL11".equals(simple_name) )
 					continue;
 				GLCapabilitiesGenerator.generateInitStubs(writer, interface_decl, context_specific);
@@ -166,8 +153,7 @@ public class GLGeneratorProcessorFactory implements AnnotationProcessorFactory, 
 			if (!context_specific) {
 				writer.println("\t\tif (!loaded_stubs)");
 				writer.println("\t\t\treturn;");
-				for (TypeDeclaration typedecl : interface_decls) {
-					TypeElementinterface_decl = (TypeElement)typedecl;
+			for ( TypeElement interface_decl : interface_decls ) {
 					GLCapabilitiesGenerator.generateUnloadStubs(writer, interface_decl);
 				}
 				writer.println("\t\tloaded_stubs = false;");
@@ -175,15 +161,15 @@ public class GLGeneratorProcessorFactory implements AnnotationProcessorFactory, 
 			writer.println("\t}");
 			writer.println();
 			GLCapabilitiesGenerator.generateInitializerPrologue(writer);
-			for (TypeDeclaration typedecl : interface_decls) {
-				TypeElementinterface_decl = (TypeElement)typedecl;
+			for ( TypeElement interface_decl : interface_decls ) {
 				if (Utils.isFinal(interface_decl))
-					GLCapabilitiesGenerator.generateInitializer(writer, interface_decl);
+					GLCapabilitiesGenerator.generateInitializer(writer, interface_decl, env);
 			}
 			writer.println("\t\ttracker.init();");
 			writer.println("\t}");
 			writer.println("}");
 			writer.close();
 		}
-	}
+
+        }
 }
