@@ -38,9 +38,10 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.sun.mirror.declaration.InterfaceDeclaration;
 import com.sun.mirror.declaration.MethodDeclaration;
 import com.sun.mirror.declaration.TypeDeclaration;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 
 /**
  * CLCapabilities generator.
@@ -54,18 +55,18 @@ public class CLCapabilitiesGenerator {
 		writer.println();
 	}
 
-	static void generateSymbolAddresses(final PrintWriter writer, final InterfaceDeclaration d) {
+	static void generateSymbolAddresses(final PrintWriter writer, final TypeElement d) {
 		final Alias alias_annotation = d.getAnnotation(Alias.class);
 		final boolean aliased = alias_annotation != null && alias_annotation.postfix().length() > 0;
 
 		boolean foundNative = false;
-		for ( final MethodDeclaration method : d.getMethods() ) {
+		for ( final ExecutableElement method : Utils.getMethods(d) ) {
 			if ( method.getAnnotation(Alternate.class) != null || method.getAnnotation(Reuse.class) != null )
 				continue;
 
 			if ( !foundNative ) {
 				//writer.println("\t// " + d.getSimpleName());
-				writer.println("\tstatic final boolean " + CLGeneratorProcessorFactory.getExtensionName(d.getSimpleName()) + ";");
+				writer.println("\tstatic final boolean " + CLGeneratorProcessorFactory.getExtensionName(new StringBuffer(d.getSimpleName()).toString() + ";"));
 				foundNative = true;
 			}
 			writer.print("\tstatic final long " + Utils.getFunctionAddressName(d, method) + " = CL.getFunctionAddress(");
@@ -97,17 +98,17 @@ public class CLCapabilitiesGenerator {
 		writer.println("\t}\n");
 	}
 
-	static void generateExtensionChecks(final PrintWriter writer, final InterfaceDeclaration d) {
-		Iterator<? extends MethodDeclaration> methods = d.getMethods().iterator();
+	static void generateExtensionChecks(final PrintWriter writer, final TypeElement d) {
+		Iterator<? extends MethodDeclaration> methods = Utils.getMethods(d).iterator();
 		if ( !methods.hasNext() )
 			return;
 
-		writer.println("\tprivate static boolean " + getExtensionSupportedName(d.getSimpleName()) + "() {");
+		writer.println("\tprivate static boolean " + getExtensionSupportedName(new StringBuffer(d.getSimpleName()).toString()) + "() {");
 		writer.println("\t\treturn ");
 
 		boolean first = true;
 		while ( methods.hasNext() ) {
-			MethodDeclaration method = methods.next();
+			ExecutableElement method = methods.next();
 			if ( method.getAnnotation(Alternate.class) != null )
 				continue;
 

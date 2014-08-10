@@ -32,17 +32,23 @@
 
 package org.lwjgl.util.generator;
 
-import com.sun.mirror.apt.*;
-import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
-
 import java.io.*;
 import java.lang.annotation.Annotation;
-import java.nio.channels.FileChannel;
-import java.util.*;
 
 import java.nio.*;
+import java.nio.channels.FileChannel;
+import java.util.*;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.SimpleElementVisitor6;
+import javax.tools.Diagnostic;
+import javax.tools.StandardLocation;
 
 /**
  *
@@ -52,14 +58,14 @@ import java.nio.*;
  * @version $Revision$
  * $Id$
  */
-public class GeneratorVisitor extends SimpleDeclarationVisitor {
-	private final AnnotationProcessorEnvironment env;
+public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
+	private final ProcessingEnvironment env;
 	private final TypeMap type_map;
 	private final boolean generate_error_checks;
 	private final boolean context_specific;
 	private final long generatorLM;
 
-	public GeneratorVisitor(AnnotationProcessorEnvironment env, TypeMap type_map, boolean generate_error_checks, boolean context_specific, long generatorLM) {
+	public GeneratorVisitor(ProcessingEnvironment env, TypeMap type_map, boolean generate_error_checks, boolean context_specific, long generatorLM) {
 		this.env = env;
 		this.type_map = type_map;
 		this.generate_error_checks = generate_error_checks;
@@ -67,7 +73,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		this.generatorLM = generatorLM;
 	}
 
-	private void validateMethod(MethodDeclaration method) {
+	private void validateMethod(ExecutableElement method) {
 		if (method.isVarArgs())
 			throw new RuntimeException("Method " + method.getSimpleName() + " is variadic");
 		Collection<Modifier> modifiers = method.getModifiers();
@@ -79,7 +85,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		StripPostfix strip_annotation = method.getAnnotation(StripPostfix.class);
 		if (strip_annotation != null && method.getAnnotation(Alternate.class) == null) {
 			String postfix_param_name = strip_annotation.value();
-			ParameterDeclaration postfix_param = Utils.findParameter(method, postfix_param_name);
+			VariableElement postfix_param = Utils.findParameter(method, postfix_param_name);
 			if (Utils.isParameterMultiTyped(postfix_param))
 				throw new RuntimeException("Postfix parameter can't be the same as a multityped parameter in method " + method);
 			if (Utils.getNIOBufferType(postfix_param.getType()) == null)
@@ -96,7 +102,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		validateTypes(method, method.getAnnotationMirrors(), method.getReturnType());
 	}
 
-	private void validateType(MethodDeclaration method, Class<?extends Annotation> annotation_type, Class type) {
+	private void validateType(ExecutableElement method, Class<?extends Annotation> annotation_type, Class type) {
 		Class[] valid_types = type_map.getValidAnnotationTypes(type);
 		for ( Class valid_type : valid_types )
 			if ( valid_type.equals(annotation_type) )
@@ -105,7 +111,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 				" in method " + method);
 	}
 
-	private void validateTypes(MethodDeclaration method, Collection<AnnotationMirror> annotations, TypeMirror type_mirror) {
+	private void validateTypes(ExecutableElement method, Collection<AnnotationMirror> annotations, TypeMirror type_mirror) {
 		for (AnnotationMirror annotation : annotations) {
 			NativeType native_type_annotation = NativeTypeTranslator.getAnnotation(annotation, NativeType.class);
 			if (native_type_annotation != null) {
@@ -118,16 +124,16 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		}
 	}
 
-	private void validateParameters(MethodDeclaration method) {
-		for (ParameterDeclaration param : method.getParameters()) {
-			validateTypes(method, param.getAnnotationMirrors(), param.getType());
-			Class<?> param_type = Utils.getJavaType(param.getType());
-			if (Utils.getNIOBufferType(param.getType()) != null && param_type != CharSequence.class && param_type != CharSequence[].class) {
+	private void validateParameters(ExecutableElement method) {
+		for (VariableElement param : method.getParameters()) {
+			validateTypes(method, param.getAnnotationMirrors(), param.asType());
+			Class<?> param_type = Utils.getJavaType(param.asType());
+			if (Utils.getNIOBufferType(param.asType()) != null && param_type != CharSequence.class && param_type != CharSequence[].class) {
 				Check parameter_check_annotation = param.getAnnotation(Check.class);
 				NullTerminated null_terminated_annotation = param.getAnnotation(NullTerminated.class);
 				if (parameter_check_annotation == null && null_terminated_annotation == null) {
 					boolean found_auto_size_param = false;
-					for (ParameterDeclaration inner_param : method.getParameters()) {
+					for (VariableElement inner_param : method.getParameters()) {
 						AutoSize auto_size_annotation = inner_param.getAnnotation(AutoSize.class);
 						if (auto_size_annotation != null &&
 								auto_size_annotation.value().equals(param.getSimpleName())) {
@@ -158,23 +164,23 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		}
 	}
 
-	private static void generateMethodsNativePointers(PrintWriter writer, Collection<? extends MethodDeclaration> methods) {
-		for (MethodDeclaration method : methods) {
+	private static void generateMethodsNativePointers(PrintWriter writer, Collection<? extends ExecutableElement> methods) {
+		for (ExecutableElement method : methods) {
 			if ( method.getAnnotation(Alternate.class) == null )
 				generateMethodNativePointers(writer, method);
 		}
 	}
 
-	private static void generateMethodNativePointers(PrintWriter writer, MethodDeclaration method) {
+	private static void generateMethodNativePointers(PrintWriter writer, ExecutableElement method) {
 		if ( method.getAnnotation(Extern.class) == null )
 			writer.print("static ");
 		writer.println(Utils.getTypedefName(method) + " " + method.getSimpleName() + ";");
 	}
 
-	private void generateJavaSource(InterfaceDeclaration d, PrintWriter java_writer) throws IOException {
+	private void generateJavaSource(TypeElement d, PrintWriter java_writer) throws IOException {
 		java_writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
 		java_writer.println();
-		java_writer.println("package " + d.getPackage().getQualifiedName() + ";");
+		java_writer.println("package " + new StringBuffer(d.getEnclosingElement().getSimpleName()).toString() + ";");
 		java_writer.println();
 		java_writer.println("import org.lwjgl.*;");
 		java_writer.println("import java.nio.*;");
@@ -191,21 +197,21 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		if (is_final)
 			java_writer.write("final ");
 		java_writer.print("class " + Utils.getSimpleClassName(d));
-		Collection<InterfaceType> super_interfaces = d.getSuperinterfaces();
+		List<DeclaredType> super_interfaces = (List<DeclaredType>) d.getInterfaces();
 		if (super_interfaces.size() > 1)
 			throw new RuntimeException(d + " extends more than one interface");
 		if (super_interfaces.size() == 1) {
-			InterfaceDeclaration super_interface = super_interfaces.iterator().next().getDeclaration();
+			TypeElement super_interface = (TypeElement) super_interfaces.iterator().next().asElement();
 			java_writer.print(" extends " + Utils.getSimpleClassName(super_interface));
 		}
 		java_writer.println(" {");
-		FieldsGenerator.generateFields(java_writer, d.getFields());
+                FieldsGenerator.generateFields(java_writer, Utils.getFields(d));
 		java_writer.println();
 		if (is_final) {
 			// Write private constructor to avoid instantiation
 			java_writer.println("\tprivate " + Utils.getSimpleClassName(d) + "() {}");
 		}
-		if (d.getMethods().size() > 0 && !context_specific) {
+		if (Utils.getMethods(d).size() > 0 && !context_specific) {
 			java_writer.println();
 			java_writer.println("\tstatic native void " + Utils.STUB_INITIALIZER_NAME + "() throws LWJGLException;");
 		}
@@ -213,22 +219,22 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		java_writer.println("}");
 		java_writer.close();
 		String qualified_interface_name = Utils.getQualifiedClassName(d);
-		env.getMessager().printNotice("Generated class " + qualified_interface_name);
+		env.getMessager().printMessage(Diagnostic.Kind.NOTE,"Generated class " + qualified_interface_name);
 	}
 
-	private void generateNativeSource(InterfaceDeclaration d) throws IOException {
+	private void generateNativeSource(TypeElement d) throws IOException {
 		String qualified_interface_name = Utils.getQualifiedClassName(d);
 		String qualified_native_name = Utils.getNativeQualifiedName(qualified_interface_name)+ ".c";
-		PrintWriter native_writer = env.getFiler().createTextFile(Filer.Location.CLASS_TREE, "", new File(qualified_native_name), "UTF-8");
+		PrintWriter native_writer = new PrintWriter(env.getFiler().createResource(StandardLocation.CLASS_OUTPUT, null, qualified_native_name, null).openWriter());
 		native_writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
 		native_writer.println();
 		native_writer.println("#include <jni.h>");
 		type_map.printNativeIncludes(native_writer);
 		native_writer.println();
-		TypedefsGenerator.generateNativeTypedefs(type_map, native_writer, d.getMethods());
+		TypedefsGenerator.generateNativeTypedefs(type_map, native_writer, Utils.getMethods(d));
 		native_writer.println();
 		if (!context_specific) {
-			generateMethodsNativePointers(native_writer, d.getMethods());
+			generateMethodsNativePointers(native_writer, Utils.getMethods(d));
 			native_writer.println();
 		}
 		NativeMethodStubsGenerator.generateNativeMethodStubs(env, type_map, native_writer, d, generate_error_checks, context_specific);
@@ -248,29 +254,29 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		env.getMessager().printNotice("Generated C source " + qualified_interface_name);
 	}
 
-	public void visitInterfaceDeclaration(InterfaceDeclaration d) {
+	public void visitInterfaceDeclaration(TypeElement d) {
 		final File input = d.getPosition().file();
-		final File outputJava = new File(env.getOptions().get("-s") + '/' + d.getPackage().getQualifiedName().replace('.', '/'), Utils.getSimpleClassName(d) + ".java");
+		final File outputJava = new File(env.getOptions().get("-s") + '/' + new StringBuffer(d.getEnclosingElement().getSimpleName()).toString().replace('.', '/'), Utils.getSimpleClassName(d) + ".java");
 
 		PrintWriter java_writer = null;
 
 		try {
-			final Collection<? extends MethodDeclaration> methods = d.getMethods();
-			if ( methods.size() == 0 && d.getFields().size() == 0 )
+			final Collection<? extends ExecutableElement> methods = Utils.getMethods(d);
+			if ( methods.size() == 0 && Utils.getFields(d).size() == 0 )
 				return;
 
 			// Skip this class if the output exists and the input has not been modified.
 			if ( outputJava.exists() && Math.max(input.lastModified(), generatorLM) < outputJava.lastModified() )
 				return;
 
-			for ( final MethodDeclaration method : methods )
+			for ( final ExecutableElement method : methods )
 				validateMethod(method);
-			java_writer = env.getFiler().createTextFile(Filer.Location.SOURCE_TREE, d.getPackage().getQualifiedName(), new File(Utils.getSimpleClassName(d) + ".java"), null);
+			java_writer = new PrintWriter(env.getFiler().createSourceFile(Utils.getSimpleClassName(d) + ".java", d.getEnclosingElement()).openWriter());
 			generateJavaSource(d, java_writer);
 
 			if ( methods.size() > 0 ) {
 				boolean noNative = true;
-				for ( final MethodDeclaration method : methods ) {
+				for ( final ExecutableElement method : methods ) {
 					Alternate alt_annotation = method.getAnnotation(Alternate.class);
 					if ( (alt_annotation == null || alt_annotation.nativeAlt()) && method.getAnnotation(Reuse.class) == null ) {
 						noNative = false;

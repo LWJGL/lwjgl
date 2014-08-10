@@ -41,33 +41,36 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-import org.lwjgl.PointerBuffer;
-import org.lwjgl.util.generator.opengl.GLreturn;
-
-import com.sun.mirror.apt.*;
-import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.*;
 
 import java.io.*;
-import java.util.*;
 import java.nio.*;
+import java.util.*;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.util.generator.opengl.GLreturn;
 
 public class JavaMethodsGenerator {
 	private static final String SAVED_PARAMETER_POSTFIX = "_saved";
 
-	public static void generateMethodsJava(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration interface_decl, boolean generate_error_checks, boolean context_specific) {
-		for (MethodDeclaration method : interface_decl.getMethods())
+	public static void generateMethodsJava(ProcessingEnvironment env, TypeMap type_map, PrintWriter writer, TypeElement interface_decl, boolean generate_error_checks, boolean context_specific) {
+		for (ExecutableElement method : interface_decl.getMethods())
 			generateMethodJava(env, type_map, writer, interface_decl, method, generate_error_checks, context_specific);
 	}
 
-	private static void generateMethodJava(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method, boolean generate_error_checks, boolean context_specific) {
+	private static void generateMethodJava(ProcessingEnvironment env, TypeMap type_map, PrintWriter writer, TypeElement interface_decl, ExecutableElement method, boolean generate_error_checks, boolean context_specific) {
 		writer.println();
 		if (Utils.isMethodIndirect(generate_error_checks, context_specific, method)) {
 			if (method.getAnnotation(GenerateAutos.class) != null) {
 				printMethodWithMultiType(env, type_map, writer, interface_decl, method, TypeInfo.getDefaultTypeInfoMap(method), Mode.AUTOS, generate_error_checks, context_specific);
 			}
-			Collection<Map<ParameterDeclaration, TypeInfo>> cross_product = TypeInfo.getTypeInfoCrossProduct(type_map, method);
-			for (Map<ParameterDeclaration, TypeInfo> typeinfos_instance : cross_product) {
+			Collection<Map<VariableElement, TypeInfo>> cross_product = TypeInfo.getTypeInfoCrossProduct(type_map, method);
+			for (Map<VariableElement, TypeInfo> typeinfos_instance : cross_product) {
 				printMethodWithMultiType(env, type_map, writer, interface_decl, method, typeinfos_instance, Mode.NORMAL, generate_error_checks, context_specific);
 			}
 		}
@@ -92,7 +95,7 @@ public class JavaMethodsGenerator {
 		}
 	}
 
-	private static void printJavaNativeStub(PrintWriter writer, MethodDeclaration method, Mode mode, boolean generate_error_checks, boolean context_specific) {
+	private static void printJavaNativeStub(PrintWriter writer, ExecutableElement method, Mode mode, boolean generate_error_checks, boolean context_specific) {
 		if (Utils.isMethodIndirect(generate_error_checks, context_specific, method)) {
 			writer.print("\tstatic native ");
 		} else {
@@ -113,9 +116,9 @@ public class JavaMethodsGenerator {
 		writer.println(");");
 	}
 
-	private static boolean generateParametersJava(PrintWriter writer, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, boolean native_stub, final boolean printTypes, Mode mode) {
+	private static boolean generateParametersJava(PrintWriter writer, ExecutableElement method, Map<VariableElement, TypeInfo> typeinfos_instance, boolean native_stub, final boolean printTypes, Mode mode) {
 		boolean first_parameter = true;
-		for (ParameterDeclaration param : method.getParameters()) {
+		for (VariableElement param : method.getParameters()) {
 			if ( native_stub && (param.getAnnotation(Helper.class) != null && !param.getAnnotation(Helper.class).passToNative()) )
 				continue;
 			final Constant constant_annotation = param.getAnnotation(Constant.class);
@@ -126,7 +129,7 @@ public class JavaMethodsGenerator {
 			if (hide_auto_parameter) {
 				AutoType auto_type_annotation = param.getAnnotation(AutoType.class);
 				if (auto_type_annotation != null) {
-					ParameterDeclaration auto_parameter = Utils.findParameter(method, auto_type_annotation.value());
+					VariableElement auto_parameter = Utils.findParameter(method, auto_type_annotation.value());
 					TypeInfo auto_param_type_info = typeinfos_instance.get(auto_parameter);
 					if (auto_param_type_info.getSignedness() == Signedness.BOTH) {
 						if (!first_parameter)
@@ -178,8 +181,8 @@ public class JavaMethodsGenerator {
 		return first_parameter;
 	}
 
-	private static boolean generateParameterJava(PrintWriter writer, ParameterDeclaration param, TypeInfo type_info, boolean native_stub, final boolean printTypes, boolean first_parameter, Mode mode) {
-		Class buffer_type = Utils.getNIOBufferType(param.getType());
+	private static boolean generateParameterJava(PrintWriter writer, VariableElement param, TypeInfo type_info, boolean native_stub, final boolean printTypes, boolean first_parameter, Mode mode) {
+		Class buffer_type = Utils.getNIOBufferType(param.asType());
 		if (!first_parameter)
 			writer.print(", ");
 		BufferObject bo_annotation = param.getAnnotation(BufferObject.class);
@@ -221,9 +224,9 @@ public class JavaMethodsGenerator {
 			writer.println("();");
 	}
 
-	private static void printBufferObjectChecks(PrintWriter writer, MethodDeclaration method, Mode mode, boolean context_specific) {
+	private static void printBufferObjectChecks(PrintWriter writer, ExecutableElement method, Mode mode, boolean context_specific) {
 		EnumSet<BufferKind> check_set = EnumSet.noneOf(BufferKind.class);
-		for (ParameterDeclaration param : method.getParameters()) {
+		for (VariableElement param : method.getParameters()) {
 			BufferObject bo_annotation = param.getAnnotation(BufferObject.class);
 			if (bo_annotation != null)
 				check_set.add(bo_annotation.value());
@@ -232,7 +235,7 @@ public class JavaMethodsGenerator {
 			printBufferObjectCheck(writer, kind, mode, context_specific);
 	}
 
-	private static void printMethodWithMultiType(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, Mode mode, boolean generate_error_checks, boolean context_specific) {
+	private static void printMethodWithMultiType(ProcessingEnvironment env, TypeMap type_map, PrintWriter writer, TypeElement interface_decl, ExecutableElement method, Map<VariableElement, TypeInfo> typeinfos_instance, Mode mode, boolean generate_error_checks, boolean context_specific) {
 		Utils.printDocComment(writer, method);
 		if ( method.getAnnotation(Deprecated.class) != null )
 			writer.println("\t@Deprecated");
@@ -244,7 +247,7 @@ public class JavaMethodsGenerator {
 		StripPostfix strip_annotation = method.getAnnotation(StripPostfix.class);
 		String method_name;
 		Alternate alt_annotation = method.getAnnotation(Alternate.class);
-		method_name = alt_annotation == null || alt_annotation.javaAlt() ? method.getSimpleName() : alt_annotation.value();
+		method_name = alt_annotation == null || alt_annotation.javaAlt() ? new StringBuffer(method.getSimpleName()).toString() : alt_annotation.value();
 		if (strip_annotation != null && mode == Mode.NORMAL)
 			method_name = getPostfixStrippedName(type_map, interface_decl, method);
 		writer.print(" " + method_name + "(");
@@ -252,7 +255,7 @@ public class JavaMethodsGenerator {
 		writer.println(") {");
 
 		final TypeMirror result_type = Utils.getMethodReturnType(method);
-		boolean has_result = !result_type.equals(env.getTypeUtils().getVoidType());
+		boolean has_result = !result_type.equals(env.getTypeUtils().getNoType(TypeKind.VOID));
 
 		final Reuse reuse_annotation = method.getAnnotation(Reuse.class);
 		if ( reuse_annotation != null ) {
@@ -348,8 +351,8 @@ public class JavaMethodsGenerator {
 		writer.println("\t}");
 	}
 
-	private static String getExtensionPostfix(InterfaceDeclaration interface_decl) {
-		String interface_simple_name = interface_decl.getSimpleName();
+	private static String getExtensionPostfix(TypeElement interface_decl) {
+		String interface_simple_name = new StringBuffer(interface_decl.getSimpleName()).toString();
 		Extension extension_annotation = interface_decl.getAnnotation(Extension.class);
 		if (extension_annotation == null) {
 			int underscore_index = interface_simple_name.indexOf("_");
@@ -361,8 +364,8 @@ public class JavaMethodsGenerator {
 			return extension_annotation.postfix();
 	}
 
-	private static ParameterDeclaration getAutoTypeParameter(MethodDeclaration method, ParameterDeclaration target_parameter) {
-		for (ParameterDeclaration param : method.getParameters()) {
+	private static VariableElement getAutoTypeParameter(ExecutableElement method, VariableElement target_parameter) {
+		for (VariableElement param : method.getParameters()) {
 			AnnotationMirror auto_annotation = Utils.getParameterAutoAnnotation(param);
 			if (auto_annotation != null) {
 				Class annotation_type = NativeTypeTranslator.getClassFromType(auto_annotation.getAnnotationType());
@@ -380,11 +383,11 @@ public class JavaMethodsGenerator {
 		return null;
 	}
 
-	private static boolean hasAnyParameterAutoTypeAnnotation(MethodDeclaration method, ParameterDeclaration target_param) {
-		for (ParameterDeclaration param : method.getParameters()) {
+	private static boolean hasAnyParameterAutoTypeAnnotation(ExecutableElement method, VariableElement target_param) {
+		for (VariableElement param : method.getParameters()) {
 			AutoType auto_type_annotation = param.getAnnotation(AutoType.class);
 			if (auto_type_annotation != null) {
-				ParameterDeclaration type_target_param = Utils.findParameter(method, auto_type_annotation.value());
+				VariableElement type_target_param = Utils.findParameter(method, auto_type_annotation.value());
 				if (target_param.equals(type_target_param))
 					return true;
 			}
@@ -392,18 +395,18 @@ public class JavaMethodsGenerator {
 		return false;
 	}
 
-	private static String getPostfixStrippedName(TypeMap type_map, InterfaceDeclaration interface_decl, MethodDeclaration method) {
+	private static String getPostfixStrippedName(TypeMap type_map, TypeElement interface_decl, ExecutableElement method) {
 		StripPostfix strip_annotation = method.getAnnotation(StripPostfix.class);
-		ParameterDeclaration postfix_parameter = Utils.findParameter(method, strip_annotation.value());
+		VariableElement postfix_parameter = Utils.findParameter(method, strip_annotation.value());
 		String postfix = strip_annotation.postfix();
 		if ( "NULL".equals(postfix) ) {
 			PostfixTranslator translator = new PostfixTranslator(type_map, postfix_parameter);
-			postfix_parameter.getType().accept(translator);
+			postfix_parameter.asType().accept(translator);
 			postfix = translator.getSignature();
 		}
 		String method_name;
 		Alternate alt_annotation = method.getAnnotation(Alternate.class);
-		method_name = alt_annotation == null || alt_annotation.javaAlt() ? method.getSimpleName() : alt_annotation.value();
+		method_name = alt_annotation == null || alt_annotation.javaAlt() ? new StringBuffer(method.getSimpleName()).toString() : alt_annotation.value();
 
 		String extension_postfix = "NULL".equals(strip_annotation.extension()) ? getExtensionPostfix(interface_decl) : strip_annotation.extension();
 		String result;
@@ -441,7 +444,7 @@ public class JavaMethodsGenerator {
 			throw new RuntimeException(c + " is not allowed");
 	}
 
-	private static boolean printMethodCallArgument(PrintWriter writer, MethodDeclaration method, ParameterDeclaration param, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, Mode mode, boolean first_parameter, TypeMap type_map) {
+	private static boolean printMethodCallArgument(PrintWriter writer, ExecutableElement method, VariableElement param, Map<VariableElement, TypeInfo> typeinfos_instance, Mode mode, boolean first_parameter, TypeMap type_map) {
 		if (!first_parameter)
 			writer.print(", ");
 
@@ -453,7 +456,7 @@ public class JavaMethodsGenerator {
 			Class param_type = NativeTypeTranslator.getClassFromType(auto_annotation.getAnnotationType());
 			if (AutoType.class.equals(param_type)) {
 				final AutoType auto_type_annotation = param.getAnnotation(AutoType.class);
-				final ParameterDeclaration auto_parameter = Utils.findParameter(method, auto_type_annotation.value());
+				final VariableElement auto_parameter = Utils.findParameter(method, auto_type_annotation.value());
 				final String auto_type = typeinfos_instance.get(auto_parameter).getAutoType();
 				if ( auto_type == null )
 					throw new RuntimeException("No auto type for parameter " + param.getSimpleName() + " in method " + method);
@@ -462,7 +465,7 @@ public class JavaMethodsGenerator {
 				final AutoSize auto_size_annotation = param.getAnnotation(AutoSize.class);
 				if ( !auto_size_annotation.useExpression() ) {
 					final String auto_parameter_name = auto_size_annotation.value();
-					final ParameterDeclaration auto_target_param = Utils.findParameter(method, auto_parameter_name);
+					final VariableElement auto_target_param = Utils.findParameter(method, auto_parameter_name);
 					final TypeInfo auto_target_type_info = typeinfos_instance.get(auto_target_param);
 					final boolean shift_remaining = !hasAnyParameterAutoTypeAnnotation(method, auto_target_param) && Utils.isParameterMultiTyped(auto_target_param);
 					int shifting = 0;
@@ -511,7 +514,7 @@ public class JavaMethodsGenerator {
 						if ( auto_size_annotation != null )
 							writer.print(auto_size_annotation.value() + "_");
 
-						final Class buffer_type = Utils.getNIOBufferType(param.getType());
+						final Class buffer_type = Utils.getNIOBufferType(param.asType());
 						if ( buffer_type == null )
 							writer.print(param.getSimpleName());
 						else {
@@ -537,9 +540,9 @@ public class JavaMethodsGenerator {
 		return false;
 	}
 
-	private static boolean printMethodCallArguments(PrintWriter writer, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, Mode mode, TypeMap type_map) {
+	private static boolean printMethodCallArguments(PrintWriter writer, ExecutableElement method, Map<VariableElement, TypeInfo> typeinfos_instance, Mode mode, TypeMap type_map) {
 		boolean first_parameter = true;
-		for ( ParameterDeclaration param : method.getParameters() ) {
+		for ( VariableElement param : method.getParameters() ) {
 			if ( param.getAnnotation(Result.class) != null || (param.getAnnotation(Helper.class) != null && !param.getAnnotation(Helper.class).passToNative()) )
 				continue;
 
@@ -573,9 +576,9 @@ public class JavaMethodsGenerator {
 		return first_parameter;
 	}
 
-	private static void printParameterCaching(PrintWriter writer, InterfaceDeclaration  interface_decl, MethodDeclaration method, Mode mode, boolean context_specific) {
-		for (ParameterDeclaration param : method.getParameters()) {
-			Class java_type = Utils.getJavaType(param.getType());
+	private static void printParameterCaching(PrintWriter writer, TypeElement  interface_decl, ExecutableElement method, Mode mode, boolean context_specific) {
+		for (VariableElement param : method.getParameters()) {
+			Class java_type = Utils.getJavaType(param.asType());
                         CachedReference cachedReference = param.getAnnotation(CachedReference.class);
 			if (Buffer.class.isAssignableFrom(java_type) &&
                                         cachedReference != null &&
@@ -599,12 +602,12 @@ public class JavaMethodsGenerator {
 		}
 	}
 
-	private static void printParameterChecks(PrintWriter writer, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos, Mode mode, final boolean generate_error_checks) {
+	private static void printParameterChecks(PrintWriter writer, ExecutableElement method, Map<VariableElement, TypeInfo> typeinfos, Mode mode, final boolean generate_error_checks) {
 		if ( mode == Mode.NORMAL ) {
 			final GenerateAutos gen_autos_annotation = method.getAnnotation(GenerateAutos.class);
 			if ( gen_autos_annotation != null && gen_autos_annotation.sizeVariables().length > 0 ) {
 				// For the auto-generated parameters, declare and init a size variable (that can be reused by @Code)
-				for ( final ParameterDeclaration param : method.getParameters() ) {
+				for ( final VariableElement param : method.getParameters() ) {
 					if ( Arrays.binarySearch(gen_autos_annotation.sizeVariables(), param.getSimpleName()) >= 0 ) {
 						final int shifting = getBufferElementSizeExponent(typeinfos.get(param).getType());
 						final Check check_annotation = param.getAnnotation(Check.class);
@@ -619,9 +622,9 @@ public class JavaMethodsGenerator {
 			}
 		}
 
-		for (ParameterDeclaration param : method.getParameters()) {
-			Class java_type = Utils.getJavaType(param.getType());
-			if ( java_type.isArray() || (Utils.isAddressableType(java_type) &&
+		for (VariableElement param : method.getParameters()) {
+			Class java_type = Utils.getJavaType(param.asType());
+			if ( java_type.isArray() || (Utils.isAddressableType((Class)java_type) &&
 					(mode != Mode.BUFFEROBJECT || param.getAnnotation(BufferObject.class) == null) &&
 					(mode != Mode.AUTOS || getAutoTypeParameter(method, param) == null) &&
 					param.getAnnotation(Result.class) == null &&
@@ -636,13 +639,13 @@ public class JavaMethodsGenerator {
 				if ((Buffer.class.isAssignableFrom(java_type) || PointerBuffer.class.isAssignableFrom(java_type)) && param.getAnnotation(Constant.class) == null) {
 					boolean out_parameter = param.getAnnotation(OutParameter.class) != null;
 					TypeInfo typeinfo = typeinfos.get(param);
-					printParameterCheck(writer, method, param.getSimpleName(), typeinfo.getType().getSimpleName(), check_value, can_be_null, param.getAnnotation(NullTerminated.class), out_parameter, generate_error_checks);
+					printParameterCheck(writer, method, new StringBuffer(param.getSimpleName()).toString(), typeinfo.getType().getSimpleName(), check_value, can_be_null, param.getAnnotation(NullTerminated.class), out_parameter, generate_error_checks);
 				} else if ( String.class.equals(java_type)) {
 					if (!can_be_null)
 						writer.println("\t\tBufferChecks.checkNotNull(" + param.getSimpleName() + ");");
 				} else if ( java_type.isArray() ) {
 					final TypeInfo typeinfo = typeinfos.get(param);
-					printArrayParameterCheck(writer, param.getSimpleName(), typeinfo.getType().getSimpleName(), check_value, can_be_null);
+					printArrayParameterCheck(writer, new StringBuffer(param.getSimpleName()).toString(), typeinfo.getType().getSimpleName(), check_value, can_be_null);
 				}
 			}
 		}
@@ -650,7 +653,7 @@ public class JavaMethodsGenerator {
 			printParameterCheck(writer, method, Utils.CACHED_BUFFER_NAME, null, null, true, null, false, generate_error_checks);
 	}
 
-	private static void printParameterCheck(PrintWriter writer, MethodDeclaration method, String name, String type, String check_value, boolean can_be_null, NullTerminated null_terminated, boolean out_parameter, boolean generate_error_checks) {
+	private static void printParameterCheck(PrintWriter writer, ExecutableElement method, String name, String type, String check_value, boolean can_be_null, NullTerminated null_terminated, boolean out_parameter, boolean generate_error_checks) {
 		String tabs;
 		if (can_be_null) {
 			writer.print("\t\tif (" + name + " != null)");
@@ -705,7 +708,7 @@ public class JavaMethodsGenerator {
 		writer.println(");");
 	}
 
-	private static String getResultType(MethodDeclaration method, boolean native_stub) {
+	private static String getResultType(ExecutableElement method, boolean native_stub) {
 		if ( native_stub && method.getAnnotation(PointerWrapper.class) != null )
 			return "long";
 		else if ( !native_stub && method.getAnnotation(GLreturn.class) != null )
@@ -714,7 +717,7 @@ public class JavaMethodsGenerator {
 			return Utils.getJavaType(Utils.getMethodReturnType(method)).getSimpleName();
 	}
 
-	private static String getDefaultResultValue(MethodDeclaration method) {
+	private static String getDefaultResultValue(ExecutableElement method) {
 		if ( method.getAnnotation(GLreturn.class) != null ) {
 			final String type = Utils.getMethodReturnType(method, method.getAnnotation(GLreturn.class), false);
 			if ( "boolean".equals(type) )

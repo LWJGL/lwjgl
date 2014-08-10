@@ -41,15 +41,17 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
+import java.lang.annotation.Annotation;
+import java.nio.*;
+import java.util.*;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.util.generator.opengl.GLvoid;
-
-import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.*;
-
-import java.lang.annotation.Annotation;
-import java.util.*;
-import java.nio.*;
 
 public class TypeInfo {
 	public static final String UNSIGNED_PARAMETER_NAME = "unsigned";
@@ -78,7 +80,7 @@ public class TypeInfo {
 		return auto_type;
 	}
 
-	private static Class getTypeFromPrimitiveKind(PrimitiveType.Kind kind) {
+	private static Class getTypeFromPrimitiveKind(TypeKind kind) {
 		Class type;
 		switch (kind) {
 			case LONG:
@@ -108,7 +110,7 @@ public class TypeInfo {
 		return type;
 	}
 
-	private static Class getBufferTypeFromPrimitiveKind(PrimitiveType.Kind kind, AnnotationMirror annotation) {
+	private static Class getBufferTypeFromPrimitiveKind(TypeKind kind, AnnotationMirror annotation) {
 		Class type;
 		switch (kind) {
 			case INT:
@@ -124,7 +126,7 @@ public class TypeInfo {
 				type = ShortBuffer.class;
 				break;
 			case LONG:
-				if ( annotation.getAnnotationType().getDeclaration().getAnnotation(PointerType.class) != null )
+				if ( annotation.getAnnotationType().asElement().getAnnotation(PointerType.class) != null )
 					type = PointerBuffer.class;
 				else
 					type = LongBuffer.class;
@@ -144,17 +146,17 @@ public class TypeInfo {
 		return new TypeInfo(java_type, Signedness.NONE, null);
 	}
 
-	public static Map<ParameterDeclaration, TypeInfo> getDefaultTypeInfoMap(MethodDeclaration method) {
-		Map<ParameterDeclaration, TypeInfo> map = new HashMap<ParameterDeclaration, TypeInfo>();
-		for (ParameterDeclaration param : method.getParameters()) {
-			TypeInfo type_info = getDefaultTypeInfo(param.getType());
+	public static Map<VariableElement, TypeInfo> getDefaultTypeInfoMap(ExecutableElement method) {
+		Map<VariableElement, TypeInfo> map = new HashMap<VariableElement, TypeInfo>();
+		for (VariableElement param : method.getParameters()) {
+			TypeInfo type_info = getDefaultTypeInfo(param.asType());
 			map.put(param, type_info);
 		}
 		return map;
 	}
 
-	private static Collection<TypeInfo> getTypeInfos(TypeMap type_map, Declaration param, TypeMirror decl_type) {
-		Collection<AnnotationMirror> annotations = Utils.getSortedAnnotations(param.getAnnotationMirrors());
+	private static Collection<TypeInfo> getTypeInfos(TypeMap type_map, Element param, TypeMirror decl_type) {
+		List<? extends AnnotationMirror> annotations = Utils.getSortedAnnotations(param.getAnnotationMirrors());
 		Map<Class, TypeInfo> types = new HashMap<Class, TypeInfo>();
 		Collection<TypeInfo> multityped_result = new ArrayList<TypeInfo>();
 		boolean add_default_type = true;
@@ -178,7 +180,7 @@ public class TypeInfo {
 					}
 				}
 				Class type;
-				PrimitiveType.Kind kind;
+				TypeKind kind;
 				GLvoid void_annotation = param.getAnnotation(GLvoid.class);
 				kind = void_annotation == null ? type_map.getPrimitiveTypeFromNativeType(annotation_type) : void_annotation.value();
 				if (Utils.getNIOBufferType(decl_type) != null)
@@ -200,37 +202,37 @@ public class TypeInfo {
 			return multityped_result;
 	}
 
-	private static Map<ParameterDeclaration, Collection<TypeInfo>> getTypeInfoMap(TypeMap type_map, MethodDeclaration method) {
-		Map<ParameterDeclaration, Collection<TypeInfo>> map = new HashMap<ParameterDeclaration, Collection<TypeInfo>>();
-		for (ParameterDeclaration param : method.getParameters()) {
-			Collection<TypeInfo> types = getTypeInfos(type_map, param, param.getType());
+	private static Map<VariableElement, Collection<TypeInfo>> getTypeInfoMap(TypeMap type_map, ExecutableElement method) {
+		Map<VariableElement, Collection<TypeInfo>> map = new HashMap<VariableElement, Collection<TypeInfo>>();
+		for (VariableElement param : method.getParameters()) {
+			Collection<TypeInfo> types = getTypeInfos(type_map, param, param.asType());
 			map.put(param, types);
 		}
 		return map;
 	}
 
-	public static Collection<Map<ParameterDeclaration, TypeInfo>> getTypeInfoCrossProduct(TypeMap type_map, MethodDeclaration method) {
-		Collection<ParameterDeclaration> parameter_collection = method.getParameters();
-		ParameterDeclaration[] parameters = new ParameterDeclaration[parameter_collection.size()];
+	public static Collection<Map<VariableElement, TypeInfo>> getTypeInfoCrossProduct(TypeMap type_map, ExecutableElement method) {
+		List<? extends VariableElement> parameter_collection = method.getParameters();
+		VariableElement[] parameters = new VariableElement[parameter_collection.size()];
 		parameter_collection.toArray(parameters);
-		Collection<Map<ParameterDeclaration, TypeInfo>> cross_product = new ArrayList<Map<ParameterDeclaration, TypeInfo>>();
+		Collection<Map<VariableElement, TypeInfo>> cross_product = new ArrayList<Map<VariableElement, TypeInfo>>();
 		getCrossProductRecursive(0, parameters, getTypeInfoMap(type_map, method),
-				new HashMap<ParameterDeclaration, TypeInfo>(), cross_product);
+				new HashMap<VariableElement, TypeInfo>(), cross_product);
 		return cross_product;
 	}
 
-	private static void getCrossProductRecursive(int index, ParameterDeclaration[] parameters, Map<ParameterDeclaration,
-			Collection<TypeInfo>> typeinfos_map, Map<ParameterDeclaration, TypeInfo> current_instance,
-			Collection<Map<ParameterDeclaration, TypeInfo>> cross_product) {
+	private static void getCrossProductRecursive(int index, VariableElement[] parameters, Map<VariableElement,
+			Collection<TypeInfo>> typeinfos_map, Map<VariableElement, TypeInfo> current_instance,
+			Collection<Map<VariableElement, TypeInfo>> cross_product) {
 		if (index == parameters.length) {
 			cross_product.add(current_instance);
 			return;
 		}
-		ParameterDeclaration param = parameters[index];
+		VariableElement param = parameters[index];
 		Collection<TypeInfo> typeinfos = typeinfos_map.get(param);
 		if (typeinfos != null) {
 			for (TypeInfo typeinfo : typeinfos) {
-				Map<ParameterDeclaration, TypeInfo> instance = new HashMap<ParameterDeclaration, TypeInfo>(current_instance);
+				Map<VariableElement, TypeInfo> instance = new HashMap<VariableElement, TypeInfo>(current_instance);
 				instance.put(param, typeinfo);
 				getCrossProductRecursive(index + 1, parameters, typeinfos_map, instance, cross_product);
 			}

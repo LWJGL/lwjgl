@@ -49,6 +49,9 @@ import com.sun.mirror.declaration.TypeDeclaration;
 import com.sun.mirror.util.DeclarationFilter;
 
 import static java.util.Collections.*;
+import java.util.List;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.ElementFilter;
 
 /**
  * Generator tool for creating the ContexCapabilities class
@@ -117,22 +120,21 @@ public class GLESGeneratorProcessorFactory implements AnnotationProcessorFactory
 			writer.println("import java.util.HashSet;");
 			writer.println();
 			GLESCapabilitiesGenerator.generateClassPrologue(writer, context_specific, generate_error_checks);
-			DeclarationFilter filter = DeclarationFilter.getFilter(InterfaceDeclaration.class);
-			Collection<TypeDeclaration> interface_decls = filter.filter(env.getSpecifiedTypeDeclarations());
+			List<TypeElement> interface_decls = ElementFilter.typesIn(env.getElementUtils().getAllMembers((TypeElement) env.getTypeUtils().getNullType()));
 			for ( TypeDeclaration typedecl : interface_decls ) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				TypeElementinterface_decl = (TypeElement)typedecl;
 				if ( Utils.isFinal(interface_decl) )
 					GLESCapabilitiesGenerator.generateField(writer, interface_decl);
 			}
 			writer.println();
 			if ( context_specific ) {
 				for ( TypeDeclaration typedecl : interface_decls ) {
-					InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+					TypeElementinterface_decl = (TypeElement)typedecl;
 					GLESCapabilitiesGenerator.generateSymbolAddresses(writer, interface_decl);
 				}
 				writer.println();
 				for ( TypeDeclaration typedecl : interface_decls ) {
-					InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+					TypeElementinterface_decl = (TypeElement)typedecl;
 					GLESCapabilitiesGenerator.generateAddressesInitializers(writer, interface_decl);
 				}
 				writer.println();
@@ -147,11 +149,11 @@ public class GLESGeneratorProcessorFactory implements AnnotationProcessorFactory
 
 			GLESCapabilitiesGenerator.generateInitStubsPrologue(writer, context_specific);
 			for ( TypeDeclaration typedecl : interface_decls ) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				TypeElementinterface_decl = (TypeElement)typedecl;
 				GLESCapabilitiesGenerator.generateSuperClassAdds(writer, interface_decl);
 			}
 			for ( TypeDeclaration typedecl : interface_decls ) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				TypeElementinterface_decl = (TypeElement)typedecl;
 				if ( "GLES20".equals(interface_decl.getSimpleName()) )
 					continue;
 				GLESCapabilitiesGenerator.generateInitStubs(writer, interface_decl, context_specific);
@@ -163,7 +165,7 @@ public class GLESGeneratorProcessorFactory implements AnnotationProcessorFactory
 				writer.println("\t\tif (!loaded_stubs)");
 				writer.println("\t\t\treturn;");
 				for ( TypeDeclaration typedecl : interface_decls ) {
-					InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+					TypeElementinterface_decl = (TypeElement)typedecl;
 					GLESCapabilitiesGenerator.generateUnloadStubs(writer, interface_decl);
 				}
 				writer.println("\t\tloaded_stubs = false;");
@@ -172,7 +174,7 @@ public class GLESGeneratorProcessorFactory implements AnnotationProcessorFactory
 			writer.println();
 			GLESCapabilitiesGenerator.generateInitializerPrologue(writer);
 			for ( TypeDeclaration typedecl : interface_decls ) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				TypeElementinterface_decl = (TypeElement)typedecl;
 				if ( Utils.isFinal(interface_decl) )
 					GLESCapabilitiesGenerator.generateInitializer(writer, interface_decl);
 			}

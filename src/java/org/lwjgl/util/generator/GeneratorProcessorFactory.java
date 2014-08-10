@@ -32,19 +32,22 @@
 
 package org.lwjgl.util.generator;
 
+
+import com.sun.mirror.apt.*;
+
+import static com.sun.mirror.util.DeclarationVisitors.*;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
 import java.util.Collection;
+import static java.util.Collections.*;
 import java.util.Map;
 import java.util.Set;
-
-import com.sun.mirror.apt.*;
-import com.sun.mirror.declaration.AnnotationTypeDeclaration;
-import com.sun.mirror.declaration.TypeDeclaration;
-
-import static com.sun.mirror.util.DeclarationVisitors.*;
-import static java.util.Collections.*;
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.Processor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.TypeElement;
 
 /**
  * Generator tool for creating the java classes and native code
@@ -54,7 +57,8 @@ import static java.util.Collections.*;
  * @version $Revision$
  *          $Id$
  */
-public class GeneratorProcessorFactory implements AnnotationProcessorFactory, RoundCompleteListener {
+public class GeneratorProcessorFactory {
+        /* deprecated implements AnnotationProcessorFactory, RoundCompleteListener {*/
 
 	private static boolean first_round = true;
 
@@ -65,37 +69,66 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 	private static final Collection<String> supportedOptions =
 		unmodifiableCollection(Arrays.asList("-Atypemap", "-Ageneratechecks", "-Acontextspecific"));
 
-	public Collection<String> supportedAnnotationTypes() {
+    /* deprecated as of Java 8 standardized API
+    public Collection<String> supportedAnnotationTypes() {
+    return supportedAnnotations;
+    }
+    public Collection<String> supportedOptions() {
+    return supportedOptions;
+    }
+    public void roundComplete(RoundCompleteEvent event) {
+    first_round = false;
+    AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds,
+    AnnotationProcessorEnvironment env) {
+    // Only process the initial types, not the generated ones
+    if ( first_round ) {
+    env.addListener(this);
+    return new GeneratorProcessor(env);
+    } else
+    return AnnotationProcessors.NO_OP;
+    }*/
+        private Processor proc;
+        public GeneratorProcessorFactory(ProcessingEnvironment env) {
+            proc = new GeneratorProcessor(env);
+        }
+
+        public Processor getProcessor() {
+            return proc;
+        }
+        
+
+    	/* deprecated as of Java 8 standardized API 
+        public Collection<String> supportedAnnotationTypes() {
 		return supportedAnnotations;
 	}
 
 	public Collection<String> supportedOptions() {
 		return supportedOptions;
 	}
-
-	public void roundComplete(RoundCompleteEvent event) {
+        
+        public void roundComplete(RoundCompleteEvent event) {
 		first_round = false;
-	}
-
-	public AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds, AnnotationProcessorEnvironment env) {
-		// Only process the initial types, not the generated ones
+	AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds,
+                                  AnnotationProcessorEnvironment env) {
+            // Only process the initial types, not the generated ones
 		if ( first_round ) {
 			env.addListener(this);
 			return new GeneratorProcessor(env);
 		} else
 			return AnnotationProcessors.NO_OP;
-	}
+	}*/
+        
+	private static class GeneratorProcessor extends AbstractProcessor {
 
-	private static class GeneratorProcessor implements AnnotationProcessor {
+		private final ProcessingEnvironment env;
 
-		private final AnnotationProcessorEnvironment env;
-
-		GeneratorProcessor(AnnotationProcessorEnvironment env) {
+		GeneratorProcessor(ProcessingEnvironment env) {
 			this.env = env;
 		}
 
-		public void process() {
-			Map<String, String> options = env.getOptions();
+                @Override
+                public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+                        Map<String, String> options = env.getOptions();
 			String typemap_classname = null;
 			String bin_path = null;
 			boolean generate_error_checks = options.containsKey("-Ageneratechecks");
@@ -118,20 +151,21 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 			if ( bin_path == null )
 				throw new RuntimeException("No path specified for the bin directory with -Abinpath=<path>");
 
-			TypeDeclaration lastFile = null;
+			TypeElement lastFile = null;
 			try {
 				long generatorLM = getGeneratorLastModified(bin_path);
 				TypeMap type_map = (TypeMap)(Class.forName(typemap_classname).newInstance());
-				for ( TypeDeclaration typedecl : env.getSpecifiedTypeDeclarations() ) {
+				/*for ( TypeElement typedecl : env.getSpecifiedTypeDeclarations() ) {
 					lastFile = typedecl;
 					typedecl.accept(getDeclarationScanner(new GeneratorVisitor(env, type_map, generate_error_checks, context_specific, generatorLM), NO_OP));
-				}
-			} catch (Exception e) {
+				}*/
+                                return true;
+                        } catch (Exception e) {
 				if ( lastFile == null )
 					throw new RuntimeException(e);
 				else
 					throw new RuntimeException("\n-- Failed to process template: " + lastFile.getQualifiedName() + " --", e);
-			}
+			}                        
 		}
 
 		/**
@@ -172,5 +206,6 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 
 			return lastModified;
 		}
-	}
+
+       }
 }

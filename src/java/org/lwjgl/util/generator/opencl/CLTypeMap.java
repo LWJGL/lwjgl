@@ -93,7 +93,7 @@ public class CLTypeMap implements TypeMap {
 		return "";
 	}
 
-	public void printErrorCheckMethod(final PrintWriter writer, final MethodDeclaration method, final String tabs) {
+	public void printErrorCheckMethod(final PrintWriter writer, final ExecutableElement method, final String tabs) {
 		final Check check = method.getAnnotation(Check.class);
 		if ( check != null ) // Get the error code from an IntBuffer output parameter
 			writer.println(tabs + "Util.checkCLError(" + check.value() + ".get(" + check.value() + ".position()));");
@@ -103,7 +103,7 @@ public class CLTypeMap implements TypeMap {
 				writer.println(tabs + "Util.checkCLError(__result);");
 			else {
 				boolean hasErrCodeParam = false;
-				for ( final ParameterDeclaration param : method.getParameters() ) {
+				for ( final VariableElement param : method.getParameters() ) {
 					if ( "errcode_ret".equals(param.getSimpleName()) && Utils.getJavaType(param.getType()) == IntBuffer.class ) {
 						hasErrCodeParam = true;
 						break;

@@ -40,20 +40,24 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
+import java.io.PrintWriter;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.util.*;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVisitor;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.util.generator.opengl.GLboolean;
 import org.lwjgl.util.generator.opengl.GLchar;
 import org.lwjgl.util.generator.opengl.GLcharARB;
 import org.lwjgl.util.generator.opengl.GLreturn;
-
-import java.io.PrintWriter;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.util.*;
-
-import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.PrimitiveType;
-import com.sun.mirror.type.TypeMirror;
 
 public class Utils {
 
@@ -71,16 +75,16 @@ public class Utils {
 	public static final  String CACHED_BUFFER_NAME              = "old_buffer";
 	private static final String OVERLOADED_METHOD_PREFIX        = "n";
 
-	public static String getTypedefName(MethodDeclaration method) {
+	public static String getTypedefName(ExecutableElement method) {
 		Alternate alt_annotation = method.getAnnotation(Alternate.class);
 		return (alt_annotation == null ? method.getSimpleName() : alt_annotation.value()) + TYPEDEF_POSTFIX;
 	}
 
-	public static String getFunctionAddressName(InterfaceDeclaration interface_decl, MethodDeclaration method) {
+	public static String getFunctionAddressName(TypeElement interface_decl, ExecutableElement method) {
 		return getFunctionAddressName(interface_decl, method, false);
 	}
 
-	public static String getFunctionAddressName(InterfaceDeclaration interface_decl, MethodDeclaration method, boolean forceAlt) {
+	public static String getFunctionAddressName(TypeElement interface_decl, ExecutableElement method, boolean forceAlt) {
 		final Alternate alt_annotation = method.getAnnotation(Alternate.class);
 
 		/* Removed prefix so that we can identify reusable entry points, removed postfix because it's not needed and looks nicer.
@@ -91,12 +95,12 @@ public class Utils {
 			return interfaceName + "_" + alt_annotation.value() + FUNCTION_POINTER_POSTFIX;
 		*/
 		if ( alt_annotation == null || (alt_annotation.nativeAlt() && !forceAlt) )
-			return method.getSimpleName();
+			return new StringBuffer(method.getSimpleName()).toString();
 		else
 			return alt_annotation.value();
 	}
 
-	public static boolean isFinal(InterfaceDeclaration d) {
+	public static boolean isFinal(VariableElement d) {
 		Extension extension_annotation = d.getAnnotation(Extension.class);
 		return extension_annotation == null || extension_annotation.isFinal();
 	}
@@ -104,8 +108,8 @@ public class Utils {
 	private static class AnnotationMirrorComparator implements Comparator<AnnotationMirror> {
 
 		public int compare(AnnotationMirror a1, AnnotationMirror a2) {
-			String n1 = a1.getAnnotationType().getDeclaration().getQualifiedName();
-			String n2 = a2.getAnnotationType().getDeclaration().getQualifiedName();
+			String n1 = a1.getAnnotationType().asElement().asType().toString();
+			String n2 = a2.getAnnotationType().asElement().asType().toString();
 			int result = n1.compareTo(n2);
 			return result;
 		}
@@ -115,13 +119,13 @@ public class Utils {
 		}
 	}
 
-	public static Collection<AnnotationMirror> getSortedAnnotations(Collection<AnnotationMirror> annotations) {
+	public static List<AnnotationMirror> getSortedAnnotations(List<AnnotationMirror> annotations) {
 		List<AnnotationMirror> annotation_list = new ArrayList<AnnotationMirror>(annotations);
 		Collections.sort(annotation_list, new AnnotationMirrorComparator());
 		return annotation_list;
 	}
 
-	public static String getReferenceName(InterfaceDeclaration interface_decl, MethodDeclaration method, ParameterDeclaration param) {
+	public static String getReferenceName(TypeElement interface_decl, ExecutableElement method, VariableElement param) {
 		return interface_decl.getSimpleName() + "_" + method.getSimpleName() + "_" + param.getSimpleName();
 	}
 
@@ -143,11 +147,11 @@ public class Utils {
 
 	public static Class getJavaType(TypeMirror type_mirror) {
 		JavaTypeTranslator translator = new JavaTypeTranslator();
-		type_mirror.accept(translator);
+		type_mirror.accept((TypeVisitor) translator,null);
 		return translator.getType();
 	}
 
-	private static boolean hasParameterMultipleTypes(ParameterDeclaration param) {
+	private static boolean hasParameterMultipleTypes(VariableElement param) {
 		int num_native_annotations = 0;
 		for ( AnnotationMirror annotation : param.getAnnotationMirrors() )
 			if ( NativeTypeTranslator.getAnnotation(annotation, NativeType.class) != null )
@@ -155,30 +159,30 @@ public class Utils {
 		return num_native_annotations > 1;
 	}
 
-	public static boolean isParameterMultiTyped(ParameterDeclaration param) {
-		boolean result = Buffer.class.equals(Utils.getJavaType(param.getType()));
+	public static boolean isParameterMultiTyped(VariableElement param) {
+		boolean result = Buffer.class.equals(Utils.getJavaType(param.asType()));
 		if ( !result && hasParameterMultipleTypes(param) )
 			throw new RuntimeException(param + " not defined as java.nio.Buffer but has multiple types");
 		return result;
 	}
 
-	public static ParameterDeclaration findParameter(MethodDeclaration method, String name) {
-		for ( ParameterDeclaration param : method.getParameters() )
+	public static VariableElement findParameter(ExecutableElement method, String name) {
+		for ( VariableElement param : method.getParameters() )
 			if ( param.getSimpleName().equals(name) )
 				return param;
 		throw new RuntimeException("Parameter " + name + " not found");
 	}
 
-	public static void printDocComment(PrintWriter writer, Declaration decl) {
+	public static void printDocComment(PrintWriter writer, Element decl, ProcessingEnvironment pe) {
 		final String overloadsComment;
-		if ( (decl instanceof MethodDeclaration) && decl.getAnnotation(Alternate.class) != null )
+		if ( (decl instanceof ExecutableElement) && decl.getAnnotation(Alternate.class) != null )
 			overloadsComment = "Overloads " + decl.getAnnotation(Alternate.class).value() + ".";
 		else
 			overloadsComment = null;
 
-		String doc_comment = decl.getDocComment();
+		String doc_comment = pe.getElementUtils().getDocComment(decl);
 		if ( doc_comment != null ) {
-			final String tab = decl instanceof InterfaceDeclaration ? "" : "\t";
+			final String tab = (decl instanceof TypeElement) ? "" : "\t";
 			writer.println(tab + "/**");
 
 			if ( overloadsComment != null ) {
@@ -205,7 +209,7 @@ public class Utils {
 			writer.println("\t/** " + overloadsComment + " */");
 	}
 
-	public static AnnotationMirror getParameterAutoAnnotation(ParameterDeclaration param) {
+	public static AnnotationMirror getParameterAutoAnnotation(VariableElement param) {
 		for ( AnnotationMirror annotation : param.getAnnotationMirrors() )
 			if ( NativeTypeTranslator.getAnnotation(annotation, Auto.class) != null )
 				return annotation;
@@ -213,9 +217,9 @@ public class Utils {
 	}
 
 	// DISABLED: We always generate indirect methods. (affects OpenAL only at the time of this change)
-	public static boolean isMethodIndirect(boolean generate_error_checks, boolean context_specific, MethodDeclaration method) {
+	public static boolean isMethodIndirect(boolean generate_error_checks, boolean context_specific, ExecutableElement method) {
 		/*
-		for (ParameterDeclaration param : method.getParameters()) {
+		for (VariableElement param : method.getParameters()) {
 			if (isAddressableType(param.getType()) || getParameterAutoAnnotation(param) != null ||
 					param.getAnnotation(Constant.class) != null)
 				return true;
@@ -240,14 +244,14 @@ public class Utils {
 		return "Java_" + getNativeQualifiedName(qualified_class_name) + "_" + method_name;
 	}
 
-	public static String getQualifiedNativeMethodName(String qualified_class_name, MethodDeclaration method, boolean generate_error_checks, boolean context_specific) {
+	public static String getQualifiedNativeMethodName(String qualified_class_name, ExecutableElement method, boolean generate_error_checks, boolean context_specific) {
 		String method_name = getSimpleNativeMethodName(method, generate_error_checks, context_specific);
 		return getQualifiedNativeMethodName(qualified_class_name, method_name);
 	}
 
-	public static ParameterDeclaration getResultParameter(MethodDeclaration method) {
-		ParameterDeclaration result_param = null;
-		for ( ParameterDeclaration param : method.getParameters() ) {
+	public static VariableElement getResultParameter(ExecutableElement method) {
+		VariableElement result_param = null;
+		for ( VariableElement param : method.getParameters() ) {
 			if ( param.getAnnotation(Result.class) != null ) {
 				if ( result_param != null )
 					throw new RuntimeException("Multiple parameters annotated with Result in method " + method);
@@ -257,19 +261,19 @@ public class Utils {
 		return result_param;
 	}
 
-	public static TypeMirror getMethodReturnType(MethodDeclaration method) {
+	public static TypeMirror getMethodReturnType(ExecutableElement method) {
 		TypeMirror result_type;
-		ParameterDeclaration result_param = getResultParameter(method);
+		VariableElement result_param = getResultParameter(method);
 		if ( result_param != null ) {
-			result_type = result_param.getType();
+			result_type = result_param.asType();
 		} else
 			result_type = method.getReturnType();
 		return result_type;
 	}
 
-	public static String getMethodReturnType(MethodDeclaration method, GLreturn return_annotation, boolean buffer) {
-		ParameterDeclaration return_param = null;
-		for ( ParameterDeclaration param : method.getParameters() ) {
+	public static String getMethodReturnType(ExecutableElement method, GLreturn return_annotation, boolean buffer) {
+		VariableElement return_param = null;
+		for ( VariableElement param : method.getParameters() ) {
 			if ( param.getSimpleName().equals(return_annotation.value()) ) {
 				return_param = param;
 				break;
@@ -278,11 +282,11 @@ public class Utils {
 		if ( return_param == null )
 			throw new RuntimeException("The @GLreturn parameter \"" + return_annotation.value() + "\" could not be found in method: " + method);
 
-		PrimitiveType.Kind kind = NativeTypeTranslator.getPrimitiveKindFromBufferClass(Utils.getJavaType(return_param.getType()));
+		TypeKind kind = NativeTypeTranslator.getPrimitiveKindFromBufferClass(Utils.getJavaType(return_param.asType()));
 		if ( return_param.getAnnotation(GLboolean.class) != null )
-			kind = PrimitiveType.Kind.BOOLEAN;
+			kind = TypeKind.BOOLEAN;
 
-		if ( kind == PrimitiveType.Kind.BYTE && (return_param.getAnnotation(GLchar.class) != null || return_param.getAnnotation(GLcharARB.class) != null) )
+		if ( kind == TypeKind.BYTE && (return_param.getAnnotation(GLchar.class) != null || return_param.getAnnotation(GLcharARB.class) != null) )
 			return "String";
 		else {
 			final String type = JavaTypeTranslator.getPrimitiveClassFromKind(kind).getName();
@@ -290,18 +294,18 @@ public class Utils {
 		}
 	}
 
-	public static boolean needResultSize(MethodDeclaration method) {
+	public static boolean needResultSize(ExecutableElement method) {
 		return getNIOBufferType(getMethodReturnType(method)) != null && method.getAnnotation(AutoSize.class) == null;
 	}
 
-	public static void printExtraCallArguments(PrintWriter writer, MethodDeclaration method, String size_parameter_name) {
+	public static void printExtraCallArguments(PrintWriter writer, ExecutableElement method, String size_parameter_name) {
 		writer.print(size_parameter_name);
 		if ( method.getAnnotation(CachedResult.class) != null ) {
 			writer.print(", " + CACHED_BUFFER_NAME);
 		}
 	}
 
-	private static String getClassName(InterfaceDeclaration interface_decl, String opengl_name) {
+	private static String getClassName(TypeElement interface_decl, String opengl_name) {
 		Extension extension_annotation = interface_decl.getAnnotation(Extension.class);
 		if ( extension_annotation != null && !"".equals(extension_annotation.className()) ) {
 			return extension_annotation.className();
@@ -318,8 +322,8 @@ public class Utils {
 		return result.toString();
 	}
 
-	public static boolean hasMethodBufferObjectParameter(MethodDeclaration method) {
-		for ( ParameterDeclaration param : method.getParameters() ) {
+	public static boolean hasMethodBufferObjectParameter(ExecutableElement method) {
+		for ( VariableElement param : method.getParameters() ) {
 			if ( param.getAnnotation(BufferObject.class) != null ) {
 				return true;
 			}
@@ -327,12 +331,12 @@ public class Utils {
 		return false;
 	}
 
-	public static String getQualifiedClassName(InterfaceDeclaration interface_decl) {
-		return interface_decl.getPackage().getQualifiedName() + "." + getSimpleClassName(interface_decl);
+	public static String getQualifiedClassName(TypeElement interface_decl) {
+		return new StringBuffer(interface_decl.getQualifiedName()).toString();
 	}
 
-	public static String getSimpleClassName(InterfaceDeclaration interface_decl) {
-		return getClassName(interface_decl, interface_decl.getSimpleName());
+	public static String getSimpleClassName(TypeElement interface_decl) {
+		return getClassName(interface_decl, new StringBuffer(interface_decl.getSimpleName()).toString());
 	}
 
 	public static Class<?> getNIOBufferType(TypeMirror t) {
@@ -345,16 +349,16 @@ public class Utils {
 			return null;
 	}
 
-	public static String getSimpleNativeMethodName(MethodDeclaration method, boolean generate_error_checks, boolean context_specific) {
+	public static String getSimpleNativeMethodName(ExecutableElement method, boolean generate_error_checks, boolean context_specific) {
 		String method_name;
 		Alternate alt_annotation = method.getAnnotation(Alternate.class);
-		method_name = alt_annotation == null || alt_annotation.nativeAlt() ? method.getSimpleName() : alt_annotation.value();
+		method_name = alt_annotation == null || alt_annotation.nativeAlt() ? new StringBuffer(method.getSimpleName()).toString() : alt_annotation.value();
 		if ( isMethodIndirect(generate_error_checks, context_specific, method) )
 			method_name = OVERLOADED_METHOD_PREFIX + method_name;
 		return method_name;
 	}
 
-	static boolean isReturnParameter(MethodDeclaration method, ParameterDeclaration param) {
+	static boolean isReturnParameter(ExecutableElement method, VariableElement param) {
 		GLreturn string_annotation = method.getAnnotation(GLreturn.class);
 		if ( string_annotation == null || !string_annotation.value().equals(param.getSimpleName()) )
 			return false;
@@ -365,22 +369,22 @@ public class Utils {
 		if ( param.getAnnotation(Check.class) != null )
 			throw new RuntimeException("The parameter specified in @GLreturn is annotated with @Check in method: " + method);
 
-		if ( param.getAnnotation(GLchar.class) != null && Utils.getJavaType(param.getType()).equals(ByteBuffer.class) && string_annotation.maxLength().length() == 0 )
+		if ( param.getAnnotation(GLchar.class) != null && Utils.getJavaType(param.asType()).equals(ByteBuffer.class) && string_annotation.maxLength().length() == 0 )
 			throw new RuntimeException("The @GLreturn annotation is missing a maxLength parameter in method: " + method);
 
 		return true;
 	}
 
-	static String getStringOffset(MethodDeclaration method, ParameterDeclaration param) {
+	static String getStringOffset(ExecutableElement method, VariableElement param) {
 		String offset = null;
-		for ( ParameterDeclaration p : method.getParameters() ) {
+		for ( VariableElement p : method.getParameters() ) {
 			if ( param != null && p.getSimpleName().equals(param.getSimpleName()) )
 				break;
 
 			if ( p.getAnnotation(NullTerminated.class) != null )
 				continue;
 
-			final Class type = Utils.getJavaType(p.getType());
+			final Class type = Utils.getJavaType(p.asType());
 			if ( type.equals(CharSequence.class) ) {
 				if ( offset == null )
 					offset = p.getSimpleName() + ".length()";
@@ -399,7 +403,7 @@ public class Utils {
 		return offset;
 	}
 
-	static void printGLReturnPre(PrintWriter writer, MethodDeclaration method, GLreturn return_annotation, TypeMap type_map) {
+	static void printGLReturnPre(PrintWriter writer, ExecutableElement method, GLreturn return_annotation, TypeMap type_map) {
 		final String return_type = getMethodReturnType(method, return_annotation, true);
 
 		if ( "String".equals(return_type) ) {
@@ -433,7 +437,7 @@ public class Utils {
 			writer.print("\t\t");
 	}
 
-	static void printGLReturnPost(PrintWriter writer, MethodDeclaration method, GLreturn return_annotation, TypeMap type_map) {
+	static void printGLReturnPost(PrintWriter writer, ExecutableElement method, GLreturn return_annotation, TypeMap type_map) {
 		final String return_type = getMethodReturnType(method, return_annotation, true);
 
 		if ( "String".equals(return_type) ) {
@@ -455,4 +459,22 @@ public class Utils {
 		}
 	}
 
+        public static List<VariableElement> getFields(TypeElement d) {
+                List<VariableElement> fields = new ArrayList<VariableElement>();
+                for(Element f : d.getEnclosedElements()){
+                    if(f.getKind().isField())
+                        fields.add((VariableElement) f);
+                }
+                return fields;
+        }
+        
+        public static List<ExecutableElement> getMethods(TypeElement d){
+                ArrayList<ExecutableElement> methods = new ArrayList<ExecutableElement>();
+                for(Element m : d.getEnclosedElements()){
+                    if(m instanceof ExecutableElement)
+                        methods.add((ExecutableElement) m);
+                }
+		return methods;
+        }
+        
 }

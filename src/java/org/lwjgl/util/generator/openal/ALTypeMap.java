@@ -182,7 +182,7 @@ public class ALTypeMap implements TypeMap {
 		return "";
 	}
 
-	public void printErrorCheckMethod(final PrintWriter writer, final MethodDeclaration method, final String tabs) {
+	public void printErrorCheckMethod(final PrintWriter writer, final ExecutableElement method, final String tabs) {
 		writer.println(tabs + "Util.checkALError();");
 	}
 

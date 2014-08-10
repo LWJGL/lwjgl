@@ -41,15 +41,18 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
+import com.sun.javafx.css.Declaration;
 import org.lwjgl.PointerBuffer;
 
-import com.sun.mirror.apt.*;
-import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.*;
 
 import java.io.*;
 import java.util.*;
 import java.nio.*;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 
 public class NativeMethodStubsGenerator {
 	private static final String BUFFER_ADDRESS_POSTFIX = "_address";
@@ -57,8 +60,8 @@ public class NativeMethodStubsGenerator {
 	private static final String STRING_LIST_NAME = "_str";
 	private static final String POINTER_LIST_NAME = "_ptr";
 
-	public static void generateNativeMethodStubs(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration d, boolean generate_error_checks, boolean context_specific) {
-		for (MethodDeclaration method : d.getMethods()) {
+	public static void generateNativeMethodStubs(ProcessingEnvironment env, TypeMap type_map, PrintWriter writer, TypeElement d, boolean generate_error_checks, boolean context_specific) {
+		for (ExecutableElement method : d.getMethods()) {
 			Alternate alt_annotation = method.getAnnotation(Alternate.class);
 			if ( (alt_annotation != null && (!alt_annotation.nativeAlt() || alt_annotation.skipNative())) || method.getAnnotation(Reuse.class) != null )
 				continue;
@@ -69,7 +72,7 @@ public class NativeMethodStubsGenerator {
 	}
 
 	private static void generateParameters(PrintWriter writer, Collection<ParameterDeclaration> params, Mode mode) {
-		for (ParameterDeclaration param : params) {
+		for (VariableElement param : params) {
 			if ( param.getAnnotation(Result.class) != null || (param.getAnnotation(Helper.class) != null && !param.getAnnotation(Helper.class).passToNative()) )
 				continue;
 			final Constant constant_annotation = param.getAnnotation(Constant.class);
@@ -78,7 +81,7 @@ public class NativeMethodStubsGenerator {
 		}
 	}
 
-	private static void generateParameter(PrintWriter writer, ParameterDeclaration param, Mode mode) {
+	private static void generateParameter(PrintWriter writer, VariableElement param, Mode mode) {
 		writer.print(", ");
 		if (mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null) {
 			writer.print("jlong " + param.getSimpleName() + Utils.BUFFER_OBJECT_PARAMETER_POSTFIX);
@@ -91,7 +94,7 @@ public class NativeMethodStubsGenerator {
 		}
 	}
 
-	private static void generateMethodStub(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, String interface_name, MethodDeclaration method, Mode mode, boolean generate_error_checks, boolean context_specific) {
+	private static void generateMethodStub(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, String interface_name, ExecutableElement method, Mode mode, boolean generate_error_checks, boolean context_specific) {
 		if ( !context_specific && method.getAnnotation(Alternate.class) == null )
 			writer.print("static ");
 		else
@@ -197,8 +200,8 @@ public class NativeMethodStubsGenerator {
 		writer.println();
 	}
 
-	private static void printResultParam(final TypeMap type_map, final PrintWriter writer, final MethodDeclaration method, final TypeMirror result_type, final boolean preDeclare) {
-		final ParameterDeclaration result_param = Utils.getResultParameter(method);
+	private static void printResultParam(final TypeMap type_map, final PrintWriter writer, final ExecutableElement method, final TypeMirror result_type, final boolean preDeclare) {
+		final VariableElement result_param = Utils.getResultParameter(method);
 		final Declaration return_declaration = result_param == null ? method : result_param;
 		final NativeTypeTranslator result_translator = new NativeTypeTranslator(type_map, return_declaration);
 		result_type.accept(result_translator);
@@ -214,7 +217,7 @@ public class NativeMethodStubsGenerator {
 	private static void generateCallParameters(PrintWriter writer, TypeMap type_map, Collection<ParameterDeclaration> params) {
 		if (params.size() > 0) {
 			boolean first = true;
-			for ( ParameterDeclaration param : params ) {
+			for ( VariableElement param : params ) {
 				if ( param.getAnnotation(Helper.class) != null )
 					continue;
 
@@ -228,7 +231,7 @@ public class NativeMethodStubsGenerator {
 		}
 	}
 
-	private static void generateCallParameter(PrintWriter writer, TypeMap type_map, ParameterDeclaration param) {
+	private static void generateCallParameter(PrintWriter writer, TypeMap type_map, VariableElement param) {
 		if ( param.getAnnotation(Helper.class) != null )
 			return;
 
@@ -263,7 +266,7 @@ public class NativeMethodStubsGenerator {
 	}
 
 	private static void generateStringDeallocations(PrintWriter writer, Collection<ParameterDeclaration> params) {
-		for (ParameterDeclaration param : params) {
+		for (VariableElement param : params) {
 			final Class java_type = Utils.getJavaType(param.getType());
 			if ( java_type.equals(String.class) && param.getAnnotation(Result.class) == null )
 				writer.println("\tfree(" + param.getSimpleName() + BUFFER_ADDRESS_POSTFIX + ");");
@@ -272,10 +275,10 @@ public class NativeMethodStubsGenerator {
 		}
 	}
 
-	private static void generateBufferParameterAddresses(TypeMap type_map, PrintWriter writer, MethodDeclaration method, Mode mode) {
+	private static void generateBufferParameterAddresses(TypeMap type_map, PrintWriter writer, ExecutableElement method, Mode mode) {
 		strLoopDeclared = false;
 		ptrLoopDeclared = false;
-		for ( ParameterDeclaration param : method.getParameters() ) {
+		for ( VariableElement param : method.getParameters() ) {
 			final Constant constant_annotation = param.getAnnotation(Constant.class);
 			if ( param.getAnnotation(Result.class) == null && (constant_annotation == null || !constant_annotation.isNative()) && Utils.isAddressableType(param.getType()))
 				generateBufferParameterAddress(type_map, writer, method,  param, mode);
@@ -285,7 +288,7 @@ public class NativeMethodStubsGenerator {
 	private static boolean strLoopDeclared;
 	private static boolean ptrLoopDeclared;
 
-	private static void generateBufferParameterAddress(TypeMap type_map, PrintWriter writer, MethodDeclaration method, ParameterDeclaration param, Mode mode) {
+	private static void generateBufferParameterAddress(TypeMap type_map, PrintWriter writer, ExecutableElement method, VariableElement param, Mode mode) {
 		final Check check_annotation = param.getAnnotation(Check.class);
 		final PointerArray array_annotation = param.getAnnotation(PointerArray.class);
 		final Class java_type = Utils.getJavaType(param.getType());
@@ -358,7 +361,7 @@ public class NativeMethodStubsGenerator {
 	}
 
 	private static boolean hasPointerArrayInits(Collection<ParameterDeclaration> params) {
-		for ( ParameterDeclaration param : params ) {
+		for ( VariableElement param : params ) {
 			PointerArray pointerArray_annotation = param.getAnnotation(PointerArray.class);
 			if ( pointerArray_annotation != null )
 				return true;
@@ -367,7 +370,7 @@ public class NativeMethodStubsGenerator {
 	}
 
 	private static void generatePointerArrayInits(TypeMap type_map, PrintWriter writer, Collection<ParameterDeclaration> params) {
-		for ( ParameterDeclaration param : params ) {
+		for ( VariableElement param : params ) {
 			PointerArray pointerArray_annotation = param.getAnnotation(PointerArray.class);
 			if ( pointerArray_annotation != null ) {
 				final Class java_type = Utils.getJavaType(param.getType());

@@ -42,17 +42,20 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-import org.lwjgl.PointerBuffer;
-
 import java.lang.annotation.Annotation;
 import java.nio.*;
 import java.util.ArrayList;
 import java.util.Collection;
-
-import com.sun.mirror.declaration.AnnotationMirror;
-import com.sun.mirror.declaration.Declaration;
-import com.sun.mirror.type.*;
-import com.sun.mirror.util.TypeVisitor;
+import java.util.List;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.NoType;
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.util.SimpleTypeVisitor6;
+import org.lwjgl.PointerBuffer;
 
 /**
  * $Id$
@@ -63,14 +66,14 @@ import com.sun.mirror.util.TypeVisitor;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-public class NativeTypeTranslator implements TypeVisitor {
+public class NativeTypeTranslator extends SimpleTypeVisitor6 {
 
 	private Collection<Class> native_types;
 	private boolean is_indirect;
-	private final Declaration declaration;
+	private final Element declaration;
 	private final TypeMap type_map;
 
-	public NativeTypeTranslator(TypeMap type_map, Declaration declaration) {
+	public NativeTypeTranslator(TypeMap type_map, Element declaration) {
 		this.declaration = declaration;
 		this.type_map = type_map;
 	}
@@ -105,12 +108,9 @@ public class NativeTypeTranslator implements TypeVisitor {
 		return native_types.iterator().next();
 	}
 
-	public void visitAnnotationType(AnnotationType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
 
-	public void visitArrayType(ArrayType t) {
-		final Class<?> type = Utils.getJavaType(t).getComponentType();
+	public Object visitArray(ArrayType t, Object o) {
+		final Class<?> type = Utils.getJavaType(t);
 
 		if ( CharSequence.class.isAssignableFrom(type) ) {
 			is_indirect = true;
@@ -124,21 +124,22 @@ public class NativeTypeTranslator implements TypeVisitor {
 			is_indirect = false;
 		} else
 			throw new RuntimeException(t + " is not allowed");
+                return type;
 	}
 
-	public static PrimitiveType.Kind getPrimitiveKindFromBufferClass(Class c) {
+	public static TypeKind getPrimitiveKindFromBufferClass(Class c) {            
 		if ( IntBuffer.class.equals(c) )
-			return PrimitiveType.Kind.INT;
-		else if ( DoubleBuffer.class.equals(c) )
-			return PrimitiveType.Kind.DOUBLE;
-		else if ( ShortBuffer.class.equals(c) )
-			return PrimitiveType.Kind.SHORT;
-		else if ( ByteBuffer.class.equals(c) || PointerBuffer.class.equals(c) )
-			return PrimitiveType.Kind.BYTE;
-		else if ( FloatBuffer.class.equals(c) )
-			return PrimitiveType.Kind.FLOAT;
-		else if ( LongBuffer.class.equals(c) )
-			return PrimitiveType.Kind.LONG;
+			return TypeKind.INT;
+		else if ( DoubleBuffer.class.equals(c))
+			return TypeKind.DOUBLE;
+		else if ( ShortBuffer.class.equals(c))
+			return TypeKind.SHORT;
+		else if ( ByteBuffer.class.equals(c) || PointerBuffer.class.equals(c))
+			return TypeKind.BYTE;
+		else if ( FloatBuffer.class.equals(c))
+			return TypeKind.FLOAT;
+		else if ( LongBuffer.class.equals(c))
+			return TypeKind.LONG;
 		else
 			throw new RuntimeException(c + " is not allowed");
 	}
@@ -146,19 +147,19 @@ public class NativeTypeTranslator implements TypeVisitor {
 	@SuppressWarnings("unchecked")
 	public static Class<? extends Annotation> getClassFromType(DeclaredType t) {
 		try {
-			return (Class<? extends Annotation>)Class.forName(t.getDeclaration().getQualifiedName());
+                    return (Class<? extends Annotation>)Class.forName(t.asElement().asType().toString());
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private void getNativeTypeFromAnnotatedPrimitiveType(PrimitiveType.Kind kind) {
+	private void getNativeTypeFromAnnotatedPrimitiveType(TypeKind kind) {
 		native_types = translateAnnotations();
 		if ( native_types.size() == 0 )
 			native_types.add(type_map.getNativeTypeFromPrimitiveType(kind));
 	}
 
-	public void visitClassType(ClassType t) {
+	private void visitClassType(DeclaredType t) {
 		is_indirect = true;
 
 		Class<?> c = getClassFromType(t);
@@ -169,7 +170,7 @@ public class NativeTypeTranslator implements TypeVisitor {
 			native_types = new ArrayList<Class>();
 			native_types.add(type_map.getVoidType());
 		} else if ( Buffer.class.isAssignableFrom(c) || PointerBuffer.class.isAssignableFrom(c) ) {
-			PrimitiveType.Kind kind = getPrimitiveKindFromBufferClass(c);
+			TypeKind kind = getPrimitiveKindFromBufferClass(c);
 			getNativeTypeFromAnnotatedPrimitiveType(kind);
 		} else if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(c) ) {
 			native_types = new ArrayList<Class>();
@@ -177,23 +178,16 @@ public class NativeTypeTranslator implements TypeVisitor {
 
 			is_indirect = false;
 		} else
-			throw new RuntimeException(t + " is not allowed");
+			throw new RuntimeException(t + " is not allowed");               
 	}
 
-	public void visitPrimitiveType(PrimitiveType t) {
+	public Object visitPrimitive(PrimitiveType t, Object p) {
 		getNativeTypeFromAnnotatedPrimitiveType(t.getKind());
+                return native_types;
 	}
 
-	public void visitDeclaredType(DeclaredType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitEnumType(EnumType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitInterfaceType(InterfaceType t) {
-		// See ARB_debug_label.glObjectPtrLabel
+        private void visitInterfaceType(DeclaredType t) {
+            // See ARB_debug_label.glObjectPtrLabel
 		Class<?> c = getClassFromType(t);
 		if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(c) ) {
 			native_types = new ArrayList<Class>();
@@ -202,6 +196,14 @@ public class NativeTypeTranslator implements TypeVisitor {
 			is_indirect = false;
 		} else
 			throw new RuntimeException(t + " is not allowed");
+        }
+        
+	public Object visitDeclared(DeclaredType t, Object p) {
+            if(t.asElement().getKind().isInterface())
+                visitInterfaceType(t);
+            else if(t.asElement().getKind().isClass())
+                visitClassType(t);
+            return native_types;
 	}
 
 	// Check if the annotation is itself annotated with a certain annotation type
@@ -219,7 +221,7 @@ public class NativeTypeTranslator implements TypeVisitor {
 	}
 
 	private Collection<Class> translateAnnotations() {
-		Collection<Class> result = new ArrayList<Class>();
+		List<Class> result = new ArrayList<Class>();
 		for ( AnnotationMirror annotation : Utils.getSortedAnnotations(declaration.getAnnotationMirrors()) ) {
 			Class translated_result = translateAnnotation(annotation);
 			if ( translated_result != null ) {
@@ -229,25 +231,11 @@ public class NativeTypeTranslator implements TypeVisitor {
 		return result;
 	}
 
-	public void visitReferenceType(ReferenceType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitTypeMirror(TypeMirror t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitTypeVariable(TypeVariable t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitVoidType(VoidType t) {
+	public Object visitNoType(NoType t, Object p) {
 		native_types = translateAnnotations();
 		if ( native_types.size() == 0 )
 			native_types.add(void.class);
+                return native_types;
 	}
 
-	public void visitWildcardType(WildcardType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
 }

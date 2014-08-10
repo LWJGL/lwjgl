@@ -136,7 +136,7 @@ public class CLGeneratorProcessorFactory implements AnnotationProcessorFactory, 
 				if ( t.getAnnotation(CLPlatformExtension.class) == null && t.getAnnotation(CLDeviceExtension.class) == null && !t.getSimpleName().startsWith("CL") )
 					throw new RuntimeException("An OpenCL extension is missing an extension type annotation: " + t.getSimpleName());
 
-				CLCapabilitiesGenerator.generateSymbolAddresses(writer, (InterfaceDeclaration)t);
+				CLCapabilitiesGenerator.generateSymbolAddresses(writer, (TypeElement)t);
 			}
 			writer.println();
 
@@ -145,7 +145,7 @@ public class CLGeneratorProcessorFactory implements AnnotationProcessorFactory, 
 			CLCapabilitiesGenerator.generateCapabilitiesGetters(writer);
 
 			for ( final TypeDeclaration template : templates )
-				CLCapabilitiesGenerator.generateExtensionChecks(writer, (InterfaceDeclaration)template);
+				CLCapabilitiesGenerator.generateExtensionChecks(writer, (TypeElement)template);
 
 			writer.println("}");
 			writer.close();
@@ -163,7 +163,7 @@ public class CLGeneratorProcessorFactory implements AnnotationProcessorFactory, 
 
 			for ( final TypeDeclaration t : templates ) {
 				if ( t.getAnnotation(capsType) != null )
-					CLPDCapabilitiesGenerator.generateExtensions(writer, (InterfaceDeclaration)t);
+					CLPDCapabilitiesGenerator.generateExtensions(writer, (TypeElement)t);
 			}
 			writer.println();
 

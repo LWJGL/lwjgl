@@ -41,17 +41,19 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.*;
 
 import java.io.*;
 import java.util.*;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 
 public class RegisterStubsGenerator {
-	public static void generateMethodsNativeStubBind(PrintWriter writer, InterfaceDeclaration d, boolean generate_error_checks, boolean context_specific) {
-		Iterator<? extends MethodDeclaration> it = d.getMethods().iterator();
+	public static void generateMethodsNativeStubBind(PrintWriter writer, TypeElement d, boolean generate_error_checks, boolean context_specific) {
+		Iterator<? extends ExecutableElement> it = Utils.getMethods(d).iterator();
 		while (it.hasNext()) {
-			MethodDeclaration method = it.next();
+			ExecutableElement method = it.next();
 			Alternate alt_annotation = method.getAnnotation(Alternate.class);
 			if ( (alt_annotation != null && (!alt_annotation.nativeAlt() || alt_annotation.skipNative())) || method.getAnnotation(Reuse.class) != null )
 				continue;
@@ -80,10 +82,10 @@ public class RegisterStubsGenerator {
 		return v.getSignature();
 	}
 
-	private static String getMethodSignature(MethodDeclaration method, Mode mode) {
-		Collection<ParameterDeclaration> params = method.getParameters();
+	private static String getMethodSignature(ExecutableElement method, Mode mode) {
+		List<? extends VariableElement> params = method.getParameters();
 		String signature = "(";
-		for (ParameterDeclaration param : params) {
+		for (VariableElement param : params) {
 			if ( param.getAnnotation(Result.class) != null || (param.getAnnotation(Helper.class) != null && !param.getAnnotation(Helper.class).passToNative()) )
 				continue;
 
@@ -94,7 +96,7 @@ public class RegisterStubsGenerator {
 			if (mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null)
 				signature += "J";
 			else
-				signature += getTypeSignature(param.getType(), true);
+				signature += getTypeSignature(param.asType(), true);
 		}
 
 		final TypeMirror result_type = Utils.getMethodReturnType(method);
@@ -114,7 +116,7 @@ public class RegisterStubsGenerator {
 		return signature;
 	}
 
-	private static void printMethodNativeStubBind(PrintWriter writer, InterfaceDeclaration d, MethodDeclaration method, Platform platform, Mode mode, boolean has_more, boolean generate_error_checks, boolean context_specific) {
+	private static void printMethodNativeStubBind(PrintWriter writer, TypeElement d, ExecutableElement method, Platform platform, Mode mode, boolean has_more, boolean generate_error_checks, boolean context_specific) {
 		writer.print("\t\t{\"" + Utils.getSimpleNativeMethodName(method, generate_error_checks, context_specific));
 		if (mode == Mode.BUFFEROBJECT)
 			writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
@@ -124,7 +126,7 @@ public class RegisterStubsGenerator {
 			writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
 
 		final Alternate alt_annotation = method.getAnnotation(Alternate.class);
-		final String methodName = alt_annotation == null ? method.getSimpleName() : alt_annotation.value();
+		final String methodName = alt_annotation == null ? new StringBuffer(method.getSimpleName()).toString() : alt_annotation.value();
 		String opengl_handle_name = methodName.replaceFirst("gl", platform.getPrefix());
 		writer.print(", \"" + opengl_handle_name + "\", (void *)&" + methodName + ", " + (method.getAnnotation(Optional.class) == null ? "false" : "true") + "}");
 		if (has_more)

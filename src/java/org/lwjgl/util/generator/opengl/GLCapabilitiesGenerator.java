@@ -32,17 +32,17 @@
 
 package org.lwjgl.util.generator.opengl;
 
-import org.lwjgl.util.generator.*;
 
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Iterator;
-
-import com.sun.mirror.declaration.InterfaceDeclaration;
-import com.sun.mirror.declaration.MethodDeclaration;
-import com.sun.mirror.type.InterfaceType;
+import java.util.List;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import org.lwjgl.util.generator.*;
 
 /**
  * Generator visitor for the context capabilities generator tool
@@ -84,25 +84,25 @@ public class GLCapabilitiesGenerator {
 			return EXTENSION_PREFIX + interface_name;
 	}
 
-	public static void generateSuperClassAdds(PrintWriter writer, InterfaceDeclaration d) {
+	public static void generateSuperClassAdds(PrintWriter writer, TypeElement d) {
 		Collection<InterfaceType> super_interfaces = d.getSuperinterfaces();
 		if ( super_interfaces.size() > 1 )
 			throw new RuntimeException(d + " extends more than one other interface");
 		if ( super_interfaces.size() == 1 ) {
 			InterfaceType super_interface = super_interfaces.iterator().next();
 			writer.print("\t\tif (" + CACHED_EXTS_VAR_NAME + ".contains(\"");
-			writer.println(translateFieldName(d.getSimpleName()) + "\"))");
+			writer.println(translateFieldName(new StringBuffer(d.getSimpleName()).toString()) + "\"))");
 			writer.print("\t\t\t");
 			generateAddExtension(writer, super_interface.getDeclaration());
 		}
 	}
 
-	public static void generateInitializer(PrintWriter writer, InterfaceDeclaration d) {
-		String translated_field_name = translateFieldName(d.getSimpleName());
+	public static void generateInitializer(PrintWriter writer, TypeElement d) {
+		String translated_field_name = translateFieldName(new StringBuffer(d.getSimpleName()).toString());
 		writer.print("\t\tthis." + translated_field_name + " = ");
 		writer.print(CACHED_EXTS_VAR_NAME + ".contains(\"");
 		writer.print(translated_field_name + "\")");
-		Collection<InterfaceType> super_interfaces = d.getSuperinterfaces();
+		List<DeclaredType> super_interfaces = (List<DeclaredType>) d.getInterfaces();
 		if ( super_interfaces.size() > 1 )
 			throw new RuntimeException(d + " extends more than one other interface");
 		if ( super_interfaces.size() == 1 ) {
@@ -163,30 +163,30 @@ public class GLCapabilitiesGenerator {
 		writer.println("\t}");
 	}
 
-	public static void generateUnloadStubs(PrintWriter writer, InterfaceDeclaration d) {
-		if ( d.getMethods().size() > 0 ) {
+	public static void generateUnloadStubs(PrintWriter writer, TypeElement d) {
+		if ( Utils.getMethods(d).size() > 0 ) {
 			writer.print("\t\tGLContext.resetNativeStubs(" + Utils.getSimpleClassName(d));
 			writer.println(".class);");
 		}
 	}
 
-	public static void generateInitStubs(PrintWriter writer, InterfaceDeclaration d, boolean context_specific) {
-		if ( d.getMethods().size() > 0 ) {
+	public static void generateInitStubs(PrintWriter writer, TypeElement d, boolean context_specific) {
+		if ( Utils.getMethods(d).size() > 0 ) {
 			if ( context_specific ) {
 				final Alias alias_annotation = d.getAnnotation(Alias.class);
 
 				if ( d.getAnnotation(ForceInit.class) != null )
-					writer.println("\t\t" + CACHED_EXTS_VAR_NAME + ".add(\"" + translateFieldName(d.getSimpleName()) + "\");");
+					writer.println("\t\t" + CACHED_EXTS_VAR_NAME + ".add(\"" + translateFieldName(new StringBuffer(d.getSimpleName()).toString()) + "\");");
 				writer.print("\t\tif (");
 				if ( alias_annotation != null )
 					writer.print("(");
 				writer.print(CACHED_EXTS_VAR_NAME + ".contains(\"");
-				writer.print(translateFieldName(d.getSimpleName()) + "\")");
+				writer.print(translateFieldName(new StringBuffer(d.getSimpleName()).toString()) + "\")");
 				if ( alias_annotation != null ) {
 					writer.print(" || " + CACHED_EXTS_VAR_NAME + ".contains(\"");
 					writer.print(translateFieldName(alias_annotation.value()) + "\"))");
 				}
-				writer.print(" && !" + getAddressesInitializerName(d.getSimpleName()) + "(");
+				writer.print(" && !" + getAddressesInitializerName(new StringBuffer(d.getSimpleName()).toString()) + "(");
 				if ( d.getAnnotation(DeprecatedGL.class) != null )
 					writer.print("forwardCompatible");
 				if ( d.getAnnotation(Dependent.class) != null ) {
@@ -201,27 +201,27 @@ public class GLCapabilitiesGenerator {
 				} else
 					writer.println("))");
 				writer.print("\t\t\tremove(" + CACHED_EXTS_VAR_NAME + ", \"");
-				writer.println(translateFieldName(d.getSimpleName()) + "\");");
+				writer.println(translateFieldName(new StringBuffer(d.getSimpleName()).toString()) + "\");");
 				if ( alias_annotation != null )
 					writer.println("\t\t}");
 			} else {
 				writer.print("\t\tGLContext." + Utils.STUB_INITIALIZER_NAME + "(" + Utils.getSimpleClassName(d));
-				writer.println(".class, " + CACHED_EXTS_VAR_NAME + ", \"" + translateFieldName(d.getSimpleName()) + "\");");
+				writer.println(".class, " + CACHED_EXTS_VAR_NAME + ", \"" + translateFieldName(new StringBuffer(d.getSimpleName()).toString()) + "\");");
 			}
 		}
 	}
 
-	private static void generateAddExtension(PrintWriter writer, InterfaceDeclaration d) {
+	private static void generateAddExtension(PrintWriter writer, TypeElement d) {
 		writer.print(CACHED_EXTS_VAR_NAME + ".add(\"");
-		writer.println(translateFieldName(d.getSimpleName()) + "\");");
+		writer.println(translateFieldName(new StringBuffer(d.getSimpleName()).toString()) + "\");");
 	}
 
-	public static void generateAddressesInitializers(PrintWriter writer, InterfaceDeclaration d) {
-		Iterator<? extends MethodDeclaration> methods = d.getMethods().iterator();
+	public static void generateAddressesInitializers(PrintWriter writer, TypeElement d) {
+		Iterator<? extends MethodDeclaration> methods = Utils.getMethods(d).iterator();
 		if ( !methods.hasNext() )
 			return;
 
-		writer.print("\tprivate boolean " + getAddressesInitializerName(d.getSimpleName()) + "(");
+		writer.print("\tprivate boolean " + getAddressesInitializerName(new StringBuffer(d.getSimpleName()).toString()) + "(");
 
 		boolean optional;
 		boolean deprecated = d.getAnnotation(DeprecatedGL.class) != null;
@@ -242,7 +242,7 @@ public class GLCapabilitiesGenerator {
 
 		boolean first = true;
 		while ( methods.hasNext() ) {
-			MethodDeclaration method = methods.next();
+			ExecutableElement method = methods.next();
 			if ( method.getAnnotation(Alternate.class) != null )
 				continue;
 
@@ -309,9 +309,9 @@ public class GLCapabilitiesGenerator {
 		writer.println();
 	}
 
-	public static void generateSymbolAddresses(PrintWriter writer, InterfaceDeclaration d) {
+	public static void generateSymbolAddresses(PrintWriter writer, TypeElement d) {
 		boolean first = true;
-		for ( final MethodDeclaration method : d.getMethods() ) {
+		for ( final ExecutableElement method : Utils.getMethods(d) ) {
 			if ( method.getAnnotation(Alternate.class) != null || method.getAnnotation(Reuse.class) != null )
 				continue;
 
@@ -323,7 +323,7 @@ public class GLCapabilitiesGenerator {
 		}
 	}
 
-	public static void generateField(PrintWriter writer, InterfaceDeclaration d) {
-		writer.println("\tpublic final boolean " + translateFieldName(d.getSimpleName()) + ";");
+	public static void generateField(PrintWriter writer, TypeElement d) {
+		writer.println("\tpublic final boolean " + translateFieldName(new StringBuffer(d.getSimpleName()).toString()) + ";");
 	}
 }

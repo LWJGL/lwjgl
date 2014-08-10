@@ -111,7 +111,7 @@ public class GLTypeMap implements TypeMap {
 		return comma ? "caps, " : "caps";
 	}
 
-	public void printErrorCheckMethod(final PrintWriter writer, final MethodDeclaration method, final String tabs) {
+	public void printErrorCheckMethod(final PrintWriter writer, final ExecutableElement method, final String tabs) {
 		writer.println(tabs + "Util.checkGLError();");
 	}
 

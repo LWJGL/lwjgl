@@ -32,12 +32,19 @@
 
 package org.lwjgl.util.generator;
 
-import org.lwjgl.opencl.CLMem;
-
 import java.nio.ByteBuffer;
-
-import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.NoType;
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeKind;
+import static javax.lang.model.type.TypeKind.BOOLEAN;
+import static javax.lang.model.type.TypeKind.BYTE;
+import static javax.lang.model.type.TypeKind.DOUBLE;
+import static javax.lang.model.type.TypeKind.FLOAT;
+import static javax.lang.model.type.TypeKind.INT;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.SimpleTypeVisitor6;
 
 /**
  * A TypeVisitor that translates (annotated) TypeMirrors to
@@ -47,18 +54,14 @@ import com.sun.mirror.util.*;
  * @version $Revision$
  * $Id$
  */
-public class JavaTypeTranslator implements TypeVisitor {
+public class JavaTypeTranslator extends SimpleTypeVisitor6 {
 	private Class type;
 
 	public Class getType() {
 		return type;
 	}
 
-	public void visitAnnotationType(AnnotationType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitArrayType(ArrayType t) {
+	public Object visitArray(ArrayType t, Object o) {
 		final TypeMirror componentType = t.getComponentType();
 		if ( componentType instanceof PrimitiveType ) {
 			type = getPrimitiveArrayClassFromKind(((PrimitiveType)componentType).getKind());
@@ -74,9 +77,10 @@ public class JavaTypeTranslator implements TypeVisitor {
 				throw new RuntimeException(e);
 			}
 		}
+                return type;
 	}
 
-	public static Class getPrimitiveClassFromKind(PrimitiveType.Kind kind) {
+	public static Class getPrimitiveClassFromKind(TypeKind kind) {
 		switch ( kind ) {
 			case LONG:
 				return long.class;
@@ -97,7 +101,7 @@ public class JavaTypeTranslator implements TypeVisitor {
 		}
 	}
 
-	private static Class getPrimitiveArrayClassFromKind(PrimitiveType.Kind kind) {
+	private static Class getPrimitiveArrayClassFromKind(TypeKind kind) {
 		switch ( kind ) {
 			case LONG:
 				return long[].class;
@@ -118,43 +122,31 @@ public class JavaTypeTranslator implements TypeVisitor {
 		}
 	}
 
-	public void visitPrimitiveType(PrimitiveType t) {
+	public Object visitPrimitive(PrimitiveType t, Object p) {
 		type = getPrimitiveClassFromKind(t.getKind());
+                return type;
 	}
 
-	public void visitDeclaredType(DeclaredType t) {
-		throw new RuntimeException(t + " is not allowed");
+	public Object visitDeclared(DeclaredType t, Object o) {
+            if(t.asElement().getKind().isClass())
+                visitClassType(t);
+            else if(t.asElement().getKind().isInterface())
+                visitInterfaceType(t);
+            return type;
 	}
 
-	public void visitEnumType(EnumType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitClassType(ClassType t) {
+	private void visitClassType(DeclaredType t) {
 		type = NativeTypeTranslator.getClassFromType(t);
 	}
 
-	public void visitInterfaceType(InterfaceType t) {
+	private void visitInterfaceType(DeclaredType t) {
 		type = NativeTypeTranslator.getClassFromType(t);
 	}
 
-	public void visitReferenceType(ReferenceType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitTypeMirror(TypeMirror t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitTypeVariable(TypeVariable t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitVoidType(VoidType t) {
+	public Object visitNoType(NoType t, Object p) {            
 		type = void.class;
+                return type;
 	}
 
-	public void visitWildcardType(WildcardType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
+
 }

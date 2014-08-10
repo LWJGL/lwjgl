@@ -48,7 +48,7 @@ import java.io.*;
 import java.util.*;
 
 public class TypedefsGenerator {
-	private static void generateNativeTypedefs(TypeMap type_map, PrintWriter writer, MethodDeclaration method) {
+	private static void generateNativeTypedefs(TypeMap type_map, PrintWriter writer, ExecutableElement method) {
 		TypeMirror return_type = method.getReturnType();
 		writer.print("typedef ");
 		writer.print(type_map.getTypedefPostfix());
@@ -65,7 +65,7 @@ public class TypedefsGenerator {
 	private static void generateNativeTypedefsParameters(TypeMap type_map, PrintWriter writer, Collection<ParameterDeclaration> params) {
 		if (params.size() > 0) {
 			boolean first = true;
-			for ( ParameterDeclaration param : params ) {
+			for ( VariableElement param : params ) {
 				if ( param.getAnnotation(Helper.class) != null )
 					continue;
 
@@ -79,7 +79,7 @@ public class TypedefsGenerator {
 		}
 	}
 
-	private static void generateNativeTypedefsParameter(TypeMap type_map, PrintWriter writer, ParameterDeclaration param) {
+	private static void generateNativeTypedefsParameter(TypeMap type_map, PrintWriter writer, VariableElement param) {
 		NativeTypeTranslator translator = new NativeTypeTranslator(type_map, param);
 		param.getType().accept(translator);
 		writer.print(translator.getSignature());
@@ -89,7 +89,7 @@ public class TypedefsGenerator {
 	}
 
 	public static void generateNativeTypedefs(TypeMap type_map, PrintWriter writer, Collection<? extends MethodDeclaration> methods) {
-		for (MethodDeclaration method : methods) {
+		for (ExecutableElement method : methods) {
 			if ( method.getAnnotation(Alternate.class) == null && method.getAnnotation(Reuse.class) == null )
 				generateNativeTypedefs(type_map, writer, method);
 		}

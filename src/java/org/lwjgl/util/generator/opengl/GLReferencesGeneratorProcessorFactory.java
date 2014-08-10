@@ -32,33 +32,25 @@
 
 package org.lwjgl.util.generator.opengl;
 
-import org.lwjgl.util.generator.Alternate;
-import org.lwjgl.util.generator.CachedReference;
-import org.lwjgl.util.generator.Utils;
-
-import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableCollection;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collection;
+import static java.util.Collections.unmodifiableCollection;
+import java.util.List;
 import java.util.Set;
-
-import com.sun.mirror.apt.AnnotationProcessor;
-import com.sun.mirror.apt.AnnotationProcessorEnvironment;
-import com.sun.mirror.apt.AnnotationProcessorFactory;
-import com.sun.mirror.apt.AnnotationProcessors;
-import com.sun.mirror.apt.Filer;
-import com.sun.mirror.apt.RoundCompleteEvent;
-import com.sun.mirror.apt.RoundCompleteListener;
-import com.sun.mirror.declaration.AnnotationTypeDeclaration;
-import com.sun.mirror.declaration.InterfaceDeclaration;
-import com.sun.mirror.declaration.MethodDeclaration;
-import com.sun.mirror.declaration.ParameterDeclaration;
-import com.sun.mirror.declaration.TypeDeclaration;
-import com.sun.mirror.util.DeclarationFilter;
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.Processor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.util.ElementFilter;
+import javax.tools.StandardLocation;
+import org.lwjgl.util.generator.Alternate;
+import org.lwjgl.util.generator.CachedReference;
+import org.lwjgl.util.generator.Utils;
 
 /**
  *
@@ -68,7 +60,7 @@ import com.sun.mirror.util.DeclarationFilter;
  * @version $Revision: 3237 $
  * $Id: ReferencesGeneratorProcessorFactory.java 3237 2009-09-08 15:07:15Z spasi $
  */
-public class GLReferencesGeneratorProcessorFactory implements AnnotationProcessorFactory, RoundCompleteListener {
+public class GLReferencesGeneratorProcessorFactory {
 	private static final String REFERENCES_CLASS_NAME = "References";
 	private static final String REFERENCES_PARAMETER_NAME = "references";
 
@@ -78,58 +70,45 @@ public class GLReferencesGeneratorProcessorFactory implements AnnotationProcesso
 	private static final Collection<String> supportedAnnotations =
 		unmodifiableCollection(Arrays.asList("*"));
 
-	public Collection<String> supportedAnnotationTypes() {
-		return supportedAnnotations;
-	}
+        private Processor processor;
+        public GLReferencesGeneratorProcessorFactory(ProcessingEnvironment env) {
+            processor = new GeneratorProcessor(env);
+        }
 
-	public Collection<String> supportedOptions() {
-		return emptyList();
-	}
+	
+	private static class GeneratorProcessor extends AbstractProcessor {
+		private final ProcessingEnvironment env;
 
-	public void roundComplete(RoundCompleteEvent event) {
-		first_round = false;
-	}
-
-	public AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds, AnnotationProcessorEnvironment env) {
-		// Only process the initial types, not the generated ones
-		if (first_round) {
-			env.addListener(this);
-			return new GeneratorProcessor(env);
-		} else
-			return AnnotationProcessors.NO_OP;
-	}
-
-	private static class GeneratorProcessor implements AnnotationProcessor {
-		private final AnnotationProcessorEnvironment env;
-
-		GeneratorProcessor(AnnotationProcessorEnvironment env) {
+		GeneratorProcessor(ProcessingEnvironment env) {
 			this.env = env;
 		}
 
-		public void process() {
-			try {
+
+        @Override
+        public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {			try {
 				generateReferencesSource();
+                                return true;
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
 
-		private static void generateClearsFromParameters(PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method) {
-			for (ParameterDeclaration param : method.getParameters()) {
+		private static void generateClearsFromParameters(PrintWriter writer, TypeElement interface_decl, ExecutableElement method) {
+			for (VariableElement param : method.getParameters()) {
 				CachedReference cached_reference_annotation = param.getAnnotation(CachedReference.class);
 				if (cached_reference_annotation != null && cached_reference_annotation.name().length() == 0) {
-					Class nio_type = Utils.getNIOBufferType(param.getType());
+					Class nio_type = Utils.getNIOBufferType(param.asType());
 					String reference_name = Utils.getReferenceName(interface_decl, method, param);
 					writer.println("\t\tthis." + reference_name + " = null;");
 				}
 			}
 		}
 
-		private static void generateCopiesFromParameters(PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method) {
-			for (ParameterDeclaration param : method.getParameters()) {
+		private static void generateCopiesFromParameters(PrintWriter writer, TypeElement interface_decl, ExecutableElement method) {
+			for (VariableElement param : method.getParameters()) {
 				CachedReference cached_reference_annotation = param.getAnnotation(CachedReference.class);
 				if (cached_reference_annotation != null && cached_reference_annotation.name().length() == 0) {
-					Class nio_type = Utils.getNIOBufferType(param.getType());
+					Class nio_type = Utils.getNIOBufferType(param.asType());
 					String reference_name = Utils.getReferenceName(interface_decl, method, param);
 					writer.print("\t\t\tthis." + reference_name + " = ");
 					writer.println(REFERENCES_PARAMETER_NAME + "." + reference_name + ";");
@@ -137,8 +116,8 @@ public class GLReferencesGeneratorProcessorFactory implements AnnotationProcesso
 			}
 		}
 
-		private static void generateClearsFromMethods(PrintWriter writer, InterfaceDeclaration interface_decl) {
-			for (MethodDeclaration method : interface_decl.getMethods()) {
+		private static void generateClearsFromMethods(PrintWriter writer, TypeElement interface_decl) {
+			for (ExecutableElement method : Utils.getMethods(interface_decl)) {
 				if ( method.getAnnotation(Alternate.class) != null )
 					continue;
 
@@ -146,8 +125,8 @@ public class GLReferencesGeneratorProcessorFactory implements AnnotationProcesso
 			}
 		}
 
-		private static void generateCopiesFromMethods(PrintWriter writer, InterfaceDeclaration interface_decl) {
-			for (MethodDeclaration method : interface_decl.getMethods()) {
+		private static void generateCopiesFromMethods(PrintWriter writer, TypeElement interface_decl) {
+			for (ExecutableElement method : Utils.getMethods(interface_decl)) {
 				if ( method.getAnnotation(Alternate.class) != null )
 					continue;
 
@@ -155,11 +134,11 @@ public class GLReferencesGeneratorProcessorFactory implements AnnotationProcesso
 			}
 		}
 
-		private static void generateReferencesFromParameters(PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method) {
-			for (ParameterDeclaration param : method.getParameters()) {
+		private static void generateReferencesFromParameters(PrintWriter writer, TypeElement interface_decl, ExecutableElement method) {
+			for (VariableElement param : method.getParameters()) {
 				CachedReference cached_reference_annotation = param.getAnnotation(CachedReference.class);
 				if (cached_reference_annotation != null && cached_reference_annotation.name().length() == 0) {
-					Class nio_type = Utils.getNIOBufferType(param.getType());
+					Class nio_type = Utils.getNIOBufferType(param.asType());
 					if (nio_type == null)
 						throw new RuntimeException(param + " in method " + method + " in " + interface_decl + " is annotated with "
 								+ cached_reference_annotation.annotationType().getSimpleName() + " but the parameter is not a NIO buffer");
@@ -169,8 +148,8 @@ public class GLReferencesGeneratorProcessorFactory implements AnnotationProcesso
 			}
 		}
 
-		private static void generateReferencesFromMethods(PrintWriter writer, InterfaceDeclaration interface_decl) {
-			for (MethodDeclaration method : interface_decl.getMethods()) {
+		private static void generateReferencesFromMethods(PrintWriter writer, TypeElement interface_decl) {
+			for (ExecutableElement method : Utils.getMethods(interface_decl)) {
 				if ( method.getAnnotation(Alternate.class) != null )
 					continue;
 
@@ -179,7 +158,7 @@ public class GLReferencesGeneratorProcessorFactory implements AnnotationProcesso
 		}
 
 		private void generateReferencesSource() throws IOException {
-			PrintWriter writer = env.getFiler().createTextFile(Filer.Location.SOURCE_TREE, "org.lwjgl.opengl", new File(REFERENCES_CLASS_NAME + ".java"), null);
+			PrintWriter writer = new PrintWriter(env.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "org.lwjgl.opengl",REFERENCES_CLASS_NAME + ".java").openWriter());
 			writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
 			writer.println();
 			writer.println("package org.lwjgl.opengl;");
@@ -188,31 +167,31 @@ public class GLReferencesGeneratorProcessorFactory implements AnnotationProcesso
                         writer.println("\t" + REFERENCES_CLASS_NAME + "(ContextCapabilities caps) {");
                         writer.println("\t\tsuper(caps);");
                         writer.println("\t}");
-			DeclarationFilter filter = DeclarationFilter.getFilter(InterfaceDeclaration.class);
-			Collection<TypeDeclaration> interface_decls = filter.filter(env.getSpecifiedTypeDeclarations());
-			for (TypeDeclaration typedecl : interface_decls) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+			List<TypeElement> interface_decls = ElementFilter.typesIn(env.getElementUtils().getAllMembers((TypeElement) env.getTypeUtils().getNullType()));
+			for (TypeElement typedecl : interface_decls) {
+				TypeElement interface_decl = (TypeElement)typedecl;
 				generateReferencesFromMethods(writer, interface_decl);
 			}
 			writer.println();
 			writer.println("\tvoid copy(" + REFERENCES_CLASS_NAME + " " + REFERENCES_PARAMETER_NAME + ", int mask) {");
 			writer.println("\t\tsuper.copy(" + REFERENCES_PARAMETER_NAME + ", mask);");
 			writer.println("\t\tif ( (mask & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0 ) {");
-			for (TypeDeclaration typedecl : interface_decls) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+			for (TypeElement typedecl : interface_decls) {
+				TypeElement interface_decl = (TypeElement)typedecl;
 				generateCopiesFromMethods(writer, interface_decl);
 			}
 			writer.println("\t\t}");
 			writer.println("\t}");
 			writer.println("\tvoid clear() {");
 			writer.println("\t\tsuper.clear();");
-			for (TypeDeclaration typedecl : interface_decls) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+			for (TypeElement typedecl : interface_decls) {
+				TypeElement interface_decl = (TypeElement)typedecl;
 				generateClearsFromMethods(writer, interface_decl);
 			}
 			writer.println("\t}");
 			writer.println("}");
 			writer.close();
 		}
+
 	}
 }

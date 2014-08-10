@@ -125,19 +125,19 @@ public class GLGeneratorProcessorFactory implements AnnotationProcessorFactory, 
 			DeclarationFilter filter = DeclarationFilter.getFilter(InterfaceDeclaration.class);
 			Collection<TypeDeclaration> interface_decls = filter.filter(env.getSpecifiedTypeDeclarations());
 			for (TypeDeclaration typedecl : interface_decls) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				TypeElementinterface_decl = (TypeElement)typedecl;
 				if (Utils.isFinal(interface_decl))
 					GLCapabilitiesGenerator.generateField(writer, interface_decl);
 			}
 			writer.println();
 			for (TypeDeclaration typedecl : interface_decls) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				TypeElementinterface_decl = (TypeElement)typedecl;
 				GLCapabilitiesGenerator.generateSymbolAddresses(writer, interface_decl);
 			}
 			writer.println();
 			if (context_specific) {
 				for (TypeDeclaration typedecl : interface_decls) {
-					InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+					TypeElementinterface_decl = (TypeElement)typedecl;
 					GLCapabilitiesGenerator.generateAddressesInitializers(writer, interface_decl);
 				}
 				writer.println();
@@ -150,11 +150,11 @@ public class GLGeneratorProcessorFactory implements AnnotationProcessorFactory, 
 
 			GLCapabilitiesGenerator.generateInitStubsPrologue(writer, context_specific);
 			for (TypeDeclaration typedecl : interface_decls) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				TypeElementinterface_decl = (TypeElement)typedecl;
 				GLCapabilitiesGenerator.generateSuperClassAdds(writer, interface_decl);
 			}
 			for (TypeDeclaration typedecl : interface_decls) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				TypeElementinterface_decl = (TypeElement)typedecl;
 				String simple_name = interface_decl.getSimpleName();
 				if ( "GL11".equals(simple_name) )
 					continue;
@@ -167,7 +167,7 @@ public class GLGeneratorProcessorFactory implements AnnotationProcessorFactory, 
 				writer.println("\t\tif (!loaded_stubs)");
 				writer.println("\t\t\treturn;");
 				for (TypeDeclaration typedecl : interface_decls) {
-					InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+					TypeElementinterface_decl = (TypeElement)typedecl;
 					GLCapabilitiesGenerator.generateUnloadStubs(writer, interface_decl);
 				}
 				writer.println("\t\tloaded_stubs = false;");
@@ -176,7 +176,7 @@ public class GLGeneratorProcessorFactory implements AnnotationProcessorFactory, 
 			writer.println();
 			GLCapabilitiesGenerator.generateInitializerPrologue(writer);
 			for (TypeDeclaration typedecl : interface_decls) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				TypeElementinterface_decl = (TypeElement)typedecl;
 				if (Utils.isFinal(interface_decl))
 					GLCapabilitiesGenerator.generateInitializer(writer, interface_decl);
 			}
