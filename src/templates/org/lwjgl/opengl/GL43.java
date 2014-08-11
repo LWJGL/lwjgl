@@ -37,8 +37,8 @@ import org.lwjgl.util.generator.opengl.*;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
+import javax.lang.model.type.TypeKind;
 
-import com.sun.mirror.type.PrimitiveType;
 
 public interface GL43 {
 
@@ -549,7 +549,7 @@ public interface GL43 {
 
 	@Alternate("glMultiDrawArraysIndirect")
 	void glMultiDrawArraysIndirect(@GLenum int mode,
-	                               @BufferObject(BufferKind.IndirectBO) @Check("(stride == 0 ? 4 : stride >> 2) * primcount") @Const @GLvoid(PrimitiveType.Kind.INT) IntBuffer indirect,
+	                               @BufferObject(BufferKind.IndirectBO) @Check("(stride == 0 ? 4 : stride >> 2) * primcount") @Const @GLvoid(TypeKind.INT) IntBuffer indirect,
 	                               @GLsizei int primcount,
 	                               @GLsizei int stride);
 
@@ -562,7 +562,7 @@ public interface GL43 {
 	@Alternate("glMultiDrawElementsIndirect")
 	void glMultiDrawElementsIndirect(@GLenum int mode,
 	                                 @GLenum int type,
-	                                 @BufferObject(BufferKind.IndirectBO) @Check("(stride == 0 ? 5 : stride >> 2) * primcount") @Const @GLvoid(PrimitiveType.Kind.INT) IntBuffer indirect,
+	                                 @BufferObject(BufferKind.IndirectBO) @Check("(stride == 0 ? 5 : stride >> 2) * primcount") @Const @GLvoid(TypeKind.INT) IntBuffer indirect,
 	                                 @GLsizei int primcount,
 	                                 @GLsizei int stride);
 

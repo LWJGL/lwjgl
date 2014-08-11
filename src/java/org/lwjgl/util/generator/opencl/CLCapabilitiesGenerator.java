@@ -47,7 +47,7 @@ import org.lwjgl.util.generator.*;
 public class CLCapabilitiesGenerator {
 
 	static void generateClassPrologue(final PrintWriter writer) {
-		writer.println("public final class " + CLGeneratorProcessorFactory.CLCAPS_CLASS_NAME + " {");
+		writer.println("public final class " + CLGeneratorProcessor.CLCAPS_CLASS_NAME + " {");
 		writer.println();
 	}
 
@@ -62,7 +62,7 @@ public class CLCapabilitiesGenerator {
 
 			if ( !foundNative ) {
 				//writer.println("\t// " + d.getSimpleName());
-				writer.println("\tstatic final boolean " + CLGeneratorProcessorFactory.getExtensionName(new StringBuffer(d.getSimpleName()).toString() + ";"));
+				writer.println("\tstatic final boolean " + CLGeneratorProcessor.getExtensionName(new StringBuffer(d.getSimpleName()).toString() + ";"));
 				foundNative = true;
 			}
 			writer.print("\tstatic final long " + Utils.getFunctionAddressName(d, method) + " = CL.getFunctionAddress(");
@@ -78,7 +78,7 @@ public class CLCapabilitiesGenerator {
 	}
 
 	static void generateConstructor(final PrintWriter writer, final List<TypeElement> interface_decls) {
-		writer.println("\tprivate " + CLGeneratorProcessorFactory.CLCAPS_CLASS_NAME + "() {}");
+		writer.println("\tprivate " + CLGeneratorProcessor.CLCAPS_CLASS_NAME + "() {}");
 		writer.println();
 		writer.println("\tstatic {");
 
@@ -87,8 +87,8 @@ public class CLCapabilitiesGenerator {
 				continue;
 
 			//writer.println("\t\tif ( " + getExtensionSupportedName(d.getSimpleName()) + "() )");
-			//writer.println("\t\t\t" + SUPPORTED_EXTS + ".add(\"" + CLGeneratorProcessorFactory.getExtensionName(d.getSimpleName()) + "\");");
-			writer.println("\t\t" + CLGeneratorProcessorFactory.getExtensionName(d.getSimpleName().toString()) + " = " + getExtensionSupportedName(d.getSimpleName().toString()) + "();");
+			//writer.println("\t\t\t" + SUPPORTED_EXTS + ".add(\"" + CLGeneratorProcessor.getExtensionName(d.getSimpleName()) + "\");");
+			writer.println("\t\t" + CLGeneratorProcessor.getExtensionName(d.getSimpleName().toString()) + " = " + getExtensionSupportedName(d.getSimpleName().toString()) + "();");
 		}
 
 		writer.println("\t}\n");
