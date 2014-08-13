@@ -41,6 +41,7 @@ import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.TypeElement;
+import javax.swing.JOptionPane;
 
 /**
  * Generator tool for creating the java classes and native code from an
@@ -65,44 +66,31 @@ public class GeneratorProcessor extends AbstractProcessor {
 
         @Override
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-                if (roundEnv.processingOver() || first_round) {
+                if (roundEnv.processingOver() || !first_round) {
                         return false;
                 }
                 Map<String, String> options = processingEnv.getOptions();
-                String typemap_classname = null;
-                String bin_path = null;
+                String typemap_classname = options.get("typemap");
+                String bin_path = options.get("binpath");
                 boolean generate_error_checks = options.containsKey("generatechecks");
                 boolean context_specific = options.containsKey("contextspecific");
-                for (String k : options.keySet()) {
-                        if (!k.startsWith("-A")) {
-                                continue;
-                        }
-
-                        int delimiter = k.indexOf('=');
-                        if (delimiter != -1) {
-                                if (k.startsWith("typemap")) {
-                                        typemap_classname = k.substring(delimiter + 1);
-                                } else if (k.startsWith("binpath")) {
-                                        bin_path = k.substring(delimiter + 1);
-                                }
-                        }
-                }
-                if (typemap_classname == null) {
-                        throw new RuntimeException("No TypeMap class name specified with -Atypemap=<class-name>");
-                }
                 if (bin_path == null) {
                         throw new RuntimeException("No path specified for the bin directory with -Abinpath=<path>");
                 }
 
+                if (typemap_classname == null) {
+                        throw new RuntimeException("No TypeMap class name specified with -Atypemap=<class-name>");
+                }
+                
                 TypeElement lastFile = null;
                 try {
                         long generatorLM = getGeneratorLastModified(bin_path);
                         TypeMap type_map = (TypeMap) (Class.forName(typemap_classname).newInstance());
-                        /*for ( TypeElement typedecl : env.getSpecifiedTypeDeclarations() ) {
-                         lastFile = typedecl;
-                         typedecl.accept(getDeclarationScanner(new GeneratorVisitor(env, type_map, generate_error_checks, context_specific, generatorLM), NO_OP));
-                         }*/
-                        return first_round = true;
+                        for (TypeElement typedecl : annotations) {
+                                lastFile = typedecl;
+                                typedecl.accept(new GeneratorVisitor(processingEnv, type_map, generate_error_checks, context_specific, generatorLM), null);
+                        }
+                        return first_round = false;
                 } catch (Exception e) {
                         if (lastFile == null) {
                                 throw new RuntimeException(e);

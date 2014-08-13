@@ -73,22 +73,22 @@ public class GLESGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-                if (roundEnv.processingOver() || first_round) {
+                if (roundEnv.processingOver() || !first_round) {
                         return false;
                 }
                 Map<String, String> options = processingEnv.getOptions();
                 boolean generate_error_checks = options.containsKey("generatechecks");
                 boolean context_specific = options.containsKey("contextspecific");
                 try {
-                        generateContextCapabilitiesSource(context_specific, generate_error_checks);
-                        return first_round = true;
+                        generateContextCapabilitiesSource(annotations, context_specific, generate_error_checks);
+                        return first_round = false;
                 } catch (IOException e) {
                         throw new RuntimeException(e);
                 }
         }
 
-        private void generateContextCapabilitiesSource(boolean context_specific, boolean generate_error_checks) throws IOException {
-                PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile(Utils.CONTEXT_CAPS_CLASS_NAME, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opengles")).openWriter());
+        private void generateContextCapabilitiesSource(Set<? extends TypeElement> annotations, boolean context_specific, boolean generate_error_checks) throws IOException {
+                PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opengles" + Utils.CONTEXT_CAPS_CLASS_NAME, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opengles")).openWriter());
                 writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
                 writer.println();
                 writer.println("package org.lwjgl.opengles;");
@@ -99,7 +99,7 @@ public class GLESGeneratorProcessor extends AbstractProcessor {
                 writer.println("import java.util.HashSet;");
                 writer.println();
                 GLESCapabilitiesGenerator.generateClassPrologue(writer, context_specific, generate_error_checks);
-                List<TypeElement> interface_decls = ElementFilter.typesIn(processingEnv.getElementUtils().getAllMembers(processingEnv.getElementUtils().getTypeElement("org.lwjgl.opengles." + Utils.CONTEXT_CAPS_CLASS_NAME)));
+                Set<? extends TypeElement> interface_decls = annotations;
                 for (TypeElement interface_decl : interface_decls) {
                         if (Utils.isFinal(interface_decl)) {
                                 GLESCapabilitiesGenerator.generateField(writer, interface_decl);

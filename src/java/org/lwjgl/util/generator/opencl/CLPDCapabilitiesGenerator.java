@@ -35,7 +35,7 @@ package org.lwjgl.util.generator.opencl;
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 import javax.lang.model.element.TypeElement;
 import org.lwjgl.PointerWrapper;
 import org.lwjgl.util.generator.Extension;
@@ -76,7 +76,7 @@ public class CLPDCapabilitiesGenerator {
 		writer.println("final boolean " + CLGeneratorProcessor.getExtensionName(new StringBuffer(d.getSimpleName()).toString()) + ";");
 	}
 
-	static void generateConstructor(final PrintWriter writer, final List<TypeElement> templates,
+	static void generateConstructor(final PrintWriter writer, final Set<? extends TypeElement> templates,
 	                                final Class<? extends Annotation> capsType, final String capsName,
 	                                final Class<? extends PointerWrapper> objectType, final String objectName) {
 		writer.println("\tpublic " + capsName + "(final " + objectType.getSimpleName() + ' ' + objectName + ") {");
@@ -132,7 +132,7 @@ public class CLPDCapabilitiesGenerator {
 		writer.println("\t}\n");
 	}
 
-	public static void generateToString(final PrintWriter writer, final Collection<TypeElement> templates, final Class<? extends Annotation> capsType) {
+	public static void generateToString(final PrintWriter writer, final Set<? extends TypeElement> templates, final Class<? extends Annotation> capsType) {
 		writer.println("\tpublic String toString() {");
 		writer.println("\t\tfinal StringBuilder buf = new StringBuilder();\n");
 

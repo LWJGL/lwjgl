@@ -83,7 +83,7 @@ public class GLESCapabilitiesGenerator {
 	}
 
 	public static void generateSuperClassAdds(PrintWriter writer, TypeElement d, ProcessingEnvironment env) {
-		List<? extends TypeMirror> super_interfaces = env.getTypeUtils().directSupertypes(d.asType());
+		List<? extends TypeMirror> super_interfaces = d.getInterfaces();
 		if ( super_interfaces.size() > 1 )
 			throw new RuntimeException(d + " extends more than one other interface");
 		if ( super_interfaces.size() == 1 ) {
@@ -100,7 +100,7 @@ public class GLESCapabilitiesGenerator {
 		writer.print("\t\tthis." + translated_field_name + " = ");
 		writer.print(CACHED_EXTS_VAR_NAME + ".contains(\"");
 		writer.print(translated_field_name + "\")");
-		List<? extends TypeMirror> super_interfaces = env.getTypeUtils().directSupertypes(d.asType());
+		List<? extends TypeMirror> super_interfaces = d.getInterfaces();
 		if ( super_interfaces.size() > 1 )
 			throw new RuntimeException(d + " extends more than one other interface");
 		if ( super_interfaces.size() == 1 ) {

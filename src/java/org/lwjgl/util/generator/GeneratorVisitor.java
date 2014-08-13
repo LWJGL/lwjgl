@@ -41,13 +41,12 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleElementVisitor6;
+import javax.swing.JOptionPane;
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.FileObject;
@@ -73,7 +72,7 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
                 this.type_map = type_map;
                 this.generate_error_checks = generate_error_checks;
                 this.context_specific = context_specific;
-                this.generatorLM = generatorLM;
+                this.generatorLM = generatorLM;                
         }
 
         private void validateMethod(ExecutableElement method) {
@@ -200,7 +199,7 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
         private void generateJavaSource(TypeElement d, PrintWriter java_writer) throws IOException {
                 java_writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
                 java_writer.println();
-                java_writer.println("package " + new StringBuffer(d.getEnclosingElement().getSimpleName()).toString() + ";");
+                java_writer.println("package " + new StringBuffer(env.getElementUtils().getPackageOf(d).getQualifiedName().toString() + ";"));
                 java_writer.println();
                 java_writer.println("import org.lwjgl.*;");
                 java_writer.println("import java.nio.*;");
@@ -220,7 +219,7 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
                         java_writer.write("final ");
                 }
                 java_writer.print("class " + Utils.getSimpleClassName(d));
-                List<? extends TypeMirror> super_interfaces = env.getTypeUtils().directSupertypes(d.asType());
+                List<? extends TypeMirror> super_interfaces = d.getInterfaces();
                 if (super_interfaces.size() > 1) {
                         throw new RuntimeException(d + " extends more than one interface");
                 }
@@ -249,7 +248,7 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
         private void generateNativeSource(TypeElement d) throws IOException {
                 String qualified_interface_name = Utils.getQualifiedClassName(d);
                 String qualified_native_name = Utils.getNativeQualifiedName(qualified_interface_name) + ".c";
-                PrintWriter native_writer = new PrintWriter(env.getFiler().createResource(StandardLocation.CLASS_OUTPUT, null, qualified_native_name).openWriter());
+                PrintWriter native_writer = new PrintWriter(env.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", qualified_native_name).openWriter());
                 native_writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
                 native_writer.println();
                 native_writer.println("#include <jni.h>");
@@ -281,24 +280,16 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
         @Override
         public Object visitType(TypeElement e, Object p) {
                 PrintWriter java_writer = null;
-                File outputJava = null;
                 try {
-                        final FileObject input = env.getFiler().getResource(StandardLocation.SOURCE_PATH, env.getElementUtils().getPackageOf(e).getQualifiedName(), e.getSimpleName());
-                        outputJava = new File(input.toUri());
                         final Collection<? extends ExecutableElement> methods = Utils.getMethods(e);
-                        if (methods.size() == 0 && Utils.getFields(e).size() == 0) {
-                                return DEFAULT_VALUE;
-                        }
-
-                        // Skip this class if the output exists and the input has not been modified.
-                        if (outputJava.exists() && Math.max(input.getLastModified(), generatorLM) < outputJava.lastModified()) {
+                        if (methods.isEmpty() && Utils.getFields(e).isEmpty()) {
                                 return DEFAULT_VALUE;
                         }
 
                         for (final ExecutableElement method : methods) {
                                 validateMethod(method);
                         }
-                        java_writer = new PrintWriter(env.getFiler().createSourceFile(Utils.getSimpleClassName(e), env.getElementUtils().getPackageOf(e)).openWriter());
+                        java_writer = new PrintWriter(env.getFiler().createSourceFile(e.getQualifiedName(), env.getElementUtils().getPackageOf(e)).openWriter());
                         generateJavaSource(e, java_writer);
 
                         if (methods.size() > 0) {
@@ -314,8 +305,9 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
                                         return DEFAULT_VALUE;
                                 }
 
-                                final FileObject fo_outputNative = env.getFiler().getResource(StandardLocation.CLASS_OUTPUT, null, Utils.getNativeQualifiedName(Utils.getQualifiedClassName(e)) + ".c");
-                                final FileObject fo_outputBackup = env.getFiler().getResource(StandardLocation.CLASS_OUTPUT, null, Utils.getNativeQualifiedName(Utils.getQualifiedClassName(e)) + "_backup.c");
+                                // TODO : TRY catch FilerException to implement file backup process
+                                final FileObject fo_outputNative = env.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", Utils.getNativeQualifiedName(Utils.getQualifiedClassName(e)).replace(".","/") + ".c");
+                                final FileObject fo_outputBackup = env.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", Utils.getNativeQualifiedName(Utils.getQualifiedClassName(e)).replace(".","/") + "_backup.c");
                                 final File outputNative = new File(fo_outputNative.toUri()), outputBackup = new File(fo_outputBackup.toUri());
 
                                 // If the native file exists, rename.
@@ -359,10 +351,6 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
                         if (java_writer != null) {
                                 java_writer.close();
                         }
-                        if (outputJava != null && outputJava.exists()) {
-                                outputJava.delete();
-                        }
-
                         throw new RuntimeException(ex);
                 }
         }

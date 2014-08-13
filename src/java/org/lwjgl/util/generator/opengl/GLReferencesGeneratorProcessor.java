@@ -76,12 +76,12 @@ public class GLReferencesGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-                if (roundEnv.processingOver() || first_round) {
+                if (roundEnv.processingOver() || !first_round) {
                         return false;
                 }
                 try {
-                        generateReferencesSource();
-                        return first_round = true;
+                        generateReferencesSource(annotations);
+                        return first_round = false;
                 } catch (IOException e) {
                         throw new RuntimeException(e);
                 }
@@ -155,8 +155,8 @@ public class GLReferencesGeneratorProcessor extends AbstractProcessor {
                 }
         }
 
-        private void generateReferencesSource() throws IOException {
-                PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile(REFERENCES_CLASS_NAME, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opengl")).openWriter());
+        private void generateReferencesSource(Set<? extends TypeElement> annotations) throws IOException {
+                PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opengl" + REFERENCES_CLASS_NAME, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opengl")).openWriter());
                 writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
                 writer.println();
                 writer.println("package org.lwjgl.opengl;");
@@ -165,7 +165,7 @@ public class GLReferencesGeneratorProcessor extends AbstractProcessor {
                 writer.println("\t" + REFERENCES_CLASS_NAME + "(ContextCapabilities caps) {");
                 writer.println("\t\tsuper(caps);");
                 writer.println("\t}");
-                final List<TypeElement> interface_decls = ElementFilter.typesIn(processingEnv.getElementUtils().getAllMembers(processingEnv.getElementUtils().getTypeElement("org.lwjgl.opengl." + REFERENCES_CLASS_NAME)));
+                final Set<? extends TypeElement> interface_decls = annotations;
                 for (TypeElement typedecl : interface_decls) {
                         TypeElement interface_decl = (TypeElement) typedecl;
                         generateReferencesFromMethods(writer, interface_decl);

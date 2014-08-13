@@ -85,14 +85,14 @@ public class CLGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-                if (roundEnv.processingOver() || first_round) {
+                if (roundEnv.processingOver() || !first_round) {
                         return false;
                 }
                 try {
-                        generateCLCapabilitiesSource();
-                        generateCLPDCapabilitiesSource(CLPlatformExtension.class, PLATFORM_CAPS_CLASS_NAME, CLPlatform.class, "platform");
-                        generateCLPDCapabilitiesSource(CLDeviceExtension.class, DEVICE_CAPS_CLASS_NAME, CLDevice.class, "device");
-                        return first_round = true;
+                        generateCLCapabilitiesSource(annotations);
+                        generateCLPDCapabilitiesSource(annotations, CLPlatformExtension.class, PLATFORM_CAPS_CLASS_NAME, CLPlatform.class, "platform");
+                        generateCLPDCapabilitiesSource(annotations, CLDeviceExtension.class, DEVICE_CAPS_CLASS_NAME, CLDevice.class, "device");
+                        return first_round = false;
                 } catch (IOException e) {
                         throw new RuntimeException(e);
                 }
@@ -105,13 +105,13 @@ public class CLGeneratorProcessor extends AbstractProcessor {
                 writer.println();
         }
 
-        private void generateCLCapabilitiesSource() throws IOException {
-                final PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile(CLCAPS_CLASS_NAME, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opencl")).openWriter());
+        private void generateCLCapabilitiesSource(Set<? extends TypeElement> annotations) throws IOException {
+                final PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opencl" + CLCAPS_CLASS_NAME, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opencl")).openWriter());
                 printHeader(writer);
 
                 CLCapabilitiesGenerator.generateClassPrologue(writer);
 
-                final List<TypeElement> templates = ElementFilter.typesIn(processingEnv.getElementUtils().getAllMembers(processingEnv.getElementUtils().getTypeElement("org.lwjgl.opencl." + CLCAPS_CLASS_NAME)));
+                final Set<? extends TypeElement> templates = annotations;
                 for (final TypeElement t : templates) {
                         if (t.getAnnotation(CLPlatformExtension.class) == null && t.getAnnotation(CLDeviceExtension.class) == null && !t.getSimpleName().toString().startsWith("CL")) {
                                 throw new RuntimeException("An OpenCL extension is missing an extension type annotation: " + t.getSimpleName());
@@ -133,15 +133,15 @@ public class CLGeneratorProcessor extends AbstractProcessor {
                 writer.close();
         }
 
-        private void generateCLPDCapabilitiesSource(final Class<? extends Annotation> capsType, final String capsName, final Class<? extends PointerWrapper> objectType, final String objectName) throws IOException {
-                final PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile(capsName, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opencl")).openWriter());
+        private void generateCLPDCapabilitiesSource(Set<? extends TypeElement> annotations, final Class<? extends Annotation> capsType, final String capsName, final Class<? extends PointerWrapper> objectType, final String objectName) throws IOException {
+                final PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opencl" + capsName, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opencl")).openWriter());
                 printHeader(writer);
                 writer.println("import java.util.*;");
                 writer.println();
 
                 CLPDCapabilitiesGenerator.generateClassPrologue(writer, capsName);
 
-                final List<TypeElement> templates = ElementFilter.typesIn(processingEnv.getElementUtils().getAllMembers(processingEnv.getElementUtils().getTypeElement("org.lwjgl.opencl" + capsName)));
+                final Set<? extends TypeElement> templates = annotations;
 
                 for (final TypeElement t : templates) {
                         if (t.getAnnotation(capsType) != null) {

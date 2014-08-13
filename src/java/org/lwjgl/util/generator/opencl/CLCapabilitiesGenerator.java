@@ -34,7 +34,7 @@ package org.lwjgl.util.generator.opencl;
 
 import java.io.PrintWriter;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import org.lwjgl.util.generator.*;
@@ -77,7 +77,7 @@ public class CLCapabilitiesGenerator {
 			writer.println();
 	}
 
-	static void generateConstructor(final PrintWriter writer, final List<TypeElement> interface_decls) {
+	static void generateConstructor(final PrintWriter writer, final Set<? extends TypeElement> interface_decls) {
 		writer.println("\tprivate " + CLGeneratorProcessor.CLCAPS_CLASS_NAME + "() {}");
 		writer.println();
 		writer.println("\tstatic {");
