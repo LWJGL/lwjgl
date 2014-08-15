@@ -74,18 +74,26 @@ public final class VersionTest {
 
 		if ( 2 < args.length ) {
 			for ( int i = 2; i < args.length; i++ ) {
-				if ( Pattern.matches("[0-9]+", args[i]) )
-					ca = ca.withLayer(Integer.parseInt(args[i]));
-				else if ( "debug".equalsIgnoreCase(args[i]) )
-					ca = ca.withDebug(true);
-				else if ( "fc".equalsIgnoreCase(args[i]) )
-					ca = ca.withForwardCompatible(true);
-				else if ( "core".equalsIgnoreCase(args[i]) )
+				if ( "core".equalsIgnoreCase(args[i]) )
 					ca = ca.withProfileCore(true);
 				else if ( "compatibility".equalsIgnoreCase(args[i]) )
 					ca = ca.withProfileCompatibility(true);
 				else if ( "es".equalsIgnoreCase(args[i]) )
 					ca = ca.withProfileES(true);
+				else if ( "debug".equalsIgnoreCase(args[i]) )
+					ca = ca.withDebug(true);
+				else if ( "fc".equalsIgnoreCase(args[i]) )
+					ca = ca.withForwardCompatible(true);
+				else if ( "robust".equalsIgnoreCase(args[i]) )
+					ca = ca.withRobustAccess(true);
+				else if ( "reset_isolation".equalsIgnoreCase(args[i]) )
+					ca = ca.withContextResetIsolation(true);
+				else if ( "reset_lose".equalsIgnoreCase(args[i]) )
+					ca = ca.withResetNotificationStrategy(ContextAttribs.LOSE_CONTEXT_ON_RESET_ARB);
+				else if ( "release_none".equalsIgnoreCase(args[i]) )
+					ca = ca.withContextReleaseBehavior(ContextAttribs.CONTEXT_RELEASE_BEHAVIOR_NONE_ARB);
+				else if ( Pattern.matches("[0-9]+", args[i]) )
+					ca = ca.withLayer(Integer.parseInt(args[i]));
 				else
 					argsError("Unknown argument: \'" + args[i] + "\'");
 			}
@@ -236,15 +244,19 @@ public final class VersionTest {
 
 	private static void argsError(final String msg) {
 		System.out.println("\nInvalid arguments error: " + msg);
-		System.out.println("\nUsage: VersionTest <majorVersion> <minorVersion> {'core'|'compatibility', <layer>, 'debug', 'fc'}:\n");
-		System.out.println("majorVersion\t- Major OpenGL version.");
-		System.out.println("majorVersion\t- Minor OpenGL version.");
+		System.out.println("\nUsage: VersionTest <majorVersion> <minorVersion> {'core'|'compatibility'|'es', 'debug', 'fc', 'robust', 'reset_isolation', 'reset_lose', 'release_none', <layer>}:\n");
+		System.out.println("<majorVersion>\t- Major OpenGL version.");
+		System.out.println("<majorVersion>\t- Minor OpenGL version.");
 		System.out.println("core\t- Sets the Core Profile bit (optional, requires 3.2+).");
 		System.out.println("compatibility\t- Sets the Compatibility Profile bit (optional, requires 3.2+).");
-		System.out.println("ws\t- Sets the OpenGL ES Profile bit (optional, requires 2.0).");
-		System.out.println("layer\t- Layer plane (optional).");
+		System.out.println("es\t- Sets the OpenGL ES Profile bit (optional, requires 2.0).");
 		System.out.println("debug\t- Enables debug mode (optional).");
 		System.out.println("fc\t- Enables forward compatibility mode (optional, requires 3.0+).");
+		System.out.println("robust\t- Enables robust access (optional).");
+		System.out.println("reset_isolation\t- Enables reset isolation (optional).");
+		System.out.println("reset_lose\t- Enables lose context on reset (optional).");
+		System.out.println("release_none\t- Enables release behavior = none (optional).");
+		System.out.println("<layer>\t- Layer plane (optional).");
 
 		cleanup();
 		System.exit(-1);
