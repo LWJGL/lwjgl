@@ -39,24 +39,27 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 /**
- * This class represents the context attributes passed to CreateContextAttribs of the ARB_create_context and
- * ARB_create_context_profile extensions.
- * These attributes can be used to indicate at context creation which OpenGL interface will be used. This includes the
- * OpenGL version, the layer plane on which rendering takes place and also optional debug and forward combatibility modes.
- * (read the ARB_create_context spec for details)
+ * This class represents the context attributes passed to CreateContextAttribs of the ARB_create_context extension.
+ * <p/>
+ * The attributes supported are described in the following extensions:<br>
+ * <ul>
+ * <li><a href="http://www.opengl.org/registry/specs/ARB/wgl_create_context.txt">WGL_ARB_create_context(_profile)</a> and <a href="http://www.opengl.org/registry/specs/ARB/glx_create_context.txt">GLX_ARB_create_context(_profile)</a></li>
+ * <li><a href="http://www.opengl.org/registry/specs/ARB/wgl_create_context_robustness.txt">WGL_ARB_create_context_robustness</a> and <a href="http://www.opengl.org/registry/specs/ARB/glx_create_context_robustness.txt">GLX_ARB_create_context_robustness</a></li>
+ * <li><a href="http://www.opengl.org/registry/specs/ARB/wgl_robustness_isolation.txt">WGL_ARB_robustness_isolation</a> and <a href="http://www.opengl.org/registry/specs/ARB/glx_robustness_isolation.txt">GLX_ARB_robustness_isolation</a></li>
+ * <li><a href="http://www.opengl.org/registry/specs/ARB/wgl_create_context_es2_profile.txt">WGL_EXT_create_context_es2_profile</a> and <a href="http://www.opengl.org/registry/specs/ARB/glx_create_context_es2_profile.txt">GLX_EXT_create_context_es2_profile</a></li>
+ * <li><a href="http://www.opengl.org/registry/specs/ARB/context_flush_control.txt">KHR_context_flush_control</a></li>
+ * </ul>
  * <p/>
  * Use of this class is optional. If an OpenGL context is created without passing an instance of this class
  * (or ARB_create_context is not supported), the old context creation code will be used. Support for debug and forward
  * compatible mobes is not guaranteed by the OpenGL implementation. Developers may encounter debug contexts being the same
  * as non-debug contexts or forward compatible contexts having support for deprecated functionality.
  * <p/>
- * If the forwardCompatible
- * attribute is used, LWJGL will not load the deprecated functionality (as defined in the OpenGL 3.0 specification). This
- * means that developers can start working on cleaning up their applications without an OpenGL 3.0 complaint driver.
+ * If the {@link #CONTEXT_FORWARD_COMPATIBLE_BIT_ARB} flag is used, LWJGL will not load the deprecated functionality (as defined in the OpenGL 3.0
+ * specification), even if the driver exposes the corresponding entry points.
  * <p/>
- * This extension is not supported on MacOS X. However, in order to enable the GL 3.2 context on MacOS X 10.7 or newer, an
- * instance of this class must be passed to LWJGL. The only valid configuration is <code>new ContextAttribs(3, 2).withProfileCore()</code>,
- * anything else will be ignored.
+ * This extension is not supported on MacOS X. However, in order to enable the GL 3.2 context on MacOS X 10.7 or newer, an instance of this class must be passed
+ * to LWJGL. The only valid configuration is <code>ContextAttribs(3, 2, CONTEXT_CORE_PROFILE_BIT_ARB)</code>, anything else will be ignored.
  *
  * @author spasi <spasi@users.sourceforge.net>
  */
@@ -118,8 +121,19 @@ public final class ContextAttribs {
 	 *
 	 * @param majorVersion the major OpenGL version
 	 * @param minorVersion the minor OpenGL version
-	 * @param profileMask  the context profile mask. One of: {@link #CONTEXT_CORE_PROFILE_BIT_ARB}, {@link #CONTEXT_FORWARD_COMPATIBLE_BIT_ARB}, {@link #CONTEXT_ES2_PROFILE_BIT_EXT}
-	 * @param contextFlags the context flags, a bitfield value. One or more of: {@link #CONTEXT_DEBUG_BIT_ARB}, {@link #CONTEXT_FORWARD_COMPATIBLE_BIT_ARB}, {@link #CONTEXT_ROBUST_ACCESS_BIT_ARB}, {@link #CONTEXT_RESET_ISOLATION_BIT_ARB}
+	 * @param profileMask  the context profile mask. One of:<br>{@link #CONTEXT_CORE_PROFILE_BIT_ARB}, {@link #CONTEXT_FORWARD_COMPATIBLE_BIT_ARB}, {@link #CONTEXT_ES2_PROFILE_BIT_EXT}
+	 */
+	public ContextAttribs(int majorVersion, int minorVersion, int profileMask) {
+		this(majorVersion, minorVersion, 0, profileMask);
+	}
+
+	/**
+	 * Creates a new ContextAttribs instance with the given attributes.
+	 *
+	 * @param majorVersion the major OpenGL version
+	 * @param minorVersion the minor OpenGL version
+	 * @param profileMask  the context profile mask. One of:<br>{@link #CONTEXT_CORE_PROFILE_BIT_ARB}, {@link #CONTEXT_FORWARD_COMPATIBLE_BIT_ARB}, {@link #CONTEXT_ES2_PROFILE_BIT_EXT}
+	 * @param contextFlags the context flags, a bitfield value. One or more of:<br>{@link #CONTEXT_DEBUG_BIT_ARB}, {@link #CONTEXT_FORWARD_COMPATIBLE_BIT_ARB}, {@link #CONTEXT_ROBUST_ACCESS_BIT_ARB}, {@link #CONTEXT_RESET_ISOLATION_BIT_ARB}
 	 */
 	public ContextAttribs(int majorVersion, int minorVersion, int profileMask, int contextFlags) {
 		if ( majorVersion < 0 || 4 < majorVersion ||
@@ -130,11 +144,13 @@ public final class ContextAttribs {
 		     (majorVersion == 1 && 5 < minorVersion) )
 			throw new IllegalArgumentException("Invalid OpenGL version specified: " + majorVersion + '.' + minorVersion);
 
-		if ( 1 < Integer.bitCount(profileMask) || CONTEXT_ES2_PROFILE_BIT_EXT < profileMask )
-			throw new IllegalArgumentException("Invalid profile mask specified: " + Integer.toBinaryString(profileMask));
+		if ( LWJGLUtil.CHECKS ) {
+			if ( 1 < Integer.bitCount(profileMask) || CONTEXT_ES2_PROFILE_BIT_EXT < profileMask )
+				throw new IllegalArgumentException("Invalid profile mask specified: " + Integer.toBinaryString(profileMask));
 
-		if ( 0xF < contextFlags )
-			throw new IllegalArgumentException("Invalid context flags specified: " + Integer.toBinaryString(profileMask));
+			if ( 0xF < contextFlags )
+				throw new IllegalArgumentException("Invalid context flags specified: " + Integer.toBinaryString(profileMask));
+		}
 
 		this.majorVersion = majorVersion;
 		this.minorVersion = minorVersion;
@@ -311,7 +327,7 @@ public final class ContextAttribs {
 	 * Returns a ContextAttribs instance with {@link #CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB} set to the given strategy. The default context reset notification
 	 * strategy is {@link #NO_RESET_NOTIFICATION_ARB}.
 	 *
-	 * @param strategy the context reset notification strategy. One of: {@link #NO_RESET_NOTIFICATION_ARB}, {@link #LOSE_CONTEXT_ON_RESET_ARB}
+	 * @param strategy the context reset notification strategy. One of:<br>{@link #NO_RESET_NOTIFICATION_ARB}, {@link #LOSE_CONTEXT_ON_RESET_ARB}
 	 *
 	 * @return the new ContextAttribs
 	 */
@@ -319,7 +335,7 @@ public final class ContextAttribs {
 		if ( strategy == contextResetNotificationStrategy )
 			return this;
 
-		if ( !(strategy == NO_RESET_NOTIFICATION_ARB || strategy == LOSE_CONTEXT_ON_RESET_ARB) )
+		if ( LWJGLUtil.CHECKS && !(strategy == NO_RESET_NOTIFICATION_ARB || strategy == LOSE_CONTEXT_ON_RESET_ARB) )
 			throw new IllegalArgumentException("Invalid context reset notification strategy specified: 0x" + LWJGLUtil.toHexString(strategy));
 
 		ContextAttribs attribs = new ContextAttribs(this);
@@ -345,7 +361,7 @@ public final class ContextAttribs {
 	 * Returns a ContextAttribs instance with {@link #CONTEXT_RELEASE_BEHABIOR_ARB} set to the given behavior. The default context release behavior is
 	 * {@link #CONTEXT_RELEASE_BEHAVIOR_FLUSH_ARB}.
 	 *
-	 * @param behavior the context release behavior. One of: {@link #CONTEXT_RELEASE_BEHAVIOR_FLUSH_ARB}, {@link #CONTEXT_RELEASE_BEHAVIOR_NONE_ARB}
+	 * @param behavior the context release behavior. One of:<br>{@link #CONTEXT_RELEASE_BEHAVIOR_FLUSH_ARB}, {@link #CONTEXT_RELEASE_BEHAVIOR_NONE_ARB}
 	 *
 	 * @return the new ContextAttribs
 	 */
@@ -353,7 +369,7 @@ public final class ContextAttribs {
 		if ( behavior == contextReleaseBehavior )
 			return this;
 
-		if ( !(behavior == CONTEXT_RELEASE_BEHAVIOR_FLUSH_ARB || behavior == CONTEXT_RELEASE_BEHAVIOR_NONE_ARB) )
+		if ( LWJGLUtil.CHECKS && !(behavior == CONTEXT_RELEASE_BEHAVIOR_FLUSH_ARB || behavior == CONTEXT_RELEASE_BEHAVIOR_NONE_ARB) )
 			throw new IllegalArgumentException("Invalid context release behavior specified: 0x" + LWJGLUtil.toHexString(behavior));
 
 		ContextAttribs attribs = new ContextAttribs(this);
