@@ -65,22 +65,6 @@ class GLChecks {
 	private GLChecks() {
 	}
 
-	static int getBufferObjectSize(ContextCapabilities caps, int buffer_enum) {
-		return glGetBufferParameteri(buffer_enum, GL_BUFFER_SIZE);
-	}
-
-	static int getBufferObjectSizeARB(ContextCapabilities caps, int buffer_enum) {
-		return glGetBufferParameteriARB(buffer_enum, GL_BUFFER_SIZE_ARB);
-	}
-
-	static int getBufferObjectSizeATI(ContextCapabilities caps, int buffer) {
-		return glGetObjectBufferiATI(buffer, GL_OBJECT_BUFFER_SIZE_ATI);
-	}
-
-	static int getNamedBufferObjectSize(ContextCapabilities caps, int buffer) {
-		return glGetNamedBufferParameterEXT(buffer, GL_BUFFER_SIZE);
-	}
-
 	/** Helper method to ensure that array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOdisabled(ContextCapabilities caps) {
 		if ( LWJGLUtil.CHECKS && StateTracker.getReferences(caps).arrayBuffer != 0 )

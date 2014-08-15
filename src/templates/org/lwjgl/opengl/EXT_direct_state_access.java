@@ -906,7 +906,7 @@ public interface EXT_direct_state_access {
 	@Dependent("OpenGL15")
 	@CachedResult
 	@GLvoid
-	@AutoSize("GLChecks.getNamedBufferObjectSize(caps, buffer)")
+	@AutoSize("glGetNamedBufferParameterEXT(buffer, GL15.GL_BUFFER_SIZE)")
 	ByteBuffer glMapNamedBufferEXT(@GLuint int buffer, @GLenum int access);
 
 	@Dependent("OpenGL15")
@@ -924,7 +924,7 @@ public interface EXT_direct_state_access {
 
 	@Dependent("OpenGL15")
 	@StripPostfix("params")
-	@AutoSize("GLChecks.getNamedBufferObjectSize(caps, buffer)")
+	@AutoSize("glGetNamedBufferParameterEXT(buffer, GL15.GL_BUFFER_SIZE)")
 	void glGetNamedBufferPointervEXT(@GLuint int buffer, @GLenum int pname, @OutParameter @Result @GLvoid ByteBuffer params);
 
 	@Dependent("OpenGL15")

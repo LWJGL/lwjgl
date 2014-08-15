@@ -427,7 +427,7 @@ public interface GLES30 {
 	boolean glUnmapBuffer(@GLenum int target);
 
 	@StripPostfix("pointer")
-	@AutoSize("GLChecks.getBufferObjectSize(target)")
+	@AutoSize("GLES20.glGetBufferParameteri(target, GLES20.GL_BUFFER_SIZE)")
 	void glGetBufferPointerv(@GLenum int target, @GLenum int pname, @OutParameter @Result @GLvoid ByteBuffer pointer);
 
 	void glDrawBuffers(@AutoSize("buffers") @GLsizei int size, @Const @GLenum IntBuffer buffers);
