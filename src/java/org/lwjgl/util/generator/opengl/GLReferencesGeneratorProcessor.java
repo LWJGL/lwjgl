@@ -40,6 +40,7 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -55,7 +56,7 @@ import org.lwjgl.util.generator.Utils;
  * @version $Revision: 3237 $ $Id: ReferencesGeneratorProcessorFactory.java 3237
  * 2009-09-08 15:07:15Z spasi $
  */
-@SupportedAnnotationTypes({ "*" })
+@SupportedAnnotationTypes({"*"})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class GLReferencesGeneratorProcessor extends AbstractProcessor {
 
@@ -67,11 +68,13 @@ public class GLReferencesGeneratorProcessor extends AbstractProcessor {
         @Override
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
                 if (roundEnv.processingOver() || !first_round) {
-                        return false;
+                        System.exit(0);
+                        return true;
                 }
                 try {
                         generateReferencesSource(processingEnv, annotations);
-                        first_round = false; return true;
+                        first_round = false;
+                        return true;
                 } catch (IOException e) {
                         throw new RuntimeException(e);
                 }
@@ -146,7 +149,7 @@ public class GLReferencesGeneratorProcessor extends AbstractProcessor {
         }
 
         private void generateReferencesSource(ProcessingEnvironment env, Set<? extends TypeElement> annotations) throws IOException {
-                PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opengl" + REFERENCES_CLASS_NAME, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opengl")).openWriter());
+                PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opengl." + REFERENCES_CLASS_NAME, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opengl")).openWriter());
                 writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
                 writer.println();
                 writer.println("package org.lwjgl.opengl;");
@@ -157,24 +160,30 @@ public class GLReferencesGeneratorProcessor extends AbstractProcessor {
                 writer.println("\t}");
                 final Set<? extends TypeElement> interface_decls = annotations;
                 for (TypeElement typedecl : interface_decls) {
-                        TypeElement interface_decl = (TypeElement) typedecl;
-                        generateReferencesFromMethods(env, writer, interface_decl);
+                        if (typedecl.getKind().equals(ElementKind.INTERFACE)) {
+                                TypeElement interface_decl = (TypeElement) typedecl;
+                                generateReferencesFromMethods(env, writer, interface_decl);
+                        }
                 }
                 writer.println();
                 writer.println("\tvoid copy(" + REFERENCES_CLASS_NAME + " " + REFERENCES_PARAMETER_NAME + ", int mask) {");
                 writer.println("\t\tsuper.copy(" + REFERENCES_PARAMETER_NAME + ", mask);");
                 writer.println("\t\tif ( (mask & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0 ) {");
                 for (TypeElement typedecl : interface_decls) {
-                        TypeElement interface_decl = (TypeElement) typedecl;
-                        generateCopiesFromMethods(processingEnv, writer, interface_decl);
+                        if (typedecl.getKind().equals(ElementKind.INTERFACE)) {
+                                TypeElement interface_decl = (TypeElement) typedecl;
+                                generateCopiesFromMethods(processingEnv, writer, interface_decl);
+                        }
                 }
                 writer.println("\t\t}");
                 writer.println("\t}");
                 writer.println("\tvoid clear() {");
                 writer.println("\t\tsuper.clear();");
                 for (TypeElement typedecl : interface_decls) {
-                        TypeElement interface_decl = (TypeElement) typedecl;
-                        generateClearsFromMethods(processingEnv, writer, interface_decl);
+                        if (typedecl.getKind().equals(ElementKind.INTERFACE)) {
+                                TypeElement interface_decl = (TypeElement) typedecl;
+                                generateClearsFromMethods(processingEnv, writer, interface_decl);
+                        }
                 }
                 writer.println("\t}");
                 writer.println("}");

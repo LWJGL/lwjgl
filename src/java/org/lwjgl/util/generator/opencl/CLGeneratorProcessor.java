@@ -47,8 +47,10 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedOptions;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.ElementKindVisitor7;
 import org.lwjgl.PointerWrapper;
 import org.lwjgl.opencl.CLDevice;
 import org.lwjgl.opencl.CLPlatform;
@@ -58,9 +60,9 @@ import org.lwjgl.opencl.CLPlatform;
  *
  * @author Spasi
  */
-@SupportedAnnotationTypes({ "*" })
+@SupportedAnnotationTypes({"*"})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
-@SupportedOptions({"contextspecific","generatechecks"})
+@SupportedOptions({"contextspecific", "generatechecks"})
 public class CLGeneratorProcessor extends AbstractProcessor {
 
         public static final String CLCAPS_CLASS_NAME = "CLCapabilities";
@@ -83,13 +85,15 @@ public class CLGeneratorProcessor extends AbstractProcessor {
         @Override
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
                 if (roundEnv.processingOver() || !first_round) {
-                        return false;
+                        System.exit(0);
+                        return true;
                 }
                 try {
                         generateCLCapabilitiesSource(annotations);
                         generateCLPDCapabilitiesSource(annotations, CLPlatformExtension.class, PLATFORM_CAPS_CLASS_NAME, CLPlatform.class, "platform");
                         generateCLPDCapabilitiesSource(annotations, CLDeviceExtension.class, DEVICE_CAPS_CLASS_NAME, CLDevice.class, "device");
-                        first_round = false; return true;
+                        first_round = false;
+                        return true;
                 } catch (IOException e) {
                         throw new RuntimeException(e);
                 }
@@ -103,18 +107,20 @@ public class CLGeneratorProcessor extends AbstractProcessor {
         }
 
         private void generateCLCapabilitiesSource(Set<? extends TypeElement> annotations) throws IOException {
-                final PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opencl" + CLCAPS_CLASS_NAME, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opencl")).openWriter());
+                final PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opencl." + CLCAPS_CLASS_NAME, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opencl")).openWriter());
                 printHeader(writer);
 
                 CLCapabilitiesGenerator.generateClassPrologue(writer);
 
                 final Set<? extends TypeElement> templates = annotations;
                 for (final TypeElement t : templates) {
-                        if (t.getAnnotation(CLPlatformExtension.class) == null && t.getAnnotation(CLDeviceExtension.class) == null && !t.getSimpleName().toString().startsWith("CL")) {
-                                throw new RuntimeException("An OpenCL extension is missing an extension type annotation: " + t.getSimpleName());
-                        }
+                        if (t.getKind().equals(ElementKind.INTERFACE)) {
+                                if (t.getAnnotation(CLPlatformExtension.class) == null && t.getAnnotation(CLDeviceExtension.class) == null && !t.getSimpleName().toString().startsWith("CL")) {
+                                        throw new RuntimeException("An OpenCL extension is missing an extension type annotation: " + t.getSimpleName());
+                                }
 
-                        CLCapabilitiesGenerator.generateSymbolAddresses(processingEnv, writer, (TypeElement) t);
+                                CLCapabilitiesGenerator.generateSymbolAddresses(processingEnv, writer, (TypeElement) t);
+                        }
                 }
                 writer.println();
 
@@ -123,7 +129,9 @@ public class CLGeneratorProcessor extends AbstractProcessor {
                 CLCapabilitiesGenerator.generateCapabilitiesGetters(writer);
 
                 for (final TypeElement template : templates) {
-                        CLCapabilitiesGenerator.generateExtensionChecks(processingEnv, writer, (TypeElement) template);
+                        if (template.getKind().equals(ElementKind.INTERFACE)) {
+                                CLCapabilitiesGenerator.generateExtensionChecks(processingEnv, writer, (TypeElement) template);
+                        }
                 }
 
                 writer.println("}");
@@ -131,7 +139,7 @@ public class CLGeneratorProcessor extends AbstractProcessor {
         }
 
         private void generateCLPDCapabilitiesSource(Set<? extends TypeElement> annotations, final Class<? extends Annotation> capsType, final String capsName, final Class<? extends PointerWrapper> objectType, final String objectName) throws IOException {
-                final PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opencl" + capsName, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opencl")).openWriter());
+                final PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opencl." + capsName, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opencl")).openWriter());
                 printHeader(writer);
                 writer.println("import java.util.*;");
                 writer.println();
@@ -155,5 +163,14 @@ public class CLGeneratorProcessor extends AbstractProcessor {
 
                 writer.println("}");
                 writer.close();
+        }
+
+        private static class CLElementKindVisitor extends ElementKindVisitor7<Void, Void> {
+
+                @Override
+                public Void visitTypeAsInterface(TypeElement e, Void p) {
+                        return DEFAULT_VALUE;
+                }
+
         }
 }

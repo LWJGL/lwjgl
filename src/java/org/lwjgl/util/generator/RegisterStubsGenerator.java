@@ -133,7 +133,7 @@ public class RegisterStubsGenerator {
                 }
 
                 final Alternate alt_annotation = method.getAnnotation(Alternate.class);
-                final String methodName = alt_annotation == null ? new StringBuffer(method.getSimpleName()).toString() : alt_annotation.value();
+                final String methodName = alt_annotation == null ? method.getSimpleName().toString() : alt_annotation.value();
                 String opengl_handle_name = methodName.replaceFirst("gl", platform.getPrefix());
                 writer.print(", \"" + opengl_handle_name + "\", (void *)&" + methodName + ", " + (method.getAnnotation(Optional.class) == null ? "false" : "true") + "}");
                 if (has_more) {

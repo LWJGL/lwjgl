@@ -41,6 +41,7 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedOptions;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import org.lwjgl.util.generator.Utils;
 
@@ -51,9 +52,9 @@ import org.lwjgl.util.generator.Utils;
  * @version $Revision: 3316 $ $Id: ContextGeneratorProcessorFactory.java 3316
  * 2010-04-09 23:57:40Z spasi $
  */
-@SupportedAnnotationTypes({ "*" })
+@SupportedAnnotationTypes({"*"})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
-@SupportedOptions({"contextspecific","generatechecks"})
+@SupportedOptions({"contextspecific", "generatechecks"})
 public class GLESGeneratorProcessor extends AbstractProcessor {
 
         private static boolean first_round = true;
@@ -61,21 +62,23 @@ public class GLESGeneratorProcessor extends AbstractProcessor {
         @Override
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
                 if (roundEnv.processingOver() || !first_round) {
-                        return false;
+                        System.exit(0);
+                        return true;
                 }
                 Map<String, String> options = processingEnv.getOptions();
                 boolean generate_error_checks = options.containsKey("generatechecks");
                 boolean context_specific = options.containsKey("contextspecific");
                 try {
                         generateContextCapabilitiesSource(annotations, context_specific, generate_error_checks);
-                        first_round = false; return true;
+                        first_round = false;
+                        return true;
                 } catch (IOException e) {
                         throw new RuntimeException(e);
                 }
         }
 
         private void generateContextCapabilitiesSource(Set<? extends TypeElement> annotations, boolean context_specific, boolean generate_error_checks) throws IOException {
-                PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opengles" + Utils.CONTEXT_CAPS_CLASS_NAME, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opengles")).openWriter());
+                PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opengles." + Utils.CONTEXT_CAPS_CLASS_NAME, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opengles")).openWriter());
                 writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
                 writer.println();
                 writer.println("package org.lwjgl.opengles;");
@@ -88,18 +91,24 @@ public class GLESGeneratorProcessor extends AbstractProcessor {
                 GLESCapabilitiesGenerator.generateClassPrologue(writer, context_specific, generate_error_checks);
                 Set<? extends TypeElement> interface_decls = annotations;
                 for (TypeElement interface_decl : interface_decls) {
-                        if (Utils.isFinal(interface_decl)) {
-                                GLESCapabilitiesGenerator.generateField(writer, interface_decl);
+                        if (interface_decl.getKind().equals(ElementKind.INTERFACE)) {
+                                if (Utils.isFinal(interface_decl)) {
+                                        GLESCapabilitiesGenerator.generateField(writer, interface_decl);
+                                }
                         }
                 }
                 writer.println();
                 if (context_specific) {
                         for (TypeElement interface_decl : interface_decls) {
-                                GLESCapabilitiesGenerator.generateSymbolAddresses(processingEnv, writer, interface_decl);
+                                if (interface_decl.getKind().equals(ElementKind.INTERFACE)) {
+                                        GLESCapabilitiesGenerator.generateSymbolAddresses(processingEnv, writer, interface_decl);
+                                }
                         }
                         writer.println();
                         for (TypeElement interface_decl : interface_decls) {
-                                GLESCapabilitiesGenerator.generateAddressesInitializers(processingEnv, writer, interface_decl);
+                                if (interface_decl.getKind().equals(ElementKind.INTERFACE)) {
+                                        GLESCapabilitiesGenerator.generateAddressesInitializers(processingEnv, writer, interface_decl);
+                                }
                         }
                         writer.println();
                 }
@@ -113,13 +122,17 @@ public class GLESGeneratorProcessor extends AbstractProcessor {
 
                 GLESCapabilitiesGenerator.generateInitStubsPrologue(writer, context_specific);
                 for (TypeElement interface_decl : interface_decls) {
-                        GLESCapabilitiesGenerator.generateSuperClassAdds(writer, interface_decl, processingEnv);
+                        if (interface_decl.getKind().equals(ElementKind.INTERFACE)) {
+                                GLESCapabilitiesGenerator.generateSuperClassAdds(writer, interface_decl, processingEnv);
+                        }
                 }
                 for (TypeElement interface_decl : interface_decls) {
-                        if ("GLES20".equals(interface_decl.getSimpleName())) {
-                                continue;
+                        if (interface_decl.getKind().equals(ElementKind.INTERFACE)) {
+                                if ("GLES20".equals(interface_decl.getSimpleName())) {
+                                        continue;
+                                }
+                                GLESCapabilitiesGenerator.generateInitStubs(processingEnv, writer, interface_decl, context_specific);
                         }
-                        GLESCapabilitiesGenerator.generateInitStubs(processingEnv, writer, interface_decl, context_specific);
                 }
                 GLESCapabilitiesGenerator.generateInitStubsEpilogue(writer, context_specific);
                 writer.println();
@@ -128,7 +141,9 @@ public class GLESGeneratorProcessor extends AbstractProcessor {
                         writer.println("\t\tif (!loaded_stubs)");
                         writer.println("\t\t\treturn;");
                         for (TypeElement interface_decl : interface_decls) {
-                                GLESCapabilitiesGenerator.generateUnloadStubs(processingEnv, writer, interface_decl);
+                                if (interface_decl.getKind().equals(ElementKind.INTERFACE)) {
+                                        GLESCapabilitiesGenerator.generateUnloadStubs(processingEnv, writer, interface_decl);
+                                }
                         }
                         writer.println("\t\tloaded_stubs = false;");
                 }
@@ -136,8 +151,10 @@ public class GLESGeneratorProcessor extends AbstractProcessor {
                 writer.println();
                 GLESCapabilitiesGenerator.generateInitializerPrologue(writer);
                 for (TypeElement interface_decl : interface_decls) {
-                        if (Utils.isFinal(interface_decl)) {
-                                GLESCapabilitiesGenerator.generateInitializer(writer, interface_decl, processingEnv);
+                        if (interface_decl.getKind().equals(ElementKind.INTERFACE)) {
+                                if (Utils.isFinal(interface_decl)) {
+                                        GLESCapabilitiesGenerator.generateInitializer(writer, interface_decl, processingEnv);
+                                }
                         }
                 }
                 writer.println("\t}");

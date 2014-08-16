@@ -33,9 +33,6 @@ package org.lwjgl.util.generator;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.Arrays;
-import static java.util.Collections.*;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
@@ -63,7 +60,8 @@ public class GeneratorProcessor extends AbstractProcessor {
         @Override
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
                 if (roundEnv.processingOver() || !first_round) {
-                        return false;
+                        System.exit(0);
+                        return true;
                 }
                 Map<String, String> options = processingEnv.getOptions();
                 String typemap_classname = options.get("typemap");

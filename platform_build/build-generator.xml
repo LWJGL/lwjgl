@@ -1,13 +1,13 @@
 <project name="generator">
 
-	<import file="build-definitions.xml"/>
+    <import file="build-definitions.xml"/>
 
-	<!-- clean the generated files -->
-	<target name="clean-generated" description="Deletes the generated java source">
-		<delete quiet="true" failonerror="false">
-			<fileset dir="${lwjgl.src}/generated" includes="**"/>
-		</delete>
-	</target>
+    <!-- clean the generated files -->
+    <target name="clean-generated" description="Deletes the generated java source">
+        <delete quiet="true" failonerror="false">
+            <fileset dir="${lwjgl.src}/generated" includes="**"/>
+        </delete>
+    </target>
 
     <target name="clean-generated-native" description="Deletes the generated native source" depends="clean-generated">
         <delete quiet="false" failonerror="false">
@@ -15,329 +15,430 @@
         </delete>
     </target>
 
-	<!-- Compiles the Java generator source code -->
-	<target name="generators" description="Compiles the native method generators">
-		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/util/generator/**.java" taskname="generator">
+    <!-- Compiles the Java generator source code -->
+    <target name="generators" description="Compiles the native method generators">
+        <javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/util/generator/**.java" taskname="generator">
             <include name="org/lwjgl/util/generator/openal/**.java"/>
             <include name="org/lwjgl/util/generator/opengl/**.java"/>
-			<include name="org/lwjgl/util/generator/opengles/**.java"/>
+            <include name="org/lwjgl/util/generator/opengles/**.java"/>
             <include name="org/lwjgl/util/generator/opencl/**.java"/>
-			<compilerarg value="-Xlint:none"/>                        
-		</javac>
+            <compilerarg value="-Xlint:none"/>                        
+        </javac>
         <!-- Compile helper classes used by the templates -->
-		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" source="1.6" taskname="generator">
+        <javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" source="1.7" taskname="generator">
             <include name="org/lwjgl/PointerWrapper.java"/>
             <include name="org/lwjgl/PointerBuffer.java"/>
             <!-- OpenGL -->
-			<include name="org/lwjgl/opengl/GLSync.java"/>
+            <include name="org/lwjgl/opengl/GLSync.java"/>
             <include name="org/lwjgl/opengl/AMDDebugOutputCallback.java"/>
             <include name="org/lwjgl/opengl/ARBDebugOutputCallback.java"/>
-			<include name="org/lwjgl/opengl/KHRDebugCallback.java"/>
-			<!-- OpenGL ES -->
-			<include name="org/lwjgl/opengles/EGLImageOES.java"/>
-			<include name="org/lwjgl/opengles/KHRDebugCallback.java"/>
+            <include name="org/lwjgl/opengl/KHRDebugCallback.java"/>
+            <!-- OpenGL ES -->
+            <include name="org/lwjgl/opengles/EGLImageOES.java"/>
+            <include name="org/lwjgl/opengles/KHRDebugCallback.java"/>
             <!-- OpenCL -->
             <include name="org/lwjgl/opencl/CLPlatform.java"/>
             <include name="org/lwjgl/opencl/CLDevice.java"/>
             <include name="org/lwjgl/opencl/CLContext.java"/>
             <include name="org/lwjgl/opencl/CLCommandQueue.java"/>
             <include name="org/lwjgl/opencl/CLMem.java"/>
-			<include name="org/lwjgl/opencl/CL*Callback.java"/>
+            <include name="org/lwjgl/opencl/CL*Callback.java"/>
             <include name="org/lwjgl/opencl/CLNativeKernel.java"/>
             <include name="org/lwjgl/opencl/CLFunctionAddress.java"/>
-		</javac>
-	</target>
+        </javac>
+    </target>
 
-	<!-- Proxy target to generate it all -->
-	<target name="generate-all" depends="generate-openal, generate-opengl, generate-opengl-capabilities, generate-opengl-references,  generate-opengles, generate-opengles-capabilities, generate-opencl, generate-opencl-capabilities" description="Generates java and native source"/>
+    <!-- Proxy target to generate it all -->
+    <target name="generate-all" depends="generate-openal, generate-opengl, generate-opengl-capabilities, generate-opengl-references,  generate-opengles, generate-opengles-capabilities, generate-opencl, generate-opencl-capabilities" description="Generates java and native source"/>
 
-	<target name="generate-debug" depends="generate-openal-debug, generate-opengl-debug, generate-opengl-capabilities-debug, generate-opengl-references, generate-opengles-debug, generate-opengles-capabilities-debug, generate-opencl-debug, generate-opencl-capabilities-debug" description="Generates java and native source with debug functionality"/>
+    <target name="generate-debug" depends="generate-openal-debug, generate-opengl-debug, generate-opengl-capabilities-debug, generate-opengl-references, generate-opengles-debug, generate-opengles-capabilities-debug, generate-opencl-debug, generate-opencl-capabilities-debug" description="Generates java and native source with debug functionality"/>
 
-	<!-- ********************************************************************************
-		*********************************************************************************
-											OPENAL
-		*********************************************************************************
-		****************************************************************************  -->
+    <!-- ********************************************************************************
+    *********************************************************************************
+                                                                            OPENAL
+    *********************************************************************************
+    ****************************************************************************  -->
 
-	<!-- Generate OpenAL -->
-	<target name="generate-openal" depends="generators" description="Generates java and native source for AL">
-                        <javac source="1.6" srcdir="${lwjgl.src.templates.al}" fork="true" taskname="processor">
-			<compilerarg value="-proc:only"/>
-                        <compilerarg value="-processor"/>
-			<compilerarg value="org.lwjgl.util.generator.GeneratorProcessor"/>
-                        <compilerarg value="-XprintProcessorInfo"/>
-                        <compilerarg value="-XprintRounds"/>
-			<compilerarg value="-cp"/>
-			<compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<compilerarg value="-s"/>
-			<compilerarg path="${lwjgl.src}/generated"/>
-			<compilerarg value="-d"/>
-			<compilerarg path="${lwjgl.src.native}/generated/openal"/>
-			<compilerarg value="-Abinpath=${lwjgl.bin}"/>
-			<compilerarg value="-Atypemap=org.lwjgl.util.generator.openal.ALTypeMap"/>
-                        <src>
-                            <fileset dir="${lwjgl.src.templates.al}">
-                                <include name="${openal-template-pattern}"/>
-                            </fileset>
-                        </src>
-		</javac>
-	</target>
+    <!-- Generate OpenAL -->
+    <target name="generate-openal" depends="generators" description="Generates java and native source for AL">
+        <foreach            
+            list="only,none"
+            target="_generate-openal"
+            param="proc">
+        </foreach>
+    </target>
+    <target name="_generate-openal">
+        <mkdir dir="${lwjgl.src.native}/generated/openal"/>
+        <mkdir dir="${lwjgl.src}/generated"/>
+        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.al}" fork="true" taskname="processor">
+            <compilerarg value="-proc:${proc}"/>
+            <compilerarg value="-processor"/>
+            <compilerarg value="org.lwjgl.util.generator.GeneratorProcessor"/>
+            <compilerarg value="-XprintProcessorInfo"/>
+            <compilerarg value="-XprintRounds"/>
+            <compilerarg value="-cp"/>
+            <compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+            <compilerarg value="-s"/>
+            <compilerarg path="${lwjgl.src}/generated"/>
+            <compilerarg value="-d"/>
+            <compilerarg path="${lwjgl.src.native}/generated/openal"/>
+            <compilerarg value="-Abinpath=${lwjgl.bin}"/>
+            <compilerarg value="-Atypemap=org.lwjgl.util.generator.openal.ALTypeMap"/>
+            <src>
+                <fileset dir="${lwjgl.src.templates.al}">
+                    <include name="${openal-template-pattern}"/>
+                </fileset>
+            </src>                        
+        </javac>
+    </target>
 
-	<!-- Generate OpenAL [DEBUG] -->
-	<target name="generate-openal-debug" depends="generators" description="Generates java and native source for AL">
-		<javac source="1.6" srcdir="${lwjgl.src.templates.al}" fork="true" taskname="processor">	
-                        <compilerarg value="-proc:only"/>
-                        <compilerarg value="-processor"/>
-                        <compilerarg value="org.lwjgl.util.generator.GeneratorProcessor"/>
-                        <compilerarg value="-XprintProcessorInfo"/>
-                        <compilerarg value="-XprintRounds"/>
-                        <compilerarg value="-cp"/>
-                        <compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-                        <compilerarg value="-s"/>
-                        <compilerarg path="${lwjgl.src}/generated"/>
-                        <compilerarg value="-d"/>
-                        <compilerarg path="${lwjgl.src.native}/generated/openal"/>
-                        <compilerarg value="-Abinpath=${lwjgl.bin}"/>
-                        <compilerarg value="-Atypemap=org.lwjgl.util.generator.openal.ALTypeMap"/>
-                        <compilerarg value="-Ageneratechecks"/>
-                        <src>
-                            <fileset dir="${lwjgl.src.templates.al}">
-                                <include name="${openal-template-pattern}"/>
-                            </fileset>
-                        </src>
-		</javac>
-	</target>
+    <!-- Generate OpenAL [DEBUG] -->
+    <target name="generate-openal-debug" depends="generators" description="Generates java and native source for AL">
+        <foreach            
+            list="only,none"
+            target="_generate-openal-debug"
+            param="proc">
+        </foreach>
+    </target>
+    <target name="_generate-openal-debug">
+        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.al}" fork="true" taskname="processor">	
+            <compilerarg value="-proc:${proc}"/>
+            <compilerarg value="-processor"/>
+            <compilerarg value="org.lwjgl.util.generator.GeneratorProcessor"/>
+            <compilerarg value="-XprintProcessorInfo"/>
+            <compilerarg value="-XprintRounds"/>
+            <compilerarg value="-cp"/>
+            <compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+            <compilerarg value="-s"/>
+            <compilerarg path="${lwjgl.src}/generated"/>
+            <compilerarg value="-d"/>
+            <compilerarg path="${lwjgl.src.native}/generated/openal"/>
+            <compilerarg value="-Abinpath=${lwjgl.bin}"/>
+            <compilerarg value="-Atypemap=org.lwjgl.util.generator.openal.ALTypeMap"/>
+            <compilerarg value="-Ageneratechecks"/>
+            <src>
+                <fileset dir="${lwjgl.src.templates.al}">
+                    <include name="${openal-template-pattern}"/>
+                </fileset>
+            </src>
+        </javac>
+    </target>
 
-	<!-- ********************************************************************************
-		*********************************************************************************
-										OPENGL
-		*********************************************************************************
-		****************************************************************************  -->
+    <!-- ********************************************************************************
+    *********************************************************************************
+                                                                    OPENGL
+    *********************************************************************************
+    ****************************************************************************  -->
 
-	<!-- Generate OpenGL -->
-	<target name="generate-opengl" depends="generators" description="Generates java and native source for GL">
-		<javac source="1.6" srcdir="${lwjgl.src.templates.gl}" fork="true" taskname="processor">
-                        <compilerarg value="-proc:only"/>
-                        <compilerarg value="-processor"/>
-			<compilerarg value="org.lwjgl.util.generator.GeneratorProcessor"/>
-                        <compilerarg value="-XprintProcessorInfo"/>
-                        <compilerarg value="-XprintRounds"/>
-                        <compilerarg value="-cp"/>
-			<compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<compilerarg value="-s"/>
-			<compilerarg path="${lwjgl.src}/generated"/>
-			<compilerarg value="-d"/>
-			<compilerarg path="${lwjgl.src.native}/generated/opengl"/>
-			<compilerarg value="-Abinpath=${lwjgl.bin}"/>
-			<compilerarg value="-Acontextspecific"/>
-			<compilerarg value="-Atypemap=org.lwjgl.util.generator.opengl.GLTypeMap"/>
-                        <src>
-                            <fileset dir="${lwjgl.src.templates.gl}">
-                                <include name="${opengl-template-pattern}"/>
-                            </fileset>
-                        </src>
-		</javac>
-	</target>
+    <!-- Generate OpenGL -->
+    <target name="generate-opengl" depends="generators" description="Generates java and native source for GL">
+        <foreach            
+            list="only,none"
+            target="_generate-opengl"
+            param="proc">
+        </foreach>
+    </target>
+    <target name="_generate-opengl">
+        <mkdir dir="${lwjgl.src.native}/generated/opengl"/>
+        <mkdir dir="${lwjgl.src}/generated"/>
+        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.gl}" fork="true">
+            <compilerarg value="-proc:${proc}"/>
+            <compilerarg value="-processor"/>
+            <compilerarg value="org.lwjgl.util.generator.GeneratorProcessor"/>
+            <compilerarg value="-XprintProcessorInfo"/>
+            <compilerarg value="-XprintRounds"/>
+            <compilerarg value="-cp"/>
+            <compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+            <compilerarg value="-s"/>
+            <compilerarg path="${lwjgl.src}/generated"/>
+            <compilerarg value="-d"/>
+            <compilerarg path="${lwjgl.src.native}/generated/opengl"/>
+            <compilerarg value="-Abinpath=${lwjgl.bin}"/>
+            <compilerarg value="-Acontextspecific"/>
+            <compilerarg value="-Atypemap=org.lwjgl.util.generator.opengl.GLTypeMap"/>
+            <src>
+                <fileset dir="${lwjgl.src.templates.gl}">
+                    <include name="${opengl-template-pattern}"/>
+                </fileset>
+            </src>
+        </javac>
+    </target>
 
-	<!-- Generate OpenGL [DEBUG] -->
-	<target name="generate-opengl-debug" depends="generators" description="Generates debug java and native source for GL">
-		<javac source="1.6" srcdir="${lwjgl.src.templates.gl}" fork="true" taskname="processor">
-			<compilerarg value="-proc:only"/>
-                        <compilerarg value="-processor"/>
-			<compilerarg value="org.lwjgl.util.generator.GeneratorProcessor"/>
-                        <compilerarg value="-XprintProcessorInfo"/>
-                        <compilerarg value="-XprintRounds"/>
-			<compilerarg value="-cp"/>
-			<compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<compilerarg value="-s"/>
-			<compilerarg path="${lwjgl.src}/generated"/>
-			<compilerarg value="-d"/>
-			<compilerarg path="${lwjgl.src.native}/generated/opengl"/>
-			<compilerarg value="-Abinpath=${lwjgl.bin}"/>
-			<compilerarg value="-Ageneratechecks"/>
-			<compilerarg value="-Acontextspecific"/>
-			<compilerarg value="-Atypemap=org.lwjgl.util.generator.opengl.GLTypeMap"/>
-			<src> 
-                            <fileset dir="${lwjgl.src.templates.gl}">
-                                <include name="${opengl-template-pattern}"/>
-                            </fileset>
-                        </src>
-		</javac>
-	</target>
+    <!-- Generate OpenGL [DEBUG] -->
+    <target name="generate-opengl-debug" depends="generators" description="Generates debug java and native source for GL">
+        <foreach            
+            list="only,none"
+            target="_generate-opengl-debug"
+            param="proc">
+        </foreach>
+    </target>
+    <target name="_generate-opengl-debug">
+        <mkdir dir="${lwjgl.src.native}/generated/opengl"/>
+        <mkdir dir="${lwjgl.src}/generated"/>
+        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.gl}" fork="true" taskname="processor">
+            <compilerarg value="-proc:${proc}"/>
+            <compilerarg value="-processor"/>
+            <compilerarg value="org.lwjgl.util.generator.GeneratorProcessor"/>
+            <compilerarg value="-XprintProcessorInfo"/>
+            <compilerarg value="-XprintRounds"/>
+            <compilerarg value="-cp"/>
+            <compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+            <compilerarg value="-s"/>
+            <compilerarg path="${lwjgl.src}/generated"/>
+            <compilerarg value="-d"/>
+            <compilerarg path="${lwjgl.src.native}/generated/opengl"/>
+            <compilerarg value="-Abinpath=${lwjgl.bin}"/>
+            <compilerarg value="-Ageneratechecks"/>
+            <compilerarg value="-Acontextspecific"/>
+            <compilerarg value="-Atypemap=org.lwjgl.util.generator.opengl.GLTypeMap"/>
+            <src> 
+                <fileset dir="${lwjgl.src.templates.gl}">
+                    <include name="${opengl-template-pattern}"/>
+                </fileset>
+            </src>
+        </javac>
+    </target>
 
-	<!-- Generate OpenGL references -->
-	<target name="generate-opengl-references" depends="generators" description="Generates java and native source for GL">
-		<javac source="1.6" srcdir="${lwjgl.src.templates.gl}" fork="true" taskname="processor">
-			<compilerarg value="-proc:only"/>
-                        <compilerarg value="-processor"/>
-			<compilerarg value="org.lwjgl.util.generator.opengl.GLReferencesGeneratorProcessor"/>
-                        <compilerarg value="-XprintProcessorInfo"/>
-                        <compilerarg value="-XprintRounds"/>
-			<compilerarg value="-cp"/>
-			<compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<compilerarg value="-s"/>
-			<compilerarg path="${lwjgl.src}/generated"/>
-                        <src>
-                            <fileset dir="${lwjgl.src.templates.gl}">
-                                <include name="${opengl-template-pattern}"/>
-                            </fileset>
-                        </src>
-		</javac>
-	</target>
+    <!-- Generate OpenGL references -->
+    <target name="generate-opengl-references" depends="generators" description="Generates java and native source for GL">
+        <foreach            
+            list="only,none"
+            target="_generate-opengl-references"
+            param="proc">
+        </foreach>
+    </target>
+    <target name="_generate-opengl-references">
+        <mkdir dir="${lwjgl.src}/generated"/>
+        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.gl}" fork="true" taskname="processor">
+            <compilerarg value="-proc:${proc}"/>
+            <compilerarg value="-processor"/>
+            <compilerarg value="org.lwjgl.util.generator.opengl.GLReferencesGeneratorProcessor"/>
+            <compilerarg value="-XprintProcessorInfo"/>
+            <compilerarg value="-XprintRounds"/>
+            <compilerarg value="-cp"/>
+            <compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+            <compilerarg value="-s"/>
+            <compilerarg path="${lwjgl.src}/generated"/>
+            <src>
+                <fileset dir="${lwjgl.src.templates.gl}">
+                    <include name="${opengl-template-pattern}"/>
+                </fileset>
+            </src>
+        </javac>
+    </target>
 
-	<!-- Generate OpenGL context capabilities -->
-	<target name="generate-opengl-capabilities" depends="generators" description="Generates java and native source for GL">
-		<javac source="1.6" srcdir="${lwjgl.src.templates.gl}" fork="true" taskname="processor">
-			<compilerarg value="-proc:only"/>
-                        <compilerarg value="-processor"/>
-			<compilerarg value="org.lwjgl.util.generator.opengl.GLGeneratorProcessor"/>
-                        <compilerarg value="-XprintProcessorInfo"/>
-                        <compilerarg value="-XprintRounds"/>
-			<compilerarg value="-cp"/>
-			<compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<compilerarg value="-s"/>
-			<compilerarg path="${lwjgl.src}/generated"/>
-			<compilerarg value="-Acontextspecific"/>
-			<src> 
-                            <fileset dir="${lwjgl.src.templates.gl}">
-                                <include name="${opengl-template-pattern}"/>
-                            </fileset>
-                        </src>
-		</javac>
-	</target>
+    <!-- Generate OpenGL context capabilities -->
+    <target name="generate-opengl-capabilities" depends="generators" description="Generates java and native source for GL">
+        <foreach            
+            list="only,none"
+            target="_generate-opengl-capabilities"
+            param="proc">
+        </foreach>
+    </target>
+    <target name="_generate-opengl-capabilities">
+        <mkdir dir="${lwjgl.src}/generated"/>
+        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.gl}" fork="true" taskname="processor">
+            <compilerarg value="-proc:${proc}"/>
+            <compilerarg value="-processor"/>
+            <compilerarg value="org.lwjgl.util.generator.opengl.GLGeneratorProcessor"/>
+            <compilerarg value="-XprintProcessorInfo"/>
+            <compilerarg value="-XprintRounds"/>
+            <compilerarg value="-cp"/>
+            <compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+            <compilerarg value="-s"/>
+            <compilerarg path="${lwjgl.src}/generated"/>
+            <compilerarg value="-Acontextspecific"/>
+            <src>
+                <fileset dir="${lwjgl.src.templates.gl}">
+                    <include name="${opengl-template-pattern}"/>
+                </fileset>
+            </src>
+        </javac>
+    </target>
 
-	<!-- Generate OpenGL context capabilities [DEBUG] -->
-	<target name="generate-opengl-capabilities-debug" depends="generators" description="Generates debug java and native source for GL">
-		<javac source="1.6" srcdir="${lwjgl.src.templates.gl}" fork="true" taskname="processor">
-			<compilerarg value="-proc:only"/>
-                        <compilerarg value="-processor"/>
-			<compilerarg value="org.lwjgl.util.generator.opengl.GLGeneratorProcessor"/>
-                        <compilerarg value="-XprintProcessorInfo"/>
-                        <compilerarg value="-XprintRounds"/>
-			<compilerarg value="-cp"/>
-			<compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<compilerarg value="-s"/>
-			<compilerarg path="${lwjgl.src}/generated"/>
-			<compilerarg value="-Ageneratechecks"/>
-			<compilerarg value="-Acontextspecific"/>
-			<src> 
-                            <fileset dir="${lwjgl.src.templates.gl}">
-                                <include name="${opengl-template-pattern}"/>
-                            </fileset>
-                        </src>
-		</javac>
-	</target>
+    <!-- Generate OpenGL context capabilities [DEBUG] -->
+    <target name="generate-opengl-capabilities-debug" depends="generators" description="Generates debug java and native source for GL">
+        <foreach            
+            list="only,none"
+            target="_generate-opengl-capabilities-debug"
+            param="proc">
+        </foreach>
+    </target>
+    <target name="_generate-opengl-capabilities-debug">
+        <mkdir dir="${lwjgl.src}/generated"/>
+        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.gl}" fork="true" taskname="processor">
+            <compilerarg value="-proc:${proc}"/>
+            <compilerarg value="-processor"/>
+            <compilerarg value="org.lwjgl.util.generator.opengl.GLGeneratorProcessor"/>
+            <compilerarg value="-XprintProcessorInfo"/>
+            <compilerarg value="-XprintRounds"/>
+            <compilerarg value="-cp"/>
+            <compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+            <compilerarg value="-s"/>
+            <compilerarg path="${lwjgl.src}/generated"/>
+            <compilerarg value="-Ageneratechecks"/>
+            <compilerarg value="-Acontextspecific"/>
+            <src> 
+                <fileset dir="${lwjgl.src.templates.gl}">
+                    <include name="${opengl-template-pattern}"/>
+                </fileset>
+            </src>
+        </javac>
+    </target>
 
-	<!-- ********************************************************************************
-		*********************************************************************************
-											OPENGL ES
-		*********************************************************************************
-		****************************************************************************  -->
+    <!-- ********************************************************************************
+    *********************************************************************************
+                                                                            OPENGL ES
+    *********************************************************************************
+    ****************************************************************************  -->
 
-	<!-- Generate OpenGL ES -->
-	<target name="generate-opengles" depends="generators" description="Generates java and native source for GL ES">
-		<javac source="1.6" srcdir="${lwjgl.src.templates.gles}" fork="true" taskname="processor">
-			<compilerarg value="-proc:only"/>
-                        <compilerarg value="-processor"/>
-			<compilerarg value="org.lwjgl.util.generator.GeneratorProcessor"/>
-                        <compilerarg value="-XprintProcessorInfo"/>
-                        <compilerarg value="-XprintRounds"/>
-			<compilerarg value="-cp"/>
-			<compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<compilerarg value="-s"/>
-			<compilerarg path="${lwjgl.src}/generated"/>
-			<compilerarg value="-d"/>
-			<compilerarg path="${lwjgl.src.native}/generated/opengles"/>
-			<compilerarg value="-Abinpath=${lwjgl.bin}"/>
-			<!--<compilerarg value="-Acontextspecific"/>-->
-			<compilerarg value="-Atypemap=org.lwjgl.util.generator.opengl.GLESTypeMap"/>
-			<src> 
-                            <fileset dir="${lwjgl.src.templates.gles}">
-                                <include name="${opengles-template-pattern}"/>
-                            </fileset>
-                        </src>
-		</javac>
-	</target>
+    <!-- Generate OpenGL ES -->
+    <target name="generate-opengles" depends="generators" description="Generates java and native source for GL ES">
+        <foreach            
+            list="only,none"
+            target="_generate-opengles"
+            param="proc">
+        </foreach>
+    </target>
+    <target name="_generate-opengles">
+        <mkdir dir="${lwjgl.src.native}/generated/opengles"/>
+        <mkdir dir="${lwjgl.src}/generated"/>
+        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.gles}" fork="true" taskname="processor">
+            <compilerarg value="-proc:${proc}"/>
+            <compilerarg value="-processor"/>
+            <compilerarg value="org.lwjgl.util.generator.GeneratorProcessor"/>
+            <compilerarg value="-XprintProcessorInfo"/>
+            <compilerarg value="-XprintRounds"/>
+            <compilerarg value="-cp"/>
+            <compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+            <compilerarg value="-s"/>
+            <compilerarg path="${lwjgl.src}/generated"/>
+            <compilerarg value="-d"/>
+            <compilerarg path="${lwjgl.src.native}/generated/opengles"/>
+            <compilerarg value="-Abinpath=${lwjgl.bin}"/>
+            <!--<compilerarg value="-Acontextspecific"/>-->
+            <compilerarg value="-Atypemap=org.lwjgl.util.generator.opengl.GLESTypeMap"/>
+            <src> 
+                <fileset dir="${lwjgl.src.templates.gles}">
+                    <include name="${opengles-template-pattern}"/>
+                </fileset>
+            </src>
+        </javac>
+    </target>
 
-	<!-- Generate OpenGL ES [DEBUG] -->
-	<target name="generate-opengles-debug" depends="generators" description="Generates debug java and native source for GL ES">
-		<javac source="1.6" srcdir="${lwjgl.src.templates.gles}" fork="true" taskname="processor">
-			<compilerarg value="-proc:only"/>
-                        <compilerarg value="-processor"/>
-			<compilerarg value="org.lwjgl.util.generator.GeneratorProcessor"/>
-                        <compilerarg value="-XprintProcessorInfo"/>
-                        <compilerarg value="-XprintRounds"/>
-			<compilerarg value="-cp"/>
-			<compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<compilerarg value="-s"/>
-			<compilerarg path="${lwjgl.src}/generated"/>
-			<compilerarg value="-d"/>
-			<compilerarg path="${lwjgl.src.native}/generated/opengles"/>
-			<compilerarg value="-Abinpath=${lwjgl.bin}"/>
-			<compilerarg value="-Ageneratechecks"/>
-			<!--<compilerarg value="-Acontextspecific"/>-->
-			<compilerarg value="-Atypemap=org.lwjgl.util.generator.opengl.GLESTypeMap"/>
-			<src> 
-                            <fileset dir="${lwjgl.src.templates.gles}">
-                                <include name="${opengles-template-pattern}"/>
-                            </fileset>
-                        </src>
-		</javac>
-	</target>
+    <!-- Generate OpenGL ES [DEBUG] -->
+    <target name="generate-opengles-debug" depends="generators" description="Generates debug java and native source for GL ES">
+        <foreach            
+            list="only,none"
+            target="_generate-opengles-debug"
+            param="proc">
+        </foreach>
+    </target>
+    <target name="_generate-opengles-debug">
+        <mkdir dir="${lwjgl.src.native}/generated/opengles"/>
+        <mkdir dir="${lwjgl.src}/generated"/>
+        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.gles}" fork="true" taskname="processor">
+            <compilerarg value="-proc:${proc}"/>
+            <compilerarg value="-processor"/>
+            <compilerarg value="org.lwjgl.util.generator.GeneratorProcessor"/>
+            <compilerarg value="-XprintProcessorInfo"/>
+            <compilerarg value="-XprintRounds"/>
+            <compilerarg value="-cp"/>
+            <compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+            <compilerarg value="-s"/>
+            <compilerarg path="${lwjgl.src}/generated"/>
+            <compilerarg value="-d"/>
+            <compilerarg path="${lwjgl.src.native}/generated/opengles"/>
+            <compilerarg value="-Abinpath=${lwjgl.bin}"/>
+            <compilerarg value="-Ageneratechecks"/>
+            <!--<compilerarg value="-Acontextspecific"/>-->
+            <compilerarg value="-Atypemap=org.lwjgl.util.generator.opengl.GLESTypeMap"/>
+            <src> 
+                <fileset dir="${lwjgl.src.templates.gles}">
+                    <include name="${opengles-template-pattern}"/>
+                </fileset>
+            </src>
+        </javac>
+    </target>
 
-	<!-- Generate OpenGL ES context capabilities -->
-	<target name="generate-opengles-capabilities" depends="generators" description="Generates java and native source for GL ES">
-		<javac source="1.6" srcdir="${lwjgl.src.templates.gles}" fork="true" taskname="processor">
-			<compilerarg value="-proc:only"/>
-                        <compilerarg value="-processor"/>
-			<compilerarg value="org.lwjgl.util.generator.opengl.GLESGeneratorProcessor"/>
-                        <compilerarg value="-XprintProcessorInfo"/>
-                        <compilerarg value="-XprintRounds"/>
-			<compilerarg value="-cp"/>
-			<compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<compilerarg value="-s"/>
-			<compilerarg path="${lwjgl.src}/generated"/>
-			<!--<compilerarg value="-Acontextspecific"/>-->
-			<src> 
-                            <fileset dir="${lwjgl.src.templates.gles}">
-                                <include name="${opengles-template-pattern}"/>
-                            </fileset>
-                        </src>
-		</javac>
-	</target>
+    <!-- Generate OpenGL ES context capabilities -->
+    <target name="generate-opengles-capabilities" depends="generators" description="Generates java and native source for GL ES">
+        <foreach            
+            list="only,none"
+            target="_generate-opengles-capabilities"
+            param="proc">
+        </foreach>
+    </target>
+    <target name="_generate-opengles-capabilities">
+        <mkdir dir="${lwjgl.src}/generated"/>
+        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.gles}" fork="true" taskname="processor">
+            <compilerarg value="-proc:${proc}"/>
+            <compilerarg value="-processor"/>
+            <compilerarg value="org.lwjgl.util.generator.opengl.GLESGeneratorProcessor"/>
+            <compilerarg value="-XprintProcessorInfo"/>
+            <compilerarg value="-XprintRounds"/>
+            <compilerarg value="-cp"/>
+            <compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+            <compilerarg value="-s"/>
+            <compilerarg path="${lwjgl.src}/generated"/>
+            <!--<compilerarg value="-Acontextspecific"/>-->
+            <src> 
+                <fileset dir="${lwjgl.src.templates.gles}">
+                    <include name="${opengles-template-pattern}"/>
+                </fileset>
+            </src>
+        </javac>
+    </target>
 
-	<!-- Generate OpenGL ES context capabilities [DEBUG] -->
-	<target name="generate-opengles-capabilities-debug" depends="generators" description="Generates debug java and native source for GL ES">
-		<javac source="1.6" srcdir="${lwjgl.src.templates.gles}" fork="true" taskname="processor">
-			<compilerarg value="-proc:only"/>
-                        <compilerarg value="-processor"/>
-			<compilerarg value="org.lwjgl.util.generator.opengl.GLESGeneratorProcessor"/>
-                        <compilerarg value="-XprintProcessorInfo"/>
-                        <compilerarg value="-XprintRounds"/>
-			<compilerarg value="-cp"/>
-			<compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
-			<compilerarg value="-s"/>
-			<compilerarg path="${lwjgl.src}/generated"/>
-			<compilerarg value="-Ageneratechecks"/>
-			<!--<compilerarg value="-Acontextspecific"/>-->
-			<src> 
-                            <fileset dir="${lwjgl.src.templates.gles}">
-                                <include name="${opengles-template-pattern}"/>
-                            </fileset>
-                        </src>
-		</javac>
-	</target>
+    <!-- Generate OpenGL ES context capabilities [DEBUG] -->
+    <target name="generate-opengles-capabilities-debug" depends="generators" description="Generates debug java and native source for GL ES">
+        <foreach            
+            list="only,none"
+            target="_generate-opengles-capabilities-debug"
+            param="proc">
+        </foreach>
+    </target>
+    <target name="_generate-opengles-capabilities-debug">
+        <mkdir dir="${lwjgl.src}/generated"/>
+        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.gles}" fork="true" taskname="processor">
+            <compilerarg value="-proc:${proc}"/>
+            <compilerarg value="-processor"/>
+            <compilerarg value="org.lwjgl.util.generator.opengl.GLESGeneratorProcessor"/>
+            <compilerarg value="-XprintProcessorInfo"/>
+            <compilerarg value="-XprintRounds"/>
+            <compilerarg value="-cp"/>
+            <compilerarg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+            <compilerarg value="-s"/>
+            <compilerarg path="${lwjgl.src}/generated"/>
+            <compilerarg value="-Ageneratechecks"/>
+            <!--<compilerarg value="-Acontextspecific"/>-->
+            <src> 
+                <fileset dir="${lwjgl.src.templates.gles}">
+                    <include name="${opengles-template-pattern}"/>
+                </fileset>
+            </src>
+        </javac>
+    </target>
 
-	<!-- ********************************************************************************
-		*********************************************************************************
-											OPENCL
-		*********************************************************************************
-		****************************************************************************  -->
+    <!-- ********************************************************************************
+    *********************************************************************************
+                                                                            OPENCL
+    *********************************************************************************
+    ****************************************************************************  -->
 
-	<!-- Generate OpenCL -->
+    <!-- Generate OpenCL -->
     <target name="generate-opencl" depends="generators" description="Generates java and native source for CL">
-        <javac source="1.6" srcdir="${lwjgl.src.templates.cl}" fork="true" taskname="processor">
-            <compilerarg value="-proc:only"/>
+        <foreach            
+            list="only,none"
+            target="_generate-opencl"
+            param="proc">
+        </foreach>
+    </target>
+    <target name="_generate-opencl">
+        <mkdir dir="${lwjgl.src.native}/generated/opencl"/>
+        <mkdir dir="${lwjgl.src}/generated"/>
+        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.cl}" fork="true" taskname="processor">
+            <compilerarg value="-proc:${proc}"/>
             <compilerarg value="-processor"/>
             <compilerarg value="org.lwjgl.util.generator.GeneratorProcessor"/>
             <compilerarg value="-XprintProcessorInfo"/>
@@ -348,7 +449,7 @@
             <compilerarg path="${lwjgl.src}/generated"/>
             <compilerarg value="-d"/>
             <compilerarg path="${lwjgl.src.native}/generated/opencl"/>
-	    <compilerarg value="-Abinpath=${lwjgl.bin}"/>
+            <compilerarg value="-Abinpath=${lwjgl.bin}"/>
             <compilerarg value="-Acontextspecific"/>
             <compilerarg value="-Atypemap=org.lwjgl.util.generator.opencl.CLTypeMap"/>
             <src>
@@ -361,8 +462,17 @@
 
     <!-- Generate OpenCL [DEBUG] -->
     <target name="generate-opencl-debug" depends="generators" description="Generates debug java and native source for CL">
-        <javac source="1.6" srcdir="${lwjgl.src.templates.cl}" fork="true" taskname="processor">
-            <compilerarg value="-proc:only"/>
+        <foreach            
+            list="only,none"
+            target="_generate-opencl-debug"
+            param="proc">
+        </foreach>
+    </target>
+    <target name="_generate-opencl-debug">
+        <mkdir dir="${lwjgl.src.native}/generated/opencl"/>
+        <mkdir dir="${lwjgl.src}/generated"/>
+        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.cl}" fork="true" taskname="processor">
+            <compilerarg value="-proc:${proc}"/>
             <compilerarg value="-processor"/>
             <compilerarg value="org.lwjgl.util.generator.GeneratorProcessor"/>
             <compilerarg value="-XprintProcessorInfo"/>
@@ -373,7 +483,7 @@
             <compilerarg path="${lwjgl.src}/generated"/>
             <compilerarg value="-d"/>
             <compilerarg path="${lwjgl.src.native}/generated/opencl"/>
-	    <compilerarg value="-Abinpath=${lwjgl.bin}"/>
+            <compilerarg value="-Abinpath=${lwjgl.bin}"/>
             <compilerarg value="-Ageneratechecks"/>
             <compilerarg value="-Acontextspecific"/>
             <compilerarg value="-Atypemap=org.lwjgl.util.generator.opencl.CLTypeMap"/>
@@ -387,8 +497,16 @@
 
     <!-- Generate OpenCL capabilities -->
     <target name="generate-opencl-capabilities" depends="generators" description="Generates capabilities for CL">
-        <javac source="1.6" srcdir="${lwjgl.src.templates.cl}" fork="true" taskname="processor">
-            <compilerarg value="-proc:only"/>
+        <foreach            
+            list="only,none"
+            target="_generate-opencl-capabilities"
+            param="proc">
+        </foreach>
+    </target>
+    <target name="_generate-opencl-capabilities">
+        <mkdir dir="${lwjgl.src}/generated"/>
+        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.cl}" fork="true" taskname="processor">
+            <compilerarg value="-proc:${proc}"/>
             <compilerarg value="-processor"/>
             <compilerarg value="org.lwjgl.util.generator.opencl.CLGeneratorProcessor"/>
             <compilerarg value="-XprintProcessorInfo"/>
@@ -408,8 +526,16 @@
 
     <!-- Generate OpenCL capabilities [DEBUG] -->
     <target name="generate-opencl-capabilities-debug" depends="generators" description="Generates debug capabilities for CL">
-        <javac source="1.6" srcdir="${lwjgl.src.templates.cl}" fork="true" taskname="processor">
-            <compilerarg value="-proc:only"/>
+        <foreach            
+            list="only,none"
+            target="_generate-opencl-capabilities-debug"
+            param="proc">
+        </foreach>
+    </target>
+    <target name="_generate-opencl-capabilities-debug">
+        <mkdir dir="${lwjgl.src}/generated"/>
+        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.cl}" fork="true" taskname="processor">
+            <compilerarg value="-proc:${proc}"/>
             <compilerarg value="-processor"/>
             <compilerarg value="org.lwjgl.util.generator.opencl.CLGeneratorProcessor"/>
             <compilerarg value="-XprintProcessorInfo"/>

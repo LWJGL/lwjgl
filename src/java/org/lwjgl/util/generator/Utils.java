@@ -94,7 +94,7 @@ public class Utils {
                  return interfaceName + "_" + alt_annotation.value() + FUNCTION_POINTER_POSTFIX;
                  */
                 if (alt_annotation == null || (alt_annotation.nativeAlt() && !forceAlt)) {
-                        return new StringBuffer(method.getSimpleName()).toString();
+                        return method.getSimpleName().toString();
                 } else {
                         return alt_annotation.value();
                 }
@@ -348,11 +348,11 @@ public class Utils {
         }
 
         public static String getQualifiedClassName(TypeElement interface_decl) {
-                return new StringBuffer(interface_decl.getQualifiedName()).toString();
+                return interface_decl.getQualifiedName().toString();
         }
 
         public static String getSimpleClassName(TypeElement interface_decl) {
-                return getClassName(interface_decl, new StringBuffer(interface_decl.getSimpleName()).toString());
+                return getClassName(interface_decl, interface_decl.getSimpleName().toString());
         }
 
         public static Class<?> getNIOBufferType(TypeMirror t) {
@@ -369,7 +369,7 @@ public class Utils {
         public static String getSimpleNativeMethodName(ExecutableElement method, boolean generate_error_checks, boolean context_specific) {
                 String method_name;
                 Alternate alt_annotation = method.getAnnotation(Alternate.class);
-                method_name = alt_annotation == null || alt_annotation.nativeAlt() ? new StringBuffer(method.getSimpleName()).toString() : alt_annotation.value();
+                method_name = alt_annotation == null || alt_annotation.nativeAlt() ? method.getSimpleName().toString() : alt_annotation.value();
                 if (isMethodIndirect(generate_error_checks, context_specific, method)) {
                         method_name = OVERLOADED_METHOD_PREFIX + method_name;
                 }

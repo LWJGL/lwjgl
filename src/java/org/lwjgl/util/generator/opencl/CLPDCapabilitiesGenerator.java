@@ -73,7 +73,7 @@ public class CLPDCapabilitiesGenerator {
 		if ( d.getAnnotation(Private.class) == null )
 			writer.print("public ");
 
-		writer.println("final boolean " + CLGeneratorProcessor.getExtensionName(new StringBuffer(d.getSimpleName()).toString()) + ";");
+		writer.println("final boolean " + CLGeneratorProcessor.getExtensionName(d.getSimpleName().toString()) + ";");
 	}
 
 	static void generateConstructor(ProcessingEnvironment env, final PrintWriter writer, final Set<? extends TypeElement> templates,
@@ -106,7 +106,7 @@ public class CLPDCapabilitiesGenerator {
 			if ( t.getAnnotation(capsType) == null )
 				continue;
 
-			final String extName = CLGeneratorProcessor.getExtensionName(new StringBuffer(t.getSimpleName()).toString());
+			final String extName = CLGeneratorProcessor.getExtensionName(t.getSimpleName().toString());
 
 			String nativeName = extName.toLowerCase();
 			Extension ext = t.getAnnotation(Extension.class);
@@ -143,7 +143,7 @@ public class CLPDCapabilitiesGenerator {
 			if ( t.getAnnotation(capsType) == null )
 				continue;
 
-			writer.println("\t\tif ( " + CLGeneratorProcessor.getExtensionName(new StringBuffer(t.getSimpleName()).toString()) + " ) buf.append(\""  + CLGeneratorProcessor.getExtensionName(new StringBuffer(t.getSimpleName()).toString()).toLowerCase() + " \");");
+			writer.println("\t\tif ( " + CLGeneratorProcessor.getExtensionName(t.getSimpleName().toString()) + " ) buf.append(\""  + CLGeneratorProcessor.getExtensionName(t.getSimpleName().toString()).toLowerCase() + " \");");
 		}
 
 		writer.println("\n\t\treturn buf.toString();");

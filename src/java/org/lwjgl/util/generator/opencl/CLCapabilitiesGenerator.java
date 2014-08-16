@@ -63,7 +63,7 @@ public class CLCapabilitiesGenerator {
 
 			if ( !foundNative ) {
 				//writer.println("\t// " + d.getSimpleName());
-				writer.println("\tstatic final boolean " + CLGeneratorProcessor.getExtensionName(new StringBuffer(d.getSimpleName()).toString() + ";"));
+				writer.println("\tstatic final boolean " + CLGeneratorProcessor.getExtensionName(d.getSimpleName().toString() + ";"));
 				foundNative = true;
 			}
 			writer.print("\tstatic final long " + Utils.getFunctionAddressName(d, method) + " = CL.getFunctionAddress(");
@@ -100,7 +100,7 @@ public class CLCapabilitiesGenerator {
 		if ( !methods.hasNext() )
 			return;
 
-		writer.println("\tprivate static boolean " + getExtensionSupportedName(new StringBuffer(d.getSimpleName()).toString()) + "() {");
+		writer.println("\tprivate static boolean " + getExtensionSupportedName(d.getSimpleName().toString()) + "() {");
 		writer.println("\t\treturn ");
 
 		boolean first = true;

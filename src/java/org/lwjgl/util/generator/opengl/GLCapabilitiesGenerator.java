@@ -93,14 +93,14 @@ public class GLCapabilitiesGenerator {
 		if ( super_interfaces.size() == 1 ) {
 			TypeMirror super_interface = super_interfaces.iterator().next();
 			writer.print("\t\tif (" + CACHED_EXTS_VAR_NAME + ".contains(\"");
-			writer.println(translateFieldName(new StringBuffer(d.getSimpleName()).toString()) + "\"))");
+			writer.println(translateFieldName(d.getSimpleName().toString()) + "\"))");
 			writer.print("\t\t\t");
 			generateAddExtension(writer, env.getElementUtils().getTypeElement(super_interface.toString()));
 		}
 	}
 
 	public static void generateInitializer(PrintWriter writer, TypeElement d, ProcessingEnvironment env) {
-		String translated_field_name = translateFieldName(new StringBuffer(d.getSimpleName()).toString());
+		String translated_field_name = translateFieldName(d.getSimpleName().toString());
 		writer.print("\t\tthis." + translated_field_name + " = ");
 		writer.print(CACHED_EXTS_VAR_NAME + ".contains(\"");
 		writer.print(translated_field_name + "\")");
@@ -178,17 +178,17 @@ public class GLCapabilitiesGenerator {
 				final Alias alias_annotation = d.getAnnotation(Alias.class);
 
 				if ( d.getAnnotation(ForceInit.class) != null )
-					writer.println("\t\t" + CACHED_EXTS_VAR_NAME + ".add(\"" + translateFieldName(new StringBuffer(d.getSimpleName()).toString()) + "\");");
+					writer.println("\t\t" + CACHED_EXTS_VAR_NAME + ".add(\"" + translateFieldName(d.getSimpleName().toString()) + "\");");
 				writer.print("\t\tif (");
 				if ( alias_annotation != null )
 					writer.print("(");
 				writer.print(CACHED_EXTS_VAR_NAME + ".contains(\"");
-				writer.print(translateFieldName(new StringBuffer(d.getSimpleName()).toString()) + "\")");
+				writer.print(translateFieldName(d.getSimpleName().toString()) + "\")");
 				if ( alias_annotation != null ) {
 					writer.print(" || " + CACHED_EXTS_VAR_NAME + ".contains(\"");
 					writer.print(translateFieldName(alias_annotation.value()) + "\"))");
 				}
-				writer.print(" && !" + getAddressesInitializerName(new StringBuffer(d.getSimpleName()).toString()) + "(");
+				writer.print(" && !" + getAddressesInitializerName(d.getSimpleName().toString()) + "(");
 				if ( d.getAnnotation(DeprecatedGL.class) != null )
 					writer.print("forwardCompatible");
 				if ( d.getAnnotation(Dependent.class) != null ) {
@@ -203,19 +203,19 @@ public class GLCapabilitiesGenerator {
 				} else
 					writer.println("))");
 				writer.print("\t\t\tremove(" + CACHED_EXTS_VAR_NAME + ", \"");
-				writer.println(translateFieldName(new StringBuffer(d.getSimpleName()).toString()) + "\");");
+				writer.println(translateFieldName(d.getSimpleName().toString()) + "\");");
 				if ( alias_annotation != null )
 					writer.println("\t\t}");
 			} else {
 				writer.print("\t\tGLContext." + Utils.STUB_INITIALIZER_NAME + "(" + Utils.getSimpleClassName(d));
-				writer.println(".class, " + CACHED_EXTS_VAR_NAME + ", \"" + translateFieldName(new StringBuffer(d.getSimpleName()).toString()) + "\");");
+				writer.println(".class, " + CACHED_EXTS_VAR_NAME + ", \"" + translateFieldName(d.getSimpleName().toString()) + "\");");
 			}
 		}
 	}
 
 	private static void generateAddExtension(PrintWriter writer, TypeElement d) {
 		writer.print(CACHED_EXTS_VAR_NAME + ".add(\"");
-		writer.println(translateFieldName(new StringBuffer(d.getSimpleName()).toString()) + "\");");
+		writer.println(translateFieldName(d.getSimpleName().toString()) + "\");");
 	}
 
 	public static void generateAddressesInitializers(ProcessingEnvironment env, PrintWriter writer, TypeElement d) {
@@ -223,7 +223,7 @@ public class GLCapabilitiesGenerator {
 		if ( !methods.hasNext() )
 			return;
 
-		writer.print("\tprivate boolean " + getAddressesInitializerName(new StringBuffer(d.getSimpleName()).toString()) + "(");
+		writer.print("\tprivate boolean " + getAddressesInitializerName(d.getSimpleName().toString()) + "(");
 
 		boolean optional;
 		boolean deprecated = d.getAnnotation(DeprecatedGL.class) != null;
@@ -326,6 +326,6 @@ public class GLCapabilitiesGenerator {
 	}
 
 	public static void generateField(PrintWriter writer, TypeElement d) {
-		writer.println("\tpublic final boolean " + translateFieldName(new StringBuffer(d.getSimpleName()).toString()) + ";");
+		writer.println("\tpublic final boolean " + translateFieldName(d.getSimpleName().toString()) + ";");
 	}
 }

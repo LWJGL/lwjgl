@@ -45,7 +45,8 @@ package org.lwjgl.util.generator;
 import java.io.*;
 import java.nio.*;
 import java.util.*;
-<<<<<<< HEAD
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
@@ -55,9 +56,6 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.util.generator.opengl.GLreturn;
-=======
-import java.util.regex.*;
->>>>>>> master
 
 public class JavaMethodsGenerator {
 	private static final String SAVED_PARAMETER_POSTFIX = "_saved";
@@ -251,7 +249,7 @@ public class JavaMethodsGenerator {
 		StripPostfix strip_annotation = method.getAnnotation(StripPostfix.class);
 		String method_name;
 		Alternate alt_annotation = method.getAnnotation(Alternate.class);
-		method_name = alt_annotation == null || alt_annotation.javaAlt() ? new StringBuffer(method.getSimpleName()).toString() : alt_annotation.value();
+		method_name = alt_annotation == null || alt_annotation.javaAlt() ? method.getSimpleName().toString() : alt_annotation.value();
 		if (strip_annotation != null && mode == Mode.NORMAL)
 			method_name = getPostfixStrippedName(type_map, interface_decl, method);
 		writer.print(" " + method_name + "(");
@@ -356,7 +354,7 @@ public class JavaMethodsGenerator {
 	}
 
 	private static String getExtensionPostfix(TypeElement interface_decl) {
-		String interface_simple_name = new StringBuffer(interface_decl.getSimpleName()).toString();
+		String interface_simple_name = interface_decl.getSimpleName().toString();
 		Extension extension_annotation = interface_decl.getAnnotation(Extension.class);
 		if (extension_annotation == null) {
 			int underscore_index = interface_simple_name.indexOf("_");
@@ -399,9 +397,6 @@ public class JavaMethodsGenerator {
 		return false;
 	}
 
-<<<<<<< HEAD
-	private static String getPostfixStrippedName(TypeMap type_map, TypeElement interface_decl, ExecutableElement method) {
-=======
 	private static final Map<String, Pattern> postfixPatterns = new HashMap<String, Pattern>();
 
 	private static Pattern getPostfixPattern(String regex) {
@@ -411,8 +406,7 @@ public class JavaMethodsGenerator {
 		return pattern;
 	}
 
-	private static String getPostfixStrippedName(TypeMap type_map, InterfaceDeclaration interface_decl, MethodDeclaration method) {
->>>>>>> master
+	private static String getPostfixStrippedName(TypeMap type_map, TypeElement interface_decl, ExecutableElement method) {
 		StripPostfix strip_annotation = method.getAnnotation(StripPostfix.class);
 		VariableElement postfix_parameter = Utils.findParameter(method, strip_annotation.value());
 		String postfix = strip_annotation.postfix();
@@ -426,7 +420,7 @@ public class JavaMethodsGenerator {
 
 		String method_name;
 		Alternate alt_annotation = method.getAnnotation(Alternate.class);
-		method_name = alt_annotation == null || alt_annotation.javaAlt() ? new StringBuffer(method.getSimpleName()).toString() : alt_annotation.value();
+		method_name = alt_annotation == null || alt_annotation.javaAlt() ? method.getSimpleName().toString() : alt_annotation.value();
 
 		String extension_postfix = "NULL".equals(strip_annotation.extension()) ? getExtensionPostfix(interface_decl) : strip_annotation.extension();
 
@@ -654,13 +648,13 @@ public class JavaMethodsGenerator {
 				if ((Buffer.class.isAssignableFrom(java_type) || PointerBuffer.class.isAssignableFrom(java_type)) && param.getAnnotation(Constant.class) == null) {
 					boolean out_parameter = param.getAnnotation(OutParameter.class) != null;
 					TypeInfo typeinfo = typeinfos.get(param);
-					printParameterCheck(writer, method, new StringBuffer(param.getSimpleName()).toString(), typeinfo.getType().getSimpleName(), check_value, can_be_null, param.getAnnotation(NullTerminated.class), out_parameter, generate_error_checks);
+					printParameterCheck(writer, method, param.getSimpleName().toString(), typeinfo.getType().getSimpleName(), check_value, can_be_null, param.getAnnotation(NullTerminated.class), out_parameter, generate_error_checks);
 				} else if ( String.class.equals(java_type)) {
 					if (!can_be_null)
 						writer.println("\t\tBufferChecks.checkNotNull(" + param.getSimpleName() + ");");
 				} else if ( java_type.isArray() ) {
 					final TypeInfo typeinfo = typeinfos.get(param);
-					printArrayParameterCheck(writer, new StringBuffer(param.getSimpleName()).toString(), typeinfo.getType().getSimpleName(), check_value, can_be_null);
+					printArrayParameterCheck(writer, param.getSimpleName().toString(), typeinfo.getType().getSimpleName(), check_value, can_be_null);
 				}
 			}
 		}
