@@ -33,17 +33,15 @@ package org.lwjgl.util.generator.opengl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-
-import static java.util.Collections.*;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedOptions;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.ElementFilter;
 import org.lwjgl.util.generator.Utils;
 
 /**
@@ -53,23 +51,12 @@ import org.lwjgl.util.generator.Utils;
  * @version $Revision: 3316 $ $Id: ContextGeneratorProcessorFactory.java 3316
  * 2010-04-09 23:57:40Z spasi $
  */
+@SupportedAnnotationTypes({ "*" })
+@SupportedSourceVersion(SourceVersion.RELEASE_7)
+@SupportedOptions({"contextspecific","generatechecks"})
 public class GLESGeneratorProcessor extends AbstractProcessor {
 
         private static boolean first_round = true;
-
-        // Process any set of annotations
-        private static final Set<String> supportedAnnotations
-                = unmodifiableSet(new HashSet(Arrays.asList("*")));
-
-        @Override
-        public Set<String> getSupportedAnnotationTypes() {
-                return supportedAnnotations;
-        }
-
-        @Override
-        public Set<String> getSupportedOptions() {
-                return unmodifiableSet(new HashSet(Arrays.asList("contextspecific", "generatechecks")));
-        }
 
         @Override
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -81,7 +68,7 @@ public class GLESGeneratorProcessor extends AbstractProcessor {
                 boolean context_specific = options.containsKey("contextspecific");
                 try {
                         generateContextCapabilitiesSource(annotations, context_specific, generate_error_checks);
-                        return first_round = false;
+                        first_round = false; return true;
                 } catch (IOException e) {
                         throw new RuntimeException(e);
                 }
@@ -108,11 +95,11 @@ public class GLESGeneratorProcessor extends AbstractProcessor {
                 writer.println();
                 if (context_specific) {
                         for (TypeElement interface_decl : interface_decls) {
-                                GLESCapabilitiesGenerator.generateSymbolAddresses(writer, interface_decl);
+                                GLESCapabilitiesGenerator.generateSymbolAddresses(processingEnv, writer, interface_decl);
                         }
                         writer.println();
                         for (TypeElement interface_decl : interface_decls) {
-                                GLESCapabilitiesGenerator.generateAddressesInitializers(writer, interface_decl);
+                                GLESCapabilitiesGenerator.generateAddressesInitializers(processingEnv, writer, interface_decl);
                         }
                         writer.println();
                 }
@@ -132,7 +119,7 @@ public class GLESGeneratorProcessor extends AbstractProcessor {
                         if ("GLES20".equals(interface_decl.getSimpleName())) {
                                 continue;
                         }
-                        GLESCapabilitiesGenerator.generateInitStubs(writer, interface_decl, context_specific);
+                        GLESCapabilitiesGenerator.generateInitStubs(processingEnv, writer, interface_decl, context_specific);
                 }
                 GLESCapabilitiesGenerator.generateInitStubsEpilogue(writer, context_specific);
                 writer.println();
@@ -141,7 +128,7 @@ public class GLESGeneratorProcessor extends AbstractProcessor {
                         writer.println("\t\tif (!loaded_stubs)");
                         writer.println("\t\t\treturn;");
                         for (TypeElement interface_decl : interface_decls) {
-                                GLESCapabilitiesGenerator.generateUnloadStubs(writer, interface_decl);
+                                GLESCapabilitiesGenerator.generateUnloadStubs(processingEnv, writer, interface_decl);
                         }
                         writer.println("\t\tloaded_stubs = false;");
                 }

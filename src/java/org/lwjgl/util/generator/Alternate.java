@@ -32,6 +32,8 @@
 package org.lwjgl.util.generator;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
@@ -54,4 +56,5 @@ public @interface Alternate {
 
 	/** If true, the alternate method's name will be used for the Java call. */
 	boolean javaAlt() default false;
+        
 }

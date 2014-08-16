@@ -46,7 +46,6 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleElementVisitor6;
-import javax.swing.JOptionPane;
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.FileObject;
@@ -59,7 +58,7 @@ import javax.tools.StandardLocation;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$ $Id$
  */
-public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
+public class GeneratorVisitor extends SimpleElementVisitor6<Void, Void> {
 
         private final ProcessingEnvironment env;
         private final TypeMap type_map;
@@ -72,7 +71,7 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
                 this.type_map = type_map;
                 this.generate_error_checks = generate_error_checks;
                 this.context_specific = context_specific;
-                this.generatorLM = generatorLM;                
+                this.generatorLM = generatorLM;
         }
 
         private void validateMethod(ExecutableElement method) {
@@ -168,7 +167,7 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
                                 if (param.getAnnotation(BufferObject.class) != null && param.getAnnotation(Result.class) != null) {
                                         throw new RuntimeException(param + " can't be annotated with both BufferObject and Result");
                                 }
-				//if (param.getAnnotation(Constant.class) != null)
+                                //if (param.getAnnotation(Constant.class) != null)
                                 //throw new RuntimeException("Buffer parameter " + param + " cannot be Constant");
                         } else {
                                 if (param.getAnnotation(BufferObject.class) != null) {
@@ -181,7 +180,7 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
                 }
         }
 
-        private static void generateMethodsNativePointers(PrintWriter writer, List<? extends ExecutableElement> methods) {
+        private static void generateMethodsNativePointers(PrintWriter writer, Collection<? extends ExecutableElement> methods) {
                 for (ExecutableElement method : methods) {
                         if (method.getAnnotation(Alternate.class) == null) {
                                 generateMethodNativePointers(writer, method);
@@ -228,13 +227,13 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
                         java_writer.print(" extends " + super_interface.toString());
                 }
                 java_writer.println(" {");
-                FieldsGenerator.generateFields(env, java_writer, Utils.getFields(d));
+                FieldsGenerator.generateFields(env, java_writer, Utils.getFields(env, d));
                 java_writer.println();
                 if (is_final) {
                         // Write private constructor to avoid instantiation
                         java_writer.println("\tprivate " + Utils.getSimpleClassName(d) + "() {}");
                 }
-                if (Utils.getMethods(d).size() > 0 && !context_specific) {
+                if (Utils.getMethods(env, d).size() > 0 && !context_specific) {
                         java_writer.println();
                         java_writer.println("\tstatic native void " + Utils.STUB_INITIALIZER_NAME + "() throws LWJGLException;");
                 }
@@ -248,16 +247,16 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
         private void generateNativeSource(TypeElement d) throws IOException {
                 String qualified_interface_name = Utils.getQualifiedClassName(d);
                 String qualified_native_name = Utils.getNativeQualifiedName(qualified_interface_name) + ".c";
-                PrintWriter native_writer = new PrintWriter(env.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", qualified_native_name).openWriter());
+                PrintWriter native_writer = new PrintWriter(env.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", qualified_native_name).openWriter());
                 native_writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
                 native_writer.println();
                 native_writer.println("#include <jni.h>");
                 type_map.printNativeIncludes(native_writer);
                 native_writer.println();
-                TypedefsGenerator.generateNativeTypedefs(type_map, native_writer, Utils.getMethods(d));
+                TypedefsGenerator.generateNativeTypedefs(type_map, native_writer, Utils.getMethods(env, d));
                 native_writer.println();
                 if (!context_specific) {
-                        generateMethodsNativePointers(native_writer, Utils.getMethods(d));
+                        generateMethodsNativePointers(native_writer, Utils.getMethods(env, d));
                         native_writer.println();
                 }
                 NativeMethodStubsGenerator.generateNativeMethodStubs(env, type_map, native_writer, d, generate_error_checks, context_specific);
@@ -265,7 +264,7 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
                         native_writer.print("JNIEXPORT void JNICALL " + Utils.getQualifiedNativeMethodName(qualified_interface_name, Utils.STUB_INITIALIZER_NAME));
                         native_writer.println("(JNIEnv *env, jclass clazz) {");
                         native_writer.println("\tJavaMethodAndExtFunction functions[] = {");
-                        RegisterStubsGenerator.generateMethodsNativeStubBind(native_writer, d, generate_error_checks, context_specific);
+                        RegisterStubsGenerator.generateMethodsNativeStubBind(env, native_writer, d, generate_error_checks, context_specific);
                         native_writer.println("\t};");
                         native_writer.println("\tint num_functions = NUMFUNCTIONS(functions);");
                         native_writer.print("\t");
@@ -278,81 +277,100 @@ public class GeneratorVisitor extends SimpleElementVisitor6<Object, Object> {
         }
 
         @Override
-        public Object visitType(TypeElement e, Object p) {
-                PrintWriter java_writer = null;
-                try {
-                        final Collection<? extends ExecutableElement> methods = Utils.getMethods(e);
-                        if (methods.isEmpty() && Utils.getFields(e).isEmpty()) {
-                                return DEFAULT_VALUE;
-                        }
-
-                        for (final ExecutableElement method : methods) {
-                                validateMethod(method);
-                        }
-                        java_writer = new PrintWriter(env.getFiler().createSourceFile(e.getQualifiedName(), env.getElementUtils().getPackageOf(e)).openWriter());
-                        generateJavaSource(e, java_writer);
-
-                        if (methods.size() > 0) {
-                                boolean noNative = true;
-                                for (final ExecutableElement method : methods) {
-                                        Alternate alt_annotation = method.getAnnotation(Alternate.class);
-                                        if ((alt_annotation == null || alt_annotation.nativeAlt()) && method.getAnnotation(Reuse.class) == null) {
-                                                noNative = false;
-                                                break;
-                                        }
-                                }
-                                if (noNative) {
+        public Void visitType(TypeElement e, Void p) {
+                if (e.getKind().isInterface()) {
+                        PrintWriter java_writer = null;
+                        try {
+                                final Collection<? extends ExecutableElement> methods = Utils.getMethods(env, e);
+                                if (methods.isEmpty() && Utils.getFields(env, e).isEmpty()) {
                                         return DEFAULT_VALUE;
                                 }
 
-                                // TODO : TRY catch FilerException to implement file backup process
-                                final FileObject fo_outputNative = env.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", Utils.getNativeQualifiedName(Utils.getQualifiedClassName(e)).replace(".","/") + ".c");
-                                final FileObject fo_outputBackup = env.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", Utils.getNativeQualifiedName(Utils.getQualifiedClassName(e)).replace(".","/") + "_backup.c");
-                                final File outputNative = new File(fo_outputNative.toUri()), outputBackup = new File(fo_outputBackup.toUri());
-
-                                // If the native file exists, rename.
-                                final ByteBuffer nativeBefore;
-                                if (outputNative.exists()) {
-                                        nativeBefore = readFile(outputNative);
-                                        outputNative.renameTo(outputBackup);
-                                } else {
-                                        nativeBefore = null;
+                                for (final ExecutableElement method : methods) {
+                                        validateMethod(method);
                                 }
+                                java_writer = new PrintWriter(env.getFiler().createSourceFile(e.getQualifiedName(), env.getElementUtils().getPackageOf(e)).openWriter());
+                                generateJavaSource(e, java_writer);
 
-                                try {
-                                        generateNativeSource(e);
+                                if (methods.size() > 0) {
+                                        boolean noNative = true;
+                                        for (final ExecutableElement method : methods) {
+                                                Alternate alt_annotation = method.getAnnotation(Alternate.class);
+                                                if ((alt_annotation == null || alt_annotation.nativeAlt()) && method.getAnnotation(Reuse.class) == null) {
+                                                        noNative = false;
+                                                        break;
+                                                }
+                                        }
+                                        if (noNative) {
+                                                return DEFAULT_VALUE;
+                                        }
 
-					// If the native file did exist, compare with the new file. If they're the same,
-                                        // reset the last modified time to avoid ridiculous C compilation times.
-                                        if (nativeBefore != null && outputNative.length() == nativeBefore.capacity()) {
-                                                final ByteBuffer nativeAfter = readFile(outputNative);
-                                                boolean same = true;
-                                                for (int i = nativeBefore.position(); i < nativeBefore.limit(); i++) {
-                                                        if (nativeBefore.get(i) != nativeAfter.get(i)) {
-                                                                same = false;
-                                                                break;
+                                        boolean outputNativeExists = true, outputBackupExists = true;
+                                        File outputNative = null, outputBackup = null;
+                                        try {
+                                                final FileObject fo_outputNative = env.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", Utils.getNativeQualifiedName(Utils.getQualifiedClassName(e)).replace(".", "/") + ".c");
+                                                outputNative = new File(fo_outputNative.toUri());
+                                                if (!outputNative.exists()) {
+                                                        outputNativeExists = false;
+                                                }
+                                                final FileObject fo_outputBackup = env.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", Utils.getNativeQualifiedName(Utils.getQualifiedClassName(e)).replace(".", "/") + "_backup.c");
+                                                outputBackup = new File(fo_outputBackup.toUri());
+                                        } catch (IOException ex) {
+                                                if (outputNative == null) {
+                                                        outputNativeExists = false;
+                                                }
+                                                if (outputBackup == null) {
+                                                        outputBackupExists = false;
+                                                }
+                                        } finally {
+                                                // If the native file exists, rename.
+                                                final ByteBuffer nativeBefore;
+                                                if (outputNativeExists) {
+                                                        nativeBefore = readFile(outputNative);
+                                                        if (outputBackupExists) {
+                                                                outputBackup.delete();
+                                                        }
+                                                        outputNative.renameTo(outputBackup);
+                                                } else {
+                                                        nativeBefore = null;
+                                                }
+                                                try {
+                                                        generateNativeSource(e);
+
+                                                // If the native file did exist, compare with the new file. If they're the same,
+                                                        // reset the last modified time to avoid ridiculous C compilation times.
+                                                        if (nativeBefore != null && outputNative.length() == nativeBefore.capacity()) {
+                                                                final ByteBuffer nativeAfter = readFile(outputNative);
+                                                                boolean same = true;
+                                                                for (int i = nativeBefore.position(); i < nativeBefore.limit(); i++) {
+                                                                        if (nativeBefore.get(i) != nativeAfter.get(i)) {
+                                                                                same = false;
+                                                                                break;
+                                                                        }
+                                                                }
+
+                                                                if (same) {
+                                                                        outputNative.delete();
+                                                                        outputBackup.renameTo(outputNative);
+                                                                }
+                                                        }
+                                                } finally {
+                                                        if (outputBackup.exists()) {
+                                                                outputBackup.delete();
                                                         }
                                                 }
-
-                                                if (same) {
-                                                        outputNative.delete();
-                                                        outputBackup.renameTo(outputNative);
-                                                }
-                                        }
-                                } finally {
-                                        if (outputBackup.exists()) {
-                                                outputBackup.delete();
                                         }
                                 }
+                                return DEFAULT_VALUE;
+                        } catch (Exception ex) {
+                                // If anything goes wrong mid-gen, delete output to allow regen next time we run.
+                                if (java_writer != null) {
+                                        java_writer.close();
+                                }
+                                throw new RuntimeException(ex);
                         }
-                        return DEFAULT_VALUE;
-                } catch (Exception ex) {
-                        // If anything goes wrong mid-gen, delete output to allow regen next time we run.
-                        if (java_writer != null) {
-                                java_writer.close();
-                        }
-                        throw new RuntimeException(ex);
                 }
+                return DEFAULT_VALUE;
         }
 
         private static ByteBuffer readFile(final File file) throws IOException {

@@ -33,7 +33,7 @@
 package org.lwjgl.util.generator;
 
 import java.io.PrintWriter;
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
@@ -111,7 +111,7 @@ public class FieldsGenerator {
 			writer.print(",\n\t\t" + field.getSimpleName() + " = " + field_value_string);
 	}
 
-	public static void generateFields(ProcessingEnvironment env, PrintWriter writer, List<VariableElement> fields) {
+        public static void generateFields(ProcessingEnvironment env, PrintWriter writer, Collection<? extends VariableElement> fields) {
 		if ( 0 < fields.size() ) {
 			writer.println();
 			VariableElement prev_field = null;

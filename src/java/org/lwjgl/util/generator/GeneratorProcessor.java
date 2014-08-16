@@ -40,8 +40,11 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedOptions;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
-import javax.swing.JOptionPane;
 
 /**
  * Generator tool for creating the java classes and native code from an
@@ -50,19 +53,12 @@ import javax.swing.JOptionPane;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$ $Id$
  */
+@SupportedAnnotationTypes({ "*" })
+@SupportedSourceVersion(SourceVersion.RELEASE_7)
+@SupportedOptions({"binpath", "typemap", "generatechecks", "contextspecific"})
 public class GeneratorProcessor extends AbstractProcessor {
 
         private static boolean first_round = true;
-
-        @Override
-        public Set<String> getSupportedOptions() {
-                return unmodifiableSet(new HashSet<>(Arrays.asList("binpath", "typemap", "generatechecks", "contextspecific")));
-        }
-
-        @Override
-        public Set<String> getSupportedAnnotationTypes() {
-                return unmodifiableSet(new HashSet<>(Arrays.asList("*")));
-        }
 
         @Override
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -90,7 +86,7 @@ public class GeneratorProcessor extends AbstractProcessor {
                                 lastFile = typedecl;
                                 typedecl.accept(new GeneratorVisitor(processingEnv, type_map, generate_error_checks, context_specific, generatorLM), null);
                         }
-                        return first_round = false;
+                        first_round = false; return true;
                 } catch (Exception e) {
                         if (lastFile == null) {
                                 throw new RuntimeException(e);

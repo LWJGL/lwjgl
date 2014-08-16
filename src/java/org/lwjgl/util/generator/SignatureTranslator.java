@@ -58,7 +58,7 @@ import static javax.lang.model.type.TypeKind.SHORT;
 import javax.lang.model.util.SimpleTypeVisitor6;
 import org.lwjgl.PointerBuffer;
 
-class SignatureTranslator extends SimpleTypeVisitor6 {
+class SignatureTranslator extends SimpleTypeVisitor6<Void, Void> {
 	private final boolean add_position_signature;
 	private final StringBuilder signature = new StringBuilder();
 
@@ -75,7 +75,7 @@ class SignatureTranslator extends SimpleTypeVisitor6 {
 	}
 
         @Override
-	public Object visitArray(ArrayType t, Object o) {
+	public Void visitArray(ArrayType t, Void o) {
 		final Class type = Utils.getJavaType(t.getComponentType());
 		if ( CharSequence.class.isAssignableFrom(type) )
 			signature.append("J");
@@ -85,7 +85,7 @@ class SignatureTranslator extends SimpleTypeVisitor6 {
 			signature.append("[L" + getNativeNameFromClassName(type.getName()) + ";");
 		else
 			throw new RuntimeException(t + " is not allowed");
-                return signature;
+                return DEFAULT_VALUE;
 	}
 
 	private void visitClassType(DeclaredType t) {
@@ -107,12 +107,12 @@ class SignatureTranslator extends SimpleTypeVisitor6 {
 	}
 
         @Override
-	public Object visitDeclared(DeclaredType t, Object o) {
+	public Void visitDeclared(DeclaredType t, Void o) {
             if(t.asElement().getKind().isClass())
                 visitClassType(t);
             else if(t.asElement().getKind().isInterface())
                 visitInterfaceType(t);
-            return signature;
+            return DEFAULT_VALUE;
 	}
 
 	private void visitInterfaceType(DeclaredType t) {
@@ -124,7 +124,7 @@ class SignatureTranslator extends SimpleTypeVisitor6 {
 	}
 
         @Override
-	public Object visitPrimitive(PrimitiveType t, Object o) {
+	public Void visitPrimitive(PrimitiveType t, Void o) {
 		switch (t.getKind()) {
 			case BOOLEAN:
 				signature.append("Z");
@@ -150,13 +150,13 @@ class SignatureTranslator extends SimpleTypeVisitor6 {
 			default:
 				throw new RuntimeException("Unsupported type " + t);
 		}
-                return signature;
+                return DEFAULT_VALUE;
 	}
 
         @Override
-	public Object visitNoType(NoType t, Object o) {
+	public Void visitNoType(NoType t, Void o) {
 		signature.append("V");
-                return signature;
+                return DEFAULT_VALUE;
 	}
 
 }

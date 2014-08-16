@@ -63,7 +63,7 @@ public class TypedefsGenerator {
 		writer.println(");");
 	}
 
-	private static void generateNativeTypedefsParameters(TypeMap type_map, PrintWriter writer, List<? extends VariableElement> params) {
+	private static void generateNativeTypedefsParameters(TypeMap type_map, PrintWriter writer, Collection<? extends VariableElement> params) {
 		if (params.size() > 0) {
 			boolean first = true;
 			for ( VariableElement param : params ) {
@@ -89,7 +89,7 @@ public class TypedefsGenerator {
 		writer.print(" " + param.getSimpleName());
 	}
 
-	public static void generateNativeTypedefs(TypeMap type_map, PrintWriter writer, List<? extends ExecutableElement> methods) {
+	public static void generateNativeTypedefs(TypeMap type_map, PrintWriter writer, Collection<? extends ExecutableElement> methods) {
 		for (ExecutableElement method : methods) {
 			if ( method.getAnnotation(Alternate.class) == null && method.getAnnotation(Reuse.class) == null )
 				generateNativeTypedefs(type_map, writer, method);

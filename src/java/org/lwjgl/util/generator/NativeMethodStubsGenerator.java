@@ -60,7 +60,7 @@ public class NativeMethodStubsGenerator {
 	private static final String POINTER_LIST_NAME = "_ptr";
 
 	public static void generateNativeMethodStubs(ProcessingEnvironment env, TypeMap type_map, PrintWriter writer, TypeElement d, boolean generate_error_checks, boolean context_specific) {
-		for (ExecutableElement method : Utils.getMethods(d)) {
+		for (ExecutableElement method : Utils.getMethods(env, d)) {
 			Alternate alt_annotation = method.getAnnotation(Alternate.class);
 			if ( (alt_annotation != null && (!alt_annotation.nativeAlt() || alt_annotation.skipNative())) || method.getAnnotation(Reuse.class) != null )
 				continue;

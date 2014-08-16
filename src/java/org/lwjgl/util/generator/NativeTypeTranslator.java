@@ -47,6 +47,7 @@ import java.nio.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.ArrayType;
@@ -66,7 +67,7 @@ import org.lwjgl.PointerBuffer;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-public class NativeTypeTranslator extends SimpleTypeVisitor6 {
+public class NativeTypeTranslator extends SimpleTypeVisitor6<Void, Void> {
 
 	private Collection<Class> native_types;
 	private boolean is_indirect;
@@ -110,7 +111,7 @@ public class NativeTypeTranslator extends SimpleTypeVisitor6 {
 
 
         @Override
-	public Object visitArray(ArrayType t, Object o) {
+	public Void visitArray(ArrayType t, Void o) {
 		final Class<?> type = Utils.getJavaType(t);
 
 		if ( CharSequence.class.isAssignableFrom(type) ) {
@@ -125,7 +126,7 @@ public class NativeTypeTranslator extends SimpleTypeVisitor6 {
 			is_indirect = false;
 		} else
 			throw new RuntimeException(t + " is not allowed");
-                return type;
+                return DEFAULT_VALUE;
 	}
 
 	public static TypeKind getPrimitiveKindFromBufferClass(Class c) {            
@@ -148,7 +149,7 @@ public class NativeTypeTranslator extends SimpleTypeVisitor6 {
 	@SuppressWarnings("unchecked")
 	public static Class<? extends Annotation> getClassFromType(DeclaredType t) {
 		try {
-                    return (Class<? extends Annotation>)Class.forName(t.asElement().asType().toString());
+                    return (Class<? extends Annotation>)Class.forName(t.toString());
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
@@ -183,9 +184,9 @@ public class NativeTypeTranslator extends SimpleTypeVisitor6 {
 	}
 
         @Override
-	public Object visitPrimitive(PrimitiveType t, Object p) {
+	public Void visitPrimitive(PrimitiveType t, Void p) {
 		getNativeTypeFromAnnotatedPrimitiveType(t.getKind());
-                return native_types;
+                return DEFAULT_VALUE;
 	}
 
         private void visitInterfaceType(DeclaredType t) {
@@ -201,12 +202,12 @@ public class NativeTypeTranslator extends SimpleTypeVisitor6 {
         }
         
         @Override
-	public Object visitDeclared(DeclaredType t, Object p) {
+	public Void visitDeclared(DeclaredType t, Void p) {
             if(t.asElement().getKind().isInterface())
                 visitInterfaceType(t);
             else if(t.asElement().getKind().isClass())
                 visitClassType(t);
-            return native_types;
+            return DEFAULT_VALUE;
 	}
 
 	// Check if the annotation is itself annotated with a certain annotation type
@@ -235,11 +236,11 @@ public class NativeTypeTranslator extends SimpleTypeVisitor6 {
 	}
 
         @Override
-	public Object visitNoType(NoType t, Object p) {
+	public Void visitNoType(NoType t, Void p) {
 		native_types = translateAnnotations();
 		if ( native_types.isEmpty() )
 			native_types.add(void.class);
-                return native_types;
+                return DEFAULT_VALUE;
 	}
 
 }

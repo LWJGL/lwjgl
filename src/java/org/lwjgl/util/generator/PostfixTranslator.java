@@ -51,7 +51,7 @@ import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.SimpleTypeVisitor6;
 
-public class PostfixTranslator extends SimpleTypeVisitor6 {
+public class PostfixTranslator extends SimpleTypeVisitor6<Void,Void> {
 	private final StringBuilder signature = new StringBuilder();
 	private final Element declaration;
 	private final TypeMap type_map;
@@ -89,10 +89,10 @@ public class PostfixTranslator extends SimpleTypeVisitor6 {
 	}
 
         @Override
-	public Object visitDeclared(DeclaredType t, Object o) {
+	public Void visitDeclared(DeclaredType t, Void o) {
             if(t.asElement().getKind().isClass())
                 visitClassType(t);
-            return signature;
+            return DEFAULT_VALUE;
 	}
 
 	private boolean translateAnnotation(AnnotationMirror annotation) {
@@ -117,9 +117,9 @@ public class PostfixTranslator extends SimpleTypeVisitor6 {
 	}
 
         @Override
-	public Object visitPrimitive(PrimitiveType t, Object o) {
+	public Void visitPrimitive(PrimitiveType t, Void o) {
 		visitPrimitiveTypeKind(t.getKind());
-                return signature;
+                return DEFAULT_VALUE;
 	}
 
 	private void visitPrimitiveTypeKind(TypeKind kind) {

@@ -34,8 +34,8 @@ package org.lwjgl.util.generator.opencl;
 
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
-import java.util.Collection;
 import java.util.Set;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 import org.lwjgl.PointerWrapper;
 import org.lwjgl.util.generator.Extension;
@@ -76,7 +76,7 @@ public class CLPDCapabilitiesGenerator {
 		writer.println("final boolean " + CLGeneratorProcessor.getExtensionName(new StringBuffer(d.getSimpleName()).toString()) + ";");
 	}
 
-	static void generateConstructor(final PrintWriter writer, final Set<? extends TypeElement> templates,
+	static void generateConstructor(ProcessingEnvironment env, final PrintWriter writer, final Set<? extends TypeElement> templates,
 	                                final Class<? extends Annotation> capsType, final String capsName,
 	                                final Class<? extends PointerWrapper> objectType, final String objectName) {
 		writer.println("\tpublic " + capsName + "(final " + objectType.getSimpleName() + ' ' + objectName + ") {");
@@ -114,7 +114,7 @@ public class CLPDCapabilitiesGenerator {
 				nativeName = ext.nativeName();
 
 			writer.print("\t\t" + extName + " = extensions.contains(\"" + nativeName + "\")");
-			if ( !Utils.getMethods(t).isEmpty() )
+			if ( !Utils.getMethods(env, t).isEmpty() )
 				writer.print(" && CLCapabilities." + extName);
 			writer.println(";");
 		}

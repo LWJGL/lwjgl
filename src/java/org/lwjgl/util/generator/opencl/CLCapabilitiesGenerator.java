@@ -35,6 +35,7 @@ package org.lwjgl.util.generator.opencl;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.Set;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import org.lwjgl.util.generator.*;
@@ -51,12 +52,12 @@ public class CLCapabilitiesGenerator {
 		writer.println();
 	}
 
-	static void generateSymbolAddresses(final PrintWriter writer, final TypeElement d) {
+	static void generateSymbolAddresses(ProcessingEnvironment env, final PrintWriter writer, final TypeElement d) {
 		final Alias alias_annotation = d.getAnnotation(Alias.class);
 		final boolean aliased = alias_annotation != null && alias_annotation.postfix().length() > 0;
 
 		boolean foundNative = false;
-		for ( final ExecutableElement method : Utils.getMethods(d) ) {
+		for ( final ExecutableElement method : Utils.getMethods(env, d) ) {
 			if ( method.getAnnotation(Alternate.class) != null || method.getAnnotation(Reuse.class) != null )
 				continue;
 
@@ -77,13 +78,13 @@ public class CLCapabilitiesGenerator {
 			writer.println();
 	}
 
-	static void generateConstructor(final PrintWriter writer, final Set<? extends TypeElement> interface_decls) {
+	static void generateConstructor(ProcessingEnvironment env, final PrintWriter writer, final Set<? extends TypeElement> interface_decls) {
 		writer.println("\tprivate " + CLGeneratorProcessor.CLCAPS_CLASS_NAME + "() {}");
 		writer.println();
 		writer.println("\tstatic {");
 
 		for ( final TypeElement d : interface_decls ) {
-			if ( Utils.getMethods(d).isEmpty() )
+			if ( Utils.getMethods(env, d).isEmpty() )
 				continue;
 
 			//writer.println("\t\tif ( " + getExtensionSupportedName(d.getSimpleName()) + "() )");
@@ -94,8 +95,8 @@ public class CLCapabilitiesGenerator {
 		writer.println("\t}\n");
 	}
 
-	static void generateExtensionChecks(final PrintWriter writer, final TypeElement d) {
-		Iterator<? extends ExecutableElement> methods = Utils.getMethods(d).iterator();
+	static void generateExtensionChecks(ProcessingEnvironment env, final PrintWriter writer, final TypeElement d) {
+		Iterator<? extends ExecutableElement> methods = Utils.getMethods(env, d).iterator();
 		if ( !methods.hasNext() )
 			return;
 

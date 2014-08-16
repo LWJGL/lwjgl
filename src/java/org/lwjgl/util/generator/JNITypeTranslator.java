@@ -49,7 +49,7 @@ import org.lwjgl.PointerBuffer;
  * @version $Revision$
  * $Id$
  */
-public class JNITypeTranslator extends SimpleTypeVisitor6 {
+public class JNITypeTranslator extends SimpleTypeVisitor6<Void, Void> {
 
 	private final StringBuilder signature = new StringBuilder();
 
@@ -63,7 +63,8 @@ public class JNITypeTranslator extends SimpleTypeVisitor6 {
 		return objectReturn ? "jobject" : signature.toString();
 	}
 
-	public Object visitArray(ArrayType t, Object o) {
+        @Override
+	public Void visitArray(ArrayType t, Void o) {
 		final String className = t.getComponentType().toString();
 		if ( "java.lang.CharSequence".equals(className) )
 			signature.append("jlong");
@@ -73,11 +74,11 @@ public class JNITypeTranslator extends SimpleTypeVisitor6 {
 			signature.append("jobjectArray");
 		else
 			throw new RuntimeException(t + " is not allowed");
-                return className;
+                return DEFAULT_VALUE;
 	}
 
-	public void visitClassType(DeclaredType t) {
-		final Class<?> type = Utils.getJavaType(t.asElement().asType());
+	private void visitClassType(DeclaredType t) {
+		final Class<?> type = Utils.getJavaType(t);
 		if ( Buffer.class.isAssignableFrom(type) || PointerBuffer.class.isAssignableFrom(type) ) {
 			signature.append("jlong");
 			objectReturn = true;
@@ -85,13 +86,15 @@ public class JNITypeTranslator extends SimpleTypeVisitor6 {
 			signature.append("jobject");
 	}
 
-	public Object visitDeclared(DeclaredType t, Object o) {
+        @Override
+	public Void visitDeclared(DeclaredType t, Void o) {
             if(t.asElement().getKind().isClass())
                 visitClassType(t);
-            return signature;
+            return DEFAULT_VALUE;
 	}
 
-	public Object visitPrimitive(PrimitiveType t, Object o) {
+        @Override
+	public Void visitPrimitive(PrimitiveType t, Void o) {
 		String type;
 		switch (t.getKind()) {
 			case LONG:
@@ -119,12 +122,13 @@ public class JNITypeTranslator extends SimpleTypeVisitor6 {
 				throw new RuntimeException(t + " is not allowed");
 		}
 		signature.append(type);
-                return signature;
+                return DEFAULT_VALUE;
 	}
 
-	public Object visitNoType(NoType t, Object o) {
+        @Override
+	public Void visitNoType(NoType t, Void o) {
 		signature.append(t.toString());
-                return signature;
+                return DEFAULT_VALUE;
 	}
 	
 }

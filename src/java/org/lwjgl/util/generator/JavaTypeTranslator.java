@@ -54,14 +54,15 @@ import javax.lang.model.util.SimpleTypeVisitor6;
  * @version $Revision$
  * $Id$
  */
-public class JavaTypeTranslator extends SimpleTypeVisitor6 {
+public class JavaTypeTranslator extends SimpleTypeVisitor6<Void, Void> {
 	private Class type;
 
 	public Class getType() {
 		return type;
 	}
 
-	public Object visitArray(ArrayType t, Object o) {
+        @Override
+	public Void visitArray(ArrayType t, Void o) {
 		final TypeMirror componentType = t.getComponentType();
 		if ( componentType instanceof PrimitiveType ) {
 			type = getPrimitiveArrayClassFromKind(((PrimitiveType)componentType).getKind());
@@ -77,7 +78,7 @@ public class JavaTypeTranslator extends SimpleTypeVisitor6 {
 				throw new RuntimeException(e);
 			}
 		}
-                return type;
+                return DEFAULT_VALUE;
 	}
 
 	public static Class getPrimitiveClassFromKind(TypeKind kind) {
@@ -122,17 +123,19 @@ public class JavaTypeTranslator extends SimpleTypeVisitor6 {
 		}
 	}
 
-	public Object visitPrimitive(PrimitiveType t, Object p) {
+        @Override
+	public Void visitPrimitive(PrimitiveType t, Void p) {
 		type = getPrimitiveClassFromKind(t.getKind());
-                return type;
+                return DEFAULT_VALUE;
 	}
 
-	public Object visitDeclared(DeclaredType t, Object o) {
+        @Override
+	public Void visitDeclared(DeclaredType t, Void o) {
             if(t.asElement().getKind().isClass())
                 visitClassType(t);
             else if(t.asElement().getKind().isInterface())
                 visitInterfaceType(t);
-            return type;
+            return DEFAULT_VALUE;
 	}
 
 	private void visitClassType(DeclaredType t) {
@@ -143,9 +146,10 @@ public class JavaTypeTranslator extends SimpleTypeVisitor6 {
 		type = NativeTypeTranslator.getClassFromType(t);
 	}
 
-	public Object visitNoType(NoType t, Object p) {            
+        @Override
+	public Void visitNoType(NoType t, Void p) {            
 		type = void.class;
-                return type;
+                return DEFAULT_VALUE;
 	}
 
 
