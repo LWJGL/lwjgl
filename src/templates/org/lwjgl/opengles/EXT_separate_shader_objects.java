@@ -65,28 +65,28 @@ public interface EXT_separate_shader_objects {
 	void glActiveShaderProgramEXT(@GLuint int pipeline, @GLuint int program);
 
 	/** Single null-terminated source code string. */
-	@StripPostfix(value = "string", postfix = "v")
+	@StripPostfix(value = "string", hasPostfix = false)
 	@GLuint
 	int glCreateShaderProgramvEXT(@GLenum int type, @Constant("1") @GLsizei int count, @NullTerminated @Check @Const @Indirect @GLchar ByteBuffer string);
 
 	/** Multiple null-terminated source code strings, one after the other. */
 	@Alternate(value = "glCreateShaderProgramvEXT", nativeAlt = true)
-	@StripPostfix(value = "strings", postfix = "v")
+	@StripPostfix(value = "strings", hasPostfix = false)
 	@GLuint
 	int glCreateShaderProgramvEXT2(@GLenum int type, @GLsizei int count, @NullTerminated("count") @Check @Const @Indirect @GLchar @PointerArray("count") ByteBuffer strings);
 
 	@Alternate(value = "glCreateShaderProgramvEXT", nativeAlt = true)
-	@StripPostfix(value = "strings", postfix = "v")
+	@StripPostfix(value = "strings", hasPostfix = false)
 	@GLuint
 	int glCreateShaderProgramvEXT3(@GLenum int type, @Constant("strings.length") @GLsizei int count, @NullTerminated @Check("1") @PointerArray(value = "count") @Const @NativeType("GLchar") ByteBuffer[] strings);
 
 	@Alternate("glCreateShaderProgramvEXT")
-	@StripPostfix(value = "string", postfix = "v")
+	@StripPostfix(value = "string", hasPostfix = false)
 	@GLuint
 	int glCreateShaderProgramvEXT(@GLenum int type, @Constant("1") @GLsizei int count, @NullTerminated CharSequence string);
 
 	@Alternate(value = "glCreateShaderProgramvEXT", nativeAlt = true, skipNative = true)
-	@StripPostfix(value = "strings", postfix = "v")
+	@StripPostfix(value = "strings", hasPostfix = false)
 	@GLuint
 	int glCreateShaderProgramvEXT2(@GLenum int type, @Constant("strings.length") @GLsizei int count,
 	                               @Const @NullTerminated @PointerArray(value = "count") CharSequence[] strings);
@@ -113,7 +113,7 @@ public interface EXT_separate_shader_objects {
 
 	@Alternate("glGetProgramPipelineivEXT")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetProgramPipelineivEXT2(@GLuint int pipeline, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glProgramUniform1iEXT(@GLuint int program, int location, int v0);

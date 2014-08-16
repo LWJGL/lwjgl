@@ -72,7 +72,7 @@ public interface NV_occlusion_query {
 
 	@Alternate("glGetOcclusionQueryuivNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetOcclusionQueryuivNV2(@GLuint int id, @GLenum int pname, @OutParameter @GLuint IntBuffer params);
 
 	@StripPostfix("params")
@@ -80,6 +80,6 @@ public interface NV_occlusion_query {
 
 	@Alternate("glGetOcclusionQueryivNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetOcclusionQueryivNV2(@GLuint int id, @GLenum int pname, @OutParameter IntBuffer params);
 }

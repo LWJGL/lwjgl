@@ -145,7 +145,7 @@ public interface NV_video_capture {
 
 	@Alternate("glGetVideoCaptureivNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetVideoCaptureivNV2(@GLuint int video_capture_slot, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -155,7 +155,7 @@ public interface NV_video_capture {
 
 	@Alternate("glGetVideoCaptureStreamivNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetVideoCaptureStreamivNV2(@GLuint int video_capture_slot,
 	                                  @GLuint int stream, @GLenum int pname,
 	                                  @OutParameter IntBuffer params);
@@ -167,7 +167,7 @@ public interface NV_video_capture {
 
 	@Alternate("glGetVideoCaptureStreamfvNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetVideoCaptureStreamfvNV2(@GLuint int video_capture_slot,
 	                                  @GLuint int stream, @GLenum int pname,
 	                                  @OutParameter FloatBuffer params);
@@ -179,7 +179,7 @@ public interface NV_video_capture {
 
 	@Alternate("glGetVideoCaptureStreamdvNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetVideoCaptureStreamdvNV2(@GLuint int video_capture_slot,
 	                                  @GLuint int stream, @GLenum int pname,
 	                                  @OutParameter DoubleBuffer params);

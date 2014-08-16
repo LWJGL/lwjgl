@@ -551,7 +551,7 @@ public interface GL30 {
 
 	@Alternate("glGetRenderbufferParameteriv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetRenderbufferParameteriv3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	boolean glIsFramebuffer(@GLuint int framebuffer);
@@ -593,7 +593,7 @@ public interface GL30 {
 
 	@Alternate("glGetFramebufferAttachmentParameteriv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetFramebufferAttachmentParameteriv3(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGenerateMipmap(@GLenum int target);
@@ -727,14 +727,14 @@ public interface GL30 {
 	void glTexParameterIiv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
 
 	@Alternate("glTexParameterIiv")
-	@StripPostfix(value = "param", postfix = "v")
+	@StripPostfix(value = "param", hasPostfix = false)
 	void glTexParameterIiv(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getInt(caps, param)", keepParam = true) int param);
 
 	@StripPostfix("params")
 	void glTexParameterIuiv(@GLenum int target, @GLenum int pname, @Check("4") @GLuint IntBuffer params);
 
 	@Alternate("glTexParameterIuiv")
-	@StripPostfix(value = "param", postfix = "v")
+	@StripPostfix(value = "param", hasPostfix = false)
 	void glTexParameterIuiv(@GLenum int target, @GLenum int pname, @Constant(value = "APIUtil.getInt(caps, param)", keepParam = true) int param);
 
 	@StripPostfix("params")
@@ -742,7 +742,7 @@ public interface GL30 {
 
 	@Alternate("glGetTexParameterIiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTexParameterIiv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -750,7 +750,7 @@ public interface GL30 {
 
 	@Alternate("glGetTexParameterIuiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTexParameterIuiv2(@GLenum int target, @GLenum int pname, @OutParameter @GLuint IntBuffer params);
 
 	// -----------------------------------------------------------------
@@ -845,12 +845,12 @@ public interface GL30 {
 
 	void glColorMaski(@GLuint int buf, boolean r, boolean g, boolean b, boolean a);
 
-	@StripPostfix(value = "data", hasPostfix = false)
+	@StripPostfix(value = "data")
 	void glGetBooleani_v(@GLenum int value, @GLuint int index, @OutParameter @Check("4") @GLboolean ByteBuffer data);
 
 	@Alternate("glGetBooleani_v")
 	@GLreturn("data")
-	@StripPostfix(value = "data", hasPostfix = false)
+	@StripPostfix(value = "data")
 	void glGetBooleani_v2(@GLenum int value, @GLuint int index, @OutParameter @GLboolean ByteBuffer data);
 
 	@StripPostfix("data")

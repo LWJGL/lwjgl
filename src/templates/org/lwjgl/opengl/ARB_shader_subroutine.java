@@ -58,8 +58,6 @@ public interface ARB_shader_subroutine {
 	/** Accepted by the &lt;pname&gt; parameter of GetActiveSubroutineUniformiv: */
 	int GL_NUM_COMPATIBLE_SUBROUTINES = 0x8E4A;
 	int GL_COMPATIBLE_SUBROUTINES = 0x8E4B;
-	int GL_UNIFORM_SIZE = GL31.GL_UNIFORM_SIZE;
-	int GL_UNIFORM_NAME_LENGTH = GL31.GL_UNIFORM_NAME_LENGTH;
 
 	@Reuse("GL40")
 	int glGetSubroutineUniformLocation(@GLuint int program, @GLenum int shadertype, @Const @NullTerminated ByteBuffer name);
@@ -84,7 +82,7 @@ public interface ARB_shader_subroutine {
 	@Reuse("GL40")
 	@Alternate("glGetActiveSubroutineUniformiv")
 	@GLreturn("values")
-	@StripPostfix(value = "values", postfix = "v")
+	@StripPostfix(value = "values", hasPostfix = false)
 	void glGetActiveSubroutineUniformiv2(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLenum int pname,
 	                                     @OutParameter IntBuffer values);
 
@@ -123,7 +121,7 @@ public interface ARB_shader_subroutine {
 	@Reuse("GL40")
 	@Alternate("glGetUniformSubroutineuiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetUniformSubroutineuiv2(@GLenum int shadertype, int location, @OutParameter @GLuint IntBuffer params);
 
 	@Reuse("GL40")
@@ -133,7 +131,7 @@ public interface ARB_shader_subroutine {
 	@Reuse("GL40")
 	@Alternate("glGetProgramStageiv")
 	@GLreturn("values")
-	@StripPostfix(value = "values", postfix = "v")
+	@StripPostfix(value = "values", hasPostfix = false)
 	void glGetProgramStageiv2(@GLuint int program, @GLenum int shadertype, @GLenum int pname, @OutParameter IntBuffer values);
 
 }

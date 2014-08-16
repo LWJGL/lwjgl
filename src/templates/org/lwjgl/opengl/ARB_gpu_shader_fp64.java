@@ -45,7 +45,6 @@ public interface ARB_gpu_shader_fp64 {
 	 * Returned in the &lt;type&gt; parameter of GetActiveUniform, and
 	 * GetTransformFeedbackVarying:
 	 */
-	int GL_DOUBLE = GL11.GL_DOUBLE;
 	int GL_DOUBLE_VEC2 = 0x8FFC;
 	int GL_DOUBLE_VEC3 = 0x8FFD;
 	int GL_DOUBLE_VEC4 = 0x8FFE;

@@ -57,11 +57,7 @@ class GLChecks {
 	/** Static methods only! */
 	private GLChecks() {
 	}
-
-	static int getBufferObjectSize(int buffer_enum) {
-		return glGetBufferParameteri(buffer_enum, GLES20.GL_BUFFER_SIZE);
-	}
-
+	
 	/** Helper method to ensure that array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOdisabled() {
 		if ( LWJGLUtil.CHECKS && StateTracker.getTracker().arrayBuffer != 0 )

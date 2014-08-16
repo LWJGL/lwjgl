@@ -64,7 +64,7 @@ public interface ATI_map_object_buffer {
 	 */
 	@CachedResult
 	@GLvoid
-	@AutoSize("GLChecks.getBufferObjectSizeATI(caps, buffer)")
+	@AutoSize("ATIVertexArrayObject.glGetObjectBufferiATI(buffer, ATIVertexArrayObject.GL_OBJECT_BUFFER_SIZE_ATI)")
 	ByteBuffer glMapObjectBufferATI(@GLuint int buffer);
 
 	void glUnmapObjectBufferATI(@GLuint int buffer);

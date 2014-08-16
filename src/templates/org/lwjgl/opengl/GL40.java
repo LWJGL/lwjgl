@@ -241,7 +241,7 @@ public interface GL40 {
 
 	@Alternate("glGetActiveSubroutineUniformiv")
 	@GLreturn("values")
-	@StripPostfix(value = "values", postfix = "v")
+	@StripPostfix(value = "values", hasPostfix = false)
 	void glGetActiveSubroutineUniformiv3(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLenum int pname,
 	                                     @OutParameter IntBuffer values);
 
@@ -281,7 +281,7 @@ public interface GL40 {
 
 	@Alternate("glGetUniformSubroutineuiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetUniformSubroutineuiv3(@GLenum int shadertype, int location, @OutParameter @GLuint IntBuffer params);
 
 	@StripPostfix("values")
@@ -297,7 +297,7 @@ public interface GL40 {
 
 	@Alternate("glGetProgramStageiv")
 	@GLreturn("values")
-	@StripPostfix(value = "values", postfix = "v")
+	@StripPostfix(value = "values", hasPostfix = false)
 	void glGetProgramStageiv3(@GLuint int program, @GLenum int shadertype, @GLenum int pname, @OutParameter IntBuffer values);
 
 	// -----------------------------------------------------------------------
@@ -486,7 +486,7 @@ public interface GL40 {
 
 	@Alternate("glGetQueryIndexediv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetQueryIndexediv3(@GLenum int target, @GLuint int index, @GLenum int pname, @OutParameter IntBuffer params);
 
 }

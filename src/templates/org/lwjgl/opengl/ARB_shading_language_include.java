@@ -97,12 +97,12 @@ public interface ARB_shading_language_include {
 	void glGetNamedStringivARB(@AutoSize("name") int namelen, @Const @GLchar ByteBuffer name, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
 	@Alternate("glGetNamedStringivARB")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetNamedStringivARB(@Constant("name.length()") int namelen, CharSequence name, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);
 
 	@Alternate("glGetNamedStringivARB")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetNamedStringivARB2(@Constant("name.length()") int namelen, CharSequence name, @GLenum int pname, @OutParameter IntBuffer params);
 
 }

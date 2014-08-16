@@ -51,7 +51,7 @@ public interface OES_mapbuffer {
 
 	@StripPostfix("pointer")
 	@CachedResult
-	@AutoSize("GLChecks.getBufferObjectSize(target)")
+	@AutoSize("GLES20.glGetBufferParameteri(target, GLES20.GL_BUFFER_SIZE)")
 	void glGetBufferPointervOES(@GLenum int target, @GLenum int pname, @OutParameter @Result @GLvoid ByteBuffer pointer);
 
 	/**
@@ -78,7 +78,7 @@ public interface OES_mapbuffer {
 	 */
 	@CachedResult
 	@GLvoid
-	@AutoSize("GLChecks.getBufferObjectSize(target)")
+	@AutoSize("GLES20.glGetBufferParameteri(target, GLES20.GL_BUFFER_SIZE)")
 	ByteBuffer glMapBufferOES(@GLenum int target, @GLenum int access);
 
 	boolean glUnmapBufferOES(@GLenum int target);

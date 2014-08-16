@@ -400,7 +400,7 @@ public class NativeMethodStubsGenerator {
 					writer.println("\twhile ( " + n + "_i < " + pointerArray_annotation.value() + " ) {");
 					if ( lengths.length() == 0 ) {
 						writer.println("\t\t" + param.getSimpleName() + n + "[" + n + "_i++] = " + n + "_address;");
-						writer.println("\t\t" + n + "_address += strlen(" + n + "_address) + 1;");
+						writer.println("\t\t" + n + "_address += strlen((const char *)" + n + "_address) + 1;");
 					} else {
 						writer.println("\t\t" + param.getSimpleName() + n + "[" + n + "_i] = " + n + "_address;");
 						writer.println("\t\t" + n + "_address += " + lengths + BUFFER_ADDRESS_POSTFIX + "[" + n + "_i++];");

@@ -94,7 +94,7 @@ public interface APPLE_sync {
 
 	@Alternate("glGetInteger64vAPPLE")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetInteger64vAPPLE2(@GLenum int pname, @OutParameter @GLint64 LongBuffer params);
 
 	@StripPostfix("values")
@@ -104,7 +104,7 @@ public interface APPLE_sync {
 
 	@Alternate("glGetSyncivAPPLE")
 	@GLreturn("values")
-	@StripPostfix(value = "values", postfix = "v")
+	@StripPostfix(value = "values", hasPostfix = false)
 	void glGetSyncivAPPLE2(@PointerWrapper("GLsync") GLSync sync, @GLenum int pname, @Constant("1") @GLsizei int bufSize,
 	                       @OutParameter @GLsizei @Constant("0L") IntBuffer length,
 	                       @OutParameter IntBuffer values);

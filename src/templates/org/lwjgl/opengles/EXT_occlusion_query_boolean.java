@@ -80,7 +80,7 @@ public interface EXT_occlusion_query_boolean {
 
 	@Alternate("glGetQueryivEXT")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetQueryivEXT2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -88,7 +88,7 @@ public interface EXT_occlusion_query_boolean {
 
 	@Alternate("glGetQueryObjectuivEXT")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetQueryObjectuivEXT2(@GLuint int id, @GLenum int pname, @OutParameter IntBuffer params);
 
 }

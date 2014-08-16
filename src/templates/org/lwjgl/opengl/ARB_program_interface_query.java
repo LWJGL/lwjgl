@@ -105,7 +105,7 @@ public interface ARB_program_interface_query {
 	@Reuse("GL43")
 	@Alternate("glGetProgramInterfaceiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetProgramInterfaceiv2(@GLuint int program, @GLenum int programInterface,
 	                              @GLenum int pname, @OutParameter IntBuffer params);
 

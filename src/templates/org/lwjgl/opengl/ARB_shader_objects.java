@@ -177,7 +177,7 @@ public interface ARB_shader_objects {
 
 	@Alternate("glGetObjectParameterfvARB")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetObjectParameterfvARB2(@GLhandleARB int obj, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@StripPostfix("params")
@@ -185,7 +185,7 @@ public interface ARB_shader_objects {
 
 	@Alternate("glGetObjectParameterivARB")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetObjectParameterivARB2(@GLhandleARB int obj, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGetInfoLogARB(@GLhandleARB int obj, @AutoSize("infoLog") @GLsizei int maxLength,
