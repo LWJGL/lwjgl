@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2008 LWJGL Project
+ * Copyright (c) 2002-2014 LWJGL Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,28 +29,12 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.lwjgl.opengl;
 
-/** @author spasi <spasi@users.sourceforge.net> */
-interface ContextAttribsImplementation {
+public interface ARB_cull_distance {
 
-	int getMajorVersionAttrib();
-
-	int getMinorVersionAttrib();
-
-	int getLayerPlaneAttrib();
-
-	int getFlagsAttrib();
-
-	int getDebugBit();
-
-	int getForwardCompatibleBit();
-
-	int getProfileMaskAttrib();
-
-	int getProfileCoreBit();
-
-	int getProfileCompatibilityBit();
+	/** Accepted by the &lt;pname&gt; parameter of GetBooeleanv, GetDoublev, GetFloatv GetIntegerv, and GetInteger64v: */
+	int GL_MAX_CULL_DISTANCES                   = 0x82F9,
+		GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES = 0x82FA;
 
 }

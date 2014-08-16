@@ -36,8 +36,4 @@ public interface NV_shader_buffer_store {
 	/** Accepted by the &lt;barriers&gt; parameter of MemoryBarrierNV: */
 	int GL_SHADER_GLOBAL_ACCESS_BARRIER_BIT_NV = 0x00000010;
 
-	/** Accepted by the &lt;access&gt; parameter of MakeBufferResidentNV: */
-	int GL_READ_WRITE = GL15.GL_READ_WRITE;
-	int GL_WRITE_ONLY = GL15.GL_WRITE_ONLY;
-
 }

@@ -159,7 +159,7 @@ public interface EXT_framebuffer_object {
 
 	@Alternate("glGetRenderbufferParameterivEXT")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetRenderbufferParameterivEXT3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	boolean glIsFramebufferEXT(@GLuint int framebuffer);
@@ -201,7 +201,7 @@ public interface EXT_framebuffer_object {
 
 	@Alternate("glGetFramebufferAttachmentParameterivEXT")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetFramebufferAttachmentParameterivEXT3(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGenerateMipmapEXT(@GLenum int target);

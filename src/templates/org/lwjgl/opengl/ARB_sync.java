@@ -97,7 +97,7 @@ public interface ARB_sync {
 	@Reuse("GL32")
 	@Alternate("glGetInteger64v")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetInteger64v2(@GLenum int pname, @OutParameter @GLint64 LongBuffer params);
 
 	@Reuse("GL32")
@@ -119,7 +119,7 @@ public interface ARB_sync {
 	@Reuse("GL32")
 	@Alternate("glGetSynciv")
 	@GLreturn("values")
-	@StripPostfix(value = "values", postfix = "v")
+	@StripPostfix(value = "values", hasPostfix = false)
 	void glGetSynciv3(@PointerWrapper("GLsync") GLSync sync, @GLenum int pname, @Constant("1") @GLsizei int bufSize,
 	                  @OutParameter @GLsizei @Constant("0L") IntBuffer length,
 	                  @OutParameter IntBuffer values);

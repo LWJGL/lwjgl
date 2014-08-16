@@ -75,7 +75,7 @@ public interface NV_get_tex_image {
 
 	@Alternate("glGetTexLevelParameterfvNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTexLevelParameterfvNV2(@GLenum int target, @GLint int level, @GLenum int pname, @OutParameter @GLfloat FloatBuffer params);
 
 	@StripPostfix("params")
@@ -83,7 +83,7 @@ public interface NV_get_tex_image {
 
 	@Alternate("glGetTexLevelParameterivNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTexLevelParameterivNV2(@GLenum int target, @GLint int level, @GLenum int pname, @OutParameter @GLint IntBuffer params);
 
 }

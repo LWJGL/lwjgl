@@ -46,12 +46,8 @@ public interface ARB_internalformat_query2 {
 	 * Accepted by the &lt;target&gt; parameter of GetInternalformativ
 	 * and GetInternalformati64v:
 	 */
-	int GL_TEXTURE_1D                   = 0x0DE0,
-		GL_TEXTURE_1D_ARRAY             = 0x8C18,
-		GL_TEXTURE_2D                   = 0x0DE1,
+	int GL_TEXTURE_1D_ARRAY             = 0x8C18,
 		GL_TEXTURE_2D_ARRAY             = 0x8C1A,
-		GL_TEXTURE_3D                   = 0x806F,
-		GL_TEXTURE_CUBE_MAP             = 0x8513,
 		GL_TEXTURE_CUBE_MAP_ARRAY       = 0x9009,
 		GL_TEXTURE_RECTANGLE            = 0x84F5,
 		GL_TEXTURE_BUFFER               = 0x8C2A,
@@ -63,8 +59,7 @@ public interface ARB_internalformat_query2 {
 	 * Accepted by the &lt;pname&gt; parameter of GetInternalformativ
 	 * and GetInternalformati64v:
 	 */
-	int GL_SAMPLES                                = 0x80A9,
-		GL_NUM_SAMPLE_COUNTS                      = 0x9380,
+	int GL_NUM_SAMPLE_COUNTS                      = 0x9380,
 		GL_INTERNALFORMAT_SUPPORTED               = 0x826F,
 		GL_INTERNALFORMAT_PREFERRED               = 0x8270,
 		GL_INTERNALFORMAT_RED_SIZE                = 0x8271,
@@ -130,7 +125,6 @@ public interface ARB_internalformat_query2 {
 		GL_SIMULTANEOUS_TEXTURE_AND_STENCIL_TEST  = 0x82AD,
 		GL_SIMULTANEOUS_TEXTURE_AND_DEPTH_WRITE   = 0x82AE,
 		GL_SIMULTANEOUS_TEXTURE_AND_STENCIL_WRITE = 0x82AF,
-		GL_TEXTURE_COMPRESSED                     = 0x86A1,
 		GL_TEXTURE_COMPRESSED_BLOCK_WIDTH         = 0x82B1,
 		GL_TEXTURE_COMPRESSED_BLOCK_HEIGHT        = 0x82B2,
 		GL_TEXTURE_COMPRESSED_BLOCK_SIZE          = 0x82B3,
@@ -180,7 +174,7 @@ public interface ARB_internalformat_query2 {
 	@Reuse("GL43")
 	@Alternate("glGetInternalformati64v")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetInternalformati64v2(@GLenum int target, @GLenum int internalformat,
 	                              @GLenum int pname, @Constant("1") @GLsizei int bufSize, @OutParameter @GLint64 LongBuffer params);
 

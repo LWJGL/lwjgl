@@ -1072,7 +1072,7 @@ public interface GL11 {
 
 	@Alternate("glGetTexParameterfv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTexParameterfv2(@GLenum int target, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@StripPostfix("params")
@@ -1080,7 +1080,7 @@ public interface GL11 {
 
 	@Alternate("glGetTexParameteriv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTexParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -1088,7 +1088,7 @@ public interface GL11 {
 
 	@Alternate("glGetTexLevelParameterfv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTexLevelParameterfv2(@GLenum int target, int level, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@StripPostfix("params")
@@ -1096,7 +1096,7 @@ public interface GL11 {
 
 	@Alternate("glGetTexLevelParameteriv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTexLevelParameteriv2(@GLenum int target, int level, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGetTexImage(@GLenum int target, int level, @GLenum int format, @GLenum int type,
@@ -1115,7 +1115,7 @@ public interface GL11 {
 
 	@Alternate("glGetTexGeniv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	@DeprecatedGL
 	void glGetTexGeniv2(@GLenum int coord, @GLenum int pname, @OutParameter IntBuffer params);
 
@@ -1125,7 +1125,7 @@ public interface GL11 {
 
 	@Alternate("glGetTexGenfv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	@DeprecatedGL
 	void glGetTexGenfv2(@GLenum int coord, @GLenum int pname, @OutParameter FloatBuffer params);
 
@@ -1135,7 +1135,7 @@ public interface GL11 {
 
 	@Alternate("glGetTexGendv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	@DeprecatedGL
 	void glGetTexGendv2(@GLenum int coord, @GLenum int pname, @OutParameter DoubleBuffer params);
 
@@ -1144,7 +1144,7 @@ public interface GL11 {
 
 	@Alternate("glGetTexEnviv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTexEnviv2(@GLenum int coord, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -1152,7 +1152,7 @@ public interface GL11 {
 
 	@Alternate("glGetTexEnvfv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTexEnvfv2(@GLenum int coord, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@Const

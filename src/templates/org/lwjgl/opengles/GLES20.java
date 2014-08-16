@@ -709,7 +709,7 @@ public interface GLES20 {
 
 	@Alternate("glGetBufferParameteriv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetBufferParameteriv3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@NoErrorCheck
@@ -737,7 +737,7 @@ public interface GLES20 {
 
 	@Alternate("glGetFramebufferAttachmentParameteriv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetFramebufferAttachmentParameteriv3(@GLenum int target, @GLenum int attachment, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -761,7 +761,7 @@ public interface GLES20 {
 
 	@Alternate("glGetProgramiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetProgramiv3(@GLuint int program, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGetProgramInfoLog(@GLuint int program, @AutoSize("infoLog") @GLsizei int bufsize,
@@ -787,7 +787,7 @@ public interface GLES20 {
 
 	@Alternate("glGetRenderbufferParameteriv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetRenderbufferParameteriv3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -803,7 +803,7 @@ public interface GLES20 {
 
 	@Alternate("glGetShaderiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetShaderiv3(@GLuint int shader, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGetShaderInfoLog(@GLuint int shader, @AutoSize("infoLog") @GLsizei int bufsize,
@@ -836,7 +836,7 @@ public interface GLES20 {
 
 	@Alternate("glGetTexParameterfv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTexParameterfv2(@GLenum int target, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@StripPostfix("params")
@@ -844,7 +844,7 @@ public interface GLES20 {
 
 	@Alternate("glGetTexParameteriv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTexParameteriv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")

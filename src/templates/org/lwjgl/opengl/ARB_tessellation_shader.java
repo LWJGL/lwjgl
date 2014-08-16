@@ -66,22 +66,11 @@ public interface ARB_tessellation_shader {
 	int GL_TESS_GEN_POINT_MODE = 0x8E79;
 
 	/** Returned by GetProgramiv when &lt;pname&gt; is TESS_GEN_MODE: */
-	int GL_TRIANGLES = GL11.GL_TRIANGLES;
-	int GL_QUADS = GL11.GL_QUADS;
 	int GL_ISOLINES = 0x8E7A;
 
 	/** Returned by GetProgramiv when &lt;pname&gt; is TESS_GEN_SPACING: */
-	int GL_EQUAL = GL11.GL_EQUAL;
 	int GL_FRACTIONAL_ODD = 0x8E7B;
 	int GL_FRACTIONAL_EVEN = 0x8E7C;
-
-	/** Returned by GetProgramiv when &lt;pname&gt; is TESS_GEN_VERTEX_ORDER: */
-	int GL_CCW = GL11.GL_CCW;
-	int GL_CW = GL11.GL_CW;
-
-	/** Returned by GetProgramiv when &lt;pname&gt; is TESS_GEN_POINT_MODE: */
-	int GL_FALSE = GL11.GL_FALSE;
-	int GL_TRUE = GL11.GL_TRUE;
 
 	/**
 	 * Accepted by the &lt;pname&gt; parameter of GetBooleanv, GetDoublev, GetFloatv,

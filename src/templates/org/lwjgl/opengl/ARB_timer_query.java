@@ -63,7 +63,7 @@ public interface ARB_timer_query {
 	@Reuse("GL33")
 	@Alternate("glGetQueryObjecti64v")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetQueryObjecti64v2(@GLuint int id, @GLenum int pname, @OutParameter @GLint64 LongBuffer params);
 
 	@Reuse("GL33")
@@ -73,7 +73,7 @@ public interface ARB_timer_query {
 	@Reuse("GL33")
 	@Alternate("glGetQueryObjectui64v")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetQueryObjectui64v2(@GLuint int id, @GLenum int pname, @OutParameter @GLuint64 LongBuffer params);
 
 }

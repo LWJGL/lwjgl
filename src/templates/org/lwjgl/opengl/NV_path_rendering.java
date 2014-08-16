@@ -343,7 +343,7 @@ public interface NV_path_rendering {
 	void glPathParameteriNV(@GLuint int path, @GLenum int pname, int value);
 
 	@StripPostfix("value")
-	void glPathParameterfvNV(@GLuint int path, @GLenum int pname, @Check("4") @Const IntBuffer value);
+	void glPathParameterfvNV(@GLuint int path, @GLenum int pname, @Check("4") @Const FloatBuffer value);
 
 	void glPathParameterfNV(@GLuint int path, @GLenum int pname, float value);
 
@@ -424,14 +424,14 @@ public interface NV_path_rendering {
 
 	@Alternate("glGetPathParameterivNV")
 	@GLreturn("value")
-	@StripPostfix(value = "value", postfix = "v")
+	@StripPostfix(value = "value", hasPostfix = false)
 	void glGetPathParameterivNV2(@GLuint int name, @GLenum int param, @OutParameter IntBuffer value);
 
 	void glGetPathParameterfvNV(@GLuint int name, @GLenum int param, @Check("4") @OutParameter FloatBuffer value);
 
 	@Alternate("glGetPathParameterfvNV")
 	@GLreturn("value")
-	@StripPostfix(value = "value", postfix = "v")
+	@StripPostfix(value = "value", hasPostfix = false)
 	void glGetPathParameterfvNV2(@GLuint int name, @GLenum int param, @OutParameter FloatBuffer value);
 
 	void glGetPathCommandsNV(@GLuint int name, @Check @OutParameter @GLubyte ByteBuffer commands);
@@ -468,7 +468,7 @@ public interface NV_path_rendering {
 
 	@Alternate("glGetPathColorGenivNV")
 	@GLreturn("value")
-	@StripPostfix(value = "value", postfix = "v")
+	@StripPostfix(value = "value", hasPostfix = false)
 	void glGetPathColorGenivNV2(@GLenum int color, @GLenum int pname, @OutParameter IntBuffer value);
 
 	@StripPostfix("value")
@@ -476,7 +476,7 @@ public interface NV_path_rendering {
 
 	@Alternate("glGetPathColorGenfvNV")
 	@GLreturn("value")
-	@StripPostfix(value = "value", postfix = "v")
+	@StripPostfix(value = "value", hasPostfix = false)
 	void glGetPathColorGenfvNV2(@GLenum int color, @GLenum int pname, @OutParameter FloatBuffer value);
 
 	@StripPostfix("value")
@@ -484,7 +484,7 @@ public interface NV_path_rendering {
 
 	@Alternate("glGetPathTexGenivNV")
 	@GLreturn("value")
-	@StripPostfix(value = "value", postfix = "v")
+	@StripPostfix(value = "value", hasPostfix = false)
 	void glGetPathTexGenivNV2(@GLenum int texCoordSet, @GLenum int pname, @OutParameter IntBuffer value);
 
 	@StripPostfix("value")
@@ -492,7 +492,7 @@ public interface NV_path_rendering {
 
 	@Alternate("glGetPathTexGenfvNV")
 	@GLreturn("value")
-	@StripPostfix(value = "value", postfix = "v")
+	@StripPostfix(value = "value", hasPostfix = false)
 	void glGetPathTexGenfvNV2(@GLenum int texCoordSet, @GLenum int pname, @OutParameter FloatBuffer value);
 
 	boolean glIsPointInFillPathNV(@GLuint int path,

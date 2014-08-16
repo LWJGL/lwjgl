@@ -181,7 +181,7 @@ public interface ARB_program {
 
 	@Alternate("glGetProgramivARB")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetProgramivARB3(@GLenum int target, @GLenum int parameterName, @OutParameter IntBuffer params);
 
 	void glGetProgramStringARB(@GLenum int target, @GLenum int parameterName, @OutParameter @Check @GLbyte Buffer paramString);

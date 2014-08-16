@@ -134,7 +134,7 @@ public interface ARB_buffer_object {
 	 */
 	@CachedResult
 	@GLvoid
-	@AutoSize("GLChecks.getBufferObjectSizeARB(caps, target)")
+	@AutoSize("glGetBufferParameteriARB(target, GL_BUFFER_SIZE_ARB)")
 	ByteBuffer glMapBufferARB(@GLenum int target, @GLenum int access);
 
 	boolean glUnmapBufferARB(@GLenum int target);
@@ -152,10 +152,10 @@ public interface ARB_buffer_object {
 
 	@Alternate("glGetBufferParameterivARB")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetBufferParameterivARB3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("pointer")
-	@AutoSize("GLChecks.getBufferObjectSizeARB(caps, target)")
+	@AutoSize("glGetBufferParameteriARB(target, GL_BUFFER_SIZE_ARB)")
 	void glGetBufferPointervARB(@GLenum int target, @GLenum int pname, @Result @GLvoid ByteBuffer pointer);
 }

@@ -198,7 +198,7 @@ public interface EXT_direct_state_access {
 
 	@Alternate("glGetTextureParameterfvEXT")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTextureParameterfvEXT2(@GLuint int texture, @GLenum int target, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@StripPostfix("params")
@@ -206,7 +206,7 @@ public interface EXT_direct_state_access {
 
 	@Alternate("glGetTextureParameterivEXT")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTextureParameterivEXT2(@GLuint int texture, @GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -214,7 +214,7 @@ public interface EXT_direct_state_access {
 
 	@Alternate("glGetTextureLevelParameterfvEXT")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTextureLevelParameterfvEXT2(@GLuint int texture, @GLenum int target, int level, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@StripPostfix("params")
@@ -222,7 +222,7 @@ public interface EXT_direct_state_access {
 
 	@Alternate("glGetTextureLevelParameterivEXT")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTextureLevelParameterivEXT2(@GLuint int texture, @GLenum int target, int level, @GLenum int pname, @OutParameter IntBuffer params);
 
 	/*
@@ -438,7 +438,7 @@ public interface EXT_direct_state_access {
 
 	@Alternate("glGetMultiTexParameterfvEXT")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetMultiTexParameterfvEXT2(@GLenum int texunit, @GLenum int target, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@Dependent("OpenGL13")
@@ -448,7 +448,7 @@ public interface EXT_direct_state_access {
 	@Alternate("glGetMultiTexParameterivEXT")
 	@GLreturn("params")
 	@Dependent("OpenGL13")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetMultiTexParameterivEXT2(@GLenum int texunit, @GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@Dependent("OpenGL13")
@@ -458,7 +458,7 @@ public interface EXT_direct_state_access {
 	@Alternate("glGetMultiTexLevelParameterfvEXT")
 	@GLreturn("params")
 	@Dependent("OpenGL13")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetMultiTexLevelParameterfvEXT2(@GLenum int texunit, @GLenum int target, int level, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@Dependent("OpenGL13")
@@ -468,7 +468,7 @@ public interface EXT_direct_state_access {
 	@Alternate("glGetMultiTexLevelParameterivEXT")
 	@GLreturn("params")
 	@Dependent("OpenGL13")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetMultiTexLevelParameterivEXT2(@GLenum int texunit, @GLenum int target, int level, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@Dependent("OpenGL13")
@@ -590,7 +590,7 @@ public interface EXT_direct_state_access {
 
 	@Optional(reason = "AMD does not expose this (last driver checked: 11.7)")
 	@Dependent("OpenGL30")
-	@StripPostfix(value = "params", hasPostfix = false)
+	@StripPostfix(value = "params", postfix = "i_v")
 	void glGetPointeri_vEXT(@GLenum int pname, @GLuint int index, @Result @GLvoid ByteBuffer params);
 
 	/*
@@ -906,7 +906,7 @@ public interface EXT_direct_state_access {
 	@Dependent("OpenGL15")
 	@CachedResult
 	@GLvoid
-	@AutoSize("GLChecks.getNamedBufferObjectSize(caps, buffer)")
+	@AutoSize("glGetNamedBufferParameterEXT(buffer, GL15.GL_BUFFER_SIZE)")
 	ByteBuffer glMapNamedBufferEXT(@GLuint int buffer, @GLenum int access);
 
 	@Dependent("OpenGL15")
@@ -924,7 +924,7 @@ public interface EXT_direct_state_access {
 
 	@Dependent("OpenGL15")
 	@StripPostfix("params")
-	@AutoSize("GLChecks.getNamedBufferObjectSize(caps, buffer)")
+	@AutoSize("glGetNamedBufferParameterEXT(buffer, GL15.GL_BUFFER_SIZE)")
 	void glGetNamedBufferPointervEXT(@GLuint int buffer, @GLenum int pname, @OutParameter @Result @GLvoid ByteBuffer params);
 
 	@Dependent("OpenGL15")
@@ -1094,7 +1094,7 @@ public interface EXT_direct_state_access {
 	@Alternate("glGetTextureParameterIivEXT")
 	@GLreturn("params")
 	@Dependent("GL_EXT_texture_integer")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTextureParameterIivEXT2(@GLuint int texture, @GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@Dependent("GL_EXT_texture_integer")
@@ -1104,7 +1104,7 @@ public interface EXT_direct_state_access {
 	@Alternate("glGetTextureParameterIuivEXT")
 	@GLreturn("params")
 	@Dependent("GL_EXT_texture_integer")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetTextureParameterIuivEXT2(@GLuint int texture, @GLenum int target, @GLenum int pname, @OutParameter @GLuint IntBuffer params);
 
 	/*
@@ -1138,7 +1138,7 @@ public interface EXT_direct_state_access {
 	@Alternate("glGetMultiTexParameterIivEXT")
 	@GLreturn("params")
 	@Dependent("GL_EXT_texture_integer")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetMultiTexParameterIivEXT2(@GLenum int texunit, @GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@Dependent("GL_EXT_texture_integer")
@@ -1148,7 +1148,7 @@ public interface EXT_direct_state_access {
 	@Alternate("glGetMultiTexParameterIuivEXT")
 	@GLreturn("params")
 	@Dependent("GL_EXT_texture_integer")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetMultiTexParameterIuivEXT2(@GLenum int texunit, @GLenum int target, @GLenum int pname, @OutParameter @GLuint IntBuffer params);
 
 	/*
@@ -1481,7 +1481,7 @@ public interface EXT_direct_state_access {
 	void glGetVertexArrayIntegeri_vEXT2(@GLuint int vaobj, @GLuint int index, @GLenum int pname, @OutParameter IntBuffer param);
 
 	@Dependent("OpenGL30")
-	@StripPostfix(value = "param")
+	@StripPostfix(value = "param", postfix = "i_v")
 	void glGetVertexArrayPointeri_vEXT(@GLuint int vaobj, @GLuint int index, @GLenum int pname, @Result @GLvoid ByteBuffer param);
 
 	/*

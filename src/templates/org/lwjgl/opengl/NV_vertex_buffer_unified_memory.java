@@ -102,7 +102,7 @@ public interface NV_vertex_buffer_unified_memory {
 
 	void glVertexAttribIFormatNV(@GLuint int index, int size, @GLenum int type, @GLsizei int stride);
 
-	@StripPostfix("result")
+	@StripPostfix(value = "result", postfix = "i64i_v")
 	void glGetIntegerui64i_vNV(@GLenum int value, @GLuint int index, @OutParameter @Check("1") @GLuint64EXT LongBuffer result);
 
 	@Alternate("glGetIntegerui64i_vNV")
