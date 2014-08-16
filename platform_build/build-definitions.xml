@@ -1,214 +1,214 @@
 <project name="definitions">
-        <!-- ================================================================== -->
-	<!-- Global properties for build 																				-->
-	<!-- ================================================================== -->
-	<property name="lwjgl.src" 					location="src" />
-	<property name="lwjgl.src.native" 			location="${lwjgl.src}/native" />
-	<property name="lwjgl.src.headers" 			location="${lwjgl.src.native}/common" />
-	<property name="lwjgl.src.templates"		location="${lwjgl.src}/templates" />
-	<property name="lwjgl.bin" 					location="bin" />
-	<property name="lwjgl.lib" 					location="libs" />
-	<property name="lwjgl.dist" 				location="dist" />
-	<property name="lwjgl.docs" 				location="doc" />
-	<property name="lwjgl.temp" 				location="temp" />
-	<property name="lwjgl.res" 					location="res" />
-	<property name="lwjgl.version" 				value="2.9.2" />
-	<property name="lwjgl.web" 						location="www" />
+    <!-- ================================================================== -->
+    <!-- Global properties for build 																				-->
+    <!-- ================================================================== -->
+    <property name="lwjgl.src" 					location="src" />
+    <property name="lwjgl.src.native" 			location="${lwjgl.src}/native" />
+    <property name="lwjgl.src.headers" 			location="${lwjgl.src.native}/common" />
+    <property name="lwjgl.src.templates"		location="${lwjgl.src}/templates" />
+    <property name="lwjgl.bin" 					location="bin" />
+    <property name="lwjgl.lib" 					location="libs" />
+    <property name="lwjgl.dist" 				location="dist" />
+    <property name="lwjgl.docs" 				location="doc" />
+    <property name="lwjgl.temp" 				location="temp" />
+    <property name="lwjgl.res" 					location="res" />
+    <property name="lwjgl.version" 				value="2.9.2" />
+    <property name="lwjgl.web" 						location="www" />
 
-	<property name="lwjgl.src.templates.al" location="${lwjgl.src.templates}/org/lwjgl/openal"/>
-	<property name="lwjgl.src.templates.gl" location="${lwjgl.src.templates}/org/lwjgl/opengl"/>
-	<property name="lwjgl.src.templates.gles" location="${lwjgl.src.templates}/org/lwjgl/opengles"/>
-	<property name="lwjgl.src.templates.cl" location="${lwjgl.src.templates}/org/lwjgl/opencl"/>
+    <property name="lwjgl.src.templates.al" location="${lwjgl.src.templates}/org/lwjgl/openal"/>
+    <property name="lwjgl.src.templates.gl" location="${lwjgl.src.templates}/org/lwjgl/opengl"/>
+    <property name="lwjgl.src.templates.gles" location="${lwjgl.src.templates}/org/lwjgl/opengles"/>
+    <property name="lwjgl.src.templates.cl" location="${lwjgl.src.templates}/org/lwjgl/opencl"/>
 
-	<property name="openal-template-pattern" value="AL*.java,EFX*.java"/>
-	<property name="opengl-template-pattern" value="GL*.java,ARB*.java,EXT*.java,KHR*.java,AMD*.java,APPLE*.java,ATI*.java,NV*.java,NVX*.java,HP*.java,IBM*.java,SUN*.java,SGIS*.java,GREMEDY*.java,INTEL*.java"/>
-	<property name="opengles-template-pattern" value="GLES*.java,ARB*.java,EXT*.java,KHR*.java,AMD*.java,ANGLE*.java,APPLE*.java,ARM*.java,DMP*.java,IMG*.java,NV*.java,OES*.java,QCOM*.java,VIV*.java"/>
+    <property name="openal-template-pattern" value="AL*.java,EFX*.java"/>
+    <property name="opengl-template-pattern" value="GL*.java,ARB*.java,EXT*.java,KHR*.java,AMD*.java,APPLE*.java,ATI*.java,NV*.java,NVX*.java,HP*.java,IBM*.java,SUN*.java,SGIS*.java,GREMEDY*.java,INTEL*.java"/>
+    <property name="opengles-template-pattern" value="GLES*.java,ARB*.java,EXT*.java,KHR*.java,AMD*.java,ANGLE*.java,APPLE*.java,ARM*.java,DMP*.java,IMG*.java,NV*.java,OES*.java,QCOM*.java,VIV*.java"/>
     <property name="opencl-template-pattern-extensions" value="KHR*.java,EXT*.java,APPLE*.java,AMD*.java,INTEL*.java,NV*.java"/>
     <property name="opencl-template-pattern" value="CL*.java,${opencl-template-pattern-extensions}"/>
         
-        <!-- ================================================================== -->
-	<!-- extra dependencies 																					-->
-	<!-- ================================================================== -->
+    <!-- ================================================================== -->
+    <!-- extra dependencies 																					-->
+    <!-- ================================================================== -->
 
-	<property name="deps" location="deps"/>
-	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
-                <classpath>
-                        <pathelement location="${deps}/ant-contrib-1.0b3.jar" />
-                </classpath>
-	</taskdef>
+    <property name="deps" location="deps"/>
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="${deps}/ant-contrib-1.0b3.jar" />
+        </classpath>
+    </taskdef>
 	
-	<!-- ================================================================== -->
-	<!-- Filesets used for targets 																					-->
-	<!-- ================================================================== -->
+    <!-- ================================================================== -->
+    <!-- Filesets used for targets 																					-->
+    <!-- ================================================================== -->
 
-	<!-- Files to include in the lwjgl.jar file -->
-	<fileset id="lwjgl.fileset" dir="${lwjgl.bin}">
-		<patternset id="lwjgl.package.pattern">
-			<include name="org/**/*" />
-			<exclude name="org/lwjgl/opengles/**"/>
-			<exclude name="org/lwjgl/d3d/**" />
-			<exclude name="org/lwjgl/test/**" />
-			<exclude name="org/lwjgl/util/**" />
-			<exclude name="org/lwjgl/examples/**" />
-		</patternset>
-	</fileset>
-	<fileset id="lwjgl.fileset.dependencies" dir="${lwjgl.bin}">
-		<patternset id="lwjgl.package.dependencies.pattern">
-			<include name="org/lwjgl/opengles/ContextAttribs*.*"/>
-		</patternset>
-	</fileset>
+    <!-- Files to include in the lwjgl.jar file -->
+    <fileset id="lwjgl.fileset" dir="${lwjgl.bin}">
+        <patternset id="lwjgl.package.pattern">
+            <include name="org/**/*" />
+            <exclude name="org/lwjgl/opengles/**"/>
+            <exclude name="org/lwjgl/d3d/**" />
+            <exclude name="org/lwjgl/test/**" />
+            <exclude name="org/lwjgl/util/**" />
+            <exclude name="org/lwjgl/examples/**" />
+        </patternset>
+    </fileset>
+    <fileset id="lwjgl.fileset.dependencies" dir="${lwjgl.bin}">
+        <patternset id="lwjgl.package.dependencies.pattern">
+            <include name="org/lwjgl/opengles/ContextAttribs*.*"/>
+        </patternset>
+    </fileset>
 
-	<!-- Files to include in the lwjgl_util_applet.jar file -->
-	<fileset id="lwjgl_util_applet.fileset" dir="${lwjgl.bin}">
-		<patternset id="lwjgl_util_applet.package.pattern">
-			<exclude name="**.*"/>
-			<include name="org/lwjgl/util/applet/**"/>
-		</patternset>
-	</fileset>
+    <!-- Files to include in the lwjgl_util_applet.jar file -->
+    <fileset id="lwjgl_util_applet.fileset" dir="${lwjgl.bin}">
+        <patternset id="lwjgl_util_applet.package.pattern">
+            <exclude name="**.*"/>
+            <include name="org/lwjgl/util/applet/**"/>
+        </patternset>
+    </fileset>
 
-	<!-- Files to include in the lwjgl_test.jar file -->
-	<fileset id="lwjgl_test.fileset" dir="${lwjgl.bin}">
-		<exclude name="**.*" />
-		<include name="org/lwjgl/test/**" />
-		<exclude name="org/lwjgl/test/opengles/**"/>
-		<include name="org/lwjgl/examples/**" />
-	</fileset>
+    <!-- Files to include in the lwjgl_test.jar file -->
+    <fileset id="lwjgl_test.fileset" dir="${lwjgl.bin}">
+        <exclude name="**.*" />
+        <include name="org/lwjgl/test/**" />
+        <exclude name="org/lwjgl/test/opengles/**"/>
+        <include name="org/lwjgl/examples/**" />
+    </fileset>
 
-  <!-- More files to include in the lwjgl_test.jar file -->
-	<fileset id="lwjgl_test_extra.fileset" dir="${lwjgl.src}/java">
-		<exclude name="**.*" />
-		<include name="org/lwjgl/test/opengl/shaders/*.fp" />
+    <!-- More files to include in the lwjgl_test.jar file -->
+    <fileset id="lwjgl_test_extra.fileset" dir="${lwjgl.src}/java">
+        <exclude name="**.*" />
+        <include name="org/lwjgl/test/opengl/shaders/*.fp" />
         <include name="org/lwjgl/test/opengl/shaders/*.vp" />
         <include name="org/lwjgl/test/opengl/shaders/*.vsh" />
         <include name="org/lwjgl/test/opengl/shaders/*.fsh" />
         <include name="org/lwjgl/test/opencl/gl/*.cl" />
-	</fileset>
+    </fileset>
 
-	<!-- Files to include in the lwjgl_test.jar file for the ES build -->
-	<fileset id="lwjgl_test_es.fileset" dir="${lwjgl.bin}">
-		<exclude name="**.*"/>
-		<include name="org/lwjgl/test/**"/>
-		<exclude name="org/lwjgl/test/opengl/**"/>
-		<exclude name="org/lwjgl/test/*.*"/>
-	</fileset>
+    <!-- Files to include in the lwjgl_test.jar file for the ES build -->
+    <fileset id="lwjgl_test_es.fileset" dir="${lwjgl.bin}">
+        <exclude name="**.*"/>
+        <include name="org/lwjgl/test/**"/>
+        <exclude name="org/lwjgl/test/opengl/**"/>
+        <exclude name="org/lwjgl/test/*.*"/>
+    </fileset>
 
-	<!-- Files to include in the lwjgl_util.jar file -->
-	<fileset id="lwjgl_util.fileset" dir="${lwjgl.bin}">
-		<patternset id="lwjgl_util.package.pattern">
-			<exclude name="**.*" />
-			<exclude name="org/lwjgl/util/generator/**" />
-			<exclude name="org/lwjgl/util/applet/**" />
-			<include name="org/lwjgl/util/**" />
-		</patternset>
-	</fileset>
+    <!-- Files to include in the lwjgl_util.jar file -->
+    <fileset id="lwjgl_util.fileset" dir="${lwjgl.bin}">
+        <patternset id="lwjgl_util.package.pattern">
+            <exclude name="**.*" />
+            <exclude name="org/lwjgl/util/generator/**" />
+            <exclude name="org/lwjgl/util/applet/**" />
+            <include name="org/lwjgl/util/**" />
+        </patternset>
+    </fileset>
 
 
-	<!-- Files to include in the lwjgl_applet.jar file -->
-	<fileset id="lwjgl_applet.fileset" dir="${lwjgl.bin}">
-		<exclude name="**.*"/>
-		<include name="org/lwjgl/test/applet/**"/>
-		<include name="org/lwjgl/test/opengl/awt/AWTGearsCanvas.class"/>
-	</fileset>
+    <!-- Files to include in the lwjgl_applet.jar file -->
+    <fileset id="lwjgl_applet.fileset" dir="${lwjgl.bin}">
+        <exclude name="**.*"/>
+        <include name="org/lwjgl/test/applet/**"/>
+        <include name="org/lwjgl/test/opengl/awt/AWTGearsCanvas.class"/>
+    </fileset>
 
-	<!-- Files to make Javadoc from -->
-	<fileset id="lwjgl.javadoc.fileset" dir="${lwjgl.src}">
-		<include name="**/*.java" />
-		<exclude name="native/**" />
-		<exclude name="templates/**" />
-		<exclude name="java/org/lwjgl/test/**" />
-		<exclude name="java/org/lwjgl/examples/**" />
-		<exclude name="java/org/lwjgl/util/generator/**" />
-	</fileset>
+    <!-- Files to make Javadoc from -->
+    <fileset id="lwjgl.javadoc.fileset" dir="${lwjgl.src}">
+        <include name="**/*.java" />
+        <exclude name="native/**" />
+        <exclude name="templates/**" />
+        <exclude name="java/org/lwjgl/test/**" />
+        <exclude name="java/org/lwjgl/examples/**" />
+        <exclude name="java/org/lwjgl/util/generator/**" />
+    </fileset>
 
-	<!-- Files to include in doc package -->
-	<patternset id="lwjgl-docs.fileset">
-		<include name="CREDITS" />
-		<include name="LICENSE" />
-		<include name="README" />
-		<include name="lwjgl_hidden_switches.text" />
-		<include name="3rdparty/*" />
-	</patternset>
+    <!-- Files to include in doc package -->
+    <patternset id="lwjgl-docs.fileset">
+        <include name="CREDITS" />
+        <include name="LICENSE" />
+        <include name="README" />
+        <include name="lwjgl_hidden_switches.text" />
+        <include name="3rdparty/*" />
+    </patternset>
 
-	<!-- Files to include in windows package -->
-	<patternset id="lwjgl-windows.fileset">
-		<patternset id="lwjgl-windows-lwjgl.fileset">
-			<include name="lwjgl.dll" />
-			<include name="lwjgl64.dll" />
-			<include name="OpenAL32.dll" />
-			<include name="OpenAL64.dll" />
-		</patternset>
-		<patternset id="lwjgl-windows-jinput.fileset">
-	    	<include name="jinput-dx8*.dll" />
-	    	<include name="jinput-raw*.dll" />
-		</patternset>
-	</patternset>
+    <!-- Files to include in windows package -->
+    <patternset id="lwjgl-windows.fileset">
+        <patternset id="lwjgl-windows-lwjgl.fileset">
+            <include name="lwjgl.dll" />
+            <include name="lwjgl64.dll" />
+            <include name="OpenAL32.dll" />
+            <include name="OpenAL64.dll" />
+        </patternset>
+        <patternset id="lwjgl-windows-jinput.fileset">
+            <include name="jinput-dx8*.dll" />
+            <include name="jinput-raw*.dll" />
+        </patternset>
+    </patternset>
 
-	<!-- Files to include in linux, glibc2.3 package -->
-	<patternset id="lwjgl-linux.fileset">
-		<patternset id="lwjgl-linux-lwjgl.fileset">
-			<include name="liblwjgl*.so" />
-			<include name="libopenal*.so" />
-		</patternset>
-		<patternset id="lwjgl-linux-jinput.fileset">
-			<include name="libjinput-linux.so" />
-			<include name="libjinput-linux64.so" />
-		</patternset>
-	</patternset>
+    <!-- Files to include in linux, glibc2.3 package -->
+    <patternset id="lwjgl-linux.fileset">
+        <patternset id="lwjgl-linux-lwjgl.fileset">
+            <include name="liblwjgl*.so" />
+            <include name="libopenal*.so" />
+        </patternset>
+        <patternset id="lwjgl-linux-jinput.fileset">
+            <include name="libjinput-linux.so" />
+            <include name="libjinput-linux64.so" />
+        </patternset>
+    </patternset>
 
-	<!-- Files to include in mac os x package -->
-	<patternset id="lwjgl-macosx.fileset">
-		<patternset id="lwjgl-macosx-lwjgl.fileset">
-			<include name="liblwjgl.dylib" />
-			<include name="openal.dylib" />
-		</patternset>
-		<patternset id="lwjgl-macosx-jinput.fileset">
-		    <include name="libjinput-osx.dylib" />
-		    <include name="libjinput-osx-legacy.dylib" />
-		</patternset>
-	</patternset>
+    <!-- Files to include in mac os x package -->
+    <patternset id="lwjgl-macosx.fileset">
+        <patternset id="lwjgl-macosx-lwjgl.fileset">
+            <include name="liblwjgl.dylib" />
+            <include name="openal.dylib" />
+        </patternset>
+        <patternset id="lwjgl-macosx-jinput.fileset">
+            <include name="libjinput-osx.dylib" />
+            <include name="libjinput-osx-legacy.dylib" />
+        </patternset>
+    </patternset>
 
-	<!-- Files to include in solaris package -->
-	<patternset id="lwjgl-solaris.fileset">
-		<include name="liblwjgl*.so" />
-		<include name="libopenal*.so" />
-	</patternset>
+    <!-- Files to include in solaris package -->
+    <patternset id="lwjgl-solaris.fileset">
+        <include name="liblwjgl*.so" />
+        <include name="libopenal*.so" />
+    </patternset>
 
-	<!-- Files to include in source distribution -->
-	<fileset id="lwjgl.source.fileset" dir=".">
+    <!-- Files to include in source distribution -->
+    <fileset id="lwjgl.source.fileset" dir=".">
         <include name="build.xml" />
         <include name="src/**" />
-    	<include name="platform_build/**/*" />
-	</fileset>
+        <include name="platform_build/**/*" />
+    </fileset>
 
-	<!-- files in the base package -->
-	<patternset id="lwjgl_base">
-		<include name="**" />
-		<exclude name="res/ILtest.*" />
-		<exclude name="res/Missing_you.mod" />
-		<exclude name="res/phero*.*" />
-	</patternset>
+    <!-- files in the base package -->
+    <patternset id="lwjgl_base">
+        <include name="**" />
+        <exclude name="res/ILtest.*" />
+        <exclude name="res/Missing_you.mod" />
+        <exclude name="res/phero*.*" />
+    </patternset>
 
-	<!-- files in the optional package -->
-	<patternset id="lwjgl_optional">
-		<include name="res/**" />
-		<exclude name="res/logo/**" />
-		<exclude name="res/spaceinvaders/**" />
-		<exclude name="res/*.wav" />
-		<exclude name="res/*.xpm" />
-		<include name="doc/CREDITS" />
-		<include name="doc/LICENSE" />
-		<include name="doc/README" />
-	</patternset>
+    <!-- files in the optional package -->
+    <patternset id="lwjgl_optional">
+        <include name="res/**" />
+        <exclude name="res/logo/**" />
+        <exclude name="res/spaceinvaders/**" />
+        <exclude name="res/*.wav" />
+        <exclude name="res/*.xpm" />
+        <include name="doc/CREDITS" />
+        <include name="doc/LICENSE" />
+        <include name="doc/README" />
+    </patternset>
 
-	<!-- files in the lwjgl_applet package -->
-	<patternset id="lwjgl_applet">
-		<include name="applet/**" />
-		<exclude name="applet/appletviewer.policy" />
-		<exclude name="applet/lwjglkeystore" />
-	</patternset>
+    <!-- files in the lwjgl_applet package -->
+    <patternset id="lwjgl_applet">
+        <include name="applet/**" />
+        <exclude name="applet/appletviewer.policy" />
+        <exclude name="applet/lwjglkeystore" />
+    </patternset>
 
-	<uptodate property="lwjgl.main.built" targetfile="${lwjgl.lib}/windows/lwjgl.dll" >
-	    <srcfiles dir= "${lwjgl.src.native}/common" includes="*.c*"/>
-	    <srcfiles dir= "${lwjgl.src.native}/windows" includes="*.c"/>
-	</uptodate>
+    <uptodate property="lwjgl.main.built" targetfile="${lwjgl.lib}/windows/lwjgl.dll" >
+        <srcfiles dir= "${lwjgl.src.native}/common" includes="*.c*"/>
+        <srcfiles dir= "${lwjgl.src.native}/windows" includes="*.c"/>
+    </uptodate>
 </project>

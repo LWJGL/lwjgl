@@ -81,7 +81,7 @@
             <compilerarg value="-s"/>
             <compilerarg path="${lwjgl.src}/generated"/>
             <compilerarg value="-d"/>
-            <compilerarg path="${lwjgl.src.native}/generated/openal"/>
+            <compilerarg path="${lwjgl.bin}"/>
             <compilerarg value="-Abinpath=${lwjgl.bin}"/>
             <compilerarg value="-Atypemap=org.lwjgl.util.generator.openal.ALTypeMap"/>
             <src>
@@ -112,7 +112,7 @@
             <compilerarg value="-s"/>
             <compilerarg path="${lwjgl.src}/generated"/>
             <compilerarg value="-d"/>
-            <compilerarg path="${lwjgl.src.native}/generated/openal"/>
+            <compilerarg path="${lwjgl.bin}"/>
             <compilerarg value="-Abinpath=${lwjgl.bin}"/>
             <compilerarg value="-Atypemap=org.lwjgl.util.generator.openal.ALTypeMap"/>
             <compilerarg value="-Ageneratechecks"/>
@@ -152,7 +152,7 @@
             <compilerarg value="-s"/>
             <compilerarg path="${lwjgl.src}/generated"/>
             <compilerarg value="-d"/>
-            <compilerarg path="${lwjgl.src.native}/generated/opengl"/>
+            <compilerarg path="${lwjgl.bin}"/>
             <compilerarg value="-Abinpath=${lwjgl.bin}"/>
             <compilerarg value="-Acontextspecific"/>
             <compilerarg value="-Atypemap=org.lwjgl.util.generator.opengl.GLTypeMap"/>
@@ -186,7 +186,7 @@
             <compilerarg value="-s"/>
             <compilerarg path="${lwjgl.src}/generated"/>
             <compilerarg value="-d"/>
-            <compilerarg path="${lwjgl.src.native}/generated/opengl"/>
+            <compilerarg path="${lwjgl.bin}"/>
             <compilerarg value="-Abinpath=${lwjgl.bin}"/>
             <compilerarg value="-Ageneratechecks"/>
             <compilerarg value="-Acontextspecific"/>
@@ -314,7 +314,7 @@
             <compilerarg value="-s"/>
             <compilerarg path="${lwjgl.src}/generated"/>
             <compilerarg value="-d"/>
-            <compilerarg path="${lwjgl.src.native}/generated/opengles"/>
+            <compilerarg path="${lwjgl.bin}"/>
             <compilerarg value="-Abinpath=${lwjgl.bin}"/>
             <!--<compilerarg value="-Acontextspecific"/>-->
             <compilerarg value="-Atypemap=org.lwjgl.util.generator.opengl.GLESTypeMap"/>
@@ -348,7 +348,7 @@
             <compilerarg value="-s"/>
             <compilerarg path="${lwjgl.src}/generated"/>
             <compilerarg value="-d"/>
-            <compilerarg path="${lwjgl.src.native}/generated/opengles"/>
+            <compilerarg path="${lwjgl.bin}"/>
             <compilerarg value="-Abinpath=${lwjgl.bin}"/>
             <compilerarg value="-Ageneratechecks"/>
             <!--<compilerarg value="-Acontextspecific"/>-->
@@ -482,7 +482,7 @@
             <compilerarg value="-s"/>
             <compilerarg path="${lwjgl.src}/generated"/>
             <compilerarg value="-d"/>
-            <compilerarg path="${lwjgl.src.native}/generated/opencl"/>
+            <compilerarg path="${lwjgl.bin}"/>
             <compilerarg value="-Abinpath=${lwjgl.bin}"/>
             <compilerarg value="-Ageneratechecks"/>
             <compilerarg value="-Acontextspecific"/>
