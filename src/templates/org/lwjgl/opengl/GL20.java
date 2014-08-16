@@ -199,7 +199,7 @@ public interface GL20 {
 
 	@Alternate("glGetShaderiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetShaderiv3(@GLuint int shader, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -215,7 +215,7 @@ public interface GL20 {
 
 	@Alternate("glGetProgramiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetProgramiv3(@GLuint int program, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glGetShaderInfoLog(@GLuint int shader, @AutoSize("infoLog") @GLsizei int maxLength,

@@ -89,7 +89,7 @@ public interface ARB_occlusion_query {
 
 	@Alternate("glGetQueryivARB")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetQueryivARB3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -97,7 +97,7 @@ public interface ARB_occlusion_query {
 
 	@Alternate("glGetQueryObjectivARB")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetQueryObjectivARB2(@GLuint int id, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -105,6 +105,6 @@ public interface ARB_occlusion_query {
 
 	@Alternate("glGetQueryObjectuivARB")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetQueryObjectuivARB2(@GLuint int id, @GLenum int pname, @OutParameter IntBuffer params);
 }

@@ -100,7 +100,7 @@ public interface ARB_sampler_objects {
 	@Reuse("GL33")
 	@Alternate("glGetSamplerParameteriv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetSamplerParameteriv2(@GLuint int sampler, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@Reuse("GL33")
@@ -110,7 +110,7 @@ public interface ARB_sampler_objects {
 	@Reuse("GL33")
 	@Alternate("glGetSamplerParameterfv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetSamplerParameterfv2(@GLuint int sampler, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@Reuse("GL33")
@@ -120,7 +120,7 @@ public interface ARB_sampler_objects {
 	@Reuse("GL33")
 	@Alternate("glGetSamplerParameterIiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetSamplerParameterIiv2(@GLuint int sampler, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@Reuse("GL33")
@@ -130,7 +130,7 @@ public interface ARB_sampler_objects {
 	@Reuse("GL33")
 	@Alternate("glGetSamplerParameterIuiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetSamplerParameterIuiv2(@GLuint int sampler, @GLenum int pname, @OutParameter IntBuffer params);
 
 }

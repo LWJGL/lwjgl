@@ -90,7 +90,7 @@ public interface NV_program {
 
 	@Alternate("glGetProgramivNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetProgramivNV3(@GLuint int programID, @GLenum int parameterName, @OutParameter @GLint IntBuffer params);
 
 	void glGetProgramStringNV(@GLuint int programID, @GLenum int parameterName, @OutParameter @Check @GLubyte Buffer paramString);

@@ -132,7 +132,7 @@ public interface ARB_uniform_buffer_object {
 	@Reuse("GL31")
 	@Alternate("glGetActiveUniformsiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetActiveUniformsiv2(@GLuint int program, @Constant("1") @GLsizei int uniformCount,
 	                            @Constant(value = "params.put(1, uniformIndex), 1", keepParam = true) int uniformIndex, // Reuse params buffer
 	                            @GLenum int pname,
@@ -176,7 +176,7 @@ public interface ARB_uniform_buffer_object {
 	@Reuse("GL31")
 	@Alternate("glGetActiveUniformBlockiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetActiveUniformBlockiv3(@GLuint int program, @GLuint int uniformBlockIndex, @GLenum int pname,
 	                                @OutParameter @GLint IntBuffer params);
 

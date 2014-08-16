@@ -176,7 +176,7 @@ public interface GL15 {
 
 	@Alternate("glGetBufferParameteriv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetBufferParameteriv3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("pointer")
@@ -234,7 +234,7 @@ public interface GL15 {
 
 	@Alternate("glGetQueryiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetQueryiv3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -242,7 +242,7 @@ public interface GL15 {
 
 	@Alternate("glGetQueryObjectiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetQueryObjectiv2(@GLenum int id, @GLenum int pname, @OutParameter @GLint IntBuffer params);
 
 	@StripPostfix("params")
@@ -250,6 +250,6 @@ public interface GL15 {
 
 	@Alternate("glGetQueryObjectuiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetQueryObjectuiv2(@GLenum int id, @GLenum int pname, @OutParameter @GLuint IntBuffer params);
 }

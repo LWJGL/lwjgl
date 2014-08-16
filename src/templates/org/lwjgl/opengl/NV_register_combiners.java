@@ -112,7 +112,7 @@ public interface NV_register_combiners {
 
 	@Alternate("glGetCombinerInputParameterfvNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetCombinerInputParameterfvNV2(@GLenum int stage, @GLenum int portion, @GLenum int variable, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@StripPostfix("params")
@@ -120,7 +120,7 @@ public interface NV_register_combiners {
 
 	@Alternate("glGetCombinerInputParameterivNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetCombinerInputParameterivNV2(@GLenum int stage, @GLenum int portion, @GLenum int variable, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -128,7 +128,7 @@ public interface NV_register_combiners {
 
 	@Alternate("glGetCombinerOutputParameterfvNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetCombinerOutputParameterfvNV2(@GLenum int stage, @GLenum int portion, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@StripPostfix("params")
@@ -136,7 +136,7 @@ public interface NV_register_combiners {
 
 	@Alternate("glGetCombinerOutputParameterivNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetCombinerOutputParameterivNV2(@GLenum int stage, @GLenum int portion, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -144,7 +144,7 @@ public interface NV_register_combiners {
 
 	@Alternate("glGetFinalCombinerInputParameterfvNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetFinalCombinerInputParameterfvNV2(@GLenum int variable, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@StripPostfix("params")
@@ -152,6 +152,6 @@ public interface NV_register_combiners {
 
 	@Alternate("glGetFinalCombinerInputParameterivNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetFinalCombinerInputParameterivNV2(@GLenum int variable, @GLenum int pname, @OutParameter IntBuffer params);
 }

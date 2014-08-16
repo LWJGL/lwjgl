@@ -68,7 +68,7 @@ public interface NV_shader_buffer_load {
 
 	@Alternate("glGetBufferParameterui64vNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetBufferParameterui64vNV2(@GLenum int target, @GLenum int pname, @OutParameter @GLuint64EXT LongBuffer params);
 
 	@StripPostfix("params")
@@ -76,7 +76,7 @@ public interface NV_shader_buffer_load {
 
 	@Alternate("glGetNamedBufferParameterui64vNV")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetNamedBufferParameterui64vNV2(@GLuint int buffer, @GLenum int pname, @OutParameter @GLuint64EXT LongBuffer params);
 
 	@StripPostfix("result")
@@ -84,7 +84,7 @@ public interface NV_shader_buffer_load {
 
 	@Alternate("glGetIntegerui64vNV")
 	@GLreturn("result")
-	@StripPostfix(value = "result", postfix = "v")
+	@StripPostfix(value = "result", hasPostfix = false)
 	void glGetIntegerui64vNV2(@GLenum int value, @OutParameter @GLuint64EXT LongBuffer result);
 
 	void glUniformui64NV(int location, @GLuint64EXT long value);

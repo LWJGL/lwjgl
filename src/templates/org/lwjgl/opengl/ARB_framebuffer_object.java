@@ -231,7 +231,7 @@ public interface ARB_framebuffer_object {
 	@Reuse("GL30")
 	@Alternate("glGetRenderbufferParameteriv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetRenderbufferParameteriv3(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@Reuse("GL30")
@@ -297,7 +297,7 @@ public interface ARB_framebuffer_object {
 	@Reuse("GL30")
 	@Alternate("glGetFramebufferAttachmentParameteriv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetFramebufferAttachmentParameteriv3(@GLenum int target, @GLenum int attachment,
 	                                            @GLenum int pname, @OutParameter IntBuffer params);
 

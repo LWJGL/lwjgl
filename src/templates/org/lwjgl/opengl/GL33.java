@@ -128,7 +128,7 @@ public interface GL33 {
 
 	@Alternate("glGetSamplerParameteriv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetSamplerParameteriv2(@GLuint int sampler, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -136,7 +136,7 @@ public interface GL33 {
 
 	@Alternate("glGetSamplerParameterfv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetSamplerParameterfv2(@GLuint int sampler, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	@StripPostfix("params")
@@ -144,7 +144,7 @@ public interface GL33 {
 
 	@Alternate("glGetSamplerParameterIiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetSamplerParameterIiv2(@GLuint int sampler, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -152,7 +152,7 @@ public interface GL33 {
 
 	@Alternate("glGetSamplerParameterIuiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetSamplerParameterIuiv2(@GLuint int sampler, @GLenum int pname, @OutParameter IntBuffer params);
 
 	// -------------------------------------------------------------------
@@ -218,7 +218,7 @@ public interface GL33 {
 
 	@Alternate("glGetQueryObjecti64v")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetQueryObjecti64v3(@GLuint int id, @GLenum int pname, @OutParameter @GLint64 LongBuffer params);
 
 	@StripPostfix("params")
@@ -234,7 +234,7 @@ public interface GL33 {
 
 	@Alternate("glGetQueryObjectui64v")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetQueryObjectui64v3(@GLuint int id, @GLenum int pname, @OutParameter @GLuint64 LongBuffer params);
 
 	// --------------------------------------------------------------------

@@ -49,8 +49,9 @@ import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
 
 import java.io.*;
-import java.util.*;
 import java.nio.*;
+import java.util.*;
+import java.util.regex.*;
 
 public class JavaMethodsGenerator {
 	private static final String SAVED_PARAMETER_POSTFIX = "_saved";
@@ -392,36 +393,43 @@ public class JavaMethodsGenerator {
 		return false;
 	}
 
+	private static final Map<String, Pattern> postfixPatterns = new HashMap<String, Pattern>();
+
+	private static Pattern getPostfixPattern(String regex) {
+		Pattern pattern = postfixPatterns.get(regex);
+		if ( pattern == null )
+			postfixPatterns.put(regex, pattern = Pattern.compile(regex));
+		return pattern;
+	}
+
 	private static String getPostfixStrippedName(TypeMap type_map, InterfaceDeclaration interface_decl, MethodDeclaration method) {
 		StripPostfix strip_annotation = method.getAnnotation(StripPostfix.class);
 		ParameterDeclaration postfix_parameter = Utils.findParameter(method, strip_annotation.value());
 		String postfix = strip_annotation.postfix();
-		if ( "NULL".equals(postfix) ) {
+		boolean postfixOverride = !("NULL".equals(postfix) && strip_annotation.hasPostfix());
+		if ( !postfixOverride ) {
 			PostfixTranslator translator = new PostfixTranslator(type_map, postfix_parameter);
 			postfix_parameter.getType().accept(translator);
 			postfix = translator.getSignature();
-		}
+		} else if ( !strip_annotation.hasPostfix() )
+			postfix = "";
+
 		String method_name;
 		Alternate alt_annotation = method.getAnnotation(Alternate.class);
 		method_name = alt_annotation == null || alt_annotation.javaAlt() ? method.getSimpleName() : alt_annotation.value();
 
 		String extension_postfix = "NULL".equals(strip_annotation.extension()) ? getExtensionPostfix(interface_decl) : strip_annotation.extension();
-		String result;
 
-		if ( strip_annotation.hasPostfix() && method_name.endsWith(postfix + "v" + extension_postfix))
-			result = method_name.substring(0, method_name.length() - (postfix.length() + 1 + extension_postfix.length()));
-		else if ( strip_annotation.hasPostfix() && method_name.endsWith(postfix + extension_postfix))
-			result = method_name.substring(0, method_name.length() - (postfix.length() + extension_postfix.length()));
-		else if ( strip_annotation.hasPostfix() && method_name.endsWith(postfix + "i_v" + extension_postfix) )
-			result = method_name.substring(0, method_name.length() - (postfix.length() + 3 + extension_postfix.length()));
-		else if ( method_name.endsWith("i_v" + extension_postfix) )
-			result = method_name.substring(0, method_name.length() - (3 + extension_postfix.length()));
-		else if (method_name.endsWith("v" + extension_postfix))
-			result = method_name.substring(0, method_name.length() - (1 + extension_postfix.length()));
-		else
-			throw new RuntimeException(method + " is specified as being postfix stripped on parameter " + postfix_parameter + ", but it's postfix is not '" + postfix + "' nor 'v'");
+		Matcher matcher = getPostfixPattern(
+			postfixOverride
+				? (postfix + "(?:v)?" + extension_postfix + "$")
+				: ("(?:" + postfix + "(?:v)?|i(?:64)?_v|v)" + extension_postfix + "$")
+		).matcher(method_name);
 
-		return result + extension_postfix;
+		if ( !matcher.find() )
+			throw new RuntimeException(method_name + " is specified as being postfix stripped on parameter " + postfix_parameter + ", but it's postfix is neither '" + postfix + "' nor 'v'");
+
+		return method_name.substring(0, matcher.start()) + extension_postfix;
 	}
 
 	private static int getBufferElementSizeExponent(Class c) {

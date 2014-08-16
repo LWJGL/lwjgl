@@ -413,7 +413,7 @@ public interface GLES30 {
 
 	@Alternate("glGetQueryiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetQueryiv2(@GLenum int target, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -421,7 +421,7 @@ public interface GLES30 {
 
 	@Alternate("glGetQueryObjectuiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetQueryObjectuiv2(@GLenum int id, @GLenum int pname, @OutParameter @GLuint IntBuffer params);
 
 	boolean glUnmapBuffer(@GLenum int target);
@@ -662,7 +662,7 @@ public interface GLES30 {
 
 	@Alternate("glGetActiveUniformsiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetActiveUniformsiv(@GLuint int program, @Constant("1") @GLsizei int uniformCount,
 	                           @Constant(value = "MemoryUtil.getAddress(params.put(1, uniformIndex), 1)", keepParam = true) int uniformIndex, // Reuse params buffer
 	                           @GLenum int pname,
@@ -681,7 +681,7 @@ public interface GLES30 {
 
 	@Alternate("glGetActiveUniformBlockiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetActiveUniformBlockiv2(@GLuint int program, @GLuint int uniformBlockIndex, @GLenum int pname,
 	                                @OutParameter @GLint IntBuffer params);
 
@@ -742,7 +742,7 @@ public interface GLES30 {
 
 	@Alternate("glGetSynciv")
 	@GLreturn("values")
-	@StripPostfix(value = "values", postfix = "v")
+	@StripPostfix(value = "values", hasPostfix = false)
 	void glGetSynciv2(@PointerWrapper("GLsync") GLSync sync, @GLenum int pname, @Constant("1") @GLsizei int bufSize,
 	                  @OutParameter @GLsizei @Constant("0L") IntBuffer length,
 	                  @OutParameter IntBuffer values);
@@ -752,7 +752,7 @@ public interface GLES30 {
 
 	@Alternate("glGetBufferParameteri64v")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetBufferParameteri64v2(@GLenum int target, @GLenum int pname, @OutParameter LongBuffer params);
 
 	void glGenSamplers(@AutoSize("samplers") @GLsizei int count, @OutParameter @GLuint IntBuffer samplers);
@@ -785,7 +785,7 @@ public interface GLES30 {
 
 	@Alternate("glGetSamplerParameteriv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetSamplerParameteriv2(@GLuint int sampler, @GLenum int pname, @OutParameter IntBuffer params);
 
 	@StripPostfix("params")
@@ -793,7 +793,7 @@ public interface GLES30 {
 
 	@Alternate("glGetSamplerParameterfv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", postfix = "v")
+	@StripPostfix(value = "params", hasPostfix = false)
 	void glGetSamplerParameterfv2(@GLuint int sampler, @GLenum int pname, @OutParameter FloatBuffer params);
 
 	void glVertexAttribDivisor(@GLuint int index, @GLuint int divisor);
