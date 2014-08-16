@@ -243,10 +243,10 @@ public final class GLContext {
 		}
 
 		final int[][] GL_VERSIONS = {
-			{ 1, 2, 3, 4, 5 },  // OpenGL 1
-			{ 0, 1 },           // OpenGL 2
-			{ 0, 1, 2, 3 },     // OpenGL 3
-			{ 0, 1, 2, 3, 4 },  // OpenGL 4
+			{ 1, 2, 3, 4, 5 },      // OpenGL 1
+			{ 0, 1 },               // OpenGL 2
+			{ 0, 1, 2, 3 },         // OpenGL 3
+			{ 0, 1, 2, 3, 4, 5 },   // OpenGL 4
 		};
 
 		for ( int major = 1; major <= GL_VERSIONS.length; major++ ) {
