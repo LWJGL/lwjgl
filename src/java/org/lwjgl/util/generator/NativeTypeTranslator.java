@@ -110,7 +110,7 @@ public class NativeTypeTranslator extends SimpleTypeVisitor6<Void, Void> {
 
         @Override
         public Void visitArray(ArrayType t, Void o) {
-                final Class<?> type = Utils.getJavaType(t);
+                final Class<?> type = Utils.getJavaType(t).getComponentType();
 
                 if (CharSequence.class.isAssignableFrom(type)) {
                         is_indirect = true;
@@ -195,7 +195,7 @@ public class NativeTypeTranslator extends SimpleTypeVisitor6<Void, Void> {
                 // See ARB_debug_label.glObjectPtrLabel
                 Class<?> c = getClassFromType(t);
                 if (org.lwjgl.PointerWrapper.class.isAssignableFrom(c)) {
-                        native_types = new ArrayList<Class>();
+                        native_types = new ArrayList<>();
                         native_types.add(PointerWrapper.class);
 
                         is_indirect = false;

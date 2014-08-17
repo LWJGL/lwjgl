@@ -58,7 +58,7 @@ public class CLTypeMap implements TypeMap {
 	private static final Map<Class, TypeKind> native_types_to_primitive;
 
 	static {
-		native_types_to_primitive = new HashMap<Class, TypeKind>();
+		native_types_to_primitive = new HashMap<>();
 		native_types_to_primitive.put(cl_void.class, TypeKind.BYTE);
 		native_types_to_primitive.put(cl_byte.class, TypeKind.BYTE);
 		native_types_to_primitive.put(cl_char.class, TypeKind.BYTE);

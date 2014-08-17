@@ -225,7 +225,7 @@ public class GeneratorVisitor extends ElementKindVisitor7<Void, Void> {
                 }
                 if (super_interfaces.size() == 1) {
                         TypeMirror super_interface = super_interfaces.iterator().next();
-                        java_writer.print(" extends " + super_interface.toString());
+                        java_writer.print(" extends " + Utils.getSimpleClassName(env.getElementUtils().getTypeElement(super_interface.toString())));
                 }
                 java_writer.println(" {");
                 FieldsGenerator.generateFields(env, java_writer, Utils.getFields(d));
@@ -292,7 +292,7 @@ public class GeneratorVisitor extends ElementKindVisitor7<Void, Void> {
                         for (final ExecutableElement method : methods) {
                                 validateMethod(method);
                         }
-                        java_writer = new PrintWriter(env.getFiler().createSourceFile(e.getQualifiedName(), env.getElementUtils().getPackageOf(e)).openWriter());
+                        java_writer = new PrintWriter(env.getFiler().createSourceFile(Utils.getQualifiedClassName(e), env.getElementUtils().getPackageOf(e)).openWriter());
                         generateJavaSource(e, java_writer);
 
                         if (methods.size() > 0) {

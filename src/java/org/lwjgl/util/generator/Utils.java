@@ -107,6 +107,7 @@ public class Utils {
 
         private static class AnnotationMirrorComparator implements Comparator<AnnotationMirror> {
 
+                @Override
                 public int compare(AnnotationMirror a1, AnnotationMirror a2) {
                         String n1 = a1.getAnnotationType().toString();
                         String n2 = a2.getAnnotationType().toString();
@@ -120,7 +121,7 @@ public class Utils {
         }
 
         public static List<AnnotationMirror> getSortedAnnotations(List<? extends AnnotationMirror> annotations) {
-                List<AnnotationMirror> annotation_list = new ArrayList<AnnotationMirror>(annotations);
+                List<AnnotationMirror> annotation_list = new ArrayList<>(annotations);
                 Collections.sort(annotation_list, new AnnotationMirrorComparator());
                 return annotation_list;
         }
@@ -348,7 +349,7 @@ public class Utils {
         }
 
         public static String getQualifiedClassName(TypeElement interface_decl) {
-                return interface_decl.getQualifiedName().toString();
+                return interface_decl.getEnclosingElement().asType().toString() + "." + getSimpleClassName(interface_decl);
         }
 
         public static String getSimpleClassName(TypeElement interface_decl) {

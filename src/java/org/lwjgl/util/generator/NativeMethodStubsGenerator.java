@@ -319,7 +319,7 @@ public class NativeMethodStubsGenerator {
 			final String n = getPointerArrayName(java_type);
 			final String arrayType;
 			if ( POINTER_LIST_NAME.equals(n) ) {
-				if ( n.equals(param.getSimpleName()) )
+				if ( n.equals(param.getSimpleName().toString()) )
 					throw new RuntimeException("The name '" + n + "' is not valid for object array arguments annotated with PointerArray");
 
 				arrayType = translator.getSignature(true) + (org.lwjgl.PointerWrapper.class.isAssignableFrom(java_type.getComponentType()) ? " " : "");
@@ -331,7 +331,7 @@ public class NativeMethodStubsGenerator {
 					ptrLoopDeclared = true;
 				}
 			} else {
-				if ( n.equals(param.getSimpleName()) )
+				if ( n.equals(param.getSimpleName().toString()) )
 					throw new RuntimeException("The name '" + n + "' is not valid for arguments annotated with PointerArray");
 
 				arrayType = translator.getSignature(true);
