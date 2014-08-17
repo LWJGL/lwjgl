@@ -38,9 +38,9 @@ import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedOptions;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -58,6 +58,7 @@ import org.lwjgl.util.generator.Utils;
  */
 @SupportedAnnotationTypes({"*"})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
+@SupportedOptions({"generatechecks", "contextspecific"})
 public class GLReferencesGeneratorProcessor extends AbstractProcessor {
 
         private static final String REFERENCES_CLASS_NAME = "References";
@@ -67,12 +68,13 @@ public class GLReferencesGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-                if (roundEnv.processingOver() || !first_round) {
-                        System.exit(0);
+                if (roundEnv.processingOver() || !first_round) {                        
+                        first_round = true;
+                        // System.exit(0);
                         return true;
                 }
                 try {
-                        generateReferencesSource(processingEnv, annotations);
+                        generateReferencesSource(processingEnv, Utils.getAnnotatedTemplates(roundEnv, annotations));
                         first_round = false;
                         return true;
                 } catch (IOException e) {
@@ -148,7 +150,7 @@ public class GLReferencesGeneratorProcessor extends AbstractProcessor {
                 }
         }
 
-        private void generateReferencesSource(ProcessingEnvironment env, Set<? extends TypeElement> annotations) throws IOException {
+        private void generateReferencesSource(ProcessingEnvironment env, Set<TypeElement> templates) throws IOException {
                 PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opengl." + REFERENCES_CLASS_NAME, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opengl")).openWriter());
                 writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
                 writer.println();
@@ -158,10 +160,8 @@ public class GLReferencesGeneratorProcessor extends AbstractProcessor {
                 writer.println("\t" + REFERENCES_CLASS_NAME + "(ContextCapabilities caps) {");
                 writer.println("\t\tsuper(caps);");
                 writer.println("\t}");
-                final Set<? extends TypeElement> interface_decls = annotations;
-                for (TypeElement typedecl : interface_decls) {
-                        if (typedecl.getKind().equals(ElementKind.INTERFACE)) {
-                                TypeElement interface_decl = (TypeElement) typedecl;
+                for (TypeElement interface_decl : templates) {
+                        if (interface_decl.getKind().isInterface()) {
                                 generateReferencesFromMethods(env, writer, interface_decl);
                         }
                 }
@@ -169,9 +169,8 @@ public class GLReferencesGeneratorProcessor extends AbstractProcessor {
                 writer.println("\tvoid copy(" + REFERENCES_CLASS_NAME + " " + REFERENCES_PARAMETER_NAME + ", int mask) {");
                 writer.println("\t\tsuper.copy(" + REFERENCES_PARAMETER_NAME + ", mask);");
                 writer.println("\t\tif ( (mask & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0 ) {");
-                for (TypeElement typedecl : interface_decls) {
-                        if (typedecl.getKind().equals(ElementKind.INTERFACE)) {
-                                TypeElement interface_decl = (TypeElement) typedecl;
+                for (TypeElement interface_decl : templates) {
+                        if (interface_decl.getKind().isInterface()) {
                                 generateCopiesFromMethods(processingEnv, writer, interface_decl);
                         }
                 }
@@ -179,9 +178,8 @@ public class GLReferencesGeneratorProcessor extends AbstractProcessor {
                 writer.println("\t}");
                 writer.println("\tvoid clear() {");
                 writer.println("\t\tsuper.clear();");
-                for (TypeElement typedecl : interface_decls) {
-                        if (typedecl.getKind().equals(ElementKind.INTERFACE)) {
-                                TypeElement interface_decl = (TypeElement) typedecl;
+                for (TypeElement interface_decl : templates) {
+                        if (interface_decl.getKind().isInterface()) {
                                 generateClearsFromMethods(processingEnv, writer, interface_decl);
                         }
                 }

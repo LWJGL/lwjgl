@@ -33,6 +33,7 @@ package org.lwjgl.util.generator;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
@@ -41,6 +42,7 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedOptions;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 /**
@@ -50,7 +52,7 @@ import javax.lang.model.element.TypeElement;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$ $Id$
  */
-@SupportedAnnotationTypes({ "*" })
+@SupportedAnnotationTypes({"*"})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 @SupportedOptions({"binpath", "typemap", "generatechecks", "contextspecific"})
 public class GeneratorProcessor extends AbstractProcessor {
@@ -59,7 +61,8 @@ public class GeneratorProcessor extends AbstractProcessor {
 
         @Override
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-                if (roundEnv.processingOver() || !first_round) {
+                if (roundEnv.processingOver() || !first_round) {                                                
+                        first_round = true;
                         System.exit(0);
                         return true;
                 }
@@ -75,21 +78,22 @@ public class GeneratorProcessor extends AbstractProcessor {
                 if (typemap_classname == null) {
                         throw new RuntimeException("No TypeMap class name specified with -Atypemap=<class-name>");
                 }
-                
-                TypeElement lastFile = null;
+
+                Element lastFile = null;
                 try {
                         long generatorLM = getGeneratorLastModified(bin_path);
                         TypeMap type_map = (TypeMap) (Class.forName(typemap_classname).newInstance());
-                        for (TypeElement typedecl : annotations) {
-                                lastFile = typedecl;
-                                typedecl.accept(new GeneratorVisitor(processingEnv, type_map, generate_error_checks, context_specific, generatorLM), null);
+                        for (Iterator<TypeElement> it = Utils.getAnnotatedTemplates(roundEnv, annotations).iterator(); it.hasNext();) {
+                                lastFile = it.next();
+                                lastFile.accept(new GeneratorVisitor(processingEnv, type_map, generate_error_checks, context_specific, generatorLM), null);
                         }
-                        first_round = false; return true;
+                        first_round = false;
+                        return true;
                 } catch (Exception e) {
                         if (lastFile == null) {
                                 throw new RuntimeException(e);
                         } else {
-                                throw new RuntimeException("\n-- Failed to process template: " + lastFile.getQualifiedName() + " --", e);
+                                throw new RuntimeException("\n-- Failed to process template: " + lastFile.asType().toString() + " --", e);
                         }
                 }
         }
