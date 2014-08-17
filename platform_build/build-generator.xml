@@ -119,7 +119,7 @@
 
     <!-- Generate OpenGL -->
     <target name="generate-opengl" depends="generators" description="Generates java and native source for GL">
-        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.gl}" fork="true">
+        <javac sourcepath="${lwjgl.src}/java/:${lwjgl.src}/generated" source="1.7" srcdir="${lwjgl.src.templates.gl}" fork="true" taskname="processorGL">	
             <compilerarg value="-proc:${proc}"/>
             <compilerarg value="-processor"/>
             <compilerarg value="org.lwjgl.util.generator.GeneratorProcessor"/>
@@ -132,8 +132,8 @@
             <compilerarg value="-d"/>
             <compilerarg path="${lwjgl.bin}"/>
             <compilerarg value="-Abinpath=${lwjgl.bin}"/>
-            <compilerarg value="-Acontextspecific"/>
             <compilerarg value="-Atypemap=org.lwjgl.util.generator.opengl.GLTypeMap"/>
+            <compilerarg value="-Acontextspecific"/>
             <src>
                 <fileset dir="${lwjgl.src.templates.gl}">
                     <include name="${opengl-template-pattern}"/>

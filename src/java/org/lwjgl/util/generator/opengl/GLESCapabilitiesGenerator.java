@@ -156,14 +156,14 @@ public class GLESCapabilitiesGenerator {
 
 	public static void generateUnloadStubs(ProcessingEnvironment env, PrintWriter writer, TypeElement d) {
 		// TODO: Remove GLES
-		if (Utils.getMethods(env, d).size() > 0 && !d.getSimpleName().toString().startsWith("GLES") ) {
+		if (Utils.getMethods( d).size() > 0 && !d.getSimpleName().toString().startsWith("GLES") ) {
 			writer.print("\t\tGLContext.resetNativeStubs(" + Utils.getSimpleClassName(d));
 			writer.println(".class);");
 		}
 	}
 
 	public static void generateInitStubs(ProcessingEnvironment env, PrintWriter writer, TypeElement d, boolean context_specific) {
-		if ( Utils.getMethods(env, d).size() > 0 ) {
+		if ( Utils.getMethods( d).size() > 0 ) {
 			if ( context_specific ) {
 				final Alias alias_annotation = d.getAnnotation(Alias.class);
 
@@ -204,7 +204,7 @@ public class GLESCapabilitiesGenerator {
 	}
 
 	public static void generateAddressesInitializers(ProcessingEnvironment env, PrintWriter writer, TypeElement d) {
-		Iterator<? extends ExecutableElement> methods = Utils.getMethods(env, d).iterator();
+		Iterator<? extends ExecutableElement> methods = Utils.getMethods( d).iterator();
 		if ( !methods.hasNext() )
 			return;
 
@@ -290,7 +290,7 @@ public class GLESCapabilitiesGenerator {
 
 	public static void generateSymbolAddresses(ProcessingEnvironment env, PrintWriter writer, TypeElement d) {
 		boolean first = true;
-		for ( final ExecutableElement method : Utils.getMethods(env, d) ) {
+		for ( final ExecutableElement method : Utils.getMethods( d) ) {
 			if ( method.getAnnotation(Alternate.class) != null || method.getAnnotation(Reuse.class) != null )
 				continue;
 

@@ -41,11 +41,12 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedOptions;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.ElementFilter;
 import org.lwjgl.PointerWrapper;
 import org.lwjgl.opencl.CLDevice;
 import org.lwjgl.opencl.CLPlatform;
-import org.lwjgl.util.generator.Utils;
 
 /**
  * Generator tool for creating the OpenCL capabilities classes
@@ -82,7 +83,7 @@ public class CLGeneratorProcessor extends AbstractProcessor {
                         return true;
                 }
                 try {
-                        Set<TypeElement> templates = Utils.getAnnotatedTemplates(roundEnv, annotations);
+                        Set<TypeElement> templates = ElementFilter.typesIn(roundEnv.getRootElements());
                         /**
                          * provide the full set of ex-InterfaceDeclaration
                          * annotated templates elements

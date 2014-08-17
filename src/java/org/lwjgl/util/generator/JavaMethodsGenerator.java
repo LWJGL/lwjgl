@@ -61,7 +61,7 @@ public class JavaMethodsGenerator {
 	private static final String SAVED_PARAMETER_POSTFIX = "_saved";
 
 	public static void generateMethodsJava(ProcessingEnvironment env, TypeMap type_map, PrintWriter writer, TypeElement interface_decl, boolean generate_error_checks, boolean context_specific) {
-		for (ExecutableElement method : Utils.getMethods(env, interface_decl))
+		for (ExecutableElement method : Utils.getMethods( interface_decl))
 			generateMethodJava(env, type_map, writer, interface_decl, method, generate_error_checks, context_specific);
 	}
 

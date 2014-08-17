@@ -59,7 +59,7 @@ public class CLCapabilitiesGenerator {
                 final boolean aliased = alias_annotation != null && alias_annotation.postfix().length() > 0;
 
                 boolean foundNative = false;
-                for (final ExecutableElement method : Utils.getMethods(env, d)) {
+                for (final ExecutableElement method : Utils.getMethods( d)) {
                         if (method.getAnnotation(Alternate.class) != null || method.getAnnotation(Reuse.class) != null) {
                                 continue;
                         }
@@ -90,7 +90,7 @@ public class CLCapabilitiesGenerator {
 
                 for (final TypeElement d : interface_decls) {
                         if (d.getKind().isInterface()) {
-                                if (Utils.getMethods(env, d).isEmpty()) {
+                                if (Utils.getMethods( d).isEmpty()) {
                                         continue;
                                 }
 
@@ -104,7 +104,7 @@ public class CLCapabilitiesGenerator {
         }
 
         static void generateExtensionChecks(ProcessingEnvironment env, final PrintWriter writer, TypeElement d) {
-                Iterator<? extends ExecutableElement> methods = Utils.getMethods(env, d).iterator();
+                Iterator<? extends ExecutableElement> methods = Utils.getMethods( d).iterator();
                 if (!methods.hasNext()) {
                         return;
                 }

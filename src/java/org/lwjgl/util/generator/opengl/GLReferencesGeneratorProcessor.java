@@ -44,6 +44,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.util.ElementFilter;
 import org.lwjgl.util.generator.Alternate;
 import org.lwjgl.util.generator.CachedReference;
 import org.lwjgl.util.generator.Utils;
@@ -74,7 +75,7 @@ public class GLReferencesGeneratorProcessor extends AbstractProcessor {
                         return true;
                 }
                 try {
-                        generateReferencesSource(processingEnv, Utils.getAnnotatedTemplates(roundEnv, annotations));
+                        generateReferencesSource(processingEnv, ElementFilter.typesIn(roundEnv.getRootElements()));
                         first_round = false;
                         return true;
                 } catch (IOException e) {
@@ -106,7 +107,7 @@ public class GLReferencesGeneratorProcessor extends AbstractProcessor {
         }
 
         private static void generateClearsFromMethods(ProcessingEnvironment env, PrintWriter writer, TypeElement interface_decl) {
-                for (ExecutableElement method : Utils.getMethods(env, interface_decl)) {
+                for (ExecutableElement method : Utils.getMethods( interface_decl)) {
                         if (method.getAnnotation(Alternate.class) != null) {
                                 continue;
                         }
@@ -116,7 +117,7 @@ public class GLReferencesGeneratorProcessor extends AbstractProcessor {
         }
 
         private static void generateCopiesFromMethods(ProcessingEnvironment env, PrintWriter writer, TypeElement interface_decl) {
-                for (ExecutableElement method : Utils.getMethods(env, interface_decl)) {
+                for (ExecutableElement method : Utils.getMethods( interface_decl)) {
                         if (method.getAnnotation(Alternate.class) != null) {
                                 continue;
                         }
@@ -141,7 +142,7 @@ public class GLReferencesGeneratorProcessor extends AbstractProcessor {
         }
 
         private static void generateReferencesFromMethods(ProcessingEnvironment env, PrintWriter writer, TypeElement interface_decl) {
-                for (ExecutableElement method : Utils.getMethods(env, interface_decl)) {
+                for (ExecutableElement method : Utils.getMethods( interface_decl)) {
                         if (method.getAnnotation(Alternate.class) != null) {
                                 continue;
                         }

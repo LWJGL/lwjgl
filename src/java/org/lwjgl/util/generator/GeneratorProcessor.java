@@ -44,6 +44,8 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.ElementFilter;
+import javax.tools.Diagnostic;
 
 /**
  * Generator tool for creating the java classes and native code from an
@@ -61,7 +63,7 @@ public class GeneratorProcessor extends AbstractProcessor {
 
         @Override
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-                if (roundEnv.processingOver() || !first_round) {                                                
+                if (roundEnv.processingOver() || !first_round) {
                         first_round = true;
                         System.exit(0);
                         return true;
@@ -80,16 +82,17 @@ public class GeneratorProcessor extends AbstractProcessor {
                 }
 
                 Element lastFile = null;
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "annotations " + annotations.toString());
                 try {
                         long generatorLM = getGeneratorLastModified(bin_path);
                         TypeMap type_map = (TypeMap) (Class.forName(typemap_classname).newInstance());
-                        for (Iterator<TypeElement> it = Utils.getAnnotatedTemplates(roundEnv, annotations).iterator(); it.hasNext();) {
+                        for (Iterator<TypeElement> it = ElementFilter.typesIn(roundEnv.getRootElements()).iterator(); it.hasNext();) {
                                 lastFile = it.next();
                                 lastFile.accept(new GeneratorVisitor(processingEnv, type_map, generate_error_checks, context_specific, generatorLM), null);
                         }
                         first_round = false;
                         return true;
-                } catch (Exception e) {
+                } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
                         if (lastFile == null) {
                                 throw new RuntimeException(e);
                         } else {

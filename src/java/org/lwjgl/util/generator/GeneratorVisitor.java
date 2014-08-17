@@ -228,13 +228,13 @@ public class GeneratorVisitor extends ElementKindVisitor7<Void, Void> {
                         java_writer.print(" extends " + super_interface.toString());
                 }
                 java_writer.println(" {");
-                FieldsGenerator.generateFields(env, java_writer, Utils.getFields(env, d));
+                FieldsGenerator.generateFields(env, java_writer, Utils.getFields(d));
                 java_writer.println();
                 if (is_final) {
                         // Write private constructor to avoid instantiation
                         java_writer.println("\tprivate " + Utils.getSimpleClassName(d) + "() {}");
                 }
-                if (Utils.getMethods(env, d).size() > 0 && !context_specific) {
+                if (Utils.getMethods(d).size() > 0 && !context_specific) {
                         java_writer.println();
                         java_writer.println("\tstatic native void " + Utils.STUB_INITIALIZER_NAME + "() throws LWJGLException;");
                 }
@@ -257,10 +257,10 @@ public class GeneratorVisitor extends ElementKindVisitor7<Void, Void> {
                 native_writer.println("#include <jni.h>");
                 type_map.printNativeIncludes(native_writer);
                 native_writer.println();
-                TypedefsGenerator.generateNativeTypedefs(type_map, native_writer, Utils.getMethods(env, d));
+                TypedefsGenerator.generateNativeTypedefs(type_map, native_writer, Utils.getMethods(d));
                 native_writer.println();
                 if (!context_specific) {
-                        generateMethodsNativePointers(native_writer, Utils.getMethods(env, d));
+                        generateMethodsNativePointers(native_writer, Utils.getMethods(d));
                         native_writer.println();
                 }
                 NativeMethodStubsGenerator.generateNativeMethodStubs(env, type_map, native_writer, d, generate_error_checks, context_specific);
@@ -284,11 +284,11 @@ public class GeneratorVisitor extends ElementKindVisitor7<Void, Void> {
         public Void visitTypeAsInterface(TypeElement e, Void p) {
                 PrintWriter java_writer = null;
                 try {
-                        final Collection<? extends ExecutableElement> methods = Utils.getMethods(env, e);
-                        if (methods.isEmpty() && Utils.getFields(env, e).isEmpty()) {
+                        final Collection<? extends ExecutableElement> methods = Utils.getMethods(e);
+                        if (methods.isEmpty() && Utils.getFields(e).isEmpty()) {
                                 return DEFAULT_VALUE;
                         }
-
+                        env.getMessager().printMessage(Kind.NOTE, "methods count : " + Utils.getMethods(e).size() + " fields count : " + Utils.getFields(e).size(), e);
                         for (final ExecutableElement method : methods) {
                                 validateMethod(method);
                         }

@@ -41,8 +41,8 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedOptions;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.ElementFilter;
 import org.lwjgl.util.generator.Utils;
 
 /**
@@ -70,7 +70,7 @@ public class GLESGeneratorProcessor extends AbstractProcessor {
                 boolean generate_error_checks = options.containsKey("generatechecks");
                 boolean context_specific = options.containsKey("contextspecific");
                 try {
-                        generateContextCapabilitiesSource(Utils.getAnnotatedTemplates(roundEnv, annotations), context_specific, generate_error_checks);
+                        generateContextCapabilitiesSource(ElementFilter.typesIn(roundEnv.getRootElements()), context_specific, generate_error_checks);
                         first_round = false;
                         return true;
                 } catch (IOException e) {

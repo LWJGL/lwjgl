@@ -49,7 +49,7 @@ import javax.lang.model.type.TypeMirror;
 public class RegisterStubsGenerator {
 
         public static void generateMethodsNativeStubBind(ProcessingEnvironment env, PrintWriter writer, TypeElement d, boolean generate_error_checks, boolean context_specific) {
-                Iterator<? extends ExecutableElement> it = Utils.getMethods(env, d).iterator();
+                Iterator<? extends ExecutableElement> it = Utils.getMethods( d).iterator();
                 while (it.hasNext()) {
                         ExecutableElement method = it.next();
                         Alternate alt_annotation = method.getAnnotation(Alternate.class);

@@ -114,7 +114,7 @@ public class CLPDCapabilitiesGenerator {
 				nativeName = ext.nativeName();
 
 			writer.print("\t\t" + extName + " = extensions.contains(\"" + nativeName + "\")");
-			if ( !Utils.getMethods(env, t).isEmpty() )
+			if ( !Utils.getMethods( t).isEmpty() )
 				writer.print(" && CLCapabilities." + extName);
 			writer.println(";");
 		}

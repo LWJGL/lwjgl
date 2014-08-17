@@ -43,7 +43,6 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.*;
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -493,41 +492,13 @@ public class Utils {
         }
 
         public static Collection<VariableElement> getFields(TypeElement d) {
-                return getFields(null, d);
-        }
-
-        /* Include direct super interface (if not Object) declarations.*/
-        public static Collection<VariableElement> getFields(ProcessingEnvironment env, TypeElement d) {
                 Collection<VariableElement> fields = ElementFilter.fieldsIn(new HashSet(d.getEnclosedElements()));
-                if (env != null) {
-                        for (TypeMirror i : d.getInterfaces()) {
-                                fields.addAll(ElementFilter.fieldsIn(new HashSet(env.getTypeUtils().asElement(i).getEnclosedElements())));
-                        }
-                }
                 return fields;
         }
 
         public static Collection<ExecutableElement> getMethods(TypeElement d) {
-                return getMethods(null, d);
-        }
-
-        /* Include direct super interface (if not Object) declarations.*/
-        public static Collection<ExecutableElement> getMethods(ProcessingEnvironment env, TypeElement d) {
                 Collection<ExecutableElement> fields = ElementFilter.methodsIn(new HashSet(d.getEnclosedElements()));
-                if (env != null) {
-                        for (TypeMirror i : d.getInterfaces()) {
-                                fields.addAll(ElementFilter.methodsIn(new HashSet(env.getTypeUtils().asElement(i).getEnclosedElements())));
-                        }
-                }
                 return fields;
-        }
-
-        public static Set<TypeElement> getAnnotatedTemplates(RoundEnvironment roundEnv, Set<? extends TypeElement> annotations) {
-                Set<TypeElement> templates = new LinkedHashSet<>();
-                for (TypeElement annot : annotations) {
-                        templates.addAll(ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(annot)));
-                }
-                return templates;
         }
 
 }
