@@ -171,7 +171,7 @@ public class Utils {
 
         public static VariableElement findParameter(ExecutableElement method, String name) {
                 for (VariableElement param : method.getParameters()) {
-                        if (param.getSimpleName().equals(name)) {
+                        if (param.getSimpleName().toString().equals(name)) {
                                 return param;
                         }
                 }
@@ -287,7 +287,7 @@ public class Utils {
         public static String getMethodReturnType(ExecutableElement method, GLreturn return_annotation, boolean buffer) {
                 VariableElement return_param = null;
                 for (VariableElement param : method.getParameters()) {
-                        if (param.getSimpleName().equals(return_annotation.value())) {
+                        if (param.getSimpleName().toString().equals(return_annotation.value())) {
                                 return_param = param;
                                 break;
                         }
@@ -378,7 +378,7 @@ public class Utils {
 
         static boolean isReturnParameter(ExecutableElement method, VariableElement param) {
                 GLreturn string_annotation = method.getAnnotation(GLreturn.class);
-                if (string_annotation == null || !string_annotation.value().equals(param.getSimpleName())) {
+                if (string_annotation == null || !string_annotation.value().equals(param.getSimpleName().toString())) {
                         return false;
                 }
 

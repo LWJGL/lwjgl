@@ -108,7 +108,7 @@ public class CLTypeMap implements TypeMap {
 			else {
 				boolean hasErrCodeParam = false;
 				for ( final VariableElement param : method.getParameters() ) {
-					if ( "errcode_ret".equals(param.getSimpleName()) && Utils.getJavaType(param.asType()) == IntBuffer.class ) {
+					if ( "errcode_ret".equals(param.getSimpleName().toString()) && Utils.getJavaType(param.asType()) == IntBuffer.class ) {
 						hasErrCodeParam = true;
 						break;
 					}

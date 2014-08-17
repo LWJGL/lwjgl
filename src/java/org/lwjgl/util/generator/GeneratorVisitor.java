@@ -149,7 +149,7 @@ public class GeneratorVisitor extends ElementKindVisitor7<Void, Void> {
                                         for (VariableElement inner_param : method.getParameters()) {
                                                 AutoSize auto_size_annotation = inner_param.getAnnotation(AutoSize.class);
                                                 if (auto_size_annotation != null
-                                                        && auto_size_annotation.value().equals(param.getSimpleName())) {
+                                                        && auto_size_annotation.value().equals(param.getSimpleName().toString())) {
                                                         found_auto_size_param = true;
                                                         break;
                                                 }

@@ -78,8 +78,7 @@ public class CLGeneratorProcessor extends AbstractProcessor {
         @Override
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
                 if (roundEnv.processingOver() || !first_round) {                        
-                        first_round = true;
-                        // System.exit(0);
+                        System.exit(0);
                         return true;
                 }
                 try {

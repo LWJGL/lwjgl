@@ -62,8 +62,7 @@ public class GLESGeneratorProcessor extends AbstractProcessor {
         @Override
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
                 if (roundEnv.processingOver() || !first_round) {                        
-                        first_round = true;
-                        // System.exit(0);
+                        System.exit(0);
                         return true;
                 }
                 Map<String, String> options = processingEnv.getOptions();
@@ -128,7 +127,7 @@ public class GLESGeneratorProcessor extends AbstractProcessor {
                 }
                 for (TypeElement interface_decl : templates) {
                         if (interface_decl.getKind().isInterface()) {
-                                if ("GLES20".equals(interface_decl.getSimpleName())) {
+                                if ("GLES20".equals(interface_decl.getSimpleName().toString())) {
                                         continue;
                                 }
                                 GLESCapabilitiesGenerator.generateInitStubs(processingEnv, writer, interface_decl, context_specific);

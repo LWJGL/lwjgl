@@ -83,7 +83,7 @@ public class JavaMethodsGenerator {
 		Reuse reuse_annotation = method.getAnnotation(Reuse.class);
 		Alternate alt_annotation = method.getAnnotation(Alternate.class);
 		if ( alt_annotation == null || (alt_annotation.nativeAlt() && !alt_annotation.skipNative()) ) {
-			if ( alt_annotation != null && method.getSimpleName().equals(alt_annotation.value()) )
+			if ( alt_annotation != null && method.getSimpleName().toString().equals(alt_annotation.value()) )
 				throw new RuntimeException("An alternate function with native code should have a different name than the main function.");
 
 			if ( reuse_annotation == null )
@@ -378,7 +378,7 @@ public class JavaMethodsGenerator {
 					parameter_name = param.getAnnotation(AutoSize.class).value();
 				else
 					throw new RuntimeException("Unknown annotation type " + annotation_type);
-				if (target_parameter.getSimpleName().equals(parameter_name))
+				if (target_parameter.getSimpleName().toString().equals(parameter_name))
 					return param;
 			}
 		}
@@ -617,7 +617,7 @@ public class JavaMethodsGenerator {
 			if ( gen_autos_annotation != null && gen_autos_annotation.sizeVariables().length > 0 ) {
 				// For the auto-generated parameters, declare and init a size variable (that can be reused by @Code)
 				for ( final VariableElement param : method.getParameters() ) {
-					if ( Arrays.binarySearch(gen_autos_annotation.sizeVariables(), param.getSimpleName()) >= 0 ) {
+					if ( Arrays.binarySearch(gen_autos_annotation.sizeVariables(), param.getSimpleName().toString()) >= 0 ) {
 						final int shifting = getBufferElementSizeExponent(typeinfos.get(param).getType());
 						final Check check_annotation = param.getAnnotation(Check.class);
 
