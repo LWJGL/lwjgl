@@ -214,9 +214,11 @@ public class NativeTypeTranslator extends SimpleTypeVisitor6<Void, Void> {
                 return DEFAULT_VALUE;
         }
 
-	// Check if the annotation is itself annotated with a certain annotation type
+        /* Check if the annotation is itself annotated with a certain annotation type
+         * @discuss compare (DeclaredType).getAnnotation(Class) and (Element).getAnnotation(Class), they mean different Annotation's.
+         */
         public static <T extends Annotation> T getAnnotation(AnnotationMirror annotation, Class<T> type) {
-                return annotation.getAnnotationType().getAnnotation(type);
+                return annotation.getAnnotationType().asElement().getAnnotation(type);
         }
 
         private static Class translateAnnotation(AnnotationMirror annotation) {

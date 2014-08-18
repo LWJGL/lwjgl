@@ -50,6 +50,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.tools.Diagnostic;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.util.generator.opengl.GLreturn;
 
@@ -63,13 +64,17 @@ public class JavaMethodsGenerator {
                 }
         }
 
+        /**
+         * TODO : fix info multi-type methods print.
+         * 
+         **/
         private static void generateMethodJava(ProcessingEnvironment env, TypeMap type_map, PrintWriter writer, TypeElement interface_decl, ExecutableElement method, boolean generate_error_checks, boolean context_specific) {
                 writer.println();
                 if (Utils.isMethodIndirect(generate_error_checks, context_specific, method)) {
                         if (method.getAnnotation(GenerateAutos.class) != null) {
                                 printMethodWithMultiType(env, type_map, writer, interface_decl, method, TypeInfo.getDefaultTypeInfoMap(method), Mode.AUTOS, generate_error_checks, context_specific);
                         }
-                        Collection<Map<VariableElement, TypeInfo>> cross_product = TypeInfo.getTypeInfoCrossProduct(type_map, method);
+                        Collection<Map<VariableElement, TypeInfo>> cross_product = TypeInfo.getTypeInfoCrossProduct(env, type_map, method);
                         for (Map<VariableElement, TypeInfo> typeinfos_instance : cross_product) {
                                 printMethodWithMultiType(env, type_map, writer, interface_decl, method, typeinfos_instance, Mode.NORMAL, generate_error_checks, context_specific);
                         }
@@ -111,7 +116,7 @@ public class JavaMethodsGenerator {
                         writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
                 }
                 writer.print("(");
-                boolean first_parameter = generateParametersJava(writer, method, TypeInfo.getDefaultTypeInfoMap(method), true, true, mode);
+                boolean first_parameter = generateParametersJava(env, writer, method, TypeInfo.getDefaultTypeInfoMap(method), true, true, mode);
                 if (context_specific) {
                         if (!first_parameter) {
                                 writer.print(", ");
@@ -121,7 +126,7 @@ public class JavaMethodsGenerator {
                 writer.println(");");
         }
 
-        private static boolean generateParametersJava(PrintWriter writer, ExecutableElement method, Map<VariableElement, TypeInfo> typeinfos_instance, boolean native_stub, final boolean printTypes, Mode mode) {
+        private static boolean generateParametersJava(ProcessingEnvironment env, PrintWriter writer, ExecutableElement method, Map<VariableElement, TypeInfo> typeinfos_instance, boolean native_stub, final boolean printTypes, Mode mode) {
                 boolean first_parameter = true;
                 for (VariableElement param : method.getParameters()) {
                         if (native_stub && (param.getAnnotation(Helper.class) != null && !param.getAnnotation(Helper.class).passToNative())) {
@@ -131,6 +136,8 @@ public class JavaMethodsGenerator {
                         if (constant_annotation != null && constant_annotation.isNative()) {
                                 continue;
                         }
+                        /*env.getMessager().printMessage(Diagnostic.Kind.NOTE, param.getAnnotationMirrors()
+                                + " (" + typeinfos_instance.get(param).getType() + ")", param);*/
                         AnnotationMirror auto_annotation_mirror = Utils.getParameterAutoAnnotation(param);
                         boolean hide_auto_parameter = mode == Mode.NORMAL && !native_stub && auto_annotation_mirror != null;
                         if (hide_auto_parameter) {
@@ -275,7 +282,7 @@ public class JavaMethodsGenerator {
                         method_name = getPostfixStrippedName(type_map, interface_decl, method);
                 }
                 writer.print(" " + method_name + "(");
-                generateParametersJava(writer, method, typeinfos_instance, false, true, mode);
+                generateParametersJava(env, writer, method, typeinfos_instance, false, true, mode);
                 writer.println(") {");
 
                 final TypeMirror result_type = Utils.getMethodReturnType(method);
@@ -289,7 +296,7 @@ public class JavaMethodsGenerator {
                         }
 
                         writer.print(reuse_annotation.value() + "." + (reuse_annotation.method().length() > 0 ? reuse_annotation.method() : method_name) + "(");
-                        generateParametersJava(writer, method, typeinfos_instance, false, false, mode);
+                        generateParametersJava(env, writer, method, typeinfos_instance, false, false, mode);
                         writer.println(");\n\t}");
                         return;
                 }

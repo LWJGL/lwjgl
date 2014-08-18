@@ -52,6 +52,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVisitor;
 import javax.lang.model.util.ElementFilter;
+import javax.tools.Diagnostic;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.util.generator.opengl.GLboolean;
 import org.lwjgl.util.generator.opengl.GLchar;
@@ -107,6 +108,9 @@ public class Utils {
 
         private static class AnnotationMirrorComparator implements Comparator<AnnotationMirror> {
 
+                /**
+                 * Sort annotations.
+                 */
                 @Override
                 public int compare(AnnotationMirror a1, AnnotationMirror a2) {
                         String n1 = a1.getAnnotationType().toString();

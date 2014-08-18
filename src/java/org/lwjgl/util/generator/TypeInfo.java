@@ -42,12 +42,14 @@ package org.lwjgl.util.generator;
 import java.lang.annotation.Annotation;
 import java.nio.*;
 import java.util.*;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.tools.Diagnostic;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.util.generator.opengl.GLvoid;
 
@@ -157,8 +159,10 @@ public class TypeInfo {
                 return map;
         }
 
-        private static Collection<TypeInfo> getTypeInfos(TypeMap type_map, Element param, TypeMirror decl_type) {
-                List<? extends AnnotationMirror> annotations = Utils.getSortedAnnotations(param.getAnnotationMirrors());
+        private static Collection<TypeInfo> getTypeInfos(ProcessingEnvironment env, TypeMap type_map, VariableElement param) {                
+                List<? extends AnnotationMirror> annotations = param.getAnnotationMirrors();
+                GLvoid void_annotation = param.getAnnotation(GLvoid.class);
+
                 Map<Class, TypeInfo> types = new HashMap<>();
                 Collection<TypeInfo> multityped_result = new ArrayList<>();
                 boolean add_default_type = true;
@@ -166,6 +170,7 @@ public class TypeInfo {
                         NativeType native_type_annotation = NativeTypeTranslator.getAnnotation(annotation, NativeType.class);
                         if (native_type_annotation != null) {
                                 Class<? extends Annotation> annotation_type = NativeTypeTranslator.getClassFromType(annotation.getAnnotationType());
+                                /*env.getMessager().printMessage(Diagnostic.Kind.NOTE, "annotation_type " + annotation_type, param, annotation);*/
                                 Signedness signedness = type_map.getSignednessFromType(annotation_type);
                                 Class inverse_type = type_map.getInverseType(annotation_type);
                                 String auto_type = type_map.getAutoTypeFromAnnotation(annotation);
@@ -183,9 +188,8 @@ public class TypeInfo {
                                 }
                                 Class type;
                                 TypeKind kind;
-                                GLvoid void_annotation = param.getAnnotation(GLvoid.class);
                                 kind = void_annotation == null ? type_map.getPrimitiveTypeFromNativeType(annotation_type) : void_annotation.value();
-                                if (Utils.getNIOBufferType(decl_type) != null) {
+                                if (Utils.getNIOBufferType(param.asType()) != null) {
                                         type = getBufferTypeFromPrimitiveKind(kind, annotation);
                                 } else {
                                         type = getTypeFromPrimitiveKind(kind);
@@ -197,7 +201,7 @@ public class TypeInfo {
                         }
                 }
                 if (add_default_type) {
-                        TypeInfo default_type_info = getDefaultTypeInfo(decl_type);
+                        TypeInfo default_type_info = getDefaultTypeInfo(param.asType());
                         Collection<TypeInfo> result = new ArrayList<>();
                         result.add(default_type_info);
                         return result;
@@ -206,31 +210,32 @@ public class TypeInfo {
                 }
         }
 
-        private static Map<VariableElement, Collection<TypeInfo>> getTypeInfoMap(TypeMap type_map, ExecutableElement method) {
+        private static Map<VariableElement, Collection<TypeInfo>> getTypeInfoMap(ProcessingEnvironment env, TypeMap type_map, ExecutableElement method) {
                 Map<VariableElement, Collection<TypeInfo>> map = new HashMap<>();
                 for (VariableElement param : method.getParameters()) {
-                        Collection<TypeInfo> types = getTypeInfos(type_map, param, param.asType());
+                        Collection<TypeInfo> types = getTypeInfos(env, type_map, param);
                         map.put(param, types);
                 }
                 return map;
         }
 
-        public static Collection<Map<VariableElement, TypeInfo>> getTypeInfoCrossProduct(TypeMap type_map, ExecutableElement method) {
+        public static Collection<Map<VariableElement, TypeInfo>> getTypeInfoCrossProduct(ProcessingEnvironment env, TypeMap type_map, ExecutableElement method) {
                 List<? extends VariableElement> parameter_collection = method.getParameters();
-                VariableElement[] parameters = parameter_collection.toArray(new VariableElement[]{});
                 Collection<Map<VariableElement, TypeInfo>> cross_product = new ArrayList<>();
-                getCrossProductRecursive(0, parameters, getTypeInfoMap(type_map, method),
+                getCrossProductRecursive(0, parameter_collection, getTypeInfoMap(env, type_map, method),
                         new HashMap<VariableElement, TypeInfo>(), cross_product);
                 return cross_product;
         }
 
-        private static void getCrossProductRecursive(int index, VariableElement[] parameters, Map<VariableElement, Collection<TypeInfo>> typeinfos_map, Map<VariableElement, TypeInfo> current_instance,
-                Collection<Map<VariableElement, TypeInfo>> cross_product) {
-                if (index == parameters.length) {
+        private static void getCrossProductRecursive(int index, List<? extends VariableElement> parameters, Map<VariableElement, Collection<TypeInfo>> typeinfos_map, Map<VariableElement, TypeInfo> current_instance, Collection<Map<VariableElement, TypeInfo>> cross_product) {
+                if (index == parameters.size()) {
+                        /**
+                         * the last parameter is treated as multi-type only
+                         */
                         cross_product.add(current_instance);
                         return;
                 }
-                VariableElement param = parameters[index];
+                VariableElement param = parameters.get(index);
                 Collection<TypeInfo> typeinfos = typeinfos_map.get(param);
                 if (typeinfos != null) {
                         for (TypeInfo typeinfo : typeinfos) {

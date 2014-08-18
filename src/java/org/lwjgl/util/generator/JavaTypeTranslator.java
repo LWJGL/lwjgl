@@ -134,6 +134,8 @@ public class JavaTypeTranslator extends SimpleTypeVisitor6<Void, Void> {
                         visitClassType(t);
                 } else if (t.asElement().getKind().isInterface()) {
                         visitInterfaceType(t);
+                } else {
+                        throw new RuntimeException(t.asElement().getKind() + " is not allowed");
                 }
                 return DEFAULT_VALUE;
         }
