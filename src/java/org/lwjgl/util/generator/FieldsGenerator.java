@@ -34,17 +34,19 @@ package org.lwjgl.util.generator;
 
 import java.io.PrintWriter;
 import java.util.Collection;
-
-import com.sun.mirror.declaration.FieldDeclaration;
-import com.sun.mirror.declaration.Modifier;
-import com.sun.mirror.type.PrimitiveType;
-import com.sun.mirror.type.TypeMirror;
+import java.util.Set;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 
 public class FieldsGenerator {
 
-	private static void validateField(FieldDeclaration field) {
+	private static void validateField(VariableElement field) {
 		// Check if field is "public static final"
-		Collection<Modifier> modifiers = field.getModifiers();
+		Set<Modifier> modifiers = field.getModifiers();
 		if ( modifiers.size() != 3
 		     || !modifiers.contains(Modifier.PUBLIC)
 		     || !modifiers.contains(Modifier.STATIC)
@@ -53,14 +55,14 @@ public class FieldsGenerator {
 		}
 
 		// Check suported types (int, long, float, String)
-		TypeMirror field_type = field.getType();
+		TypeMirror field_type = field.asType();
 		if ( field_type instanceof PrimitiveType ) {
 			PrimitiveType field_type_prim = (PrimitiveType)field_type;
-			PrimitiveType.Kind field_kind = field_type_prim.getKind();
-			if ( field_kind != PrimitiveType.Kind.INT
-			     && field_kind != PrimitiveType.Kind.LONG
-			     && field_kind != PrimitiveType.Kind.FLOAT
-			     && field_kind != PrimitiveType.Kind.BYTE ) {
+			TypeKind field_kind = field_type_prim.getKind() ;
+			if ( field_kind != TypeKind.INT
+			     && field_kind != TypeKind.LONG
+			     && field_kind != TypeKind.FLOAT
+			     && field_kind != TypeKind.BYTE ) {
 				throw new RuntimeException("Field " + field.getSimpleName() + " is not of type 'int', 'long' or 'float'");
 			}
 		} else if ( "java.lang.String".equals(field_type.toString()) ) {
@@ -74,7 +76,7 @@ public class FieldsGenerator {
 		}
 	}
 
-	private static void generateField(PrintWriter writer, FieldDeclaration field, FieldDeclaration prev_field) {
+	private static void generateField(PrintWriter writer, VariableElement field, VariableElement prev_field, ProcessingEnvironment env) {
 		validateField(field);
 
 		Object value = field.getConstantValue();
@@ -94,27 +96,27 @@ public class FieldsGenerator {
 			throw new RuntimeException("Field is of unexpected type. This means there is a bug in validateField().");
 		}
 
-		boolean hadDoc = prev_field != null && prev_field.getDocComment() != null;
-		boolean hasDoc = field.getDocComment() != null;
-		boolean newBatch = prev_field == null || !prev_field.getType().equals(field.getType()) || (!hadDoc && field.getDocComment() != null) || (hadDoc && hasDoc && !prev_field.getDocComment().equals(field.getDocComment()));
+		boolean hadDoc = prev_field != null && env.getElementUtils().getDocComment(prev_field) != null;
+		boolean hasDoc = env.getElementUtils().getDocComment(field) != null;
+		boolean newBatch = prev_field == null || !prev_field.asType().equals(field.asType()) || (!hadDoc && env.getElementUtils().getDocComment(field) != null) || (hadDoc && hasDoc && !env.getElementUtils().getDocComment(prev_field).equals(env.getElementUtils().getDocComment(field)));
 
 		// Print field declaration
 		if ( newBatch ) {
 			if ( prev_field != null )
 				writer.println(";\n");
 
-			Utils.printDocComment(writer, field);
-			writer.print("\tpublic static final " + field.getType().toString() + " " + field.getSimpleName() + " = " + field_value_string);
+			Utils.printDocComment(writer, field, env);
+			writer.print("\tpublic static final " + field.asType().toString() + " " + field.getSimpleName() + " = " + field_value_string);
 		} else
 			writer.print(",\n\t\t" + field.getSimpleName() + " = " + field_value_string);
 	}
 
-	public static void generateFields(PrintWriter writer, Collection<FieldDeclaration> fields) {
+        public static void generateFields(ProcessingEnvironment env, PrintWriter writer, Collection<? extends VariableElement> fields) {
 		if ( 0 < fields.size() ) {
 			writer.println();
-			FieldDeclaration prev_field = null;
-			for ( FieldDeclaration field : fields ) {
-				generateField(writer, field, prev_field);
+			VariableElement prev_field = null;
+			for ( VariableElement field : fields ) {
+				generateField(writer, field, prev_field, env);
 				prev_field = field;
 			}
 			writer.println(";");

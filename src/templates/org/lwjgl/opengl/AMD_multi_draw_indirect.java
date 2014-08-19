@@ -39,7 +39,7 @@ import org.lwjgl.util.generator.opengl.GLvoid;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import com.sun.mirror.type.PrimitiveType;
+import javax.lang.model.type.TypeKind;
 
 public interface AMD_multi_draw_indirect {
 
@@ -50,7 +50,7 @@ public interface AMD_multi_draw_indirect {
 
 	@Alternate("glMultiDrawArraysIndirectAMD")
 	void glMultiDrawArraysIndirectAMD(@GLenum int mode,
-	                                  @BufferObject(BufferKind.IndirectBO) @Check("(stride == 0 ? 4 : stride >> 2) * primcount") @Const @GLvoid(PrimitiveType.Kind.INT) IntBuffer indirect,
+	                                  @BufferObject(BufferKind.IndirectBO) @Check("(stride == 0 ? 4 : stride >> 2) * primcount") @Const @GLvoid(TypeKind.INT) IntBuffer indirect,
 	                                  @GLsizei int primcount,
 	                                  @GLsizei int stride);
 
@@ -63,7 +63,7 @@ public interface AMD_multi_draw_indirect {
 	@Alternate("glMultiDrawElementsIndirectAMD")
 	void glMultiDrawElementsIndirectAMD(@GLenum int mode,
 	                                    @GLenum int type,
-	                                    @BufferObject(BufferKind.IndirectBO) @Check("(stride == 0 ? 5 : stride >> 2) * primcount") @Const @GLvoid(PrimitiveType.Kind.INT) IntBuffer indirect,
+	                                    @BufferObject(BufferKind.IndirectBO) @Check("(stride == 0 ? 5 : stride >> 2) * primcount") @Const @GLvoid(TypeKind.INT) IntBuffer indirect,
 	                                    @GLsizei int primcount,
 	                                    @GLsizei int stride);
 
