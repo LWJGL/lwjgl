@@ -79,7 +79,10 @@ static NSUInteger lastModifierFlags = 0;
 	
 	if (window_info->enableHighDPI) {
 		// call method using runtime selector as its a 10.7+ api and allows compiling on older SDK's
-		[window_info->view performSelector:NSSelectorFromString(@"setWantsBestResolutionOpenGLSurface:") withObject:YES];
+		// WORK IN PROGRESS [window_info->view performSelector:NSSelectorFromString(@"setWantsBestResolutionOpenGLSurface:") withObject:YES];
+		// the above call leads to incorrect behaviour of furhter glViewport()calls from NSView
+		// https://developer.apple.com/library/mac/documentation/AppKit/Reference/NSViewOpenGLAdditions/Reference/Reference.html#jumpTo_3
+		// NSRect highDPIBounds = [self convertRectToBacking:[self bounds]];
 	}
 	
 	// set nsapp delegate for catching app quit events
@@ -131,10 +134,10 @@ static NSUInteger lastModifierFlags = 0;
 		[window_info->view enterFullScreenMode: [NSScreen mainScreen] withOptions: nil ];
 		window_info->window = [window_info->view window];
         
-		// adjust the NSView bounds to correct mouse coordinates in fullscreen
+		/* not here : adjust the NSView bounds to correct mouse coordinates in fullscreen
 		NSSize windowSize = [window_info->window frame].size;
 		NSSize newBounds = NSMakeSize(windowSize.width/width*windowSize.width, windowSize.height/height*windowSize.height);
-		[window_info->view setBoundsSize:newBounds];
+		[window_info->view setBoundsSize:newBounds];*/
 	}
 	
 	if (window_info->enableFullscreenModeAPI && window_info->resizable) {
@@ -165,16 +168,12 @@ static NSUInteger lastModifierFlags = 0;
 		}
 		
 		if (window_info->window != nil) {
+            // release the nsview and remove it from any parent nsview
+            [window_info->view removeFromSuperview];
 			// if the nsview has no parent then close window
 			if ([window_info->window contentView] == window_info->view) {
-				// release the nsview and remove it from any parent nsview
-				[window_info->view removeFromSuperviewWithoutNeedingDisplay];
 				[window_info->window close];
 				window_info->window = nil;
-			}
-			else {
-				// release the nsview and remove it from any parent nsview
-				[window_info->view removeFromSuperviewWithoutNeedingDisplay];
 			}
 		}
 	}
@@ -705,7 +704,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	peer_info->window_info = window_info;
 	peer_info->isWindowed = true;
 	
-    window_info->display_rect = NSMakeRect(x, [[NSScreen mainScreen] frame].size.height - y - height, width, height);
+    window_info->display_rect = NSMakeRect(x, y, width, height);
 	
 	// Cache the necessary info for window-close callbacks into the JVM
 	if (window_info->jdisplay == NULL) {

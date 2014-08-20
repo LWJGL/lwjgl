@@ -128,8 +128,7 @@ final class MacOSXContextImplementation implements ContextImplementation {
 	private static native void nSetSwapInterval(ByteBuffer context_handle, int value);
 
 	public void destroy(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException {
-		nDestroy(handle);
+	    	nDestroy(handle);
 	}
 
-	private static native void nDestroy(ByteBuffer context_handle) throws LWJGLException;
-}
+	private static native void nDestroy(ByteBuffer context_handle) throws LWJGLException;}
