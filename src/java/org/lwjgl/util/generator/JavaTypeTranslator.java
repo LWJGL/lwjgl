@@ -32,6 +32,8 @@
 package org.lwjgl.util.generator;
 
 import java.nio.ByteBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
@@ -63,21 +65,23 @@ public class JavaTypeTranslator extends SimpleTypeVisitor6<Void, Void> {
         @Override
         public Void visitArray(ArrayType t, Void o) {
                 final TypeMirror componentType = t.getComponentType();
-                if (componentType instanceof PrimitiveType) {
-                        type = getPrimitiveArrayClassFromKind(((PrimitiveType) componentType).getKind());
-                } else {
-                        try {
-                                final Class c = Class.forName(t.getComponentType().toString());
-                                if (CharSequence.class.isAssignableFrom(c) || ByteBuffer.class.isAssignableFrom(c) || org.lwjgl.PointerWrapper.class.isAssignableFrom(c)) {
-                                        type = Class.forName("[L" + t.getComponentType() + ";");
+                try {
+                        final Class c = Class.forName(t.getComponentType().toString());
+                        if (CharSequence.class.isAssignableFrom(c) || ByteBuffer.class.isAssignableFrom(c) || org.lwjgl.PointerWrapper.class.isAssignableFrom(c)) {
+                                type = Class.forName("[L" + t.getComponentType() + ";");
+                        }
+                } catch (ClassNotFoundException ex) {
+                        type = null;
+                } finally {
+                        if (type == null) {
+                                if (componentType instanceof PrimitiveType) {
+                                        type = getPrimitiveArrayClassFromKind(((PrimitiveType) componentType).getKind());
                                 } else {
                                         throw new RuntimeException(t + " is not allowed");
                                 }
-                        } catch (ClassNotFoundException e) {
-                                throw new RuntimeException(e);
                         }
+                        return DEFAULT_VALUE;
                 }
-                return DEFAULT_VALUE;
         }
 
         public static Class getPrimitiveClassFromKind(TypeKind kind) {
