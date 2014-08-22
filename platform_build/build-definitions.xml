@@ -27,6 +27,17 @@
     <property name="opencl-template-pattern" value="CL*.java,${opencl-template-pattern-extensions}"/>
 
 	<!-- ================================================================== -->
+    <!-- extra dependencies 																					-->
+    <!-- ================================================================== -->
+
+    <property name="deps" location="deps"/>
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="${deps}/ant-contrib.jar" />
+        </classpath>
+    </taskdef>
+	
+    <!-- ================================================================== -->
 	<!-- Filesets used for targets 																					-->
 	<!-- ================================================================== -->
 
