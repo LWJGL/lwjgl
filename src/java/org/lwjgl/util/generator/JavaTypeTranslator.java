@@ -29,132 +29,133 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.lwjgl.util.generator;
 
-import org.lwjgl.opencl.CLMem;
-
 import java.nio.ByteBuffer;
-
-import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.NoType;
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeKind;
+import static javax.lang.model.type.TypeKind.BOOLEAN;
+import static javax.lang.model.type.TypeKind.BYTE;
+import static javax.lang.model.type.TypeKind.DOUBLE;
+import static javax.lang.model.type.TypeKind.FLOAT;
+import static javax.lang.model.type.TypeKind.INT;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.SimpleTypeVisitor6;
 
 /**
- * A TypeVisitor that translates (annotated) TypeMirrors to
- * java types (represented by a Class)
+ * A TypeVisitor that translates (annotated) TypeMirrors to java types
+ * (represented by a Class)
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
- * @version $Revision$
- * $Id$
+ * @version $Revision$ $Id$
  */
-public class JavaTypeTranslator implements TypeVisitor {
-	private Class type;
+public class JavaTypeTranslator extends SimpleTypeVisitor6<Void, Void> {
 
-	public Class getType() {
-		return type;
-	}
+        private Class type;
 
-	public void visitAnnotationType(AnnotationType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
+        public Class getType() {
+                return type;
+        }
 
-	public void visitArrayType(ArrayType t) {
-		final TypeMirror componentType = t.getComponentType();
-		if ( componentType instanceof PrimitiveType ) {
-			type = getPrimitiveArrayClassFromKind(((PrimitiveType)componentType).getKind());
-		} else {
-			try {
-				final Class c = Class.forName(t.getComponentType().toString());
-				if ( CharSequence.class.isAssignableFrom(c) || ByteBuffer.class.isAssignableFrom(c) || org.lwjgl.PointerWrapper.class.isAssignableFrom(c) )
-					type = Class.forName("[L" + t.getComponentType() + ";");
-				else {
-					throw new RuntimeException(t + " is not allowed");
-				}
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
+        @Override
+        public Void visitArray(ArrayType t, Void o) {
+                final TypeMirror componentType = t.getComponentType();
+                try {
+                        final Class c = Class.forName(t.getComponentType().toString());
+                        if (CharSequence.class.isAssignableFrom(c) || ByteBuffer.class.isAssignableFrom(c) || org.lwjgl.PointerWrapper.class.isAssignableFrom(c)) {
+                                type = Class.forName("[L" + t.getComponentType() + ";");
+                        }
+                } catch (ClassNotFoundException ex) {
+                        type = null;
+                } finally {
+                        if (type == null) {
+                                if (componentType instanceof PrimitiveType) {
+                                        type = getPrimitiveArrayClassFromKind(((PrimitiveType) componentType).getKind());
+                                } else {
+                                        throw new RuntimeException(t + " is not allowed");
+                                }
+                        }
+                        return DEFAULT_VALUE;
+                }
+        }
 
-	public static Class getPrimitiveClassFromKind(PrimitiveType.Kind kind) {
-		switch ( kind ) {
-			case LONG:
-				return long.class;
-			case INT:
-				return int.class;
-			case DOUBLE:
-				return double.class;
-			case FLOAT:
-				return float.class;
-			case SHORT:
-				return short.class;
-			case BYTE:
-				return byte.class;
-			case BOOLEAN:
-				return boolean.class;
-			default:
-				throw new RuntimeException(kind + " is not allowed");
-		}
-	}
+        public static Class getPrimitiveClassFromKind(TypeKind kind) {
+                switch (kind) {
+                        case LONG:
+                                return long.class;
+                        case INT:
+                                return int.class;
+                        case DOUBLE:
+                                return double.class;
+                        case FLOAT:
+                                return float.class;
+                        case SHORT:
+                                return short.class;
+                        case BYTE:
+                                return byte.class;
+                        case BOOLEAN:
+                                return boolean.class;
+                        default:
+                                throw new RuntimeException(kind + " is not allowed");
+                }
+        }
 
-	private static Class getPrimitiveArrayClassFromKind(PrimitiveType.Kind kind) {
-		switch ( kind ) {
-			case LONG:
-				return long[].class;
-			case INT:
-				return int[].class;
-			case DOUBLE:
-				return double[].class;
-			case FLOAT:
-				return float[].class;
-			case SHORT:
-				return short[].class;
-			case BYTE:
-				return byte[].class;
-			case BOOLEAN:
-				return boolean[].class;
-			default:
-				throw new RuntimeException(kind + " is not allowed");
-		}
-	}
+        private static Class getPrimitiveArrayClassFromKind(TypeKind kind) {
+                switch (kind) {
+                        case LONG:
+                                return long[].class;
+                        case INT:
+                                return int[].class;
+                        case DOUBLE:
+                                return double[].class;
+                        case FLOAT:
+                                return float[].class;
+                        case SHORT:
+                                return short[].class;
+                        case BYTE:
+                                return byte[].class;
+                        case BOOLEAN:
+                                return boolean[].class;
+                        default:
+                                throw new RuntimeException(kind + " is not allowed");
+                }
+        }
 
-	public void visitPrimitiveType(PrimitiveType t) {
-		type = getPrimitiveClassFromKind(t.getKind());
-	}
+        @Override
+        public Void visitPrimitive(PrimitiveType t, Void p) {
+                type = getPrimitiveClassFromKind(t.getKind());
+                return DEFAULT_VALUE;
+        }
 
-	public void visitDeclaredType(DeclaredType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
+        @Override
+        public Void visitDeclared(DeclaredType t, Void o) {
+                if (t.asElement().getKind().isClass()) {
+                        visitClassType(t);
+                } else if (t.asElement().getKind().isInterface()) {
+                        visitInterfaceType(t);
+                } else {
+                        throw new RuntimeException(t.asElement().getKind() + " is not allowed");
+                }
+                return DEFAULT_VALUE;
+        }
 
-	public void visitEnumType(EnumType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
+        private void visitClassType(DeclaredType t) {
+                type = NativeTypeTranslator.getClassFromType(t);
+        }
 
-	public void visitClassType(ClassType t) {
-		type = NativeTypeTranslator.getClassFromType(t);
-	}
+        private void visitInterfaceType(DeclaredType t) {
+                type = NativeTypeTranslator.getClassFromType(t);
+        }
 
-	public void visitInterfaceType(InterfaceType t) {
-		type = NativeTypeTranslator.getClassFromType(t);
-	}
+        @Override
+        public Void visitNoType(NoType t, Void p) {
+                type = void.class;
+                return DEFAULT_VALUE;
+        }
 
-	public void visitReferenceType(ReferenceType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitTypeMirror(TypeMirror t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitTypeVariable(TypeVariable t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitVoidType(VoidType t) {
-		type = void.class;
-	}
-
-	public void visitWildcardType(WildcardType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
 }

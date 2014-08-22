@@ -41,42 +41,44 @@ package org.lwjgl.util.generator.openal;
  * $Id: ALTypeMap.java 2983 2008-04-07 18:36:09Z matzon $
  */
 
-import org.lwjgl.util.generator.Signedness;
-import org.lwjgl.util.generator.TypeMap;
-
-import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.*;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
-import java.util.*;
 import java.nio.*;
+import java.util.*;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.type.TypeKind;
+import org.lwjgl.util.generator.Signedness;
+import org.lwjgl.util.generator.TypeMap;
 
 public class ALTypeMap implements TypeMap {
-	private static final Map<Class, PrimitiveType.Kind> native_types_to_primitive;
+	private static final Map<Class, TypeKind> native_types_to_primitive;
 
 	static {
-		native_types_to_primitive = new HashMap<Class, PrimitiveType.Kind>();
-		native_types_to_primitive.put(ALboolean.class, PrimitiveType.Kind.BOOLEAN);
-		native_types_to_primitive.put(ALbyte.class, PrimitiveType.Kind.BYTE);
-		native_types_to_primitive.put(ALenum.class, PrimitiveType.Kind.INT);
-		native_types_to_primitive.put(ALfloat.class, PrimitiveType.Kind.FLOAT);
-		native_types_to_primitive.put(ALdouble.class, PrimitiveType.Kind.DOUBLE);
-		native_types_to_primitive.put(ALint.class, PrimitiveType.Kind.INT);
-		native_types_to_primitive.put(ALshort.class, PrimitiveType.Kind.SHORT);
-		native_types_to_primitive.put(ALsizei.class, PrimitiveType.Kind.INT);
-		native_types_to_primitive.put(ALubyte.class, PrimitiveType.Kind.BYTE);
-		native_types_to_primitive.put(ALuint.class, PrimitiveType.Kind.INT);
-		native_types_to_primitive.put(ALvoid.class, PrimitiveType.Kind.BYTE);
+		native_types_to_primitive = new HashMap<>();
+		native_types_to_primitive.put(ALboolean.class, TypeKind.BOOLEAN);
+		native_types_to_primitive.put(ALbyte.class, TypeKind.BYTE);
+		native_types_to_primitive.put(ALenum.class, TypeKind.INT);
+		native_types_to_primitive.put(ALfloat.class, TypeKind.FLOAT);
+		native_types_to_primitive.put(ALdouble.class, TypeKind.DOUBLE);
+		native_types_to_primitive.put(ALint.class, TypeKind.INT);
+		native_types_to_primitive.put(ALshort.class, TypeKind.SHORT);
+		native_types_to_primitive.put(ALsizei.class, TypeKind.INT);
+		native_types_to_primitive.put(ALubyte.class, TypeKind.BYTE);
+		native_types_to_primitive.put(ALuint.class, TypeKind.INT);
+		native_types_to_primitive.put(ALvoid.class, TypeKind.BYTE);
 	}
 
-	public PrimitiveType.Kind getPrimitiveTypeFromNativeType(Class native_type) {
-		PrimitiveType.Kind kind = native_types_to_primitive.get(native_type);
+        @Override
+	public TypeKind getPrimitiveTypeFromNativeType(Class native_type) {
+		TypeKind kind = native_types_to_primitive.get(native_type);
 		if (kind == null)
 			throw new RuntimeException("Unsupported type " + native_type);
 		return kind;
 	}
 
+        @Override
 	public Signedness getSignednessFromType(Class type) {
 		if (ALuint.class.equals(type))
 			return Signedness.UNSIGNED;
@@ -90,6 +92,7 @@ public class ALTypeMap implements TypeMap {
 			return Signedness.NONE;
 	}
 
+        @Override
 	public String translateAnnotation(Class annotation_type) {
 		if (annotation_type.equals(ALuint.class))
 			return "i";
@@ -109,7 +112,8 @@ public class ALTypeMap implements TypeMap {
 			throw new RuntimeException(annotation_type + " is not allowed");
 	}
 
-	public Class getNativeTypeFromPrimitiveType(PrimitiveType.Kind kind) {
+        @Override
+	public Class getNativeTypeFromPrimitiveType(TypeKind kind) {
 		Class type;
 		switch (kind) {
 			case INT:
@@ -170,50 +174,62 @@ public class ALTypeMap implements TypeMap {
 			return new Class[]{};
 	}
 
+        @Override
 	public void printCapabilitiesInit(final PrintWriter writer) {
 		throw new UnsupportedOperationException();
 	}
 
+        @Override
 	public String getCapabilities() {
 		throw new UnsupportedOperationException();
 	}
 
+        @Override
 	public String getAPIUtilParam(boolean comma) {
 		return "";
 	}
 
-	public void printErrorCheckMethod(final PrintWriter writer, final MethodDeclaration method, final String tabs) {
+        @Override
+	public void printErrorCheckMethod(final PrintWriter writer, final ExecutableElement method, final String tabs) {
 		writer.println(tabs + "Util.checkALError();");
 	}
 
+        @Override
 	public String getRegisterNativesFunctionName() {
 		return "extal_InitializeClass";
 	}
 
+        @Override
 	public String getTypedefPostfix() {
 		return "";
 	}
 
+        @Override
 	public String getFunctionPrefix() {
 		return "ALAPIENTRY";
 	}
 
+        @Override
 	public void printNativeIncludes(PrintWriter writer) {
 		writer.println("#include \"extal.h\"");
 	}
 
+        @Override
 	public Class<? extends Annotation> getStringElementType()	{
 		return ALubyte.class;
 	}
 
+        @Override
 	public Class<? extends Annotation> getStringArrayType() {
 		return ALubyte.class;
 	}
 
+        @Override
 	public Class<? extends Annotation> getByteBufferArrayType() {
 		return ALubyte.class;
 	}
 
+        @Override
 	public Class[] getValidAnnotationTypes(Class type) {
 		Class[] valid_types;
 		if (Buffer.class.isAssignableFrom(type))
@@ -227,10 +243,12 @@ public class ALTypeMap implements TypeMap {
 		return valid_types;
 	}
 
+        @Override
 	public Class<? extends Annotation> getVoidType() {
 		return ALvoid.class;
 	}
 
+        @Override
 	public Class<? extends Annotation> getInverseType(Class type) {
 		if (ALuint.class.equals(type))
 			return ALint.class;
@@ -240,6 +258,7 @@ public class ALTypeMap implements TypeMap {
 			return null;
 	}
 
+        @Override
 	public String getAutoTypeFromAnnotation(AnnotationMirror annotation) {
 		return null;
 	}
