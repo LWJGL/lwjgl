@@ -16,7 +16,12 @@
     </target>
 
 	<!-- Compiles the Java generator source code -->
-	<target name="generators" description="Compiles the native method generators">
+	<target name="generators" description="Compiles the native method generators">            
+            <mkdir dir="${lwjgl.src}/generated/"/>
+            <mkdir dir="${lwjgl.src.native}/generated/openal"/>
+            <mkdir dir="${lwjgl.src.native}/generated/opengl"/>
+            <mkdir dir="${lwjgl.src.native}/generated/opengles"/>
+            <mkdir dir="${lwjgl.src.native}/generated/opencl"/>
         <javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/util/generator/**.java" taskname="generator">
             <include name="org/lwjgl/util/generator/openal/**.java"/>
             <include name="org/lwjgl/util/generator/opengl/**.java"/>
@@ -60,7 +65,7 @@
 		****************************************************************************  -->
 
 	<!-- Generate OpenAL -->
-	<target name="generate-openal" depends="generators" description="Generates java and native source for AL">
+	<target name="generate-openal" depends="generators" description="Generates java and native source for AL">            
         <javac destdir="${lwjgl.bin}" source="1.7" srcdir="${lwjgl.src.templates.al}" fork="true" taskname="processor">
             <compilerarg value="-proc:only"/>
             <compilerarg value="-processor"/>
