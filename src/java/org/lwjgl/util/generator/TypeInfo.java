@@ -33,207 +33,216 @@ package org.lwjgl.util.generator;
 
 /**
  *
- * This class represent a parameter configuration. There are multiple
- * TypeInfos in case of multityped parameters.
+ * This class represent a parameter configuration. There are multiple TypeInfos
+ * in case of multityped parameters.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
- * @version $Revision$
- * $Id$
+ * @version $Revision$ $Id$
  */
-
+import java.lang.annotation.Annotation;
+import java.nio.*;
+import java.util.*;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.tools.Diagnostic;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.util.generator.opengl.GLvoid;
 
-import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.*;
-
-import java.lang.annotation.Annotation;
-import java.util.*;
-import java.nio.*;
-
 public class TypeInfo {
-	public static final String UNSIGNED_PARAMETER_NAME = "unsigned";
 
-	private final Signedness signedness;
-	private final Class type;
-	private final String auto_type;
+        public static final String UNSIGNED_PARAMETER_NAME = "unsigned";
 
-	private TypeInfo(Class type, Signedness signedness, String auto_type) {
-		this.type = type;
-		this.signedness = signedness;
-		this.auto_type = auto_type;
-	}
+        private final Signedness signedness;
+        private final Class type;
+        private final String auto_type;
 
-	public Class getType() {
-		return type;
-	}
+        private TypeInfo(Class type, Signedness signedness, String auto_type) {
+                this.type = type;
+                this.signedness = signedness;
+                this.auto_type = auto_type;
+        }
 
-	public Signedness getSignedness() {
-		return signedness;
-	}
+        public Class getType() {
+                return type;
+        }
 
-	public String getAutoType() {
-		if (auto_type == null)
-			throw new RuntimeException("No auto type assigned");
-		return auto_type;
-	}
+        public Signedness getSignedness() {
+                return signedness;
+        }
 
-	private static Class getTypeFromPrimitiveKind(PrimitiveType.Kind kind) {
-		Class type;
-		switch (kind) {
-			case LONG:
-				type = long.class;
-				break;
-			case INT:
-				type = int.class;
-				break;
-			case FLOAT:
-				type = float.class;
-				break;
-			case DOUBLE:
-				type = double.class;
-				break;
-			case SHORT:
-				type = short.class;
-				break;
-			case BYTE:
-				type = byte.class;
-				break;
-			case BOOLEAN:
-				type = boolean.class;
-				break;
-			default:
-				throw new RuntimeException(kind + " is not allowed");
-		}
-		return type;
-	}
+        public String getAutoType() {
+                if (auto_type == null) {
+                        throw new RuntimeException("No auto type assigned");
+                }
+                return auto_type;
+        }
 
-	private static Class getBufferTypeFromPrimitiveKind(PrimitiveType.Kind kind, AnnotationMirror annotation) {
-		Class type;
-		switch (kind) {
-			case INT:
-				type = IntBuffer.class;
-				break;
-			case FLOAT:
-				type = FloatBuffer.class;
-				break;
-			case DOUBLE:
-				type = DoubleBuffer.class;
-				break;
-			case SHORT:
-				type = ShortBuffer.class;
-				break;
-			case LONG:
-				if ( annotation.getAnnotationType().getDeclaration().getAnnotation(PointerType.class) != null )
-					type = PointerBuffer.class;
-				else
-					type = LongBuffer.class;
-				break;
-			case BYTE: /* fall through */
-			case BOOLEAN:
-				type = ByteBuffer.class;
-				break;
-			default:
-				throw new RuntimeException(kind + " is not allowed");
-		}
-		return type;
-	}
+        private static Class getTypeFromPrimitiveKind(TypeKind kind) {
+                Class type;
+                switch (kind) {
+                        case LONG:
+                                type = long.class;
+                                break;
+                        case INT:
+                                type = int.class;
+                                break;
+                        case FLOAT:
+                                type = float.class;
+                                break;
+                        case DOUBLE:
+                                type = double.class;
+                                break;
+                        case SHORT:
+                                type = short.class;
+                                break;
+                        case BYTE:
+                                type = byte.class;
+                                break;
+                        case BOOLEAN:
+                                type = boolean.class;
+                                break;
+                        default:
+                                throw new RuntimeException(kind + " is not allowed");
+                }
+                return type;
+        }
 
-	private static TypeInfo getDefaultTypeInfo(TypeMirror t) {
-		Class java_type = Utils.getJavaType(t);
-		return new TypeInfo(java_type, Signedness.NONE, null);
-	}
+        private static Class getBufferTypeFromPrimitiveKind(TypeKind kind, AnnotationMirror annotation) {
+                Class type;
+                switch (kind) {
+                        case INT:
+                                type = IntBuffer.class;
+                                break;
+                        case FLOAT:
+                                type = FloatBuffer.class;
+                                break;
+                        case DOUBLE:
+                                type = DoubleBuffer.class;
+                                break;
+                        case SHORT:
+                                type = ShortBuffer.class;
+                                break;
+                        case LONG:
+                                if (annotation.getAnnotationType().asElement().getAnnotation(PointerType.class) != null) {
+                                        type = PointerBuffer.class;
+                                } else {
+                                        type = LongBuffer.class;
+                                }
+                                break;
+                        case BYTE: /* fall through */
 
-	public static Map<ParameterDeclaration, TypeInfo> getDefaultTypeInfoMap(MethodDeclaration method) {
-		Map<ParameterDeclaration, TypeInfo> map = new HashMap<ParameterDeclaration, TypeInfo>();
-		for (ParameterDeclaration param : method.getParameters()) {
-			TypeInfo type_info = getDefaultTypeInfo(param.getType());
-			map.put(param, type_info);
-		}
-		return map;
-	}
+                        case BOOLEAN:
+                                type = ByteBuffer.class;
+                                break;
+                        default:
+                                throw new RuntimeException(kind + " is not allowed");
+                }
+                return type;
+        }
 
-	private static Collection<TypeInfo> getTypeInfos(TypeMap type_map, Declaration param, TypeMirror decl_type) {
-		Collection<AnnotationMirror> annotations = Utils.getSortedAnnotations(param.getAnnotationMirrors());
-		Map<Class, TypeInfo> types = new HashMap<Class, TypeInfo>();
-		Collection<TypeInfo> multityped_result = new ArrayList<TypeInfo>();
-		boolean add_default_type = true;
-		for (AnnotationMirror annotation : annotations) {
-			NativeType native_type_annotation = NativeTypeTranslator.getAnnotation(annotation, NativeType.class);
-			if (native_type_annotation != null) {
-				Class<? extends Annotation> annotation_type = NativeTypeTranslator.getClassFromType(annotation.getAnnotationType());
-				Signedness signedness = type_map.getSignednessFromType(annotation_type);
-				Class inverse_type = type_map.getInverseType(annotation_type);
-				String auto_type = type_map.getAutoTypeFromAnnotation(annotation);
-				if (inverse_type != null) {
-					if (types.containsKey(inverse_type)) {
-						TypeInfo inverse_type_info = types.get(inverse_type);
-						String inverse_auto_type = inverse_type_info.getAutoType();
-						auto_type = signedness == Signedness.UNSIGNED ? auto_type + " : " + inverse_auto_type :
-							inverse_auto_type + " : " + auto_type;
-						auto_type = UNSIGNED_PARAMETER_NAME + " ? " + auto_type;
-						signedness = Signedness.BOTH;
-						types.remove(inverse_type);
-						multityped_result.remove(inverse_type_info);
-					}
-				}
-				Class type;
-				PrimitiveType.Kind kind;
-				GLvoid void_annotation = param.getAnnotation(GLvoid.class);
-				kind = void_annotation == null ? type_map.getPrimitiveTypeFromNativeType(annotation_type) : void_annotation.value();
-				if (Utils.getNIOBufferType(decl_type) != null)
-					type = getBufferTypeFromPrimitiveKind(kind, annotation);
-				else
-					type = getTypeFromPrimitiveKind(kind);
-				TypeInfo type_info = new TypeInfo(type, signedness, auto_type);
-				types.put(annotation_type, type_info);
-				multityped_result.add(type_info);
-				add_default_type = false;
-			}
-		}
-		if (add_default_type) {
-			TypeInfo default_type_info = getDefaultTypeInfo(decl_type);
-			Collection<TypeInfo> result = new ArrayList<TypeInfo>();
-			result.add(default_type_info);
-			return result;
-		} else
-			return multityped_result;
-	}
+        private static TypeInfo getDefaultTypeInfo(TypeMirror t) {
+                Class java_type = Utils.getJavaType(t);
+                return new TypeInfo(java_type, Signedness.NONE, null);
+        }
 
-	private static Map<ParameterDeclaration, Collection<TypeInfo>> getTypeInfoMap(TypeMap type_map, MethodDeclaration method) {
-		Map<ParameterDeclaration, Collection<TypeInfo>> map = new HashMap<ParameterDeclaration, Collection<TypeInfo>>();
-		for (ParameterDeclaration param : method.getParameters()) {
-			Collection<TypeInfo> types = getTypeInfos(type_map, param, param.getType());
-			map.put(param, types);
-		}
-		return map;
-	}
+        public static Map<VariableElement, TypeInfo> getDefaultTypeInfoMap(ExecutableElement method) {
+                Map<VariableElement, TypeInfo> map = new HashMap<>();
+                for (VariableElement param : method.getParameters()) {
+                        TypeInfo type_info = getDefaultTypeInfo(param.asType());
+                        map.put(param, type_info);
+                }
+                return map;
+        }
 
-	public static Collection<Map<ParameterDeclaration, TypeInfo>> getTypeInfoCrossProduct(TypeMap type_map, MethodDeclaration method) {
-		Collection<ParameterDeclaration> parameter_collection = method.getParameters();
-		ParameterDeclaration[] parameters = new ParameterDeclaration[parameter_collection.size()];
-		parameter_collection.toArray(parameters);
-		Collection<Map<ParameterDeclaration, TypeInfo>> cross_product = new ArrayList<Map<ParameterDeclaration, TypeInfo>>();
-		getCrossProductRecursive(0, parameters, getTypeInfoMap(type_map, method),
-				new HashMap<ParameterDeclaration, TypeInfo>(), cross_product);
-		return cross_product;
-	}
+        private static Collection<TypeInfo> getTypeInfos(ProcessingEnvironment env, TypeMap type_map, VariableElement param) {                
+                List<? extends AnnotationMirror> annotations = param.getAnnotationMirrors();
+                GLvoid void_annotation = param.getAnnotation(GLvoid.class);
 
-	private static void getCrossProductRecursive(int index, ParameterDeclaration[] parameters, Map<ParameterDeclaration,
-			Collection<TypeInfo>> typeinfos_map, Map<ParameterDeclaration, TypeInfo> current_instance,
-			Collection<Map<ParameterDeclaration, TypeInfo>> cross_product) {
-		if (index == parameters.length) {
-			cross_product.add(current_instance);
-			return;
-		}
-		ParameterDeclaration param = parameters[index];
-		Collection<TypeInfo> typeinfos = typeinfos_map.get(param);
-		if (typeinfos != null) {
-			for (TypeInfo typeinfo : typeinfos) {
-				Map<ParameterDeclaration, TypeInfo> instance = new HashMap<ParameterDeclaration, TypeInfo>(current_instance);
-				instance.put(param, typeinfo);
-				getCrossProductRecursive(index + 1, parameters, typeinfos_map, instance, cross_product);
-			}
-		}
-	}
+                Map<Class, TypeInfo> types = new HashMap<>();
+                Collection<TypeInfo> multityped_result = new ArrayList<>();
+                boolean add_default_type = true;
+                for (AnnotationMirror annotation : annotations) {
+                        NativeType native_type_annotation = NativeTypeTranslator.getAnnotation(annotation, NativeType.class);
+                        if (native_type_annotation != null) {
+                                Class<? extends Annotation> annotation_type = NativeTypeTranslator.getClassFromType(annotation.getAnnotationType());
+                                /*env.getMessager().printMessage(Diagnostic.Kind.NOTE, "annotation_type " + annotation_type, param, annotation);*/
+                                Signedness signedness = type_map.getSignednessFromType(annotation_type);
+                                Class inverse_type = type_map.getInverseType(annotation_type);
+                                String auto_type = type_map.getAutoTypeFromAnnotation(annotation);
+                                if (inverse_type != null) {
+                                        if (types.containsKey(inverse_type)) {
+                                                TypeInfo inverse_type_info = types.get(inverse_type);
+                                                String inverse_auto_type = inverse_type_info.getAutoType();
+                                                auto_type = signedness == Signedness.UNSIGNED ? auto_type + " : " + inverse_auto_type
+                                                        : inverse_auto_type + " : " + auto_type;
+                                                auto_type = UNSIGNED_PARAMETER_NAME + " ? " + auto_type;
+                                                signedness = Signedness.BOTH;
+                                                types.remove(inverse_type);
+                                                multityped_result.remove(inverse_type_info);
+                                        }
+                                }
+                                Class type;
+                                TypeKind kind;
+                                kind = void_annotation == null ? type_map.getPrimitiveTypeFromNativeType(annotation_type) : void_annotation.value();
+                                if (Utils.getNIOBufferType(param.asType()) != null) {
+                                        type = getBufferTypeFromPrimitiveKind(kind, annotation);
+                                } else {
+                                        type = getTypeFromPrimitiveKind(kind);
+                                }
+                                TypeInfo type_info = new TypeInfo(type, signedness, auto_type);
+                                types.put(annotation_type, type_info);
+                                multityped_result.add(type_info);
+                                add_default_type = false;
+                        }
+                }
+                if (add_default_type) {
+                        TypeInfo default_type_info = getDefaultTypeInfo(param.asType());
+                        Collection<TypeInfo> result = new ArrayList<>();
+                        result.add(default_type_info);
+                        return result;
+                } else {
+                        return multityped_result;
+                }
+        }
+
+        private static Map<VariableElement, Collection<TypeInfo>> getTypeInfoMap(ProcessingEnvironment env, TypeMap type_map, ExecutableElement method) {
+                Map<VariableElement, Collection<TypeInfo>> map = new HashMap<>();
+                for (VariableElement param : method.getParameters()) {
+                        Collection<TypeInfo> types = getTypeInfos(env, type_map, param);
+                        map.put(param, types);
+                }
+                return map;
+        }
+
+        public static Collection<Map<VariableElement, TypeInfo>> getTypeInfoCrossProduct(ProcessingEnvironment env, TypeMap type_map, ExecutableElement method) {
+                List<? extends VariableElement> parameter_collection = method.getParameters();
+                Collection<Map<VariableElement, TypeInfo>> cross_product = new ArrayList<>();
+                getCrossProductRecursive(0, parameter_collection, getTypeInfoMap(env, type_map, method),
+                        new HashMap<VariableElement, TypeInfo>(), cross_product);
+                return cross_product;
+        }
+
+        private static void getCrossProductRecursive(int index, List<? extends VariableElement> parameters, Map<VariableElement, Collection<TypeInfo>> typeinfos_map, Map<VariableElement, TypeInfo> current_instance, Collection<Map<VariableElement, TypeInfo>> cross_product) {
+                if (index == parameters.size()) {
+                        /**
+                         * the last parameter is treated as multi-type only
+                         */
+                        cross_product.add(current_instance);
+                        return;
+                }
+                VariableElement param = parameters.get(index);
+                Collection<TypeInfo> typeinfos = typeinfos_map.get(param);
+                if (typeinfos != null) {
+                        for (TypeInfo typeinfo : typeinfos) {
+                                Map<VariableElement, TypeInfo> instance = new HashMap<>(current_instance);
+                                instance.put(param, typeinfo);
+                                getCrossProductRecursive(index + 1, parameters, typeinfos_map, instance, cross_product);
+                        }
+                }
+        }
 }

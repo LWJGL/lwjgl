@@ -57,10 +57,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXMouseEventQueue_nWarpCursor(J
 	p.x = x;
 	p.y = y;
 	CGWarpMouseCursorPosition(p);
+    CGAssociateMouseAndMouseCursorPosition(true);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXMouseEventQueue_getMouseDeltas(JNIEnv *env, jclass unused, jobject delta_buffer) {
-	CGMouseDelta dx, dy;
+	int32_t dx, dy;
 	CGGetLastMouseDelta(&dx, &dy);
 	int buffer_length = (*env)->GetDirectBufferCapacity(env, delta_buffer);
 	if (buffer_length != 2) {
