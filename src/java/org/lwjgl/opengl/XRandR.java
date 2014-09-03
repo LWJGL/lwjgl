@@ -112,12 +112,7 @@ public class XRandR
 					else if( Pattern.matches( "\\d*x\\d*", sa[ 0 ] ) )
 					{
 						// found a new mode line
-                                                // current mode contains a star (*)
-                                                if (sa[1].contains("*")) {
-                                                    parseScreenModeline( currentList, name, sa[ 0 ], Arrays.copyOfRange(sa, 1, sa.length), currentScreenPosition);
-                                                }
-                                                // normal parsing
-						parseScreenModeline( possibles, name, sa[ 0 ], Arrays.copyOfRange(sa, 1, sa.length), null);
+						parseScreenModeline( possibles, currentList, name, sa[ 0 ], Arrays.copyOfRange(sa, 1, sa.length), currentScreenPosition);
 					}
 				}
 
@@ -231,6 +226,7 @@ public class XRandR
          * restoreConfiguration()
          */
         public static void saveConfiguration() {
+                populate();
                 savedConfiguration = current.clone();
         }
 
@@ -271,14 +267,15 @@ public class XRandR
 
 	private static final Pattern SCREEN_MODELINE_PATTERN = Pattern.compile( "^(\\d+)x(\\d+)$" );
 
-        private static final Pattern FREQ_PATTERN = Pattern.compile("^(\\d+).(\\d+)\\*?\\+?$");
+        private static final Pattern FREQ_PATTERN = Pattern.compile("^(\\d+).(\\d+)[\\*,\\s]?\\+?$");
 
         /**
-	 * Parses a screen configuration and adds it to the list if it's
-	 * valid.
+	 * Parses a screen configuration and adds it to one of the lists if valid.
 	 *
-	 * @param list
+	 * @param allModes
 	 *           the list to add the Screen to if it's valid
+         * @param current
+         *           the list to add the current screen config to
 	 * @param name
 	 *           the name of this screen
 	 * @param res
@@ -288,7 +285,7 @@ public class XRandR
          * @param screenPosition
          *           position of this screen, null defaults to 0,0
 	 */
-	private static void parseScreenModeline( List<Screen> list, String name, String res, String[] freqs, int[] screenPosition)
+	private static void parseScreenModeline( List<Screen> allModes, List<Screen> current, String name, String res, String[] freqs, int[] screenPosition)
 	{
 		Matcher m = SCREEN_MODELINE_PATTERN.matcher( res );
                 if( !m.matches() )
@@ -298,14 +295,15 @@ public class XRandR
                 }
 		int width = Integer.parseInt( m.group( 1 ) );
 		int height = Integer.parseInt( m.group( 2 ) );
-		int xpos = 0;
-                int ypos = 0;
-                if (screenPosition != null) {
-                    xpos = screenPosition[0];
-                    ypos = screenPosition[1];
-                }
+                int xpos = screenPosition[0];
+                int ypos = screenPosition[1];
 
                 for (String freqS : freqs) {
+                    if ("+".equals(freqS)) {
+                        // previous rate was the "preferred" refresh rate
+                        // no way to get this info to the application, so ignore it
+                        continue;
+                    }
                     m = FREQ_PATTERN.matcher(freqS);
                     if( !m.matches() )
                     {
@@ -313,7 +311,12 @@ public class XRandR
                         return;
                     }
                     int freq = Integer.parseInt(m.group(1));
-                    list.add( new Screen( name, width, height, freq, xpos, ypos ) );
+                    if (freqS.contains("*")) {
+                        // current mode, save to current list with screen position
+                        current.add( new Screen( name, width, height, freq, xpos, ypos ) );
+                    }
+                    // always add to List of all modes without screen position
+                    allModes.add( new Screen( name, width, height, freq, 0, 0 ) );
                 }
 	}
 
