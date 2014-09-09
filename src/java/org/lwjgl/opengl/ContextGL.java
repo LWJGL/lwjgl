@@ -253,8 +253,12 @@ final class ContextGL implements Context {
 		boolean was_current = isCurrent();
 		int error = GL_NO_ERROR;
 		if ( was_current ) {
-			if ( GLContext.getCapabilities() != null && GLContext.getCapabilities().OpenGL11 )
-				error = glGetError();
+                        try {
+                                if ( GLContext.getCapabilities().OpenGL11 )
+                                        error = glGetError();
+                        } catch (RuntimeException ex) {
+                            // this happens instead of getCapabilites() returning null, ignore
+                        }
 			releaseCurrent();
 		}
 		checkDestroy();
