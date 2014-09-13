@@ -89,6 +89,11 @@ final class LinuxContextImplementation implements ContextImplementation {
 	private static native void nSwapBuffers(ByteBuffer peer_info_handle) throws LWJGLException;
 
 	public void releaseCurrentContext() throws LWJGLException {
+                // do not release context for gallium3D amd driver, see MC-70651
+                String renderer = GL11.glGetString(GL11.GL_RENDERER).toLowerCase();
+                if (renderer.contains("gallium") && (renderer.contains("amd") || renderer.contains("ati"))) {
+                    return;
+                }
 		ContextGL current_context = ContextGL.getCurrentContext();
 		if ( current_context == null )
 			throw new IllegalStateException("No context is current");
