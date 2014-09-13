@@ -4,7 +4,7 @@
 	<property name="native" location="../../src/native"/>
 	<property name="libname32" value="liblwjgl.so"/>
 	<property name="libname64" value="liblwjgl64.so"/>
-	<property name="libs32" value="-L/home/spasi/lwjgl/libs/linux -lEGL -L/usr/X11R6/lib -L/usr/X11/lib -lm -lX11 -lXext -lXcursor -lXrandr -lpthread -L${java.home}/lib/i386 -ljawt" />
+	<property name="libs32" value="-L/home/spasi/lwjgl/libs/linux -lEGL -L/usr/X11R6/lib -L/usr/X11/lib -lm -lX11 -lXext -lXcursor -lXxf86vm -lXrandr -lpthread -L${java.home}/lib/i386 -ljawt" />
 	<property name="libs64" value="-L${lib_folder}/x64 -lEGL -L/usr/X11R6/lib64 -L/usr/X11/lib64 -lm -lX11 -lXext -lXcursor -lXrandr -lXxf86vm -lpthread -L${java.home}/lib/amd64 -ljawt" />
 	<property name="cflags32" value="-O2 -Wall -c -fPIC -std=c99 -Wunused"/>
 
