@@ -42,9 +42,11 @@ package org.lwjgl.util.generator;
  */
 
 import org.lwjgl.PointerBuffer;
+import org.lwjgl.PointerWrapper;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.util.regex.Pattern;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
@@ -52,15 +54,14 @@ import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.util.SimpleTypeVisitor6;
 
 class SignatureTranslator extends SimpleTypeVisitor6<Void, Void> {
-	private final boolean add_position_signature;
 	private final StringBuilder signature = new StringBuilder();
 
-	SignatureTranslator(boolean add_position_signature) {
-		this.add_position_signature = add_position_signature;
-	}
+	SignatureTranslator() {}
+
+	private static final Pattern DOT_PATTERN = Pattern.compile("\\.");
 
 	private static String getNativeNameFromClassName(String class_name) {
-		return class_name.replaceAll("\\.", "/");
+		return DOT_PATTERN.matcher(class_name).replaceAll("/");
 	}
 
 	public String getSignature() {
@@ -74,7 +75,7 @@ class SignatureTranslator extends SimpleTypeVisitor6<Void, Void> {
 			signature.append("J");
 		else if ( Buffer.class.isAssignableFrom(type) )
 			signature.append("[Ljava/nio/ByteBuffer;");
-		else if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(type) )
+		else if ( PointerWrapper.class.isAssignableFrom(type) )
 			signature.append("[L" + getNativeNameFromClassName(type.getName()) + ";");
 		else
 			throw new RuntimeException(t + " is not allowed");
@@ -84,7 +85,7 @@ class SignatureTranslator extends SimpleTypeVisitor6<Void, Void> {
 	private void visitClassType(DeclaredType t) {
 		Class type = NativeTypeTranslator.getClassFromType(t);
 
-		if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(type) || (Utils.isAddressableType(type) && !String.class.equals(type)) )
+		if ( PointerWrapper.class.isAssignableFrom(type) || (Utils.isAddressableType(type) && !String.class.equals(type)) )
 			signature.append("J");
 		else {
 			String type_name;
@@ -110,7 +111,7 @@ class SignatureTranslator extends SimpleTypeVisitor6<Void, Void> {
 
 	private void visitInterfaceType(DeclaredType t) {
 		Class type = NativeTypeTranslator.getClassFromType(t);
-		if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(type) )
+		if ( PointerWrapper.class.isAssignableFrom(type) )
 			signature.append("J");
 		else
 			throw new RuntimeException(t + " is not allowed");

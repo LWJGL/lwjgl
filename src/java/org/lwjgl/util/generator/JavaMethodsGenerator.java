@@ -73,7 +73,7 @@ public class JavaMethodsGenerator {
 			if ( method.getAnnotation(GenerateAutos.class) != null ) {
 				printMethodWithMultiType(env, type_map, writer, interface_decl, method, TypeInfo.getDefaultTypeInfoMap(method), Mode.AUTOS, generate_error_checks, context_specific);
 			}
-			Collection<Map<VariableElement, TypeInfo>> cross_product = TypeInfo.getTypeInfoCrossProduct(env, type_map, method);
+			Collection<Map<VariableElement, TypeInfo>> cross_product = TypeInfo.getTypeInfoCrossProduct(type_map, method);
 			for ( Map<VariableElement, TypeInfo> typeinfos_instance : cross_product ) {
 				printMethodWithMultiType(env, type_map, writer, interface_decl, method, typeinfos_instance, Mode.NORMAL, generate_error_checks, context_specific);
 			}
@@ -115,7 +115,7 @@ public class JavaMethodsGenerator {
 			writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
 		}
 		writer.print("(");
-		boolean first_parameter = generateParametersJava(env, writer, method, TypeInfo.getDefaultTypeInfoMap(method), true, true, mode);
+		boolean first_parameter = generateParametersJava(writer, method, TypeInfo.getDefaultTypeInfoMap(method), true, true, mode);
 		if ( context_specific ) {
 			if ( !first_parameter ) {
 				writer.print(", ");
@@ -125,7 +125,7 @@ public class JavaMethodsGenerator {
 		writer.println(");");
 	}
 
-	private static boolean generateParametersJava(ProcessingEnvironment env, PrintWriter writer, ExecutableElement method, Map<VariableElement, TypeInfo> typeinfos_instance, boolean native_stub, final boolean printTypes, Mode mode) {
+	private static boolean generateParametersJava(PrintWriter writer, ExecutableElement method, Map<VariableElement, TypeInfo> typeinfos_instance, boolean native_stub, final boolean printTypes, Mode mode) {
 		boolean first_parameter = true;
 		for ( VariableElement param : method.getParameters() ) {
 			if ( native_stub && (param.getAnnotation(Helper.class) != null && !param.getAnnotation(Helper.class).passToNative()) ) {
@@ -281,7 +281,7 @@ public class JavaMethodsGenerator {
 			method_name = getPostfixStrippedName(type_map, interface_decl, method);
 		}
 		writer.print(" " + method_name + "(");
-		generateParametersJava(env, writer, method, typeinfos_instance, false, true, mode);
+		generateParametersJava(writer, method, typeinfos_instance, false, true, mode);
 		writer.println(") {");
 
 		final TypeMirror result_type = Utils.getMethodReturnType(method);
@@ -295,7 +295,7 @@ public class JavaMethodsGenerator {
 			}
 
 			writer.print(reuse_annotation.value() + "." + (reuse_annotation.method().length() > 0 ? reuse_annotation.method() : method_name) + "(");
-			generateParametersJava(env, writer, method, typeinfos_instance, false, false, mode);
+			generateParametersJava(writer, method, typeinfos_instance, false, false, mode);
 			writer.println(");\n\t}");
 			return;
 		}
@@ -441,7 +441,7 @@ public class JavaMethodsGenerator {
 		return false;
 	}
 
-	private static final Map<String, Pattern> postfixPatterns = new HashMap<>();
+	private static final Map<String, Pattern> postfixPatterns = new HashMap<String, Pattern>();
 
 	private static Pattern getPostfixPattern(String regex) {
 		Pattern pattern = postfixPatterns.get(regex);
@@ -697,7 +697,7 @@ public class JavaMethodsGenerator {
 
 		for ( VariableElement param : method.getParameters() ) {
 			Class java_type = Utils.getJavaType(param.asType());
-			if ( java_type.isArray() || (Utils.isAddressableType((Class)java_type)
+			if ( java_type.isArray() || (Utils.isAddressableType(java_type)
 			                             && (mode != Mode.BUFFEROBJECT || param.getAnnotation(BufferObject.class) == null)
 			                             && (mode != Mode.AUTOS || getAutoTypeParameter(method, param) == null)
 			                             && param.getAnnotation(Result.class) == null
@@ -710,25 +710,23 @@ public class JavaMethodsGenerator {
 					can_be_null = check_annotation.canBeNull();
 				}
 				if ( (Buffer.class.isAssignableFrom(java_type) || PointerBuffer.class.isAssignableFrom(java_type)) && param.getAnnotation(Constant.class) == null ) {
-					boolean out_parameter = param.getAnnotation(OutParameter.class) != null;
 					TypeInfo typeinfo = typeinfos.get(param);
-					printParameterCheck(writer, method, param.getSimpleName().toString(), typeinfo.getType().getSimpleName(), check_value, can_be_null, param.getAnnotation(NullTerminated.class), out_parameter, generate_error_checks);
+					printParameterCheck(writer, method, param.getSimpleName().toString(), typeinfo.getType().getSimpleName(), check_value, can_be_null, param.getAnnotation(NullTerminated.class), generate_error_checks);
 				} else if ( String.class.equals(java_type) ) {
 					if ( !can_be_null ) {
 						writer.println("\t\tBufferChecks.checkNotNull(" + param.getSimpleName() + ");");
 					}
 				} else if ( java_type.isArray() ) {
-					final TypeInfo typeinfo = typeinfos.get(param);
-					printArrayParameterCheck(writer, param.getSimpleName().toString(), typeinfo.getType().getSimpleName(), check_value, can_be_null);
+					printArrayParameterCheck(writer, param.getSimpleName().toString(), check_value, can_be_null);
 				}
 			}
 		}
 		if ( method.getAnnotation(CachedResult.class) != null ) {
-			printParameterCheck(writer, method, Utils.CACHED_BUFFER_NAME, null, null, true, null, false, generate_error_checks);
+			printParameterCheck(writer, method, Utils.CACHED_BUFFER_NAME, null, null, true, null, generate_error_checks);
 		}
 	}
 
-	private static void printParameterCheck(PrintWriter writer, ExecutableElement method, String name, String type, String check_value, boolean can_be_null, NullTerminated null_terminated, boolean out_parameter, boolean generate_error_checks) {
+	private static void printParameterCheck(PrintWriter writer, ExecutableElement method, String name, String type, String check_value, boolean can_be_null, NullTerminated null_terminated, boolean generate_error_checks) {
 		String tabs;
 		if ( can_be_null ) {
 			writer.print("\t\tif (" + name + " != null)");
@@ -773,7 +771,7 @@ public class JavaMethodsGenerator {
 		}
 	}
 
-	private static void printArrayParameterCheck(PrintWriter writer, String name, String type, String check_value, boolean can_be_null) {
+	private static void printArrayParameterCheck(PrintWriter writer, String name, String check_value, boolean can_be_null) {
 		String tabs;
 		if ( can_be_null ) {
 			writer.println("\t\tif (" + name + " != null)");

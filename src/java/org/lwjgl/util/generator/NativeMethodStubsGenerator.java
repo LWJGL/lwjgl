@@ -281,14 +281,14 @@ public class NativeMethodStubsGenerator {
 		for ( VariableElement param : method.getParameters() ) {
 			final Constant constant_annotation = param.getAnnotation(Constant.class);
 			if ( param.getAnnotation(Result.class) == null && (constant_annotation == null || !constant_annotation.isNative()) && Utils.isAddressableType(param.asType()) )
-				generateBufferParameterAddress(type_map, writer, method, param, mode);
+				generateBufferParameterAddress(type_map, writer, param, mode);
 		}
 	}
 
 	private static boolean strLoopDeclared;
 	private static boolean ptrLoopDeclared;
 
-	private static void generateBufferParameterAddress(TypeMap type_map, PrintWriter writer, ExecutableElement method, VariableElement param, Mode mode) {
+	private static void generateBufferParameterAddress(TypeMap type_map, PrintWriter writer, VariableElement param, Mode mode) {
 		final Check check_annotation = param.getAnnotation(Check.class);
 		final PointerArray array_annotation = param.getAnnotation(PointerArray.class);
 		final Class java_type = Utils.getJavaType(param.asType());

@@ -53,7 +53,7 @@ import javax.lang.model.util.ElementFilter;
  *          2009-09-08 15:07:15Z spasi $
  */
 @SupportedAnnotationTypes({ "*" })
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
+@SupportedSourceVersion(SourceVersion.RELEASE_6)
 @SupportedOptions({ "generatechecks", "contextspecific" })
 public class GLReferencesGeneratorProcessor extends AbstractProcessor {
 

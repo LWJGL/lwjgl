@@ -60,7 +60,7 @@ public class GLESTypeMap implements TypeMap {
 	private static final Map<Class<? extends Annotation>, TypeKind> native_types_to_primitive;
 
 	static {
-		native_types_to_primitive = new HashMap<>();
+		native_types_to_primitive = new HashMap<Class<? extends Annotation>, TypeKind>();
 		native_types_to_primitive.put(GLbitfield.class, TypeKind.INT);
 		native_types_to_primitive.put(GLclampf.class, TypeKind.FLOAT);
 		native_types_to_primitive.put(GLfloat.class, TypeKind.FLOAT);

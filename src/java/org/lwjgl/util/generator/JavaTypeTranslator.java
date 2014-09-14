@@ -63,7 +63,7 @@ public class JavaTypeTranslator extends SimpleTypeVisitor6<Void, Void> {
 		} finally {
 			if ( type == null ) {
 				if ( componentType instanceof PrimitiveType ) {
-					type = getPrimitiveArrayClassFromKind(((PrimitiveType)componentType).getKind());
+					type = getPrimitiveArrayClassFromKind(componentType.getKind());
 				} else {
 					throw new RuntimeException(t + " is not allowed");
 				}

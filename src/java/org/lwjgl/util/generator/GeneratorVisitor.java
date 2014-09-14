@@ -45,7 +45,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementKindVisitor7;
+import javax.lang.model.util.ElementKindVisitor6;
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.FileObject;
@@ -57,7 +57,7 @@ import javax.tools.StandardLocation;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$ $Id$
  */
-public class GeneratorVisitor extends ElementKindVisitor7<Void, Void> {
+public class GeneratorVisitor extends ElementKindVisitor6<Void, Void> {
 
 	private final ProcessingEnvironment env;
 	private final TypeMap               type_map;
@@ -266,7 +266,7 @@ public class GeneratorVisitor extends ElementKindVisitor7<Void, Void> {
 			native_writer.print("JNIEXPORT void JNICALL " + Utils.getQualifiedNativeMethodName(qualified_interface_name, Utils.STUB_INITIALIZER_NAME));
 			native_writer.println("(JNIEnv *env, jclass clazz) {");
 			native_writer.println("\tJavaMethodAndExtFunction functions[] = {");
-			RegisterStubsGenerator.generateMethodsNativeStubBind(env, native_writer, d, generate_error_checks, context_specific);
+			RegisterStubsGenerator.generateMethodsNativeStubBind(native_writer, d, generate_error_checks, context_specific);
 			native_writer.println("\t};");
 			native_writer.println("\tint num_functions = NUMFUNCTIONS(functions);");
 			native_writer.print("\t");

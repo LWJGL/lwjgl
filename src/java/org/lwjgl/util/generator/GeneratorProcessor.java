@@ -51,7 +51,7 @@ import javax.tools.Diagnostic;
  * @version $Revision$ $Id$
  */
 @SupportedAnnotationTypes({ "*" })
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
+@SupportedSourceVersion(SourceVersion.RELEASE_6)
 @SupportedOptions({ "binpath", "typemap", "generatechecks", "contextspecific" })
 public class GeneratorProcessor extends AbstractProcessor {
 
@@ -87,7 +87,7 @@ public class GeneratorProcessor extends AbstractProcessor {
 			}
 			first_round = false;
 			return true;
-		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+		} catch (Exception e) {
 			if ( lastFile == null ) {
 				throw new RuntimeException(e);
 			} else {

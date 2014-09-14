@@ -57,7 +57,7 @@ public class ALTypeMap implements TypeMap {
 	private static final Map<Class, TypeKind> native_types_to_primitive;
 
 	static {
-		native_types_to_primitive = new HashMap<>();
+		native_types_to_primitive = new HashMap<Class, TypeKind>();
 		native_types_to_primitive.put(ALboolean.class, TypeKind.BOOLEAN);
 		native_types_to_primitive.put(ALbyte.class, TypeKind.BYTE);
 		native_types_to_primitive.put(ALenum.class, TypeKind.INT);

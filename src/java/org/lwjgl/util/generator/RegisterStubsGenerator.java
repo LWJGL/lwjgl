@@ -43,7 +43,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
-import javax.annotation.processing.ProcessingEnvironment;
+import java.util.regex.Pattern;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -51,7 +51,7 @@ import javax.lang.model.type.TypeMirror;
 
 public class RegisterStubsGenerator {
 
-	public static void generateMethodsNativeStubBind(ProcessingEnvironment env, PrintWriter writer, TypeElement d, boolean generate_error_checks, boolean context_specific) {
+	public static void generateMethodsNativeStubBind(PrintWriter writer, TypeElement d, boolean generate_error_checks, boolean context_specific) {
 		Iterator<? extends ExecutableElement> it = Utils.getMethods(d).iterator();
 		while ( it.hasNext() ) {
 			ExecutableElement method = it.next();
@@ -79,8 +79,8 @@ public class RegisterStubsGenerator {
 		writer.println();
 	}
 
-	private static String getTypeSignature(TypeMirror type, boolean add_position_signature) {
-		SignatureTranslator v = new SignatureTranslator(add_position_signature);
+	private static String getTypeSignature(TypeMirror type) {
+		SignatureTranslator v = new SignatureTranslator();
 		type.accept(v, null);
 		return v.getSignature();
 	}
@@ -101,7 +101,7 @@ public class RegisterStubsGenerator {
 			if ( mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null ) {
 				signature += "J";
 			} else {
-				signature += getTypeSignature(param.asType(), true);
+				signature += getTypeSignature(param.asType());
 			}
 		}
 
@@ -114,7 +114,7 @@ public class RegisterStubsGenerator {
 			signature += "J";
 		}
 
-		final String result_type_signature = isNIOBuffer ? "Ljava/nio/ByteBuffer;" : getTypeSignature(result_type, false);
+		final String result_type_signature = isNIOBuffer ? "Ljava/nio/ByteBuffer;" : getTypeSignature(result_type);
 		if ( cached_result_annotation != null ) {
 			signature += result_type_signature;
 		}
@@ -123,6 +123,8 @@ public class RegisterStubsGenerator {
 		signature += result_type_signature;
 		return signature;
 	}
+
+	private static final Pattern GL_PATTERN = Pattern.compile("gl");
 
 	private static void printMethodNativeStubBind(PrintWriter writer, TypeElement d, ExecutableElement method, Platform platform, Mode mode, boolean has_more, boolean generate_error_checks, boolean context_specific) {
 		writer.print("\t\t{\"" + Utils.getSimpleNativeMethodName(method, generate_error_checks, context_specific));
@@ -137,7 +139,7 @@ public class RegisterStubsGenerator {
 
 		final Alternate alt_annotation = method.getAnnotation(Alternate.class);
 		final String methodName = alt_annotation == null ? method.getSimpleName().toString() : alt_annotation.value();
-		String opengl_handle_name = methodName.replaceFirst("gl", platform.getPrefix());
+		String opengl_handle_name = GL_PATTERN.matcher(methodName).replaceFirst(platform.getPrefix());
 		writer.print(", \"" + opengl_handle_name + "\", (void *)&" + methodName + ", " + (method.getAnnotation(Optional.class) == null ? "false" : "true") + "}");
 		if ( has_more ) {
 			writer.println(",");

@@ -110,11 +110,11 @@ public class NativeTypeTranslator extends SimpleTypeVisitor6<Void, Void> {
 
 		if ( CharSequence.class.isAssignableFrom(type) ) {
 			is_indirect = true;
-			native_types = new ArrayList<>();
+			native_types = new ArrayList<Class>();
 			native_types.add(type_map.getStringArrayType());
 		} else if ( Buffer.class.isAssignableFrom(type) ) {
 			is_indirect = true;
-			native_types = new ArrayList<>();
+			native_types = new ArrayList<Class>();
 			native_types.add(type_map.getByteBufferArrayType());
 		} else if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(type) ) {
 			is_indirect = false;
@@ -163,16 +163,16 @@ public class NativeTypeTranslator extends SimpleTypeVisitor6<Void, Void> {
 
 		Class<?> c = getClassFromType(t);
 		if ( String.class.equals(c) ) {
-			native_types = new ArrayList<>();
+			native_types = new ArrayList<Class>();
 			native_types.add(type_map.getStringElementType());
 		} else if ( Buffer.class.equals(c) ) {
-			native_types = new ArrayList<>();
+			native_types = new ArrayList<Class>();
 			native_types.add(type_map.getVoidType());
 		} else if ( Buffer.class.isAssignableFrom(c) || PointerBuffer.class.isAssignableFrom(c) ) {
 			TypeKind kind = getPrimitiveKindFromBufferClass(c);
 			getNativeTypeFromAnnotatedPrimitiveType(kind);
 		} else if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(c) ) {
-			native_types = new ArrayList<>();
+			native_types = new ArrayList<Class>();
 			native_types.add(PointerWrapper.class);
 
 			is_indirect = false;
@@ -191,7 +191,7 @@ public class NativeTypeTranslator extends SimpleTypeVisitor6<Void, Void> {
 		// See ARB_debug_label.glObjectPtrLabel
 		Class<?> c = getClassFromType(t);
 		if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(c) ) {
-			native_types = new ArrayList<>();
+			native_types = new ArrayList<Class>();
 			native_types.add(PointerWrapper.class);
 
 			is_indirect = false;
@@ -227,7 +227,7 @@ public class NativeTypeTranslator extends SimpleTypeVisitor6<Void, Void> {
 	}
 
 	private List<Class> translateAnnotations() {
-		List<Class> result = new ArrayList<>();
+		List<Class> result = new ArrayList<Class>();
 		for ( AnnotationMirror annotation : Utils.getSortedAnnotations(declaration.getAnnotationMirrors()) ) {
 			Class translated_result = translateAnnotation(annotation);
 			if ( translated_result != null ) {

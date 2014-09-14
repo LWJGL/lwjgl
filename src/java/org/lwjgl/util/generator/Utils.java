@@ -39,6 +39,7 @@ package org.lwjgl.util.generator;
  * @version $Revision$ $Id$
  */
 import org.lwjgl.PointerBuffer;
+import org.lwjgl.PointerWrapper;
 import org.lwjgl.util.generator.opengl.GLboolean;
 import org.lwjgl.util.generator.opengl.GLchar;
 import org.lwjgl.util.generator.opengl.GLcharARB;
@@ -48,6 +49,7 @@ import java.io.PrintWriter;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.regex.Pattern;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeKind;
@@ -111,8 +113,7 @@ public class Utils {
 		public int compare(AnnotationMirror a1, AnnotationMirror a2) {
 			String n1 = a1.getAnnotationType().toString();
 			String n2 = a2.getAnnotationType().toString();
-			int result = n1.compareTo(n2);
-			return result;
+			return n1.compareTo(n2);
 		}
 
 		public boolean equals(AnnotationMirror a1, AnnotationMirror a2) {
@@ -121,7 +122,7 @@ public class Utils {
 	}
 
 	public static List<AnnotationMirror> getSortedAnnotations(List<? extends AnnotationMirror> annotations) {
-		List<AnnotationMirror> annotation_list = new ArrayList<>(annotations);
+		List<AnnotationMirror> annotation_list = new ArrayList<AnnotationMirror>(annotations);
 		Collections.sort(annotation_list, new AnnotationMirrorComparator());
 		return annotation_list;
 	}
@@ -137,7 +138,7 @@ public class Utils {
 	public static boolean isAddressableType(Class type) {
 		if ( type.isArray() ) {
 			final Class component_type = type.getComponentType();
-			return isAddressableTypeImpl(component_type) || org.lwjgl.PointerWrapper.class.isAssignableFrom(component_type);
+			return isAddressableTypeImpl(component_type) || PointerWrapper.class.isAssignableFrom(component_type);
 		}
 		return isAddressableTypeImpl(type);
 	}
@@ -230,7 +231,7 @@ public class Utils {
 	// DISABLED: We always generate indirect methods. (affects OpenAL only at the time of this change)
 	public static boolean isMethodIndirect(boolean generate_error_checks, boolean context_specific, ExecutableElement method) {
 	            /*
-                 for (VariableElement param : method.getParameters()) {
+	             for (VariableElement param : method.getParameters()) {
                  if (isAddressableType(param.getType()) || getParameterAutoAnnotation(param) != null ||
                  param.getAnnotation(Constant.class) != null)
                  return true;
@@ -243,8 +244,10 @@ public class Utils {
 		return true;
 	}
 
+	private static final Pattern DOT_PATTERN = Pattern.compile("\\.");
+
 	public static String getNativeQualifiedName(String qualified_name) {
-		return qualified_name.replaceAll("\\.", "_");
+		return DOT_PATTERN.matcher(qualified_name).replaceAll("_");
 	}
 
 	public static String getQualifiedNativeMethodName(String qualified_class_name, String method_name) {
@@ -493,13 +496,11 @@ public class Utils {
 	}
 
 	public static Collection<VariableElement> getFields(TypeElement d) {
-		Collection<VariableElement> fields = ElementFilter.fieldsIn(new HashSet(d.getEnclosedElements()));
-		return fields;
+		return ElementFilter.fieldsIn(new HashSet(d.getEnclosedElements()));
 	}
 
 	public static Collection<ExecutableElement> getMethods(TypeElement d) {
-		Collection<ExecutableElement> fields = ElementFilter.methodsIn(new HashSet(d.getEnclosedElements()));
-		return fields;
+		return ElementFilter.methodsIn(new HashSet(d.getEnclosedElements()));
 	}
 
 }

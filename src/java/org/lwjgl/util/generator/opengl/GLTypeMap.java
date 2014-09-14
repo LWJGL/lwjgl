@@ -59,7 +59,7 @@ public class GLTypeMap implements TypeMap {
 	private static final Map<Class, TypeKind> native_types_to_primitive;
 
 	static {
-		native_types_to_primitive = new HashMap<>();
+		native_types_to_primitive = new HashMap<Class, TypeKind>();
 		native_types_to_primitive.put(GLbitfield.class, TypeKind.INT);
 		native_types_to_primitive.put(GLcharARB.class, TypeKind.BYTE);
 		native_types_to_primitive.put(GLclampf.class, TypeKind.FLOAT);
