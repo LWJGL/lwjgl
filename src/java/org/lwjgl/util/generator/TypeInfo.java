@@ -158,7 +158,7 @@ public class TypeInfo {
 	}
 
 	private static Collection<TypeInfo> getTypeInfos(TypeMap type_map, VariableElement param) {
-		List<? extends AnnotationMirror> annotations = param.getAnnotationMirrors();
+		List<? extends AnnotationMirror> annotations = Utils.getSortedAnnotations(param.getAnnotationMirrors());
 		GLvoid void_annotation = param.getAnnotation(GLvoid.class);
 
 		Map<Class, TypeInfo> types = new HashMap<Class, TypeInfo>();
@@ -175,8 +175,7 @@ public class TypeInfo {
 					if ( types.containsKey(inverse_type) ) {
 						TypeInfo inverse_type_info = types.get(inverse_type);
 						String inverse_auto_type = inverse_type_info.getAutoType();
-						auto_type = signedness == Signedness.UNSIGNED ? auto_type + " : " + inverse_auto_type
-							: inverse_auto_type + " : " + auto_type;
+						auto_type = signedness == Signedness.UNSIGNED ? auto_type + " : " + inverse_auto_type : inverse_auto_type + " : " + auto_type;
 						auto_type = UNSIGNED_PARAMETER_NAME + " ? " + auto_type;
 						signedness = Signedness.BOTH;
 						types.remove(inverse_type);

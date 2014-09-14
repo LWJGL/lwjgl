@@ -442,11 +442,11 @@ public class Utils {
 				writer.print("\t\t");
 			}
 			writer.print("ByteBuffer " + return_annotation.value() + " = APIUtil.getBufferByte(" + type_map.getAPIUtilParam(true) + return_annotation.maxLength());
-                        /*
-                         Params that use the return buffer will advance its position while filling it. When we return, the position will be
-                         at the right spot for grabbing the returned string bytes. We only have to make sure that the original buffer was
-                         large enough to hold everything, so that no re-allocations happen while filling.
-                         */
+	        /*
+             Params that use the return buffer will advance its position while filling it. When we return, the position will be
+             at the right spot for grabbing the returned string bytes. We only have to make sure that the original buffer was
+             large enough to hold everything, so that no re-allocations happen while filling.
+             */
 			final String offset = getStringOffset(method, null);
 			if ( offset != null ) {
 				writer.print(" + " + offset);
@@ -496,11 +496,11 @@ public class Utils {
 	}
 
 	public static Collection<VariableElement> getFields(TypeElement d) {
-		return ElementFilter.fieldsIn(new HashSet(d.getEnclosedElements()));
+		return ElementFilter.fieldsIn(new LinkedHashSet<Element>(d.getEnclosedElements()));
 	}
 
 	public static Collection<ExecutableElement> getMethods(TypeElement d) {
-		return ElementFilter.methodsIn(new HashSet(d.getEnclosedElements()));
+		return ElementFilter.methodsIn(new LinkedHashSet<Element>(d.getEnclosedElements()));
 	}
 
 }
