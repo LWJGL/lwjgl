@@ -298,6 +298,8 @@ public class GeneratorVisitor extends ElementKindVisitor6<Void, Void> {
 			for ( final ExecutableElement method : methods ) {
 				validateMethod(method);
 			}
+
+			// TODO: Back-port LWJGL 3's generation file handling (generate in-memory and avoid touching files if nothing has changed)
 			java_writer = new PrintWriter(env.getFiler().createSourceFile(Utils.getQualifiedClassName(e), env.getElementUtils().getPackageOf(e)).openWriter());
 			generateJavaSource(e, java_writer);
 
@@ -314,69 +316,18 @@ public class GeneratorVisitor extends ElementKindVisitor6<Void, Void> {
 					return DEFAULT_VALUE;
 				}
 
-				boolean outputNativeExists = true, outputBackupExists = true;
-				File outputNative = null, outputBackup = null;
 				try {
-					final FileObject fo_outputNative = env.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", Utils.getNativeQualifiedName(Utils.getQualifiedClassName(e)).replace(".", "/") + ".c");
-					outputNative = new File(fo_outputNative.toUri());
-					outputNativeExists = outputNative.exists();
-					final FileObject fo_outputBackup = env.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", Utils.getNativeQualifiedName(Utils.getQualifiedClassName(e)).replace(".", "/") + "_backup.c");
-					outputBackup = new File(fo_outputBackup.toUri());
-					outputBackupExists = outputBackup.exists();
+					generateNativeSource(e);
 				} catch (IOException ex) {
-					if ( outputNative == null ) {
-						outputNativeExists = false;
-					}
-					if ( outputBackup == null ) {
-						outputBackupExists = false;
-					}
-				} finally {
-					// If the native file exists, rename.
-					final ByteBuffer nativeBefore;
-					if ( outputNativeExists ) {
-						nativeBefore = readFile(outputNative);
-						if ( outputBackupExists ) {
-							outputBackup.delete();
-						}
-						outputNative.renameTo(outputBackup);
-					} else {
-						nativeBefore = null;
-					}
-					try {
-						generateNativeSource(e);
-
-						// If the native file did exist, compare with the new file. If they're the same,
-						// reset the last modified time to avoid ridiculous C compilation times.
-						if ( nativeBefore != null && outputNative.length() == nativeBefore.capacity() ) {
-							final ByteBuffer nativeAfter = readFile(outputNative);
-							boolean same = true;
-							for ( int i = nativeBefore.position(); i < nativeBefore.limit(); i++ ) {
-								if ( nativeBefore.get(i) != nativeAfter.get(i) ) {
-									same = false;
-									break;
-								}
-							}
-
-							if ( same ) {
-								outputNative.delete();
-								outputBackup.renameTo(outputNative);
-							}
-						}
-					} catch (IOException ex) {
-						throw new RuntimeException(ex);
-					} finally {
-						if ( outputBackup.exists() ) {
-							outputBackup.delete();
-						}
-					}
+					throw new RuntimeException(ex);
 				}
 			}
 			return DEFAULT_VALUE;
 		} catch (Exception ex) {
 			// If anything goes wrong mid-gen, delete output to allow regen next time we run.
-			if ( java_writer != null ) {
-				java_writer.close();
-			}
+			if ( java_writer != null ) java_writer.close();
+			if ( outputJava.exists() ) outputJava.delete();
+
 			throw new RuntimeException(ex);
 		}
 	}
