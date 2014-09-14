@@ -32,16 +32,15 @@
 
 package org.lwjgl.util.generator.opencl;
 
+import java.io.PrintWriter;
+import java.lang.annotation.Annotation;
+import java.util.Set;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.TypeElement;
 import org.lwjgl.PointerWrapper;
 import org.lwjgl.util.generator.Extension;
 import org.lwjgl.util.generator.Private;
-
-import java.io.PrintWriter;
-import java.lang.annotation.Annotation;
-import java.util.Collection;
-
-import com.sun.mirror.declaration.InterfaceDeclaration;
-import com.sun.mirror.declaration.TypeDeclaration;
+import org.lwjgl.util.generator.Utils;
 
 /**
  * CL platform/device capabilities generator.
@@ -68,16 +67,16 @@ public class CLPDCapabilitiesGenerator {
 		writer.println();
 	}
 
-	static void generateExtensions(final PrintWriter writer, final InterfaceDeclaration d) {
+	static void generateExtensions(final PrintWriter writer, final TypeElement d) {
 		writer.print("\t");
 
 		if ( d.getAnnotation(Private.class) == null )
 			writer.print("public ");
 
-		writer.println("final boolean " + CLGeneratorProcessorFactory.getExtensionName(d.getSimpleName()) + ";");
+		writer.println("final boolean " + CLGeneratorProcessor.getExtensionName(d.getSimpleName().toString()) + ";");
 	}
 
-	static void generateConstructor(final PrintWriter writer, final Collection<TypeDeclaration> templates,
+	static void generateConstructor(ProcessingEnvironment env, final PrintWriter writer, final Set<? extends TypeElement> templates,
 	                                final Class<? extends Annotation> capsType, final String capsName,
 	                                final Class<? extends PointerWrapper> objectType, final String objectName) {
 		writer.println("\tpublic " + capsName + "(final " + objectType.getSimpleName() + ' ' + objectName + ") {");
@@ -103,11 +102,11 @@ public class CLPDCapabilitiesGenerator {
 
 		writer.println("\t\tfinal Set<String> extensions = APIUtil.getExtensions(extensionList);");
 
-		for ( final TypeDeclaration t : templates ) {
+		for ( final TypeElement t : templates ) {
 			if ( t.getAnnotation(capsType) == null )
 				continue;
 
-			final String extName = CLGeneratorProcessorFactory.getExtensionName(t.getSimpleName());
+			final String extName = CLGeneratorProcessor.getExtensionName(t.getSimpleName().toString());
 
 			String nativeName = extName.toLowerCase();
 			Extension ext = t.getAnnotation(Extension.class);
@@ -115,7 +114,7 @@ public class CLPDCapabilitiesGenerator {
 				nativeName = ext.nativeName();
 
 			writer.print("\t\t" + extName + " = extensions.contains(\"" + nativeName + "\")");
-			if ( !t.getMethods().isEmpty() )
+			if ( !Utils.getMethods( t).isEmpty() )
 				writer.print(" && CLCapabilities." + extName);
 			writer.println(";");
 		}
@@ -133,18 +132,18 @@ public class CLPDCapabilitiesGenerator {
 		writer.println("\t}\n");
 	}
 
-	public static void generateToString(final PrintWriter writer, final Collection<TypeDeclaration> templates, final Class<? extends Annotation> capsType) {
+	public static void generateToString(final PrintWriter writer, final Set<? extends TypeElement> templates, final Class<? extends Annotation> capsType) {
 		writer.println("\tpublic String toString() {");
 		writer.println("\t\tfinal StringBuilder buf = new StringBuilder();\n");
 
 		writer.println("\t\tbuf.append(\"OpenCL \").append(majorVersion).append('.').append(minorVersion);");
 		writer.println();
 		writer.println("\t\tbuf.append(\" - Extensions: \");");
-		for ( final TypeDeclaration t : templates ) {
+		for ( final TypeElement t : templates ) {
 			if ( t.getAnnotation(capsType) == null )
 				continue;
 
-			writer.println("\t\tif ( " + CLGeneratorProcessorFactory.getExtensionName(t.getSimpleName()) + " ) buf.append(\""  + CLGeneratorProcessorFactory.getExtensionName(t.getSimpleName()).toLowerCase() + " \");");
+			writer.println("\t\tif ( " + CLGeneratorProcessor.getExtensionName(t.getSimpleName().toString()) + " ) buf.append(\""  + CLGeneratorProcessor.getExtensionName(t.getSimpleName().toString()).toLowerCase() + " \");");
 		}
 
 		writer.println("\n\t\treturn buf.toString();");

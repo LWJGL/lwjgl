@@ -41,14 +41,24 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-import org.lwjgl.PointerBuffer;
-
-import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
 
 import java.nio.*;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.NoType;
+import javax.lang.model.type.PrimitiveType;
+import static javax.lang.model.type.TypeKind.BOOLEAN;
+import static javax.lang.model.type.TypeKind.BYTE;
+import static javax.lang.model.type.TypeKind.DOUBLE;
+import static javax.lang.model.type.TypeKind.FLOAT;
+import static javax.lang.model.type.TypeKind.INT;
+import static javax.lang.model.type.TypeKind.LONG;
+import static javax.lang.model.type.TypeKind.SHORT;
+import javax.lang.model.util.SimpleTypeVisitor6;
+import org.lwjgl.PointerBuffer;
 
-class SignatureTranslator implements TypeVisitor {
+class SignatureTranslator extends SimpleTypeVisitor6<Void, Void> {
 	private final boolean add_position_signature;
 	private final StringBuilder signature = new StringBuilder();
 
@@ -64,11 +74,8 @@ class SignatureTranslator implements TypeVisitor {
 		return signature.toString();
 	}
 
-	public void visitAnnotationType(AnnotationType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitArrayType(ArrayType t) {
+        @Override
+	public Void visitArray(ArrayType t, Void o) {
 		final Class type = Utils.getJavaType(t.getComponentType());
 		if ( CharSequence.class.isAssignableFrom(type) )
 			signature.append("J");
@@ -78,9 +85,10 @@ class SignatureTranslator implements TypeVisitor {
 			signature.append("[L" + getNativeNameFromClassName(type.getName()) + ";");
 		else
 			throw new RuntimeException(t + " is not allowed");
+                return DEFAULT_VALUE;
 	}
 
-	public void visitClassType(ClassType t) {
+	private void visitClassType(DeclaredType t) {
 		Class type = NativeTypeTranslator.getClassFromType(t);
 
 		if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(type) || (Utils.isAddressableType(type) && !String.class.equals(type)) )
@@ -90,7 +98,7 @@ class SignatureTranslator implements TypeVisitor {
 			if ( (CharSequence.class.isAssignableFrom(type) && !String.class.equals(type)) || CharSequence[].class.isAssignableFrom(type) || PointerBuffer.class.isAssignableFrom(type) )
 				type_name = ByteBuffer.class.getName();
 			else
-				type_name = t.getDeclaration().getQualifiedName();
+				type_name = t.toString();
 
 			signature.append("L");
 			signature.append(getNativeNameFromClassName(type_name));
@@ -98,15 +106,16 @@ class SignatureTranslator implements TypeVisitor {
 		}
 	}
 
-	public void visitDeclaredType(DeclaredType t) {
-		throw new RuntimeException(t + " is not allowed");
+        @Override
+	public Void visitDeclared(DeclaredType t, Void o) {
+            if(t.asElement().getKind().isClass())
+                visitClassType(t);
+            else if(t.asElement().getKind().isInterface())
+                visitInterfaceType(t);
+            return DEFAULT_VALUE;
 	}
 
-	public void visitEnumType(EnumType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitInterfaceType(InterfaceType t) {
+	private void visitInterfaceType(DeclaredType t) {
 		Class type = NativeTypeTranslator.getClassFromType(t);
 		if ( org.lwjgl.PointerWrapper.class.isAssignableFrom(type) )
 			signature.append("J");
@@ -114,7 +123,8 @@ class SignatureTranslator implements TypeVisitor {
 			throw new RuntimeException(t + " is not allowed");
 	}
 
-	public void visitPrimitiveType(PrimitiveType t) {
+        @Override
+	public Void visitPrimitive(PrimitiveType t, Void o) {
 		switch (t.getKind()) {
 			case BOOLEAN:
 				signature.append("Z");
@@ -140,25 +150,13 @@ class SignatureTranslator implements TypeVisitor {
 			default:
 				throw new RuntimeException("Unsupported type " + t);
 		}
+                return DEFAULT_VALUE;
 	}
 
-	public void visitReferenceType(ReferenceType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitTypeMirror(TypeMirror t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitTypeVariable(TypeVariable t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
-
-	public void visitVoidType(VoidType t) {
+        @Override
+	public Void visitNoType(NoType t, Void o) {
 		signature.append("V");
+                return DEFAULT_VALUE;
 	}
 
-	public void visitWildcardType(WildcardType t) {
-		throw new RuntimeException(t + " is not allowed");
-	}
 }
