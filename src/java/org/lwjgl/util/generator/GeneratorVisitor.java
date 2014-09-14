@@ -280,13 +280,21 @@ public class GeneratorVisitor extends ElementKindVisitor6<Void, Void> {
 
 	@Override
 	public Void visitTypeAsInterface(TypeElement e, Void p) {
+		final File input = new File("src/templates/" + e.getQualifiedName().toString().replace('.', '/') + ".java");
+		final File outputJava = new File("src/generated/" + env.getElementUtils().getPackageOf(e).getQualifiedName().toString().replace('.', '/'), Utils.getSimpleClassName(e) + ".java");
+
 		PrintWriter java_writer = null;
 		try {
 			final Collection<? extends ExecutableElement> methods = Utils.getMethods(e);
 			if ( methods.isEmpty() && Utils.getFields(e).isEmpty() ) {
 				return DEFAULT_VALUE;
 			}
-			env.getMessager().printMessage(Kind.NOTE, "methods count : " + Utils.getMethods(e).size() + " fields count : " + Utils.getFields(e).size(), e);
+
+			// Skip this class if the output exists and the input has not been modified.
+			if ( outputJava.exists() && Math.max(input.lastModified(), generatorLM) < outputJava.lastModified() )
+				return DEFAULT_VALUE;
+
+			//env.getMessager().printMessage(Kind.NOTE, "methods count : " + Utils.getMethods(e).size() + " fields count : " + Utils.getFields(e).size(), e);
 			for ( final ExecutableElement method : methods ) {
 				validateMethod(method);
 			}

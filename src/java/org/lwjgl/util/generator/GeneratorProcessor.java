@@ -77,7 +77,6 @@ public class GeneratorProcessor extends AbstractProcessor {
 		}
 
 		Element lastFile = null;
-		processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "annotations " + annotations.toString());
 		try {
 			long generatorLM = getGeneratorLastModified(bin_path);
 			TypeMap type_map = (TypeMap)(Class.forName(typemap_classname).newInstance());

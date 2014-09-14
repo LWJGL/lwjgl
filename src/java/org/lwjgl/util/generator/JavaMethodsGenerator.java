@@ -135,8 +135,6 @@ public class JavaMethodsGenerator {
 			if ( constant_annotation != null && constant_annotation.isNative() ) {
 				continue;
 			}
-	                    /*env.getMessager().printMessage(Diagnostic.Kind.NOTE, param.getAnnotationMirrors()
-                                + " (" + typeinfos_instance.get(param).getType() + ")", param);*/
 			AnnotationMirror auto_annotation_mirror = Utils.getParameterAutoAnnotation(param);
 			boolean hide_auto_parameter = mode == Mode.NORMAL && !native_stub && auto_annotation_mirror != null;
 			if ( hide_auto_parameter ) {

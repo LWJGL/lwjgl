@@ -168,7 +168,6 @@ public class TypeInfo {
 			NativeType native_type_annotation = NativeTypeTranslator.getAnnotation(annotation, NativeType.class);
 			if ( native_type_annotation != null ) {
 				Class<? extends Annotation> annotation_type = NativeTypeTranslator.getClassFromType(annotation.getAnnotationType());
-		                        /*env.getMessager().printMessage(Diagnostic.Kind.NOTE, "annotation_type " + annotation_type, param, annotation);*/
 				Signedness signedness = type_map.getSignednessFromType(annotation_type);
 				Class inverse_type = type_map.getInverseType(annotation_type);
 				String auto_type = type_map.getAutoTypeFromAnnotation(annotation);
