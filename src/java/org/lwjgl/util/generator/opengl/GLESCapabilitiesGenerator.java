@@ -32,6 +32,7 @@
 
 package org.lwjgl.util.generator.opengl;
 
+import org.lwjgl.util.generator.*;
 
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -41,9 +42,7 @@ import java.util.List;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
-import org.lwjgl.util.generator.*;
 
 /**
  * Generator visitor for the context capabilities generator tool
@@ -54,12 +53,12 @@ import org.lwjgl.util.generator.*;
  */
 public class GLESCapabilitiesGenerator {
 
-	private static final String STUBS_LOADED_NAME = "loaded_stubs";
-	private static final String ALL_INIT_METHOD_NAME = "initAllStubs";
+	private static final String STUBS_LOADED_NAME           = "loaded_stubs";
+	private static final String ALL_INIT_METHOD_NAME        = "initAllStubs";
 	private static final String POINTER_INITIALIZER_POSTFIX = "_initNativeFunctionAddresses";
-	private static final String CACHED_EXTS_VAR_NAME = "supported_extensions";
-	private static final String EXTENSION_PREFIX = "GL_";
-	private static final String CORE_PREFIX = "Open";
+	private static final String CACHED_EXTS_VAR_NAME        = "supported_extensions";
+	private static final String EXTENSION_PREFIX            = "GL_";
+	private static final String CORE_PREFIX                 = "Open";
 
 	public static void generateClassPrologue(PrintWriter writer, boolean context_specific, boolean generate_error_checks) {
 		writer.println("public class " + Utils.CONTEXT_CAPS_CLASS_NAME + " {");
@@ -95,7 +94,7 @@ public class GLESCapabilitiesGenerator {
 		}
 	}
 
-	public static void generateInitializer(PrintWriter writer, TypeElement d,ProcessingEnvironment env) {
+	public static void generateInitializer(PrintWriter writer, TypeElement d, ProcessingEnvironment env) {
 		String translated_field_name = translateFieldName(d.getSimpleName().toString());
 		writer.print("\t\tthis." + translated_field_name + " = ");
 		writer.print(CACHED_EXTS_VAR_NAME + ".contains(\"");
@@ -126,9 +125,9 @@ public class GLESCapabilitiesGenerator {
 		writer.println("\tprivate Set<String> " + ALL_INIT_METHOD_NAME + "() throws LWJGLException {");
 
 		if ( context_specific ) {
-            // Load the basic pointers we need to detect OpenGL version and supported extensions.
-            writer.println("\t\tglGetError = GLContext.getFunctionAddress(\"glGetError\");");
-            writer.println("\t\tglGetString = GLContext.getFunctionAddress(\"glGetString\");");
+			// Load the basic pointers we need to detect OpenGL version and supported extensions.
+			writer.println("\t\tglGetError = GLContext.getFunctionAddress(\"glGetError\");");
+			writer.println("\t\tglGetString = GLContext.getFunctionAddress(\"glGetString\");");
 		}
 
 		// Get the supported extensions set.
@@ -156,14 +155,14 @@ public class GLESCapabilitiesGenerator {
 
 	public static void generateUnloadStubs(ProcessingEnvironment env, PrintWriter writer, TypeElement d) {
 		// TODO: Remove GLES
-		if (Utils.getMethods( d).size() > 0 && !d.getSimpleName().toString().startsWith("GLES") ) {
+		if ( Utils.getMethods(d).size() > 0 && !d.getSimpleName().toString().startsWith("GLES") ) {
 			writer.print("\t\tGLContext.resetNativeStubs(" + Utils.getSimpleClassName(d));
 			writer.println(".class);");
 		}
 	}
 
 	public static void generateInitStubs(ProcessingEnvironment env, PrintWriter writer, TypeElement d, boolean context_specific) {
-		if ( Utils.getMethods( d).size() > 0 ) {
+		if ( Utils.getMethods(d).size() > 0 ) {
 			if ( context_specific ) {
 				final Alias alias_annotation = d.getAnnotation(Alias.class);
 
@@ -204,7 +203,7 @@ public class GLESCapabilitiesGenerator {
 	}
 
 	public static void generateAddressesInitializers(ProcessingEnvironment env, PrintWriter writer, TypeElement d) {
-		Iterator<? extends ExecutableElement> methods = Utils.getMethods( d).iterator();
+		Iterator<? extends ExecutableElement> methods = Utils.getMethods(d).iterator();
 		if ( !methods.hasNext() )
 			return;
 
@@ -290,7 +289,7 @@ public class GLESCapabilitiesGenerator {
 
 	public static void generateSymbolAddresses(ProcessingEnvironment env, PrintWriter writer, TypeElement d) {
 		boolean first = true;
-		for ( final ExecutableElement method : Utils.getMethods( d) ) {
+		for ( final ExecutableElement method : Utils.getMethods(d) ) {
 			if ( method.getAnnotation(Alternate.class) != null || method.getAnnotation(Reuse.class) != null )
 				continue;
 

@@ -41,9 +41,11 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-import java.io.*;
-import java.nio.*;
-import java.util.*;
+import org.lwjgl.PointerBuffer;
+
+import java.io.PrintWriter;
+import java.nio.Buffer;
+import java.util.List;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -51,27 +53,26 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import org.lwjgl.PointerBuffer;
 
 public class NativeMethodStubsGenerator {
-	private static final String BUFFER_ADDRESS_POSTFIX = "_address";
-	public static final String BUFFER_POSITION_POSTFIX = "_position";
-	private static final String STRING_LIST_NAME = "_str";
-	private static final String POINTER_LIST_NAME = "_ptr";
+	private static final String BUFFER_ADDRESS_POSTFIX  = "_address";
+	public static final  String BUFFER_POSITION_POSTFIX = "_position";
+	private static final String STRING_LIST_NAME        = "_str";
+	private static final String POINTER_LIST_NAME       = "_ptr";
 
 	public static void generateNativeMethodStubs(ProcessingEnvironment env, TypeMap type_map, PrintWriter writer, TypeElement d, boolean generate_error_checks, boolean context_specific) {
-		for (ExecutableElement method : Utils.getMethods( d)) {
+		for ( ExecutableElement method : Utils.getMethods(d) ) {
 			Alternate alt_annotation = method.getAnnotation(Alternate.class);
 			if ( (alt_annotation != null && (!alt_annotation.nativeAlt() || alt_annotation.skipNative())) || method.getAnnotation(Reuse.class) != null )
 				continue;
 			generateMethodStub(env, type_map, writer, Utils.getQualifiedClassName(d), method, Mode.NORMAL, generate_error_checks, context_specific);
-			if (Utils.hasMethodBufferObjectParameter(method))
+			if ( Utils.hasMethodBufferObjectParameter(method) )
 				generateMethodStub(env, type_map, writer, Utils.getQualifiedClassName(d), method, Mode.BUFFEROBJECT, generate_error_checks, context_specific);
 		}
 	}
 
 	private static void generateParameters(PrintWriter writer, List<? extends VariableElement> params, Mode mode) {
-		for (VariableElement param : params) {
+		for ( VariableElement param : params ) {
 			if ( param.getAnnotation(Result.class) != null || (param.getAnnotation(Helper.class) != null && !param.getAnnotation(Helper.class).passToNative()) )
 				continue;
 			final Constant constant_annotation = param.getAnnotation(Constant.class);
@@ -82,7 +83,7 @@ public class NativeMethodStubsGenerator {
 
 	private static void generateParameter(PrintWriter writer, VariableElement param, Mode mode) {
 		writer.print(", ");
-		if (mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null) {
+		if ( mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null ) {
 			writer.print("jlong " + param.getSimpleName() + Utils.BUFFER_OBJECT_PARAMETER_POSTFIX);
 		} else if ( param.getAnnotation(PointerWrapper.class) != null ) {
 			writer.print("jlong " + param.getSimpleName());
@@ -113,24 +114,24 @@ public class NativeMethodStubsGenerator {
 		writer.print(" JNICALL ");
 
 		writer.print(Utils.getQualifiedNativeMethodName(interface_name, method, generate_error_checks, context_specific));
-		if (mode == Mode.BUFFEROBJECT)
+		if ( mode == Mode.BUFFEROBJECT )
 			writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
 		writer.print("(JNIEnv *env, jclass clazz");
 		generateParameters(writer, method.getParameters(), mode);
-		if (Utils.getNIOBufferType(result_type) != null) {
+		if ( Utils.getNIOBufferType(result_type) != null ) {
 			if ( (cached_result_annotation == null || !cached_result_annotation.isRange()) && (auto_size_annotation == null || !auto_size_annotation.isNative()) )
 				writer.print(", jlong " + Utils.RESULT_SIZE_NAME);
-			if (cached_result_annotation != null)
+			if ( cached_result_annotation != null )
 				writer.print(", jobject " + Utils.CACHED_BUFFER_NAME);
 		}
-		if (context_specific) {
+		if ( context_specific ) {
 			writer.print(", jlong " + Utils.FUNCTION_POINTER_VAR_NAME);
 		}
 		writer.println(") {");
 
 		generateBufferParameterAddresses(type_map, writer, method, mode);
 		Alternate alt_annotation = method.getAnnotation(Alternate.class);
-		if (context_specific) {
+		if ( context_specific ) {
 			String typedef_name = Utils.getTypedefName(method);
 			writer.print("\t" + typedef_name + " " + (alt_annotation == null ? method.getSimpleName() : alt_annotation.value()));
 			writer.print(" = (" + typedef_name + ")((intptr_t)");
@@ -166,21 +167,21 @@ public class NativeMethodStubsGenerator {
 			writer.println(code_annotation.nativeAfterCall());
 
 		generateStringDeallocations(writer, method.getParameters());
-		if (!result_type.equals(env.getTypeUtils().getNoType(TypeKind.VOID))) {
+		if ( !result_type.equals(env.getTypeUtils().getNoType(TypeKind.VOID)) ) {
 			writer.print("\treturn ");
 			Class java_result_type = Utils.getJavaType(result_type);
-			if (Buffer.class.isAssignableFrom(java_result_type)) {
-				if (cached_result_annotation != null)
+			if ( Buffer.class.isAssignableFrom(java_result_type) ) {
+				if ( cached_result_annotation != null )
 					writer.print("safeNewBufferCached(env, ");
 				else
 					writer.print("safeNewBuffer(env, ");
-			} else if (String.class.equals(java_result_type)) {
+			} else if ( String.class.equals(java_result_type) ) {
 				writer.print("NewStringNativeUnsigned(env, ");
 			} else if ( method.getAnnotation(PointerWrapper.class) != null ) {
 				writer.print("(intptr_t)");
 			}
 			writer.print(Utils.RESULT_VAR_NAME);
-			if (Buffer.class.isAssignableFrom(java_result_type)) {
+			if ( Buffer.class.isAssignableFrom(java_result_type) ) {
 				final String size_parameter_name;
 				if ( auto_size_annotation != null && (auto_size_annotation.isNative() || (cached_result_annotation != null && cached_result_annotation.isRange())) )
 					size_parameter_name = auto_size_annotation.value();
@@ -190,8 +191,8 @@ public class NativeMethodStubsGenerator {
 				writer.print(", ");
 				Utils.printExtraCallArguments(writer, method, size_parameter_name);
 			}
-			if (Buffer.class.isAssignableFrom(java_result_type) ||
-				String.class.equals(java_result_type))
+			if ( Buffer.class.isAssignableFrom(java_result_type) ||
+			     String.class.equals(java_result_type) )
 				writer.print(")");
 			writer.println(";");
 		}
@@ -207,14 +208,14 @@ public class NativeMethodStubsGenerator {
 		if ( preDeclare )
 			writer.print("\t");
 		writer.print(result_translator.getSignature() + " " + Utils.RESULT_VAR_NAME);
-		if ( preDeclare)
+		if ( preDeclare )
 			writer.println(";");
 		else
 			writer.print(result_param == null ? " = " : ";\n\t");
 	}
 
 	private static void generateCallParameters(PrintWriter writer, TypeMap type_map, List<? extends VariableElement> params) {
-		if (params.size() > 0) {
+		if ( params.size() > 0 ) {
 			boolean first = true;
 			for ( VariableElement param : params ) {
 				if ( param.getAnnotation(Helper.class) != null )
@@ -241,7 +242,7 @@ public class NativeMethodStubsGenerator {
 		}
 
 		boolean is_indirect = param.getAnnotation(Indirect.class) != null;
-		if (is_indirect || param.getAnnotation(PointerArray.class) != null) {
+		if ( is_indirect || param.getAnnotation(PointerArray.class) != null ) {
 			writer.print("(");
 			final NativeTypeTranslator translator = new NativeTypeTranslator(type_map, param);
 			param.asType().accept(translator, null);
@@ -250,7 +251,7 @@ public class NativeMethodStubsGenerator {
 		}
 		if ( param.getAnnotation(PointerWrapper.class) != null )
 			writer.print("(" + param.getAnnotation(PointerWrapper.class).value() + ")(intptr_t)");
-		if (param.getAnnotation(Result.class) != null || is_indirect)
+		if ( param.getAnnotation(Result.class) != null || is_indirect )
 			writer.print("&");
 
 		if ( param.getAnnotation(Result.class) != null ) {
@@ -265,11 +266,11 @@ public class NativeMethodStubsGenerator {
 	}
 
 	private static void generateStringDeallocations(PrintWriter writer, List<? extends VariableElement> params) {
-		for (VariableElement param : params) {
+		for ( VariableElement param : params ) {
 			final Class java_type = Utils.getJavaType(param.asType());
 			if ( java_type.equals(String.class) && param.getAnnotation(Result.class) == null )
 				writer.println("\tfree(" + param.getSimpleName() + BUFFER_ADDRESS_POSTFIX + ");");
-			else if (param.getAnnotation(PointerArray.class) != null ) // Free the string array mem
+			else if ( param.getAnnotation(PointerArray.class) != null ) // Free the string array mem
 				writer.println("\tfree(" + param.getSimpleName() + getPointerArrayName(java_type) + ");");
 		}
 	}
@@ -279,8 +280,8 @@ public class NativeMethodStubsGenerator {
 		ptrLoopDeclared = false;
 		for ( VariableElement param : method.getParameters() ) {
 			final Constant constant_annotation = param.getAnnotation(Constant.class);
-			if ( param.getAnnotation(Result.class) == null && (constant_annotation == null || !constant_annotation.isNative()) && Utils.isAddressableType(param.asType()))
-				generateBufferParameterAddress(type_map, writer, method,  param, mode);
+			if ( param.getAnnotation(Result.class) == null && (constant_annotation == null || !constant_annotation.isNative()) && Utils.isAddressableType(param.asType()) )
+				generateBufferParameterAddress(type_map, writer, method, param, mode);
 		}
 	}
 
@@ -302,12 +303,12 @@ public class NativeMethodStubsGenerator {
 			writer.print(native_type);
 			writer.print(")(intptr_t)");
 
-			if (mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null) {
+			if ( mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null ) {
 				writer.print("offsetToPointer(" + param.getSimpleName() + Utils.BUFFER_OBJECT_PARAMETER_POSTFIX + ")");
 			} else {
-				if (Buffer.class.isAssignableFrom(java_type) || java_type.equals(CharSequence.class) || java_type.equals(CharSequence[].class) || PointerBuffer.class.isAssignableFrom(java_type) ) {
+				if ( Buffer.class.isAssignableFrom(java_type) || java_type.equals(CharSequence.class) || java_type.equals(CharSequence[].class) || PointerBuffer.class.isAssignableFrom(java_type) ) {
 					writer.print(param.getSimpleName());
-				} else if (java_type.equals(String.class)) {
+				} else if ( java_type.equals(String.class) ) {
 					writer.print("GetStringNativeChars(env, " + param.getSimpleName() + ")");
 				} else if ( array_annotation == null )
 					throw new RuntimeException("Illegal type " + java_type);

@@ -36,11 +36,7 @@ import java.io.FileFilter;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedOptions;
-import javax.annotation.processing.SupportedSourceVersion;
+import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -54,92 +50,92 @@ import javax.tools.Diagnostic;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$ $Id$
  */
-@SupportedAnnotationTypes({"*"})
+@SupportedAnnotationTypes({ "*" })
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
-@SupportedOptions({"binpath", "typemap", "generatechecks", "contextspecific"})
+@SupportedOptions({ "binpath", "typemap", "generatechecks", "contextspecific" })
 public class GeneratorProcessor extends AbstractProcessor {
 
-        private static boolean first_round = true;
+	private static boolean first_round = true;
 
-        @Override
-        public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-                if (roundEnv.processingOver() || !first_round) {
-                        System.exit(0);
-                        return true;
-                }
-                Map<String, String> options = processingEnv.getOptions();
-                String typemap_classname = options.get("typemap");
-                String bin_path = options.get("binpath");
-                boolean generate_error_checks = options.containsKey("generatechecks");
-                boolean context_specific = options.containsKey("contextspecific");
-                if (bin_path == null) {
-                        throw new RuntimeException("No path specified for the bin directory with -Abinpath=<path>");
-                }
+	@Override
+	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+		if ( roundEnv.processingOver() || !first_round ) {
+			System.exit(0);
+			return true;
+		}
+		Map<String, String> options = processingEnv.getOptions();
+		String typemap_classname = options.get("typemap");
+		String bin_path = options.get("binpath");
+		boolean generate_error_checks = options.containsKey("generatechecks");
+		boolean context_specific = options.containsKey("contextspecific");
+		if ( bin_path == null ) {
+			throw new RuntimeException("No path specified for the bin directory with -Abinpath=<path>");
+		}
 
-                if (typemap_classname == null) {
-                        throw new RuntimeException("No TypeMap class name specified with -Atypemap=<class-name>");
-                }
+		if ( typemap_classname == null ) {
+			throw new RuntimeException("No TypeMap class name specified with -Atypemap=<class-name>");
+		}
 
-                Element lastFile = null;
-                processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "annotations " + annotations.toString());
-                try {
-                        long generatorLM = getGeneratorLastModified(bin_path);
-                        TypeMap type_map = (TypeMap) (Class.forName(typemap_classname).newInstance());
-                        for (Iterator<TypeElement> it = ElementFilter.typesIn(roundEnv.getRootElements()).iterator(); it.hasNext();) {
-                                lastFile = it.next();
-                                lastFile.accept(new GeneratorVisitor(processingEnv, type_map, generate_error_checks, context_specific, generatorLM), null);
-                        }
-                        first_round = false;
-                        return true;
-                } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-                        if (lastFile == null) {
-                                throw new RuntimeException(e);
-                        } else {
-                                throw new RuntimeException("\n-- Failed to process template: " + lastFile.asType().toString() + " --", e);
-                        }
-                }
-        }
+		Element lastFile = null;
+		processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "annotations " + annotations.toString());
+		try {
+			long generatorLM = getGeneratorLastModified(bin_path);
+			TypeMap type_map = (TypeMap)(Class.forName(typemap_classname).newInstance());
+			for ( Iterator<TypeElement> it = ElementFilter.typesIn(roundEnv.getRootElements()).iterator(); it.hasNext(); ) {
+				lastFile = it.next();
+				lastFile.accept(new GeneratorVisitor(processingEnv, type_map, generate_error_checks, context_specific, generatorLM), null);
+			}
+			first_round = false;
+			return true;
+		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+			if ( lastFile == null ) {
+				throw new RuntimeException(e);
+			} else {
+				throw new RuntimeException("\n-- Failed to process template: " + lastFile.asType().toString() + " --", e);
+			}
+		}
+	}
 
-        /**
-         * Gets the time of the latest change on the Generator classes.
-         *
-         * @return time of the latest change
-         */
-        private static long getGeneratorLastModified(final String bin_path) {
-                long lastModified = getDirectoryLastModified(bin_path, "/org/lwjgl/util/generator");
-                lastModified = Math.max(lastModified, getDirectoryLastModified(bin_path, "/org/lwjgl/util/generator/openal"));
-                lastModified = Math.max(lastModified, getDirectoryLastModified(bin_path, "/org/lwjgl/util/generator/opengl"));
-                lastModified = Math.max(lastModified, getDirectoryLastModified(bin_path, "/org/lwjgl/util/generator/opencl"));
+	/**
+	 * Gets the time of the latest change on the Generator classes.
+	 *
+	 * @return time of the latest change
+	 */
+	private static long getGeneratorLastModified(final String bin_path) {
+		long lastModified = getDirectoryLastModified(bin_path, "/org/lwjgl/util/generator");
+		lastModified = Math.max(lastModified, getDirectoryLastModified(bin_path, "/org/lwjgl/util/generator/openal"));
+		lastModified = Math.max(lastModified, getDirectoryLastModified(bin_path, "/org/lwjgl/util/generator/opengl"));
+		lastModified = Math.max(lastModified, getDirectoryLastModified(bin_path, "/org/lwjgl/util/generator/opencl"));
 
-                return lastModified;
-        }
+		return lastModified;
+	}
 
-        private static long getDirectoryLastModified(final String bin_path, final String path) {
-                final File pck = new File(bin_path + path);
-                if (!pck.exists() || !pck.isDirectory()) {
-                        return Long.MAX_VALUE;
-                }
+	private static long getDirectoryLastModified(final String bin_path, final String path) {
+		final File pck = new File(bin_path + path);
+		if ( !pck.exists() || !pck.isDirectory() ) {
+			return Long.MAX_VALUE;
+		}
 
-                final File[] classes = pck.listFiles(new FileFilter() {
-                        public boolean accept(final File pathname) {
-                                return pathname.isFile() && pathname.getName().endsWith(".class");
-                        }
-                });
+		final File[] classes = pck.listFiles(new FileFilter() {
+			public boolean accept(final File pathname) {
+				return pathname.isFile() && pathname.getName().endsWith(".class");
+			}
+		});
 
-                if (classes == null || classes.length == 0) {
-                        return Long.MAX_VALUE;
-                }
+		if ( classes == null || classes.length == 0 ) {
+			return Long.MAX_VALUE;
+		}
 
-                long lastModified = 0;
+		long lastModified = 0;
 
-                for (File clazz : classes) {
-                        long lm = clazz.lastModified();
-                        if (lastModified < lm) {
-                                lastModified = lm;
-                        }
-                }
+		for ( File clazz : classes ) {
+			long lm = clazz.lastModified();
+			if ( lastModified < lm ) {
+				lastModified = lm;
+			}
+		}
 
-                return lastModified;
-        }
+		return lastModified;
+	}
 
 }

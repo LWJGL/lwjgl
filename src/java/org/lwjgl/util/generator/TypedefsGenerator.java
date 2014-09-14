@@ -41,9 +41,8 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-
-import java.io.*;
-import java.util.*;
+import java.io.PrintWriter;
+import java.util.Collection;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
@@ -64,7 +63,7 @@ public class TypedefsGenerator {
 	}
 
 	private static void generateNativeTypedefsParameters(TypeMap type_map, PrintWriter writer, Collection<? extends VariableElement> params) {
-		if (params.size() > 0) {
+		if ( params.size() > 0 ) {
 			boolean first = true;
 			for ( VariableElement param : params ) {
 				if ( param.getAnnotation(Helper.class) != null )
@@ -84,13 +83,13 @@ public class TypedefsGenerator {
 		NativeTypeTranslator translator = new NativeTypeTranslator(type_map, param);
 		param.asType().accept(translator, null);
 		writer.print(translator.getSignature());
-		if (param.getAnnotation(Result.class) != null || param.getAnnotation(Indirect.class) != null || param.getAnnotation(PointerArray.class) != null)
+		if ( param.getAnnotation(Result.class) != null || param.getAnnotation(Indirect.class) != null || param.getAnnotation(PointerArray.class) != null )
 			writer.print("*");
 		writer.print(" " + param.getSimpleName());
 	}
 
 	public static void generateNativeTypedefs(TypeMap type_map, PrintWriter writer, Collection<? extends ExecutableElement> methods) {
-		for (ExecutableElement method : methods) {
+		for ( ExecutableElement method : methods ) {
 			if ( method.getAnnotation(Alternate.class) == null && method.getAnnotation(Reuse.class) == null )
 				generateNativeTypedefs(type_map, writer, method);
 		}

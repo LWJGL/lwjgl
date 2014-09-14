@@ -41,22 +41,15 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
+import org.lwjgl.PointerBuffer;
 
-import java.nio.*;
-import javax.annotation.processing.ProcessingEnvironment;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.PrimitiveType;
-import static javax.lang.model.type.TypeKind.BOOLEAN;
-import static javax.lang.model.type.TypeKind.BYTE;
-import static javax.lang.model.type.TypeKind.DOUBLE;
-import static javax.lang.model.type.TypeKind.FLOAT;
-import static javax.lang.model.type.TypeKind.INT;
-import static javax.lang.model.type.TypeKind.LONG;
-import static javax.lang.model.type.TypeKind.SHORT;
 import javax.lang.model.util.SimpleTypeVisitor6;
-import org.lwjgl.PointerBuffer;
 
 class SignatureTranslator extends SimpleTypeVisitor6<Void, Void> {
 	private final boolean add_position_signature;
@@ -74,7 +67,7 @@ class SignatureTranslator extends SimpleTypeVisitor6<Void, Void> {
 		return signature.toString();
 	}
 
-        @Override
+	@Override
 	public Void visitArray(ArrayType t, Void o) {
 		final Class type = Utils.getJavaType(t.getComponentType());
 		if ( CharSequence.class.isAssignableFrom(type) )
@@ -85,7 +78,7 @@ class SignatureTranslator extends SimpleTypeVisitor6<Void, Void> {
 			signature.append("[L" + getNativeNameFromClassName(type.getName()) + ";");
 		else
 			throw new RuntimeException(t + " is not allowed");
-                return DEFAULT_VALUE;
+		return DEFAULT_VALUE;
 	}
 
 	private void visitClassType(DeclaredType t) {
@@ -106,13 +99,13 @@ class SignatureTranslator extends SimpleTypeVisitor6<Void, Void> {
 		}
 	}
 
-        @Override
+	@Override
 	public Void visitDeclared(DeclaredType t, Void o) {
-            if(t.asElement().getKind().isClass())
-                visitClassType(t);
-            else if(t.asElement().getKind().isInterface())
-                visitInterfaceType(t);
-            return DEFAULT_VALUE;
+		if ( t.asElement().getKind().isClass() )
+			visitClassType(t);
+		else if ( t.asElement().getKind().isInterface() )
+			visitInterfaceType(t);
+		return DEFAULT_VALUE;
 	}
 
 	private void visitInterfaceType(DeclaredType t) {
@@ -123,9 +116,9 @@ class SignatureTranslator extends SimpleTypeVisitor6<Void, Void> {
 			throw new RuntimeException(t + " is not allowed");
 	}
 
-        @Override
+	@Override
 	public Void visitPrimitive(PrimitiveType t, Void o) {
-		switch (t.getKind()) {
+		switch ( t.getKind() ) {
 			case BOOLEAN:
 				signature.append("Z");
 				break;
@@ -150,13 +143,13 @@ class SignatureTranslator extends SimpleTypeVisitor6<Void, Void> {
 			default:
 				throw new RuntimeException("Unsupported type " + t);
 		}
-                return DEFAULT_VALUE;
+		return DEFAULT_VALUE;
 	}
 
-        @Override
+	@Override
 	public Void visitNoType(NoType t, Void o) {
 		signature.append("V");
-                return DEFAULT_VALUE;
+		return DEFAULT_VALUE;
 	}
 
 }

@@ -41,8 +41,7 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-
-import java.io.*;
+import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;

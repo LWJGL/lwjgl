@@ -38,8 +38,11 @@ package org.lwjgl.util.generator;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$ $Id$
  */
-import java.io.*;
-import java.util.*;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.List;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -48,97 +51,97 @@ import javax.lang.model.type.TypeMirror;
 
 public class RegisterStubsGenerator {
 
-        public static void generateMethodsNativeStubBind(ProcessingEnvironment env, PrintWriter writer, TypeElement d, boolean generate_error_checks, boolean context_specific) {
-                Iterator<? extends ExecutableElement> it = Utils.getMethods( d).iterator();
-                while (it.hasNext()) {
-                        ExecutableElement method = it.next();
-                        Alternate alt_annotation = method.getAnnotation(Alternate.class);
-                        if ((alt_annotation != null && (!alt_annotation.nativeAlt() || alt_annotation.skipNative())) || method.getAnnotation(Reuse.class) != null) {
-                                continue;
-                        }
-                        EnumSet<Platform> platforms;
-                        PlatformDependent platform_annotation = method.getAnnotation(PlatformDependent.class);
-                        if (platform_annotation != null) {
-                                platforms = EnumSet.copyOf(Arrays.asList(platform_annotation.value()));
-                        } else {
-                                platforms = EnumSet.of(Platform.ALL);
-                        }
-                        for (Platform platform : platforms) {
-                                platform.printPrologue(writer);
-                                boolean has_buffer_parameter = Utils.hasMethodBufferObjectParameter(method);
-                                printMethodNativeStubBind(writer, d, method, platform, Mode.NORMAL, it.hasNext() || has_buffer_parameter, generate_error_checks, context_specific);
-                                if (has_buffer_parameter) {
-                                        printMethodNativeStubBind(writer, d, method, platform, Mode.BUFFEROBJECT, it.hasNext(), generate_error_checks, context_specific);
-                                }
-                                platform.printEpilogue(writer);
-                        }
-                }
-                writer.println();
-        }
+	public static void generateMethodsNativeStubBind(ProcessingEnvironment env, PrintWriter writer, TypeElement d, boolean generate_error_checks, boolean context_specific) {
+		Iterator<? extends ExecutableElement> it = Utils.getMethods(d).iterator();
+		while ( it.hasNext() ) {
+			ExecutableElement method = it.next();
+			Alternate alt_annotation = method.getAnnotation(Alternate.class);
+			if ( (alt_annotation != null && (!alt_annotation.nativeAlt() || alt_annotation.skipNative())) || method.getAnnotation(Reuse.class) != null ) {
+				continue;
+			}
+			EnumSet<Platform> platforms;
+			PlatformDependent platform_annotation = method.getAnnotation(PlatformDependent.class);
+			if ( platform_annotation != null ) {
+				platforms = EnumSet.copyOf(Arrays.asList(platform_annotation.value()));
+			} else {
+				platforms = EnumSet.of(Platform.ALL);
+			}
+			for ( Platform platform : platforms ) {
+				platform.printPrologue(writer);
+				boolean has_buffer_parameter = Utils.hasMethodBufferObjectParameter(method);
+				printMethodNativeStubBind(writer, d, method, platform, Mode.NORMAL, it.hasNext() || has_buffer_parameter, generate_error_checks, context_specific);
+				if ( has_buffer_parameter ) {
+					printMethodNativeStubBind(writer, d, method, platform, Mode.BUFFEROBJECT, it.hasNext(), generate_error_checks, context_specific);
+				}
+				platform.printEpilogue(writer);
+			}
+		}
+		writer.println();
+	}
 
-        private static String getTypeSignature(TypeMirror type, boolean add_position_signature) {
-                SignatureTranslator v = new SignatureTranslator(add_position_signature);
-                type.accept(v, null);
-                return v.getSignature();
-        }
+	private static String getTypeSignature(TypeMirror type, boolean add_position_signature) {
+		SignatureTranslator v = new SignatureTranslator(add_position_signature);
+		type.accept(v, null);
+		return v.getSignature();
+	}
 
-        private static String getMethodSignature(ExecutableElement method, Mode mode) {
-                List<? extends VariableElement> params = method.getParameters();
-                String signature = "(";
-                for (VariableElement param : params) {
-                        if (param.getAnnotation(Result.class) != null || (param.getAnnotation(Helper.class) != null && !param.getAnnotation(Helper.class).passToNative())) {
-                                continue;
-                        }
+	private static String getMethodSignature(ExecutableElement method, Mode mode) {
+		List<? extends VariableElement> params = method.getParameters();
+		String signature = "(";
+		for ( VariableElement param : params ) {
+			if ( param.getAnnotation(Result.class) != null || (param.getAnnotation(Helper.class) != null && !param.getAnnotation(Helper.class).passToNative()) ) {
+				continue;
+			}
 
-                        final Constant constant_annotation = param.getAnnotation(Constant.class);
-                        if (constant_annotation != null && constant_annotation.isNative()) {
-                                continue;
-                        }
+			final Constant constant_annotation = param.getAnnotation(Constant.class);
+			if ( constant_annotation != null && constant_annotation.isNative() ) {
+				continue;
+			}
 
-                        if (mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null) {
-                                signature += "J";
-                        } else {
-                                signature += getTypeSignature(param.asType(), true);
-                        }
-                }
+			if ( mode == Mode.BUFFEROBJECT && param.getAnnotation(BufferObject.class) != null ) {
+				signature += "J";
+			} else {
+				signature += getTypeSignature(param.asType(), true);
+			}
+		}
 
-                final TypeMirror result_type = Utils.getMethodReturnType(method);
-                final CachedResult cached_result_annotation = method.getAnnotation(CachedResult.class);
-                final AutoSize auto_size_annotation = method.getAnnotation(AutoSize.class);
+		final TypeMirror result_type = Utils.getMethodReturnType(method);
+		final CachedResult cached_result_annotation = method.getAnnotation(CachedResult.class);
+		final AutoSize auto_size_annotation = method.getAnnotation(AutoSize.class);
 
-                final boolean isNIOBuffer = Utils.getNIOBufferType(result_type) != null;
-                if (isNIOBuffer && (auto_size_annotation == null || !auto_size_annotation.isNative())) {
-                        signature += "J";
-                }
+		final boolean isNIOBuffer = Utils.getNIOBufferType(result_type) != null;
+		if ( isNIOBuffer && (auto_size_annotation == null || !auto_size_annotation.isNative()) ) {
+			signature += "J";
+		}
 
-                final String result_type_signature = isNIOBuffer ? "Ljava/nio/ByteBuffer;" : getTypeSignature(result_type, false);
-                if (cached_result_annotation != null) {
-                        signature += result_type_signature;
-                }
+		final String result_type_signature = isNIOBuffer ? "Ljava/nio/ByteBuffer;" : getTypeSignature(result_type, false);
+		if ( cached_result_annotation != null ) {
+			signature += result_type_signature;
+		}
 
-                signature += ")";
-                signature += result_type_signature;
-                return signature;
-        }
+		signature += ")";
+		signature += result_type_signature;
+		return signature;
+	}
 
-        private static void printMethodNativeStubBind(PrintWriter writer, TypeElement d, ExecutableElement method, Platform platform, Mode mode, boolean has_more, boolean generate_error_checks, boolean context_specific) {
-                writer.print("\t\t{\"" + Utils.getSimpleNativeMethodName(method, generate_error_checks, context_specific));
-                if (mode == Mode.BUFFEROBJECT) {
-                        writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
-                }
-                writer.print("\", \"" + getMethodSignature(method, mode) + "\", (void *)&");
-                writer.print(Utils.getQualifiedNativeMethodName(Utils.getQualifiedClassName(d), method, generate_error_checks, context_specific));
-                if (mode == Mode.BUFFEROBJECT) {
-                        writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
-                }
+	private static void printMethodNativeStubBind(PrintWriter writer, TypeElement d, ExecutableElement method, Platform platform, Mode mode, boolean has_more, boolean generate_error_checks, boolean context_specific) {
+		writer.print("\t\t{\"" + Utils.getSimpleNativeMethodName(method, generate_error_checks, context_specific));
+		if ( mode == Mode.BUFFEROBJECT ) {
+			writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
+		}
+		writer.print("\", \"" + getMethodSignature(method, mode) + "\", (void *)&");
+		writer.print(Utils.getQualifiedNativeMethodName(Utils.getQualifiedClassName(d), method, generate_error_checks, context_specific));
+		if ( mode == Mode.BUFFEROBJECT ) {
+			writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
+		}
 
-                final Alternate alt_annotation = method.getAnnotation(Alternate.class);
-                final String methodName = alt_annotation == null ? method.getSimpleName().toString() : alt_annotation.value();
-                String opengl_handle_name = methodName.replaceFirst("gl", platform.getPrefix());
-                writer.print(", \"" + opengl_handle_name + "\", (void *)&" + methodName + ", " + (method.getAnnotation(Optional.class) == null ? "false" : "true") + "}");
-                if (has_more) {
-                        writer.println(",");
-                }
-        }
+		final Alternate alt_annotation = method.getAnnotation(Alternate.class);
+		final String methodName = alt_annotation == null ? method.getSimpleName().toString() : alt_annotation.value();
+		String opengl_handle_name = methodName.replaceFirst("gl", platform.getPrefix());
+		writer.print(", \"" + opengl_handle_name + "\", (void *)&" + methodName + ", " + (method.getAnnotation(Optional.class) == null ? "false" : "true") + "}");
+		if ( has_more ) {
+			writer.println(",");
+		}
+	}
 
 }

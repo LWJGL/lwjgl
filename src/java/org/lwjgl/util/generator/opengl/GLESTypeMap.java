@@ -41,6 +41,11 @@ package org.lwjgl.util.generator.opengl;
  * $Id: GLTypeMap.java 3287 2010-03-14 23:24:40Z spasi $
  */
 
+import org.lwjgl.util.generator.NativeTypeTranslator;
+import org.lwjgl.util.generator.PointerWrapper;
+import org.lwjgl.util.generator.Signedness;
+import org.lwjgl.util.generator.TypeMap;
+
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.nio.*;
@@ -49,10 +54,6 @@ import java.util.Map;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeKind;
-import org.lwjgl.util.generator.NativeTypeTranslator;
-import org.lwjgl.util.generator.PointerWrapper;
-import org.lwjgl.util.generator.Signedness;
-import org.lwjgl.util.generator.TypeMap;
 
 public class GLESTypeMap implements TypeMap {
 
@@ -83,7 +84,7 @@ public class GLESTypeMap implements TypeMap {
 		native_types_to_primitive.put(GLuint64.class, TypeKind.LONG);
 	}
 
-        @Override
+	@Override
 	public TypeKind getPrimitiveTypeFromNativeType(Class<? extends Annotation> native_type) {
 		TypeKind kind = native_types_to_primitive.get(native_type);
 		if ( kind == null )
@@ -91,32 +92,32 @@ public class GLESTypeMap implements TypeMap {
 		return kind;
 	}
 
-        @Override
+	@Override
 	public void printCapabilitiesInit(final PrintWriter writer) {
 		writer.println("\t\tContextCapabilities caps = GLContext.getCapabilities();");
 	}
 
-        @Override
+	@Override
 	public String getCapabilities() {
 		return "caps";
 	}
 
-        @Override
+	@Override
 	public String getAPIUtilParam(boolean comma) {
 		return "";
 	}
 
-        @Override
+	@Override
 	public void printErrorCheckMethod(final PrintWriter writer, final ExecutableElement method, final String tabs) {
 		writer.println(tabs + "Util.checkGLError();");
 	}
 
-        @Override
+	@Override
 	public String getRegisterNativesFunctionName() {
 		return "extgl_InitializeClass";
 	}
 
-        @Override
+	@Override
 	public Signedness getSignednessFromType(Class<? extends Annotation> type) {
 		if ( GLuint.class.equals(type) )
 			return Signedness.UNSIGNED;
@@ -138,7 +139,7 @@ public class GLESTypeMap implements TypeMap {
 			return Signedness.NONE;
 	}
 
-        @Override
+	@Override
 	public String translateAnnotation(Class annotation_type) {
 		if ( annotation_type.equals(GLuint64.class) || annotation_type.equals(GLint64.class) )
 			return "i64";
@@ -160,7 +161,7 @@ public class GLESTypeMap implements TypeMap {
 			throw new RuntimeException(annotation_type + " is not allowed");
 	}
 
-        @Override
+	@Override
 	public Class<? extends Annotation> getNativeTypeFromPrimitiveType(TypeKind kind) {
 		Class<? extends Annotation> type;
 		switch ( kind ) {
@@ -188,22 +189,22 @@ public class GLESTypeMap implements TypeMap {
 		return type;
 	}
 
-        @Override
+	@Override
 	public Class<? extends Annotation> getVoidType() {
 		return GLvoid.class;
 	}
 
-        @Override
+	@Override
 	public Class<? extends Annotation> getStringElementType() {
 		return GLubyte.class;
 	}
 
-        @Override
+	@Override
 	public Class<? extends Annotation> getStringArrayType() {
 		return GLchar.class;
 	}
 
-        @Override
+	@Override
 	public Class<? extends Annotation> getByteBufferArrayType() {
 		return GLubyte.class;
 	}
@@ -242,22 +243,22 @@ public class GLESTypeMap implements TypeMap {
 			return new Class[] { };
 	}
 
-        @Override
+	@Override
 	public String getTypedefPostfix() {
 		return "GL_APICALL ";
 	}
 
-        @Override
+	@Override
 	public String getFunctionPrefix() {
 		return "GL_APIENTRY";
 	}
 
-        @Override
+	@Override
 	public void printNativeIncludes(PrintWriter writer) {
 		writer.println("#include \"extgl.h\"");
 	}
 
-        @Override
+	@Override
 	public Class[] getValidAnnotationTypes(Class type) {
 		Class[] valid_types;
 		if ( Buffer.class.isAssignableFrom(type) )
@@ -275,7 +276,7 @@ public class GLESTypeMap implements TypeMap {
 		return valid_types;
 	}
 
-        @Override
+	@Override
 	public Class<? extends Annotation> getInverseType(Class<? extends Annotation> type) {
 		if ( GLuint64.class.equals(type) )
 			return GLint64.class;
@@ -295,7 +296,7 @@ public class GLESTypeMap implements TypeMap {
 			return null;
 	}
 
-        @Override
+	@Override
 	public String getAutoTypeFromAnnotation(AnnotationMirror annotation) {
 		Class annotation_class = NativeTypeTranslator.getClassFromType(annotation.getAnnotationType());
 		if ( annotation_class.equals(GLint.class) )

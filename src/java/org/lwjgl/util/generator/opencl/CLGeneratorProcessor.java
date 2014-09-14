@@ -31,125 +31,122 @@
  */
 package org.lwjgl.util.generator.opencl;
 
+import org.lwjgl.PointerWrapper;
+import org.lwjgl.opencl.CLDevice;
+import org.lwjgl.opencl.CLPlatform;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.util.Set;
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedOptions;
-import javax.annotation.processing.SupportedSourceVersion;
+import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
-import org.lwjgl.PointerWrapper;
-import org.lwjgl.opencl.CLDevice;
-import org.lwjgl.opencl.CLPlatform;
 
 /**
  * Generator tool for creating the OpenCL capabilities classes
  *
  * @author Spasi
  */
-@SupportedAnnotationTypes({"*"})
+@SupportedAnnotationTypes({ "*" })
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
-@SupportedOptions({"generatechecks", "contextspecific"})
+@SupportedOptions({ "generatechecks", "contextspecific" })
 public class CLGeneratorProcessor extends AbstractProcessor {
 
-        public static final String CLCAPS_CLASS_NAME = "CLCapabilities";
-        public static final String PLATFORM_CAPS_CLASS_NAME = "CLPlatformCapabilities";
-        public static final String DEVICE_CAPS_CLASS_NAME = "CLDeviceCapabilities";
+	public static final String CLCAPS_CLASS_NAME        = "CLCapabilities";
+	public static final String PLATFORM_CAPS_CLASS_NAME = "CLPlatformCapabilities";
+	public static final String DEVICE_CAPS_CLASS_NAME   = "CLDeviceCapabilities";
 
-        private static final String EXTENSION_PREFIX = "CL_";
-        private static final String CORE_PREFIX = "Open";
+	private static final String EXTENSION_PREFIX = "CL_";
+	private static final String CORE_PREFIX      = "Open";
 
-        private static boolean first_round = true;
+	private static boolean first_round = true;
 
-        static String getExtensionName(String interface_name) {
-                if (interface_name.startsWith("CL")) {
-                        return CORE_PREFIX + interface_name;
-                } else {
-                        return EXTENSION_PREFIX + interface_name;
-                }
-        }
+	static String getExtensionName(String interface_name) {
+		if ( interface_name.startsWith("CL") ) {
+			return CORE_PREFIX + interface_name;
+		} else {
+			return EXTENSION_PREFIX + interface_name;
+		}
+	}
 
-        @Override
-        public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-                if (roundEnv.processingOver() || !first_round) {                        
-                        System.exit(0);
-                        return true;
-                }
-                try {
-                        Set<TypeElement> templates = ElementFilter.typesIn(roundEnv.getRootElements());
-                        /**
-                         * provide the full set of ex-InterfaceDeclaration
-                         * annotated templates elements
-                         */
-                        generateCLCapabilitiesSource(templates);
-                        generateCLPDCapabilitiesSource(templates, CLPlatformExtension.class, PLATFORM_CAPS_CLASS_NAME, CLPlatform.class, "platform");
-                        generateCLPDCapabilitiesSource(templates, CLDeviceExtension.class, DEVICE_CAPS_CLASS_NAME, CLDevice.class, "device");
-                        first_round = false;
-                        return true;
-                } catch (IOException e) {
-                        throw new RuntimeException(e);
-                }
-        }
+	@Override
+	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+		if ( roundEnv.processingOver() || !first_round ) {
+			System.exit(0);
+			return true;
+		}
+		try {
+			Set<TypeElement> templates = ElementFilter.typesIn(roundEnv.getRootElements());
+			/**
+			 * provide the full set of ex-InterfaceDeclaration
+			 * annotated templates elements
+			 */
+			generateCLCapabilitiesSource(templates);
+			generateCLPDCapabilitiesSource(templates, CLPlatformExtension.class, PLATFORM_CAPS_CLASS_NAME, CLPlatform.class, "platform");
+			generateCLPDCapabilitiesSource(templates, CLDeviceExtension.class, DEVICE_CAPS_CLASS_NAME, CLDevice.class, "device");
+			first_round = false;
+			return true;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-        private static void printHeader(final PrintWriter writer) {
-                writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
-                writer.println();
-                writer.println("package org.lwjgl.opencl;");
-                writer.println();
-        }
+	private static void printHeader(final PrintWriter writer) {
+		writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
+		writer.println();
+		writer.println("package org.lwjgl.opencl;");
+		writer.println();
+	}
 
-        private void generateCLCapabilitiesSource(Set<TypeElement> templates) throws IOException {
-                final PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opencl." + CLCAPS_CLASS_NAME, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opencl")).openWriter());
-                printHeader(writer);
+	private void generateCLCapabilitiesSource(Set<TypeElement> templates) throws IOException {
+		final PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opencl." + CLCAPS_CLASS_NAME, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opencl")).openWriter());
+		printHeader(writer);
 
-                CLCapabilitiesGenerator.generateClassPrologue(writer);
-                for (TypeElement d : templates) {
-                        if (d.getKind().isInterface()) {
-                                CLCapabilitiesGenerator.generateSymbolAddresses(processingEnv, writer, d);
-                        }
-                }
-                writer.println();
+		CLCapabilitiesGenerator.generateClassPrologue(writer);
+		for ( TypeElement d : templates ) {
+			if ( d.getKind().isInterface() ) {
+				CLCapabilitiesGenerator.generateSymbolAddresses(processingEnv, writer, d);
+			}
+		}
+		writer.println();
 
-                CLCapabilitiesGenerator.generateConstructor(processingEnv, writer, templates);
+		CLCapabilitiesGenerator.generateConstructor(processingEnv, writer, templates);
 
-                CLCapabilitiesGenerator.generateCapabilitiesGetters(writer);
-                for (TypeElement d : templates) {
-                        if (d.getKind().isInterface()) {
-                                CLCapabilitiesGenerator.generateExtensionChecks(processingEnv, writer, d);
-                        }
-                }
+		CLCapabilitiesGenerator.generateCapabilitiesGetters(writer);
+		for ( TypeElement d : templates ) {
+			if ( d.getKind().isInterface() ) {
+				CLCapabilitiesGenerator.generateExtensionChecks(processingEnv, writer, d);
+			}
+		}
 
-                writer.println("}");
-                writer.close();
-        }
+		writer.println("}");
+		writer.close();
+	}
 
-        private void generateCLPDCapabilitiesSource(Set<TypeElement> templates, final Class<? extends Annotation> capsType, final String capsName, final Class<? extends PointerWrapper> objectType, final String objectName) throws IOException {
-                final PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opencl." + capsName, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opencl")).openWriter());
-                printHeader(writer);
-                writer.println("import java.util.*;");
-                writer.println();
+	private void generateCLPDCapabilitiesSource(Set<TypeElement> templates, final Class<? extends Annotation> capsType, final String capsName, final Class<? extends PointerWrapper> objectType, final String objectName) throws IOException {
+		final PrintWriter writer = new PrintWriter(processingEnv.getFiler().createSourceFile("org.lwjgl.opencl." + capsName, processingEnv.getElementUtils().getPackageElement("org.lwjgl.opencl")).openWriter());
+		printHeader(writer);
+		writer.println("import java.util.*;");
+		writer.println();
 
-                CLPDCapabilitiesGenerator.generateClassPrologue(writer, capsName);
+		CLPDCapabilitiesGenerator.generateClassPrologue(writer, capsName);
 
-                for (TypeElement t : templates) {
-                        if (t.getKind().isInterface() && t.getAnnotation(capsType) != null) {
-                                CLPDCapabilitiesGenerator.generateExtensions(writer, (TypeElement) t);
-                        }
-                }
-                writer.println();
+		for ( TypeElement t : templates ) {
+			if ( t.getKind().isInterface() && t.getAnnotation(capsType) != null ) {
+				CLPDCapabilitiesGenerator.generateExtensions(writer, (TypeElement)t);
+			}
+		}
+		writer.println();
 
-                CLPDCapabilitiesGenerator.generateConstructor(processingEnv, writer, templates, capsType, capsName, objectType, objectName);
+		CLPDCapabilitiesGenerator.generateConstructor(processingEnv, writer, templates, capsType, capsName, objectType, objectName);
 
-                CLPDCapabilitiesGenerator.generateGetters(writer);
+		CLPDCapabilitiesGenerator.generateGetters(writer);
 
-                CLPDCapabilitiesGenerator.generateToString(writer, templates, capsType);
+		CLPDCapabilitiesGenerator.generateToString(writer, templates, capsType);
 
-                writer.println("}");
-                writer.close();
-        }
+		writer.println("}");
+		writer.close();
+	}
 }

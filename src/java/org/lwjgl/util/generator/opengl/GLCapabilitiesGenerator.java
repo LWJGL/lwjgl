@@ -32,19 +32,17 @@
 
 package org.lwjgl.util.generator.opengl;
 
+import org.lwjgl.util.generator.*;
 
 import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
-import org.lwjgl.util.generator.*;
 
 /**
  * Generator visitor for the context capabilities generator tool
@@ -55,13 +53,13 @@ import org.lwjgl.util.generator.*;
  */
 public class GLCapabilitiesGenerator {
 
-	private static final String STUBS_LOADED_NAME = "loaded_stubs";
-	private static final String ALL_INIT_METHOD_NAME = "initAllStubs";
+	private static final String STUBS_LOADED_NAME           = "loaded_stubs";
+	private static final String ALL_INIT_METHOD_NAME        = "initAllStubs";
 	private static final String POINTER_INITIALIZER_POSTFIX = "_initNativeFunctionAddresses";
-	private static final String CACHED_EXTS_VAR_NAME = "supported_extensions";
-	private static final String PROFILE_MASK_VAR_NAME = "profileMask";
-	private static final String EXTENSION_PREFIX = "GL_";
-	private static final String CORE_PREFIX = "Open";
+	private static final String CACHED_EXTS_VAR_NAME        = "supported_extensions";
+	private static final String PROFILE_MASK_VAR_NAME       = "profileMask";
+	private static final String EXTENSION_PREFIX            = "GL_";
+	private static final String CORE_PREFIX                 = "Open";
 
 	public static void generateClassPrologue(PrintWriter writer, boolean context_specific, boolean generate_error_checks) {
 		writer.println("public class " + Utils.CONTEXT_CAPS_CLASS_NAME + " {");
@@ -105,7 +103,7 @@ public class GLCapabilitiesGenerator {
 		writer.print(CACHED_EXTS_VAR_NAME + ".contains(\"");
 		writer.print(translated_field_name + "\")");
 		List<? extends TypeMirror> super_interfaces = d.getInterfaces();
-                if ( super_interfaces.size() > 1 )
+		if ( super_interfaces.size() > 1 )
 			throw new RuntimeException(d + " extends more than one other interface");
 		if ( super_interfaces.size() == 1 ) {
 			TypeMirror super_interface = super_interfaces.iterator().next();
@@ -166,14 +164,14 @@ public class GLCapabilitiesGenerator {
 	}
 
 	public static void generateUnloadStubs(ProcessingEnvironment env, PrintWriter writer, TypeElement d) {
-		if ( Utils.getMethods( d).size() > 0 ) {
+		if ( Utils.getMethods(d).size() > 0 ) {
 			writer.print("\t\tGLContext.resetNativeStubs(" + Utils.getSimpleClassName(d));
 			writer.println(".class);");
 		}
 	}
 
 	public static void generateInitStubs(ProcessingEnvironment env, PrintWriter writer, TypeElement d, boolean context_specific) {
-		if ( Utils.getMethods( d).size() > 0 ) {
+		if ( Utils.getMethods(d).size() > 0 ) {
 			if ( context_specific ) {
 				final Alias alias_annotation = d.getAnnotation(Alias.class);
 
@@ -219,7 +217,7 @@ public class GLCapabilitiesGenerator {
 	}
 
 	public static void generateAddressesInitializers(ProcessingEnvironment env, PrintWriter writer, TypeElement d) {
-		Iterator<? extends ExecutableElement> methods = Utils.getMethods( d).iterator();
+		Iterator<? extends ExecutableElement> methods = Utils.getMethods(d).iterator();
 		if ( !methods.hasNext() )
 			return;
 
@@ -313,7 +311,7 @@ public class GLCapabilitiesGenerator {
 
 	public static void generateSymbolAddresses(ProcessingEnvironment env, PrintWriter writer, TypeElement d) {
 		boolean first = true;
-		for ( final ExecutableElement method : Utils.getMethods( d) ) {
+		for ( final ExecutableElement method : Utils.getMethods(d) ) {
 			if ( method.getAnnotation(Alternate.class) != null || method.getAnnotation(Reuse.class) != null )
 				continue;
 

@@ -32,22 +32,22 @@
 
 package org.lwjgl.util.generator;
 
+import org.lwjgl.PointerBuffer;
+
 import java.nio.Buffer;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.util.SimpleTypeVisitor6;
-import org.lwjgl.PointerBuffer;
 
 /**
- *
  * A TypeVisitor that translates TypeMirrors to JNI
  * type strings.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
- * $Id$
+ *          $Id$
  */
 public class JNITypeTranslator extends SimpleTypeVisitor6<Void, Void> {
 
@@ -63,7 +63,7 @@ public class JNITypeTranslator extends SimpleTypeVisitor6<Void, Void> {
 		return objectReturn ? "jobject" : signature.toString();
 	}
 
-        @Override
+	@Override
 	public Void visitArray(ArrayType t, Void o) {
 		final String className = t.getComponentType().toString();
 		if ( "java.lang.CharSequence".equals(className) )
@@ -74,7 +74,7 @@ public class JNITypeTranslator extends SimpleTypeVisitor6<Void, Void> {
 			signature.append("jobjectArray");
 		else
 			throw new RuntimeException(t + " is not allowed");
-                return DEFAULT_VALUE;
+		return DEFAULT_VALUE;
 	}
 
 	private void visitClassType(DeclaredType t) {
@@ -86,17 +86,17 @@ public class JNITypeTranslator extends SimpleTypeVisitor6<Void, Void> {
 			signature.append("jobject");
 	}
 
-        @Override
+	@Override
 	public Void visitDeclared(DeclaredType t, Void o) {
-            if(t.asElement().getKind().isClass())
-                visitClassType(t);
-            return DEFAULT_VALUE;
+		if ( t.asElement().getKind().isClass() )
+			visitClassType(t);
+		return DEFAULT_VALUE;
 	}
 
-        @Override
+	@Override
 	public Void visitPrimitive(PrimitiveType t, Void o) {
 		String type;
-		switch (t.getKind()) {
+		switch ( t.getKind() ) {
 			case LONG:
 				type = "jlong";
 				break;
@@ -122,13 +122,13 @@ public class JNITypeTranslator extends SimpleTypeVisitor6<Void, Void> {
 				throw new RuntimeException(t + " is not allowed");
 		}
 		signature.append(type);
-                return DEFAULT_VALUE;
+		return DEFAULT_VALUE;
 	}
 
-        @Override
+	@Override
 	public Void visitNoType(NoType t, Void o) {
 		signature.append(t.toString());
-                return DEFAULT_VALUE;
+		return DEFAULT_VALUE;
 	}
-	
+
 }

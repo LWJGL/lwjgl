@@ -39,6 +39,10 @@ package org.lwjgl.util.generator.opencl;
  * @author Spasi
  */
 
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.util.generator.*;
+import org.lwjgl.util.generator.opengl.GLreturn;
+
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.nio.*;
@@ -48,10 +52,6 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
-import org.lwjgl.PointerBuffer;
-import org.lwjgl.util.generator.*;
-import org.lwjgl.util.generator.opengl.GLreturn;
-
 
 public class CLTypeMap implements TypeMap {
 
@@ -74,7 +74,7 @@ public class CLTypeMap implements TypeMap {
 		native_types_to_primitive.put(cl_double.class, TypeKind.DOUBLE);
 	}
 
-        @Override
+	@Override
 	public TypeKind getPrimitiveTypeFromNativeType(Class native_type) {
 		TypeKind kind = native_types_to_primitive.get(native_type);
 		if ( kind == null )
@@ -82,21 +82,21 @@ public class CLTypeMap implements TypeMap {
 		return kind;
 	}
 
-        @Override
+	@Override
 	public void printCapabilitiesInit(final PrintWriter writer) {
 	}
 
-        @Override
+	@Override
 	public String getCapabilities() {
 		return "CLCapabilities";
 	}
 
-        @Override
+	@Override
 	public String getAPIUtilParam(boolean comma) {
 		return "";
 	}
 
-        @Override
+	@Override
 	public void printErrorCheckMethod(final PrintWriter writer, final ExecutableElement method, final String tabs) {
 		final Check check = method.getAnnotation(Check.class);
 		if ( check != null ) // Get the error code from an IntBuffer output parameter
@@ -119,12 +119,12 @@ public class CLTypeMap implements TypeMap {
 		}
 	}
 
-        @Override
+	@Override
 	public String getRegisterNativesFunctionName() {
 		return "extcl_InitializeClass";
 	}
 
-        @Override
+	@Override
 	public Signedness getSignednessFromType(Class type) {
 		if ( cl_uint.class.equals(type) )
 			return Signedness.UNSIGNED;
@@ -134,7 +134,7 @@ public class CLTypeMap implements TypeMap {
 			return Signedness.NONE;
 	}
 
-        @Override
+	@Override
 	public String translateAnnotation(Class annotation_type) {
 		if ( annotation_type.equals(cl_uint.class) || annotation_type.equals(cl_int.class) )
 			return "i";
@@ -150,7 +150,7 @@ public class CLTypeMap implements TypeMap {
 			throw new RuntimeException(annotation_type + " is not allowed");
 	}
 
-        @Override
+	@Override
 	public Class getNativeTypeFromPrimitiveType(TypeKind kind) {
 		Class type;
 		switch ( kind ) {
@@ -181,22 +181,22 @@ public class CLTypeMap implements TypeMap {
 		return type;
 	}
 
-        @Override
+	@Override
 	public Class<? extends Annotation> getVoidType() {
 		return cl_void.class;
 	}
 
-        @Override
+	@Override
 	public Class<? extends Annotation> getStringElementType() {
 		return cl_char.class;
 	}
 
-        @Override
+	@Override
 	public Class<? extends Annotation> getStringArrayType() {
 		return cl_char.class;
 	}
 
-        @Override
+	@Override
 	public Class<? extends Annotation> getByteBufferArrayType() {
 		return cl_uchar.class;
 	}
@@ -241,22 +241,22 @@ public class CLTypeMap implements TypeMap {
 			return new Class[] { };
 	}
 
-        @Override
+	@Override
 	public String getTypedefPostfix() {
 		return "CL_API_ENTRY ";
 	}
 
-        @Override
+	@Override
 	public String getFunctionPrefix() {
 		return "CL_API_CALL";
 	}
 
-        @Override
+	@Override
 	public void printNativeIncludes(PrintWriter writer) {
 		writer.println("#include \"extcl.h\"");
 	}
 
-        @Override
+	@Override
 	public Class[] getValidAnnotationTypes(Class type) {
 		Class[] valid_types;
 		if ( Buffer.class.isAssignableFrom(type) || PointerBuffer.class.isAssignableFrom(type) )
@@ -276,12 +276,12 @@ public class CLTypeMap implements TypeMap {
 		return valid_types;
 	}
 
-        @Override
+	@Override
 	public Class<? extends Annotation> getInverseType(Class type) {
 		return null;
 	}
 
-        @Override
+	@Override
 	public String getAutoTypeFromAnnotation(AnnotationMirror annotation) {
 		return null;
 	}
