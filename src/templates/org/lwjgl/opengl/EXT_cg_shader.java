@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-public interface EXT_Cg_shader {
+public interface EXT_cg_shader {
 
 	/**
 	 * You can pass GL_CG_VERTEX_SHADER_EXT to glCreateShaderARB instead of GL_VERTEX_SHADER_ARB to create a vertex shader object
