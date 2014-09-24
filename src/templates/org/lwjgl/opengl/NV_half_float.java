@@ -39,6 +39,7 @@ import org.lwjgl.util.generator.opengl.GLuint;
 
 import java.nio.*;
 
+@Dependent
 public interface NV_half_float {
 
 	/**
@@ -92,48 +93,50 @@ public interface NV_half_float {
 	@NoErrorCheck
 	void glMultiTexCoord4hNV(@GLenum int target, @GLhalf short s, @GLhalf short t, @GLhalf short r, @GLhalf short q);
 
+	@Dependent("GL_EXT_fog_coord")
 	@NoErrorCheck
 	void glFogCoordhNV(@GLhalf short fog);
 
+	@Dependent("GL_EXT_secondary_color")
 	@NoErrorCheck
 	void glSecondaryColor3hNV(@GLhalf short red, @GLhalf short green, @GLhalf short blue);
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 11.7)")
+	@Dependent("GL_EXT_vertex_weighting")
 	@NoErrorCheck
 	void glVertexWeighthNV(@GLhalf short weight);
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 11.7)")
+	@Dependent("GL_NV_vertex_program")
 	@NoErrorCheck
 	void glVertexAttrib1hNV(@GLuint int index, @GLhalf short x);
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 11.7)")
+	@Dependent("GL_NV_vertex_program")
 	@NoErrorCheck
 	void glVertexAttrib2hNV(@GLuint int index, @GLhalf short x, @GLhalf short y);
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 11.7)")
+	@Dependent("GL_NV_vertex_program")
 	@NoErrorCheck
 	void glVertexAttrib3hNV(@GLuint int index, @GLhalf short x, @GLhalf short y, @GLhalf short z);
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 11.7)")
+	@Dependent("GL_NV_vertex_program")
 	@NoErrorCheck
 	void glVertexAttrib4hNV(@GLuint int index, @GLhalf short x, @GLhalf short y, @GLhalf short z, @GLhalf short w);
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 11.7)")
+	@Dependent("GL_NV_vertex_program")
 	@NoErrorCheck
 	@StripPostfix("attribs")
 	void glVertexAttribs1hvNV(@GLuint int index, @AutoSize("attribs") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 11.7)")
+	@Dependent("GL_NV_vertex_program")
 	@NoErrorCheck
 	@StripPostfix("attribs")
 	void glVertexAttribs2hvNV(@GLuint int index, @AutoSize(value = "attribs", expression = " >> 1") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 11.7)")
+	@Dependent("GL_NV_vertex_program")
 	@NoErrorCheck
 	@StripPostfix("attribs")
 	void glVertexAttribs3hvNV(@GLuint int index, @AutoSize(value = "attribs", expression = " / 3") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
 
-	@Optional(reason = "AMD does not expose this (last driver checked: 11.7)")
+	@Dependent("GL_NV_vertex_program")
 	@NoErrorCheck
 	@StripPostfix("attribs")
 	void glVertexAttribs4hvNV(@GLuint int index, @AutoSize(value = "attribs", expression = " >> 2") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);

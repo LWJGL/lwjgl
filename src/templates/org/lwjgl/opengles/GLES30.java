@@ -727,7 +727,6 @@ public interface GLES30 {
 	void glGetInteger64v2(@GLenum int pname, @OutParameter @GLint64 LongBuffer data);
 
 	@StripPostfix("data")
-	@Optional(reason = "NV's 3.2 implementation does not expose this (last driver checked: 19?.??)")
 	void glGetInteger64i_v(@GLenum int value, @GLuint int index, @OutParameter @Check("4") @GLint64 LongBuffer data);
 
 	@Alternate("glGetInteger64i_v")
