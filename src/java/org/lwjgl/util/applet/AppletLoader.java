@@ -111,6 +111,7 @@ import java.util.zip.ZipFile;
  * <li>al_mac - [String] Jar containing native files for mac.</li>
  * <li>al_solaris - [String] Jar containing native files for solaris.</li>
  * <li>al_freebsd - [String] Jar containing native files for freebsd.</li>
+ * <li>al_openbsd - [String] Jar containing native files for openbsd.</li>
  * </ul>
  * </p>
  * <p>
@@ -775,6 +776,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			nativeJarList = getParameter("al_solaris");
 		} else if (osName.startsWith("FreeBSD")) {
 			nativeJarList = getParameter("al_freebsd");
+		} else if (osName.startsWith("OpenBSD")) {
+			nativeJarList = getParameter("al_openbsd");
 		} else {
 			fatalErrorOccured("OS (" + osName + ") not supported", null);
 			return;
