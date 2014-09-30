@@ -220,7 +220,11 @@ bool extgl_Open(JNIEnv *env) {
 	 *
 	 * DRI drivers need this flag to work properly
 	 */
+#ifdef __OpenBSD__
+	lib_gl_handle = dlopen("libGL.so", RTLD_LAZY | RTLD_GLOBAL);
+#else
 	lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
+#endif
 	if (lib_gl_handle == NULL) {
 		throwFormattedException(env, "Error loading libGL.so.1: %s", dlerror());
 		return false;
