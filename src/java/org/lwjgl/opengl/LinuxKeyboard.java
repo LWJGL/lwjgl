@@ -296,7 +296,7 @@ final class LinuxKeyboard {
 		return keycode;
 	}
 
-	private byte getKeyState(int event_type) {
+	private static byte getKeyState(int event_type) {
 		switch (event_type) {
 			case LinuxEvent.KeyPress:
 				return 1;
@@ -307,10 +307,22 @@ final class LinuxKeyboard {
 		}
 	}
 
+	/** This is called when the window loses focus: we release all currently pressed keys. */
+	void releaseAll() {
+		for ( int i = 0; i < key_down_buffer.length; i++ ) {
+			if ( key_down_buffer[i] != 0 ) {
+				key_down_buffer[i] = 0;
+				putKeyboardEvent(i, (byte)0, 0, 0L, false);
+			}
+		}
+	}
+
 	private void handleKeyEvent(long event_ptr, long millis, int event_type, int event_keycode, int event_state) {
 		int keycode = getKeycode(event_ptr, event_state);
 		byte key_state = getKeyState(event_type);
 		boolean repeat = key_state == key_down_buffer[keycode];
+		if ( repeat && event_type == LinuxEvent.KeyRelease ) // This can happen for modifier keys after losing and regaining focus.
+			return;
 		key_down_buffer[keycode] = key_state;
 		long nanos = millis*1000000;
 		if (event_type == LinuxEvent.KeyPress) {

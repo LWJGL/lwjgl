@@ -1125,6 +1125,8 @@ final class LinuxDisplay implements DisplayImplementation {
 	private void releaseInput() {
 		if (isLegacyFullscreen() || input_released)
 			return;
+		if ( keyboard != null )
+			keyboard.releaseAll();
 		input_released = true;
 		updateInputGrab();
 		if (current_window_mode == FULLSCREEN_NETWM) {

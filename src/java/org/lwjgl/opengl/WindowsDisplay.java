@@ -362,7 +362,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	/*
 	 * Called when the application is alt-tabbed to or from
 	 */
-	private void appActivate(boolean active) {
+	private void appActivate(boolean active, long millis) {
 		if (inAppActivate) {
 			return;
 		}
@@ -379,14 +379,15 @@ final class WindowsDisplay implements DisplayImplementation {
 			redoMakeContextCurrent = true;
 			if (Display.isFullscreen())
 				updateClipping();
-
+		} else {
 			if ( keyboard != null )
-				keyboard.fireLostKeyEvents();
-		} else if (Display.isFullscreen()) {
-			showWindow(getHwnd(), SW_SHOWMINNOACTIVE);
-			resetDisplayMode();
-		} else
-			updateClipping();
+				keyboard.releaseAll(millis);
+			if ( Display.isFullscreen() ) {
+				showWindow(getHwnd(), SW_SHOWMINNOACTIVE);
+				resetDisplayMode();
+			} else
+				updateClipping();
+		}
 		updateCursor();
 		inAppActivate = false;
 	}
@@ -997,10 +998,10 @@ final class WindowsDisplay implements DisplayImplementation {
 					return defWindowProc(hwnd, msg, wParam, lParam);
 				}
 			case WM_KILLFOCUS:
-				appActivate(false);
+				appActivate(false, millis);
 				return 0L;
 			case WM_SETFOCUS:
-				appActivate(true);
+				appActivate(true, millis);
 				return 0L;
 			case WM_MOUSEACTIVATE:
 				if ( parent != null ) {

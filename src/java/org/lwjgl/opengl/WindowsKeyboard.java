@@ -122,6 +122,18 @@ final class WindowsKeyboard {
 		return (GetAsyncKeyState(virt_key) & 0x8000) != 0;
 	}
 
+	/**
+	 * This is called when the window loses focus: we release all currently pressed keys. If a key has been pressed (or hasn't been released at all), before we
+	 * regain focus, we'll start receiving repeat press events. We'll treat the first of those as a non-repeat press.
+	 */
+	void releaseAll(long millis) {
+		for ( int i = 0; i < virt_key_down_buffer.length; i++ ) {
+			if ( isKeyPressed(virt_key_down_buffer[i]) ) {
+				handleKey(i, 0, false, (byte)0, millis, false);
+			}
+		}
+	}
+
 	void handleKey(int virt_key, int scan_code, boolean extended, byte event_state, long millis, boolean repeat) {
 		virt_key = translateExtended(virt_key, scan_code, extended);
 		if ( !repeat && isKeyPressed(event_state) == isKeyPressed(virt_key_down_buffer[virt_key]) )
@@ -132,6 +144,7 @@ final class WindowsKeyboard {
 		int keycode = WindowsKeycodes.mapVirtualKeyToLWJGLCode(virt_key);
 		if (keycode < key_down_buffer.length) {
 			key_down_buffer[keycode] = event_state;
+			repeat &= isKeyPressed(virt_key_down_buffer[virt_key]); // Treat the first repeat event after releaseAll() as a non-repeat press.
 			virt_key_down_buffer[virt_key] = event_state;
 		}
 		retained_key_code = keycode;
@@ -139,13 +152,6 @@ final class WindowsKeyboard {
 		retained_millis = millis;
 		retained_char = 0;
 		retained_repeat = repeat;
-	}
-
-	void fireLostKeyEvents() {
-		for ( int i = 0; i < virt_key_down_buffer.length; i++ ) {
-			if ( isKeyPressed(virt_key_down_buffer[i]) && !isKeyPressedAsync(i) )
-				handleKey(i, 0, false, (byte)0, 0L, false);
-		}
 	}
 
 	void handleChar(int event_char, long millis, boolean repeat) {
