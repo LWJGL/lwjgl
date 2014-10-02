@@ -186,7 +186,7 @@
 			<param name="libname" value="liblwjgl-i86_64.dylib"/>
 			<param name="linkerflags" value="-isysroot ${x86_64_sdkroot} -arch x86_64 -mmacosx-version-min=10.5"/>
 		</antcall>
-		<apply dir="." parallel="true" executable="lipo" os="Mac OS X" failonerror="true" skipemptyfilesets="true" >
+		<apply dir="." parallel="true" executable="lipo" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
 			<arg value="-create"/>
 			<srcfile/>
 			<arg value="-output"/>
@@ -202,12 +202,16 @@
 			<param name="sdkroot" location="${sdkroot}"/>
 			<param name="cflags" value="-isysroot ${sdkroot} -arch x86_64 -mmacosx-version-min=10.5"/>
 		</antcall>
+		<exec vmlauncher="true" executable="sh" output="lwjgl.symbols" failonerror="true">
+			<arg path="../../platform_build/macosx_ant/build-symbolls-list"/>
+			<arg path="x86_64"/>
+		</exec>
 		<antcall target="link">
 			<param name="objdir" location="x86_64"/>
 			<param name="libname" value="liblwjgl-i86_64.dylib"/>
 			<param name="linkerflags" value="-isysroot ${sdkroot} -arch x86_64 -mmacosx-version-min=10.5"/>
 		</antcall>
-		<apply dir="." parallel="true" executable="lipo" os="Mac OS X" failonerror="true" skipemptyfilesets="true" >
+		<apply dir="." parallel="true" executable="lipo" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
 			<arg value="-create"/>
 			<srcfile/>
 			<arg value="-output"/>
