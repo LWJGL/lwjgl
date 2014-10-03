@@ -203,7 +203,7 @@
 			<param name="cflags" value="-isysroot ${sdkroot} -arch x86_64 -mmacosx-version-min=10.5"/>
 		</antcall>
 		<exec vmlauncher="true" executable="sh" output="lwjgl.symbols" failonerror="true">
-			<arg path="../../platform_build/macosx_ant/build-symbolls-list"/>
+			<arg path="../../platform_build/macosx_ant/build-symbol-list"/>
 			<arg path="x86_64"/>
 		</exec>
 		<antcall target="link">
