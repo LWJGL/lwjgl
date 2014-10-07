@@ -130,6 +130,10 @@ public final class AL {
 				throw new LWJGLException("Unknown platform: " + LWJGLUtil.getPlatform());
 		}
 		String[] oalPaths = LWJGLUtil.getLibraryPaths(libname, library_names, AL.class.getClassLoader());
+		if (oalPaths.length == 0 && LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_WINDOWS) {
+			//Maybe loading 32-bit on 64-bit jvm. So try 64-bit here.
+			oalPaths = LWJGLUtil.getLibraryPaths("OpenAL64", new String[]{}, AL.class.getClassLoader());
+		}
 		LWJGLUtil.log("Found " + oalPaths.length + " OpenAL paths");
 		for ( String oalPath : oalPaths ) {
 			try {
