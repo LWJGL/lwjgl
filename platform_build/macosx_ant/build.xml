@@ -126,9 +126,9 @@
 
 	<target name="link" depends="init">
 		<condition property="jdk_lib" value="${java.home}/lib">
-			<available file="${java.home}/lib" type="dir"/>
+			<available file="${java.home}/lib/libjawt.dylib" type="file"/>
 		</condition>
-		<condition property="jdk_lib" value="${java.home}../Libraries">
+		<condition property="jdk_lib" value="${java.home}/../Libraries">
 			<not><isset property="jdk_lib"/></not>
 		</condition>
 
