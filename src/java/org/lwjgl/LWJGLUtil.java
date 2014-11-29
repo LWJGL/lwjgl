@@ -320,6 +320,21 @@ public class LWJGLUtil {
 	}
 
 	/**
+	 * Wraps {@link System#mapLibraryName}. On OS X with JDK 6, the .jnilib file
+	 * extension will be replaced with .dylib.
+	 *
+	 * @param name the name of the library.
+	 *
+	 * @return a platform-dependent native library name.
+	 */
+	public static String mapLibraryName(String name) {
+		String libName = System.mapLibraryName(name);
+		return LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_MACOSX && libName.endsWith(".jnilib")
+			? libName.substring(0, libName.length() - ".jnilib".length()) + ".dylib"
+			: libName;
+	}
+
+	/**
 	 * Locates the paths required by a library.
 	 *
 	 * @param libname Local Library Name to search the classloader with ("openal").
@@ -421,7 +436,7 @@ public class LWJGLUtil {
 	 */
 	private static String getPathFromClassLoader(final String libname, final ClassLoader classloader) {
 		Class<?> c = null;
-		
+
 		try {
 			log("getPathFromClassLoader: searching for: " + libname);
 			c = classloader.getClass();

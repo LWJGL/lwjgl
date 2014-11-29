@@ -280,7 +280,7 @@ public interface ARB_direct_state_access {
 
 	@GLenum
 	@Reuse("GL45")
-	int CheckNamedFramebufferStatus(@GLuint int framebuffer, @GLenum int target);
+	int glCheckNamedFramebufferStatus(@GLuint int framebuffer, @GLenum int target);
 
 	@StripPostfix("params")
 	@Reuse("GL45")

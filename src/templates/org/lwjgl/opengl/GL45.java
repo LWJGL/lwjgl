@@ -272,7 +272,7 @@ public interface GL45 {
 		@GLbitfield int mask, @GLenum int filter);
 
 	@GLenum
-	int CheckNamedFramebufferStatus(@GLuint int framebuffer, @GLenum int target);
+	int glCheckNamedFramebufferStatus(@GLuint int framebuffer, @GLenum int target);
 
 	@StripPostfix("params")
 	void glGetNamedFramebufferParameteriv(@GLuint int framebuffer, @GLenum int pname, @OutParameter @Check("1") IntBuffer params);

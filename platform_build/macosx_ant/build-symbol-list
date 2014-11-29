@@ -1,4 +1,3 @@
 #!/bin/sh
 
-nm -g "$1"/*.o | grep "Java_" | cut -d ' ' -f3 | cut -c 1-
-nm -g "$1"/*.o | grep "JNI_" | cut -d ' ' -f3 | cut -c 1-
+nm -j -g "$1"/*.o | grep -E "J(ava|NI)_[^.]*$"
