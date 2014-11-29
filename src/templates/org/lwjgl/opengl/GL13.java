@@ -161,6 +161,15 @@ public interface GL13 {
 	                            @GLvoid
 	                            Buffer data);
 
+    @Alternate("glCompressedTexImage1D")
+	void glCompressedTexImage1D2(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, int border, @GLsizei int imageSize,
+	                            @BufferObject(BufferKind.UnpackPBO)
+	                            @Check
+	                            @Const
+	                            @GLvoid
+	                            @Constant("0L")
+	                            Buffer data);
+
 	void glCompressedTexImage2D(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, int border, @AutoSize("data") @GLsizei int imageSize,
 	                            @BufferObject(BufferKind.UnpackPBO)
 	                            @Check
@@ -168,11 +177,29 @@ public interface GL13 {
 	                            @GLvoid
 	                            ByteBuffer data);
 
+    @Alternate("glCompressedTexImage2D")
+	void glCompressedTexImage2D2(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, int border, @GLsizei int imageSize,
+	                            @BufferObject(BufferKind.UnpackPBO)
+	                            @Check
+	                            @Const
+	                            @GLvoid
+	                            @Constant("0L")
+	                            ByteBuffer data);
+
 	void glCompressedTexImage3D(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, @GLsizei int depth, int border, @AutoSize("data") @GLsizei int imageSize,
 	                            @BufferObject(BufferKind.UnpackPBO)
 	                            @Check
 	                            @Const
 	                            @GLvoid
+	                            ByteBuffer data);
+
+    @Alternate("glCompressedTexImage3D")
+	void glCompressedTexImage3D2(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, @GLsizei int depth, int border, @GLsizei int imageSize,
+	                            @BufferObject(BufferKind.UnpackPBO)
+	                            @Check
+	                            @Const
+	                            @GLvoid
+	                            @Constant("0L")
 	                            ByteBuffer data);
 
 	void glCompressedTexSubImage1D(@GLenum int target, int level, int xoffset, @GLsizei int width, @GLenum int format, @AutoSize("data") @GLsizei int imageSize,
