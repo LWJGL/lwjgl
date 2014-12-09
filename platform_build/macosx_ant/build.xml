@@ -18,7 +18,6 @@
 		<property name="headers_path" value="System/Library/Frameworks/JavaVM.framework/Versions/A/Headers"/>
                 <property name="compiler" value="clang"/> <!-- Default to clang for 10.8 and up -->
                 <macrodef name="xcode-select">
-                        <attribute name="osx-version"/>
                         <attribute name="property"/>
                         <attribute name="value"/>
                         <sequential>
@@ -34,12 +33,12 @@
                 </macrodef>
 		
 		<!-- Choose a JavaVM.framework -->
-                <xcode-select osx-version="${os.version}" property="jvm_headers" value="${developer_path}/${sdk_path}/MacOSX@{osx-version}.sdk/${headers_path}"/>
-                <xcode-select osx-version="${os.version}" property="jvm_headers" value="/${headers_path}"/> <!-- Old location -->
+                <xcode-select property="jvm_headers" value="${developer_path}/${sdk_path}/MacOSX${os.version}.sdk/${headers_path}"/>
+                <xcode-select property="jvm_headers" value="/${headers_path}"/> <!-- Old location -->
                 
 		<!-- Choose a MacOSX SDK -->
-                <xcode-select osx-version="${os.version}" property="sdkroot" value="${developer_path}/${sdk_path}/MacOSX@{osx-version}.sdk"/>
-                <xcode-select osx-version="${os.version}" property="sdkroot" value="${developer_path}/SDKs/MacOSx10.6.sdk"/> <!-- Old XCode location -->
+                <xcode-select property="sdkroot" value="${developer_path}/${sdk_path}/MacOSX${os.version}.sdk"/>
+                <xcode-select property="sdkroot" value="${developer_path}/SDKs/MacOSx10.6.sdk"/> <!-- Old XCode location -->
                 
                 
 		<!-- If we're on 10.7 or lower, use gcc instead of clang -->
