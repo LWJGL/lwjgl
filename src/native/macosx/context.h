@@ -113,12 +113,12 @@ typedef struct {
 - (NSOpenGLPixelFormat*)pixelFormat;
 - (void)setParent:(MacOSXWindowInfo*)parent;
 - (BOOL)acceptsFirstResponder;
+- (NSRect)getBoundsHighDpi;
 @end
 
 @interface GLLayer : CAOpenGLLayer {
 	@public
 	JAWT_MacOSXDrawingSurfaceInfo *macosx_dsi;
-	JAWT_Rectangle canvasBounds;
 	MacOSXWindowInfo *window_info;
 	bool setViewport;
 	bool autoResizable;
