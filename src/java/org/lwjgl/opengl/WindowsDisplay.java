@@ -226,11 +226,6 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public void createWindow(DrawableLWJGL drawable, DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException {
-		close_requested = false;
-		is_dirty = false;
-		isMinimized = false;
-		isFocused = false;
-		redoMakeContextCurrent = false;
 		this.parent = parent;
 		hasParent = parent != null;
 		parent_hwnd = parent != null ? getHwnd(parent) : 0;
@@ -320,6 +315,15 @@ final class WindowsDisplay implements DisplayImplementation {
 		freeLargeIcon();
 		freeSmallIcon();
 		resetCursorClipping();
+
+		// reset state
+		close_requested = false;
+		is_dirty = false;
+		isMinimized = false;
+		isFocused = false;
+		redoMakeContextCurrent = false;
+		trackingMouse = false;
+		mouseInside = false;
 	}
 	private static native void nReleaseDC(long hwnd, long hdc);
 	private static native void nDestroyWindow(long hwnd);
