@@ -604,7 +604,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons) {
-		mouse.poll(coord_buffer, buttons);
+		mouse.poll(coord_buffer, buttons, this);
 	}
 
 	public void readMouse(ByteBuffer buffer) {
@@ -863,12 +863,6 @@ final class WindowsDisplay implements DisplayImplementation {
 		return !isMinimized && isFocused && Mouse.isGrabbed();
 	}
 
-	private void handleMouseMoved(int x, int y, long millis) {
-		if (mouse != null) {
-			mouse.handleMouseMoved(x, y, millis, shouldGrab());
-		}
-	}
-
 	private static native long nSetCapture(long hwnd);
 	private static native boolean nReleaseCapture();
 
@@ -1015,9 +1009,11 @@ final class WindowsDisplay implements DisplayImplementation {
 				}
 				break;
 			case WM_MOUSEMOVE:
-				int xPos = (int)(short)(lParam & 0xFFFF);
-				int yPos = transformY(getHwnd(), (int)(short)((lParam >> 16) & 0xFFFF));
-				handleMouseMoved(xPos, yPos, millis);
+				if ( mouse != null ) {
+					int xPos = (short)(lParam & 0xFFFF);
+					int yPos = transformY(getHwnd(), (short)(lParam >>> 16));
+					mouse.handleMouseMoved(xPos, yPos, millis);
+				}
 				checkCursorState();
                                 mouseInside = true;
                                 if(!trackingMouse) {
