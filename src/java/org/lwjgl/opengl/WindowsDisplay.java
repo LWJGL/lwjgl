@@ -209,7 +209,6 @@ final class WindowsDisplay implements DisplayImplementation {
 		private boolean iconsLoaded;
 
 	private int captureMouse = -1;
-        private boolean trackingMouse;
         private boolean mouseInside;
 
 	static {
@@ -322,7 +321,6 @@ final class WindowsDisplay implements DisplayImplementation {
 		isMinimized = false;
 		isFocused = false;
 		redoMakeContextCurrent = false;
-		trackingMouse = false;
 		mouseInside = false;
 	}
 	private static native void nReleaseDC(long hwnd, long hdc);
@@ -913,10 +911,6 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private static native long defWindowProc(long hwnd, int msg, long wParam, long lParam);
 
-	private void checkCursorState() {
-		updateClipping();
-	}
-
 	private void updateClipping() {
 		if ((Display.isFullscreen() || (mouse != null && mouse.isGrabbed())) && !isMinimized && isFocused && (getForegroundWindow() == getHwnd() || hasParent)) {
 			try {
@@ -930,8 +924,10 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	private void setMinimized(boolean m) {
-		isMinimized = m;
-		checkCursorState();
+		if ( m != isMinimized ) {
+			isMinimized = m;
+			updateClipping();
+		}
 	}
 
 	private long doHandleMessage(long hwnd, int msg, long wParam, long lParam, long millis) {
@@ -1014,11 +1010,11 @@ final class WindowsDisplay implements DisplayImplementation {
 					int yPos = transformY(getHwnd(), (short)(lParam >>> 16));
 					mouse.handleMouseMoved(xPos, yPos, millis);
 				}
-				checkCursorState();
-                                mouseInside = true;
-                                if(!trackingMouse) {
-                                    trackingMouse = nTrackMouseEvent(hwnd);
-                                }
+				if ( !mouseInside ) {
+					mouseInside = true;
+					updateClipping();
+					nTrackMouseEvent(hwnd);
+				}
 				return 0L;
 			case WM_MOUSEWHEEL:
 				int dwheel = (int)(short)((wParam >> 16) & 0xFFFF);
@@ -1101,7 +1097,6 @@ final class WindowsDisplay implements DisplayImplementation {
 				break;
             case WM_MOUSELEAVE:
             	mouseInside = false;
-                trackingMouse = false;
 	            break;
 			case WM_CANCELMODE:
 				nReleaseCapture();
