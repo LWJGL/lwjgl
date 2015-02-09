@@ -379,16 +379,13 @@ final class WindowsDisplay implements DisplayImplementation {
 			}
 			setFocus(getHwnd());
 			redoMakeContextCurrent = true;
-			if (Display.isFullscreen())
-				updateClipping();
 		} else {
 			if ( keyboard != null )
 				keyboard.releaseAll(millis);
 			if ( Display.isFullscreen() ) {
 				showWindow(getHwnd(), SW_SHOWMINNOACTIVE);
 				resetDisplayMode();
-			} else
-				updateClipping();
+			}
 		}
 		updateCursor();
 		inAppActivate = false;
@@ -610,7 +607,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public void grabMouse(boolean grab) {
-		mouse.grab(grab, shouldGrab());
+		mouse.grab(grab);
 		updateCursor();
 	}
 
@@ -634,13 +631,15 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private void updateCursor() {
 		try {
-			if (mouse != null && shouldGrab())
+			if (mouse != null && shouldGrab()) {
+				centerCursor(hwnd);
 				nSetNativeCursor(getHwnd(), mouse.getBlankCursor());
-			else
+			} else
 				nSetNativeCursor(getHwnd(), current_cursor);
 		} catch (LWJGLException e) {
 			LWJGLUtil.log("Failed to update cursor: " + e);
 		}
+		updateClipping();
 	}
 	static native void nSetNativeCursor(long hwnd, Object handle) throws LWJGLException;
 
@@ -981,16 +980,6 @@ final class WindowsDisplay implements DisplayImplementation {
 				resized = true;
 				updateWidthAndHeight();
 				break;
-			case WM_SETCURSOR:
-				if((lParam & 0xFFFF) == HTCLIENT) {
-					// if the cursor is inside the client area, reset it
-					// to the current LWJGL-cursor
-					updateCursor();
-					return -1; //TRUE
-				} else {
-					// let Windows handle cursors outside the client area for resizing, etc.
-					return defWindowProc(hwnd, msg, wParam, lParam);
-				}
 			case WM_KILLFOCUS:
 				appActivate(false, millis);
 				return 0L;
@@ -1012,7 +1001,7 @@ final class WindowsDisplay implements DisplayImplementation {
 				}
 				if ( !mouseInside ) {
 					mouseInside = true;
-					updateClipping();
+					updateCursor();
 					nTrackMouseEvent(hwnd);
 				}
 				return 0L;

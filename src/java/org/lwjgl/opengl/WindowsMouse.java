@@ -105,7 +105,7 @@ final class WindowsMouse {
 			coord_buffer.put(coord_buffer.position() + 1, accum_dy);
 
 			if ( display.isActive() && display.isVisible() && (accum_dx != 0 || accum_dy != 0) )
-				centerCursor();
+				WindowsDisplay.centerCursor(hwnd);
 		} else {
 			coord_buffer.put(coord_buffer.position() + 0, last_x);
 			coord_buffer.put(coord_buffer.position() + 1, last_y);
@@ -135,35 +135,14 @@ final class WindowsMouse {
 		return blank_cursor;
 	}
 
-	public void grab(boolean grab, boolean should_center) {
-		if (grab) {
-			if (!mouse_grabbed) {
-				mouse_grabbed = true;
-				if (should_center) {
-					try {
-						WindowsDisplay.setupCursorClipping(hwnd);
-					} catch (LWJGLException e) {
-						LWJGLUtil.log("Failed to setup cursor clipping: " + e);
-					}
-					centerCursor();
-				}
-			}
-		} else {
-			if (mouse_grabbed) {
-				mouse_grabbed = false;
-				WindowsDisplay.resetCursorClipping();
-			}
-		}
+	public void grab(boolean grab) {
+		mouse_grabbed = grab;
 		event_queue.clearEvents();
 	}
 
 	public void handleMouseScrolled(int event_dwheel, long millis) {
 		accum_dwheel += event_dwheel;
 		putMouseEvent((byte)-1, (byte)0, event_dwheel, millis*1000000);
-	}
-
-	private void centerCursor() {
-		WindowsDisplay.centerCursor(hwnd);
 	}
 
 	public void setPosition(int x, int y) {
