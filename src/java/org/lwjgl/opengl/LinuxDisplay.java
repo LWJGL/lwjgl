@@ -787,9 +787,6 @@ final class LinuxDisplay implements DisplayImplementation {
 		} finally {
 			unlockAWT();
 		}
-		
-		// also update the class hint value as some WM's use it for the window title
-		if (Display.isCreated()) setClassHint(title, wm_class);
 	}
 	private static native void nSetTitle(long display, long window, long title, int len);
 	

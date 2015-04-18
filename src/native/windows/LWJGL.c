@@ -47,6 +47,8 @@
 
 HINSTANCE dll_handle;
 
+__declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001; // Force high performance GPU for Nvidia Optimus systems
+
 /*
  * DLL entry point for Windows. Called when Java loads the .dll
  */

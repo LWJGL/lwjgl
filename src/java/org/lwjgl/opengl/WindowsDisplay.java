@@ -209,7 +209,6 @@ final class WindowsDisplay implements DisplayImplementation {
 		private boolean iconsLoaded;
 
 	private int captureMouse = -1;
-        private boolean trackingMouse;
         private boolean mouseInside;
 
 	static {
@@ -226,11 +225,6 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public void createWindow(DrawableLWJGL drawable, DisplayMode mode, Canvas parent, int x, int y) throws LWJGLException {
-		close_requested = false;
-		is_dirty = false;
-		isMinimized = false;
-		isFocused = false;
-		redoMakeContextCurrent = false;
 		this.parent = parent;
 		hasParent = parent != null;
 		parent_hwnd = parent != null ? getHwnd(parent) : 0;
@@ -320,6 +314,14 @@ final class WindowsDisplay implements DisplayImplementation {
 		freeLargeIcon();
 		freeSmallIcon();
 		resetCursorClipping();
+
+		// reset state
+		close_requested = false;
+		is_dirty = false;
+		isMinimized = false;
+		isFocused = false;
+		redoMakeContextCurrent = false;
+		mouseInside = false;
 	}
 	private static native void nReleaseDC(long hwnd, long hdc);
 	private static native void nDestroyWindow(long hwnd);
@@ -377,16 +379,13 @@ final class WindowsDisplay implements DisplayImplementation {
 			}
 			setFocus(getHwnd());
 			redoMakeContextCurrent = true;
-			if (Display.isFullscreen())
-				updateClipping();
 		} else {
 			if ( keyboard != null )
 				keyboard.releaseAll(millis);
 			if ( Display.isFullscreen() ) {
 				showWindow(getHwnd(), SW_SHOWMINNOACTIVE);
 				resetDisplayMode();
-			} else
-				updateClipping();
+			}
 		}
 		updateCursor();
 		inAppActivate = false;
@@ -600,7 +599,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons) {
-		mouse.poll(coord_buffer, buttons);
+		mouse.poll(coord_buffer, buttons, this);
 	}
 
 	public void readMouse(ByteBuffer buffer) {
@@ -608,7 +607,7 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	public void grabMouse(boolean grab) {
-		mouse.grab(grab, shouldGrab());
+		mouse.grab(grab);
 		updateCursor();
 	}
 
@@ -632,13 +631,15 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private void updateCursor() {
 		try {
-			if (mouse != null && shouldGrab())
+			if (mouse != null && shouldGrab()) {
+				centerCursor(hwnd);
 				nSetNativeCursor(getHwnd(), mouse.getBlankCursor());
-			else
+			} else
 				nSetNativeCursor(getHwnd(), current_cursor);
 		} catch (LWJGLException e) {
 			LWJGLUtil.log("Failed to update cursor: " + e);
 		}
+		updateClipping();
 	}
 	static native void nSetNativeCursor(long hwnd, Object handle) throws LWJGLException;
 
@@ -859,12 +860,6 @@ final class WindowsDisplay implements DisplayImplementation {
 		return !isMinimized && isFocused && Mouse.isGrabbed();
 	}
 
-	private void handleMouseMoved(int x, int y, long millis) {
-		if (mouse != null) {
-			mouse.handleMouseMoved(x, y, millis, shouldGrab());
-		}
-	}
-
 	private static native long nSetCapture(long hwnd);
 	private static native boolean nReleaseCapture();
 
@@ -915,10 +910,6 @@ final class WindowsDisplay implements DisplayImplementation {
 
 	private static native long defWindowProc(long hwnd, int msg, long wParam, long lParam);
 
-	private void checkCursorState() {
-		updateClipping();
-	}
-
 	private void updateClipping() {
 		if ((Display.isFullscreen() || (mouse != null && mouse.isGrabbed())) && !isMinimized && isFocused && (getForegroundWindow() == getHwnd() || hasParent)) {
 			try {
@@ -932,8 +923,10 @@ final class WindowsDisplay implements DisplayImplementation {
 	}
 
 	private void setMinimized(boolean m) {
-		isMinimized = m;
-		checkCursorState();
+		if ( m != isMinimized ) {
+			isMinimized = m;
+			updateClipping();
+		}
 	}
 
 	private long doHandleMessage(long hwnd, int msg, long wParam, long lParam, long millis) {
@@ -987,16 +980,6 @@ final class WindowsDisplay implements DisplayImplementation {
 				resized = true;
 				updateWidthAndHeight();
 				break;
-			case WM_SETCURSOR:
-				if((lParam & 0xFFFF) == HTCLIENT) {
-					// if the cursor is inside the client area, reset it
-					// to the current LWJGL-cursor
-					updateCursor();
-					return -1; //TRUE
-				} else {
-					// let Windows handle cursors outside the client area for resizing, etc.
-					return defWindowProc(hwnd, msg, wParam, lParam);
-				}
 			case WM_KILLFOCUS:
 				appActivate(false, millis);
 				return 0L;
@@ -1011,14 +994,16 @@ final class WindowsDisplay implements DisplayImplementation {
 				}
 				break;
 			case WM_MOUSEMOVE:
-				int xPos = (int)(short)(lParam & 0xFFFF);
-				int yPos = transformY(getHwnd(), (int)(short)((lParam >> 16) & 0xFFFF));
-				handleMouseMoved(xPos, yPos, millis);
-				checkCursorState();
-                                mouseInside = true;
-                                if(!trackingMouse) {
-                                    trackingMouse = nTrackMouseEvent(hwnd);
-                                }
+				if ( mouse != null ) {
+					int xPos = (short)(lParam & 0xFFFF);
+					int yPos = transformY(getHwnd(), (short)(lParam >>> 16));
+					mouse.handleMouseMoved(xPos, yPos, millis);
+				}
+				if ( !mouseInside ) {
+					mouseInside = true;
+					updateCursor();
+					nTrackMouseEvent(hwnd);
+				}
 				return 0L;
 			case WM_MOUSEWHEEL:
 				int dwheel = (int)(short)((wParam >> 16) & 0xFFFF);
@@ -1101,7 +1086,6 @@ final class WindowsDisplay implements DisplayImplementation {
 				break;
             case WM_MOUSELEAVE:
             	mouseInside = false;
-                trackingMouse = false;
 	            break;
 			case WM_CANCELMODE:
 				nReleaseCapture();
