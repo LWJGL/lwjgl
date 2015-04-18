@@ -174,15 +174,25 @@ static bool isLegacyFullscreen(jint window_mode) {
 }
 
 static void setWindowTitle(Display *disp, Window window, jlong title, jint len) {
+	Atom UTF8_STRING = XInternAtom(disp, "UTF8_STRING", True);
+	Atom _NET_WM_NAME = XInternAtom(disp, "_NET_WM_NAME", True);
+	Atom _NET_WM_ICON_NAME = XInternAtom(disp, "_NET_WM_ICON_NAME", True);
+
 	// ASCII fallback if XChangeProperty fails.
-	XStoreName(disp, window, (const char *)(intptr_t)title);
+    XmbSetWMProperties(disp, window, (const char *)(intptr_t)title, (const char *)(intptr_t)title, NULL, 0, NULL, NULL, NULL);
 
 	// Set the UTF-8 encoded title
-	XChangeProperty(disp, window,
-					XInternAtom(disp, "_NET_WM_NAME", False),
-					XInternAtom(disp, "UTF8_STRING", False),
-					8, PropModeReplace, (const unsigned char *)(intptr_t)title,
-					len);
+	if ( _NET_WM_NAME )
+		XChangeProperty(
+			disp, window, _NET_WM_NAME, UTF8_STRING,
+			8, PropModeReplace, (const unsigned char *)(intptr_t)title, len
+		);
+
+	if ( _NET_WM_ICON_NAME )
+		XChangeProperty(
+			disp, window, _NET_WM_ICON_NAME, UTF8_STRING,
+			8, PropModeReplace, (const unsigned char *)(intptr_t)title, len
+		);
 }
 
 static void setClassHint(Display *disp, Window window, jlong wm_name, jlong wm_class) {

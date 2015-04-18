@@ -12,7 +12,7 @@
 	<property name="lwjgl.docs" 				location="doc" />
 	<property name="lwjgl.temp" 				location="temp" />
 	<property name="lwjgl.res" 					location="res" />
-	<property name="lwjgl.version" 				value="2.9.2" />
+	<property name="lwjgl.version" 				value="2.9.4" />
 	<property name="lwjgl.web" 						location="www" />
 
 	<property name="lwjgl.src.templates.al" location="${lwjgl.src.templates}/org/lwjgl/openal"/>
