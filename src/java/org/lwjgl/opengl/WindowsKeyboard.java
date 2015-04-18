@@ -70,10 +70,11 @@ final class WindowsKeyboard {
 		// Windows will not send an up event for the first button that was released in this case.
 		// There will only be one up event, for the last button only. We handle this problem
 		// here, using asynchronous state queries.
-		if ( isKeyDown(Keyboard.KEY_LSHIFT) && isKeyDown(Keyboard.KEY_RSHIFT) ) {
-			if ( !isKeyPressedAsync(WindowsKeycodes.VK_LSHIFT) ) handleKey(WindowsKeycodes.VK_SHIFT, Keyboard.KEY_LSHIFT, false, (byte)0, 0L, false);
-			if ( !isKeyPressedAsync(WindowsKeycodes.VK_RSHIFT) ) handleKey(WindowsKeycodes.VK_SHIFT, Keyboard.KEY_RSHIFT, false, (byte)0, 0L, false);
-		}
+		if ( isKeyDown(Keyboard.KEY_LSHIFT) && !isKeyPressedAsync(WindowsKeycodes.VK_LSHIFT) )
+			handleKey(WindowsKeycodes.VK_SHIFT, Keyboard.KEY_LSHIFT, false, (byte)0, 0L, false);
+
+		if ( isKeyDown(Keyboard.KEY_RSHIFT) && !isKeyPressedAsync(WindowsKeycodes.VK_RSHIFT) )
+			handleKey(WindowsKeycodes.VK_SHIFT, Keyboard.KEY_RSHIFT, false, (byte)0, 0L, false);
 
 		int old_position = keyDownBuffer.position();
 		keyDownBuffer.put(key_down_buffer);

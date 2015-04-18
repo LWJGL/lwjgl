@@ -681,7 +681,7 @@
 	<!-- get and copy nightly binaries into libs folder -->
 	<target name="copy-nightly-binaries" depends="-initialize" description="Copies latest successful nightly binaries into appropriate libs folder">
 		<delete file="${lwjgl.temp}/lwjgl-${lwjgl.version}.zip" failonerror="false"/>
-		<get src="http://ci.newdawnsoftware.com/view/LWJGL/job/LWJGL-git-dist/lastSuccessfulBuild/artifact/dist/lwjgl-${lwjgl.version}.zip" dest="${lwjgl.temp}" verbose="true"/>
+		<get src="http://ci.newdawnsoftware.com/job/LWJGL-git-dist/lastBuild/artifact/dist/lwjgl-${lwjgl.version}.zip" dest="${lwjgl.temp}" verbose="true"/>
 		<unzip src="${lwjgl.temp}/lwjgl-${lwjgl.version}.zip" dest="${lwjgl.lib}" overwrite="true">
 		 	<patternset>
 				<include name="**/native/**/*lwjgl*"/>

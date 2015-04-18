@@ -69,7 +69,7 @@ public interface InputImplementation {
 	void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons);
 
 	/**
-	 * Method to read the keyboard buffer
+	 * Method to read the mouse buffer
 	 */
 	void readMouse(ByteBuffer buffer);
 
