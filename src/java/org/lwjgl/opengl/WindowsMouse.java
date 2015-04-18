@@ -90,7 +90,7 @@ final class WindowsMouse {
 		return mouse_button_count;
 	}
 
-	public void poll(IntBuffer coord_buffer, ByteBuffer buttons) {
+	public void poll(IntBuffer coord_buffer, ByteBuffer buttons, WindowsDisplay display) {
 		for (int i = 0; i < coord_buffer.remaining(); i++)
 			coord_buffer.put(coord_buffer.position() + i, 0);
 		int num_buttons = mouse_button_count;
@@ -103,6 +103,9 @@ final class WindowsMouse {
 		if (isGrabbed()) {
 			coord_buffer.put(coord_buffer.position() + 0, accum_dx);
 			coord_buffer.put(coord_buffer.position() + 1, accum_dy);
+
+			if ( display.isActive() && display.isVisible() && (accum_dx != 0 || accum_dy != 0) )
+				WindowsDisplay.centerCursor(hwnd);
 		} else {
 			coord_buffer.put(coord_buffer.position() + 0, last_x);
 			coord_buffer.put(coord_buffer.position() + 1, last_y);
@@ -132,35 +135,14 @@ final class WindowsMouse {
 		return blank_cursor;
 	}
 
-	public void grab(boolean grab, boolean should_center) {
-		if (grab) {
-			if (!mouse_grabbed) {
-				mouse_grabbed = true;
-				if (should_center) {
-					try {
-						WindowsDisplay.setupCursorClipping(hwnd);
-					} catch (LWJGLException e) {
-						LWJGLUtil.log("Failed to setup cursor clipping: " + e);
-					}
-					centerCursor();
-				}
-			}
-		} else {
-			if (mouse_grabbed) {
-				mouse_grabbed = false;
-				WindowsDisplay.resetCursorClipping();
-			}
-		}
+	public void grab(boolean grab) {
+		mouse_grabbed = grab;
 		event_queue.clearEvents();
 	}
 
 	public void handleMouseScrolled(int event_dwheel, long millis) {
 		accum_dwheel += event_dwheel;
 		putMouseEvent((byte)-1, (byte)0, event_dwheel, millis*1000000);
-	}
-
-	private void centerCursor() {
-		WindowsDisplay.centerCursor(hwnd);
 	}
 
 	public void setPosition(int x, int y) {
@@ -172,7 +154,7 @@ final class WindowsMouse {
 		WindowsDisplay.doDestroyCursor(blank_cursor);
 	}
 
-	public void handleMouseMoved(int x, int y, long millis, boolean should_center) {
+	public void handleMouseMoved(int x, int y, long millis) {
 		int dx = x - last_x;
 		int dy = y - last_y;
 		if (dx != 0 || dy != 0) {
@@ -183,8 +165,6 @@ final class WindowsMouse {
 			long nanos = millis*1000000;
 			if (mouse_grabbed) {
 				putMouseEventWithCoords((byte)-1, (byte)0, dx, dy, 0, nanos);
-				if (should_center)
-					centerCursor();
 			} else {
 				putMouseEventWithCoords((byte)-1, (byte)0, x, y, 0, nanos);
 			}
