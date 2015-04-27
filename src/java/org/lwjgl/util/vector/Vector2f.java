@@ -52,21 +52,21 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f, 
 	public float x, y;
 
 	/**
-	 * Constructor for Vector3f.
+	 * Constructor for Vector2f.
 	 */
 	public Vector2f() {
 		super();
 	}
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public Vector2f(ReadableVector2f src) {
 		set(src);
 	}
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public Vector2f(float x, float y) {
 		set(x, y);
