@@ -92,15 +92,28 @@ public class XRandR {
 					}
 					name = sa[0];
 
-					// save position of this screen, will be used later when current modeline is parsed
-					if ( "primary".equals(sa[2]) ) {
-						parseScreenHeader(currentScreenPosition, sa[3]);
-						// save primary
-						primaryScreenIdentifier = name;
-					} else {
-						parseScreenHeader(currentScreenPosition, sa[2]);
-					}
-				} else {
+                                        // enabled?
+                                        if (sa.length > 2) {
+                                                // save position of this screen, will be used later when current modeline is parsed
+                                                if ( "primary".equals(sa[2]) ) {
+                                                        parseScreenHeader(currentScreenPosition, sa[3]);
+                                                        // save primary
+                                                        primaryScreenIdentifier = name;
+                                                } else {
+                                                        parseScreenHeader(currentScreenPosition, sa[2]);
+                                                }
+                                        } else {
+                                            // disabled screen, no position info available
+                                            currentScreenPosition[0] = 0;
+                                            currentScreenPosition[1] = 0;
+                                        }
+                                } else if ("disconnected".equals(sa[1])) {
+                                        // previous screen block is over
+                                        if (name != null) {
+                                                screens.put(name, possibles.toArray(new Screen[possibles.size()]));
+                                                name = null;
+                                        }
+                                } else if (name != null) { // only read modelines after a valid screen identifier
 					Matcher m = SCREEN_MODELINE_PATTERN.matcher(sa[0]);
 					if ( m.matches() ) {
 						// found a new mode line
@@ -113,7 +126,9 @@ public class XRandR {
 				}
 			}
 
-			screens.put(name, possibles.toArray(new Screen[possibles.size()]));
+                        if (name != null) {
+                                screens.put(name, possibles.toArray(new Screen[possibles.size()]));
+                        }
 
 			current = currentList.toArray(new Screen[currentList.size()]);
 
