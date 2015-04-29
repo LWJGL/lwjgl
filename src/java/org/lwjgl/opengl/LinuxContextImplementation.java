@@ -143,10 +143,12 @@ final class LinuxContextImplementation implements ContextImplementation {
 
 	public void setSwapInterval(int value) {
 		ContextGL current_context = ContextGL.getCurrentContext();
-		PeerInfo peer_info = current_context.getPeerInfo();
 		
 		if ( current_context == null )
 			throw new IllegalStateException("No context is current");
+		
+		PeerInfo peer_info = current_context.getPeerInfo();
+		
 		synchronized ( current_context ) {
 			LinuxDisplay.lockAWT();
 			try {
