@@ -257,43 +257,19 @@ final class LinuxKeyboard {
 	private static native long lookupKeysym(long event_ptr, int index);
 	private static native long toUpper(long keysym);
 
-	private long mapEventToKeySym(long event_ptr, int event_state) {
-		int group;
-		long keysym;
-		if ((event_state & modeswitch_mask) != 0)
-			group = 1;
-		else
-			group = 0;
-		if ((event_state & numlock_mask) != 0 && isKeypadKeysym(keysym = getKeySym(event_ptr, group, 1))) {
-			if ((event_state & (ShiftMask | shift_lock_mask)) != 0) {
-				return getKeySym(event_ptr, group, 0);
-			} else {
-				return keysym;
-			}
-		} else if ((event_state & (ShiftMask | LockMask)) == 0) {
-			return getKeySym(event_ptr, group, 0);
-		} else if ((event_state & ShiftMask) == 0) {
-			keysym = getKeySym(event_ptr, group, 0);
-			if ((event_state & caps_lock_mask) != 0)
-				keysym = toUpper(keysym);
-			return keysym;
-		} else {
-			keysym = getKeySym(event_ptr, group, 1);
-			if ((event_state & caps_lock_mask) != 0)
-				keysym = toUpper(keysym);
-			return keysym;
-		}
-	}
-
 	private int getKeycode(long event_ptr, int event_state) {
-		long keysym = mapEventToKeySym(event_ptr, event_state);
-		int keycode = LinuxKeycodes.mapKeySymToLWJGLKeyCode(keysym);
-		if (keycode == Keyboard.KEY_NONE) {
-			// Try unshifted keysym mapping
-			keysym = lookupKeysym(event_ptr, 0);
-			keycode = LinuxKeycodes.mapKeySymToLWJGLKeyCode(keysym);
+		boolean shift = (event_state & (ShiftMask | shift_lock_mask)) != 0;
+		int group = (event_state & modeswitch_mask) != 0 ? 1 : 0;
+		long keysym;
+		if ((event_state & numlock_mask) != 0 && isKeypadKeysym(keysym = getKeySym(event_ptr, group, 1))) {
+			if ( shift )
+				keysym = getKeySym(event_ptr, group, 0);
+		} else {
+			keysym = getKeySym(event_ptr, group, 0);
+			if ( shift ^ ((event_state & caps_lock_mask) != 0) )
+				keysym = toUpper(keysym);
 		}
-		return keycode;
+		return LinuxKeycodes.mapKeySymToLWJGLKeyCode(keysym);
 	}
 
 	private static byte getKeyState(int event_type) {
