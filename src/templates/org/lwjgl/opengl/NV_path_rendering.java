@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 import org.lwjgl.util.generator.*;
 import org.lwjgl.util.generator.opengl.*;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -281,23 +282,43 @@ public interface NV_path_rendering {
 
 	void glPathCommandsNV(@GLuint int path,
 	                      @AutoSize("commands") @GLsizei int numCommands, @Const @GLubyte ByteBuffer commands,
-	                      @AutoSize("coords") @GLsizei int numCoords, @GLenum int coordType,
-	                      @Const @GLvoid ByteBuffer coords);
+	                      @AutoSize("coords") @GLsizei int numCoords, @AutoType("coords") @GLenum int coordType,
+	                      @Const
+	                      @GLbyte
+	                      @GLubyte
+	                      @GLshort
+	                      @GLushort
+	                      @GLfloat Buffer coords);
 
 	void glPathCoordsNV(@GLuint int path,
-	                    @AutoSize("coords") @GLsizei int numCoords, @GLenum int coordType,
-	                    @Const @GLvoid ByteBuffer coords);
+	                    @AutoSize("coords") @GLsizei int numCoords, @AutoType("coords") @GLenum int coordType,
+	                    @Const
+	                    @GLbyte
+	                    @GLubyte
+	                    @GLshort
+	                    @GLushort
+	                    @GLfloat Buffer coords);
 
 	void glPathSubCommandsNV(@GLuint int path,
 	                         @GLsizei int commandStart, @GLsizei int commandsToDelete,
 	                         @AutoSize("commands") @GLsizei int numCommands, @Const @GLubyte ByteBuffer commands,
-	                         @AutoSize("coords") @GLsizei int numCoords, @GLenum int coordType,
-	                         @Const @GLvoid ByteBuffer coords);
+	                         @AutoSize("coords") @GLsizei int numCoords, @AutoType("coords") @GLenum int coordType,
+	                         @Const
+	                         @GLbyte
+	                         @GLubyte
+	                         @GLshort
+	                         @GLushort
+	                         @GLfloat Buffer coords);
 
 	void glPathSubCoordsNV(@GLuint int path,
 	                       @GLsizei int coordStart,
-	                       @AutoSize("coords") @GLsizei int numCoords, @GLenum int coordType,
-	                       @Const @GLvoid ByteBuffer coords);
+	                       @AutoSize("coords") @GLsizei int numCoords, @AutoType("coords") @GLenum int coordType,
+	                       @Const
+	                       @GLbyte
+	                       @GLubyte
+	                       @GLshort
+	                       @GLushort
+	                       @GLfloat Buffer coords);
 
 	void glPathStringNV(@GLuint int path, @GLenum int format,
 	                    @AutoSize("pathString") @GLsizei int length, @Const @GLvoid ByteBuffer pathString);
@@ -371,19 +392,21 @@ public interface NV_path_rendering {
 	void glStencilStrokePathNV(@GLuint int path,
 	                           int reference, @GLuint int mask);
 
-	void glStencilFillPathInstancedNV(@AutoSize(value="paths", expression = " / GLChecks.calculateBytesPerPathName(pathNameType)") @GLsizei int numPaths,
+	@Code("\t\tint numPaths = paths.remaining() / GLChecks.calculateBytesPerPathName(pathNameType);")
+	void glStencilFillPathInstancedNV(@AutoSize(value = "paths", expression = "numPaths", useExpression = true) @GLsizei int numPaths,
 	                                  @GLenum int pathNameType, @Const @GLvoid ByteBuffer paths,
 	                                  @GLuint int pathBase,
 	                                  @GLenum int fillMode, @GLuint int mask,
 	                                  @GLenum int transformType,
-	                                  @Check(value = "GLChecks.calculateTransformPathValues(transformType)", canBeNull = true) @Const FloatBuffer transformValues);
+	                                  @Check(value = "numPaths * GLChecks.calculateTransformPathValues(transformType)", canBeNull = true) @Const FloatBuffer transformValues);
 
-	void glStencilStrokePathInstancedNV(@AutoSize(value = "paths", expression = " / GLChecks.calculateBytesPerPathName(pathNameType)") @GLsizei int numPaths,
+	@Code("\t\tint numPaths = paths.remaining() / GLChecks.calculateBytesPerPathName(pathNameType);")
+	void glStencilStrokePathInstancedNV(@AutoSize(value = "paths", expression = "numPaths", useExpression = true) @GLsizei int numPaths,
 	                                    @GLenum int pathNameType, @Const @GLvoid ByteBuffer paths,
 	                                    @GLuint int pathBase,
 	                                    int reference, @GLuint int mask,
 	                                    @GLenum int transformType,
-	                                    @Check(value = "GLChecks.calculateTransformPathValues(transformType)", canBeNull = true) @Const FloatBuffer transformValues);
+	                                    @Check(value = "numPaths * GLChecks.calculateTransformPathValues(transformType)", canBeNull = true) @Const FloatBuffer transformValues);
 
 	// PATH COVERING
 
@@ -391,11 +414,11 @@ public interface NV_path_rendering {
 
 	void glPathColorGenNV(@GLenum int color,
 	                      @GLenum int genMode,
-	                      @GLenum int colorFormat, @Check(value = "GLChecks.calculatePathColorGenCoeffsCount(genMode, colorFormat)", canBeNull = true) @Const FloatBuffer coeffs);
+	                      @GLenum int colorFormat, @Check(value = "GLChecks.calculatePathColorGenModeElements(genMode) * GLChecks.calculatePathColorGenFormatComponents(colorFormat)", canBeNull = true) @Const FloatBuffer coeffs);
 
 	void glPathTexGenNV(@GLenum int texCoordSet,
 	                    @GLenum int genMode,
-	                    @AutoSize(value="coeffs", expression="GLChecks.calculatePathTextGenCoeffsPerComponent(coeffs, genMode)", useExpression = true, canBeNull = true) int components, @Check(canBeNull = true) @Const FloatBuffer coeffs);
+	                    int components, @Check(value = "GLChecks.calculatePathColorGenModeElements(genMode) * components", canBeNull = true) @Const FloatBuffer coeffs);
 
 	void glPathFogGenNV(@GLenum int genMode);
 
@@ -403,19 +426,21 @@ public interface NV_path_rendering {
 
 	void glCoverStrokePathNV(@GLuint int name, @GLenum int coverMode);
 
-	void glCoverFillPathInstancedNV(@AutoSize(value = "paths", expression = " / GLChecks.calculateBytesPerPathName(pathNameType)") @GLsizei int numPaths,
+	@Code("\t\tint numPaths = paths.remaining() / GLChecks.calculateBytesPerPathName(pathNameType);")
+	void glCoverFillPathInstancedNV(@AutoSize(value = "paths", expression = "numPaths", useExpression = true) @GLsizei int numPaths,
 	                                @GLenum int pathNameType, @Const @GLvoid ByteBuffer paths,
 	                                @GLuint int pathBase,
 	                                @GLenum int coverMode,
 	                                @GLenum int transformType,
-	                                @Check(value = "GLChecks.calculateTransformPathValues(transformType)", canBeNull = true) @Const FloatBuffer transformValues);
+	                                @Check(value = "numPaths * GLChecks.calculateTransformPathValues(transformType)", canBeNull = true) @Const FloatBuffer transformValues);
 
-	void glCoverStrokePathInstancedNV(@AutoSize(value = "paths", expression = " / GLChecks.calculateBytesPerPathName(pathNameType)") @GLsizei int numPaths,
+	@Code("\t\tint numPaths = paths.remaining() / GLChecks.calculateBytesPerPathName(pathNameType);")
+	void glCoverStrokePathInstancedNV(@AutoSize(value = "paths", expression = "numPaths", useExpression = true) @GLsizei int numPaths,
 	                                  @GLenum int pathNameType, @Const @GLvoid ByteBuffer paths,
 	                                  @GLuint int pathBase,
 	                                  @GLenum int coverMode,
 	                                  @GLenum int transformType,
-	                                  @Check(value = "GLChecks.calculateTransformPathValues(transformType)", canBeNull = true) @Const FloatBuffer transformValues);
+	                                  @Check(value = "numPaths * GLChecks.calculateTransformPathValues(transformType)", canBeNull = true) @Const FloatBuffer transformValues);
 
 	// PATH QUERIES
 
@@ -440,18 +465,19 @@ public interface NV_path_rendering {
 
 	void glGetPathDashArrayNV(@GLuint int name, @Check @OutParameter FloatBuffer dashArray);
 
+	@Code("\t\tint numPaths = paths.remaining() / GLChecks.calculateBytesPerPathName(pathNameType);")
 	void glGetPathMetricsNV(@GLbitfield int metricQueryMask,
-	                        @AutoSize(value = "paths", expression = " / GLChecks.calculateBytesPerPathName(pathNameType)") @GLsizei int numPaths,
+	                        @AutoSize(value = "paths", expression = "numPaths", useExpression = true) @GLsizei int numPaths,
 	                        @GLenum int pathNameType, @Const @GLvoid ByteBuffer paths,
 	                        @GLuint int pathBase,
 	                        @GLsizei int stride,
-	                        @Check("GLChecks.calculateMetricsSize(metricQueryMask, stride)") @OutParameter FloatBuffer metrics);
+	                        @Check("numPaths * GLChecks.calculateMetricsSize(metricQueryMask, stride)") @OutParameter FloatBuffer metrics);
 
 	void glGetPathMetricRangeNV(@GLbitfield int metricQueryMask,
 	                            @GLuint int fistPathName,
 	                            @GLsizei int numPaths,
 	                            @GLsizei int stride,
-	                            @Check("GLChecks.calculateMetricsSize(metricQueryMask, stride)") @OutParameter FloatBuffer metrics);
+	                            @Check("numPaths * GLChecks.calculateMetricsSize(metricQueryMask, stride)") @OutParameter FloatBuffer metrics);
 
 	@Code("\t\tint numPaths = paths.remaining() / GLChecks.calculateBytesPerPathName(pathNameType);")
 	void glGetPathSpacingNV(@GLenum int pathListMode,

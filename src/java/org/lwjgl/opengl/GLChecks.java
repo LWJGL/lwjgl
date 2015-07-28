@@ -43,6 +43,7 @@ import static org.lwjgl.opengl.EXTAbgr.*;
 import static org.lwjgl.opengl.EXTBgra.*;
 import static org.lwjgl.opengl.EXTDirectStateAccess.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.NVPathRendering.*;
 
@@ -294,37 +295,36 @@ class GLChecks {
 		}
 	}
 
-	static int calculatePathColorGenCoeffsCount(int genMode, int colorFormat) {
-		final int coeffsPerComponent = calculatePathGenCoeffsPerComponent(genMode);
-
-		switch ( colorFormat ) {
-			case GL_RGB:
-				return 3 * coeffsPerComponent;
-			case GL_RGBA:
-				return 4 * coeffsPerComponent;
-			default:
-				return coeffsPerComponent;
-		}
-	}
-
-	static int calculatePathTextGenCoeffsPerComponent(FloatBuffer coeffs, int genMode) {
-		if ( genMode == GL_NONE )
-			return 0;
-
-		return coeffs.remaining() / calculatePathGenCoeffsPerComponent(genMode);
-	}
-
-	private static int calculatePathGenCoeffsPerComponent(int genMode) {
+	static int calculatePathColorGenModeElements(int genMode) {
 		switch ( genMode ) {
 			case GL_NONE:
 				return 0;
+			case GL_CONSTANT:
+				return 1;
 			case GL_OBJECT_LINEAR:
 			case GL_PATH_OBJECT_BOUNDING_BOX_NV:
 				return 3;
 			case GL_EYE_LINEAR:
 				return 4;
 			default:
-				throw new IllegalArgumentException("Unsupported gen mode: " + genMode);
+				throw new IllegalArgumentException(String.format("Unsupported genMode specified: 0x%X", genMode));
+		}
+	}
+
+	static int calculatePathColorGenFormatComponents(int colorFormat) {
+		switch ( colorFormat ) {
+			case GL_LUMINANCE:
+			case GL_INTENSITY:
+			case GL_ALPHA:
+				return 1;
+			case GL_LUMINANCE_ALPHA:
+				return 2;
+			case GL_RGB:
+				return 3;
+			case GL_RGBA:
+				return 4;
+			default:
+				throw new IllegalArgumentException(String.format("Unsupported colorFormat specified: 0x%X", colorFormat));
 		}
 	}
 
