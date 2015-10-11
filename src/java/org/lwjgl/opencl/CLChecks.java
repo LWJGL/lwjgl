@@ -31,9 +31,11 @@
  */
 package org.lwjgl.opencl;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.PointerBuffer;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opencl.CL10.*;
@@ -137,7 +139,7 @@ final class CLChecks {
 	 *
 	 * @return the 2D image size in bytes
 	 */
-	static int calculateImage2DSize(final ByteBuffer format, final long w, final long h, long row_pitch) {
+	static int calculateImage2DSize(final Buffer host_ptr, final ByteBuffer format, final long w, final long h, long row_pitch) {
 		if ( !LWJGLUtil.CHECKS )
 			return 0;
 
@@ -151,7 +153,7 @@ final class CLChecks {
 		else if ( LWJGLUtil.DEBUG && ((row_pitch < w * elementSize) || (row_pitch % elementSize != 0)) )
 			throw new IllegalArgumentException("Invalid image_row_pitch specified: " + row_pitch);
 
-		return (int)(row_pitch * h);
+		return (int)(row_pitch * h) >> BufferUtils.getElementSizeExponent(host_ptr);
 	}
 
 	/**
@@ -166,7 +168,7 @@ final class CLChecks {
 	 *
 	 * @return the 3D image size in bytes
 	 */
-	static int calculateImage3DSize(final ByteBuffer format, final long w, final long h, final long d, long row_pitch, long slice_pitch) {
+	static int calculateImage3DSize(final Buffer host_ptr, final ByteBuffer format, final long w, final long h, final long d, long row_pitch, long slice_pitch) {
 		if ( !LWJGLUtil.CHECKS )
 			return 0;
 
@@ -185,7 +187,7 @@ final class CLChecks {
 		else if ( LWJGLUtil.DEBUG && ((row_pitch < row_pitch * h) || (slice_pitch % row_pitch != 0)) )
 			throw new IllegalArgumentException("Invalid image_slice_pitch specified: " + row_pitch);
 
-		return (int)(slice_pitch * d);
+		return (int)(slice_pitch * d) >> BufferUtils.getElementSizeExponent(host_ptr);
 	}
 
 	/**

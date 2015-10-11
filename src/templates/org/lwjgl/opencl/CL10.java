@@ -576,7 +576,7 @@ public interface CL10 {
 	                      @size_t long image_width,
 	                      @size_t long image_height,
 	                      @size_t long image_row_pitch,
-	                      @Check(value = "CLChecks.calculateImage2DSize(image_format, image_width, image_height, image_row_pitch)", canBeNull = true)
+	                      @Check(value = "CLChecks.calculateImage2DSize(host_ptr, image_format, image_width, image_height, image_row_pitch)", canBeNull = true)
 	                      @cl_byte
 	                      @cl_short
 	                      @cl_int
@@ -593,7 +593,7 @@ public interface CL10 {
 	                      @size_t long image_depth,
 	                      @size_t long image_row_pitch,
 	                      @size_t long image_slice_pitch,
-	                      @Check(value = "CLChecks.calculateImage3DSize(image_format, image_width, image_height, image_height, image_row_pitch, image_slice_pitch)", canBeNull = true)
+	                      @Check(value = "CLChecks.calculateImage3DSize(host_ptr, image_format, image_width, image_height, image_height, image_row_pitch, image_slice_pitch)", canBeNull = true)
 	                      @cl_byte
 	                      @cl_short
 	                      @cl_int
