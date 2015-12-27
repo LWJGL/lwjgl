@@ -22,6 +22,7 @@
         <mkdir dir="${lwjgl.src.native}/generated/opengl"/>
         <mkdir dir="${lwjgl.src.native}/generated/opengles"/>
         <mkdir dir="${lwjgl.src.native}/generated/opencl"/>
+        <mkdir dir="${lwjgl.bin}"/>
 
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" source="1.6" target="1.6" includes="org/lwjgl/util/generator/**.java" taskname="generator">
             <include name="org/lwjgl/util/generator/openal/**.java"/>
