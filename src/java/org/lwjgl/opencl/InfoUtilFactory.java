@@ -305,7 +305,7 @@ final class InfoUtilFactory {
 				errcode_ret = APIUtil.getBufferInt();
 
 			CLMem __result = new CLMem(nclCreateImage2D(context.getPointer(), flags, MemoryUtil.getAddress(formatBuffer, 0), image_width, image_height, image_row_pitch, MemoryUtil.getAddress0Safe(host_ptr) +
-			                                                                                                                                                             (host_ptr != null ? BufferChecks.checkBuffer(host_ptr, CLChecks.calculateImage2DSize(formatBuffer, image_width, image_height, image_row_pitch)) : 0),
+			                                                                                                                                                             (host_ptr != null ? BufferChecks.checkBuffer(host_ptr, CLChecks.calculateImage2DSize(host_ptr, formatBuffer, image_width, image_height, image_row_pitch)) : 0),
 			                                            MemoryUtil.getAddressSafe(errcode_ret), function_pointer), context);
 			if ( LWJGLUtil.DEBUG )
 				Util.checkCLError(errcode_ret.get(0));
@@ -325,7 +325,7 @@ final class InfoUtilFactory {
 				errcode_ret = APIUtil.getBufferInt();
 
 			CLMem __result = new CLMem(nclCreateImage3D(context.getPointer(), flags, MemoryUtil.getAddress(formatBuffer, 0), image_width, image_height, image_depth, image_row_pitch, image_slice_pitch, MemoryUtil.getAddress0Safe(host_ptr) +
-			                                                                                                                                                                                             (host_ptr != null ? BufferChecks.checkBuffer(host_ptr, CLChecks.calculateImage3DSize(formatBuffer, image_width, image_height, image_depth, image_row_pitch, image_slice_pitch)) : 0),
+			                                                                                                                                                                                             (host_ptr != null ? BufferChecks.checkBuffer(host_ptr, CLChecks.calculateImage3DSize(host_ptr, formatBuffer, image_width, image_height, image_depth, image_row_pitch, image_slice_pitch)) : 0),
 			                                            MemoryUtil.getAddressSafe(errcode_ret), function_pointer), context);
 			if ( LWJGLUtil.DEBUG )
 				Util.checkCLError(errcode_ret.get(0));
