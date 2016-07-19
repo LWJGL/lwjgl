@@ -17,6 +17,7 @@
 
 	<!-- Compiles the Java generator source code -->
 	<target name="generators" description="Compiles the native method generators">            
+        <mkdir dir="${lwjgl.bin}/"/>
         <mkdir dir="${lwjgl.src}/generated/"/>
         <mkdir dir="${lwjgl.src.native}/generated/openal"/>
         <mkdir dir="${lwjgl.src.native}/generated/opengl"/>

@@ -19,6 +19,13 @@ Compilation
 
 LWJGL requires a JDK and Ant installed to compile, as well as your platforms native compiler to compile the JNI.
 
+To build all:
+
+* ant all
+
+Or for finer control on what's done:
+
 * ant generate-all
 * ant compile
 * ant compile_native
+* ant jars

@@ -259,7 +259,7 @@ public class XRandR {
 	}
 
 	private static final Pattern SCREEN_HEADER_PATTERN   = Pattern.compile("^(\\d+)x(\\d+)[+](\\d+)[+](\\d+)$");
-	private static final Pattern SCREEN_MODELINE_PATTERN = Pattern.compile("^(\\d+)x(\\d+)$");
+	private static final Pattern SCREEN_MODELINE_PATTERN = Pattern.compile("^(\\d+)x(\\d+)(_[0-9.]+)?$");
 	private static final Pattern FREQ_PATTERN            = Pattern.compile("^(\\d+)[.](\\d+)(?:\\s*[*])?(?:\\s*[+])?$");
 
 	/**
