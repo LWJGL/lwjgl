@@ -742,8 +742,7 @@ final class LinuxDisplay implements DisplayImplementation {
 				case XRANDR:
 					saved_mode = AccessController.doPrivileged(new PrivilegedAction<DisplayMode>() {
 						public DisplayMode run() {
-							XRandR.saveConfiguration();
-                                                        return XRandR.ScreentoDisplayMode(XRandR.getConfiguration());
+							return XRandR.ScreentoDisplayMode(XRandR.getConfiguration());
 						}
 					});
 					break;

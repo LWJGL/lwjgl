@@ -177,6 +177,9 @@ public class XRandR {
 		if ( screens.length == 0 )
 			throw new IllegalArgumentException("Must specify at least one screen");
 
+		if ( savedConfiguration == null )
+			saveConfiguration();
+
 		List<String> cmd = new ArrayList<String>();
 		cmd.add("xrandr");
 
@@ -222,7 +225,7 @@ public class XRandR {
 	 * This configuration can be restored on exit/crash by calling
 	 * restoreConfiguration()
 	 */
-	public static void saveConfiguration() {
+	private static void saveConfiguration() {
 		populate();
 		savedConfiguration = current.clone();
 	}
@@ -260,7 +263,7 @@ public class XRandR {
 
 	private static final Pattern SCREEN_HEADER_PATTERN   = Pattern.compile("^(\\d+)x(\\d+)[+](\\d+)[+](\\d+)$");
 	private static final Pattern SCREEN_MODELINE_PATTERN = Pattern.compile("^(\\d+)x(\\d+)$");
-	private static final Pattern FREQ_PATTERN            = Pattern.compile("^(\\d+)[.](\\d+)(?:\\s*[*])?(?:\\s*[+])?$");
+	private static final Pattern FREQ_PATTERN            = Pattern.compile("^(\\d+[.]\\d+)(?:\\s*[*])?(?:\\s*[+])?$");
 
 	/**
 	 * Parses a screen configuration and adds it to one of the lists if valid.
@@ -286,7 +289,7 @@ public class XRandR {
 				return;
 			}
 
-			int freq = Integer.parseInt(m.group(1));
+			String freq = m.group(1);
 
 			Screen s = new Screen(name, width, height, freq, 0, 0);
 			if ( freqS.contains("*") ) {
@@ -322,7 +325,7 @@ public class XRandR {
 	static Screen DisplayModetoScreen(DisplayMode mode) {
 		populate();
 		Screen primary = findPrimary(current);
-		return new Screen(primary.name, mode.getWidth(), mode.getHeight(), mode.getFrequency(), primary.xPos, primary.yPos);
+		return new Screen(primary.name, mode.getWidth(), mode.getHeight(), Integer.toString(mode.getFrequency()), primary.xPos, primary.yPos);
 	}
 
 	static DisplayMode ScreentoDisplayMode(Screen... screens) {
@@ -360,17 +363,21 @@ public class XRandR {
 		/** Frequency in Hz */
 		public final int freq;
 
+		/** Frequency in Hz, in the original decimal format */
+		final String freqOriginal;
+
 		/** Position on the x-axis, in pixels */
 		public int xPos;
 
 		/** Position on the y-axis, in pixels */
 		public int yPos;
 
-		Screen(String name, int width, int height, int freq, int xPos, int yPos) {
+		Screen(String name, int width, int height, String freq, int xPos, int yPos) {
 			this.name = name;
 			this.width = width;
 			this.height = height;
-			this.freq = freq;
+			this.freq = (int)Float.parseFloat(freq);
+			this.freqOriginal = freq;
 			this.xPos = xPos;
 			this.yPos = yPos;
 		}
@@ -381,14 +388,14 @@ public class XRandR {
 			argList.add("--mode");
 			argList.add(width + "x" + height);
 			argList.add("--rate");
-			argList.add(Integer.toString(freq));
+			argList.add(freqOriginal);
 			argList.add("--pos");
 			argList.add(xPos + "x" + yPos);
 		}
 
 		//@Override
 		public String toString() {
-			return name + " " + width + "x" + height + " @ " + xPos + "x" + yPos + " with " + freq + "Hz";
+			return name + " " + width + "x" + height + " @ " + xPos + "x" + yPos + " with " + freqOriginal + "Hz";
 		}
 	}
 }
