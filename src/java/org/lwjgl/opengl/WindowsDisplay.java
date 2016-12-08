@@ -321,6 +321,7 @@ final class WindowsDisplay implements DisplayImplementation {
 		isMinimized = false;
 		isFocused = false;
 		redoMakeContextCurrent = false;
+		resizable = false;
 		mouseInside = false;
 	}
 	private static native void nReleaseDC(long hwnd, long hdc);
