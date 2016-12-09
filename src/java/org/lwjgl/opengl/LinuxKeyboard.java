@@ -42,6 +42,7 @@ import java.nio.charset.CharsetDecoder;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 
 final class LinuxKeyboard {
@@ -68,10 +69,10 @@ final class LinuxKeyboard {
 	private final EventQueue event_queue = new EventQueue(Keyboard.EVENT_SIZE);
 
 	private final ByteBuffer tmp_event = ByteBuffer.allocate(Keyboard.EVENT_SIZE);
-	private final int[] temp_translation_buffer = new int[KEYBOARD_BUFFER_SIZE];
-	private final ByteBuffer native_translation_buffer = BufferUtils.createByteBuffer(KEYBOARD_BUFFER_SIZE);
 	private final CharsetDecoder utf8_decoder = Charset.forName("UTF-8").newDecoder();
-	private final CharBuffer char_buffer = CharBuffer.allocate(KEYBOARD_BUFFER_SIZE);
+	private final int[] temp_translation_buffer;
+	private final ByteBuffer native_translation_buffer;
+	private final CharBuffer char_buffer;
 
 	// Deferred key released event, to detect key repeat
 	private boolean has_deferred_event;
@@ -80,7 +81,7 @@ final class LinuxKeyboard {
 	private long deferred_nanos;
 	private byte deferred_key_state;
 
-	LinuxKeyboard(long display, long window) {
+	LinuxKeyboard(long display, long window, int keyboardBufferSize, String imLocaleModifiers) {
 		long modifier_map = getModifierMapping(display);
 		int tmp_numlock_mask = 0;
 		int tmp_modeswitch_mask = 0;
@@ -124,7 +125,7 @@ final class LinuxKeyboard {
 		caps_lock_mask = tmp_caps_lock_mask;
 		shift_lock_mask = tmp_shift_lock_mask;
 		setDetectableKeyRepeat(display, true);
-		xim = openIM(display);
+		xim = openIM(display, imLocaleModifiers);
 		if (xim != 0) {
 			xic = createIC(xim, window);
 			if (xic != 0) {
@@ -136,6 +137,15 @@ final class LinuxKeyboard {
 			xic = 0;
 		}
 		compose_status = allocateComposeStatus();
+
+		//	Allocate keyborad buffersize.
+		//	When input method send long string to application, it needs a lot of memories.
+		if (keyboardBufferSize <= 0) {
+			keyboardBufferSize = KEYBOARD_BUFFER_SIZE;
+		}
+		temp_translation_buffer = new int[keyboardBufferSize];
+		native_translation_buffer = BufferUtils.createByteBuffer(keyboardBufferSize);
+		char_buffer = CharBuffer.allocate(keyboardBufferSize);
 	}
 	private static native long getModifierMapping(long display);
 	private static native void freeModifierMapping(long modifier_map);
@@ -143,7 +153,7 @@ final class LinuxKeyboard {
 	private static native int lookupModifierMap(long modifier_map, int index);
 	private static native long keycodeToKeySym(long display, int key_code);
 
-	private static native long openIM(long display);
+	private static native long openIM(long display, String locale_modifiers);
 	private static native long createIC(long xim, long window);
 	private static native void setupIMEventMask(long display, long window, long xic);
 	private static native ByteBuffer allocateComposeStatus();
@@ -204,10 +214,13 @@ final class LinuxKeyboard {
 		native_translation_buffer.compact();
 		char_buffer.flip();
 		int i = 0;
-		while (char_buffer.hasRemaining() && i < translation_buffer.length) {
-			translation_buffer[i++] = char_buffer.get();
+		//	For lookuped multibyte string, convert all chars in the CharBuffer into a string,
+		//	and return each characters.
+		for (char c: char_buffer.toString().toCharArray()) {
+			translation_buffer[i++] = (int)c;
 		}
-		char_buffer.compact();
+		//	Because all bytes is converted to lookuped multibyte string, clear the CharBuffer.
+		char_buffer.clear();
 		return i;
 	}
 	private static native int utf8LookupString(long xic, long event_ptr, ByteBuffer buffer, int pos, int size);
@@ -296,7 +309,11 @@ final class LinuxKeyboard {
 	private void handleKeyEvent(long event_ptr, long millis, int event_type, int event_keycode, int event_state) {
 		int keycode = getKeycode(event_ptr, event_state);
 		byte key_state = getKeyState(event_type);
-		boolean repeat = key_state == key_down_buffer[keycode];
+		//	To know whether key events are repeating or not,
+		//	compare current keycode and keystate with previous keycode and keystate. 
+		//	But, the keycode is Keyborad.KEY_NONE whenever input method sends string,
+		//	So Keyborad.KEY_NONE has nothing to do with events repetition.
+		boolean repeat = ((keycode != 0) && (key_state == key_down_buffer[keycode]));
 		if ( repeat && event_type == LinuxEvent.KeyRelease ) // This can happen for modifier keys after losing and regaining focus.
 			return;
 		key_down_buffer[keycode] = key_state;
@@ -338,4 +355,14 @@ final class LinuxKeyboard {
 		}
 		return false;
 	}
+
+	public void setICFocus() {
+		nSetICFocus(xic);
+	}
+	private static native void nSetICFocus(long xic);
+
+	public void unsetICFocus() {
+		nUnsetICFocus(xic);
+	}
+	private static native void nUnsetICFocus(long xic);
 }
