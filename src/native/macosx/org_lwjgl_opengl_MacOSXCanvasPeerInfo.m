@@ -80,10 +80,11 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 			peer_info->glLayer->window_info = peer_info->window_info;
 			peer_info->glLayer->autoResizable = autoResizable;
 
-			/* we set bounds as requested w/ frame function */
-                        peer_info->glLayer.frame = CGRectMake(x, y, surface->dsi->bounds.width, surface->dsi->bounds.height);
+			/* ensure to set bounds */
+            NSRect dsiLayer = NSMakeRect(x, y, peer_info->window_info->display_rect.size.width, peer_info->window_info->display_rect.size.height);
 			
 			[peer_info->glLayer performSelectorOnMainThread:@selector(createWindow:) withObject:peer_info->pixel_format waitUntilDone:YES];
+            [peer_info->glLayer performSelectorOnMainThread:@selector(updateBounds:) withObject:[NSValue valueWithRect:dsiLayer] waitUntilDone:YES];
 			
 			peer_info->isCALayer = true;
 			peer_info->isWindowed = true;
@@ -141,7 +142,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerBound
 	// get root layer of the AWT Canvas and add self to it
 	id <JAWT_SurfaceLayers> surfaceLayers = (id <JAWT_SurfaceLayers>)macosx_dsi;
 	
-	if (surfaceLayers.layer != self) {
+	if (surfaceLayers != nil && surfaceLayers.layer != self) {
 		surfaceLayers.layer = self;
 	}
 }
@@ -175,11 +176,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerBound
 }
 
 - (int) getWidth {
-	return canvasBounds.width;
+	return self.frame.size.width;
 }
 
 - (int) getHeight {
-	return canvasBounds.height;
+	return self.frame.size.height;
 }
 
 - (void) createWindow:(NSOpenGLPixelFormat*)pixel_format {
@@ -208,8 +209,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerBound
 - (void) blitFrameBuffer {
 	
 	// get the size of the CALayer/AWT Canvas
-	int width = self.bounds.size.width;
-	int height = self.bounds.size.height;
+	int width = self.frame.size.width;
+	int height = self.frame.size.height;
 	
 	if (width != fboWidth || height != fboHeight) {
 		
@@ -258,9 +259,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerBound
 		fboWidth = width;
 		fboHeight = height;
 		
-		// set the size of the offscreen frame buffer window
-		window_info->display_rect = NSMakeRect(0, 0, width, height);
-		
+				
 		// clean up the old fbo and renderBuffers
 		glDeleteFramebuffersEXT(1, &oldFboID);
 		glDeleteRenderbuffersEXT(1, &oldImageRenderBufferID);
@@ -289,8 +288,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerBound
 	CGLSetCurrentContext(glContext);
 	
 	// get the size of the CALayer/AWT Canvas
-	int width = self.bounds.size.width;
-	int height = self.bounds.size.height;
+	int width = self.frame.size.width;
+	int height = self.frame.size.height;
 	
 	if (width != fboWidth || height != fboHeight) {
 		// clear garbage background before lwjgl fbo blit
@@ -318,13 +317,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerBound
 
 - (CGLContextObj)copyCGLContextForPixelFormat:(CGLPixelFormatObj)pixelFormat {
 	CGLCreateContext(pixelFormat, [window_info->context CGLContextObj], &contextObject);
+    CGLRetainContext(contextObject);
 	return contextObject;
 }
 
 - (void)releaseCGLContext:(CGLContextObj)glContext {
 	CGLClearDrawable(contextObject);
-    // disable releasing context due to nvidia crash bug when releasing shared contexts
-    //CGLDestroyContext(contextObject);
+    CGLReleaseContext(contextObject);
 }
 
 - (CGLPixelFormatObj)copyCGLPixelFormatForDisplayMask:(uint32_t)mask {
@@ -332,7 +331,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerBound
 }
 
 - (void)releaseCGLPixelFormat:(CGLPixelFormatObj)pixelFormat {
-	
+    CGLReleasePixelFormat(pixelFormat);
 }
 
 @end
