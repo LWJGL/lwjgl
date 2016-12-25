@@ -99,8 +99,8 @@ final class MacOSXMouseEventQueue extends MouseEventQueue {
 		if (isGrabbed()) {
 			Rectangle bounds = getComponent().getBounds();
 			Point location_on_screen = getComponent().getLocationOnScreen();
-			int x = location_on_screen.x + bounds.width/2;
-			int y = location_on_screen.y + bounds.height/2;
+			int x = Math.round(location_on_screen.x + bounds.width/2f);
+			int y = Math.round(location_on_screen.y + bounds.height/2f);
 			nWarpCursor(x, y);
 		}
 	}
