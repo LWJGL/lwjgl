@@ -15,90 +15,53 @@
 		</condition>
 
 		<property name="sdk_path" value="Platforms/MacOSX.platform/Developer/SDKs"/>
-		<property name="jvm_headers_path" value="System/Library/Frameworks/JavaVM.framework/Versions/A/Headers"/>
-
+		<property name="headers_path" value="System/Library/Frameworks/JavaVM.framework/Versions/A/Headers"/>
+                <property name="compiler" value="clang"/> <!-- Default to clang for 10.8 and up -->
+                <macrodef name="xcode-select">
+                        <attribute name="property"/>
+                        <attribute name="value"/>
+                        <sequential>
+                                <condition property="@{property}" value="@{value}">
+                                        <and>
+                                                <not>
+                                                        <isset property="@{property}"/>
+                                                </not>
+                                                <available file="@{value}" type="dir"/>
+                                        </and>
+                                </condition>	
+                        </sequential>
+                </macrodef>
+		
 		<!-- Choose a JavaVM.framework -->
-		<condition property="javavmroot" value="${developer_path}/${sdk_path}/MacOSX10.9.sdk">
-			<and>
-				<not><isset property="javavmroot"/></not>
-				<available file="${developer_path}/${sdk_path}/MacOSX10.9.sdk/${jvm_headers_path}" type="dir"/>
-			</and>
-		</condition>
-		<condition property="javavmroot" value="${developer_path}/${sdk_path}/MacOSX10.8.sdk">
-			<and>
-				<not><isset property="javavmroot"/></not>
-				<available file="${developer_path}/${sdk_path}/MacOSX10.8.sdk/${jvm_headers_path}" type="dir"/>
-			</and>
-		</condition>
-		<condition property="javavmroot" value="${developer_path}/${sdk_path}/MacOSX10.7.sdk">
-			<and>
-				<not><isset property="javavmroot"/></not>
-				<available file="${developer_path}/${sdk_path}/MacOSX10.7.sdk/${jvm_headers_path}" type="dir"/>
-			</and>
-		</condition>
-		<condition property="javavmroot" value="${developer_path}/${sdk_path}/MacOSX10.6.sdk">
-			<and>
-				<not><isset property="javavmroot"/></not>
-				<available file="${developer_path}/${sdk_path}/MacOSX10.6.sdk/${jvm_headers_path}" type="dir"/>
-			</and>
-		</condition>
-		<condition property="javavmroot" value=""> <!-- Old location -->
-			<and>
-				<not><isset property="javavmroot"/></not>
-				<available file="/${jvm_headers_path}" type="dir"/>
-			</and>
-		</condition>
-
+                <xcode-select property="jvm_headers" value="${developer_path}/${sdk_path}/MacOSX${os.version}.sdk/${headers_path}"/>
+                <xcode-select property="jvm_headers" value="/${headers_path}"/> <!-- Old location -->
+                
 		<!-- Choose a MacOSX SDK -->
-		<property name="compiler" value="clang"/> <!-- Default to clang for 10.8 and up -->
-
-		<condition property="sdkroot" value="${developer_path}/${sdk_path}/MacOSX10.9.sdk">
-			<and>
-				<not><isset property="sdkroot"/></not>
-				<available file="${developer_path}/${sdk_path}/MacOSX10.9.sdk" type="dir"/>
-			</and>
-		</condition>
-		<condition property="sdkroot" value="${developer_path}/${sdk_path}/MacOSX10.8.sdk">
-			<and>
-				<not><isset property="sdkroot"/></not>
-				<available file="${developer_path}/${sdk_path}/MacOSX10.8.sdk" type="dir"/>
-			</and>
-		</condition>
-
+                <xcode-select property="sdkroot" value="${developer_path}/${sdk_path}/MacOSX${os.version}.sdk"/>
+                <xcode-select property="sdkroot" value="${developer_path}/SDKs/MacOSx10.6.sdk"/> <!-- Old XCode location -->
+                
+                
 		<!-- If we're on 10.7 or lower, use gcc instead of clang -->
-		<condition property="compiler" value="gcc-4.2">
-			<and>
-				<not><isset property="sdkroot"/></not>
-				<available file="gcc-4.2" filepath="${env.PATH}"/>
-			</and>
-		</condition>
-		<condition property="compiler" value="gcc">
-			<and>
-				<not><isset property="sdkroot"/></not>
-				<not><available file="gcc-4.2" filepath="${env.PATH}"/></not>
-				<available file="gcc" filepath="${env.PATH}"/>
-			</and>
-		</condition>
-
-		<condition property="sdkroot" value="${developer_path}/${sdk_path}/MacOSX10.7.sdk">
-			<and>
-				<not><isset property="sdkroot"/></not>
-				<available file="${developer_path}/${sdk_path}/MacOSX10.7.sdk" type="dir"/>
-			</and>
-		</condition>
-		<condition property="sdkroot" value="${developer_path}/${sdk_path}/MacOSX10.6.sdk">
-			<and>
-				<not><isset property="sdkroot"/></not>
-				<available file="${developer_path}/${sdk_path}/MacOSX10.6.sdk" type="dir"/>
-			</and>
-		</condition>
-		<condition property="sdkroot" value="${developer_path}/SDKs/MacOSx10.6.sdk"> <!-- Old XCode location -->
-			<and>
-				<not><isset property="sdkroot"/></not>
-				<available file="${developer_path}/SDKs/MacOSx10.6.sdk" type="dir"/>
-			</and>
-		</condition>
-	</target>
+                <condition property="compiler" value="gcc-4.2">
+                        <and>
+                                <not>
+                                        <isset property="sdkroot"/>
+                                </not>
+                                <available file="gcc-4.2" filepath="${env.PATH}"/>
+                        </and>
+                </condition>
+                <condition property="compiler" value="gcc">
+                        <and>
+                                <not>
+                                        <isset property="sdkroot"/>
+                                </not>
+                                <not>
+                                        <available file="gcc-4.2" filepath="${env.PATH}"/>
+                                </not>
+                                <available file="gcc" filepath="${env.PATH}"/>
+                        </and>
+                </condition>
+        </target>
 
 	<target name="clean">
 		<delete failonerror="false">
@@ -111,7 +74,7 @@
 
 	<target name="compile" depends="init">
 		<apply dir="${dstdir}" executable="${compiler}" os="Mac OS X" skipemptyfilesets="true" failonerror="true" dest="${dstdir}">
-			<arg line="${cflags} -ObjC -O2 -Wall -Wunused -c -fPIC -I${javavmroot}/${jvm_headers_path} -I${native}/common -I${native}/common/opengl -I${native}/macosx"/>
+			<arg line="${cflags} -ObjC -O2 -Wall -Wunused -c -fPIC -I${jvm_headers} -I${native}/common -I${native}/common/opengl -I${native}/macosx"/>
 			<!-- Map from *.m and *.c to .o -->
 			<mapper type="regexp" from="^(.*)\.(c|m)" to="\1.o"/>
 			<fileset dir="${native}/macosx" includes="*.m"/>
@@ -145,7 +108,7 @@
 	<target name="nativelibrary" depends="init">
 		<echo message="        Compiler: ${compiler}"/>
 		<echo message="      Mac OS SDK: ${sdkroot}"/>
-		<echo message="JavaVM.framework: ${javavmroot}"/>
+		<echo message="JavaVM headers: ${jvm_headers}"/>
 
 		<condition property="build_x86_64" value="1">
 			<equals arg1="${compiler}" arg2="clang"/>
