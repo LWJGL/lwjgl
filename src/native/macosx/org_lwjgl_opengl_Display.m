@@ -80,6 +80,10 @@ static NSUInteger lastModifierFlags = 0;
 	if (window_info->enableHighDPI) {
 		// call method using runtime selector as its a 10.7+ api and allows compiling on older SDK's
 		[window_info->view performSelector:NSSelectorFromString(@"setWantsBestResolutionOpenGLSurface:") withObject:YES];
+		// the above call leads to incorrect behaviour of furhter glViewport()calls from NSView
+		// https://developer.apple.com/library/mac/documentation/AppKit/Reference/NSViewOpenGLAdditions/Reference/Reference.html#jumpTo_3
+        // https://developer.apple.com/library/mac/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/CapturingScreenContents/CapturingScreenContents.html
+        // see this file -viewDidChangeBackingProperties method override
 	}
 	
 	// set nsapp delegate for catching app quit events
@@ -131,10 +135,6 @@ static NSUInteger lastModifierFlags = 0;
 		[window_info->view enterFullScreenMode: [NSScreen mainScreen] withOptions: nil ];
 		window_info->window = [window_info->view window];
         
-		// adjust the NSView bounds to correct mouse coordinates in fullscreen
-		NSSize windowSize = [window_info->window frame].size;
-		NSSize newBounds = NSMakeSize(windowSize.width/width*windowSize.width, windowSize.height/height*windowSize.height);
-		[window_info->view setBoundsSize:newBounds];
 	}
 	
 	if (window_info->enableFullscreenModeAPI && window_info->resizable) {
@@ -165,20 +165,16 @@ static NSUInteger lastModifierFlags = 0;
 		}
 		
 		if (window_info->window != nil) {
+            // release the nsview and remove it from any parent nsview
+            [window_info->view removeFromSuperviewWithoutNeedingDisplay];
 			// if the nsview has no parent then close window
 			if ([window_info->window contentView] == window_info->view) {
-				// release the nsview and remove it from any parent nsview
-				[window_info->view removeFromSuperviewWithoutNeedingDisplay];
 				[window_info->window close];
 				window_info->window = nil;
 			}
-			else {
-				// release the nsview and remove it from any parent nsview
-				[window_info->view removeFromSuperviewWithoutNeedingDisplay];
 			}
 		}
 	}
-}
 
 - (BOOL)canBecomeKeyWindow;
 {
@@ -345,7 +341,7 @@ static NSUInteger lastModifierFlags = 0;
 				keyCode = kVK_Command; // left command key code
 			}
 			// key code not specified when right Command key + Tab moves focus to another Window, therefore manually detect and specify correct key code
-			else if (((lastModifierFlags & NSCommandLeftKeyMask) == NSCommandLeftKeyMask) && ((modifierFlags & NSCommandLeftKeyMask) != NSCommandLeftKeyMask)) {
+			else if (((lastModifierFlags & NSCommandRightKeyMask) == NSCommandRightKeyMask) && ((modifierFlags & NSCommandRightKeyMask) != NSCommandRightKeyMask)) {
 				keyCode = 0x36; // right command key code
 			}
 			else {
@@ -494,17 +490,37 @@ static NSUInteger lastModifierFlags = 0;
 - (void)windowResized:(NSNotification *)notification; 
 {
 	if (_parent != nil) {
-		_parent->display_rect = [self frame];
+		_parent->display_rect = [self getBoundsHighDpi];
 		_parent->resized = JNI_TRUE;
 	}
 }
 
+- (NSRect)getBoundsHighDpi {
+    
+    NSRect backingBounds = [self bounds];
+	// call method using runtime selector as its a 10.7+ api and allows compiling on older SDK's
+	SEL selector = NSSelectorFromString(@"convertRectToBacking");
+	
+	// as we are using a runtime selector, we need to use NSInvocations to get a CGFloat value back from it
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[[self class] instanceMethodSignatureForSelector:selector]];
+	[invocation setSelector:selector];
+	[invocation setTarget: self];
+	[invocation invoke];
+	[invocation getReturnValue:&backingBounds];
+    [invocation setArgument:&backingBounds atIndex:0];
+    
+    return backingBounds;
+}
+
 - (void)viewDidChangeBackingProperties {
+    [super viewDidChangeBackingProperties];
 	JNIEnv *env = attachCurrentThread();
 	if (env == nil || _parent == nil || _parent->jdisplay == nil) {
 		return;
 	}
 	
+    _parent->display_rect = [self getBoundsHighDpi];
+    
 	jclass display_class = (*env)->GetObjectClass(env, _parent->jdisplay);
 	jmethodID setScaleFactor_callback = (*env)->GetMethodID(env, display_class, "setScaleFactor", "(F)V");
 	
@@ -519,6 +535,7 @@ static NSUInteger lastModifierFlags = 0;
 	[invocation setTarget:[self window]];
 	[invocation invoke];
 	[invocation getReturnValue:&scaleFactor];
+	
 	
 	(*env)->CallVoidMethod(env, _parent->jdisplay, setScaleFactor_callback, scaleFactor);
 }
@@ -705,7 +722,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreateWindow(JNIE
 	peer_info->window_info = window_info;
 	peer_info->isWindowed = true;
 	
-    window_info->display_rect = NSMakeRect(x, [[NSScreen mainScreen] frame].size.height - y - height, width, height);
+    window_info->display_rect = NSMakeRect(x, y, width, height);
 	
 	// Cache the necessary info for window-close callbacks into the JVM
 	if (window_info->jdisplay == NULL) {
