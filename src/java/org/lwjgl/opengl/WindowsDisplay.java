@@ -382,7 +382,7 @@ final class WindowsDisplay implements DisplayImplementation {
 			redoMakeContextCurrent = true;
 		} else {
 			if ( keyboard != null )
-				keyboard.releaseAll(millis);
+				keyboard.releaseAll(System.currentTimeMillis());
 			if ( Display.isFullscreen() ) {
 				showWindow(getHwnd(), SW_SHOWMINNOACTIVE);
 				resetDisplayMode();
