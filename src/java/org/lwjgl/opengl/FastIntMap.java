@@ -72,7 +72,7 @@ final class FastIntMap<V> implements Iterable<FastIntMap.Entry<V>> {
 		// Check for invalid parameter values.
 		if ( initialCapacity > 1 << 30 ) throw new IllegalArgumentException("initialCapacity is too large.");
 		if ( initialCapacity < 0 ) throw new IllegalArgumentException("initialCapacity must be greater than zero.");
-		if ( loadFactor <= 0 ) throw new IllegalArgumentException("initialCapacity must be greater than zero.");
+		if ( loadFactor <= 0 ) throw new IllegalArgumentException("loadFactor must be greater than zero.");
 
 		// Set the capacity to 2^initialCapacity.
 		capacity = 1;
