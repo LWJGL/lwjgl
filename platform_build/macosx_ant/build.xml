@@ -2,7 +2,7 @@
 	<property name="native" location="../../src/native"/>
 
 	<target name="init">
-		<mkdir dir="x86_64"/>
+		<mkdir dir="arm64"/>
 		<property environment="env" />
 		<!-- Ask Xcode for correct path to XCode tools -->
 		<!-- Will fail if XCode Command Line Tools are not installed on 10.7+ (Lion) -->
@@ -14,96 +14,21 @@
 			<isset property="xcode-select.error" />
 		</condition>
 
-		<property name="sdk_path" value="Platforms/MacOSX.platform/Developer/SDKs"/>
+		<property name="sdkroot" value="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"/>
+        <property name="javavmroot" value="/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home"/>
+        <condition property="compiler" value="clang">
+           <not>
+              <isset property="clang"/>
+           </not>
+        </condition>
 		<property name="jvm_headers_path" value="System/Library/Frameworks/JavaVM.framework/Versions/A/Headers"/>
 
-		<!-- Choose a JavaVM.framework -->
-		<condition property="javavmroot" value="${developer_path}/${sdk_path}/MacOSX10.9.sdk">
-			<and>
-				<not><isset property="javavmroot"/></not>
-				<available file="${developer_path}/${sdk_path}/MacOSX10.9.sdk/${jvm_headers_path}" type="dir"/>
-			</and>
-		</condition>
-		<condition property="javavmroot" value="${developer_path}/${sdk_path}/MacOSX10.8.sdk">
-			<and>
-				<not><isset property="javavmroot"/></not>
-				<available file="${developer_path}/${sdk_path}/MacOSX10.8.sdk/${jvm_headers_path}" type="dir"/>
-			</and>
-		</condition>
-		<condition property="javavmroot" value="${developer_path}/${sdk_path}/MacOSX10.7.sdk">
-			<and>
-				<not><isset property="javavmroot"/></not>
-				<available file="${developer_path}/${sdk_path}/MacOSX10.7.sdk/${jvm_headers_path}" type="dir"/>
-			</and>
-		</condition>
-		<condition property="javavmroot" value="${developer_path}/${sdk_path}/MacOSX10.6.sdk">
-			<and>
-				<not><isset property="javavmroot"/></not>
-				<available file="${developer_path}/${sdk_path}/MacOSX10.6.sdk/${jvm_headers_path}" type="dir"/>
-			</and>
-		</condition>
-		<condition property="javavmroot" value=""> <!-- Old location -->
-			<and>
-				<not><isset property="javavmroot"/></not>
-				<available file="/${jvm_headers_path}" type="dir"/>
-			</and>
-		</condition>
-
-		<!-- Choose a MacOSX SDK -->
-		<property name="compiler" value="clang"/> <!-- Default to clang for 10.8 and up -->
-
-		<condition property="sdkroot" value="${developer_path}/${sdk_path}/MacOSX10.9.sdk">
-			<and>
-				<not><isset property="sdkroot"/></not>
-				<available file="${developer_path}/${sdk_path}/MacOSX10.9.sdk" type="dir"/>
-			</and>
-		</condition>
-		<condition property="sdkroot" value="${developer_path}/${sdk_path}/MacOSX10.8.sdk">
-			<and>
-				<not><isset property="sdkroot"/></not>
-				<available file="${developer_path}/${sdk_path}/MacOSX10.8.sdk" type="dir"/>
-			</and>
-		</condition>
-
-		<!-- If we're on 10.7 or lower, use gcc instead of clang -->
-		<condition property="compiler" value="gcc-4.2">
-			<and>
-				<not><isset property="sdkroot"/></not>
-				<available file="gcc-4.2" filepath="${env.PATH}"/>
-			</and>
-		</condition>
-		<condition property="compiler" value="gcc">
-			<and>
-				<not><isset property="sdkroot"/></not>
-				<not><available file="gcc-4.2" filepath="${env.PATH}"/></not>
-				<available file="gcc" filepath="${env.PATH}"/>
-			</and>
-		</condition>
-
-		<condition property="sdkroot" value="${developer_path}/${sdk_path}/MacOSX10.7.sdk">
-			<and>
-				<not><isset property="sdkroot"/></not>
-				<available file="${developer_path}/${sdk_path}/MacOSX10.7.sdk" type="dir"/>
-			</and>
-		</condition>
-		<condition property="sdkroot" value="${developer_path}/${sdk_path}/MacOSX10.6.sdk">
-			<and>
-				<not><isset property="sdkroot"/></not>
-				<available file="${developer_path}/${sdk_path}/MacOSX10.6.sdk" type="dir"/>
-			</and>
-		</condition>
-		<condition property="sdkroot" value="${developer_path}/SDKs/MacOSx10.6.sdk"> <!-- Old XCode location -->
-			<and>
-				<not><isset property="sdkroot"/></not>
-				<available file="${developer_path}/SDKs/MacOSx10.6.sdk" type="dir"/>
-			</and>
-		</condition>
+        
 	</target>
 
 	<target name="clean">
 		<delete failonerror="false">
-			<fileset dir="i386"/>
-			<fileset dir="x86_64"/>
+			<fileset dir="arm64"/>
 			<fileset dir="." includes="liblwjgl.dylib"/>
 			<fileset dir="." includes="lwjgl.symbols"/>
 		</delete>
@@ -111,7 +36,7 @@
 
 	<target name="compile" depends="init">
 		<apply dir="${dstdir}" executable="${compiler}" os="Mac OS X" skipemptyfilesets="true" failonerror="true" dest="${dstdir}">
-			<arg line="${cflags} -ObjC -O2 -Wall -Wunused -c -fPIC -I${javavmroot}/${jvm_headers_path} -I${native}/common -I${native}/common/opengl -I${native}/macosx"/>
+			<arg line="${cflags} -ObjC -O2 -Wall -Wunused -Wno-deprecated -c -fPIC -I${javavmroot}/include -I${javavmroot}/include/darwin -I${native}/common -I${native}/common/opengl -I${native}/macosx"/>
 			<!-- Map from *.m and *.c to .o -->
 			<mapper type="regexp" from="^(.*)\.(c|m)" to="\1.o"/>
 			<fileset dir="${native}/macosx" includes="*.m"/>
@@ -138,7 +63,7 @@
 		</apply>
 		<apply dir="${objdir}" executable="strip" os="Mac OS X" failonerror="true">
 			<arg line="-S -X"/>
-			<fileset dir="." file="${libname}"/>
+			<fileset file="${libname}"/>
 		</apply>
 	</target>
 
@@ -147,76 +72,36 @@
 		<echo message="      Mac OS SDK: ${sdkroot}"/>
 		<echo message="JavaVM.framework: ${javavmroot}"/>
 
-		<condition property="build_x86_64" value="1">
+		<condition property="build_arm64" value="1">
 			<equals arg1="${compiler}" arg2="clang"/>
 		</condition>
 
 		<antcall target="-build"/>
 	</target>
 
-	<target name="-build" depends="-build_universal,-build_x86_x64"/>
+	<target name="-build" depends="-build_arm64"/>
 
-	<target name="-build_universal" unless="build_x86_64">
-		<mkdir dir="i386"/>
-
-		<property name="universal_sdkroot" location="${sdkroot}"/>
-		<property name="x86_64_sdkroot" location="${sdkroot}"/>
-		<property name="universal_flags" value="-isysroot ${universal_sdkroot}"/>
+	<target name="-build_arm64" if="build_arm64">
 		<antcall target="compile">
-			<param name="dstdir" location="i386"/>
-			<param name="sdkroot" location="${universal_sdkroot}"/>
-			<param name="cflags" value="${universal_flags} -arch i386 -mmacosx-version-min=10.5"/>
-		</antcall>
-		<antcall target="compile">
-			<param name="dstdir" location="x86_64"/>
-			<param name="sdkroot" location="${universal_sdkroot}"/>
-			<param name="cflags" value="-isysroot ${x86_64_sdkroot} -arch x86_64 -mmacosx-version-min=10.5"/>
-		</antcall>
-		<exec vmlauncher="true" executable="sh" output="lwjgl.symbols" failonerror="true">
-			<arg path="../../platform_build/macosx_ant/build-symbol-list"/>
-			<arg path="i386"/>
-		</exec>
-		<antcall target="link">
-			<param name="objdir" location="i386"/>
-			<param name="libname" value="liblwjgl-i386.dylib"/>
-			<param name="linkerflags" value="${universal_flags} -arch i386 -mmacosx-version-min=10.5"/>
-		</antcall>
-		<antcall target="link">
-			<param name="objdir" location="x86_64"/>
-			<param name="libname" value="liblwjgl-i86_64.dylib"/>
-			<param name="linkerflags" value="-isysroot ${x86_64_sdkroot} -arch x86_64 -mmacosx-version-min=10.5"/>
-		</antcall>
-		<apply dir="." parallel="true" executable="lipo" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
-			<arg value="-create"/>
-			<srcfile/>
-			<arg value="-output"/>
-			<arg path="liblwjgl.dylib"/>
-			<fileset file="i386/liblwjgl-i386.dylib"/>
-			<fileset file="x86_64/liblwjgl-i86_64.dylib"/>
-		</apply>
-	</target>
-
-	<target name="-build_x86_x64" if="build_x86_64">
-		<antcall target="compile">
-			<param name="dstdir" location="x86_64"/>
+			<param name="dstdir" location="arm64"/>
 			<param name="sdkroot" location="${sdkroot}"/>
-			<param name="cflags" value="-isysroot ${sdkroot} -arch x86_64 -mmacosx-version-min=10.5"/>
+			<param name="cflags" value="-isysroot ${sdkroot} -arch arm64 -mmacosx-version-min=11"/>
 		</antcall>
 		<exec vmlauncher="true" executable="sh" output="lwjgl.symbols" failonerror="true">
 			<arg path="../../platform_build/macosx_ant/build-symbol-list"/>
-			<arg path="x86_64"/>
+			<arg path="arm64"/>
 		</exec>
 		<antcall target="link">
-			<param name="objdir" location="x86_64"/>
-			<param name="libname" value="liblwjgl-i86_64.dylib"/>
-			<param name="linkerflags" value="-isysroot ${sdkroot} -arch x86_64 -mmacosx-version-min=10.5"/>
+			<param name="objdir" location="arm64"/>
+			<param name="libname" value="liblwjgl-arm64.dylib"/>
+			<param name="linkerflags" value="-isysroot ${sdkroot} -arch arm64 -mmacosx-version-min=11"/>
 		</antcall>
 		<apply dir="." parallel="true" executable="lipo" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
 			<arg value="-create"/>
 			<srcfile/>
 			<arg value="-output"/>
 			<arg path="liblwjgl.dylib"/>
-			<fileset file="x86_64/liblwjgl-i86_64.dylib"/>
+			<fileset file="arm64/liblwjgl-arm64.dylib"/>
 		</apply>
 	</target>
 </project>

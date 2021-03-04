@@ -39,11 +39,7 @@
  */
 
 #include <jni.h>
-#ifdef __MACH__
-#include <JavaVM/jawt_md.h>
-#else
 #include <jawt_md.h>
-#endif
 #include "org_lwjgl_opengl_AWTSurfaceLock.h"
 #include "awt_tools.h"
 #include "common_tools.h"

@@ -78,12 +78,11 @@ static NSUInteger lastModifierFlags = 0;
 	[window_info->view setParent:window_info];
 	
 	if (window_info->enableHighDPI) {
-		// call method using runtime selector as its a 10.7+ api and allows compiling on older SDK's
-		[window_info->view performSelector:NSSelectorFromString(@"setWantsBestResolutionOpenGLSurface:") withObject:YES];
+        [window_info->view setWantsBestResolutionOpenGLSurface:YES];
 	}
 	
 	// set nsapp delegate for catching app quit events
-	[NSApp setDelegate:window_info->view];
+	// [NSApp setDelegate:window_info->view];
 	
 	if (window_info->context != nil) {
 		[window_info->view setOpenGLContext:window_info->context];
@@ -91,30 +90,24 @@ static NSUInteger lastModifierFlags = 0;
 	
 	if (!window_info->fullscreen) {
 		
-		if (window_info->parented) {
-			window_info->window = [peer_info->parent window];
-			[peer_info->parent addSubview:window_info->view];
-		}
-		else {
-			
-			int default_window_mask = NSBorderlessWindowMask; // undecorated
-			
-			if (!window_info->undecorated) {
-				default_window_mask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
-			}
-			
-			if (window_info->resizable) {
-				default_window_mask |= NSResizableWindowMask;
-			}
-			
-			window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:default_window_mask backing:NSBackingStoreBuffered defer:NO];
-			
-			[window_info->window setContentView:window_info->view];
-			[window_info->window setContentView:window_info->view]; // call twice to fix issue
-			
-			// set NSView as delegate of NSWindow to get windowShouldClose events
-			[window_info->window setDelegate:window_info->view];
-		}
+        int default_window_mask = NSBorderlessWindowMask; // undecorated
+        
+        if (!window_info->undecorated) {
+            default_window_mask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
+        }
+        
+        if (window_info->resizable) {
+            default_window_mask |= NSResizableWindowMask;
+        }
+        
+        window_info->window = [[MacOSXKeyableWindow alloc] initWithContentRect:window_info->display_rect styleMask:default_window_mask backing:NSBackingStoreBuffered defer:NO];
+        
+        [window_info->window setContentView:window_info->view];
+        [window_info->window setContentView:window_info->view]; // call twice to fix issue
+        
+        // set NSView as delegate of NSWindow to get windowShouldClose events
+        // [window_info->window setDelegate:window_info->view];
+		
 		
 		// disable any fixed backbuffer size to allow resizing
 		CGLContextObj cgcontext = (CGLContextObj)[[window_info->view openGLContext] CGLContextObj];
@@ -129,7 +122,7 @@ static NSUInteger lastModifierFlags = 0;
 		
 		// enter fullscreen mode
 		[window_info->view enterFullScreenMode: [NSScreen mainScreen] withOptions: nil ];
-		window_info->window = [window_info->view window];
+		// window_info->window = [window_info->view window];
         
 		// adjust the NSView bounds to correct mouse coordinates in fullscreen
 		NSSize windowSize = [window_info->window frame].size;
@@ -541,12 +534,12 @@ static NSUInteger lastModifierFlags = 0;
 	NSPoint mouseLocation = [[self window] mouseLocationOutsideOfEventStream];
     mouseLocation = [self convertPoint:mouseLocation fromView:nil];
 	
-    if (NSPointInRect(mouseLocation, [self bounds])) {
+    /*if (NSPointInRect(mouseLocation, [self bounds])) {
 		[self mouseEntered:nil];
 	}
 	else {
 		[self mouseExited:nil];
-	}
+	}*/
 }
 
 -(void)mouseEntered:(NSEvent *)event {

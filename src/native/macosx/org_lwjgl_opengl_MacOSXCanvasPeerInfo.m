@@ -53,7 +53,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	
 	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	AWTSurfaceLock *surface = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
-	JAWT_MacOSXDrawingSurfaceInfo *macosx_dsi = (JAWT_MacOSXDrawingSurfaceInfo *)surface->dsi->platformInfo;
+    NSObject *macosx_dsi = (NSObject *)surface->dsi->platformInfo;
 	
 	// force CALayer usage or check if CALayer is supported (i.e. on Java 5 and Java 6)
 	if(forceCALayer || (surface->awt.version & 0x80000000)) { //JAWT_MACOSX_USE_CALAYER) {
@@ -95,7 +95,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nInitHandle
 	}
 	
 	// no CALayer support, fallback to using legacy method of getting the NSView of an AWT Canvas
-	peer_info->parent = macosx_dsi->cocoaViewRef;
+	//peer_info->parent = macosx_dsi->cocoaViewRef;
 	peer_info->isCALayer = false;
 	peer_info->isWindowed = true;
 	
@@ -214,12 +214,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXCanvasPeerInfo_nSetLayerBound
 	if (width != fboWidth || height != fboHeight) {
 		
 		// store current fbo/renderbuffers for later deletion
-		int oldFboID = fboID;
-		int oldImageRenderBufferID = imageRenderBufferID;
-		int oldDepthRenderBufferID = depthRenderBufferID;
+		unsigned int oldFboID = fboID;
+		unsigned int oldImageRenderBufferID = imageRenderBufferID;
+		unsigned int oldDepthRenderBufferID = depthRenderBufferID;
 		
 		// create new fbo
-		int tempFBO;
+		unsigned int tempFBO;
 		glGenFramebuffersEXT(1, &tempFBO);
 		
 		// create new render buffers

@@ -117,7 +117,7 @@ typedef struct {
 
 @interface GLLayer : CAOpenGLLayer {
 	@public
-	JAWT_MacOSXDrawingSurfaceInfo *macosx_dsi;
+	JAWT_DrawingSurfaceInfo *macosx_dsi;
 	JAWT_Rectangle canvasBounds;
 	MacOSXWindowInfo *window_info;
 	bool setViewport;
@@ -125,9 +125,9 @@ typedef struct {
 	
 	@private
 	CGLContextObj contextObject;
-	int fboID;
-	int imageRenderBufferID;
-	int depthRenderBufferID;
+	unsigned int fboID;
+	unsigned int imageRenderBufferID;
+	unsigned int depthRenderBufferID;
 	int fboWidth;
 	int fboHeight;
 }
