@@ -1011,37 +1011,37 @@ final class WindowsDisplay implements DisplayImplementation {
 				handleMouseScrolled(dwheel, millis);
 				return 0L;
 			case WM_LBUTTONDOWN:
-				handleMouseButton(0, 1, millis);
-				return 0L;
-			case WM_LBUTTONUP:
-				handleMouseButton(0, 0, millis);
-				return 0L;
 			case WM_RBUTTONDOWN:
-				handleMouseButton(1, 1, millis);
-				return 0L;
-			case WM_RBUTTONUP:
-				handleMouseButton(1, 0, millis);
-				return 0L;
 			case WM_MBUTTONDOWN:
-				handleMouseButton(2, 1, millis);
-				return 0L;
-			case WM_MBUTTONUP:
-				handleMouseButton(2, 0, millis);
-				return 0L;
-			case WM_XBUTTONUP:
-				if((wParam >> 16) == XBUTTON1) {
-					handleMouseButton(3, 0, millis);
-				} else {
-					handleMouseButton(4, 0, millis);
-				}
-				return 1;
 			case WM_XBUTTONDOWN:
-				if((wParam & 0xFF) == MK_XBUTTON1) {
-					handleMouseButton(3, 1, millis);
-				} else {
-					handleMouseButton(4, 1, millis);
-				}
-				return 1;
+			case WM_LBUTTONUP:
+			case WM_RBUTTONUP:
+			case WM_MBUTTONUP:
+			case WM_XBUTTONUP:
+			{
+				int button;
+
+				if (msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP)
+					button = 0;
+				else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP)
+					button = 1;
+				else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP)
+					button = 2;
+				else if ((wParam >> 16) == XBUTTON1)
+					button = 3;
+				else
+					button = 4;
+
+				int action = msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN ||
+						msg == WM_MBUTTONDOWN || msg == WM_XBUTTONDOWN ? 1 : 0;
+
+				handleMouseButton(button, action, millis);
+
+				if (msg == WM_XBUTTONDOWN || msg == WM_XBUTTONUP)
+					return 1L;
+
+				return 0L;
+			}
 			case WM_SYSCHAR:
 			case WM_CHAR:
 				handleChar(wParam, lParam, millis);
