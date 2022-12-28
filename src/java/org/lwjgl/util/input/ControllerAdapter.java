@@ -63,7 +63,7 @@ public class ControllerAdapter implements Controller {
 	/**
 	 * Retrieve the number of buttons available on this controller
 	 * 
-	 * @return The number of butotns available on this controller
+	 * @return The number of buttons available on this controller
 	 */
 	public int getButtonCount() {
 		return 0;
